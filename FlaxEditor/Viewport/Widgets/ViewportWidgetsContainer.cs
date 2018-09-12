@@ -5,9 +5,19 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.Viewport.Widgets
 {
+    /// <summary>
+    /// The viewport widget location.
+    /// </summary>
     public enum ViewportWidgetLocation
     {
+        /// <summary>
+        /// The upper left.
+        /// </summary>
         UpperLeft,
+
+        /// <summary>
+        /// The upper right.
+        /// </summary>
         UpperRight,
     }
 

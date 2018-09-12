@@ -7,9 +7,17 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    /// <summary>
+    /// Drag content items handler.
+    /// </summary>
     public sealed class DragItems : DragItems<DragEventArgs>
     {
-        public DragItems(Func<ContentItem, bool> validateFunction) : base(validateFunction)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DragItems"/> class.
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
+        public DragItems(Func<ContentItem, bool> validateFunction)
+        : base(validateFunction)
         {
         }
     }
@@ -29,10 +37,16 @@ namespace FlaxEditor.GUI.Drag
         /// Creates a new DragHelper
         /// </summary>
         /// <param name="validateFunction">The validation function</param>
-        public DragItems(Func<ContentItem, bool> validateFunction) : base(validateFunction)
+        public DragItems(Func<ContentItem, bool> validateFunction)
+        : base(validateFunction)
         {
         }
 
+        /// <summary>
+        /// Gets the drag data for the given file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The data.</returns>
         public DragData ToDragData(string path) => GetDragData(path);
 
         /// <inheritdoc/>
@@ -41,6 +55,11 @@ namespace FlaxEditor.GUI.Drag
         /// <inheritdoc/>
         public override DragData ToDragData(IEnumerable<ContentItem> items) => GetDragData(items);
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(string path)
         {
             if (path == null)
@@ -49,6 +68,11 @@ namespace FlaxEditor.GUI.Drag
             return new DragDataText(DragPrefix + path);
         }
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>The data.</returns>
         public static DragDataText GetDragData(ContentItem item)
         {
             if (item == null)
@@ -57,6 +81,11 @@ namespace FlaxEditor.GUI.Drag
             return new DragDataText(DragPrefix + item.Path);
         }
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(IEnumerable<ContentItem> items)
         {
             if (items == null)
@@ -75,7 +104,7 @@ namespace FlaxEditor.GUI.Drag
             {
                 if (dataText.Text.StartsWith(DragPrefix))
                 {
-                    // Remove prefix and parse splitted names
+                    // Remove prefix and parse spitted names
                     var paths = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
                     var results = new List<ContentItem>(paths.Length);
                     for (int i = 0; i < paths.Length; i++)

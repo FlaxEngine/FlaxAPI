@@ -35,9 +35,20 @@ namespace FlaxEditor.Viewport
         private readonly DragAssets<DragDropEventArgs> _dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem);
         private readonly DragActorType<DragDropEventArgs> _dragActorType = new DragActorType<DragDropEventArgs>(ValidateDragActorType);
 
+        /// <summary>
+        /// The custom drag drop event arguments.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.GUI.Drag.DragEventArgs" />
         public class DragDropEventArgs : DragEventArgs
         {
+            /// <summary>
+            /// The hit.
+            /// </summary>
             public SceneGraphNode Hit;
+
+            /// <summary>
+            /// The hit location.
+            /// </summary>
             public Vector3 HitLocation;
         }
 
@@ -241,7 +252,7 @@ namespace FlaxEditor.Viewport
             actor.StaticFlags = StaticFlags.None;
             actor.Name = "Camera";
             actor.Transform = ViewTransform;
-            actor.FieldOfView = _fieldOfView;
+            actor.FieldOfView = FieldOfView;
 
             // Spawn
             Editor.Instance.SceneEditing.Spawn(actor);

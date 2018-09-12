@@ -7,9 +7,17 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    /// <summary>
+    /// Script items drag handler.
+    /// </summary>
     public sealed class DragScriptItems : DragScriptItems<DragEventArgs>
     {
-        public DragScriptItems(Func<ScriptItem, bool> validateFunction) : base(validateFunction)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DragScriptItems"/> class.
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
+        public DragScriptItems(Func<ScriptItem, bool> validateFunction)
+        : base(validateFunction)
         {
         }
     }
@@ -29,7 +37,8 @@ namespace FlaxEditor.GUI.Drag
         /// Creates a new DragHelper
         /// </summary>
         /// <param name="validateFunction">The validation function</param>
-        public DragScriptItems(Func<ScriptItem, bool> validateFunction) : base(validateFunction)
+        public DragScriptItems(Func<ScriptItem, bool> validateFunction)
+        : base(validateFunction)
         {
         }
 
@@ -39,23 +48,40 @@ namespace FlaxEditor.GUI.Drag
         /// <inheritdoc/>
         public override DragData ToDragData(IEnumerable<ScriptItem> items) => GetDragData(items);
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(ScriptItem item)
         {
             return DragItems<DragEventArgs>.GetDragData(item);
         }
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(IEnumerable<ScriptItem> items)
         {
             return DragItems<DragEventArgs>.GetDragData(items);
         }
 
+        /// <summary>
+        /// Tries to parse the drag data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>
+        /// Gathered objects or empty IEnumerable if cannot get any valid.
+        /// </returns>
         public override IEnumerable<ScriptItem> FromDragData(DragData data)
         {
             if (data is DragDataText dataText)
             {
                 if (dataText.Text.StartsWith(DragPrefix))
                 {
-                    // Remove prefix and parse splitted names
+                    // Remove prefix and parse spitted names
                     var paths = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
                     var results = new List<ScriptItem>(paths.Length);
                     for (int i = 0; i < paths.Length; i++)

@@ -8,12 +8,21 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    /// <summary>
+    /// Actors references collection drag handler.
+    /// </summary>
     public sealed class DragActors : DragActors<DragEventArgs>
     {
-        public DragActors(Func<ActorNode, bool> validateFunction) : base(validateFunction)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DragActors"/> class.
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
+        public DragActors(Func<ActorNode, bool> validateFunction)
+        : base(validateFunction)
         {
         }
     }
+
     /// <summary>
     /// Helper class for handling <see cref="ActorNode"/> drag and drop.
     /// </summary>
@@ -30,7 +39,8 @@ namespace FlaxEditor.GUI.Drag
         /// Creates a new DragHelper
         /// </summary>
         /// <param name="validateFunction">The validation function</param>
-        public DragActors(Func<ActorNode, bool> validateFunction) : base(validateFunction)
+        public DragActors(Func<ActorNode, bool> validateFunction)
+        : base(validateFunction)
         {
         }
 
@@ -39,7 +49,7 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         /// <param name="actor">The actor.</param>
         /// <returns>The data.</returns>
-        public DragData ToDragData(Actor item) => GetDragData(item);
+        public DragData ToDragData(Actor actor) => GetDragData(actor);
 
         /// <inheritdoc/>
         public override DragData ToDragData(ActorNode item) => GetDragData(item);
@@ -47,6 +57,11 @@ namespace FlaxEditor.GUI.Drag
         /// <inheritdoc/>
         public override DragData ToDragData(IEnumerable<ActorNode> items) => GetDragData(items);
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(Actor actor)
         {
             if (actor == null)
@@ -55,6 +70,11 @@ namespace FlaxEditor.GUI.Drag
             return new DragDataText(DragPrefix + actor.ID.ToString("N"));
         }
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(ActorNode item)
         {
             if (item == null)
@@ -63,6 +83,11 @@ namespace FlaxEditor.GUI.Drag
             return new DragDataText(DragPrefix + item.ID.ToString("N"));
         }
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(IEnumerable<ActorNode> items)
         {
             if (items == null)
@@ -81,7 +106,7 @@ namespace FlaxEditor.GUI.Drag
             {
                 if (dataText.Text.StartsWith(DragPrefix))
                 {
-                    // Remove prefix and parse splitted names
+                    // Remove prefix and parse spitted names
                     var ids = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
                     var results = new List<ActorNode>(ids.Length);
                     for (int i = 0; i < ids.Length; i++)

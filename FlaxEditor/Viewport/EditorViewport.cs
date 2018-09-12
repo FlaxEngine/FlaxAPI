@@ -92,7 +92,7 @@ namespace FlaxEditor.Viewport
             /// Gathers input from the specified window.
             /// </summary>
             /// <param name="window">The window.</param>
-            public void Gather(FlaxEngine.Window window)
+            public void Gather(Window window)
             {
                 IsControlDown = window.GetKey(Keys.Control);
                 IsShiftDown = window.GetKey(Keys.Shift);
@@ -139,23 +139,23 @@ namespace FlaxEditor.Viewport
         private bool _isControllingMouse;
         protected Input _prevInput;
         protected Input _input;
-        protected int _deltaFilteringStep;
+        private int _deltaFilteringStep;
         protected Vector2 _viewMousePos;
         protected Vector2 _mouseDeltaRight;
         protected Vector2 _mouseDeltaLeft;
-        protected Vector2 _startPosRight;
-        protected Vector2 _startPosLeft;
-        protected Vector2 _mouseDeltaRightLast;
-        protected Vector2[] _deltaFilteringBuffer = new Vector2[FpsCameraFilteringFrames];
+        private Vector2 _startPosRight;
+        private Vector2 _startPosLeft;
+        private Vector2 _mouseDeltaRightLast;
+        private Vector2[] _deltaFilteringBuffer = new Vector2[FpsCameraFilteringFrames];
 
         // Camera
 
         private ViewportCamera _camera;
-        protected float _yaw;
-        protected float _pitch;
-        protected float _fieldOfView = 60.0f;
-        protected float _nearPlane = 2.0f;
-        protected float _farPlane = 10000.0f;
+        private float _yaw;
+        private float _pitch;
+        private float _fieldOfView = 60.0f;
+        private float _nearPlane = 2.0f;
+        private float _farPlane = 10000.0f;
 
         /// <summary>
         /// Speed of the mouse.
@@ -322,6 +322,33 @@ namespace FlaxEditor.Viewport
         }
 
         /// <summary>
+        /// Gets or sets the camera near clipping plane.
+        /// </summary>
+        public float NearPlane
+        {
+            get => _nearPlane;
+            set => _nearPlane = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the camera far clipping plane.
+        /// </summary>
+        public float FarPlane
+        {
+            get => _farPlane;
+            set => _farPlane = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the camera field of view (in degrees).
+        /// </summary>
+        public float FieldOfView
+        {
+            get => _fieldOfView;
+            set => _fieldOfView = value;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorViewport"/> class.
         /// </summary>
         /// <param name="task">The task.</param>
@@ -356,7 +383,7 @@ namespace FlaxEditor.Viewport
                     button.Tag = v;
                 }
                 camSpeedCM.ButtonClicked += (button) => MovementSpeed = (float)button.Tag;
-                camSpeedCM.VisibleChanged += widgetCamSpeedShowHide;
+                camSpeedCM.VisibleChanged += WidgetCamSpeedShowHide;
                 camSpeedButton.Parent = camSpeed;
                 camSpeed.Parent = this;
 
@@ -384,7 +411,7 @@ namespace FlaxEditor.Viewport
                         button.Tag = v.Mode;
                     }
                     viewFlags.ButtonClicked += (button) => Task.Flags ^= (ViewFlags)button.Tag;
-                    viewFlags.VisibleChanged += widgetViewFlagsShowHide;
+                    viewFlags.VisibleChanged += WidgetViewFlagsShowHide;
                 }
 
                 // Debug View
@@ -397,7 +424,7 @@ namespace FlaxEditor.Viewport
                         button.Tag = v.Mode;
                     }
                     debugView.ButtonClicked += (button) => Task.Mode = (ViewMode)button.Tag;
-                    debugView.VisibleChanged += widgetViewModeShowHide;
+                    debugView.VisibleChanged += WidgetViewModeShowHide;
                 }
 
                 ViewWidgetButtonMenu.AddSeparator();
@@ -594,7 +621,7 @@ namespace FlaxEditor.Viewport
         /// Called when mouse control begins.
         /// </summary>
         /// <param name="win">The parent window.</param>
-        protected virtual void OnControlMouseBegin(FlaxEngine.Window win)
+        protected virtual void OnControlMouseBegin(Window win)
         {
             // Hide cursor and start tracking mouse movement
             win.StartTrackingMouse(false);
@@ -609,7 +636,7 @@ namespace FlaxEditor.Viewport
         /// Called when mouse control ends.
         /// </summary>
         /// <param name="win">The parent window.</param>
-        protected virtual void OnControlMouseEnd(FlaxEngine.Window win)
+        protected virtual void OnControlMouseEnd(Window win)
         {
             // Restore cursor and stop tracking mouse movement
             win.Cursor = CursorType.Default;
@@ -668,7 +695,7 @@ namespace FlaxEditor.Viewport
 
             // Get parent window
             var win = (WindowRootControl)Root;
-            
+
             // Get current mouse position in the view
             _viewMousePos = PointFromWindow(win.MousePosition);
 
@@ -887,7 +914,7 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        private ViewModeOptions[] EditorViewportViewModeValues =
+        private static readonly ViewModeOptions[] EditorViewportViewModeValues =
         {
             new ViewModeOptions(ViewMode.Default, "Default"),
             new ViewModeOptions(ViewMode.NoPostFx, "No PostFx"),
@@ -907,7 +934,7 @@ namespace FlaxEditor.Viewport
             new ViewModeOptions(ViewMode.MotionVectors, "Motion Vectors"),
         };
 
-        private void widgetCamSpeedShowHide(Control cm)
+        private void WidgetCamSpeedShowHide(Control cm)
         {
             if (cm.Visible == false)
                 return;
@@ -925,7 +952,7 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        private void widgetViewModeShowHide(Control cm)
+        private void WidgetViewModeShowHide(Control cm)
         {
             if (cm.Visible == false)
                 return;
@@ -955,7 +982,7 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        private ViewFlagOptions[] EditorViewportViewFlagsValues =
+        private static readonly ViewFlagOptions[] EditorViewportViewFlagsValues =
         {
             new ViewFlagOptions(ViewFlags.AntiAliasing, "Anti Aliasing"),
             new ViewFlagOptions(ViewFlags.Shadows, "Shadows"),
@@ -983,7 +1010,7 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.PhysicsDebug, "Physics Debug"),
         };
 
-        private void widgetViewFlagsShowHide(Control cm)
+        private void WidgetViewFlagsShowHide(Control cm)
         {
             if (cm.Visible == false)
                 return;

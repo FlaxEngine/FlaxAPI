@@ -8,12 +8,21 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    /// <summary>
+    /// Assets collection drag handler.
+    /// </summary>
     public sealed class DragAssets : DragAssets<DragEventArgs>
     {
-        public DragAssets(Func<AssetItem, bool> validateFunction) : base(validateFunction)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DragAssets"/> class.
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
+        public DragAssets(Func<AssetItem, bool> validateFunction)
+        : base(validateFunction)
         {
         }
     }
+
     /// <summary>
     /// Helper class for handling <see cref="AssetItem"/> drag and drop.
     /// </summary>
@@ -29,7 +38,8 @@ namespace FlaxEditor.GUI.Drag
         /// Creates a new DragHelper
         /// </summary>
         /// <param name="validateFunction">The validation function</param>
-        public DragAssets(Func<AssetItem, bool> validateFunction) : base(validateFunction)
+        public DragAssets(Func<AssetItem, bool> validateFunction)
+        : base(validateFunction)
         {
         }
 
@@ -46,16 +56,31 @@ namespace FlaxEditor.GUI.Drag
         /// <inheritdoc/>
         public override DragData ToDragData(IEnumerable<AssetItem> items) => GetDragData(items);
 
-
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="asset">The asset.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(Asset asset)
         {
             return DragItems<DragEventArgs>.GetDragData(Editor.Instance.ContentDatabase.Find(asset.ID));
         }
+
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(AssetItem item)
         {
             return DragItems<DragEventArgs>.GetDragData(item);
         }
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <returns>The data.</returns>
         public static DragData GetDragData(IEnumerable<AssetItem> items)
         {
             return DragItems<DragEventArgs>.GetDragData(items);
@@ -72,16 +97,13 @@ namespace FlaxEditor.GUI.Drag
             {
                 if (dataText.Text.StartsWith(DragPrefix))
                 {
-                    // Remove prefix and parse splitted names
+                    // Remove prefix and parse spitted names
                     var paths = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
                     var results = new List<AssetItem>(paths.Length);
                     for (int i = 0; i < paths.Length; i++)
                     {
                         // Find element
-                        var obj = Editor.Instance.ContentDatabase.Find(paths[i]) as AssetItem;
-
-                        // Check it
-                        if (obj != null)
+                        if (Editor.Instance.ContentDatabase.Find(paths[i]) is AssetItem obj)
                             results.Add(obj);
                     }
 

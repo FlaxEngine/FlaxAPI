@@ -1,8 +1,7 @@
-using System;
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -26,7 +25,12 @@ namespace FlaxEditor.GUI.Drag
             return helper;
         }
 
-        public DragDropEffect? OnDragEnter(/*ref Vector2 location, */DragData data)
+        /// <summary>
+        /// Called when drag enter.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>The result.</returns>
+        public DragDropEffect? OnDragEnter( /*ref Vector2 location, */ DragData data)
         {
             DragDropEffect? effect = null;
             foreach (var dragHelper in _dragHelpers)
@@ -40,6 +44,9 @@ namespace FlaxEditor.GUI.Drag
             return effect;
         }
 
+        /// <summary>
+        /// Called when drag leaves.
+        /// </summary>
         public void OnDragLeave()
         {
             foreach (var dragHelper in _dragHelpers)
@@ -48,6 +55,10 @@ namespace FlaxEditor.GUI.Drag
             }
         }
 
+        /// <summary>
+        /// Called when drag drops.
+        /// </summary>
+        /// <param name="dragEventArgs">The <see cref="DragEventArgs"/> instance containing the event data.</param>
         public void OnDragDrop(DragEventArgs dragEventArgs)
         {
             foreach (var dragHelper in _dragHelpers)
@@ -56,6 +67,10 @@ namespace FlaxEditor.GUI.Drag
             }
         }
 
+        /// <summary>
+        /// Determines whether has valid drag handler to handle the drag request.
+        /// </summary>
+        /// <returns>True if has valid drag handler to handle the drag request, otherwise false.</returns>
         public bool HasValidDrag()
         {
             foreach (var dragHelper in _dragHelpers)
@@ -68,13 +83,21 @@ namespace FlaxEditor.GUI.Drag
             return false;
         }
 
+        /// <summary>
+        /// Gets the first valid drag helper.
+        /// </summary>
+        /// <returns>The drag helper.</returns>
         public DragHelper WithValidDrag()
         {
             return _dragHelpers
-                .DefaultIfEmpty()
-                .First(helper => helper.HasValidDrag);
+                   .DefaultIfEmpty()
+                   .First(helper => helper.HasValidDrag);
         }
 
+        /// <summary>
+        /// Gets teh valid drag effect to use.
+        /// </summary>
+        /// <returns>The effect.</returns>
         public DragDropEffect? Effect()
         {
             foreach (var dragHelper in _dragHelpers)

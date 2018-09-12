@@ -219,7 +219,7 @@ namespace FlaxEditor.Viewport
         public GizmosCollection Gizmos { get; } = new GizmosCollection();
 
         /// <inheritdoc />
-        public float ViewFarPlane => _farPlane;
+        public float ViewFarPlane => FarPlane;
 
         /// <inheritdoc />
         public bool IsLeftMouseButtonDown => _input.IsMouseLeftDown;

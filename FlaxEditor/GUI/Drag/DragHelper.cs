@@ -7,13 +7,42 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    /// <summary>
+    /// The drag events helper object.
+    /// </summary>
     public abstract class DragHelper
     {
+        /// <summary>
+        /// Gets a value indicating whether this instance has valid drag.
+        /// </summary>
         public abstract bool HasValidDrag { get; }
+
+        /// <summary>
+        /// Gets the drag effect.
+        /// </summary>
         public abstract DragDropEffect Effect { get; }
+
+        /// <summary>
+        /// Called when drag enters.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>True if handled.</returns>
         public abstract bool OnDragEnter(DragData data);
+
+        /// <summary>
+        /// Called when drag leaves.
+        /// </summary>
         public abstract void OnDragLeave();
+
+        /// <summary>
+        /// Called when drag drops.
+        /// </summary>
         public abstract void OnDragDrop();
+
+        /// <summary>
+        /// Called when drag drops.
+        /// </summary>
+        /// <param name="dragEventArgs">The <see cref="DragEventArgs"/> instance containing the event data.</param>
         public abstract void OnDragDrop(DragEventArgs dragEventArgs);
     }
 
@@ -80,12 +109,13 @@ namespace FlaxEditor.GUI.Drag
         /// <returns>Gathered objects or empty IEnumerable if cannot get any valid.</returns>
         public abstract IEnumerable<T> FromDragData(DragData data);
 
-
-        //TODO: This could also be an event or something
-        //public DragDropEvent<U> DragDrop;
+        /// <summary>
+        /// Handler drag drop event.
+        /// </summary>
+        /// <param name="dragEventArgs">The drag event arguments.</param>
+        /// <param name="item">The item.</param>
         public virtual void DragDrop(U dragEventArgs, IEnumerable<T> item)
         {
-
         }
 
         /// <summary>
@@ -131,10 +161,10 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         public sealed override void OnDragDrop()
         {
-            if (HasValidDrag) DragDrop(null, Objects);
+            if (HasValidDrag)
+                DragDrop(null, Objects);
             Objects.Clear();
         }
-
 
         /// <summary>
         /// Called when drag drops.
@@ -142,7 +172,8 @@ namespace FlaxEditor.GUI.Drag
         /// <param name="dragEventArgs">Arguments</param>
         public sealed override void OnDragDrop(DragEventArgs dragEventArgs)
         {
-            if (HasValidDrag) DragDrop(dragEventArgs as U, Objects);
+            if (HasValidDrag)
+                DragDrop(dragEventArgs as U, Objects);
             Objects.Clear();
         }
     }

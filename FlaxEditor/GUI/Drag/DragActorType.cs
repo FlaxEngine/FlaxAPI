@@ -8,12 +8,21 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    /// <summary>
+    /// Actor type drag handler.
+    /// </summary>
     public sealed class DragActorType : DragActorType<DragEventArgs>
     {
-        public DragActorType(Func<Type, bool> validateFunction) : base(validateFunction)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DragActorType"/> class.
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
+        public DragActorType(Func<Type, bool> validateFunction)
+        : base(validateFunction)
         {
         }
     }
+
     /// <summary>
     /// Helper class for handling actor type drag and drop (for spawning).
     /// </summary>
@@ -30,7 +39,8 @@ namespace FlaxEditor.GUI.Drag
         /// Creates a new DragHelper
         /// </summary>
         /// <param name="validateFunction">The validation function</param>
-        public DragActorType(Func<Type, bool> validateFunction) : base(validateFunction)
+        public DragActorType(Func<Type, bool> validateFunction)
+        : base(validateFunction)
         {
         }
 
@@ -43,6 +53,11 @@ namespace FlaxEditor.GUI.Drag
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the drag data.
+        /// </summary>
+        /// <param name="item">The actor type.</param>
+        /// <returns>The data</returns>
         public static DragData GetDragData(Type item)
         {
             if (item == null)
@@ -62,7 +77,7 @@ namespace FlaxEditor.GUI.Drag
             {
                 if (dataText.Text.StartsWith(DragPrefix))
                 {
-                    // Remove prefix and parse splitted names
+                    // Remove prefix and parse spitted names
                     var types = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
                     var results = new List<Type>(types.Length);
                     var assembly = Utils.GetAssemblyByName("FlaxEngine");
