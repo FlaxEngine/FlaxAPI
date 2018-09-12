@@ -28,8 +28,8 @@ namespace FlaxEditor.Content.GUI
 
             // Check if drop actor(s)
             if (_dragActors == null)
-                _dragActors = new DragActors();
-            if (_dragActors.OnDragEnter(data, ValidateDragActors))
+                _dragActors = new DragActors(ValidateDragActors);
+            if (_dragActors.OnDragEnter(data))
             {
                 _validDragOver = true;
                 return DragDropEffect.Move;

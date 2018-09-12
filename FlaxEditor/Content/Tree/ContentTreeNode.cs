@@ -135,9 +135,9 @@ namespace FlaxEditor.Content
         protected override DragDropEffect OnDragEnterHeader(DragData data)
         {
             if (_dragOverItems == null)
-                _dragOverItems = new DragItems();
+                _dragOverItems = new DragItems(ValidateDragItem);
 
-            _dragOverItems.OnDragEnter(data, ValidateDragItem);
+            _dragOverItems.OnDragEnter(data);
             return GetDragEffect(data);
         }
 

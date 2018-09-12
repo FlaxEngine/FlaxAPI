@@ -8,54 +8,29 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    public sealed class DragAssets : DragAssets<DragEventArgs>
+    {
+        public DragAssets(Func<AssetItem, bool> validateFunction) : base(validateFunction)
+        {
+        }
+    }
     /// <summary>
     /// Helper class for handling <see cref="AssetItem"/> drag and drop.
     /// </summary>
     /// <seealso cref="AssetItem" />
-    public sealed class DragAssets : DragHelper<AssetItem>
+    public class DragAssets<U> : DragHelper<AssetItem, U> where U : DragEventArgs
     {
         /// <summary>
         /// The default prefix for drag data used for <see cref="ContentItem"/>.
         /// </summary>
-        public const string DragPrefix = DragItems.DragPrefix;
-
-        /// <inheritdoc />
-        protected override void GetherObjects(DragDataText data, Func<AssetItem, bool> validateFunc)
-        {
-            var items = ParseData(data);
-            for (int i = 0; i < items.Length; i++)
-            {
-                if (validateFunc(items[i]))
-                    Objects.Add(items[i]);
-            }
-        }
+        public const string DragPrefix = DragItems<DragEventArgs>.DragPrefix;
 
         /// <summary>
-        /// Tries to parse the drag data to extract <see cref="AssetItem"/> collection.
+        /// Creates a new DragHelper
         /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>Gathered objects or empty array if cannot get any valid.</returns>
-        public static AssetItem[] ParseData(DragDataText data)
+        /// <param name="validateFunction">The validation function</param>
+        public DragAssets(Func<AssetItem, bool> validateFunction) : base(validateFunction)
         {
-            if (data.Text.StartsWith(DragPrefix))
-            {
-                // Remove prefix and parse splitted names
-                var paths = data.Text.Remove(0, DragPrefix.Length).Split('\n');
-                var results = new List<AssetItem>(paths.Length);
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    // Find element
-                    var obj = Editor.Instance.ContentDatabase.Find(paths[i]) as AssetItem;
-
-                    // Check it
-                    if (obj != null)
-                        results.Add(obj);
-                }
-
-                return results.ToArray();
-            }
-
-            return new AssetItem[0];
         }
 
         /// <summary>
@@ -63,29 +38,57 @@ namespace FlaxEditor.GUI.Drag
         /// </summary>
         /// <param name="asset">The asset.</param>
         /// <returns>The data.</returns>
-        public static DragDataText GetDragData(Asset asset)
+        public DragData ToDragData(Asset asset) => GetDragData(asset);
+
+        /// <inheritdoc/>
+        public override DragData ToDragData(AssetItem item) => GetDragData(item);
+
+        /// <inheritdoc/>
+        public override DragData ToDragData(IEnumerable<AssetItem> items) => GetDragData(items);
+
+
+        public static DragData GetDragData(Asset asset)
         {
-            return DragItems.GetDragData(Editor.Instance.ContentDatabase.Find(asset.ID));
+            return DragItems<DragEventArgs>.GetDragData(Editor.Instance.ContentDatabase.Find(asset.ID));
+        }
+        public static DragData GetDragData(AssetItem item)
+        {
+            return DragItems<DragEventArgs>.GetDragData(item);
+        }
+
+        public static DragData GetDragData(IEnumerable<AssetItem> items)
+        {
+            return DragItems<DragEventArgs>.GetDragData(items);
         }
 
         /// <summary>
-        /// Gets the drag data.
+        /// Tries to parse the drag data to extract <see cref="AssetItem"/> collection.
         /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The data.</returns>
-        public static DragDataText GetDragData(AssetItem item)
+        /// <param name="data">The data.</param>
+        /// <returns>Gathered objects or empty array if cannot get any valid.</returns>
+        public override IEnumerable<AssetItem> FromDragData(DragData data)
         {
-            return DragItems.GetDragData(item);
-        }
+            if (data is DragDataText dataText)
+            {
+                if (dataText.Text.StartsWith(DragPrefix))
+                {
+                    // Remove prefix and parse splitted names
+                    var paths = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
+                    var results = new List<AssetItem>(paths.Length);
+                    for (int i = 0; i < paths.Length; i++)
+                    {
+                        // Find element
+                        var obj = Editor.Instance.ContentDatabase.Find(paths[i]) as AssetItem;
 
-        /// <summary>
-        /// Gets the drag data.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        /// <returns>The data.</returns>
-        public static DragDataText GetDragData(IEnumerable<AssetItem> items)
-        {
-            return DragItems.GetDragData(items);
+                        // Check it
+                        if (obj != null)
+                            results.Add(obj);
+                    }
+
+                    return results.ToArray();
+                }
+            }
+            return new AssetItem[0];
         }
     }
 }
