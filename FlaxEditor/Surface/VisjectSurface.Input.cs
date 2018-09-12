@@ -10,6 +10,7 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface
     {
         private string _currentInputText = "";
+
         private string CurrentInputText
         {
             get => _currentInputText;
@@ -322,7 +323,6 @@ namespace FlaxEditor.Surface
 
             if (HasInputSelection)
             {
-
                 if (_hasInputSelectionChanged)
                 {
                     ResetInputSelection();
@@ -433,7 +433,6 @@ namespace FlaxEditor.Surface
 
             if (HasInputSelection)
             {
-
                 if (_hasInputSelectionChanged)
                 {
                     ResetInputSelection();
@@ -447,7 +446,6 @@ namespace FlaxEditor.Surface
                 }
             }
             return false;
-
         }
     }
 }

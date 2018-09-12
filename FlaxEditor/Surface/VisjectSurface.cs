@@ -801,4 +801,4 @@ namespace FlaxEditor.Surface
             base.OnDestroy();
         }
     }
-}
+}

@@ -35,13 +35,14 @@ namespace FlaxEditor.Surface.Archetypes
                 TryParseText = (string filterText, out object[] data) =>
                 {
                     data = null;
-                    if(filterText == "true")
+                    if (filterText == "true")
                     {
-                        data = new object[]{ true };
+                        data = new object[] { true };
                         return true;
-                    } else if(filterText == "false")
+                    }
+                    else if (filterText == "false")
                     {
-                        data = new object[]{ false };
+                        data = new object[] { false };
                         return true;
                     }
                     return false;
@@ -66,9 +67,9 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     data = null;
                     int number;
-                    if(int.TryParse(filterText, out number))
+                    if (int.TryParse(filterText, out number))
                     {
-                        data = new object[]{ number };
+                        data = new object[] { number };
                         return true;
                     }
                     return false;
@@ -93,7 +94,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     data = null;
                     float[] values;
-                    if(TryParseValues(filterText, out values) && values.Length < 2)
+                    if (TryParseValues(filterText, out values) && values.Length < 2)
                     {
                         data = new object[] { values[0] };
                         return true;
@@ -123,7 +124,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     data = null;
                     float[] values;
-                    if(TryParseValues(filterText, out values) && values.Length < 3)
+                    if (TryParseValues(filterText, out values) && values.Length < 3)
                     {
                         data = new object[] { new Vector2(ValuesToVector4(values)) };
                         return true;
@@ -155,7 +156,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     data = null;
                     float[] values;
-                    if(TryParseValues(filterText, out values) && values.Length < 4)
+                    if (TryParseValues(filterText, out values) && values.Length < 4)
                     {
                         data = new object[] { new Vector3(ValuesToVector4(values)) };
                         return true;
@@ -189,7 +190,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     data = null;
                     float[] values;
-                    if(TryParseValues(filterText, out values))
+                    if (TryParseValues(filterText, out values))
                     {
                         data = new object[] { ValuesToVector4(values) };
                         return true;
@@ -219,11 +220,11 @@ namespace FlaxEditor.Surface.Archetypes
                 TryParseText = (string filterText, out object[] data) =>
                 {
                     data = null;
-                    if(!filterText.StartsWith("#")) return false;
+                    if (!filterText.StartsWith("#")) return false;
                     Color color;
-                    if(Color.TryParseHex(filterText, out color))
+                    if (Color.TryParseHex(filterText, out color))
                     {
-                        data = new object[]{ color };
+                        data = new object[] { color };
                         return true;
                     }
                     return false;

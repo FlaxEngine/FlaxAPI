@@ -4,7 +4,12 @@ using FlaxEngine;
 
 namespace FlaxEditor.Surface
 {
-
+    /// <summary>
+    /// Delegate for node data parsing.
+    /// </summary>
+    /// <param name="filterText">The filter text.</param>
+    /// <param name="data">The node data.</param>
+    /// <returns>True if requests has been parsed, otherwise false.</returns>
     public delegate bool NodeArchetypeTryParseHandler(string filterText, out object[] data);
 
     /// <summary>
@@ -78,8 +83,8 @@ namespace FlaxEditor.Surface
         public NodeElementArchetype[] Elements;
 
         /// <summary>
-        /// Tries to parse some text and extract the data from it
+        /// Tries to parse some text and extract the data from it.
         /// </summary>
-        public NodeArchetypeTryParseHandler TryParseText { get; internal set; }
+        public NodeArchetypeTryParseHandler TryParseText;
     }
 }

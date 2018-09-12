@@ -174,7 +174,7 @@ namespace FlaxEditor.Surface.Archetypes
                     default: break;
                     }
                 }
-                
+
                 _layoutHeight = height;
 
                 UpdateTitle();
