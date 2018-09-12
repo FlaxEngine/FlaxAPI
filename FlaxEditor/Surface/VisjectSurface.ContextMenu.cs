@@ -25,6 +25,7 @@ namespace FlaxEditor.Surface
         public void ShowPrimaryMenu(Vector2 location)
         {
             _cmPrimaryMenu.Show(this, location);
+            _cmStartPos = location;
         }
 
         /// <summary>
@@ -51,7 +52,12 @@ namespace FlaxEditor.Surface
 
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
-            var node = SpawnNode(visjectCmItem.GroupArchetype, visjectCmItem.NodeArchetype, _surface.PointFromParent(_cmStartPos));
+            var node = SpawnNode(
+                    visjectCmItem.GroupArchetype,
+                    visjectCmItem.NodeArchetype,
+                    _surface.PointFromParent(_cmStartPos),
+                    visjectCmItem.Data
+                );
 
             // And, if the user is patiently waiting for his box to get connected to the newly created one
             //   fulfill his wish! #MagicLamp? #Genie?

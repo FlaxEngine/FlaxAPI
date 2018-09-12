@@ -278,6 +278,8 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void SelectAll()
         {
+            _hasInputSelectionChanged = true;
+
             for (int i = 0; i < _nodes.Count; i++)
                 _nodes[i].IsSelected = true;
         }
@@ -287,6 +289,8 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void ClearSelection()
         {
+            _hasInputSelectionChanged = true;
+
             for (int i = 0; i < _nodes.Count; i++)
                 _nodes[i].IsSelected = false;
         }
@@ -297,6 +301,8 @@ namespace FlaxEditor.Surface
         /// <param name="node">The node.</param>
         public void AddToSelection(SurfaceNode node)
         {
+            _hasInputSelectionChanged = true;
+
             node.IsSelected = true;
         }
 
@@ -306,6 +312,8 @@ namespace FlaxEditor.Surface
         /// <param name="node">The node.</param>
         public void Select(SurfaceNode node)
         {
+            _hasInputSelectionChanged = true;
+
             ClearSelection();
 
             node.IsSelected = true;
@@ -317,6 +325,8 @@ namespace FlaxEditor.Surface
         /// <param name="nodes">The nodes.</param>
         public void Select(IEnumerable<SurfaceNode> nodes)
         {
+            _hasInputSelectionChanged = true;
+
             ClearSelection();
 
             foreach (var node in nodes)
@@ -331,6 +341,8 @@ namespace FlaxEditor.Surface
         /// <param name="node">The node.</param>
         public void Deselect(SurfaceNode node)
         {
+            _hasInputSelectionChanged = true;
+
             node.IsSelected = false;
         }
 
@@ -340,6 +352,8 @@ namespace FlaxEditor.Surface
         /// <param name="nodes">The nodes.</param>
         public void Delete(IEnumerable<SurfaceNode> nodes)
         {
+            _hasInputSelectionChanged = true;
+
             foreach (var node in nodes)
             {
                 Delete(node);
@@ -352,6 +366,8 @@ namespace FlaxEditor.Surface
         /// <param name="node">The node.</param>
         public void Delete(SurfaceNode node)
         {
+            _hasInputSelectionChanged = true;
+
             if ((node.Archetype.Flags & NodeFlags.NoRemove) == 0)
             {
                 node.RemoveConnections();
@@ -368,6 +384,8 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void Delete()
         {
+            _hasInputSelectionChanged = true;
+
             bool edited = false;
 
             for (int i = 0; i < _nodes.Count; i++)
