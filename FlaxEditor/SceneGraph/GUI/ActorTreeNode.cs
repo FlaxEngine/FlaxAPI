@@ -22,6 +22,7 @@ namespace FlaxEditor.SceneGraph.GUI
         private DragActors _dragActors;
         private DragAssets _dragAssets;
         private DragActorType _dragActorType;
+        private DragHandlers _dragHandlers;
 
         /// <summary>
         /// The actor node that owns this node.
@@ -226,22 +227,34 @@ namespace FlaxEditor.SceneGraph.GUI
                     return DragDropEffect.None;
             }
 
+            if (_dragHandlers == null)
+                _dragHandlers = new DragHandlers();
+
             // Check if drop actors
             if (_dragActors == null)
-                _dragActors = new DragActors();
-            if (_dragActors.OnDragEnter(data, ValidateDragActor))
+            {
+                _dragActors = new DragActors(ValidateDragActor);
+                _dragHandlers.Add(_dragActors);
+            }
+            if (_dragActors.OnDragEnter(data))
                 return _dragActors.Effect;
 
             // Check if drag assets
             if (_dragAssets == null)
-                _dragAssets = new DragAssets();
-            if (_dragAssets.OnDragEnter(data, ValidateDragAsset))
+            {
+                _dragAssets = new DragAssets(ValidateDragAsset);
+                _dragHandlers.Add(_dragAssets);
+            }
+            if (_dragAssets.OnDragEnter(data))
                 return _dragAssets.Effect;
 
             // Check if drag actor type
             if (_dragActorType == null)
-                _dragActorType = new DragActorType();
-            if (_dragActorType.OnDragEnter(data, ValidateDragActorType))
+            {
+                _dragActorType = new DragActorType(ValidateDragActorType);
+                _dragHandlers.Add(_dragActorType);
+            }
+            if (_dragActorType.OnDragEnter(data))
                 return _dragActorType.Effect;
 
             return DragDropEffect.None;
@@ -250,22 +263,13 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <inheritdoc />
         protected override DragDropEffect OnDragMoveHeader(DragData data)
         {
-            if (_dragActors != null && _dragActors.HasValidDrag)
-                return _dragActors.Effect;
-            if (_dragAssets != null && _dragAssets.HasValidDrag)
-                return _dragAssets.Effect;
-            if (_dragActorType != null && _dragActorType.HasValidDrag)
-                return _dragActorType.Effect;
-
-            return DragDropEffect.None;
+            return _dragHandlers.Effect() ?? DragDropEffect.None;
         }
 
         /// <inheritdoc />
         protected override void OnDragLeaveHeader()
         {
-            _dragActors?.OnDragLeave();
-            _dragAssets?.OnDragLeave();
-            _dragActorType?.OnDragLeave();
+            _dragHandlers.OnDragLeave();
         }
 
         private class ReparentAction : IUndoAction
@@ -563,9 +567,7 @@ namespace FlaxEditor.SceneGraph.GUI
             }
 
             // Clear cache
-            _dragActors?.OnDragDrop();
-            _dragAssets?.OnDragDrop();
-            _dragActorType?.OnDragDrop();
+            _dragHandlers.OnDragDrop(null);
 
             // Check if scene has been modified
             if (result != DragDropEffect.None)

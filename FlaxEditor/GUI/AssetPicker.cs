@@ -25,7 +25,7 @@ namespace FlaxEditor.GUI
         private bool _isMosueDown;
         private Vector2 _mosueDownPos;
         private Vector2 _mousePos;
-        private readonly DragAssets _dragOverElement = new DragAssets();
+        private readonly DragAssets _dragOverElement;
 
         /// <summary>
         /// Gets or sets the selected item.
@@ -147,6 +147,7 @@ namespace FlaxEditor.GUI
         {
             _type = assetType;
             _mousePos = Vector2.Minimum;
+            _dragOverElement = new DragAssets(IsValid);
         }
 
         /// <summary>
@@ -371,7 +372,7 @@ namespace FlaxEditor.GUI
             base.OnDragEnter(ref location, data);
 
             // Check if drop asset
-            if (_dragOverElement.OnDragEnter(data, IsValid))
+            if (_dragOverElement.OnDragEnter(data))
             {
             }
 

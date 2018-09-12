@@ -108,8 +108,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var result = base.OnDragEnter(ref location, data);
 
             if (_dragScriptItems == null)
-                _dragScriptItems = new DragScriptItems();
-            if (_dragScriptItems.OnDragEnter(data, ValidateScript))
+                _dragScriptItems = new DragScriptItems(ValidateScript);
+            if (_dragScriptItems.OnDragEnter(data))
                 result = _dragScriptItems.Effect;
 
             return result;

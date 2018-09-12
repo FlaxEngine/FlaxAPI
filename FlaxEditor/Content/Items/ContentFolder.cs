@@ -256,8 +256,8 @@ namespace FlaxEditor.Content
 
             // Check if drop asset(s)
             if (_dragOverItems == null)
-                _dragOverItems = new DragItems();
-            _dragOverItems.OnDragEnter(data, ValidateDragItem);
+                _dragOverItems = new DragItems(ValidateDragItem);
+            _dragOverItems.OnDragEnter(data);
             _validDragOver = _dragOverItems.HasValidDrag;
             return _dragOverItems.Effect;
         }

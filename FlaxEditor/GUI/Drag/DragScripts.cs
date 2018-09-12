@@ -7,57 +7,84 @@ using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
+    public sealed class DragScripts : DragScripts<DragEventArgs>
+    {
+        public DragScripts(Func<Script, bool> validateFunction) : base(validateFunction)
+        {
+        }
+    }
+
     /// <summary>
     /// Helper class for handling <see cref="Script"/> instance drag and drop.
     /// </summary>
     /// <seealso cref="Script" />
-    public sealed class DragScripts : DragHelper<Script>
+    public class DragScripts<U> : DragHelper<Script, U> where U : DragEventArgs
     {
         /// <summary>
         /// The default prefix for drag data used for <see cref="Script"/>.
         /// </summary>
         public const string DragPrefix = "SCRIPT!?";
 
-        /// <inheritdoc />
-        protected override void GatherObjects(DragDataText data, Func<Script, bool> validateFunc)
+        /// <summary>
+        /// Creates a new DragHelper
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
+        public DragScripts(Func<Script, bool> validateFunction) : base(validateFunction)
         {
-            var items = ParseData(data);
-            for (int i = 0; i < items.Length; i++)
-            {
-                if (validateFunc(items[i]))
-                    Objects.Add(items[i]);
-            }
         }
 
-        /// <summary>
-        /// Tries to parse the drag data to extract <see cref="Script"/> collection.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>Gathered objects or empty array if cannot get any valid.</returns>
-        public static Script[] ParseData(DragDataText data)
+
+        /// <inheritdoc/>
+        public override DragData ToDragData(Script item) => GetDragData(item);
+
+        /// <inheritdoc/>
+        public override DragData ToDragData(IEnumerable<Script> items) => GetDragData(items);
+
+        public static DragData GetDragData(Script item)
         {
-            if (data.Text.StartsWith(DragPrefix))
+            if (item == null)
+                throw new ArgumentNullException();
+
+            return new DragDataText(DragPrefix + item.ID.ToString("N"));
+        }
+        public static DragData GetDragData(IEnumerable<Script> items)
+        {
+            if (items == null)
+                throw new ArgumentNullException();
+
+            string text = DragPrefix;
+            foreach (var item in items)
+                text += item.ID.ToString("N") + '\n';
+
+            return new DragDataText(text);
+        }
+
+        public override IEnumerable<Script> FromDragData(DragData data)
+        {
+            if (data is DragDataText dataText)
             {
-                // Remove prefix and parse splitted names
-                var ids = data.Text.Remove(0, DragPrefix.Length).Split('\n');
-                var results = new List<Script>(ids.Length);
-                for (int i = 0; i < ids.Length; i++)
+                if (dataText.Text.StartsWith(DragPrefix))
                 {
-                    // Find element
-                    Guid id;
-                    if (Guid.TryParse(ids[i], out id))
+                    // Remove prefix and parse splitted names
+                    var ids = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
+                    var results = new List<Script>(ids.Length);
+                    for (int i = 0; i < ids.Length; i++)
                     {
-                        var obj = FlaxEngine.Object.Find<Script>(ref id);
+                        // Find element
+                        Guid id;
+                        if (Guid.TryParse(ids[i], out id))
+                        {
+                            var obj = FlaxEngine.Object.Find<Script>(ref id);
 
-                        // Check it
-                        if (obj != null)
-                            results.Add(obj);
+                            // Check it
+                            if (obj != null)
+                                results.Add(obj);
+                        }
                     }
+
+                    return results.ToArray();
                 }
-
-                return results.ToArray();
             }
-
             return new Script[0];
         }
 
@@ -88,36 +115,6 @@ namespace FlaxEditor.GUI.Drag
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Gets the drag data.
-        /// </summary>
-        /// <param name="script">The script.</param>
-        /// <returns>The data.</returns>
-        public static DragDataText GetDragData(Script script)
-        {
-            if (script == null)
-                throw new ArgumentNullException();
-
-            return new DragDataText(DragPrefix + script.ID.ToString("N"));
-        }
-
-        /// <summary>
-        /// Gets the drag data.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        /// <returns>The data.</returns>
-        public static DragDataText GetDragData(IEnumerable<Script> items)
-        {
-            if (items == null)
-                throw new ArgumentNullException();
-
-            string text = DragPrefix;
-            foreach (var item in items)
-                text += item.ID.ToString("N") + '\n';
-
-            return new DragDataText(text);
         }
     }
 }

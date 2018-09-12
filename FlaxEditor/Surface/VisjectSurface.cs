@@ -225,6 +225,8 @@ namespace FlaxEditor.Surface
 
             // Set initial scale to provide nice zoom in effect on startup
             _surface.Scale = new Vector2(0.5f);
+
+            _dragOverItems = new GUI.Drag.DragAssets(ValidateDragItemFunc);
         }
 
         /// <summary>
