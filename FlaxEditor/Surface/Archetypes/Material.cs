@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
@@ -18,10 +19,96 @@ namespace FlaxEditor.Surface.Archetypes
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         public class SurfaceNodeMaterial : SurfaceNode
         {
+            /// <summary>
+            /// Material node input boxes (each enum item value maps to box ID).
+            /// </summary>
+            public enum MaterialNodeBoxes
+            {
+                /// <summary>
+                /// The layer input.
+                /// </summary>
+                Layer = 0,
+
+                /// <summary>
+                /// The color input.
+                /// </summary>
+                Color = 1,
+
+                /// <summary>
+                /// The mask input.
+                /// </summary>
+                Mask = 2,
+
+                /// <summary>
+                /// The emissive input.
+                /// </summary>
+                Emissive = 3,
+
+                /// <summary>
+                /// The metalness input.
+                /// </summary>
+                Metalness = 4,
+
+                /// <summary>
+                /// The specular input.
+                /// </summary>
+                Specular = 5,
+
+                /// <summary>
+                /// The roughness input.
+                /// </summary>
+                Roughness = 6,
+
+                /// <summary>
+                /// The ambient occlusion input.
+                /// </summary>
+                AmbientOcclusion = 7,
+
+                /// <summary>
+                /// The normal input.
+                /// </summary>
+                Normal = 8,
+
+                /// <summary>
+                /// The opacity input.
+                /// </summary>
+                Opacity = 9,
+
+                /// <summary>
+                /// The refraction input.
+                /// </summary>
+                Refraction = 10,
+
+                /// <summary>
+                /// The position offset input.
+                /// </summary>
+                PositionOffset = 11,
+
+                /// <summary>
+                /// The tessellation multiplier input.
+                /// </summary>
+                TessellationMultiplier = 12,
+
+                /// <summary>
+                /// The world displacement input.
+                /// </summary>
+                WorldDisplacement = 13,
+            };
+
             /// <inheritdoc />
             public SurfaceNodeMaterial(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
             {
+            }
+
+            /// <summary>
+            /// Gets the material box.
+            /// </summary>
+            /// <param name="box">The input type.</param>
+            /// <returns>The box</returns>
+            public Box GetBox(MaterialNodeBoxes box)
+            {
+                return GetBox((int)box);
             }
 
             /// <summary>
@@ -34,51 +121,107 @@ namespace FlaxEditor.Surface.Archetypes
                 if (!(Surface.Owner is MaterialWindow materialWindow) || materialWindow.Item == null)
                     return;
 
+                // Layered material
+                if (GetBox(MaterialNodeBoxes.Layer).HasAnyConnection)
+                {
+                    GetBox(MaterialNodeBoxes.Color).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Mask).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Emissive).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Metalness).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Specular).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Roughness).Enabled = false;
+                    GetBox(MaterialNodeBoxes.AmbientOcclusion).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Normal).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Opacity).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Refraction).Enabled = false;
+                    GetBox(MaterialNodeBoxes.PositionOffset).Enabled = false;
+                    GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = false;
+                    GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = false;
+                    return;
+                }
+
                 // Get material info
                 MaterialInfo info;
                 materialWindow.FillMaterialInfo(out info);
-                bool isPostFx = info.Domain == MaterialDomain.PostProcess;
-                bool isDecal = info.Domain == MaterialDomain.Decal;
-                bool isGUI = info.Domain == MaterialDomain.GUI;
-                bool isntLayered = !GetBox(0).HasAnyConnection;
-                bool isSurface = info.Domain == MaterialDomain.Surface && isntLayered;
-                bool isLitSurface = isSurface && info.BlendMode != MaterialBlendMode.Unlit;
-                bool isTransparent = isSurface && info.BlendMode == MaterialBlendMode.Transparent;
-                bool isSurfaceWithTess = isSurface && info.TessellationMode != TessellationMethod.None;
 
                 // Update boxes
-                if (isDecal)
+                switch (info.Domain)
+                {
+                case MaterialDomain.Surface:
+                {
+                    bool isNotUnlit = info.ShadingMode != MaterialShadingMode.Unlit;
+                    bool isTransparent = info.BlendMode == MaterialBlendMode.Transparent;
+                    bool withTess = info.TessellationMode != TessellationMethod.None;
+
+                    GetBox(MaterialNodeBoxes.Color).Enabled = isNotUnlit;
+                    GetBox(MaterialNodeBoxes.Mask).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Emissive).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Metalness).Enabled = isNotUnlit;
+                    GetBox(MaterialNodeBoxes.Specular).Enabled = isNotUnlit;
+                    GetBox(MaterialNodeBoxes.Roughness).Enabled = isNotUnlit;
+                    GetBox(MaterialNodeBoxes.AmbientOcclusion).Enabled = isNotUnlit;
+                    GetBox(MaterialNodeBoxes.Normal).Enabled = isNotUnlit;
+                    GetBox(MaterialNodeBoxes.Opacity).Enabled = isTransparent;
+                    GetBox(MaterialNodeBoxes.Refraction).Enabled = isTransparent;
+                    GetBox(MaterialNodeBoxes.PositionOffset).Enabled = true;
+                    GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = withTess;
+                    GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = withTess;
+                    break;
+                }
+                case MaterialDomain.PostProcess:
+                {
+                    GetBox(MaterialNodeBoxes.Color).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Mask).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Emissive).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Metalness).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Specular).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Roughness).Enabled = false;
+                    GetBox(MaterialNodeBoxes.AmbientOcclusion).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Normal).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Opacity).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Refraction).Enabled = false;
+                    GetBox(MaterialNodeBoxes.PositionOffset).Enabled = false;
+                    GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = false;
+                    GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = false;
+                    break;
+                }
+                case MaterialDomain.Decal:
                 {
                     var mode = info.DecalBlendingMode;
-                    GetBox(1).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Stain; // Color
-                    GetBox(2).Enabled = true; // Mask
-                    GetBox(3).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Emissive; // Emissive
-                    GetBox(4).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Metalness
-                    GetBox(5).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Specular
-                    GetBox(6).Enabled = mode == MaterialDecalBlendingMode.Translucent; // Roughness
-                    GetBox(7).Enabled = false; // Ambient Occlusion
-                    GetBox(8).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Normal; // Normal
-                    GetBox(9).Enabled = true; // Opacity
-                    GetBox(10).Enabled = false; // Refraction
-                    GetBox(11).Enabled = false; // Position Offset
-                    GetBox(12).Enabled = false; // Tessellation Multiplier
-                    GetBox(13).Enabled = false; // World Displacement
+
+                    GetBox(MaterialNodeBoxes.Color).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Stain;
+                    GetBox(MaterialNodeBoxes.Mask).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Emissive).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Emissive;
+                    GetBox(MaterialNodeBoxes.Metalness).Enabled = mode == MaterialDecalBlendingMode.Translucent;
+                    GetBox(MaterialNodeBoxes.Specular).Enabled = mode == MaterialDecalBlendingMode.Translucent;
+                    GetBox(MaterialNodeBoxes.Roughness).Enabled = mode == MaterialDecalBlendingMode.Translucent;
+                    GetBox(MaterialNodeBoxes.AmbientOcclusion).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Normal).Enabled = mode == MaterialDecalBlendingMode.Translucent || mode == MaterialDecalBlendingMode.Normal;
+                    GetBox(MaterialNodeBoxes.Opacity).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Refraction).Enabled = false;
+                    GetBox(MaterialNodeBoxes.PositionOffset).Enabled = false;
+                    GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = false;
+                    GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = false;
+                    break;
                 }
-                else
+                case MaterialDomain.GUI:
                 {
-                    GetBox(1).Enabled = isLitSurface; // Color
-                    GetBox(2).Enabled = isSurface || isGUI; // Mask
-                    GetBox(3).Enabled = isSurface || isPostFx || isGUI; // Emissive
-                    GetBox(4).Enabled = isLitSurface; // Metalness
-                    GetBox(5).Enabled = isLitSurface; // Specular
-                    GetBox(6).Enabled = isLitSurface; // Roughness
-                    GetBox(7).Enabled = isLitSurface; // Ambient Occlusion
-                    GetBox(8).Enabled = isLitSurface; // Normal
-                    GetBox(9).Enabled = isTransparent || isPostFx || isGUI; // Opacity
-                    GetBox(10).Enabled = isTransparent; // Refraction
-                    GetBox(11).Enabled = isSurface; // Position Offset
-                    GetBox(12).Enabled = isSurfaceWithTess; // Tessellation Multiplier
-                    GetBox(13).Enabled = isSurfaceWithTess; // World Displacement
+                    GetBox(MaterialNodeBoxes.Color).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Mask).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Emissive).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Metalness).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Specular).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Roughness).Enabled = false;
+                    GetBox(MaterialNodeBoxes.AmbientOcclusion).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Normal).Enabled = false;
+                    GetBox(MaterialNodeBoxes.Opacity).Enabled = true;
+                    GetBox(MaterialNodeBoxes.Refraction).Enabled = false;
+                    GetBox(MaterialNodeBoxes.PositionOffset).Enabled = false;
+                    GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = false;
+                    GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = false;
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException();
                 }
             }
 
