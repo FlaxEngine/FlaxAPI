@@ -37,7 +37,10 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(20), EditorDisplay("General"), Tooltip("Determinates how materials' color should be blended with the background colors")]
             public MaterialBlendMode BlendMode { get; set; }
 
-            [EditorOrder(30), EditorDisplay("General"), Tooltip("Indicates that material should be renered without backface culling and normals should be fliped for the backfaces")]
+            [EditorOrder(25), EditorDisplay("General"), Tooltip("Defines how material inputs and properties are combined to result the final surface color.")]
+            public MaterialShadingMode ShadingMode { get; set; }
+
+            [EditorOrder(30), EditorDisplay("General"), Tooltip("Indicates that material should be rendered without backface culling and normals should be fliped for the backfaces")]
             public bool TwoSided { get; set; }
 
             [EditorOrder(40), EditorDisplay("General"), Tooltip("True if render in wireframe mode")]
@@ -346,6 +349,7 @@ namespace FlaxEditor.Windows.Assets
                 DecalBlendingMode = info.DecalBlendingMode;
                 PostFxLocation = info.PostFxLocation;
                 BlendMode = info.BlendMode;
+                ShadingMode = info.ShadingMode;
                 Lighting = info.TransparentLighting;
                 Domain = info.Domain;
 
@@ -381,6 +385,7 @@ namespace FlaxEditor.Windows.Assets
                 info.DecalBlendingMode = DecalBlendingMode;
                 info.PostFxLocation = PostFxLocation;
                 info.BlendMode = BlendMode;
+                info.ShadingMode = ShadingMode;
                 info.TransparentLighting = Lighting;
                 info.Domain = Domain;
             }
