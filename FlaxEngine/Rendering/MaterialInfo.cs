@@ -6,33 +6,33 @@ using System.Runtime.InteropServices;
 namespace FlaxEngine.Rendering
 {
     /// <summary>
-    /// Material Domain Type
+    /// Material domain type. Material domain defines the target usage of the material shader.
     /// </summary>
     public enum MaterialDomain : byte
     {
         /// <summary>
-        /// The surface material.
+        /// The surface material. Can be used to render the scene geometry including models and skinned models.
         /// </summary>
         Surface = 0,
 
         /// <summary>
-        /// The post process material.
+        /// The post process material. Can be used to perform custom post-processing of the rendered frame.
         /// </summary>
         PostProcess = 1,
 
         /// <summary>
-        /// The deferred decal material.
+        /// The deferred decal material. Can be used to apply custom overlay or surface modifications to the object surfaces in the world.
         /// </summary>
         Decal = 2,
 
         /// <summary>
-        /// The GUI shader.
+        /// The GUI shader. Can be used to draw custom control interface elements or to add custom effects to the GUI.
         /// </summary>
         GUI = 3,
     }
 
     /// <summary>
-    /// Material Blending Mode
+    /// Material blending modes.
     /// </summary>
     public enum MaterialBlendMode : byte
     {
@@ -45,15 +45,26 @@ namespace FlaxEngine.Rendering
         /// The transparent material. Used during Forward pass rendering.
         /// </summary>
         Transparent = 1,
-
-        /// <summary>
-        /// The unlit material. Emissive channel is used as an output color. Can perform custom lighting operations or just glow. Won't be affected by the lighting pipeline
-        /// </summary>
-        Unlit = 2,
     }
 
     /// <summary>
-    /// Material Transparent Lighting Mode
+    /// Material shading modes. Defines how material inputs and properties are combined to result the final surface color.
+    /// </summary>
+    public enum MaterialShadingMode : byte
+    {
+        /// <summary>
+        /// The unlit material. Emissive channel is used as an output color. Can perform custom lighting operations or just glow. Won't be affected by the lighting pipeline.
+        /// </summary>
+        Unlit = 0,
+
+        /// <summary>
+        /// The default lit material. The most common choice for the material surfaces.
+        /// </summary>
+        Lit = 1,
+    }
+
+    /// <summary>
+    /// Material transparent lighting modes.
     /// </summary>
     public enum MaterialTransparentLighting : byte
     {
@@ -69,7 +80,7 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
-    /// Material usage flags
+    /// Material usage flags.
     /// </summary>
     [Flags]
     public enum MaterialFlags : uint
@@ -282,6 +293,11 @@ namespace FlaxEngine.Rendering
         public MaterialBlendMode BlendMode;
 
         /// <summary>
+        /// The shading mode.
+        /// </summary>
+        public MaterialShadingMode ShadingMode;
+
+        /// <summary>
         /// The flags.
         /// </summary>
         public MaterialFlags Flags;
@@ -331,6 +347,7 @@ namespace FlaxEngine.Rendering
             {
                 Domain = MaterialDomain.Surface,
                 BlendMode = MaterialBlendMode.Opaque,
+                ShadingMode = MaterialShadingMode.Lit,
                 Flags = MaterialFlags.None,
                 TransparentLighting = MaterialTransparentLighting.None,
                 DecalBlendingMode = MaterialDecalBlendingMode.Translucent,
@@ -377,6 +394,7 @@ namespace FlaxEngine.Rendering
         {
             return Domain == other.Domain
                    && BlendMode == other.BlendMode
+                   && ShadingMode == other.ShadingMode
                    && Flags == other.Flags
                    && TransparentLighting == other.TransparentLighting
                    && DecalBlendingMode == other.DecalBlendingMode
@@ -400,6 +418,7 @@ namespace FlaxEngine.Rendering
             {
                 var hashCode = (int)Domain;
                 hashCode = (hashCode * 397) ^ (int)BlendMode;
+                hashCode = (hashCode * 397) ^ (int)ShadingMode;
                 hashCode = (hashCode * 397) ^ (int)Flags;
                 hashCode = (hashCode * 397) ^ (int)TransparentLighting;
                 hashCode = (hashCode * 397) ^ (int)PostFxLocation;
