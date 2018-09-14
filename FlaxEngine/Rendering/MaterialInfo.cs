@@ -48,9 +48,9 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
-    /// Material shading modes. Defines how material inputs and properties are combined to result the final surface color.
+    /// Material shading models. Defines how material inputs and properties are combined to result the final surface color.
     /// </summary>
-    public enum MaterialShadingMode : byte
+    public enum MaterialShadingModel : byte
     {
         /// <summary>
         /// The unlit material. Emissive channel is used as an output color. Can perform custom lighting operations or just glow. Won't be affected by the lighting pipeline.
@@ -300,7 +300,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The shading mode.
         /// </summary>
-        public MaterialShadingMode ShadingMode;
+        public MaterialShadingModel ShadingModel;
 
         /// <summary>
         /// The flags.
@@ -352,7 +352,7 @@ namespace FlaxEngine.Rendering
             {
                 Domain = MaterialDomain.Surface,
                 BlendMode = MaterialBlendMode.Opaque,
-                ShadingMode = MaterialShadingMode.Lit,
+                ShadingModel = MaterialShadingModel.Lit,
                 Flags = MaterialFlags.None,
                 TransparentLighting = MaterialTransparentLighting.None,
                 DecalBlendingMode = MaterialDecalBlendingMode.Translucent,
@@ -399,7 +399,7 @@ namespace FlaxEngine.Rendering
         {
             return Domain == other.Domain
                    && BlendMode == other.BlendMode
-                   && ShadingMode == other.ShadingMode
+                   && ShadingModel == other.ShadingModel
                    && Flags == other.Flags
                    && TransparentLighting == other.TransparentLighting
                    && DecalBlendingMode == other.DecalBlendingMode
@@ -423,7 +423,7 @@ namespace FlaxEngine.Rendering
             {
                 var hashCode = (int)Domain;
                 hashCode = (hashCode * 397) ^ (int)BlendMode;
-                hashCode = (hashCode * 397) ^ (int)ShadingMode;
+                hashCode = (hashCode * 397) ^ (int)ShadingModel;
                 hashCode = (hashCode * 397) ^ (int)Flags;
                 hashCode = (hashCode * 397) ^ (int)TransparentLighting;
                 hashCode = (hashCode * 397) ^ (int)PostFxLocation;

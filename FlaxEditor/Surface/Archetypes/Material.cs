@@ -155,10 +155,10 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                 case MaterialDomain.Surface:
                 {
-                    bool isNotUnlit = info.ShadingMode != MaterialShadingMode.Unlit;
+                    bool isNotUnlit = info.ShadingModel != MaterialShadingModel.Unlit;
                     bool isTransparent = info.BlendMode == MaterialBlendMode.Transparent;
                     bool withTess = info.TessellationMode != TessellationMethod.None;
-                    bool withSubsurface = info.ShadingMode == MaterialShadingMode.Subsurface;
+                    bool withSubsurface = info.ShadingModel == MaterialShadingModel.Subsurface;
 
                     GetBox(MaterialNodeBoxes.Color).Enabled = isNotUnlit;
                     GetBox(MaterialNodeBoxes.Mask).Enabled = true;
