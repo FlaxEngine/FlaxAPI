@@ -61,6 +61,11 @@ namespace FlaxEngine.Rendering
         /// The default lit material. The most common choice for the material surfaces.
         /// </summary>
         Lit = 1,
+
+        /// <summary>
+        /// The subsurface material. Intended for materials like vax or skin that need light scattering to transport simulation through the object.
+        /// </summary>
+        Subsurface = 2,
     }
 
     /// <summary>

@@ -927,6 +927,7 @@ namespace FlaxEditor.Viewport
             new ViewModeOptions(ViewMode.Roughness, "Roughness"),
             new ViewModeOptions(ViewMode.Specular, "Specular"),
             new ViewModeOptions(ViewMode.SpecularColor, "Specular Color"),
+            new ViewModeOptions(ViewMode.SubsurfaceColor, "Subsurface Color"),
             new ViewModeOptions(ViewMode.ShadingModel, "Shading Model"),
             new ViewModeOptions(ViewMode.Emissive, "Emissive Light"),
             new ViewModeOptions(ViewMode.Normals, "Normals"),

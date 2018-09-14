@@ -86,5 +86,10 @@ namespace FlaxEngine.Rendering
         /// Draw motion vectors debug view
         /// </summary>
         MotionVectors = 15,
+
+        /// <summary>
+        /// Draw materials subsurface color debug view
+        /// </summary>
+        SubsurfaceColor = 16,
     }
 }

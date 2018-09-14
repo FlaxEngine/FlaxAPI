@@ -93,6 +93,11 @@ namespace FlaxEditor.Surface.Archetypes
                 /// The world displacement input.
                 /// </summary>
                 WorldDisplacement = 13,
+
+                /// <summary>
+                /// The subsurface color input.
+                /// </summary>
+                SubsurfaceColor = 14,
             };
 
             /// <inheritdoc />
@@ -137,6 +142,7 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(MaterialNodeBoxes.PositionOffset).Enabled = false;
                     GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = false;
                     GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = false;
+                    GetBox(MaterialNodeBoxes.SubsurfaceColor).Enabled = false;
                     return;
                 }
 
@@ -152,6 +158,7 @@ namespace FlaxEditor.Surface.Archetypes
                     bool isNotUnlit = info.ShadingMode != MaterialShadingMode.Unlit;
                     bool isTransparent = info.BlendMode == MaterialBlendMode.Transparent;
                     bool withTess = info.TessellationMode != TessellationMethod.None;
+                    bool withSubsurface = info.ShadingMode == MaterialShadingMode.Subsurface;
 
                     GetBox(MaterialNodeBoxes.Color).Enabled = isNotUnlit;
                     GetBox(MaterialNodeBoxes.Mask).Enabled = true;
@@ -161,11 +168,12 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(MaterialNodeBoxes.Roughness).Enabled = isNotUnlit;
                     GetBox(MaterialNodeBoxes.AmbientOcclusion).Enabled = isNotUnlit;
                     GetBox(MaterialNodeBoxes.Normal).Enabled = isNotUnlit;
-                    GetBox(MaterialNodeBoxes.Opacity).Enabled = isTransparent;
+                    GetBox(MaterialNodeBoxes.Opacity).Enabled = isTransparent || withSubsurface;
                     GetBox(MaterialNodeBoxes.Refraction).Enabled = isTransparent;
                     GetBox(MaterialNodeBoxes.PositionOffset).Enabled = true;
                     GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = withTess;
                     GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = withTess;
+                    GetBox(MaterialNodeBoxes.SubsurfaceColor).Enabled = withSubsurface;
                     break;
                 }
                 case MaterialDomain.PostProcess:
@@ -183,6 +191,7 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(MaterialNodeBoxes.PositionOffset).Enabled = false;
                     GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = false;
                     GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = false;
+                    GetBox(MaterialNodeBoxes.SubsurfaceColor).Enabled = false;
                     break;
                 }
                 case MaterialDomain.Decal:
@@ -202,6 +211,7 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(MaterialNodeBoxes.PositionOffset).Enabled = false;
                     GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = false;
                     GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = false;
+                    GetBox(MaterialNodeBoxes.SubsurfaceColor).Enabled = false;
                     break;
                 }
                 case MaterialDomain.GUI:
@@ -219,6 +229,7 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(MaterialNodeBoxes.PositionOffset).Enabled = false;
                     GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = false;
                     GetBox(MaterialNodeBoxes.WorldDisplacement).Enabled = false;
+                    GetBox(MaterialNodeBoxes.SubsurfaceColor).Enabled = false;
                     break;
                 }
                 default: throw new ArgumentOutOfRangeException();
@@ -263,7 +274,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Material",
                 Description = "Main material node",
                 Flags = NodeFlags.MaterialOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI,
-                Size = new Vector2(150, 280),
+                Size = new Vector2(150, 300),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "", true, ConnectionType.Impulse, 0),
@@ -280,6 +291,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(11, "Position Offset", true, ConnectionType.Vector3, 11),
                     NodeElementArchetype.Factory.Input(12, "Tessellation Multiplier", true, ConnectionType.Float, 12),
                     NodeElementArchetype.Factory.Input(13, "World Displacement", true, ConnectionType.Vector3, 13),
+                    NodeElementArchetype.Factory.Input(14, "Subsurface Color", true, ConnectionType.Vector3, 14),
                 }
             },
             new NodeArchetype
