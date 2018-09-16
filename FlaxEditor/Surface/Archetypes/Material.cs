@@ -533,7 +533,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Per Instance Random",
                 Description = "Per object instance random value",
                 Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(180, 40),
+                Size = new Vector2(200, 40),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
