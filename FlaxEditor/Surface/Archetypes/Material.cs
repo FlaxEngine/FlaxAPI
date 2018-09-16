@@ -531,7 +531,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 19,
                 Title = "Per Instance Random",
-                Description = "Per object instance random value",
+                Description = "Per object instance random value (normalized to range 0-1)",
                 Flags = NodeFlags.MaterialOnly,
                 Size = new Vector2(200, 40),
                 Elements = new[]
