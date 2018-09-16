@@ -273,7 +273,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, surface, arch, groupArch) => new SurfaceNodeMaterial(id, surface, arch, groupArch),
                 Title = "Material",
                 Description = "Main material node",
-                Flags = NodeFlags.MaterialOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.MaterialOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(150, 300),
                 Elements = new[]
                 {

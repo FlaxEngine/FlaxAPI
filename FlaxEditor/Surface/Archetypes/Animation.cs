@@ -113,7 +113,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, surface, arch, groupArch) => new Output(id, surface, arch, groupArch),
                 Title = "Animation Output",
                 Description = "Main animation graph output node",
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(200, 100),
                 DefaultValues = new object[]
                 {
