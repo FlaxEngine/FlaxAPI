@@ -53,7 +53,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     if (assetReference != null)
                     {
                         if (assetReference.UseSmallPicker)
-                            height = 24;
+                            height = 32;
 
                         if (!string.IsNullOrEmpty(assetReference.TypeName))
                         {
