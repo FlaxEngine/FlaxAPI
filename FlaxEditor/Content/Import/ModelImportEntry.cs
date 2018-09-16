@@ -219,7 +219,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// If checked, the importer will try to restore the model material slots.
         /// </summary>
-        [EditorOrder(1100), EditorDisplay("Miscellaneous"), Tooltip("If checked, the importer will try to restore the model material slots.")]
+        [EditorOrder(1100), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the model material slots.")]
         public bool RestoreMaterialsOnReimport { get; set; }
 
         [StructLayout(LayoutKind.Sequential)]
