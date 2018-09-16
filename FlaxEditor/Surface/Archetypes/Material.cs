@@ -527,6 +527,18 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "XYZ", ConnectionType.Vector3, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 19,
+                Title = "Per Instance Random",
+                Description = "Per object instance random value",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(180, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
+                }
+            },
         };
     }
 }
