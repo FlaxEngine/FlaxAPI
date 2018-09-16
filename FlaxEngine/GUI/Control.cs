@@ -427,7 +427,7 @@ namespace FlaxEngine.GUI
         public virtual void PerformLayout(bool force = false)
         {
         }
-        
+
         #region Focus
 
         /// <summary>
@@ -767,7 +767,7 @@ namespace FlaxEngine.GUI
         /// Tooltip can be only visible if mouse is over the control area (see <see cref="IsMouseOver"/>).
         /// </remarks>
         protected virtual bool ShowTooltip => _tooltipText != null;
-        
+
         /// <summary>
         /// Links the tooltip.
         /// </summary>
@@ -897,12 +897,12 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Input location of the point to convert</param>
         /// <returns>Converted point location in window coordinates</returns>
-        public virtual Vector2 PointToWindow(Vector2 location)
+        public Vector2 PointToWindow(Vector2 location)
         {
             location = PointToParent(location);
             if (HasParent)
             {
-                return _parent.PointToWindow(location);
+                location = _parent.PointToWindow(location);
             }
             return location;
         }
@@ -912,14 +912,11 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Input location of the point to convert</param>
         /// <returns>Converted point location in control's space</returns>
-        public virtual Vector2 PointFromWindow(Vector2 location)
+        public Vector2 PointFromWindow(Vector2 location)
         {
-            location = PointFromParent(location);
             if (HasParent)
-            {
-                return _parent.PointFromWindow(location);
-            }
-            return location;
+                location = _parent.PointFromWindow(location);
+            return PointFromParent(location);
         }
 
         /// <summary>
@@ -931,7 +928,9 @@ namespace FlaxEngine.GUI
         {
             location = PointToParent(location);
             if (HasParent)
-                return _parent.ClientToScreen(location);
+            {
+                location = _parent.ClientToScreen(location);
+            }
             return location;
         }
 
@@ -945,7 +944,7 @@ namespace FlaxEngine.GUI
             location = PointFromParent(location);
             if (HasParent)
             {
-                return _parent.ScreenToClient(location);
+                location = _parent.ScreenToClient(location);
             }
             return location;
         }
@@ -953,7 +952,7 @@ namespace FlaxEngine.GUI
         #endregion
 
         #region Control Action
-        
+
         /// <summary>
         ///     Sets location of control and calls event
         ///     <remarks>This method is called from engine when necessary</remarks>

@@ -341,13 +341,5 @@ namespace FlaxEngine.GUI
 
             UpdateThumb();
         }
-
-        /// <inheritdoc />
-        public override Vector2 PointFromWindow(Vector2 location)
-        {
-            if (Parent is Panel panel)
-                location += panel.ViewOffset;
-            return base.PointFromWindow(location);
-        }
     }
 }
