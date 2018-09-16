@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using Newtonsoft.Json;
 
@@ -717,6 +718,7 @@ namespace FlaxEditor.Surface
             }
 
             // For each node
+            var boxes = new List<Box>();
             for (int i = 0; i < _nodes.Count; i++)
             {
                 var node = _nodes[i];
@@ -734,7 +736,7 @@ namespace FlaxEditor.Surface
                 }
 
                 // Boxes
-                var boxes = node.GetBoxes();
+                node.GetBoxes(boxes);
                 stream.Write((ushort)boxes.Count);
                 for (int j = 0; j < boxes.Count; j++)
                 {

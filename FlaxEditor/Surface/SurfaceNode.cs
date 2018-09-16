@@ -267,6 +267,16 @@ namespace FlaxEditor.Surface
             return result;
         }
 
+        internal void GetBoxes(List<Box> result)
+        {
+            result.Clear();
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box box)
+                    result.Add(box);
+            }
+        }
+
         /// <summary>
         /// Called when node gets loaded and elements are created.
         /// </summary>
