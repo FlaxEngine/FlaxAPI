@@ -172,6 +172,10 @@ namespace FlaxEngine.GUI
             if (value == null)
                 value = string.Empty;
 
+            // Filter text
+            if (value.IndexOf('\r') != -1)
+                value = value.Replace("\r", "");
+
             // Clamp length
             if (value.Length > MaxLength)
                 value = value.Substring(0, MaxLength);
@@ -537,6 +541,10 @@ namespace FlaxEngine.GUI
         {
             if (IsReadOnly)
                 return;
+
+            // Filter text
+            if (str.IndexOf('\r') != -1)
+                str = str.Replace("\r", "");
 
             int selectionLength = SelectionLength;
             int charactersLeft = MaxLength - _text.Length + selectionLength;
