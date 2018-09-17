@@ -92,6 +92,7 @@ namespace FlaxEditor.Windows.Assets
             /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
             public class ParametersEditor : CustomEditor
             {
+                private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
                 private int _parametersHash;
 
                 private enum NewParameterType
@@ -146,6 +147,7 @@ namespace FlaxEditor.Windows.Assets
                         var pValue = p.Value;
                         var pGuidType = false;
                         Type pType;
+                        object[] attributes = null;
                         switch (p.Type)
                         {
                         case MaterialParameterType.CubeTexture:
@@ -166,6 +168,8 @@ namespace FlaxEditor.Windows.Assets
                             break;
                         default:
                             pType = p.Value.GetType();
+                            // TODO: support custom attributes with defined value range for parameter (min, max)
+                            attributes = DefaultAttributes;
                             break;
                         }
 
@@ -191,7 +195,8 @@ namespace FlaxEditor.Windows.Assets
                                 win.Asset.Parameters[pIndex].Value = value;
                                 win.Surface.Parameters[pIndex].Value = surfaceParam;
                                 win._paramValueChange = true;
-                            }
+                            },
+                            attributes
                         );
 
                         var propertyLabel = new DragablePropertyNameLabel(p.Name);

@@ -51,6 +51,7 @@ namespace FlaxEditor.Windows.Assets
             /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
             public class ParametersEditor : CustomEditor
             {
+                private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
                 private int _parametersHash;
 
                 /// <inheritdoc />
@@ -85,6 +86,7 @@ namespace FlaxEditor.Windows.Assets
                         var pIndex = i;
                         var pValue = p.Value;
                         Type pType;
+                        object[] attributes = null;
                         switch (p.Type)
                         {
                         case MaterialParameterType.CubeTexture:
@@ -98,10 +100,12 @@ namespace FlaxEditor.Windows.Assets
                         case MaterialParameterType.RenderTargetArray:
                         case MaterialParameterType.RenderTargetCube:
                         case MaterialParameterType.RenderTargetVolume:
-                                pType = typeof(RenderTarget);
+                            pType = typeof(RenderTarget);
                             break;
                         default:
                             pType = p.Value.GetType();
+                            // TODO: support custom attributes with defined value range for parameter (min, max)
+                            attributes = DefaultAttributes;
                             break;
                         }
 
@@ -120,7 +124,8 @@ namespace FlaxEditor.Windows.Assets
                                 var win = (MaterialInstanceWindow)instance;
                                 win.Asset.Parameters[pIndex].Value = value;
                                 win._paramValueChange = true;
-                            }
+                            },
+                            attributes
                         );
 
                         layout.Property(p.Name, propertyValue);
