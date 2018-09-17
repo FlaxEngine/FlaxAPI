@@ -1001,6 +1001,26 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override bool OnMouseWheel(Vector2 location, float delta)
+        {
+            // Base
+            if (base.OnMouseWheel(location, delta))
+                return true;
+
+            // Multiline scroll
+            if (IsMultiline && _text.Length != 0)
+            {
+                var font = Font.GetFont();
+                Vector2 endLocation = font.GetCharPosition(_text, _text.Length, _layout);
+                _targetViewOffset = Vector2.Clamp(_targetViewOffset - new Vector2(0, delta * 10.0f), Vector2.Zero, new Vector2(_targetViewOffset.X, endLocation.Y));
+                return true;
+            }
+
+            // No event handled
+            return false;
+        }
+
+        /// <inheritdoc />
         protected override void SetSizeInternal(ref Vector2 size)
         {
             base.SetSizeInternal(ref size);
