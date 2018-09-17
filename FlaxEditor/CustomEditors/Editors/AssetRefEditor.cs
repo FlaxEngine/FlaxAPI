@@ -46,9 +46,9 @@ namespace FlaxEditor.CustomEditors.Editors
                 _type = Values.Type != typeof(object) || Values[0] == null ? Values.Type : Values[0].GetType();
 
                 float height = 48;
-                if (Values.Info != null)
+                var attributes = Values.GetAttributes();
+                if (attributes != null)
                 {
-                    var attributes = Values.Info.GetCustomAttributes(true);
                     var assetReference = (AssetReferenceAttribute)attributes.FirstOrDefault(x => x is AssetReferenceAttribute);
                     if (assetReference != null)
                     {

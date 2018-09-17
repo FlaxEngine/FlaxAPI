@@ -22,9 +22,9 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             bool isMultiLine = false;
 
-            if (Values.Info != null)
+            var attributes = Values.GetAttributes();
+            if (attributes != null)
             {
-                var attributes = Values.Info.GetCustomAttributes(true);
                 var multiLine = attributes.FirstOrDefault(x => x is MultilineTextAttribute);
                 if (multiLine != null)
                 {

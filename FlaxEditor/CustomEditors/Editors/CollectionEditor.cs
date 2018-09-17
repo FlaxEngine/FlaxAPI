@@ -50,9 +50,9 @@ namespace FlaxEditor.CustomEditors.Editors
             var size = Count;
 
             // Try get MemberCollectionAttribute for collection editor meta
-            if (Values.Info != null)
+            var attributes = Values.GetAttributes();
+            if (attributes != null)
             {
-                var attributes = Values.Info.GetCustomAttributes(true);
                 var memberCollection = (MemberCollectionAttribute)attributes.FirstOrDefault(x => x is MemberCollectionAttribute);
                 if (memberCollection != null)
                 {

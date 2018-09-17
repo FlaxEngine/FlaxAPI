@@ -42,9 +42,9 @@ namespace FlaxEditor.CustomEditors.Editors
             gridControl.SlotsVertically = 1;
 
             LimitAttribute limit = null;
-            if (Values.Info != null)
+            var attributes = Values.GetAttributes();
+            if (attributes != null)
             {
-                var attributes = Values.Info.GetCustomAttributes(true);
                 limit = (LimitAttribute)attributes.FirstOrDefault(x => x is LimitAttribute);
             }
 

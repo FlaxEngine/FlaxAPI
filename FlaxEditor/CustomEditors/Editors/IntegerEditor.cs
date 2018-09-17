@@ -23,9 +23,9 @@ namespace FlaxEditor.CustomEditors.Editors
             _element = null;
 
             // Try get limit attribute for value min/max range setting and slider speed
-            if (Values.Info != null)
+            var attributes = Values.GetAttributes();
+            if (attributes != null)
             {
-                var attributes = Values.Info.GetCustomAttributes(true);
                 var range = attributes.FirstOrDefault(x => x is RangeAttribute);
                 if (range != null)
                 {
@@ -100,9 +100,9 @@ namespace FlaxEditor.CustomEditors.Editors
             GetLimits(out var min, out var max);
 
             // Try get limit attribute for value min/max range setting and slider speed
-            if (Values.Info != null)
+            var attributes = Values.GetAttributes();
+            if (attributes != null)
             {
-                var attributes = Values.Info.GetCustomAttributes(true);
                 var limit = attributes.FirstOrDefault(x => x is LimitAttribute);
                 if (limit != null)
                 {
@@ -269,9 +269,9 @@ namespace FlaxEditor.CustomEditors.Editors
             GetLimits(out var min, out var max);
 
             // Try get limit attribute for value min/max range setting and slider speed
-            if (Values.Info != null)
+            var attributes = Values.GetAttributes();
+            if (attributes != null)
             {
-                var attributes = Values.Info.GetCustomAttributes(true);
                 var limit = attributes.FirstOrDefault(x => x is LimitAttribute);
                 if (limit != null)
                 {

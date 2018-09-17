@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -28,6 +29,7 @@ namespace FlaxEditor.CustomEditors
 
         private readonly GetDelegate _getter;
         private readonly SetDelegate _setter;
+        private readonly object[] _attributes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomValueContainer"/> class.
@@ -35,7 +37,8 @@ namespace FlaxEditor.CustomEditors
         /// <param name="valueType">Type of the value.</param>
         /// <param name="getter">The value getter.</param>
         /// <param name="setter">The value setter.</param>
-        public CustomValueContainer(Type valueType, GetDelegate getter, SetDelegate setter)
+        /// <param name="attributes">The custom type attributes used to override the value editor logic or appearance (eg. instance of <see cref="LimitAttribute"/>).</param>
+        public CustomValueContainer(Type valueType, GetDelegate getter, SetDelegate setter, object[] attributes = null)
         : base(null, valueType)
         {
             if (getter == null || setter == null)
@@ -43,6 +46,7 @@ namespace FlaxEditor.CustomEditors
 
             _getter = getter;
             _setter = setter;
+            _attributes = attributes;
         }
 
         /// <summary>
@@ -52,10 +56,17 @@ namespace FlaxEditor.CustomEditors
         /// <param name="initialValue">The initial value.</param>
         /// <param name="getter">The value getter.</param>
         /// <param name="setter">The value setter.</param>
-        public CustomValueContainer(Type valueType, object initialValue, GetDelegate getter, SetDelegate setter)
-        : this(valueType, getter, setter)
+        /// <param name="attributes">The custom type attributes used to override the value editor logic or appearance (eg. instance of <see cref="LimitAttribute"/>).</param>
+        public CustomValueContainer(Type valueType, object initialValue, GetDelegate getter, SetDelegate setter, object[] attributes = null)
+        : this(valueType, getter, setter, attributes)
         {
             Add(initialValue);
+        }
+
+        /// <inheritdoc />
+        public override object[] GetAttributes()
+        {
+            return _attributes ?? base.GetAttributes();
         }
 
         /// <inheritdoc />

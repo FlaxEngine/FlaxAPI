@@ -235,6 +235,15 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Gets the custom attributes defined for the values source member.
+        /// </summary>
+        /// <returns>The attributes objects array.</returns>
+        public virtual object[] GetAttributes()
+        {
+            return Info?.GetCustomAttributes(true);
+        }
+
+        /// <summary>
         /// Refreshes the specified instance values.
         /// </summary>
         /// <param name="instanceValues">The parent values.</param>

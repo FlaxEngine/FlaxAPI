@@ -65,7 +65,7 @@ namespace FlaxEditor.Surface
         /// Creates the new parameter of the given type.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
+        /// <returns>The created parameter.</returns>
         public static SurfaceParameter Create(ParameterType type)
         {
             // Create new parameter with default values
