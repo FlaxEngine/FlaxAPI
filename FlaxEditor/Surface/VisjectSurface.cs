@@ -18,7 +18,11 @@ namespace FlaxEditor.Surface
     /// <seealso cref="IParametersDependantNode" />
     public partial class VisjectSurface : ContainerControl, IParametersDependantNode
     {
-        private class SurfaceControl : ContainerControl
+        /// <summary>
+        /// The surface root control used to navigate around the view (scale and move it).
+        /// </summary>
+        /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+        protected class SurfaceControl : ContainerControl
         {
             /// <inheritdoc />
             public SurfaceControl()
@@ -36,31 +40,87 @@ namespace FlaxEditor.Surface
             }
         }
 
-        private SurfaceControl _surface;
+        /// <summary>
+        /// The surface control.
+        /// </summary>
+        protected SurfaceControl _surface;
 
         private bool _edited;
-        private float _targeScale = 1.0f;
-        private readonly List<SurfaceNode> _nodes = new List<SurfaceNode>(64);
+        private float _targetScale = 1.0f;
         private float _moveViewWithMouseDragSpeed = 1.0f;
 
-        private bool _leftMouseDown;
-        private bool _rightMouseDown;
-        private Vector2 _leftMouseDownPos = Vector2.Minimum;
-        private Vector2 _rightMouseDownPos = Vector2.Minimum;
-        private Vector2 _mousePos = Vector2.Minimum;
-        private float _mouseMoveAmount;
-
-        private bool _isMovingSelection;
-        private Vector2 _movingSelectionViewPos;
-        private Box _startBox;
-        private Box _lastBoxUnderMouse;
-
-        private VisjectCM _cmPrimaryMenu;
-        private FlaxEngine.GUI.ContextMenu _cmSecondaryMenu;
-        private Vector2 _cmStartPos = Vector2.Minimum;
+        /// <summary>
+        /// The nodes collection.
+        /// </summary>
+        protected readonly List<SurfaceNode> _nodes = new List<SurfaceNode>(64);
 
         /// <summary>
-        /// The owner.
+        /// The left mouse down flag.
+        /// </summary>
+        protected bool _leftMouseDown;
+
+        /// <summary>
+        /// The right mouse down flag.
+        /// </summary>
+        protected bool _rightMouseDown;
+
+        /// <summary>
+        /// The left mouse down position.
+        /// </summary>
+        protected Vector2 _leftMouseDownPos = Vector2.Minimum;
+
+        /// <summary>
+        /// The right mouse down position.
+        /// </summary>
+        protected Vector2 _rightMouseDownPos = Vector2.Minimum;
+
+        /// <summary>
+        /// The mouse position.
+        /// </summary>
+        protected Vector2 _mousePos = Vector2.Minimum;
+
+        /// <summary>
+        /// The mouse movement amount.
+        /// </summary>
+        protected float _mouseMoveAmount;
+
+        /// <summary>
+        /// The is moving selection flag.
+        /// </summary>
+        protected bool _isMovingSelection;
+
+        /// <summary>
+        /// The moving selection view position.
+        /// </summary>
+        protected Vector2 _movingSelectionViewPos;
+
+        /// <summary>
+        /// The start box (for connecting).
+        /// </summary>
+        protected Box _startBox;
+
+        /// <summary>
+        /// The last box under mouse.
+        /// </summary>
+        protected Box _lastBoxUnderMouse;
+
+        /// <summary>
+        /// The primary context menu.
+        /// </summary>
+        protected VisjectCM _cmPrimaryMenu;
+
+        /// <summary>
+        /// The secondary context menu.
+        /// </summary>
+        protected FlaxEngine.GUI.ContextMenu _cmSecondaryMenu;
+
+        /// <summary>
+        /// The context menu start position.
+        /// </summary>
+        protected Vector2 _cmStartPos = Vector2.Minimum;
+
+        /// <summary>
+        /// The surface owner.
         /// </summary>
         public readonly IVisjectSurfaceOwner Owner;
 
@@ -102,21 +162,21 @@ namespace FlaxEditor.Surface
         /// </summary>
         public float ViewScale
         {
-            get => _targeScale;
+            get => _targetScale;
             set
             {
                 // Clamp
                 value = Mathf.Clamp(value, 0.05f, 1.6f);
 
                 // Check if value will change
-                if (Mathf.Abs(value - _targeScale) > 0.0001f)
+                if (Mathf.Abs(value - _targetScale) > 0.0001f)
                 {
                     // Set new target scale
-                    _targeScale = value;
+                    _targetScale = value;
                 }
 
                 // disable view scale animation
-                _surface.Scale = new Vector2(_targeScale);
+                _surface.Scale = new Vector2(_targetScale);
             }
         }
 
@@ -128,7 +188,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether user is moving selected nodes.
         /// </summary>
-        public bool IsMovignSelection => _leftMouseDown && _isMovingSelection && _startBox == null;
+        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _startBox == null;
 
         /// <summary>
         /// Gets a value indicating whether user is connecting nodes.
@@ -642,145 +702,6 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override void Update(float deltaTime)
-        {
-            // Update scale
-            var currentScale = _surface.Scale.X;
-            if (Mathf.Abs(_targeScale - currentScale) > 0.001f)
-            {
-                var scale = new Vector2(Mathf.Lerp(currentScale, _targeScale, deltaTime * 10.0f));
-                _surface.Scale = scale;
-            }
-
-            // Navigate when mouse is near the edge and is doing sth
-            bool isMovingWithMouse = false;
-            if (IsMovignSelection || IsConnecting)
-            {
-                Vector2 moveVector = Vector2.Zero;
-                float edgeDetectDistance = 22.0f;
-                if (_mousePos.X < edgeDetectDistance)
-                {
-                    moveVector.X -= 1;
-                }
-                if (_mousePos.Y < edgeDetectDistance)
-                {
-                    moveVector.Y -= 1;
-                }
-                if (_mousePos.X > Width - edgeDetectDistance)
-                {
-                    moveVector.X += 1;
-                }
-                if (_mousePos.Y > Height - edgeDetectDistance)
-                {
-                    moveVector.Y += 1;
-                }
-                moveVector.Normalize();
-                isMovingWithMouse = moveVector.LengthSquared > Mathf.Epsilon;
-                if (isMovingWithMouse)
-                {
-                    _surface.Location -= moveVector * _moveViewWithMouseDragSpeed;
-                }
-            }
-            _moveViewWithMouseDragSpeed = isMovingWithMouse ? Mathf.Clamp(_moveViewWithMouseDragSpeed + deltaTime * 20.0f, 1.0f, 8.0f) : 1.0f;
-
-            base.Update(deltaTime);
-        }
-
-        /// <inheritdoc />
-        public override void Draw()
-        {
-            // Cache data
-            var style = FlaxEngine.GUI.Style.Current;
-            var rect = new Rectangle(Vector2.Zero, Size);
-
-            // Draw background
-            var background = Owner.GetSurfaceBackground();
-            if (background && background.ResidentMipLevels > 0)
-            {
-                var bSize = background.Size;
-                float bw = bSize.X;
-                float bh = bSize.Y;
-                Vector2 pos = Vector2.Mod(bSize);
-
-                if (pos.X > 0)
-                    pos.X -= bw;
-                if (pos.Y > 0)
-                    pos.Y -= bh;
-
-                int maxI = Mathf.CeilToInt(rect.Width / bw + 1.0f);
-                int maxJ = Mathf.CeilToInt(rect.Height / bh + 1.0f);
-
-                for (int i = 0; i < maxI; i++)
-                {
-                    for (int j = 0; j < maxJ; j++)
-                    {
-                        Render2D.DrawTexture(background, new Rectangle(pos.X + i * bw, pos.Y + j * bh, bw, bh), Color.White);
-                    }
-                }
-            }
-
-            // Selection
-            if (IsSelecting)
-            {
-                var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
-                Render2D.FillRectangle(selectionRect, Color.Orange * 0.4f);
-                Render2D.DrawRectangle(selectionRect, Color.Orange);
-            }
-
-            // Push surface view transform (scale and offset)
-            Render2D.PushTransform(ref _surface._cachedTransform);
-
-            // Draw all connections at once to boost batching process
-            for (int i = 0; i < _nodes.Count; i++)
-            {
-                var node = _nodes[i];
-                for (int j = 0; j < node.Elements.Count; j++)
-                {
-                    if (node.Elements[j] is OutputBox ob && ob.HasAnyConnection)
-                    {
-                        ob.DrawConnections();
-                    }
-                }
-            }
-
-            // Draw connecting line
-            if (IsConnecting)
-            {
-                // Get start position
-                Vector2 startPos = _startBox.ConnectionOrigin;
-
-                // Check if mouse is over any of box
-                Vector2 endPos = _cmPrimaryMenu.Visible ? _surface.PointFromParent(_cmStartPos) : _surface.PointFromParent(_mousePos);
-                Color lineColor = Style.Colors.Connecting;
-                if (_lastBoxUnderMouse != null)
-                {
-                    // Check if can connect boxes
-                    bool canConnect = CanConnectBoxes(_startBox, _lastBoxUnderMouse);
-                    lineColor = canConnect ? Style.Colors.ConnectingValid : Style.Colors.ConnectingInvalid;
-                    endPos = _lastBoxUnderMouse.ConnectionOrigin;
-                }
-
-                // Draw connection
-                OutputBox.DrawConnection(ref startPos, ref endPos, ref lineColor);
-            }
-
-            Render2D.PopTransform();
-
-            // Base
-            base.Draw();
-
-            //Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", _surface.Scale), rect, Enabled ? Color.Red : Color.Black);
-
-            // Draw border
-            if (ContainsFocus)
-                Render2D.DrawRectangle(new Rectangle(0, 0, rect.Width - 2, rect.Height - 2), style.BackgroundSelected);
-
-            // Draw disabled overlay
-            //if (!Enabled)
-            //    Render2D.FillRectangle(rect, new Color(0.2f, 0.2f, 0.2f, 0.5f), true);
-        }
-
-        /// <inheritdoc />
         protected override void SetSizeInternal(ref Vector2 size)
         {
             // Keep view stable
@@ -794,6 +715,9 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            if (IsDisposing)
+                return;
+
             // Cleanup
             _cmPrimaryMenu.Dispose();
             _cmSecondaryMenu.Dispose();

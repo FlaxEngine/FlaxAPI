@@ -98,7 +98,7 @@ namespace FlaxEditor.Surface
                     if (delta.LengthSquared > 0.01f)
                     {
                         // Move selected nodes
-                        delta /= _targeScale;
+                        delta /= _targetScale;
                         for (int i = 0; i < _nodes.Count; i++)
                         {
                             if (_nodes[i].IsSelected)
