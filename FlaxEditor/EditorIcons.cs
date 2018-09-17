@@ -54,6 +54,7 @@ namespace FlaxEditor
         public Sprite Import32;
         public Sprite AddDoc32;
         public Sprite RemoveDoc32;
+        public Sprite BracketsSlash32;
         public Sprite Find32;
         public Sprite Reload32;
         public Sprite ArrowLeft32;

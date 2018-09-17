@@ -670,6 +670,25 @@ namespace FlaxEditor
         }
 
         /// <summary>
+        /// Gets the material shader source code (HLSL shader code).
+        /// </summary>
+        /// <param name="asset">The material asset.</param>
+        /// <returns>The generated source code.</returns>
+        public static string GetMaterialShaderSourceCode(Material asset)
+        {
+            if (asset == null)
+                throw new ArgumentNullException(nameof(asset));
+            if (asset.WaitForLoaded())
+                throw new FlaxException("Failed to load asset.");
+
+            var source = Internal_GetMaterialShaderSourceCode(asset.unmanagedPtr);
+            if (source == null)
+                throw new FlaxException("Failed to get material source code.");
+
+            return source;
+        }
+
+        /// <summary>
         /// Creates the prefab asset from the given root actor. Saves it to the output file path.
         /// </summary>
         /// <param name="path">The output asset path.</param>
@@ -1016,6 +1035,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BakeLightmaps(bool cancel);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetMaterialShaderSourceCode(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);

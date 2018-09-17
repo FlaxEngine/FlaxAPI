@@ -461,6 +461,7 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.PageScale32, _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
             _toolstrip.AddSeparator();
+            _toolstrip.AddButton(editor.Icons.BracketsSlash32, () => ShowSourceCode(_asset)).LinkTooltip("Show generated shader source code");
             _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/materials/index.html")).LinkTooltip("See documentation to learn more");
         }
 
@@ -469,6 +470,38 @@ namespace FlaxEditor.Windows.Assets
             _surface.MarkAsEdited(!_paramValueChange);
             _paramValueChange = false;
             RefreshMainNode();
+        }
+
+        /// <summary>
+        /// Shows the material source code window.
+        /// </summary>
+        /// <param name="material">The material asset.</param>
+        public static void ShowSourceCode(Material material)
+        {
+            var source = Editor.GetMaterialShaderSourceCode(material);
+
+            CreateWindowSettings settings = CreateWindowSettings.Default;
+            settings.ActivateWhenFirstShown = true;
+            settings.AllowMaximize = false;
+            settings.AllowMinimize = false;
+            settings.HasSizingFrame = false;
+            settings.StartPosition = WindowStartPosition.CenterScreen;
+            settings.Size = new Vector2(500, 600);
+            settings.Title = "Material Source";
+            var dialog = Window.Create(settings);
+
+            var copyButton = new Button(4, 4, 100);
+            copyButton.Text = "Copy";
+            copyButton.Clicked += () => Application.ClipboardText = source;
+            copyButton.Parent = dialog.GUI;
+
+            var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);
+            sourceTextBox.Height = settings.Size.Y - sourceTextBox.Top - 2;
+            sourceTextBox.Text = source;
+            sourceTextBox.Parent = dialog.GUI;
+
+            dialog.Show();
+            dialog.Focus();
         }
 
         /// <summary>
