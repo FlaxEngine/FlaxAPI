@@ -45,6 +45,16 @@ namespace FlaxEngine.Rendering
         /// The transparent material. Used during Forward pass rendering.
         /// </summary>
         Transparent = 1,
+
+        /// <summary>
+        /// The additive blend. Material color is used to add to color of the objects behind the surface. Used during Forward pass rendering.
+        /// </summary>
+        Additive = 2,
+
+        /// <summary>
+        /// The multiply blend. Material color is used to multiply color of the objects behind the surface. Used during Forward pass rendering.
+        /// </summary>
+        Multiply = 3,
     }
 
     /// <summary>
