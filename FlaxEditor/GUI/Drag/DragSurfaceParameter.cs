@@ -1,15 +1,32 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
-using FlaxEngine;
+using System.Collections.Generic;
+using FlaxEditor.Content;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Drag
 {
     /// <summary>
-    /// Helper class for handling dropping the surface parameter on the Visject Surface.
+    /// Visject Surface parameter collection drag handler.
     /// </summary>
-    public class DragSurfaceParameter
+    public sealed class DragSurfaceParameters : DragSurfaceParameters<DragEventArgs>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DragSurfaceParameters"/> class.
+        /// </summary>
+        /// <param name="validateFunction">The validation function</param>
+        public DragSurfaceParameters(Func<string, bool> validateFunction)
+        : base(validateFunction)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Helper class for handling <see cref="Surface.SurfaceParameter"/> drag and drop.
+    /// </summary>
+    /// <seealso cref="AssetItem" />
+    public class DragSurfaceParameters<U> : DragHelper<string, U> where U : DragEventArgs
     {
         /// <summary>
         /// The default prefix for drag data used for <see cref="FlaxEditor.Surface.SurfaceParameter"/>.
@@ -17,92 +34,58 @@ namespace FlaxEditor.GUI.Drag
         public const string DragPrefix = "SURFPARAM!?";
 
         /// <summary>
-        /// The parameter name.
+        /// Creates a new DragHelper
         /// </summary>
-        public string Parameter;
-
-        /// <summary>
-        /// Gets a value indicating whether this instance has valid drag data.
-        /// </summary>
-        public bool HasValidDrag => Parameter != null;
-
-        /// <summary>
-        /// Gets the current drag effect.
-        /// </summary>
-        public DragDropEffect Effect => HasValidDrag ? DragDropEffect.Move : DragDropEffect.None;
-
-        /// <summary>
-        /// Invalids the drag data.
-        /// </summary>
-        public void InvalidDrag()
+        /// <param name="validateFunction">The validation function</param>
+        public DragSurfaceParameters(Func<string, bool> validateFunction)
+        : base(validateFunction)
         {
-            Parameter = null;
         }
 
-        /// <summary>
-        /// Called when drag enters.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="validateFunc">The validate function. Check if gathered object is valid to drop it.</param>
-        /// <returns>True if drag event is valid and can be performed, otherwise false.</returns>
-        public bool OnDragEnter(DragData data, Func<string, bool> validateFunc)
-        {
-            if (data == null || validateFunc == null)
-                throw new ArgumentNullException();
+        /// <inheritdoc/>
+        public override DragData ToDragData(string item) => GetDragData(item);
 
-            Parameter = null;
-
-            if (data is DragDataText text)
-                GatherObjects(text, validateFunc);
-
-            return HasValidDrag;
-        }
+        /// <inheritdoc/>
+        public override DragData ToDragData(IEnumerable<string> items) => GetDragData(items);
 
         /// <summary>
-        /// Called when drag leaves.
+        /// Gets the drag data.
         /// </summary>
-        public void OnDragLeave()
+        /// <param name="parameterName">The parameter name.</param>
+        /// <returns>The data.</returns>
+        public static DragData GetDragData(string parameterName)
         {
-            Parameter = null;
-        }
-
-        /// <summary>
-        /// Called when drag drops.
-        /// </summary>
-        public void OnDragDrop()
-        {
-            Parameter = null;
-        }
-
-        /// <summary>
-        /// Gathers the objects from the drag data (text).
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="validateFunc">The validate function. Check if gathered object is valid to drop it.</param>
-        protected virtual void GatherObjects(DragDataText data, Func<string, bool> validateFunc)
-        {
-            if (data.Text.StartsWith(DragPrefix))
-            {
-                // Remove prefix and parse spitted names
-                var name = data.Text.Remove(0, DragPrefix.Length);
-                if (validateFunc(name))
-                {
-                    Parameter = name;
-                }
-            }
+            return new DragDataText(DragPrefix + parameterName);
         }
 
         /// <summary>
         /// Gets the drag data.
         /// </summary>
-        /// <param name="parameter">The parameter name.</param>
+        /// <param name="parameterNames">The parameter names.</param>
         /// <returns>The data.</returns>
-        public static DragDataText GetDragData(string parameter)
+        public static DragData GetDragData(IEnumerable<string> parameterNames)
         {
-            if (parameter == null)
-                throw new ArgumentNullException();
+            // Not supported
+            return null;
+        }
 
-            return new DragDataText(DragPrefix + parameter);
+        /// <summary>
+        /// Tries to parse the drag data to extract parameters collection.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Gathered objects or empty array if cannot get any valid.</returns>
+        public override IEnumerable<string> FromDragData(DragData data)
+        {
+            if (data is DragDataText dataText)
+            {
+                if (dataText.Text.StartsWith(DragPrefix))
+                {
+                    // Remove prefix and parse spitted names
+                    var parameterNames = dataText.Text.Remove(0, DragPrefix.Length).Split('\n');
+                    return parameterNames;
+                }
+            }
+            return new string[0];
         }
     }
 }

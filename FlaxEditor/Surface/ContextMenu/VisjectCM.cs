@@ -12,7 +12,7 @@ namespace FlaxEditor.Surface.ContextMenu
     /// The Visject Surface dedicated context menu for nodes spawning.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
-    public sealed class VisjectCM : ContextMenuBase
+    public class VisjectCM : ContextMenuBase
     {
         private readonly List<VisjectCMGroup> _groups = new List<VisjectCMGroup>(16);
         private readonly TextBox _searchBox;
@@ -26,12 +26,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// The selected item
         /// </summary>
         public VisjectCMItem SelectedItem;
-
-        /// <summary>
-        /// The type of the surface.
-        /// </summary>
-        public readonly SurfaceType Type;
-
+        
         /// <summary>
         /// Event fired when any item in this popup menu gets clicked.
         /// </summary>
@@ -40,11 +35,11 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCM"/> class.
         /// </summary>
-        /// <param name="type">The surface type.</param>
+        /// <param name="groups">The group archetypes.</param>
+        /// <param name="canSpawnNodeType">The surface node type validation helper.</param>
         /// <param name="parametersGetter">The surface parameters getter callback.</param>
-        public VisjectCM(SurfaceType type, Func<List<SurfaceParameter>> parametersGetter)
+        public VisjectCM(List<GroupArchetype> groups, Func<NodeArchetype, bool> canSpawnNodeType, Func<List<SurfaceParameter>> parametersGetter)
         {
-            Type = type;
             _parametersGetter = parametersGetter;
 
             // Context menu dimensions
@@ -78,7 +73,6 @@ namespace FlaxEditor.Surface.ContextMenu
             _panel2 = panel2;
 
             // Init groups
-            var groups = NodeFactory.Groups;
             var nodes = new List<NodeArchetype>();
             foreach (var groupArchetype in groups)
             {
@@ -86,16 +80,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 nodes.Clear();
                 foreach (var nodeArchetype in groupArchetype.Archetypes)
                 {
-                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0)
-                        continue;
-
-                    if (type != SurfaceType.Material && (nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0)
-                        continue;
-
-                    if (type != SurfaceType.AnimationGraph && (nodeArchetype.Flags & NodeFlags.AnimGraphOnly) != 0)
-                        continue;
-
-                    if (type != SurfaceType.Visject && (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
+                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0 || !canSpawnNodeType(nodeArchetype))
                         continue;
 
                     nodes.Add(nodeArchetype);

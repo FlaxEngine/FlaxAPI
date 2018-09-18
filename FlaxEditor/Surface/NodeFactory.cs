@@ -1,9 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -16,9 +14,9 @@ namespace FlaxEditor.Surface
     public static class NodeFactory
     {
         /// <summary>
-        /// The groups collection.
+        /// The default Visject Node archetype groups collection.
         /// </summary>
-        public static readonly List<GroupArchetype> Groups = new List<GroupArchetype>(16)
+        public static readonly List<GroupArchetype> DefaultGroups = new List<GroupArchetype>(16)
         {
             new GroupArchetype
             {
@@ -134,18 +132,19 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets the archetypes for the node.
         /// </summary>
+        /// <param name="groups">The group archetypes.</param>
         /// <param name="groupID">The group identifier.</param>
         /// <param name="typeID">The type identifier.</param>
         /// <param name="gArch">The output group archetype.</param>
         /// <param name="arch">The output node archetype.</param>
         /// <returns>True if found it, otherwise false.</returns>
-        public static bool GetArchetype(ushort groupID, ushort typeID, out GroupArchetype gArch, out NodeArchetype arch)
+        public static bool GetArchetype(List<GroupArchetype> groups, ushort groupID, ushort typeID, out GroupArchetype gArch, out NodeArchetype arch)
         {
             gArch = null;
             arch = null;
 
             // Find archetype for that node
-            foreach (var groupArchetype in Groups)
+            foreach (var groupArchetype in groups)
             {
                 if (groupArchetype.GroupID == groupID && groupArchetype.Archetypes != null)
                 {
@@ -163,22 +162,23 @@ namespace FlaxEditor.Surface
             }
 
             // Error
-            Debug.LogError($"Failed to create Visject Surface node with id: {groupID}:{typeID}");
+            Editor.LogError($"Failed to create Visject Surface node with id: {groupID}:{typeID}");
             return false;
         }
 
         /// <summary>
         /// Creates the node.
         /// </summary>
+        /// <param name="groups">The group archetypes.</param>
         /// <param name="id">The node id.</param>
         /// <param name="surface">The surface.</param>
         /// <param name="groupID">The group identifier.</param>
         /// <param name="typeID">The type identifier.</param>
         /// <returns>Created node or null if failed.</returns>
-        public static SurfaceNode CreateNode(uint id, VisjectSurface surface, ushort groupID, ushort typeID)
+        public static SurfaceNode CreateNode(List<GroupArchetype> groups, uint id, VisjectSurface surface, ushort groupID, ushort typeID)
         {
             // Find archetype for that node
-            foreach (var groupArchetype in Groups)
+            foreach (var groupArchetype in groups)
             {
                 if (groupArchetype.GroupID == groupID && groupArchetype.Archetypes != null)
                 {
@@ -199,7 +199,7 @@ namespace FlaxEditor.Surface
             }
 
             // Error
-            Debug.LogError($"Failed to create Visject Surface node with id: {groupID}:{typeID}");
+            Editor.LogError($"Failed to create Visject Surface node with id: {groupID}:{typeID}");
             return null;
         }
 

@@ -1,7 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using FlaxEngine;
 
@@ -9,7 +7,7 @@ namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
-        private string _currentInputText = "";
+        private string _currentInputText = string.Empty;
 
         private string CurrentInputText
         {
@@ -86,10 +84,12 @@ namespace FlaxEditor.Surface
             // Check if user is selecting or moving node(s)
             if (_leftMouseDown)
             {
-                if (_startBox != null) // Connecting
+                // Connecting
+                if (_startBox != null)
                 {
                 }
-                else if (_isMovingSelection) // Moving
+                // Moving
+                else if (_isMovingSelection)
                 {
                     // Calculate delta (apply view offset)
                     Vector2 viewDelta = _surface.Location - _movingSelectionViewPos;
@@ -114,7 +114,8 @@ namespace FlaxEditor.Surface
                     // Handled
                     return;
                 }
-                else // Selecting
+                // Selecting
+                else
                 {
                     UpdateSelectionRectangle();
 
@@ -367,7 +368,7 @@ namespace FlaxEditor.Surface
             _cmStartPos = _surface.PointToParent(_surface.Parent, PositionAfterNode(node));
             _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
 
-            //If the menu is not fully visible, move the surface a bit 
+            // If the menu is not fully visible, move the surface a bit 
             Vector2 overflow = (_cmStartPos + _cmPrimaryMenu.Size) - _surface.Parent.Size;
             overflow = Vector2.Max(overflow, Vector2.Zero);
 
@@ -386,8 +387,6 @@ namespace FlaxEditor.Surface
                 _cmPrimaryMenu.OnKeyUp(Keys.None);
             }
             ResetInputSelection();
-
-            Debug.Log(currentInputText);
         }
 
         private Vector2 PositionAfterNode(SurfaceNode node)

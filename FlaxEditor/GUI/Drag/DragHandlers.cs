@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEngine;
@@ -21,6 +22,9 @@ namespace FlaxEditor.GUI.Drag
         /// <returns>The drag helper that was just added</returns>
         public DragHelper Add(DragHelper helper)
         {
+            if (helper == null)
+                throw new ArgumentNullException(nameof(helper));
+
             _dragHelpers.Add(helper);
             return helper;
         }

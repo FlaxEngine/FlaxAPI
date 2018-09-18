@@ -224,7 +224,6 @@ namespace FlaxEditor.Surface
                 }
 
                 // Create nodes
-                var type = Type;
                 var nodes = new Dictionary<uint, SurfaceNode>();
                 var nodesData = new Dictionary<uint, NodeDataModel>();
                 for (int i = 0; i < model.Nodes.Length; i++)
@@ -234,23 +233,12 @@ namespace FlaxEditor.Surface
                     // Peek type
                     GroupArchetype groupArchetype;
                     NodeArchetype nodeArchetype;
-                    if (!NodeFactory.GetArchetype(nodeData.GroupID, nodeData.TypeID, out groupArchetype, out nodeArchetype))
+                    if (!NodeFactory.GetArchetype(NodeArchetypes, nodeData.GroupID, nodeData.TypeID, out groupArchetype, out nodeArchetype))
                         throw new InvalidOperationException("Unknown node type.");
 
                     // Validate given node type
-                    {
-                        if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0)
-                            continue;
-
-                        if (type != SurfaceType.Material && (nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0)
-                            continue;
-
-                        if (type != SurfaceType.AnimationGraph && (nodeArchetype.Flags & NodeFlags.AnimGraphOnly) != 0)
-                            continue;
-
-                        if (type != SurfaceType.Visject && (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
-                            continue;
-                    }
+                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0 || !CanSpawnNodeType(nodeArchetype))
+                        continue;
 
                     // Create
                     var node = NodeFactory.CreateNode(idsMapping[nodeData.ID], this, groupArchetype, nodeArchetype);
@@ -326,7 +314,7 @@ namespace FlaxEditor.Surface
                         }
                         else
                         {
-                            Debug.LogWarning("Invalid node custom values.");
+                            Editor.LogWarning("Invalid node custom values.");
                         }
                     }
 

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
@@ -125,11 +126,6 @@ namespace FlaxEditor.Surface
         public readonly IVisjectSurfaceOwner Owner;
 
         /// <summary>
-        /// The surface type.
-        /// </summary>
-        public readonly SurfaceType Type;
-
-        /// <summary>
         /// The style used by the surface.
         /// </summary>
         public readonly SurfaceStyle Style;
@@ -235,26 +231,33 @@ namespace FlaxEditor.Surface
         public readonly SurfaceMeta Meta = new SurfaceMeta();
 
         /// <summary>
+        /// The surface node descriptors collection.
+        /// </summary>
+        public readonly List<GroupArchetype> NodeArchetypes;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurface"/> class.
         /// </summary>
         /// <param name="owner">The owner.</param>
-        /// <param name="type">The type.</param>
-        public VisjectSurface(IVisjectSurfaceOwner owner, SurfaceType type)
+        /// <param name="style">The custom surface style. Use null to create the default style.</param>
+        /// <param name="groups">The custom surface node types. Pass null to use the default nodes set.</param>
+        /// <param name="primaryContextMenu">The custom surface context menu. Pass null to use the default one.</param>
+        public VisjectSurface(IVisjectSurfaceOwner owner, SurfaceStyle style = null, List<GroupArchetype> groups = null, VisjectCM primaryContextMenu = null)
         {
             DockStyle = DockStyle.Fill;
 
             Owner = owner;
-            Type = type;
-            Style = SurfaceStyle.CreateStyleHandler(Editor.Instance, Type);
+            Style = style ?? SurfaceStyle.CreateStyleHandler(Editor.Instance);
             if (Style == null)
                 throw new InvalidOperationException("Missing visject surface style.");
+            NodeArchetypes = groups ?? NodeFactory.DefaultGroups;
 
             // Surface control used to navigate around the view (scale and move it)
             _surface = new SurfaceControl();
             _surface.Parent = this;
 
             // Create primary menu (for nodes spawning)
-            _cmPrimaryMenu = new VisjectCM(type, () => Parameters);
+            _cmPrimaryMenu = primaryContextMenu ?? new VisjectCM(NodeArchetypes, CanSpawnNodeType, () => Parameters);
             _cmPrimaryMenu.OnItemClicked += OnPrimaryMenuButtonClick;
 
             // Create secondary menu (for other actions)
@@ -286,7 +289,19 @@ namespace FlaxEditor.Surface
             // Set initial scale to provide nice zoom in effect on startup
             _surface.Scale = new Vector2(0.5f);
 
-            _dragOverItems = new GUI.Drag.DragAssets(ValidateDragItemFunc);
+            // Init drag handlers
+            DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
+            DragHandlers.Add(_dragParameters = new DragSurfaceParameters<DragDropEventArgs>(ValidateDragParameter));
+        }
+
+        /// <summary>
+        /// Determines whether the specified node archetype can be spawned into the surface.
+        /// </summary>
+        /// <param name="nodeArchetype">The node archetype.</param>
+        /// <returns>True if can spawn this node archetype, otherwise false.</returns>
+        protected virtual bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        {
+            return true;
         }
 
         /// <summary>
@@ -562,7 +577,7 @@ namespace FlaxEditor.Surface
         {
             GroupArchetype groupArchetype;
             NodeArchetype nodeArchetype;
-            if (NodeFactory.GetArchetype(groupID, typeID, out groupArchetype, out nodeArchetype))
+            if (NodeFactory.GetArchetype(NodeArchetypes, groupID, typeID, out groupArchetype, out nodeArchetype))
             {
                 return SpawnNode(groupArchetype, nodeArchetype, location, customValues);
             }
@@ -605,13 +620,19 @@ namespace FlaxEditor.Surface
                 throw new ArgumentNullException();
             Assert.IsTrue(groupArchetype.Archetypes.Contains(nodeArchetype));
 
+            if (!CanSpawnNodeType(nodeArchetype))
+            {
+                Editor.LogWarning("Cannot spawn given node type.");
+                return null;
+            }
+
             var id = GetFreeNodeID();
 
             // Create node
             var node = NodeFactory.CreateNode(id, this, groupArchetype, nodeArchetype);
             if (node == null)
             {
-                Debug.LogError("Failed to create node.");
+                Editor.LogWarning("Failed to create node.");
                 return null;
             }
             _nodes.Add(node);

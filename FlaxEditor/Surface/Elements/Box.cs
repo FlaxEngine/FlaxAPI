@@ -341,7 +341,7 @@ namespace FlaxEditor.Surface.Elements
             var style = Surface.Style;
             Sprite icon;
             if (_currentType == ConnectionType.Impulse || _currentType == ConnectionType.ImpulseSecondary)
-                icon = hasConnections ? style.Icons.ArowClose : style.Icons.ArowOpen;
+                icon = hasConnections ? style.Icons.ArrowClose : style.Icons.ArrowOpen;
             else
                 icon = hasConnections ? style.Icons.BoxClose : style.Icons.BoxOpen;
             Render2D.DrawSprite(icon, rect, color);

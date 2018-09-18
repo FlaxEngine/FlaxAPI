@@ -206,7 +206,7 @@ namespace FlaxEditor.Windows.Assets
                     var win = (AnimationGraphWindow)Values[0];
                     var animatedModel = win.PreviewModelActor;
                     var parameter = animatedModel.Parameters[(int)label.Tag];
-                    return DragSurfaceParameter.GetDragData(parameter.Name);
+                    return DragSurfaceParameters.GetDragData(parameter.Name);
                 }
 
                 /// <summary>
@@ -345,7 +345,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly SplitPanel _split1;
         private readonly SplitPanel _split2;
         private readonly Preview _preview;
-        private readonly VisjectSurface _surface;
+        private readonly AnimGraphSurface _surface;
 
         private readonly ToolStripButton _saveButton;
         private readonly PropertiesProxy _properties;
@@ -356,7 +356,7 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// Gets the graph surface.
         /// </summary>
-        public VisjectSurface Surface => _surface;
+        public AnimGraphSurface Surface => _surface;
 
         /// <summary>
         /// Gets the animated model actor used for the animation preview.
@@ -400,7 +400,7 @@ namespace FlaxEditor.Windows.Assets
             propertiesEditor.Modified += OnGraphPropertyEdited;
 
             // Surface
-            _surface = new VisjectSurface(this, SurfaceType.AnimationGraph)
+            _surface = new AnimGraphSurface(this)
             {
                 Parent = _split1.Panel1,
                 Enabled = false
@@ -478,7 +478,7 @@ namespace FlaxEditor.Windows.Assets
                 if (mainNode == null)
                 {
                     // Error
-                    Debug.LogError("Failed to find main graph node.");
+                    Editor.LogError("Failed to find main graph node.");
                 }
                 return mainNode;
             }
@@ -607,7 +607,7 @@ namespace FlaxEditor.Windows.Assets
                 if (data == null)
                 {
                     // Error
-                    Debug.LogError("Failed to load animation graph surface data.");
+                    Editor.LogError("Failed to load animation graph surface data.");
                     Close();
                     return;
                 }
@@ -616,7 +616,7 @@ namespace FlaxEditor.Windows.Assets
                 if (_surface.Load(data))
                 {
                     // Error
-                    Debug.LogError("Failed to load animation graph surface.");
+                    Editor.LogError("Failed to load animation graph surface.");
                     Close();
                     return;
                 }

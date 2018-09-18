@@ -109,12 +109,12 @@ namespace FlaxEditor.Surface
             /// <summary>
             /// Icon for impulse boxes without connections.
             /// </summary>
-            public Sprite ArowOpen;
+            public Sprite ArrowOpen;
 
             /// <summary>
             /// Icon for impulse boxes with connections.
             /// </summary>
-            public Sprite ArowClose;
+            public Sprite ArrowClose;
         }
 
         /// <summary>
@@ -181,30 +181,14 @@ namespace FlaxEditor.Surface
         /// <summary>
         ///  Function used to create style for the given surface type. Can be overriden to provide some customization via user plugin.
         /// </summary>
-        public static Func<Editor, SurfaceType, SurfaceStyle> CreateStyleHandler = CreateDefault;
+        public static Func<Editor, SurfaceStyle> CreateStyleHandler = CreateDefault;
 
         /// <summary>
         /// Creates the default style.
         /// </summary>
         /// <param name="editor">The editor.</param>
-        /// <param name="surfaceType">Type of the surface.</param>
         /// <returns>Created style.</returns>
-        public static SurfaceStyle CreateDefault(Editor editor, SurfaceType surfaceType)
-        {
-            switch (surfaceType)
-            {
-            case SurfaceType.AnimationGraph:
-            case SurfaceType.Material: return CreateDefaultMaterial(editor);
-            default: throw new NotSupportedException();
-            }
-        }
-
-        /// <summary>
-        /// Creates the material surface style.
-        /// </summary>
-        /// <param name="editor">The editor instance.</param>
-        /// <returns>Created style descriptor.</returns>
-        public static SurfaceStyle CreateDefaultMaterial(Editor editor)
+        public static SurfaceStyle CreateDefault(Editor editor)
         {
             return new SurfaceStyle
             {
@@ -233,8 +217,8 @@ namespace FlaxEditor.Surface
                 {
                     BoxOpen = editor.Icons.VisjectBoxOpen,
                     BoxClose = editor.Icons.VisjectBoxClose,
-                    ArowOpen = editor.Icons.VisjectArrowOpen,
-                    ArowClose = editor.Icons.VisjectArrowClose,
+                    ArrowOpen = editor.Icons.VisjectArrowOpen,
+                    ArrowClose = editor.Icons.VisjectArrowClose,
                 }
             };
         }

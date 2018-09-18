@@ -344,6 +344,7 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\AnimGraphSurface.cs" />
     <Compile Include="Surface\Archetypes\Animation.cs" />
     <Compile Include="Surface\Archetypes\Constants.cs" />
     <Compile Include="Surface\Archetypes\Layers.cs" />
@@ -373,6 +374,7 @@
     <Compile Include="Surface\GroupArchetype.cs" />
     <Compile Include="Surface\IParametersDependantNode.cs" />
     <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
+    <Compile Include="Surface\MaterialSurface.cs" />
     <Compile Include="Surface\NodeArchetype.cs" />
     <Compile Include="Surface\NodeElementArchetype.cs" />
     <Compile Include="Surface\NodeElementType.cs" />
@@ -385,7 +387,6 @@
     <Compile Include="Surface\SurfaceNodeElementControl.cs" />
     <Compile Include="Surface\SurfaceParameter.cs" />
     <Compile Include="Surface\SurfaceStyle.cs" />
-    <Compile Include="Surface\SurfaceType.cs" />
     <Compile Include="Surface\TransformCoordinateSystem.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />
