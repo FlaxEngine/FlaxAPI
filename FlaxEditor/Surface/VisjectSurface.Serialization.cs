@@ -620,7 +620,7 @@ namespace FlaxEditor.Surface
             try
             {
                 // Load graph
-                MemoryStream stream = new MemoryStream(bytes);
+                using (var stream = new MemoryStream(bytes))
                 using (var reader = new BinaryReader(stream))
                 {
                     result = LoadGraph(reader);
@@ -655,10 +655,38 @@ namespace FlaxEditor.Surface
                 ViewCenterPosition = Vector2.Zero;
             }
 
-            // Post load
-            for (int i = 0; i < _nodes.Count; i++)
+            // Load surface comments
+            var commentsData = Meta.GetEntry(666);
+            if (commentsData.Data != null)
             {
-                _nodes[i].OnSurfaceLoaded();
+                using (var stream = new MemoryStream(commentsData.Data))
+                using (var reader = new BinaryReader(stream))
+                {
+                    var commentsCount = reader.ReadInt32();
+
+                    for (int i = 0; i < commentsCount; i++)
+                    {
+                        var title = ReadStr(reader, 71);
+                        var color = new Color(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        var bounds = new Rectangle(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+
+                        var comment = SpawnComment(ref bounds);
+                        if (comment == null)
+                            throw new InvalidOperationException("Failed to create comment.");
+
+                        comment.Title = title;
+                        comment.Color = color;
+
+                        OnControlLoaded(comment);
+                    }
+                }
+            }
+
+            // Post load
+            for (int i = 0; i < _surface.Children.Count; i++)
+            {
+                if (_surface.Children[i] is SurfaceControl control)
+                    control.OnSurfaceLoaded();
             }
 
             // End
@@ -798,6 +826,34 @@ namespace FlaxEditor.Surface
             Meta.Release();
             Meta.AddEntry(10, StructureToByteArray(ref meta10));
 
+            // Save surface comments in surface meta container
+            var comments = Comments;
+            if (comments.Count > 0)
+            {
+                using (var stream = new MemoryStream())
+                using (var writer = new BinaryWriter(stream))
+                {
+                    writer.Write(comments.Count);
+
+                    for (int i = 0; i < comments.Count; i++)
+                    {
+                        var comment = comments[i];
+
+                        WriteStr(writer, comment.Title, 71);
+                        writer.Write(comment.Color.R);
+                        writer.Write(comment.Color.G);
+                        writer.Write(comment.Color.B);
+                        writer.Write(comment.Color.A);
+                        writer.Write(comment.X);
+                        writer.Write(comment.Y);
+                        writer.Write(comment.Width);
+                        writer.Write(comment.Height);
+                    }
+
+                    Meta.AddEntry(666, stream.ToArray());
+                }
+            }
+
             // Save all nodes meta
             VisjectSurfaceMeta11 meta11;
             for (int i = 0; i < _nodes.Count; i++)
@@ -816,9 +872,9 @@ namespace FlaxEditor.Surface
             {
                 // Save graph
                 using (var stream = new MemoryStream())
-                using (var reader = new BinaryWriter(stream))
+                using (var writer = new BinaryWriter(stream))
                 {
-                    result = SaveGraph(reader);
+                    result = SaveGraph(writer);
                     if (result == false)
                         bytes = stream.ToArray();
                 }

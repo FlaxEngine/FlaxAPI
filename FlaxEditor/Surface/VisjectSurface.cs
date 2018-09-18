@@ -308,6 +308,23 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Gets the list of the surface comments.
+        /// </summary>
+        public List<SurfaceComment> Comments
+        {
+            get
+            {
+                var result = new List<SurfaceComment>();
+                for (int i = 0; i < _surface.Children.Count; i++)
+                {
+                    if (_surface.Children[i] is SurfaceComment comment)
+                        result.Add(comment);
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
         /// The metadata.
         /// </summary>
         public readonly SurfaceMeta Meta = new SurfaceMeta();
@@ -619,6 +636,7 @@ namespace FlaxEditor.Surface
                 }
                 else if (_surface.Children[i] is SurfaceControl control && control.IsSelected)
                 {
+                    i--;
                     control.Dispose();
                     edited = true;
                 }
