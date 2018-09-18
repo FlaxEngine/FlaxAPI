@@ -95,7 +95,7 @@ namespace FlaxEditor.Surface
                 for (int i = groupIndex + 1; i < DefaultGroups.Count; i++)
                 {
                     if(group.GroupID == DefaultGroups[i].GroupID)
-                        throw new AccessViolationException("Invalid group ID.");
+                        throw new System.AccessViolationException("Invalid group ID.");
                 }
 
                 for (int nodeIndex = 0; nodeIndex < group.Archetypes.Length; nodeIndex++)
@@ -106,7 +106,7 @@ namespace FlaxEditor.Surface
                     for (int i = nodeIndex + 1; i < group.Archetypes.Length; i++)
                     {
                         if (node.TypeID == group.Archetypes[i].TypeID)
-                            throw new AccessViolationException("Invalid node ID.");
+                            throw new System.AccessViolationException("Invalid node ID.");
                     }
 
                     // Unique box ids
@@ -119,7 +119,7 @@ namespace FlaxEditor.Surface
                                 if (node.Elements[j].Type == NodeElementType.Input || node.Elements[j].Type == NodeElementType.Output)
                                 {
                                     if (node.Elements[i].BoxID == node.Elements[j].BoxID)
-                                        throw new AccessViolationException("Invalid box ID.");
+                                        throw new System.AccessViolationException("Invalid box ID.");
                                 }
                             }
                         }
