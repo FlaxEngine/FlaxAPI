@@ -79,8 +79,13 @@ namespace FlaxEditor.GUI
         /// <returns>Created popup.</returns>
         public static RenamePopup Show(Control control, Rectangle area, string value, bool isMultiline)
         {
-            var rename = new RenamePopup(value, area.Size, isMultiline);
-            rename.Show(control, area.Location + new Vector2(0, (area.Height - rename.Height) * 0.5f));
+            // Calculate the control size in the window space to handle scaled controls
+            var upperLeft = control.PointToWindow(area.UpperLeft);
+            var bottomRight = control.PointToWindow(area.BottomRight);
+            var size = bottomRight - upperLeft;
+
+            var rename = new RenamePopup(value, size, isMultiline);
+            rename.Show(control, area.Location + new Vector2(0, (size.Y - rename.Height) * 0.5f));
             return rename;
         }
 
