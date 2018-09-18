@@ -408,7 +408,7 @@ namespace FlaxEditor.Surface
             }
         }
 
-        private unsafe bool loadGraph(BinaryReader stream)
+        private bool LoadGraph(BinaryReader stream)
         {
             // IMPORTANT! This must match C++ Graph format
 
@@ -417,7 +417,7 @@ namespace FlaxEditor.Surface
             if (tmp != 1963542358)
             {
                 // Error
-                Editor.LogWarning("Invalid Grpah format version");
+                Editor.LogWarning("Invalid Graph format version");
                 return true;
             }
 
@@ -426,8 +426,8 @@ namespace FlaxEditor.Surface
 
             // Load1
             {
-                // Time saved
-                DateTime tiemSaved = new DateTime(stream.ReadInt64());
+                // Time saved (not used anymore to prevent binary diffs after saving unmodified surface)
+                stream.ReadInt64();
                 byte[] guidBytes = new byte[16];
 
                 // Nodes count
@@ -614,7 +614,7 @@ namespace FlaxEditor.Surface
                 MemoryStream stream = new MemoryStream(bytes);
                 using (var reader = new BinaryReader(stream))
                 {
-                    result = loadGraph(reader);
+                    result = LoadGraph(reader);
                 }
             }
             catch (Exception ex)
@@ -659,7 +659,7 @@ namespace FlaxEditor.Surface
             return false;
         }
 
-        private bool saveGraph(BinaryWriter stream)
+        private bool SaveGraph(BinaryWriter stream)
         {
             // IMPORTANT! This must match C++ Graph format
             // Changes: don't write save time and keep engine build constant
@@ -809,7 +809,7 @@ namespace FlaxEditor.Surface
                 using (var stream = new MemoryStream())
                 using (var reader = new BinaryWriter(stream))
                 {
-                    result = saveGraph(reader);
+                    result = SaveGraph(reader);
                     if (result == false)
                         bytes = stream.ToArray();
                 }
