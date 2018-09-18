@@ -175,6 +175,7 @@ namespace FlaxEditor.Surface
             {
                 // Update size
                 Size = Vector2.Max(location, new Vector2(140.0f, _headerRect.Bottom));
+                Surface.MarkAsEdited(false);
             }
             else
             {
@@ -204,6 +205,7 @@ namespace FlaxEditor.Surface
         private void OnRenamed(RenamePopup renamePopup)
         {
             Title = renamePopup.Text;
+            Surface.MarkAsEdited(false);
         }
 
         /// <inheritdoc />
@@ -238,6 +240,7 @@ namespace FlaxEditor.Surface
         private void OnColorChanged(Color color, bool sliding)
         {
             Color = color;
+            Surface.MarkAsEdited(false);
         }
     }
 }
