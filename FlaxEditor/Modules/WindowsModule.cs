@@ -603,7 +603,7 @@ namespace FlaxEditor.Modules
             if (MainWindow == null)
             {
                 // Error
-                Debug.LogError("Failed to create editor main window!");
+                Editor.LogError("Failed to create editor main window!");
                 return;
             }
             UpdateWindowTitle();

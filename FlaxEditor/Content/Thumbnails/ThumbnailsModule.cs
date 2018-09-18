@@ -69,7 +69,7 @@ namespace FlaxEditor.Content.Thumbnails
             if (proxy == null)
             {
                 // Error
-                Debug.LogWarning($"Cannot generate preview for item {item.Path}. Cannot find proxy for it.");
+                Editor.LogWarning($"Cannot generate preview for item {item.Path}. Cannot find proxy for it.");
                 return;
             }
 
@@ -235,7 +235,7 @@ namespace FlaxEditor.Content.Thumbnails
                     // Error
                     _task.Enabled = false;
                     _requests.Clear();
-                    Debug.LogError("Failed to get atlas.");
+                    Editor.LogError("Failed to get atlas.");
                     return;
                 }
 
@@ -266,7 +266,7 @@ namespace FlaxEditor.Content.Thumbnails
                     // Error
                     _task.Enabled = false;
                     _requests.Clear();
-                    Debug.LogError("Failed to occupy previews cache atlas slot.");
+                    Editor.LogError("Failed to occupy previews cache atlas slot.");
                     return;
                 }
 
@@ -335,8 +335,8 @@ namespace FlaxEditor.Content.Thumbnails
                 catch (Exception ex)
                 {
                     // Error
-                    Debug.LogException(ex);
-                    Debug.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
+                    Editor.LogWarning(ex);
+                    Editor.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
                 }
             }
 
@@ -356,7 +356,7 @@ namespace FlaxEditor.Content.Thumbnails
             if (PreviewsCache.Create(path))
             {
                 // Error
-                Debug.LogError("Failed to create thumbnails atlas.");
+                Editor.LogError("Failed to create thumbnails atlas.");
                 return null;
             }
 
@@ -365,7 +365,7 @@ namespace FlaxEditor.Content.Thumbnails
             if (atlas == null)
             {
                 // Error
-                Debug.LogError("Failed to load thumbnails atlas.");
+                Editor.LogError("Failed to load thumbnails atlas.");
                 return null;
             }
 
@@ -451,8 +451,8 @@ namespace FlaxEditor.Content.Thumbnails
                         catch (Exception ex)
                         {
                             // Error
-                            Debug.LogException(ex);
-                            Debug.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
+                            Editor.LogWarning(ex);
+                            Editor.LogWarning($"Failed to prepare thumbnail rendering for {request.Item.ShortName}.");
                         }
                     }
 

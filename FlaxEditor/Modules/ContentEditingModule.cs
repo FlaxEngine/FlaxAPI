@@ -54,7 +54,7 @@ namespace FlaxEditor.Modules
             }
             catch (Exception ex)
             {
-                Debug.LogException(ex);
+                Editor.LogWarning(ex);
             }
             if (window != null && !disableAutoShow)
             {

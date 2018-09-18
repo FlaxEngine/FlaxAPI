@@ -118,8 +118,8 @@ namespace FlaxEditor.SceneGraph
             catch (Exception ex)
             {
                 // Error
-                Debug.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
-                Debug.LogException(ex);
+                Editor.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
+                Editor.LogWarning(ex);
             }
 
             return result;

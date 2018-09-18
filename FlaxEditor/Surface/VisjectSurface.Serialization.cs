@@ -417,7 +417,7 @@ namespace FlaxEditor.Surface
             if (tmp != 1963542358)
             {
                 // Error
-                Debug.LogWarning("Invalid Grpah format version");
+                Editor.LogWarning("Invalid Grpah format version");
                 return true;
             }
 
@@ -452,7 +452,7 @@ namespace FlaxEditor.Surface
                     ushort groupId = stream.ReadUInt16();
 
                     // Create node
-                    var node = NodeFactory.CreateNode(id, this, groupId, typeId);
+                    var node = NodeFactory.CreateNode(NodeArchetypes, id, this, groupId, typeId);
                     if (node == null)
                     {
                         // Error
@@ -488,7 +488,7 @@ namespace FlaxEditor.Surface
                         if (node == null)
                         {
                             // Error
-                            Debug.LogWarning($"Invalid node reference id (param: {param.Name}, node ref: {refID})");
+                            Editor.LogWarning($"Invalid node reference id (param: {param.Name}, node ref: {refID})");
                         }
                         else
                         {
@@ -518,7 +518,7 @@ namespace FlaxEditor.Surface
                     }
                     else
                     {
-                        Debug.LogWarning(string.Format("Invalid node values. Loaded: {0}, expected: {1}. Type: {2}, {3}", valuesCnt, nodeValuesCnt, node.Archetype.Title, node.Archetype.TypeID));
+                        Editor.LogWarning(string.Format("Invalid node values. Loaded: {0}, expected: {1}. Type: {2}, {3}", valuesCnt, nodeValuesCnt, node.Archetype.Title, node.Archetype.TypeID));
 
                         object dummy = null;
                         for (int j = 0; j < valuesCnt; j++)
@@ -546,7 +546,7 @@ namespace FlaxEditor.Surface
                             if (hint.NodeA == null)
                             {
                                 // Error
-                                Debug.LogWarning("Invalid connected node id.");
+                                Editor.LogWarning("Invalid connected node id.");
                             }
                             else
                             {
@@ -583,7 +583,7 @@ namespace FlaxEditor.Surface
                 if (end != '\t')
                 {
                     // Error
-                    Debug.LogWarning("Invalid data.");
+                    Editor.LogWarning("Invalid data.");
                     return true;
                 }
             }
@@ -620,7 +620,7 @@ namespace FlaxEditor.Surface
             catch (Exception ex)
             {
                 // Error
-                Debug.LogException(ex);
+                Editor.LogWarning(ex);
             }
 
             Enabled = true;
@@ -817,7 +817,7 @@ namespace FlaxEditor.Surface
             catch (Exception ex)
             {
                 // Error
-                Debug.LogException(ex);
+                Editor.LogWarning(ex);
             }
 
             Enabled = true;

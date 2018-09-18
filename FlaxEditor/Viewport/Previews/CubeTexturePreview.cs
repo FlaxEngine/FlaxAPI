@@ -39,21 +39,21 @@ namespace FlaxEditor.Viewport.Previews
                 if (_previewMaterial == null || _previewMaterial.WaitForLoaded())
                 {
                     // Error
-                    Debug.LogError("Cannot load preview material.");
+                    Editor.LogError("Cannot load preview material.");
                     return;
                 }
                 var baseMaterial = _previewMaterial.BaseMaterial;
                 if (baseMaterial == null || baseMaterial.WaitForLoaded())
                 {
                     // Error
-                    Debug.LogError("Cannot load base material for preview material.");
+                    Editor.LogError("Cannot load base material for preview material.");
                     return;
                 }
                 var param = _previewMaterial.GetParam("CubeTexture");
                 if (param == null)
                 {
                     // Error
-                    Debug.LogError("Invalid preview material parameters.");
+                    Editor.LogError("Invalid preview material parameters.");
                     return;
                 }
                 param.Value = value;

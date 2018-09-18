@@ -356,7 +356,7 @@ namespace FlaxEditor.Windows.Assets
                 if (_asset == null)
                 {
                     // Error
-                    Debug.LogError(string.Format("Cannot load asset \'{0}\' ({1})", _item.Path, typeof(T)));
+                    Editor.LogError(string.Format("Cannot load asset \'{0}\' ({1})", _item.Path, typeof(T)));
 
                     // Close window
                     Close();

@@ -333,7 +333,7 @@ namespace FlaxEditor.Modules
             }
             else
             {
-                Debug.LogError("Cannot load primary GUI Style font " + EditorAssets.PrimaryFont);
+                Editor.LogError("Cannot load primary GUI Style font " + EditorAssets.PrimaryFont);
             }
 
             // Icons
