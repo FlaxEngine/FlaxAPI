@@ -124,26 +124,76 @@ namespace FlaxEditor.Surface
             Application.ClipboardText = sw.ToString();
         }
 
+        /// <summary>
+        /// The box data model.
+        /// </summary>
         private class BoxDataModel
         {
+            /// <summary>
+            /// The identifier.
+            /// </summary>
             public int ID;
+
+            /// <summary>
+            /// The connected nodes ids.
+            /// </summary>
             public uint[] NodeIDs;
+
+            /// <summary>
+            /// The connected boxes ids.
+            /// </summary>
             public int[] BoxIDs;
         }
 
+        /// <summary>
+        /// The node data model.
+        /// </summary>
         private class NodeDataModel
         {
+            /// <summary>
+            /// The group identifier.
+            /// </summary>
             public ushort GroupID;
+
+            /// <summary>
+            /// The type identifier.
+            /// </summary>
             public ushort TypeID;
+
+            /// <summary>
+            /// The identifier.
+            /// </summary>
             public uint ID;
+
+            /// <summary>
+            /// The x position.
+            /// </summary>
             public float X;
+
+            /// <summary>
+            /// The y position.
+            /// </summary>
             public float Y;
+
+            /// <summary>
+            /// The values.
+            /// </summary>
             public object[] Values;
+
+            /// <summary>
+            /// The boxes.
+            /// </summary>
             public BoxDataModel[] Boxes;
         }
 
+        /// <summary>
+        /// Nodes data model.
+        /// </summary>
         private class NodesDataModel
         {
+            /// <summary>
+            /// The nodes.
+            /// </summary>
             public NodeDataModel[] Nodes;
         }
 

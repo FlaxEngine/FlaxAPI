@@ -87,14 +87,14 @@ namespace FlaxEditor.Surface
         static NodeFactory()
         {
             // Validate all archetypes (reduce mistakes)
-            for (int groupIndex = 0; groupIndex < Groups.Count; groupIndex++)
+            for (int groupIndex = 0; groupIndex < DefaultGroups.Count; groupIndex++)
             {
-                var group = Groups[groupIndex];
+                var group = DefaultGroups[groupIndex];
 
                 // Unique group id
-                for (int i = groupIndex + 1; i < Groups.Count; i++)
+                for (int i = groupIndex + 1; i < DefaultGroups.Count; i++)
                 {
-                    if(group.GroupID == Groups[i].GroupID)
+                    if(group.GroupID == DefaultGroups[i].GroupID)
                         throw new AccessViolationException("Invalid group ID.");
                 }
 
