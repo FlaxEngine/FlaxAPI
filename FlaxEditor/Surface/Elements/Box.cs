@@ -361,7 +361,7 @@ namespace FlaxEditor.Surface.Elements
         /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
-            Surface.OnMosueOverBox(this);
+            Surface.OnMouseOverBox(this);
             base.OnMouseMove(location);
         }
 

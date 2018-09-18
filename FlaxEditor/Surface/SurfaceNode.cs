@@ -11,19 +11,12 @@ namespace FlaxEditor.Surface
     /// <summary>
     /// Visject Surface node control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-    public class SurfaceNode : ContainerControl
+    /// <seealso cref="SurfaceControl" />
+    public class SurfaceNode : SurfaceControl
     {
         private Rectangle _headerRect;
         private Rectangle _closeButtonRect;
         private Rectangle _footerRect;
-        private Vector2 _mousePosition;
-        private bool _isSelected;
-
-        /// <summary>
-        /// The surface.
-        /// </summary>
-        public readonly VisjectSurface Surface;
 
         /// <summary>
         /// The node archetype.
@@ -51,18 +44,6 @@ namespace FlaxEditor.Surface
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether this node is selected.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this node is selected; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsSelected
-        {
-            get => _isSelected;
-            internal set { _isSelected = value; }
-        }
-
-        /// <summary>
         /// The identifier of the node.
         /// </summary>
         public readonly uint ID;
@@ -88,13 +69,10 @@ namespace FlaxEditor.Surface
         /// <param name="nodeArch">The node archetype.</param>
         /// <param name="groupArch">The group archetype.</param>
         public SurfaceNode(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-        : base(0, 0, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
+        : base(surface, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
         {
-            ClipChildren = false;
             Title = nodeArch.Title;
-
             ID = id;
-            Surface = surface;
             Archetype = nodeArch;
             GroupArchetype = groupArch;
 
@@ -146,11 +124,6 @@ namespace FlaxEditor.Surface
                 if (dispose)
                     control.Dispose();
             }
-        }
-
-        internal bool HitsHeader(ref Vector2 location)
-        {
-            return _headerRect.MakeOffseted(Location).Contains(ref location);
         }
 
         /// <summary>
@@ -277,19 +250,17 @@ namespace FlaxEditor.Surface
             }
         }
 
-        /// <summary>
-        /// Called when node gets loaded and elements are created.
-        /// </summary>
-        public virtual void OnLoaded()
+        /// <inheritdoc />
+        public override bool CanSelect(ref Vector2 location)
         {
+            return _headerRect.MakeOffseted(Location).Contains(ref location);
         }
 
-        /// <summary>
-        /// Called when surface gets loaded and boxes are connected.
-        /// </summary>
-        public virtual void OnSurfaceLoaded()
+        /// <inheritdoc />
+        public override void OnSurfaceLoaded()
         {
-            UpdateRectangles();
+            base.OnSurfaceLoaded();
+
             UpdateBoxesTypes();
 
             for (int i = 0; i < Elements.Count; i++)
@@ -319,10 +290,8 @@ namespace FlaxEditor.Surface
             UpdateBoxesTypes();
         }
 
-        /// <summary>
-        /// Updates the cached rectangles on node size change.
-        /// </summary>
-        protected virtual void UpdateRectangles()
+        /// <inheritdoc />
+        protected override void UpdateRectangles()
         {
             const float footerSize = Constants.NodeFooterSize;
             const float headerSize = Constants.NodeHeaderSize;
@@ -366,30 +335,6 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override void OnMouseEnter(Vector2 location)
-        {
-            _mousePosition = location;
-
-            base.OnMouseEnter(location);
-        }
-
-        /// <inheritdoc />
-        public override void OnMouseMove(Vector2 location)
-        {
-            _mousePosition = location;
-
-            base.OnMouseMove(location);
-        }
-
-        /// <inheritdoc />
-        public override void OnMouseLeave()
-        {
-            _mousePosition = Vector2.Minimum;
-
-            base.OnMouseLeave();
-        }
-
-        /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             if (base.OnMouseUp(location, buttons))
@@ -414,22 +359,6 @@ namespace FlaxEditor.Surface
             }
 
             return false;
-        }
-
-        /// <inheritdoc />
-        protected override void SetScaleInternal(ref Vector2 scale)
-        {
-            base.SetScaleInternal(ref scale);
-
-            UpdateRectangles();
-        }
-
-        /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
-        {
-            base.SetSizeInternal(ref size);
-
-            UpdateRectangles();
         }
     }
 }

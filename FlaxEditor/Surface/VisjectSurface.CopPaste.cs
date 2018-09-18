@@ -10,6 +10,9 @@ using FlaxEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+// ReSharper disable ClassNeverInstantiated.Local
+#pragma warning disable 649
+
 namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
@@ -368,7 +371,7 @@ namespace FlaxEditor.Surface
                         }
                     }
 
-                    OnNodeLoaded(node);
+                    OnControlLoaded(node);
                 }
 
                 // Setup connections

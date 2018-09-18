@@ -560,7 +560,7 @@ namespace FlaxEditor.Surface
                     // Meta
                     node.Meta.Load(engineBuild, stream);
 
-                    OnNodeLoaded(node);
+                    OnControlLoaded(node);
                 }
 
                 // Visject Meta

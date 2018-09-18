@@ -35,6 +35,8 @@ namespace FlaxEditor.Surface
         public void ShowSecondaryCM(Vector2 location)
         {
             var selection = Selection;
+            if (selection.Count == 0)
+                return;
 
             // Update context menu buttons
             _cmPasteButton.Enabled = CanPaste();

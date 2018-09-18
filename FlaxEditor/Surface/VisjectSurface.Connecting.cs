@@ -102,7 +102,7 @@ namespace FlaxEditor.Surface
             return result;
         }
 
-        internal void OnMosueOverBox(Box box)
+        internal void OnMouseOverBox(Box box)
         {
             _lastBoxUnderMouse = box;
         }

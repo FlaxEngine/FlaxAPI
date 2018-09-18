@@ -23,10 +23,10 @@ namespace FlaxEditor.Surface
         /// The surface root control used to navigate around the view (scale and move it).
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-        protected class SurfaceControl : ContainerControl
+        protected class SurfaceRootControl : ContainerControl
         {
             /// <inheritdoc />
-            public SurfaceControl()
+            public SurfaceRootControl()
             {
                 CanFocus = false;
                 ClipChildren = false;
@@ -39,16 +39,71 @@ namespace FlaxEditor.Surface
                 location = PointFromParent(locationParent);
                 return true;
             }
+
+            /// <summary>
+            /// Draws the comments. Render them before other controls to prevent foreground override.
+            /// </summary>
+            public virtual void DrawComments()
+            {
+                Render2D.PushTransform(ref _cachedTransform);
+
+                // Push clipping mask
+                if (ClipChildren)
+                {
+                    Rectangle clientArea;
+                    GetDesireClientArea(out clientArea);
+                    Render2D.PushClip(ref clientArea);
+                }
+
+                // Draw all visible child comments
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    var child = _children[i];
+
+                    if (child is SurfaceComment && child.Visible)
+                    {
+                        Render2D.PushTransform(ref child._cachedTransform);
+                        child.Draw();
+                        Render2D.PopTransform();
+                    }
+                }
+
+                // Pop clipping mask
+                if (ClipChildren)
+                {
+                    Render2D.PopClip();
+                }
+
+                Render2D.PopTransform();
+            }
+
+            /// <inheritdoc />
+            protected override void DrawChildren()
+            {
+                // Skip comments (render them to as background manually by Visject Surface)
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    var child = _children[i];
+
+                    if (!(child is SurfaceComment) && child.Visible)
+                    {
+                        Render2D.PushTransform(ref child._cachedTransform);
+                        child.Draw();
+                        Render2D.PopTransform();
+                    }
+                }
+            }
         }
 
         /// <summary>
         /// The surface control.
         /// </summary>
-        protected SurfaceControl _surface;
+        protected SurfaceRootControl _surface;
 
         private bool _edited;
         private float _targetScale = 1.0f;
         private float _moveViewWithMouseDragSpeed = 1.0f;
+        private bool _wasMouseDownSinceCommentCreatingStart;
 
         /// <summary>
         /// The nodes collection.
@@ -64,6 +119,11 @@ namespace FlaxEditor.Surface
         /// The right mouse down flag.
         /// </summary>
         protected bool _rightMouseDown;
+
+        /// <summary>
+        /// The flag for keyboard key down for comment creating.
+        /// </summary>
+        protected bool _isCommentCreateKeyDown;
 
         /// <summary>
         /// The left mouse down position.
@@ -179,17 +239,22 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether user is selecting nodes.
         /// </summary>
-        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _startBox == null;
+        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _startBox == null && !_isCommentCreateKeyDown;
 
         /// <summary>
         /// Gets a value indicating whether user is moving selected nodes.
         /// </summary>
-        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _startBox == null;
+        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _startBox == null && !_isCommentCreateKeyDown;
 
         /// <summary>
         /// Gets a value indicating whether user is connecting nodes.
         /// </summary>
         public bool IsConnecting => _startBox != null;
+
+        /// <summary>
+        /// Gets a value indicating whether user is creating comment.
+        /// </summary>
+        public bool IsCreatingComment => _isCommentCreateKeyDown && _leftMouseDown && !_isMovingSelection && _startBox == null;
 
         /// <summary>
         /// Returns true if any node is selected by the user (one or more).
@@ -253,7 +318,7 @@ namespace FlaxEditor.Surface
             NodeArchetypes = groups ?? NodeFactory.DefaultGroups;
 
             // Surface control used to navigate around the view (scale and move it)
-            _surface = new SurfaceControl();
+            _surface = new SurfaceRootControl();
             _surface.Parent = this;
 
             // Create primary menu (for nodes spawning)
@@ -355,8 +420,11 @@ namespace FlaxEditor.Surface
         {
             _hasInputSelectionChanged = true;
 
-            for (int i = 0; i < _nodes.Count; i++)
-                _nodes[i].IsSelected = true;
+            for (int i = 0; i < _surface.Children.Count; i++)
+            {
+                if (_surface.Children[i] is SurfaceControl control)
+                    control.IsSelected = true;
+            }
         }
 
         /// <summary>
@@ -366,96 +434,153 @@ namespace FlaxEditor.Surface
         {
             _hasInputSelectionChanged = true;
 
-            for (int i = 0; i < _nodes.Count; i++)
-                _nodes[i].IsSelected = false;
+            for (int i = 0; i < _surface.Children.Count; i++)
+            {
+                if (_surface.Children[i] is SurfaceControl control)
+                    control.IsSelected = false;
+            }
         }
 
         /// <summary>
-        /// Adds the specified node to the selection.
+        /// Adds the specified control to the selection.
         /// </summary>
-        /// <param name="node">The node.</param>
-        public void AddToSelection(SurfaceNode node)
+        /// <param name="control">The control.</param>
+        public void AddToSelection(SurfaceControl control)
         {
             _hasInputSelectionChanged = true;
 
-            node.IsSelected = true;
+            control.IsSelected = true;
         }
 
         /// <summary>
-        /// Selects the specified node.
+        /// Selects the specified control.
         /// </summary>
-        /// <param name="node">The node.</param>
-        public void Select(SurfaceNode node)
+        /// <param name="control">The control.</param>
+        public void Select(SurfaceControl control)
         {
             _hasInputSelectionChanged = true;
 
             ClearSelection();
 
-            node.IsSelected = true;
+            control.IsSelected = true;
         }
 
         /// <summary>
-        /// Selects the specified nodes collection.
+        /// Selects the specified controls collection.
         /// </summary>
-        /// <param name="nodes">The nodes.</param>
-        public void Select(IEnumerable<SurfaceNode> nodes)
+        /// <param name="controls">The controls.</param>
+        public void Select(IEnumerable<SurfaceControl> controls)
         {
             _hasInputSelectionChanged = true;
 
             ClearSelection();
 
-            foreach (var node in nodes)
+            foreach (var control in controls)
             {
-                node.IsSelected = true;
+                control.IsSelected = true;
             }
         }
 
         /// <summary>
-        /// Deselects the specified node.
+        /// Deselects the specified control.
         /// </summary>
-        /// <param name="node">The node.</param>
-        public void Deselect(SurfaceNode node)
+        /// <param name="control">The control.</param>
+        public void Deselect(SurfaceControl control)
         {
             _hasInputSelectionChanged = true;
 
-            node.IsSelected = false;
+            control.IsSelected = false;
         }
 
         /// <summary>
-        /// Deletes the specified collection of the nodes.
+        /// Creates the comment around the selected nodes.
         /// </summary>
-        /// <param name="nodes">The nodes.</param>
-        public void Delete(IEnumerable<SurfaceNode> nodes)
+        public void CommentSelection()
+        {
+            var selection = Selection;
+            if (selection.Count == 0)
+                return;
+
+            Rectangle surfaceArea = selection[0].Bounds.MakeExpanded(80.0f);
+            for (int i = 1; i < selection.Count; i++)
+            {
+                surfaceArea = Rectangle.Union(surfaceArea, selection[i].Bounds.MakeExpanded(80.0f));
+            }
+
+            CreateComment(ref surfaceArea);
+        }
+
+        /// <summary>
+        /// Spawns the comment object. Used by the <see cref="CreateComment"/> and loading method. Can be overriden to provide custom comment object implementations.
+        /// </summary>
+        /// <param name="surfaceArea">The surface area.</param>
+        /// <returns>The comment object</returns>
+        protected virtual SurfaceComment SpawnComment(ref Rectangle surfaceArea)
+        {
+            return new SurfaceComment(this, ref surfaceArea);
+        }
+
+        /// <summary>
+        /// Creates the comment.
+        /// </summary>
+        /// <param name="surfaceArea">The surface area to create comment.</param>
+        /// <returns>The comment object</returns>
+        public SurfaceComment CreateComment(ref Rectangle surfaceArea)
+        {
+            // Create comment
+            var comment = SpawnComment(ref surfaceArea);
+            if (comment == null)
+            {
+                Editor.LogWarning("Failed to create comment.");
+                return null;
+            }
+
+            // Initialize
+            OnControlLoaded(comment);
+            comment.OnSurfaceLoaded();
+
+            MarkAsEdited();
+
+            return comment;
+        }
+
+        /// <summary>
+        /// Deletes the specified collection of the controls.
+        /// </summary>
+        /// <param name="controls">The controls.</param>
+        public void Delete(IEnumerable<SurfaceControl> controls)
         {
             _hasInputSelectionChanged = true;
 
-            foreach (var node in nodes)
+            foreach (var control in controls)
             {
-                Delete(node);
+                Delete(control);
             }
         }
 
         /// <summary>
-        /// Deletes the specified node.
+        /// Deletes the specified control.
         /// </summary>
-        /// <param name="node">The node.</param>
-        public void Delete(SurfaceNode node)
+        /// <param name="control">The control.</param>
+        public void Delete(SurfaceControl control)
         {
             _hasInputSelectionChanged = true;
 
-            if ((node.Archetype.Flags & NodeFlags.NoRemove) == 0)
+            if (control is SurfaceNode node)
             {
+                if ((node.Archetype.Flags & NodeFlags.NoRemove) != 0)
+                    return;
+
                 node.RemoveConnections();
-                node.Dispose();
-
                 _nodes.Remove(node);
-
-                MarkAsEdited();
             }
+
+            control.Dispose();
+            MarkAsEdited();
         }
 
         /// <summary>
-        /// Deletes the selected nodes.
+        /// Deletes the selected controls.
         /// </summary>
         public void Delete()
         {
@@ -463,18 +588,21 @@ namespace FlaxEditor.Surface
 
             bool edited = false;
 
-            for (int i = 0; i < _nodes.Count; i++)
+            for (int i = 0; i < _surface.Children.Count; i++)
             {
-                var node = _nodes[i];
-
-                if (node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
+                if (_surface.Children[i] is SurfaceNode node && node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
                 {
                     node.RemoveConnections();
                     node.Dispose();
 
-                    _nodes.RemoveAt(i);
+                    _nodes.Remove(node);
                     i--;
 
+                    edited = true;
+                }
+                else if (_surface.Children[i] is SurfaceControl control && control.IsSelected)
+                {
+                    control.Dispose();
                     edited = true;
                 }
             }
@@ -645,7 +773,7 @@ namespace FlaxEditor.Surface
                 else
                     throw new InvalidOperationException("Invalid node custom values.");
             }
-            OnNodeLoaded(node);
+            OnControlLoaded(node);
             node.OnSurfaceLoaded();
             node.Location = location;
 
@@ -658,7 +786,7 @@ namespace FlaxEditor.Surface
         /// Called when node gets loaded and should be added to the surface. Creates node elements from the archetype.
         /// </summary>
         /// <param name="node">The node.</param>
-        private void OnNodeLoaded(SurfaceNode node)
+        protected virtual void OnNodeLoaded(SurfaceNode node)
         {
             // Create child elements of the node based on it's archetype
             for (int i = 0; i < node.Archetype.Elements.Length; i++)
@@ -716,10 +844,29 @@ namespace FlaxEditor.Surface
                 node.Location = meta11.Position;
                 //node.IsSelected = meta11.Selected;
             }
+        }
 
-            // Link node
-            node.OnLoaded();
-            node.Parent = _surface;
+        /// <summary>
+        /// Called when control gets loaded and should be added to the surface. Handles surface nodes initialization.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        protected virtual void OnControlLoaded(SurfaceControl control)
+        {
+            if (control is SurfaceNode node)
+            {
+                // Initialize node
+                OnNodeLoaded(node);
+            }
+
+            // Link control
+            control.OnLoaded();
+            control.Parent = _surface;
+
+            if (control is SurfaceComment)
+            {
+                // Move comments to the background
+                control.IndexInParent = 0;
+            }
         }
 
         /// <inheritdoc />

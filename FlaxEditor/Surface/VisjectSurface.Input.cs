@@ -7,6 +7,11 @@ namespace FlaxEditor.Surface
 {
     public partial class VisjectSurface
     {
+        /// <summary>
+        /// The create comment key shortcut.
+        /// </summary>
+        public Keys CreateCommentKey = Keys.C;
+
         private string _currentInputText = string.Empty;
 
         private string CurrentInputText
@@ -23,11 +28,23 @@ namespace FlaxEditor.Surface
         /// Gets the node under the mouse location.
         /// </summary>
         /// <returns>The node or null if no intersection.</returns>
-        private SurfaceNode GetNodeUnderMouse()
+        public SurfaceNode GetNodeUnderMouse()
         {
             var pos = _surface.PointFromParent(_mousePos);
             if (_surface.GetChildAt(pos) is SurfaceNode node)
                 return node;
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the control under the mouse location.
+        /// </summary>
+        /// <returns>The control or null if no intersection.</returns>
+        public SurfaceControl GetControlUnderMouse()
+        {
+            var pos = _surface.PointFromParent(_mousePos);
+            if (_surface.GetChildAt(pos) is SurfaceControl control)
+                return control;
             return null;
         }
 
@@ -37,10 +54,13 @@ namespace FlaxEditor.Surface
             var p2 = _surface.PointFromParent(_mousePos);
             var selectionRect = Rectangle.FromPoints(p1, p2);
 
-            // Find nodes to select
-            for (int i = 0; i < _nodes.Count; i++)
+            // Find controls to select
+            for (int i = 0; i < _surface.Children.Count; i++)
             {
-                _nodes[i].IsSelected = _nodes[i].Bounds.Intersects(ref selectionRect);
+                if (_surface.Children[i] is SurfaceControl control)
+                {
+                    control.IsSelected = control.IsSelectionIntersecting(ref selectionRect);
+                }
             }
         }
 
@@ -97,13 +117,13 @@ namespace FlaxEditor.Surface
                     Vector2 delta = location - _leftMouseDownPos - viewDelta;
                     if (delta.LengthSquared > 0.01f)
                     {
-                        // Move selected nodes
+                        // Move selected surface control
                         delta /= _targetScale;
-                        for (int i = 0; i < _nodes.Count; i++)
+                        for (int i = 0; i < _surface.Children.Count; i++)
                         {
-                            if (_nodes[i].IsSelected)
+                            if (_surface.Children[i] is SurfaceControl control && control.IsSelected)
                             {
-                                _nodes[i].Location += delta;
+                                control.Location += delta;
                             }
                         }
                         _leftMouseDownPos = location;
@@ -111,6 +131,12 @@ namespace FlaxEditor.Surface
                         MarkAsEdited(false);
                     }
 
+                    // Handled
+                    return;
+                }
+                // Commenting
+                else if (_isCommentCreateKeyDown)
+                {
                     // Handled
                     return;
                 }
@@ -167,6 +193,8 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
+            _wasMouseDownSinceCommentCreatingStart = true;
+
             // Check if user is connecting boxes
             if (_startBox != null)
                 return true;
@@ -186,24 +214,24 @@ namespace FlaxEditor.Surface
             }
 
             // Check if any node is under the mouse
-            SurfaceNode nodeAtMouse = GetNodeUnderMouse();
+            SurfaceControl controlUnderMouse = GetControlUnderMouse();
             Vector2 cLocation = _surface.PointFromParent(location);
-            if (nodeAtMouse != null)
+            if (controlUnderMouse != null)
             {
                 // Check if mouse is over header and user is pressing mouse left button
-                if (_leftMouseDown && nodeAtMouse.HitsHeader(ref cLocation))
+                if (_leftMouseDown && controlUnderMouse.CanSelect(ref cLocation))
                 {
                     // Check if user is pressing control
                     if (Root.GetKey(Keys.Control))
                     {
                         // Add to selection
-                        AddToSelection(nodeAtMouse);
+                        AddToSelection(controlUnderMouse);
                     }
                     // Check if node isn't selected
-                    else if (!nodeAtMouse.IsSelected)
+                    else if (!controlUnderMouse.IsSelected)
                     {
                         // Select node
-                        Select(nodeAtMouse);
+                        Select(controlUnderMouse);
                     }
 
                     // Start moving selected nodes
@@ -219,7 +247,7 @@ namespace FlaxEditor.Surface
                 // Cache flags and state
                 if (_leftMouseDown)
                 {
-                    // Start selecting
+                    // Start selecting or commenting
                     StartMouseCapture();
                     ClearSelection();
                     Focus();
@@ -252,8 +280,8 @@ namespace FlaxEditor.Surface
             // Cache mouse location
             _mousePos = location;
 
-            // Check if any node is under the mouse
-            SurfaceNode nodeAtMouse = GetNodeUnderMouse();
+            // Check if any control is under the mouse
+            SurfaceControl controlUnderMouse = GetControlUnderMouse();
 
             // Right clicking while attempting to connect a node to something
             if (!_rightMouseDown && buttons == MouseButton.Right && !_isMovingSelection && _startBox != null)
@@ -269,7 +297,16 @@ namespace FlaxEditor.Surface
                 EndMouseCapture();
                 Cursor = CursorType.Default;
 
-                if (!_isMovingSelection && _startBox == null)
+                // Commenting
+                if (_isCommentCreateKeyDown)
+                {
+                    var p1 = _surface.PointFromParent(_leftMouseDownPos);
+                    var p2 = _surface.PointFromParent(_mousePos);
+                    var selectionRect = Rectangle.FromPoints(p1, p2);
+                    CreateComment(ref selectionRect);
+                }
+                // Selecting
+                else if (!_isMovingSelection && _startBox == null)
                 {
                     UpdateSelectionRectangle();
                 }
@@ -283,12 +320,12 @@ namespace FlaxEditor.Surface
                 // Check if no move has been made at all
                 if (_mouseMoveAmount < 3.0f)
                 {
-                    // Check if any node is under the mouse
+                    // Check if any control is under the mouse
                     _cmStartPos = location;
-                    if (nodeAtMouse != null)
+                    if (controlUnderMouse != null)
                     {
                         if (!HasSelection)
-                            Select(nodeAtMouse);
+                            Select(controlUnderMouse);
 
                         // Show secondary context menu
                         ShowSecondaryCM(_cmStartPos);
@@ -333,10 +370,8 @@ namespace FlaxEditor.Surface
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         private bool HasInputSelection => HasSelection;
@@ -351,8 +386,10 @@ namespace FlaxEditor.Surface
 
         private void CurrentInputTextChanged(string currentInputText)
         {
-            if (Selection.Count != 1) return;
+            var selection = Selection;
+            if (selection.Count != 1) return;
             if (string.IsNullOrEmpty(currentInputText)) return;
+            if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey)) return;
             if (_cmPrimaryMenu.Visible) return;
 
             // # => color
@@ -361,7 +398,7 @@ namespace FlaxEditor.Surface
 
             // Multiple nodes selected?
 
-            var node = Selection[0];
+            var node = selection[0];
             var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(box => box.IsOutput);
             if (firstOutputBox == null) return;
 
@@ -430,6 +467,12 @@ namespace FlaxEditor.Surface
                 }
             }
 
+            if (key == CreateCommentKey)
+            {
+                _isCommentCreateKeyDown = true;
+                _wasMouseDownSinceCommentCreatingStart = false;
+            }
+
             if (HasInputSelection)
             {
                 if (_hasInputSelectionChanged)
@@ -444,7 +487,23 @@ namespace FlaxEditor.Surface
                     return true;
                 }
             }
+
             return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnKeyUp(Keys key)
+        {
+            base.OnKeyUp(key);
+
+            if (key == CreateCommentKey)
+            {
+                if (!_wasMouseDownSinceCommentCreatingStart)
+                    CommentSelection();
+
+                _wasMouseDownSinceCommentCreatingStart = false;
+                _isCommentCreateKeyDown = false;
+            }
         }
     }
 }

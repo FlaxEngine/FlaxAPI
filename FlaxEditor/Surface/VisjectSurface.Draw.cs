@@ -95,6 +95,17 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Draws the comment creating background.
+        /// </summary>
+        /// <remarks>Called only when user is creating comment using rectangle tool.</remarks>
+        protected virtual void DrawCommenting()
+        {
+            var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
+            Render2D.FillRectangle(selectionRect, Color.White * 0.4f);
+            Render2D.DrawRectangle(selectionRect, Color.White);
+        }
+
+        /// <summary>
         /// Draws all the connections between surface nodes.
         /// </summary>
         protected virtual void DrawConnections()
@@ -136,6 +147,14 @@ namespace FlaxEditor.Surface
             // Draw connection
             OutputBox.DrawConnection(ref startPos, ref endPos, ref lineColor);
         }
+        
+        /// <summary>
+        /// Draws the contents of the surface (nodes, connections, comments, etc.).
+        /// </summary>
+        protected virtual void DrawContents()
+        {
+            base.Draw();
+        }
 
         /// <inheritdoc />
         public override void Draw()
@@ -145,7 +164,13 @@ namespace FlaxEditor.Surface
 
             DrawBackground();
 
-            if (IsSelecting)
+            _surface.DrawComments();
+
+            if (IsCreatingComment)
+            {
+                DrawCommenting();
+            }
+            else if (IsSelecting)
             {
                 DrawSelection();
             }
@@ -162,8 +187,7 @@ namespace FlaxEditor.Surface
 
             Render2D.PopTransform();
 
-            // Base
-            base.Draw();
+            DrawContents();
 
             //Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", _surface.Scale), rect, Enabled ? Color.Red : Color.Black);
 
