@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
@@ -22,7 +23,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void Copy()
         {
-            var selection = Selection;
+            var selection = SelectedControls;
 
             if (selection.Count == 0)
             {
@@ -41,7 +42,9 @@ namespace FlaxEditor.Surface
 
                 for (int i = 0; i < selection.Count; i++)
                 {
-                    var node = selection[i];
+                    var node = selection[i] as SurfaceNode;
+                    if (node == null)
+                        continue;
 
                     jsonWriter.WriteStartObject();
 
@@ -121,6 +124,31 @@ namespace FlaxEditor.Surface
 
                 jsonWriter.WriteEndArray();
 
+                jsonWriter.WritePropertyName("Comments");
+                jsonWriter.WriteStartArray();
+
+                for (int i = 0; i < selection.Count; i++)
+                {
+                    var comment = selection[i] as SurfaceComment;
+                    if (comment == null)
+                        continue;
+
+                    jsonWriter.WriteStartObject();
+
+                    jsonWriter.WritePropertyName("Title");
+                    jsonWriter.WriteValue(comment.Title);
+
+                    jsonWriter.WritePropertyName("Color");
+                    WriteCommonValue(jsonWriter, comment.Color);
+
+                    jsonWriter.WritePropertyName("Bounds");
+                    WriteCommonValue(jsonWriter, comment.Bounds);
+
+                    jsonWriter.WriteEndObject();
+                }
+
+                jsonWriter.WriteEndArray();
+
                 jsonWriter.WriteEnd();
             }
 
@@ -190,14 +218,40 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Nodes data model.
+        /// Comment data model.
         /// </summary>
-        private class NodesDataModel
+        private class CommentDataModel
+        {
+            /// <summary>
+            /// The title text.
+            /// </summary>
+            public string Title;
+
+            /// <summary>
+            /// The color.
+            /// </summary>
+            public Color Color;
+
+            /// <summary>
+            /// The bounds of the comment (in surface-space).
+            /// </summary>
+            public Rectangle Bounds;
+        }
+
+        /// <summary>
+        /// Copied data model.
+        /// </summary>
+        private class DataModel
         {
             /// <summary>
             /// The nodes.
             /// </summary>
             public NodeDataModel[] Nodes;
+
+            /// <summary>
+            /// The comments.
+            /// </summary>
+            public CommentDataModel[] Comments;
         }
 
         /// <summary>
@@ -212,8 +266,8 @@ namespace FlaxEditor.Surface
 
             try
             {
-                var model = JsonConvert.DeserializeObject<NodesDataModel>(data);
-                return model?.Nodes != null && model.Nodes.Length != 0;
+                var model = JsonConvert.DeserializeObject<DataModel>(data);
+                return model != null && ((model.Nodes != null && model.Nodes.Length != 0) || (model.Comments != null && model.Comments.Length != 0));
             }
             catch (Exception)
             {
@@ -233,7 +287,11 @@ namespace FlaxEditor.Surface
             try
             {
                 // Load Mr Json
-                var model = JsonConvert.DeserializeObject<NodesDataModel>(data);
+                var model = JsonConvert.DeserializeObject<DataModel>(data);
+                if (model.Nodes == null)
+                    model.Nodes = new NodeDataModel[0];
+                if (model.Comments == null)
+                    model.Comments = new CommentDataModel[0];
 
                 // Build the nodes IDs mapping (need to generate new IDs for the pasted nodes and preserve the internal connections)
                 var idsMapping = new Dictionary<uint, uint>();
@@ -268,12 +326,28 @@ namespace FlaxEditor.Surface
                     idsMapping.Add(model.Nodes[i].ID, result);
                 }
 
-                // Find nodes upper left location
-                Vector2 upperLeft = new Vector2(model.Nodes[0].X, model.Nodes[0].Y);
-                for (int i = 1; i < model.Nodes.Length; i++)
+                // Find controls upper left location
+                Vector2 upperLeft;
+                if (model.Nodes.Length > 0)
                 {
-                    upperLeft.X = Mathf.Min(upperLeft.X, model.Nodes[i].X);
-                    upperLeft.Y = Mathf.Min(upperLeft.Y, model.Nodes[i].Y);
+                    upperLeft = new Vector2(model.Nodes[0].X, model.Nodes[0].Y);
+                    for (int i = 1; i < model.Nodes.Length; i++)
+                    {
+                        upperLeft.X = Mathf.Min(upperLeft.X, model.Nodes[i].X);
+                        upperLeft.Y = Mathf.Min(upperLeft.Y, model.Nodes[i].Y);
+                    }
+                    for (int i = 0; i < model.Comments.Length; i++)
+                    {
+                        upperLeft = Vector2.Min(upperLeft, model.Comments[i].Bounds.Location);
+                    }
+                }
+                else
+                {
+                    upperLeft = model.Comments[0].Bounds.Location;
+                    for (int i = 1; i < model.Comments.Length; i++)
+                    {
+                        upperLeft = Vector2.Min(upperLeft, model.Comments[i].Bounds.Location);
+                    }
                 }
 
                 // Create nodes
@@ -396,7 +470,25 @@ namespace FlaxEditor.Surface
                     }
                 }
 
-                // Arrange nodes
+                // Create comments
+                var comments = new List<SurfaceComment>();
+                for (int i = 0; i < model.Comments.Length; i++)
+                {
+                    var commentData = model.Comments[i];
+
+                    // Create
+                    var comment = SpawnComment(ref commentData.Bounds);
+                    if (comment == null)
+                        throw new InvalidOperationException("Failed to create comment.");
+                    comments.Add(comment);
+
+                    comment.Title = commentData.Title;
+                    comment.Color = commentData.Color;
+
+                    OnControlLoaded(comment);
+                }
+
+                // Arrange controls
                 foreach (var e in nodes)
                 {
                     var node = e.Value;
@@ -404,15 +496,35 @@ namespace FlaxEditor.Surface
                     var pos = new Vector2(nodeData.X, nodeData.Y) - upperLeft;
                     node.Location = ViewPosition + pos + new Vector2(40);
                 }
+                foreach (var comment in comments)
+                {
+                    var pos = comment.Location - upperLeft;
+                    comment.Location = ViewPosition + pos + new Vector2(40);
+                }
 
                 // Post load
                 foreach (var node in nodes)
                 {
                     node.Value.OnSurfaceLoaded();
                 }
+                foreach (var comment in comments)
+                {
+                    comment.OnSurfaceLoaded();
+                }
 
-                // Select those nodes
-                Select(nodes.Values);
+                // Select those nodes and comments
+                if (comments.Count == 0)
+                {
+                    Select(nodes.Values);
+                }
+                else if (nodes.Count == 0)
+                {
+                    Select(comments);
+                }
+                else
+                {
+                    Select(nodes.Values.Cast<SurfaceControl>().Union(comments));
+                }
 
                 MarkAsEdited();
             }

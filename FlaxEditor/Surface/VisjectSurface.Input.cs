@@ -324,7 +324,7 @@ namespace FlaxEditor.Surface
                     _cmStartPos = location;
                     if (controlUnderMouse != null)
                     {
-                        if (!HasSelection)
+                        if (!HasNodesSelection)
                             Select(controlUnderMouse);
 
                         // Show secondary context menu
@@ -374,7 +374,7 @@ namespace FlaxEditor.Surface
             return false;
         }
 
-        private bool HasInputSelection => HasSelection;
+        private bool HasInputSelection => HasNodesSelection;
 
         private bool _hasInputSelectionChanged = false;
 
@@ -386,7 +386,7 @@ namespace FlaxEditor.Surface
 
         private void CurrentInputTextChanged(string currentInputText)
         {
-            var selection = Selection;
+            var selection = SelectedNodes;
             if (selection.Count != 1) return;
             if (string.IsNullOrEmpty(currentInputText)) return;
             if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey)) return;

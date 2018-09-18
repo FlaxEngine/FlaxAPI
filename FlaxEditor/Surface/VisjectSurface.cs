@@ -259,7 +259,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Returns true if any node is selected by the user (one or more).
         /// </summary>
-        public bool HasSelection
+        public bool HasNodesSelection
         {
             get
             {
@@ -276,15 +276,32 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets the list of the selected nodes.
         /// </summary>
-        public List<SurfaceNode> Selection
+        public List<SurfaceNode> SelectedNodes
         {
             get
             {
-                List<SurfaceNode> selection = new List<SurfaceNode>();
+                var selection = new List<SurfaceNode>();
                 for (int i = 0; i < _nodes.Count; i++)
                 {
                     if (_nodes[i].IsSelected)
                         selection.Add(_nodes[i]);
+                }
+                return selection;
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of the selected controls (comments and nodes).
+        /// </summary>
+        public List<SurfaceControl> SelectedControls
+        {
+            get
+            {
+                var selection = new List<SurfaceControl>();
+                for (int i = 0; i < _surface.Children.Count; i++)
+                {
+                    if (_surface.Children[i] is SurfaceControl control && control.IsSelected)
+                        selection.Add(control);
                 }
                 return selection;
             }
@@ -497,7 +514,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void CommentSelection()
         {
-            var selection = Selection;
+            var selection = SelectedNodes;
             if (selection.Count == 0)
                 return;
 

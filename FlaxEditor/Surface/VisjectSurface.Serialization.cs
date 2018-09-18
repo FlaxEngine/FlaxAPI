@@ -352,6 +352,15 @@ namespace FlaxEditor.Surface
                 stream.WriteValue(asColor.A);
                 stream.WriteEndObject();
             }
+            else if (value is Rectangle asRectangle)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("Location");
+                WriteCommonValue(stream, asRectangle.Location);
+                stream.WritePropertyName("Size");
+                WriteCommonValue(stream, asRectangle.Size);
+                stream.WriteEndObject();
+            }
             else if (value is Guid asGuid)
             {
                 stream.WriteValue(asGuid);

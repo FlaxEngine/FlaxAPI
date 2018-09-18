@@ -34,7 +34,7 @@ namespace FlaxEditor.Surface
         /// <param name="location">The location in the Surface Space.</param>
         public void ShowSecondaryCM(Vector2 location)
         {
-            var selection = Selection;
+            var selection = SelectedNodes;
             if (selection.Count == 0)
                 return;
 
