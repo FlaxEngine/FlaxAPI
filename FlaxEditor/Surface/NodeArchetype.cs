@@ -58,6 +58,11 @@ namespace FlaxEditor.Surface
         public string[] AlternativeTitles;
 
         /// <summary>
+        /// The custom tag.
+        /// </summary>
+        public object Tag;
+
+        /// <summary>
         /// Default node values.
         /// </summary>
         public object[] DefaultValues;

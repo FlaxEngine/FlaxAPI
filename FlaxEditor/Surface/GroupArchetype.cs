@@ -25,6 +25,11 @@ namespace FlaxEditor.Surface
         public Color Color;
 
         /// <summary>
+        /// The custom tag.
+        /// </summary>
+        public object Tag;
+
+        /// <summary>
         /// All nodes descriptions.
         /// </summary>
         public NodeArchetype[] Archetypes;
