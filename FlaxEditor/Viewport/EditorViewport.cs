@@ -502,6 +502,7 @@ namespace FlaxEditor.Viewport
             set
             {
                 _fpsCounter.Visible = value;
+                _fpsCounter.Enabled = value;
                 _showFpsButon.Icon = value ? Style.Current.CheckBoxTick : Sprite.Invalid;
             }
         }
@@ -510,6 +511,7 @@ namespace FlaxEditor.Viewport
         {
             _fpsCounter = new FpsCounter(10, ViewportWidgetsContainer.WidgetsHeight + 14);
             _fpsCounter.Visible = false;
+            _fpsCounter.Enabled = false;
             _fpsCounter.Parent = this;
         }
 
@@ -703,7 +705,7 @@ namespace FlaxEditor.Viewport
             {
                 // Get input buttons and keys (skip if viewport has no focus or mouse is over a child control)
                 _prevInput = _input;
-                if (ContainsFocus && GetChildAt(_viewMousePos) == null)
+                if (ContainsFocus && GetChildAt(_viewMousePos, c => c.Visible) == null)
                     _input.Gather(win.Window);
                 else
                     _input.Clear();

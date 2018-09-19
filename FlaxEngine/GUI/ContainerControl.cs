@@ -318,6 +318,33 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Tries to find valid child control at given point in control local coordinates. Uses custom callback method to test controls to pick.
+        /// </summary>
+        /// <param name="point">The local point to check.</param>
+        /// <param name="isValid">Control validation callback</param>
+        /// <returns>Found control or null.</returns>
+        public Control GetChildAt(Vector2 point, Func<Control, bool> isValid)
+        {
+            if (isValid == null)
+                throw new ArgumentNullException(nameof(isValid));
+
+            Control result = null;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                var child = _children[i];
+
+                // Check collision
+                Vector2 childLocation;
+                if (isValid(child) && IntersectsChildContent(child, point, out childLocation))
+                {
+                    result = child;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         ///     Tries to find lowest child control at given point in control local coordinates
         /// </summary>
         /// <param name="point">Local point to check</param>
