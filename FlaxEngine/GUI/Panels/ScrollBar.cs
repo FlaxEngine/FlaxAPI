@@ -233,7 +233,7 @@ namespace FlaxEngine.GUI
                 // Value smoothing
                 if (Mathf.Abs(_targetValue - _value) > 0.01f)
                 {
-                    // Lerp or not if running slow
+                    // Interpolate or not if running slow
                     float value;
                     if (!isDeltaSlow && UseSmoothing)
                         value = Mathf.Lerp(_value, _targetValue, deltaTime * 20.0f * SmoothingScale);
@@ -275,10 +275,12 @@ namespace FlaxEngine.GUI
             if (_thumbClicked)
             {
                 Vector2 slidePosition = location + Root.TrackingMouseOffset;
+                if (Parent is Panel panel)
+                    slidePosition += panel.ViewOffset; // Hardcoded fix
                 float mousePosition = _orientation == Orientation.Vertical ? slidePosition.Y : slidePosition.X;
 
-                float perc = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
-                Value = perc * _maximum;
+                float percentage = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
+                Value = percentage * _maximum;
             }
         }
 
