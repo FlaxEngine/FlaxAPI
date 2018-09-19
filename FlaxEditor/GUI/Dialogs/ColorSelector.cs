@@ -128,7 +128,9 @@ namespace FlaxEditor.GUI.Dialogs
                 if (_color == Color.Black && hsv.Z <= 0.001f)
                     hsv.Z = 1.0f;
 
-                Color = Color.FromHSV(hsv);
+                var color = Color.FromHSV(hsv);
+                color.A = _color.A;
+                Color = color;
             }
         }
 
