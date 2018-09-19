@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using FlaxEngine.GUI;
 using FlaxEditor.Windows;
@@ -25,7 +25,7 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        protected override void Arrage()
+        protected override void Arrange()
         {
             // Arrange buttons
             float x = DefaultButtonsMargin;

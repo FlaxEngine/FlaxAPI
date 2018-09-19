@@ -33,9 +33,9 @@ namespace FlaxEngine.GUI
             }
 
             /// <inheritdoc />
-            protected override void Arrage()
+            protected override void Arrange()
             {
-                base.Arrage();
+                base.Arrange();
 
                 // Arrange controls
                 Margin margin = _menu._itemsMargin;
