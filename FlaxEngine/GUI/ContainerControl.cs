@@ -735,11 +735,15 @@ namespace FlaxEngine.GUI
             get
             {
                 if (base.IsMouseOver)
-                {
                     return true;
+
+                for (int i = 0; i < _children.Count && _children.Count > 0; i++)
+                {
+                    if (_children[i].IsMouseOver)
+                        return true;
                 }
 
-                return _children.Any(child => child.IsMouseOver);
+                return false;
             }
         }
 
