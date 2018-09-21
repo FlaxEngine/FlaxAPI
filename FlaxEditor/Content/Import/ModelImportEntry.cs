@@ -187,6 +187,12 @@ namespace FlaxEditor.Content.Import
         public float FramesRangeEnd { get; set; } = 0;
 
         /// <summary>
+        /// The imported animation default frame rate. Can specify the default frames per second amount for imported animation. If value is 0 then the original animation frame rate will be used.
+        /// </summary>
+        [EditorOrder(1025), Limit(0, 1000, 0.01f), EditorDisplay("Animation"), Tooltip("The imported animation default frame rate. Can specify the default frames per second amount for imported animation. If value is 0 then the original animation frame rate will be used.")]
+        public float DefaultFrameRate { get; set; } = 0.0f;
+
+        /// <summary>
         /// The imported animation sampling rate. If value is 0 then the original animation speed will be used.
         /// </summary>
         [EditorOrder(1030), Limit(0, 1000, 0.01f), EditorDisplay("Animation"), Tooltip("The imported animation sampling rate. If value is 0 then the original animation speed will be used.")]
@@ -248,6 +254,7 @@ namespace FlaxEditor.Content.Import
             public AnimationDuration Duration;
             public float FramesRangeStart;
             public float FramesRangeEnd;
+            public float DefaultFrameRate;
             public float SamplingRate;
             public byte SkipEmptyCurves;
             public byte OptimizeKeyframes;
@@ -279,6 +286,7 @@ namespace FlaxEditor.Content.Import
                 Duration = Duration,
                 FramesRangeStart = FramesRangeStart,
                 FramesRangeEnd = FramesRangeEnd,
+                DefaultFrameRate = DefaultFrameRate,
                 SamplingRate = SamplingRate,
                 SkipEmptyCurves = (byte)(SkipEmptyCurves ? 1 : 0),
                 OptimizeKeyframes = (byte)(OptimizeKeyframes ? 1 : 0),
@@ -306,6 +314,7 @@ namespace FlaxEditor.Content.Import
             CenterGeometry = options.CenterGeometry != 0;
             FramesRangeStart = options.FramesRangeStart;
             FramesRangeEnd = options.FramesRangeEnd;
+            DefaultFrameRate = options.DefaultFrameRate;
             SamplingRate = options.SamplingRate;
             SkipEmptyCurves = options.SkipEmptyCurves != 0;
             OptimizeKeyframes = options.OptimizeKeyframes != 0;
