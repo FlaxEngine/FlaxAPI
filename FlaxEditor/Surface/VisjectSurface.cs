@@ -624,15 +624,18 @@ namespace FlaxEditor.Surface
 
             for (int i = 0; i < _surface.Children.Count; i++)
             {
-                if (_surface.Children[i] is SurfaceNode node && node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
+                if (_surface.Children[i] is SurfaceNode node)
                 {
-                    node.RemoveConnections();
-                    node.Dispose();
+                    if (node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
+                    {
+                        node.RemoveConnections();
+                        node.Dispose();
 
-                    _nodes.Remove(node);
-                    i--;
+                        _nodes.Remove(node);
+                        i--;
 
-                    edited = true;
+                        edited = true;
+                    }
                 }
                 else if (_surface.Children[i] is SurfaceControl control && control.IsSelected)
                 {
