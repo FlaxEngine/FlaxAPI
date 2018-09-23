@@ -277,7 +277,7 @@ namespace FlaxEditor.Surface.Archetypes
             if (ExtractNumber(ref filterText, out vec[count]))
             {
                 count = count + 1;
-                while (count <= 4)
+                while (count < 4)
                 {
                     if (ExtractComma(ref filterText) && ExtractNumber(ref filterText, out vec[count]))
                     {
