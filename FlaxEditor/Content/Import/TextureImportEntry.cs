@@ -369,9 +369,6 @@ namespace FlaxEditor.Content.Import
         public TextureImportEntry(string url, string resultUrl)
         : base(url, resultUrl)
         {
-            // Try to restore target asset texture import options (useful for fast reimport)
-            TextureImportSettings.TryRestore(ref _settings, resultUrl);
-
             // Try to guess format type based on file name
             var shortName = System.IO.Path.GetFileNameWithoutExtension(url);
             string snl = shortName.ToLower();
@@ -423,6 +420,9 @@ namespace FlaxEditor.Content.Import
                 // Glossiness, metalness, ambient occlusion, displacement, height, cavity or specular
                 _settings.Type = TextureImportSettings.CustomTextureFormatType.GrayScale;
             }
+
+            // Try to restore target asset texture import options (useful for fast reimport)
+            TextureImportSettings.TryRestore(ref _settings, resultUrl);
         }
 
         /// <inheritdoc />
