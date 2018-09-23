@@ -242,7 +242,7 @@ namespace FlaxEditor.Windows.Assets
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
                 DockStyle = DockStyle.Fill,
-                SplitterValue = 0.7f,
+                SplitterValue = 0.5f,
                 Parent = this
             };
 
@@ -363,7 +363,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void OnLayoutDeserialize()
         {
-            _split.SplitterValue = 0.7f;
+            _split.SplitterValue = 0.5f;
         }
     }
 }
