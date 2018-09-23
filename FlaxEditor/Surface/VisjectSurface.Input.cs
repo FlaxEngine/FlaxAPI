@@ -496,7 +496,7 @@ namespace FlaxEditor.Surface
         {
             base.OnKeyUp(key);
 
-            if (key == CreateCommentKey)
+            if (key == CreateCommentKey && !RootWindow.GetKey(Keys.Control))
             {
                 if (!_wasMouseDownSinceCommentCreatingStart)
                     CommentSelection();
