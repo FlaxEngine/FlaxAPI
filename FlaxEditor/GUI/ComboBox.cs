@@ -91,7 +91,8 @@ namespace FlaxEngine.GUI
                 {
                     // Select
                     _selectedIndices.Clear();
-                    _selectedIndices.Add(value);
+                    if (value != -1)
+                        _selectedIndices.Add(value);
                     OnSelectedIndexChanged();
                 }
             }
@@ -110,6 +111,8 @@ namespace FlaxEngine.GUI
                     throw new ArgumentNullException();
                 if (!SupportMultiSelect && value.Count > 1)
                     throw new InvalidOperationException();
+                if (_selectedIndices.Contains(-1))
+                    throw new ArgumentOutOfRangeException();
 
                 if (!_selectedIndices.SequenceEqual(value))
                 {
