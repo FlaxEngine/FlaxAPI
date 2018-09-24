@@ -460,7 +460,7 @@ namespace FlaxEngine.GUI
 
             var right = SelectionRight;
             Insert(clipboardText);
-            SetSelection(right + clipboardText.Length);
+            SetSelection(Mathf.Max(right, 0) + clipboardText.Length);
         }
 
         /// <summary>
