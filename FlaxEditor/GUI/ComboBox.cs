@@ -111,8 +111,12 @@ namespace FlaxEngine.GUI
                     throw new ArgumentNullException();
                 if (!SupportMultiSelect && value.Count > 1)
                     throw new InvalidOperationException();
-                if (_selectedIndices.Contains(-1))
-                    throw new ArgumentOutOfRangeException();
+                for (int i = 0; i < value.Count; i++)
+                {
+                    var index = value[i];
+                    if (index < 0 || index >= _items.Count)
+                        throw new ArgumentOutOfRangeException();
+                }
 
                 if (!_selectedIndices.SequenceEqual(value))
                 {
