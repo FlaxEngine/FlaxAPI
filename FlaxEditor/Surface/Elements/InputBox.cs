@@ -50,9 +50,11 @@ namespace FlaxEditor.Surface.Elements
                 case ConnectionType.Bool:
                     isValid = _defaultValueEditor is CheckBox;
                     break;
+
                 case ConnectionType.Integer:
                     isValid = _defaultValueEditor is IntValueBox;
                     break;
+
                 case ConnectionType.Float:
                     isValid = _defaultValueEditor is FloatValue;
                     break;
@@ -137,12 +139,32 @@ namespace FlaxEditor.Surface.Elements
                 _defaultValueEditor = control;
                 break;
             }
+            case ConnectionType.Vector2:
+            case ConnectionType.Vector3:
+            case ConnectionType.Vector4:
+            case ConnectionType.Vector:
+            {
+                float value = FloatValue.Get(ParentNode, Archetype);
+                var control = new FloatValueBox(value, x, y, 40, float.MinValue, float.MaxValue, 0.01f)
+                {
+                    Height = height,
+                    Parent = Parent
+                };
+                control.ValueChanged += OnVectorValueBoxChanged;
+                _defaultValueEditor = control;
+                break;
+            }
             }
         }
 
         private void OnCheckBoxChanged(CheckBox checkBox)
         {
             ParentNode.SetValue(Archetype.ValueIndex, checkBox.Checked);
+        }
+
+        private void OnVectorValueBoxChanged()
+        {
+            FloatValue.SetAllValues(ParentNode, Archetype, ((FloatValueBox)_defaultValueEditor).Value);
         }
 
         private void OnFloatValueBoxChanged()
