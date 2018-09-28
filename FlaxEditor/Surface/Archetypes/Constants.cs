@@ -311,7 +311,7 @@ namespace FlaxEditor.Surface.Archetypes
 
         private static bool ExtractNumber(ref string filterText, out float number)
         {
-            var numberMatcher = new System.Text.RegularExpressions.Regex(@"^(([0-9]+(\.[0-9]*)?)|(\.[0-9]*))");
+            var numberMatcher = new System.Text.RegularExpressions.Regex(@"^([+-]?([0-9]+(\.[0-9]*)?)|(\.[0-9]*))");
             var match = numberMatcher.Match(filterText);
             if (match.Success && float.TryParse(match.Value, out number))
             {
