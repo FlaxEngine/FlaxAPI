@@ -101,6 +101,36 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the model Level Of Detail bias value. Allows to increase or decrease rendered model quality.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(40), Limit(-100, 100, 0.1f), EditorDisplay("Model"), Tooltip("Model Level Of Detail bias value. Allows to increase or decrease rendered model quality.")]
+        public int LODBias
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetLODBias(unmanagedPtr); }
+            set { Internal_SetLODBias(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(50), Limit(-1, 100, 0.1f), EditorDisplay("Model"), Tooltip("Model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.")]
+        public int ForcedLOD
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetForcedLOD(unmanagedPtr); }
+            set { Internal_SetForcedLOD(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets material used to render mesh at given index (overriden by model instance buffer or model default).
         /// </summary>
         /// <param name="meshIndex">Mesh index</param>
@@ -161,6 +191,18 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetModel(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetLODBias(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetLODBias(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetForcedLOD(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetForcedLOD(IntPtr obj, int val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern MaterialBase Internal_GetMaterial(IntPtr obj, int meshIndex, int lodIndex);
