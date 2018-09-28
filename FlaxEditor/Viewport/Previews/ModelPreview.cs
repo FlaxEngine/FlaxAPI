@@ -49,7 +49,7 @@ namespace FlaxEditor.Viewport.Previews
             {
                 // Forced LOD
                 {
-                    var forcedLOD = ViewWidgetButtonMenu.AddButton("Forced LOD");
+                    var forcedLOD = ViewWidgetButtonMenu.AddButton("Preview LOD");
                     var forcedLODValue = new IntValueBox(-1, 75, 2, 50.0f, -1, 10, 0.02f);
                     forcedLODValue.Parent = forcedLOD;
                     forcedLODValue.ValueChanged += () => _previewModel.ForcedLOD = forcedLODValue.Value;
