@@ -47,13 +47,13 @@ namespace FlaxEditor.Viewport.Previews
 
             if (useWidgets)
             {
-                // Forced LOD
+                // Preview LOD
                 {
-                    var forcedLOD = ViewWidgetButtonMenu.AddButton("Preview LOD");
-                    var forcedLODValue = new IntValueBox(-1, 75, 2, 50.0f, -1, 10, 0.02f);
-                    forcedLODValue.Parent = forcedLOD;
-                    forcedLODValue.ValueChanged += () => _previewModel.ForcedLOD = forcedLODValue.Value;
-                    ViewWidgetButtonMenu.VisibleChanged += control => forcedLODValue.Value = _previewModel.ForcedLOD;
+                    var previewLOD = ViewWidgetButtonMenu.AddButton("Preview LOD");
+                    var previewLODValue = new IntValueBox(-1, 75, 2, 50.0f, -1, 10, 0.02f);
+                    previewLODValue.Parent = previewLOD;
+                    previewLODValue.ValueChanged += () => _previewModel.ForcedLOD = previewLODValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => previewLODValue.Value = _previewModel.ForcedLOD;
                 }
             }
         }
