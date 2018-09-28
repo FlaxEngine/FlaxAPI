@@ -138,5 +138,40 @@ namespace FlaxEditor.Surface.Elements
 
             parentNode.SetValue(arch.ValueIndex, value);
         }
+
+        public static void SetAllValues(SurfaceNode parentNode, NodeElementArchetype arch, float toSet)
+        {
+            if (arch.ValueIndex < 0)
+                return;
+
+            var value = parentNode.Values[arch.ValueIndex];
+
+            if (value is int)
+            {
+                value = (int)toSet;
+            }
+            else if (value is float)
+            {
+                value = toSet;
+            }
+            else if (value is Vector2)
+            {
+                value = new Vector2(toSet);
+            }
+            else if (value is Vector3)
+            {
+                value = new Vector3(toSet);
+            }
+            else if (value is Vector4)
+            {
+                value = new Vector4(toSet);
+            }
+            else
+            {
+                value = 0;
+            }
+
+            parentNode.SetValue(arch.ValueIndex, value);
+        }
     }
 }
