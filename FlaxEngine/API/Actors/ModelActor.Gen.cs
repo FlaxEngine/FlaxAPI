@@ -104,7 +104,7 @@ namespace FlaxEngine
         /// Gets or sets the model Level Of Detail bias value. Allows to increase or decrease rendered model quality.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), Limit(-100, 100, 0.1f), EditorDisplay("Model"), Tooltip("Model Level Of Detail bias value. Allows to increase or decrease rendered model quality.")]
+        [EditorOrder(40), Limit(-100, 100, 0.1f), EditorDisplay("Model", "LOD Bias"), Tooltip("Model Level Of Detail bias value. Allows to increase or decrease rendered model quality.")]
         public int LODBias
         {
 #if UNIT_TEST_COMPILANT
@@ -119,7 +119,7 @@ namespace FlaxEngine
         /// Gets or sets the model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(50), Limit(-1, 100, 0.1f), EditorDisplay("Model"), Tooltip("Model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.")]
+        [EditorOrder(50), Limit(-1, 100, 0.1f), EditorDisplay("Model", "Forced LOD"), Tooltip("Model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.")]
         public int ForcedLOD
         {
 #if UNIT_TEST_COMPILANT
