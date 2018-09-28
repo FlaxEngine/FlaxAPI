@@ -85,6 +85,15 @@ namespace FlaxEngine.GUI
         public event Action SlidingEnd;
 
         /// <summary>
+        /// Gets or sets the slider speed.
+        /// </summary>
+        public float SlideSpeed
+        {
+            get => _slideSpeed;
+            set => _slideSpeed = value;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ValueBox{T}"/> class.
         /// </summary>
         /// <param name="value">The value.</param>
