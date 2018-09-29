@@ -165,6 +165,11 @@ namespace FlaxEngine.Rendering
         /// The material is using per-pixel normal mapping.
         /// </summary>
         UseNormal = 1 << 11,
+
+        /// <summary>
+        /// The material is using position displacement (in domain shader).
+        /// </summary>
+        UseDisplacement = 1 << 12,
     }
 
     /// <summary>
