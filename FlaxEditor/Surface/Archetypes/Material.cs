@@ -539,6 +539,19 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 20,
+                Title = "Interpolate VS To PS",
+                Description = "Helper node used to pass data from Vertex Shader to Pixel Shader",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(220, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "VS", true, ConnectionType.Vector4, 0),
+                    NodeElementArchetype.Factory.Output(0, "PS", ConnectionType.Vector4, 1),
+                }
+            },
         };
     }
 }
