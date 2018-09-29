@@ -1,20 +1,30 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 namespace FlaxEditor.Surface
 {
     /// <summary>
-    /// Vector transformation coordinate systems
+    /// Vector transformation coordinate systems.
     /// </summary>
     public enum TransformCoordinateSystem
     {
         /// <summary>
-        /// The world space.
+        /// The world space. It's absolute world space coordinate system.
         /// </summary>
         World = 0,
 
         /// <summary>
-        /// The tangent space.
+        /// The tangent space. It's relative to the surface (tangent frame defined by normal, tangent and bitangent vectors).
         /// </summary>
-        Tangent = 1
+        Tangent = 1,
+
+        /// <summary>
+        /// The view space. It's relative to the current rendered viewport orientation.
+        /// </summary>
+        View = 2,
+
+        /// <summary>
+        /// The local space. It's relative to the rendered object (aka object space).
+        /// </summary>
+        Local = 3,
     }
 }

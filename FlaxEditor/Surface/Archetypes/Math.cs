@@ -68,6 +68,7 @@ namespace FlaxEditor.Surface.Archetypes
             "World",
             "Tangent",
             "View",
+            "Local",
         };
 
         /// <summary>
