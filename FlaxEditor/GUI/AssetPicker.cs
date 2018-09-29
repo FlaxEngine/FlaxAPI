@@ -315,6 +315,7 @@ namespace FlaxEditor.GUI
             if (Button1Rect.Contains(location))
             {
                 // Show asset picker popup
+                Focus();
                 AssetSearchPopup.Show(this, Button1Rect.BottomLeft, IsValid, (assetItem) => SelectedItem = assetItem);
             }
             else if (_selected != null)
@@ -327,6 +328,7 @@ namespace FlaxEditor.GUI
                 else if (Button3Rect.Contains(location))
                 {
                     // Deselect asset
+                    Focus();
                     SelectedItem = null;
                 }
             }
