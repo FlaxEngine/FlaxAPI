@@ -77,9 +77,9 @@ namespace FlaxEditor.Surface.Archetypes
         {
             Op2(1, "Add", "Result is sum A and B", new[] { "+" }),
             Op2(2, "Subtract", "Result is difference A and B", new[] { "-" }),
-            Op2(3, "Multiply", "Result is A times B", new[] { "*" }, defaultValues: new object[] {1, 1 }),
+            Op2(3, "Multiply", "Result is A times B", new[] { "*" }, defaultValues: new object[] { 1.0f, 1.0f }),
             Op2(4, "Modulo", "Result is remainder A from A divided by B B", new[] { "%" }),
-            Op2(5, "Divide", "Result is A divided by B", new[] { "/" }, defaultValues: new object[] {1, 1 }),
+            Op2(5, "Divide", "Result is A divided by B", new[] { "/" }, defaultValues: new object[] { 1.0f, 1.0f }),
             Op1(7, "Absolute", "Result is absolute value of A"),
             Op1(8, "Ceil", "Returns the smallest integer value greater than or equal to A"),
             Op1(9, "Cosine", "Returns cosine of A"),
