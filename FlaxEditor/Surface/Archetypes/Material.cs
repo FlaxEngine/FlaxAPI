@@ -548,8 +548,8 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Vector2(220, 40),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "VS", true, ConnectionType.Vector4, 0),
-                    NodeElementArchetype.Factory.Output(0, "PS", ConnectionType.Vector4, 1),
+                    NodeElementArchetype.Factory.Input(0, "Vertex Shader", true, ConnectionType.Vector4, 0),
+                    NodeElementArchetype.Factory.Output(0, "Pixel Shader", ConnectionType.Vector4, 1),
                 }
             },
         };
