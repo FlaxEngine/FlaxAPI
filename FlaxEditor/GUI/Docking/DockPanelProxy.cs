@@ -401,7 +401,7 @@ namespace FlaxEditor.GUI.Docking
             if (tab != null)
             {
                 _panel.SelectTab(tab);
-                Update(0);// Fake update
+                Update(0); // Fake update
                 return true;
             }
 

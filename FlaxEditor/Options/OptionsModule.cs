@@ -24,7 +24,7 @@ namespace FlaxEditor.Options
         public event Action<EditorOptions> OptionsChanged;
 
         private readonly string _optionsFilePath;
-        
+
         internal OptionsModule(Editor editor)
         : base(editor)
         {

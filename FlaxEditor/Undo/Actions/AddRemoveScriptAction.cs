@@ -144,7 +144,7 @@ namespace FlaxEditor.Actions
             parentActor.AddScript(_script);
             if (_orderInParent != -1)
                 _script.OrderInParent = _orderInParent;
-            if(_prefabObjectId != Guid.Empty)
+            if (_prefabObjectId != Guid.Empty)
                 Script.Internal_LinkPrefab(_script.unmanagedPtr, ref _prefabId, ref _prefabObjectId);
             Editor.Instance.Scene.MarkSceneEdited(parentActor.Scene);
         }

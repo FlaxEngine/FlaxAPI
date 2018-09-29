@@ -73,7 +73,7 @@ namespace FlaxEngine
             Extents = extents;
             Transformation = transformation;
         }
-        
+
         /// <summary>
         /// Creates an <see cref="OrientedBoundingBox" /> which contained between two minimum and maximum points.
         /// </summary>

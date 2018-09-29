@@ -103,7 +103,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
         public Color TextColor { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the font used to render text.
         /// </summary>

@@ -149,7 +149,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
         public Color TextColor { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the color of the border.
         /// </summary>

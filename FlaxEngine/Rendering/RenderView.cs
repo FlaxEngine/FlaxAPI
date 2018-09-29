@@ -49,7 +49,7 @@ namespace FlaxEngine.Rendering
         /// Maximum allowed shadows quality for this view
         /// </summary>
         public Quality MaxShadowsQuality;
-        
+
         /// <summary>
         /// The model LOD bias. Default is 0. Applied to all the objects in the render view.
         /// </summary>

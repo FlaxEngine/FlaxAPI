@@ -56,7 +56,7 @@ namespace FlaxEngine.GUI
 
         /// <inheritdoc />
         public override Vector2 TrackingMouseOffset => Vector2.Zero;
-        
+
         /// <inheritdoc />
         public override Vector2 MousePosition
         {

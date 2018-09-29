@@ -51,7 +51,7 @@ namespace FlaxEditor.Viewport.Previews
         /// Gets the instance of the prefab spawned for the preview.
         /// </summary>
         public Actor Instance => _instance;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PrefabPreview"/> class.
         /// </summary>

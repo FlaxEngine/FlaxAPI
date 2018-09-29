@@ -26,7 +26,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// The selected item
         /// </summary>
         public VisjectCMItem SelectedItem;
-        
+
         /// <summary>
         /// Event fired when any item in this popup menu gets clicked.
         /// </summary>

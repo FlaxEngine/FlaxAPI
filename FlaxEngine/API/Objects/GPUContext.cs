@@ -278,7 +278,7 @@ namespace FlaxEngine.Rendering
             Internal_DrawPostFxMaterial1(unmanagedPtr, GetUnmanagedPtr(material), GetUnmanagedPtr(output), GetUnmanagedPtr(input), ref sceneRenderTask.View, Object.GetUnmanagedPtr(sceneRenderTask.Buffers));
 #endif
         }
-        
+
         /// <summary>
         /// Draws postFx material to the render target.
         /// </summary>

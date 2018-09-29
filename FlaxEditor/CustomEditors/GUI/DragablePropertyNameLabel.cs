@@ -24,7 +24,7 @@ namespace FlaxEditor.CustomEditors.GUI
         /// The mouse starts the drag. Callbacks gets the drag data.
         /// </summary>
         public DragDelegate Drag;
-        
+
         /// <inheritdoc />
         public DragablePropertyNameLabel(string name)
         : base(name)
@@ -38,7 +38,7 @@ namespace FlaxEditor.CustomEditors.GUI
             {
                 _isLeftMouseButtonDown = false;
             }
-            
+
             base.OnMouseUp(location, buttons);
             return true;
         }
@@ -77,7 +77,7 @@ namespace FlaxEditor.CustomEditors.GUI
         {
             // Unlink event
             Drag = null;
-            
+
             base.OnDestroy();
         }
     }

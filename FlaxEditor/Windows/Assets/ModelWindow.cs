@@ -224,7 +224,7 @@ namespace FlaxEditor.Windows.Assets
 
                     base.Initialize(layout);
                 }
-                
+
                 /// <inheritdoc />
                 internal override void RefreshInternal()
                 {

@@ -303,7 +303,6 @@ namespace FlaxEngine.Utilities
                 throw new ArgumentNullException(nameof(collection));
             }
 
-
             foreach (var item in collection)
             {
                 stack.Push(item);

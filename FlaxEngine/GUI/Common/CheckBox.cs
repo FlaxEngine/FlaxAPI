@@ -112,13 +112,13 @@ namespace FlaxEngine.GUI
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
         public Color ImageColor { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the color of the border.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
         public Color BorderColor { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the border color when checkbox is hovered.
         /// </summary>

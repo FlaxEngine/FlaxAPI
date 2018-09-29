@@ -17,7 +17,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// The 16 components editors.
         /// </summary>
         protected readonly FloatValueElement[] Elements = new FloatValueElement[16];
-        
+
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
 

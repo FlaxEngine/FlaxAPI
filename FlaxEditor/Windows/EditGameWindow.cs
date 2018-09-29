@@ -148,7 +148,7 @@ namespace FlaxEditor.Windows
         {
             ((FPSCamera)Viewport.ViewportCamera).ShowActors(Viewport.TransformGizmo.SelectedParents);
         }
-        
+
         /// <summary>
         /// Updates the camera previews.
         /// </summary>

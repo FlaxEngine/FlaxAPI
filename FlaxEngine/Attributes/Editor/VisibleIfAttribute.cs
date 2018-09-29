@@ -15,7 +15,7 @@ namespace FlaxEngine
         /// The member name.
         /// </summary>
         public string MemberName;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HeaderAttribute"/> class.
         /// </summary>
