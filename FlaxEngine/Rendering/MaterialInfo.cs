@@ -175,6 +175,11 @@ namespace FlaxEngine.Rendering
         /// The flag used to indicate that material input normal vector is defined in the world space rather than tangent space.
         /// </summary>
         InputWorldSpaceNormal = 1 << 13,
+
+        /// <summary>
+        /// The flag used to indicate that material uses dithered model LOD transition for smoother LODs switching.
+        /// </summary>
+        UseDitheredLODTransition = 1 << 14,
     }
 
     /// <summary>
