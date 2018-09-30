@@ -73,6 +73,9 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(200), EditorDisplay("Misc"), Tooltip("True if disable depth buffer write when rendering material")]
             public bool DisableDepthWrite { get; set; }
 
+            [EditorOrder(205), EditorDisplay("Misc"), Tooltip("If checked, material input normal will be assumed as world-space rather than tangent-space.")]
+            public bool UseInputWorldSpaceNormal { get; set; }
+
             [EditorOrder(210), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
             public float MaskThreshold { get; set; }
 
@@ -347,6 +350,7 @@ namespace FlaxEditor.Windows.Assets
                 DisableFog = (info.Flags & MaterialFlags.TransparentDisableFog) != 0;
                 DisableDepthWrite = (info.Flags & MaterialFlags.DisableDepthWrite) != 0;
                 DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
+                UseInputWorldSpaceNormal = (info.Flags & MaterialFlags.InputWorldSpaceNormal) != 0;
                 OpacityThreshold = info.OpacityThreshold;
                 TessellationMode = info.TessellationMode;
                 MaxTessellationFactor = info.MaxTessellationFactor;
@@ -383,6 +387,8 @@ namespace FlaxEditor.Windows.Assets
                     info.Flags |= MaterialFlags.DisableDepthWrite;
                 if (DisableDistortion)
                     info.Flags |= MaterialFlags.TransparentDisableDistortion;
+                if (UseInputWorldSpaceNormal)
+                    info.Flags |= MaterialFlags.InputWorldSpaceNormal;
                 info.OpacityThreshold = OpacityThreshold;
                 info.TessellationMode = TessellationMode;
                 info.MaxTessellationFactor = MaxTessellationFactor;

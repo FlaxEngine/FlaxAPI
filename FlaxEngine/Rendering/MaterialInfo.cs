@@ -170,6 +170,11 @@ namespace FlaxEngine.Rendering
         /// The material is using position displacement (in domain shader).
         /// </summary>
         UseDisplacement = 1 << 12,
+
+        /// <summary>
+        /// The flag used to indicate that material input normal vector is defined in the world space rather than tangent space.
+        /// </summary>
+        InputWorldSpaceNormal = 1 << 13,
     }
 
     /// <summary>
