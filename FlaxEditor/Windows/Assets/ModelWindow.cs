@@ -282,7 +282,7 @@ namespace FlaxEditor.Windows.Assets
                         group.Label("Size: " + lod.Bounds.Size);
                         var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
                         screenSize.FloatValue.MinValue = 0.0f;
-                        screenSize.FloatValue.MaxValue = 1.0f;
+                        screenSize.FloatValue.MaxValue = 10.0f;
                         screenSize.FloatValue.Value = lod.ScreenSize;
                         screenSize.FloatValue.ValueChanged += () =>
                         {
