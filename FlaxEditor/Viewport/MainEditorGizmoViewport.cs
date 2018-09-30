@@ -101,6 +101,9 @@ namespace FlaxEditor.Viewport
             Task.Draw += RenderTaskOnDraw;
             Task.End += RenderTaskOnEnd;
 
+            // Render task after the main game task so streaming and render state data will use main game task instead of editor preview
+            Task.Order = 1;
+
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
             SelectionOutline.SelectionGetter = () => _editor.SceneEditing.Selection;
