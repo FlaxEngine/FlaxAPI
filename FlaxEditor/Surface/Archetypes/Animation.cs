@@ -9,7 +9,7 @@ namespace FlaxEditor.Surface.Archetypes
     /// <summary>
     /// Contains archetypes for nodes from the Animation group.
     /// </summary>
-    public static class Animation
+    public static partial class Animation
     {
         /// <summary>
         /// Customized <see cref="SurfaceNode"/> for the main animation graph node.
@@ -158,7 +158,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 3,
                 Title = "Transform Bone (local space)",
-                Description = "Trnsforms the skeleton bone",
+                Description = "Transforms the skeleton bone",
                 Flags = NodeFlags.AnimGraphOnly,
                 Size = new Vector2(270, 130),
                 DefaultValues = new object[]
@@ -183,7 +183,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 4,
                 Title = "Transform Bone (global space)",
-                Description = "Trnsforms the skeleton bone",
+                Description = "Transforms the skeleton bone",
                 Flags = NodeFlags.AnimGraphOnly,
                 Size = new Vector2(270, 130),
                 DefaultValues = new object[]
@@ -208,7 +208,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 5,
                 Title = "Local To Global",
-                Description = "Trnsforms the skeleton bones from local into global space",
+                Description = "Transforms the skeleton bones from local into global space",
                 Flags = NodeFlags.AnimGraphOnly,
                 Size = new Vector2(150, 40),
                 Elements = new[]
@@ -221,7 +221,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 6,
                 Title = "Global To Local",
-                Description = "Trnsforms the skeleton bones from global into local space",
+                Description = "Transforms the skeleton bones from global into local space",
                 Flags = NodeFlags.AnimGraphOnly,
                 Size = new Vector2(150, 40),
                 Elements = new[]
@@ -337,6 +337,55 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(1, "Pose B", true, ConnectionType.Impulse, 2),
                     NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 3, 0),
                     NodeElementArchetype.Factory.Asset(100, 20, 1, ContentDomain.SkeletonMask),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 12,
+                Create = (id, surface, arch, groupArch) => new MultiBlend1D(id, surface, arch, groupArch),
+                Title = "Multi Blend 1D",
+                Description = "Animation blending in 1D",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(420, 400),
+                DefaultValues = new object[]
+                {
+                    // Node data
+                    new Vector4(0, 100.0f, 0, 0),
+                    1.0f,
+                    true,
+                    0.0f,
+
+                    // Per blend sample data
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    // Output
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+
+                    // Options
+                    NodeElementArchetype.Factory.Input(0, "Speed", true, ConnectionType.Float, 1, 1),
+                    NodeElementArchetype.Factory.Input(1, "Loop", true, ConnectionType.Bool, 2, 2),
+                    NodeElementArchetype.Factory.Input(2, "Start Position", true, ConnectionType.Float, 3, 3),
+
+                    // Axis X
+                    NodeElementArchetype.Factory.Input(4, "X", true, ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Text(30, 4 * Surface.Constants.LayoutOffsetY, "(min:                   max:                   )"),
+                    NodeElementArchetype.Factory.Float(60, 4 * Surface.Constants.LayoutOffsetY, 0, 0),
+                    NodeElementArchetype.Factory.Float(145, 4 * Surface.Constants.LayoutOffsetY, 0, 1),
                 }
             },
         };
