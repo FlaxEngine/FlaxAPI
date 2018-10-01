@@ -234,7 +234,7 @@ namespace FlaxEditor.Windows
         public override void OnDestroy()
         {
             _tree = null;
-            
+
             base.OnDestroy();
         }
     }

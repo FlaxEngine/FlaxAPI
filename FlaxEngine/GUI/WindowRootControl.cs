@@ -282,7 +282,7 @@ namespace FlaxEngine.GUI
 
             // Update flags
             UpdateContainsFocus();
-            
+
             return true;
         }
 

@@ -24,7 +24,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 Text += filename;
                 Text += ")";
             }
-            
+
             // Append star character to modified scenes
             if (ActorNode is SceneNode node && node.IsEdited)
                 Text += "*";

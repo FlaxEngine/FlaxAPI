@@ -22,7 +22,11 @@ namespace FlaxEditor.Surface.Elements
             // Select saved value
             _selectedIndices.Clear();
             if (Archetype.ValueIndex != -1)
-                _selectedIndices.Add((int)ParentNode.Values[Archetype.ValueIndex]);
+            {
+                var selectedIndex = (int)ParentNode.Values[Archetype.ValueIndex];
+                if (selectedIndex > -1 && selectedIndex < _items.Count)
+                    SelectedIndex = selectedIndex;
+            }
         }
 
         /// <summary>

@@ -122,7 +122,9 @@ namespace FlaxEngine.Rendering
 
         internal SceneRenderTask()
         {
+            // Init view defaults
             View.MaxShadowsQuality = Quality.Ultra;
+            View.ModelLODDistanceFactor = 1.0f;
         }
 
         /// <inheritdoc />

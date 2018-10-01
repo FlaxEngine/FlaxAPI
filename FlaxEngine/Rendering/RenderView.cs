@@ -51,6 +51,16 @@ namespace FlaxEngine.Rendering
         public Quality MaxShadowsQuality;
 
         /// <summary>
+        /// The model LOD bias. Default is 0. Applied to all the objects in the render view.
+        /// </summary>
+        public int ModelLODBias;
+
+        /// <summary>
+        /// The model LOD distance scale factor. Default is 1. Applied to all the objects in the render view. Higher values increase LODs quality.
+        /// </summary>
+        public float ModelLODDistanceFactor;
+
+        /// <summary>
         /// The view flags.
         /// </summary>
         public ViewFlags Flags;

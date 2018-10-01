@@ -2,6 +2,7 @@
 
 using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
+using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
@@ -43,6 +44,18 @@ namespace FlaxEditor.Viewport.Previews
 
             // Link actors for rendering
             Task.CustomActors.Add(_previewModel);
+
+            if (useWidgets)
+            {
+                // Preview LOD
+                {
+                    var previewLOD = ViewWidgetButtonMenu.AddButton("Preview LOD");
+                    var previewLODValue = new IntValueBox(-1, 75, 2, 50.0f, -1, 10, 0.02f);
+                    previewLODValue.Parent = previewLOD;
+                    previewLODValue.ValueChanged += () => _previewModel.ForcedLOD = previewLODValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => previewLODValue.Value = _previewModel.ForcedLOD;
+                }
+            }
         }
 
         private void OnBegin(SceneRenderTask task, GPUContext context)

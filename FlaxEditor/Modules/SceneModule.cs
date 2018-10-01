@@ -407,7 +407,7 @@ namespace FlaxEditor.Modules
             var treeNode = sceneNode.TreeNode;
             treeNode.IsLayoutLocked = true;
             treeNode.Expand(true);
-            
+
             // Add to the tree
             var rootNode = Root.TreeNode;
             rootNode.IsLayoutLocked = true;

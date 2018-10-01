@@ -165,6 +165,21 @@ namespace FlaxEngine.Rendering
         /// The material is using per-pixel normal mapping.
         /// </summary>
         UseNormal = 1 << 11,
+
+        /// <summary>
+        /// The material is using position displacement (in domain shader).
+        /// </summary>
+        UseDisplacement = 1 << 12,
+
+        /// <summary>
+        /// The flag used to indicate that material input normal vector is defined in the world space rather than tangent space.
+        /// </summary>
+        InputWorldSpaceNormal = 1 << 13,
+
+        /// <summary>
+        /// The flag used to indicate that material uses dithered model LOD transition for smoother LODs switching.
+        /// </summary>
+        UseDitheredLODTransition = 1 << 14,
     }
 
     /// <summary>

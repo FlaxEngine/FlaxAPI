@@ -207,7 +207,7 @@ namespace FlaxEditor.Viewport.Cameras
                 yaw += mouseDelta.X;
                 pitch += mouseDelta.Y;
             }
-            
+
             // Zoom in/out
             if (input.IsZooming)
             {

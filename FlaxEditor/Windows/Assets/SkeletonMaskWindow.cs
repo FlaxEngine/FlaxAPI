@@ -113,7 +113,7 @@ namespace FlaxEditor.Windows.Assets
                     // Skeleton Mask
                     var group = layout.Group("Mask");
                     var tree = group.Tree();
-                    
+
                     for (int i = 0; i < bones.Length; i++)
                     {
                         if (bones[i].ParentIndex == -1)

@@ -79,7 +79,7 @@ namespace FlaxEngine.GUI
         {
             UpdateText();
         }
-        
+
         /// <summary>
         /// Sets the limits from the attribute.
         /// </summary>

@@ -179,7 +179,7 @@ namespace FlaxEngine
                 break;
             }
         }
-        
+
         /// <summary>
         /// Unlaods all active scenes and loads the given scene (in the background).
         /// </summary>
@@ -190,7 +190,7 @@ namespace FlaxEngine
             UnloadAllScenesAsync();
             return LoadSceneAsync(sceneAssetId);
         }
-        
+
         /// <summary>
         /// Unlaods all active scenes and loads the given scene (in the background).
         /// </summary>

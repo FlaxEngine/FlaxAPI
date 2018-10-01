@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
@@ -26,7 +25,6 @@ namespace FlaxEditor.Windows.Assets
         // TODO: debug model UVs channels
         // TODO: refresh material slots comboboxes on material slot rename
         // TODO: add button to draw model bounds
-        // TODO: add small panel in `General` group with lods switches visualization
 
         /// <summary>
         /// The model properties proxy object.
@@ -226,7 +224,7 @@ namespace FlaxEditor.Windows.Assets
 
                     base.Initialize(layout);
                 }
-                
+
                 /// <inheritdoc />
                 internal override void RefreshInternal()
                 {
@@ -284,7 +282,7 @@ namespace FlaxEditor.Windows.Assets
                         group.Label("Size: " + lod.Bounds.Size);
                         var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
                         screenSize.FloatValue.MinValue = 0.0f;
-                        screenSize.FloatValue.MaxValue = 1.0f;
+                        screenSize.FloatValue.MaxValue = 10.0f;
                         screenSize.FloatValue.Value = lod.ScreenSize;
                         screenSize.FloatValue.ValueChanged += () =>
                         {
@@ -343,7 +341,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly PropertiesProxy _properties;
         private readonly ToolStripButton _saveButton;
         private ModelActor _highlightActor;
-        private bool _refreshOnLodsLoaded;
+        private bool _refreshOnLODsLoaded;
 
         /// <inheritdoc />
         public ModelWindow(Editor editor, AssetItem item)
@@ -427,16 +425,16 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            // Sync highlight actor size with actual preview model (preview scales model for better usage experiance)
+            // Sync highlight actor size with actual preview model (preview scales model for better usage experience)
             if (_highlightActor && _highlightActor.IsActive)
             {
                 _highlightActor.Transform = _preview.PreviewModelActor.Transform;
             }
 
-            // Model is loaded but LODs data may be during streaming so refresh proeprties on fully loaded
-            if (_refreshOnLodsLoaded && _asset && _asset.LoadedLODs == _asset.LODs.Length)
+            // Model is loaded but LODs data may be during streaming so refresh properties on fully loaded
+            if (_refreshOnLODsLoaded && _asset && _asset.LoadedLODs == _asset.LODs.Length)
             {
-                _refreshOnLodsLoaded = false;
+                _refreshOnLODsLoaded = false;
                 _propertiesPresenter.BuildLayout();
             }
 
@@ -502,9 +500,9 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnLoad(this);
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
-            _refreshOnLodsLoaded = true;
+            _refreshOnLODsLoaded = true;
 
-            // TODO: disable streamign for this model
+            // TODO: disable streaming for this model
 
             base.OnAssetLoaded();
         }
@@ -525,7 +523,7 @@ namespace FlaxEditor.Windows.Assets
         {
             base.OnDestroy();
 
-            FlaxEngine.Object.Destroy(ref _highlightActor);
+            Object.Destroy(ref _highlightActor);
         }
 
         /// <inheritdoc />

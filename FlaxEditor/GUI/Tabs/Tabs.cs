@@ -135,7 +135,7 @@ namespace FlaxEditor.GUI
                 tabsSize = Vector2.Min(tabsSize, clientSize.Size);
                 var tabRect = new Rectangle(Vector2.Zero, tabsSize);
                 var tabStripOffset = Tabs._orientation == Orientation.Horizontal ? new Vector2(tabsSize.X, 0) : new Vector2(0, tabsSize.Y);
-                
+
                 // Arrange tab header controls
                 for (int i = 0; i < Children.Count; i++)
                 {
@@ -147,7 +147,7 @@ namespace FlaxEditor.GUI
                 }
             }
         }
-        
+
         /// <summary>
         /// The selected tab index.
         /// </summary>
@@ -288,7 +288,7 @@ namespace FlaxEditor.GUI
             _orientation = Orientation.Horizontal;
 
             TabsPanel = new TabsHeader(this);
-            
+
             TabStripColor = Style.Current.LightBackground;
 
             TabsPanel.Parent = this;
@@ -323,7 +323,7 @@ namespace FlaxEditor.GUI
         {
             SelectedTabChanged?.Invoke(this);
         }
-        
+
         /// <inheritdoc />
         public override void OnChildrenChanged()
         {
@@ -343,10 +343,10 @@ namespace FlaxEditor.GUI
             }
 
             TabsPanel.IsLayoutLocked = wasLocked;
-            
+
             base.OnChildrenChanged();
         }
-        
+
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {

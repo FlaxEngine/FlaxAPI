@@ -31,7 +31,7 @@ namespace FlaxEditor.CustomEditors.Elements
 
         /// <inheritdoc />
         public override ContainerControl ContainerControl => TreeNode;
-        
+
         /// <inheritdoc />
         public TreeNodeElement Node(string text)
         {

@@ -37,7 +37,7 @@ namespace FlaxEngine.GUI
         /// Item icon (best is 16x16).
         /// </summary>
         public Sprite Icon;
-        
+
         /// <summary>
         /// The checked state.
         /// </summary>

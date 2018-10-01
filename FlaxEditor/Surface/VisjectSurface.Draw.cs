@@ -147,7 +147,7 @@ namespace FlaxEditor.Surface
             // Draw connection
             OutputBox.DrawConnection(ref startPos, ref endPos, ref lineColor);
         }
-        
+
         /// <summary>
         /// Draws the contents of the surface (nodes, connections, comments, etc.).
         /// </summary>

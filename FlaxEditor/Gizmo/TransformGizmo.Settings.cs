@@ -74,7 +74,7 @@ namespace FlaxEditor.Gizmo
         /// The value to adjust all transformation when precisionMode is active.
         /// </summary>
         public float PrecisionModeScale = 0.1f;
-        
+
         /// <summary>
         /// True if enable grid snapping when moving objects
         /// </summary>

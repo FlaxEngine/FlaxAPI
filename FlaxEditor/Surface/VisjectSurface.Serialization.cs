@@ -689,6 +689,23 @@ namespace FlaxEditor.Surface
                     control.OnSurfaceLoaded();
             }
 
+            // Update boxes types for nodes that dependant box types based on incoming connections
+            {
+                bool keepUpdating = false;
+                int updateLimit = 100;
+                do
+                {
+                    for (int i = 0; i < _surface.Children.Count; i++)
+                    {
+                        if (_surface.Children[i] is SurfaceNode node && !node.HasDependentBoxesSetup)
+                        {
+                            node.UpdateBoxesTypes();
+                            keepUpdating = true;
+                        }
+                    }
+                } while (keepUpdating && updateLimit-- > 0);
+            }
+
             // End
             _edited = false;
             Owner.OnSurfaceEditedChanged();
