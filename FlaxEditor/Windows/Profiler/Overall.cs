@@ -14,6 +14,7 @@ namespace FlaxEditor.Windows.Profiler
     {
         private readonly SingleChart _fpsChart;
         private readonly SingleChart _updateTimeChart;
+        private readonly SingleChart _drawTimeChart;
         private readonly SingleChart _cpuMemChart;
         private readonly SingleChart _gpuMemChart;
 
@@ -42,11 +43,18 @@ namespace FlaxEditor.Windows.Profiler
             _fpsChart.SelectedSampleChanged += OnSelectedSampleChanged;
             _updateTimeChart = new SingleChart
             {
-                Title = "Update",
+                Title = "Update Time",
                 FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
                 Parent = layout,
             };
             _updateTimeChart.SelectedSampleChanged += OnSelectedSampleChanged;
+            _drawTimeChart = new SingleChart
+            {
+                Title = "Draw Time",
+                FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
+                Parent = layout,
+            };
+            _drawTimeChart.SelectedSampleChanged += OnSelectedSampleChanged;
             _cpuMemChart = new SingleChart
             {
                 Title = "CPU Memory",
@@ -68,6 +76,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             _fpsChart.Clear();
             _updateTimeChart.Clear();
+            _drawTimeChart.Clear();
             _cpuMemChart.Clear();
             _gpuMemChart.Clear();
         }
@@ -78,6 +87,7 @@ namespace FlaxEditor.Windows.Profiler
             var stats = ProfilingTools.Stats;
             _fpsChart.AddSample(stats.FPS);
             _updateTimeChart.AddSample(stats.UpdateTimeMs);
+            _drawTimeChart.AddSample(stats.DrawTimeMs);
             _cpuMemChart.AddSample(stats.ProcessMemory_UsedPhysicalMemory / 1024 / 1024);
             _gpuMemChart.AddSample(stats.MemoryGPU_Used / 1024 / 1024);
         }
@@ -87,6 +97,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             _fpsChart.SelectedSampleIndex = selectedFrame;
             _updateTimeChart.SelectedSampleIndex = selectedFrame;
+            _drawTimeChart.SelectedSampleIndex = selectedFrame;
             _cpuMemChart.SelectedSampleIndex = selectedFrame;
             _gpuMemChart.SelectedSampleIndex = selectedFrame;
         }
