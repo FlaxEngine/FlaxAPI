@@ -181,7 +181,7 @@ namespace FlaxEditor.History
         public override void Undo()
         {
             var data = PrepareData();
-            for (var i = 0; i < data.Diff.Length; i++)
+            for (var i = data.Diff.Length - 1; i >= 0; i--)
             {
                 var diff = data.Diff[i];
                 diff.SetMemberValue(data.TargetInstance, diff.Value1);
