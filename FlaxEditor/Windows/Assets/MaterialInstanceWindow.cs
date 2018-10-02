@@ -2,9 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -24,139 +27,89 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
+        [CustomEditor(typeof(ParametersEditor))]
         private sealed class PropertiesProxy
         {
             private Material _restoreBase;
             private Dictionary<string, object> _restoreParams;
 
-            [EditorOrder(10), EditorDisplay("General"), Tooltip("The base material used to override it's properties")]
+            [EditorDisplay("General"), Tooltip("The base material used to override it's properties")]
             public Material BaseMaterial
             {
-                get => MaterialWinRef?.Asset?.BaseMaterial;
+                get => Window?.Asset?.BaseMaterial;
                 set
                 {
-                    var asset = MaterialWinRef?.Asset;
+                    var asset = Window?.Asset;
                     if (asset)
+                    {
                         asset.BaseMaterial = value;
+                        //Window._editor.BuildLayoutOnUpdate();
+                    }
                 }
             }
 
-            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
-            public MaterialInstanceWindow MaterialWinRef { get; set; }
+            /// <summary>
+            /// The window reference. Used to handle some special logic.
+            /// </summary>
+            [NoSerialize, HideInEditor]
+            public MaterialInstanceWindow Window;
 
             /// <summary>
-            /// Custom editor for editing material parameters collection.
+            /// The material parameter values collection. Used to record undo changes.
             /// </summary>
-            /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
-            public class ParametersEditor : CustomEditor
+            /// <remarks>
+            /// Contains only items with raw values excluding Flax Objects.
+            /// </remarks>
+            [HideInEditor]
+            public object[] Values
             {
-                private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
-                private int _parametersHash;
-
-                /// <inheritdoc />
-                public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
-
-                /// <inheritdoc />
-                public override void Initialize(LayoutElementsContainer layout)
+                get => Window?.Asset?.Parameters.Select(x => x.Value).ToArray();
+                set
                 {
-                    var materialWin = Values[0] as MaterialInstanceWindow;
-                    var material = materialWin?.Asset;
-                    if (material == null)
+                    var parameters = Window?.Asset?.Parameters;
+                    if (value != null && parameters != null)
                     {
-                        _parametersHash = -1;
-                        layout.Label("No parameters");
-                        return;
-                    }
-                    if (!material.IsLoaded || (material.BaseMaterial && !material.BaseMaterial.IsLoaded))
-                    {
-                        _parametersHash = -2;
-                        layout.Label("Loading...");
-                        return;
-                    }
-                    _parametersHash = material._parametersHash;
-                    var parameters = material.Parameters;
+                        if (value.Length != parameters.Length)
+                            return;
 
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        var p = parameters[i];
-                        if (!p.IsPublic)
-                            continue;
-
-                        var pIndex = i;
-                        var pValue = p.Value;
-                        Type pType;
-                        object[] attributes = null;
-                        switch (p.Type)
+                        for (int i = 0; i < value.Length; i++)
                         {
-                        case MaterialParameterType.CubeTexture:
-                            pType = typeof(CubeTexture);
-                            break;
-                        case MaterialParameterType.Texture:
-                        case MaterialParameterType.NormalMap:
-                            pType = typeof(Texture);
-                            break;
-                        case MaterialParameterType.RenderTarget:
-                        case MaterialParameterType.RenderTargetArray:
-                        case MaterialParameterType.RenderTargetCube:
-                        case MaterialParameterType.RenderTargetVolume:
-                            pType = typeof(RenderTarget);
-                            break;
-                        default:
-                            pType = p.Value.GetType();
-                            // TODO: support custom attributes with defined value range for parameter (min, max)
-                            attributes = DefaultAttributes;
-                            break;
+                            var p = parameters[i].Value;
+                            if (p is FlaxEngine.Object || p == null)
+                                continue;
+
+                            parameters[i].Value = value[i];
                         }
-
-                        var propertyValue = new CustomValueContainer(
-                            pType,
-                            pValue,
-                            (instance, index) =>
-                            {
-                                // Get material parameter
-                                var win = (MaterialInstanceWindow)instance;
-                                return win.Asset.Parameters[pIndex].Value;
-                            },
-                            (instance, index, value) =>
-                            {
-                                // Set material parameter and surface parameter
-                                var win = (MaterialInstanceWindow)instance;
-                                win.Asset.Parameters[pIndex].Value = value;
-                                win._paramValueChange = true;
-                            },
-                            attributes
-                        );
-
-                        layout.Property(p.Name, propertyValue);
                     }
                 }
+            }
 
-                /// <inheritdoc />
-                public override void Refresh()
+            /// <summary>
+            /// The material parameter values collection. Used to record undo changes.
+            /// </summary>
+            /// <remarks>
+            /// Contains only items with references to Flax Objects identified by ID.
+            /// </remarks>
+            [HideInEditor]
+            public FlaxEngine.Object[] ValuesRef
+            {
+                get => Window?.Asset?.Parameters.Select(x => x.Value as FlaxEngine.Object).Cast<FlaxEngine.Object>().ToArray();
+                set
                 {
-                    base.Refresh();
-
-                    var materialWin = Values[0] as MaterialInstanceWindow;
-                    var material = materialWin?.Asset;
-                    int parametersHash = -1;
-                    if (material != null)
+                    var parameters = Window?.Asset?.Parameters;
+                    if (value != null && parameters != null)
                     {
-                        if (material.IsLoaded)
-                        {
-                            var parameters = material.Parameters; // need to ask for params here to sync valid hash   
-                            parametersHash = material._parametersHash;
-                        }
-                        else
-                        {
-                            parametersHash = -2;
-                        }
-                    }
+                        if (value.Length != parameters.Length)
+                            return;
 
-                    if (parametersHash != _parametersHash)
-                    {
-                        // Parameters has been modified (loaded/unloaded/edited)
-                        RebuildLayout();
+                        for (int i = 0; i < value.Length; i++)
+                        {
+                            var p = parameters[i].Value;
+                            if (!(p is FlaxEngine.Object || p == null))
+                                continue;
+
+                            parameters[i].Value = value[i];
+                        }
                     }
                 }
             }
@@ -168,7 +121,7 @@ namespace FlaxEditor.Windows.Assets
             public void OnLoad(MaterialInstanceWindow materialWin)
             {
                 // Link
-                MaterialWinRef = materialWin;
+                Window = materialWin;
 
                 // Prepare restore data
                 PeekState();
@@ -179,10 +132,10 @@ namespace FlaxEditor.Windows.Assets
             /// </summary>
             public void PeekState()
             {
-                if (MaterialWinRef == null)
+                if (Window == null)
                     return;
 
-                var material = MaterialWinRef.Asset;
+                var material = Window.Asset;
                 _restoreBase = material.BaseMaterial;
                 var parameters = material.Parameters;
                 _restoreParams = new Dictionary<string, object>();
@@ -195,10 +148,10 @@ namespace FlaxEditor.Windows.Assets
             /// </summary>
             public void DiscardChanges()
             {
-                if (MaterialWinRef == null)
+                if (Window == null)
                     return;
 
-                var material = MaterialWinRef.Asset;
+                var material = Window.Asset;
                 material.BaseMaterial = _restoreBase;
                 var parameters = material.Parameters;
                 for (int i = 0; i < parameters.Length; i++)
@@ -217,14 +170,149 @@ namespace FlaxEditor.Windows.Assets
             public void OnClean()
             {
                 // Unlink
-                MaterialWinRef = null;
+                Window = null;
+            }
+        }
+
+        /// <summary>
+        /// Custom editor for editing material parameters collection.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
+        public class ParametersEditor : GenericEditor
+        {
+            private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
+            private int _parametersHash;
+
+            /// <inheritdoc />
+            public override void Initialize(LayoutElementsContainer layout)
+            {
+                // Prepare
+                var proxy = (PropertiesProxy)Values[0];
+                var material = proxy.Window?.Asset;
+                if (material == null)
+                {
+                    _parametersHash = -1;
+                    layout.Label("No parameters");
+                    return;
+                }
+                if (!material.IsLoaded || (material.BaseMaterial && !material.BaseMaterial.IsLoaded))
+                {
+                    _parametersHash = -2;
+                    layout.Label("Loading...");
+                    return;
+                }
+                _parametersHash = material._parametersHash;
+                var parameters = material.Parameters;
+
+                // Base
+                base.Initialize(layout);
+
+                // Show parameters
+                if (parameters.Length != 0)
+                {
+                    var parametersGroup = layout.Group("Parameters");
+                    InitializeProperties(parametersGroup, parameters);
+                }
+            }
+
+            private void InitializeProperties(LayoutElementsContainer layout, MaterialParameter[] parameters)
+            {
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    var p = parameters[i];
+                    if (!p.IsPublic)
+                        continue;
+
+                    var pIndex = i;
+                    var pValue = p.Value;
+                    Type pType;
+                    object[] attributes = null;
+
+                    switch (p.Type)
+                    {
+                    case MaterialParameterType.CubeTexture:
+                        pType = typeof(CubeTexture);
+                        break;
+                    case MaterialParameterType.Texture:
+                    case MaterialParameterType.NormalMap:
+                        pType = typeof(Texture);
+                        break;
+                    case MaterialParameterType.RenderTarget:
+                    case MaterialParameterType.RenderTargetArray:
+                    case MaterialParameterType.RenderTargetCube:
+                    case MaterialParameterType.RenderTargetVolume:
+                        pType = typeof(RenderTarget);
+                        break;
+                    default:
+                        pType = p.Value.GetType();
+                        // TODO: support custom attributes with defined value range for parameter (min, max)
+                        attributes = DefaultAttributes;
+                        break;
+                    }
+
+                    var propertyValue = new CustomValueContainer(
+                        pType,
+                        pValue,
+                        (instance, index) =>
+                        {
+                            // Get material parameter
+                            var proxy = (PropertiesProxy)instance;
+                            var array = proxy.Window.Asset.Parameters;
+                            if (array == null || array.Length <= pIndex)
+                                throw new TargetException("Material parameters collection has been changed.");
+                            return array[pIndex].Value;
+                        },
+                        (instance, index, value) =>
+                        {
+                            // Set material parameter and surface parameter
+                            var proxy = (PropertiesProxy)instance;
+                            proxy.Window.Asset.Parameters[pIndex].Value = value;
+                            proxy.Window._paramValueChange = true;
+                        },
+                        attributes
+                    );
+
+                    layout.Property(p.Name, propertyValue);
+                }
+            }
+
+            /// <inheritdoc />
+            public override void Refresh()
+            {
+                base.Refresh();
+
+                var proxy = Values[0] as PropertiesProxy;
+                var material = proxy?.Window?.Asset;
+                int parametersHash = -1;
+                if (material != null)
+                {
+                    if (material.IsLoaded)
+                    {
+                        var parameters = material.Parameters; // need to ask for params here to sync valid hash   
+                        parametersHash = material._parametersHash;
+                    }
+                    else
+                    {
+                        parametersHash = -2;
+                    }
+                }
+
+                if (parametersHash != _parametersHash)
+                {
+                    // Parameters has been modified (loaded/unloaded/edited)
+                    RebuildLayout();
+                }
             }
         }
 
         private readonly SplitPanel _split;
         private readonly MaterialPreview _preview;
         private readonly ToolStripButton _saveButton;
+        private readonly ToolStripButton _undoButton;
+        private readonly ToolStripButton _redoButton;
 
+        private readonly CustomEditorPresenter _editor;
+        private readonly Undo _undo;
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForLoad;
         internal bool _paramValueChange;
@@ -233,8 +321,17 @@ namespace FlaxEditor.Windows.Assets
         public MaterialInstanceWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            // Undo
+            _undo = new Undo();
+            _undo.UndoDone += OnUndo;
+            _undo.RedoDone += OnUndo;
+            _undo.ActionDone += OnUndo;
+
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
+            _toolstrip.AddSeparator();
+            _undoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Undo32, _undo.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
+            _redoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Redo32, _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/materials/instanced-materials/index.html")).LinkTooltip("See documentation to learn more");
 
@@ -253,11 +350,19 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Material properties editor
-            var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.Parent = _split.Panel2;
+            _editor = new CustomEditorPresenter(_undo);
+            _editor.Panel.Parent = _split.Panel2;
             _properties = new PropertiesProxy();
-            propertiesEditor.Select(_properties);
-            propertiesEditor.Modified += OnMaterialPropertyEdited;
+            _editor.Select(_properties);
+            _editor.Modified += OnMaterialPropertyEdited;
+        }
+
+        private void OnUndo(IUndoAction action)
+        {
+            _paramValueChange = false;
+            MarkAsEdited();
+            UpdateToolstrip();
+            _editor.BuildLayoutOnUpdate();
         }
 
         private void OnMaterialPropertyEdited()
@@ -291,6 +396,8 @@ namespace FlaxEditor.Windows.Assets
         protected override void UpdateToolstrip()
         {
             _saveButton.Enabled = IsEdited;
+            _undoButton.Enabled = _undo.CanUndo;
+            _redoButton.Enabled = _undo.CanRedo;
 
             base.UpdateToolstrip();
         }
@@ -320,6 +427,9 @@ namespace FlaxEditor.Windows.Assets
             // Discard unsaved changes
             _properties.DiscardChanges();
 
+            // Cleanup
+            _undo.Clear();
+
             base.OnClose();
         }
 
@@ -339,7 +449,32 @@ namespace FlaxEditor.Windows.Assets
 
                 // Setup
                 ClearEditedFlag();
+                _undo.Clear();
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            bool result = base.OnKeyDown(key);
+            if (!result)
+            {
+                if (Root.GetKey(Keys.Control))
+                {
+                    switch (key)
+                    {
+                    case Keys.Z:
+                        _undo.PerformUndo();
+                        return true;
+                    case Keys.Y:
+                        _undo.PerformRedo();
+                        return true;
+                    }
+                }
+            }
+
+            return result;
         }
 
         /// <inheritdoc />
