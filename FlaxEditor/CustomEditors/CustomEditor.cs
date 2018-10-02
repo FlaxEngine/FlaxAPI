@@ -210,8 +210,19 @@ namespace FlaxEditor.CustomEditors
 
         internal void RefreshRoot()
         {
-            for (int i = 0; i < _children.Count; i++)
-                _children[i].RefreshRootChild();
+            try
+            {
+                for (int i = 0; i < _children.Count; i++)
+                    _children[i].RefreshRootChild();
+            }
+            catch (TargetException ex)
+            {
+                // This happens when something (from root editor) calls the error.
+                // Just handle it and rebuild UI. Some parts of the pipeline can report data problems via that exception.
+                Editor.LogWarning("Exception while updating the root editors");
+                Editor.LogWarning(ex);
+                Presenter.BuildLayoutOnUpdate();
+            }
         }
 
         internal void RefreshRootChild()
@@ -272,7 +283,7 @@ namespace FlaxEditor.CustomEditors
                 // It's valid, just rebuild the child editors and log the warning to keep it tracking.
                 Editor.LogWarning("Exception while updating the child editors");
                 Editor.LogWarning(ex);
-                RebuildLayout();
+                RebuildLayoutOnRefresh();
             }
 
             // Rebuild if flag is set
