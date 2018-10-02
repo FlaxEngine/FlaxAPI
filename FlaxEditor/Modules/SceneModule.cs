@@ -140,7 +140,7 @@ namespace FlaxEditor.Modules
             var sky = Sky.New();
             var sun = DirectionalLight.New();
             var skyLight = SkyLight.New();
-            var floor = ModelActor.New();
+            var floor = StaticModel.New();
             var cam = Camera.New();
             //
             scene.StaticFlags = StaticFlags.FullyStatic;

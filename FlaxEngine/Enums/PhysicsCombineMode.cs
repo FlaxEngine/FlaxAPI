@@ -20,7 +20,7 @@ namespace FlaxEngine
         /// <summary>
         /// Uses the smaller value of the touching materials: min(a,b).
         /// </summary>
-        Mininum = 1,
+        Minimum = 1,
 
         /// <summary>
         /// Multiplies the values of the touching materials: a*b.

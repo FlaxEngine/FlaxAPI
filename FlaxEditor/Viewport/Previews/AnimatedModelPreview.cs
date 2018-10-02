@@ -14,7 +14,7 @@ namespace FlaxEditor.Viewport.Previews
     public class AnimatedModelPreview : AssetPreview
     {
         private AnimatedModel _previewModel;
-        private ModelActor _previewBonesActor;
+        private StaticModel _previewBonesActor;
         private Model _previewBonesModel;
         private AnimatedModel.Pose _previewModelPose;
         private int _previewBonesCounter;
@@ -33,7 +33,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <summary>
         /// Gets the skinned model actor used to preview selected asset.
         /// </summary>
-        public AnimatedModel PreviewModelActor => _previewModel;
+        public AnimatedModel PreviewActor => _previewModel;
 
         /// <summary>
         /// Gets or sets a value indicating whether play the animation in editor.
@@ -72,7 +72,7 @@ namespace FlaxEditor.Viewport.Previews
             _previewModel.UpdateMode = AnimatedModel.AnimationUpdateMode.Manual;
             _previewBonesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
             _previewBonesModel.SetupLODs(1);
-            _previewBonesActor = ModelActor.New();
+            _previewBonesActor = StaticModel.New();
             _previewBonesActor.Model = _previewBonesModel;
             _previewBonesActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
 

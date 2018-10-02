@@ -55,7 +55,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(ExponentialHeightFog), typeof(ExponentialHeightFogNode));
             CustomNodesTypes.Add(typeof(SkyLight), typeof(SkyLightNode));
             CustomNodesTypes.Add(typeof(PostFxVolume), typeof(PostFxVolumeNode));
-            CustomNodesTypes.Add(typeof(ModelActor), typeof(ModelActorNode));
+            CustomNodesTypes.Add(typeof(StaticModel), typeof(StaticModelNode));
             CustomNodesTypes.Add(typeof(BoxBrush), typeof(BoxBrushNode));
             CustomNodesTypes.Add(typeof(TextRender), typeof(TextRenderNode));
             CustomNodesTypes.Add(typeof(AudioListener), typeof(AudioListenerNode));

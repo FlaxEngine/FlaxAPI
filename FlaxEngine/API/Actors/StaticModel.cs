@@ -4,7 +4,7 @@ using System;
 
 namespace FlaxEngine
 {
-    public sealed partial class ModelActor
+    public sealed partial class StaticModel
     {
         private ModelEntryInfo[] _entries;
 
@@ -49,9 +49,9 @@ namespace FlaxEngine
 
         /// <summary>
         /// Occurs when entries collection gets changed.
-        /// It's called on <see cref="ModelActor"/> model changed or when model asset gets reloaded, etc.
+        /// It's called on <see cref="StaticModel"/> model changed or when model asset gets reloaded, etc.
         /// </summary>
-        public event Action<ModelActor> EntriesChanged;
+        public event Action<StaticModel> EntriesChanged;
 
         internal void Internal_OnModelChanged()
         {

@@ -47,7 +47,7 @@ namespace FlaxEditor
         /// Highlights the model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void HighlightModel(ModelActor model)
+        public void HighlightModel(StaticModel model)
         {
             if (model.Model == null)
                 return;
@@ -62,7 +62,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="entryIndex">Index of the entry to highlight.</param>
-        public void HighlightModel(ModelActor model, int entryIndex)
+        public void HighlightModel(StaticModel model, int entryIndex)
         {
             _highlights.Add(new HighlightData
             {
@@ -97,17 +97,17 @@ namespace FlaxEditor
             for (var i = 0; i < _highlights.Count; i++)
             {
                 HighlightData highlight = _highlights[i];
-                if (highlight.Target is ModelActor modelActor)
+                if (highlight.Target is StaticModel staticModel)
                 {
-                    if (modelActor.Model == null)
+                    if (staticModel.Model == null)
                         continue;
 
-                    modelActor.Transform.GetWorld(out m1);
-                    modelActor.Entries[highlight.EntryIndex].Transform.GetWorld(out m2);
+                    staticModel.Transform.GetWorld(out m1);
+                    staticModel.Entries[highlight.EntryIndex].Transform.GetWorld(out m2);
                     Matrix.Multiply(ref m2, ref m1, out world);
-                    BoundingSphere bounds = BoundingSphere.FromBox(modelActor.Box);
+                    BoundingSphere bounds = BoundingSphere.FromBox(staticModel.Box);
 
-                    collector.AddDrawCall(modelActor.Model, highlight.EntryIndex, _highlightMaterial, ref bounds, ref world);
+                    collector.AddDrawCall(staticModel.Model, highlight.EntryIndex, _highlightMaterial, ref bounds, ref world);
                 }
             }
 

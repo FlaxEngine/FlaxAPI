@@ -340,7 +340,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly CustomEditorPresenter _propertiesPresenter;
         private readonly PropertiesProxy _properties;
         private readonly ToolStripButton _saveButton;
-        private ModelActor _highlightActor;
+        private StaticModel _highlightActor;
         private bool _refreshOnLODsLoaded;
 
         /// <inheritdoc />
@@ -377,7 +377,7 @@ namespace FlaxEditor.Windows.Assets
             _propertiesPresenter.Modified += MarkAsEdited;
 
             // Highlight actor (used to highlight selected material slot, see UpdateEffectsOnAsset)
-            _highlightActor = ModelActor.New();
+            _highlightActor = StaticModel.New();
             _highlightActor.IsActive = false;
             _preview.Task.CustomActors.Add(_highlightActor);
         }
@@ -392,7 +392,7 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private void UpdateEffectsOnAsset()
         {
-            var entries = _preview.PreviewModelActor.Entries;
+            var entries = _preview.PreviewStaticModel.Entries;
             if (entries != null)
             {
                 for (int i = 0; i < entries.Length; i++)
@@ -428,7 +428,7 @@ namespace FlaxEditor.Windows.Assets
             // Sync highlight actor size with actual preview model (preview scales model for better usage experience)
             if (_highlightActor && _highlightActor.IsActive)
             {
-                _highlightActor.Transform = _preview.PreviewModelActor.Transform;
+                _highlightActor.Transform = _preview.PreviewStaticModel.Transform;
             }
 
             // Model is loaded but LODs data may be during streaming so refresh properties on fully loaded

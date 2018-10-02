@@ -479,7 +479,7 @@ namespace FlaxEditor.SceneGraph.GUI
                         {
                             // Create actor
                             var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
-                            var actor = ModelActor.New();
+                            var actor = StaticModel.New();
                             actor.StaticFlags = Actor.StaticFlags;
                             actor.Name = item.ShortName;
                             actor.Model = model;

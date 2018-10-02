@@ -54,8 +54,8 @@ namespace FlaxEditor.Viewport
 
         private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
 
-        private ModelActor _previewModelActor;
-        private int _previewModelActorEntryIndex;
+        private StaticModel _previewStaticModel;
+        private int _previewModelEntryIndex;
 
         /// <summary>
         /// Drag and drop handlers
@@ -279,9 +279,9 @@ namespace FlaxEditor.Viewport
 
         private void RenderTaskOnDraw(DrawCallsCollector collector)
         {
-            if (_previewModelActor)
+            if (_previewStaticModel)
             {
-                _debugDrawData.HighlightModel(_previewModelActor, _previewModelActorEntryIndex);
+                _debugDrawData.HighlightModel(_previewStaticModel, _previewModelEntryIndex);
             }
 
             _debugDrawData.OnDraw(collector);
@@ -648,18 +648,18 @@ namespace FlaxEditor.Viewport
                 SceneGraphNode hit;
                 GetHitLocation(ref location, out hit, out hitLocation);
 
-                if (hit is ModelActorNode.EntryNode meshNode)
+                if (hit is StaticModelNode.EntryNode meshNode)
                 {
-                    _previewModelActor = meshNode.ModelActor;
-                    _previewModelActorEntryIndex = meshNode.Index;
+                    _previewStaticModel = meshNode.Model;
+                    _previewModelEntryIndex = meshNode.Index;
                 }
             }
         }
 
         private void ClearDragEffects()
         {
-            _previewModelActor = null;
-            _previewModelActorEntryIndex = -1;
+            _previewStaticModel = null;
+            _previewModelEntryIndex = -1;
         }
 
         /// <inheritdoc />
@@ -753,10 +753,10 @@ namespace FlaxEditor.Viewport
             {
             case ContentDomain.Material:
             {
-                if (hit is ModelActorNode.EntryNode meshNode)
+                if (hit is StaticModelNode.EntryNode meshNode)
                 {
                     var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                    using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
+                    using (new UndoBlock(Undo, meshNode.Model, "Change material"))
                         meshNode.Entry.Material = material;
                 }
                 else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
@@ -782,7 +782,7 @@ namespace FlaxEditor.Viewport
                 else
                 {
                     var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
-                    var actor = ModelActor.New();
+                    var actor = StaticModel.New();
                     actor.Name = item.ShortName;
                     actor.Model = model;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);

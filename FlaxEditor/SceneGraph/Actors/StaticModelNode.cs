@@ -1,35 +1,34 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using FlaxEngine;
 
 namespace FlaxEditor.SceneGraph.Actors
 {
     /// <summary>
-    /// Scene tree node for <see cref="ModelActor"/> actor type.
+    /// Scene tree node for <see cref="StaticModel"/> actor type.
     /// </summary>
     /// <seealso cref="ActorNode" />
-    public sealed class ModelActorNode : ActorNode
+    public sealed class StaticModelNode : ActorNode
     {
         /// <summary>
         /// Single model material slot entry node.
         /// </summary>
         /// <seealso cref="FlaxEditor.SceneGraph.ActorChildNode{T}" />
-        public sealed class EntryNode : ActorChildNode<ModelActorNode>
+        public sealed class EntryNode : ActorChildNode<StaticModelNode>
         {
             /// <summary>
             /// Gets the model actor.
             /// </summary>
-            public ModelActor ModelActor => (ModelActor)_actor.Actor;
+            public StaticModel Model => (StaticModel)_actor.Actor;
 
             /// <summary>
             /// Gets the entry.
             /// </summary>
-            public ModelEntryInfo Entry => ((ModelActor)_actor.Actor).Entries[Index];
+            public ModelEntryInfo Entry => ((StaticModel)_actor.Actor).Entries[Index];
 
             /// <inheritdoc />
-            public EntryNode(ModelActorNode actor, Guid id, int index)
+            public EntryNode(StaticModelNode actor, Guid id, int index)
             : base(actor, id, index)
             {
             }
@@ -53,20 +52,20 @@ namespace FlaxEditor.SceneGraph.Actors
             /// <inheritdoc />
             public override void OnDebugDraw(ViewportDebugDrawData data)
             {
-                data.HighlightModel((ModelActor)_actor.Actor, Index);
+                data.HighlightModel((StaticModel)_actor.Actor, Index);
             }
         }
 
         /// <inheritdoc />
-        public ModelActorNode(Actor actor)
+        public StaticModelNode(Actor actor)
         : base(actor)
         {
-            var modelActor = (ModelActor)actor;
+            var modelActor = (StaticModel)actor;
             modelActor.EntriesChanged += BuildNodes;
             BuildNodes(modelActor);
         }
 
-        private void BuildNodes(ModelActor actor)
+        private void BuildNodes(StaticModel actor)
         {
             // Clear previous
             DisposeChildNodes();
