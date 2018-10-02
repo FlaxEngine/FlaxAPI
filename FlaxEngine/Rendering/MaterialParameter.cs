@@ -244,28 +244,18 @@ namespace FlaxEngine.Rendering
                 switch (_type)
                 {
                 case MaterialParameterType.Bool:
-                    vBool = (bool)value;
+                    vBool = Convert.ToBoolean(value);
                     ptr = new IntPtr(&vBool);
                     break;
                 case MaterialParameterType.Integer:
                 {
-                    if (value is int)
-                        vInt = (int)value;
-                    else if (value is float)
-                        vInt = (int)(float)value;
-                    else
-                        throw new InvalidCastException();
+                    vInt = Convert.ToInt32(value);
                     ptr = new IntPtr(&vInt);
                     break;
                 }
                 case MaterialParameterType.Float:
                 {
-                    if (value is int)
-                        vFloat = (int)value;
-                    else if (value is float)
-                        vFloat = (float)value;
-                    else
-                        throw new InvalidCastException();
+                    vFloat = Convert.ToSingle(value);
                     ptr = new IntPtr(&vFloat);
                     break;
                 }
