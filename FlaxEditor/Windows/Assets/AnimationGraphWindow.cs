@@ -72,7 +72,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         _baseModel = value;
                         if (WindowReference != null)
-                            WindowReference.PreviewModelActor.SkinnedModel = _baseModel;
+                            WindowReference.PreviewActor.SkinnedModel = _baseModel;
                     }
                 }
             }
@@ -123,14 +123,14 @@ namespace FlaxEditor.Windows.Assets
                         layout.Label("Loading...");
                         return;
                     }
-                    var parameters = window.PreviewModelActor.Parameters;
+                    var parameters = window.PreviewActor.Parameters;
                     if (parameters == null || parameters.Length == 0)
                     {
                         _parametersHash = -1;
                         layout.Label("No parameters");
                         return;
                     }
-                    _parametersHash = window.PreviewModelActor._parametersHash;
+                    _parametersHash = window.PreviewActor._parametersHash;
 
                     for (int i = 0; i < parameters.Length; i++)
                     {
@@ -163,7 +163,7 @@ namespace FlaxEditor.Windows.Assets
                             {
                                 // Get parameter
                                 var win = (AnimationGraphWindow)instance;
-                                return win.PreviewModelActor.Parameters[pIndex].Value;
+                                return win.PreviewActor.Parameters[pIndex].Value;
                             },
                             (instance, index, value) =>
                             {
@@ -175,7 +175,7 @@ namespace FlaxEditor.Windows.Assets
                                 if (pGuidType)
                                     surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
 
-                                win.PreviewModelActor.Parameters[pIndex].Value = value;
+                                win.PreviewActor.Parameters[pIndex].Value = value;
                                 win.Surface.Parameters[pIndex].Value = surfaceParam;
                                 win._paramValueChange = true;
                             },
@@ -204,7 +204,7 @@ namespace FlaxEditor.Windows.Assets
                 private DragData DragParameter(DragablePropertyNameLabel label)
                 {
                     var win = (AnimationGraphWindow)Values[0];
-                    var animatedModel = win.PreviewModelActor;
+                    var animatedModel = win.PreviewActor;
                     var parameter = animatedModel.Parameters[(int)label.Tag];
                     return DragSurfaceParameters.GetDragData(parameter.Name);
                 }
@@ -245,7 +245,7 @@ namespace FlaxEditor.Windows.Assets
                 private void StartParameterRenaming(ClickablePropertyNameLabel label)
                 {
                     var win = (AnimationGraphWindow)Values[0];
-                    var animatedModel = win.PreviewModelActor;
+                    var animatedModel = win.PreviewActor;
                     var parameter = animatedModel.Parameters[(int)label.Tag];
                     var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
                     dialog.Tag = label;
@@ -287,8 +287,8 @@ namespace FlaxEditor.Windows.Assets
                     {
                         if (asset.IsLoaded)
                         {
-                            var parameters = window.PreviewModelActor.Parameters; // need to ask for params here to sync valid hash   
-                            parametersHash = window.PreviewModelActor._parametersHash;
+                            var parameters = window.PreviewActor.Parameters; // need to ask for params here to sync valid hash   
+                            parametersHash = window.PreviewActor._parametersHash;
                         }
                         else
                         {
@@ -312,7 +312,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 WindowReference = window;
 
-                var model = window.PreviewModelActor;
+                var model = window.PreviewActor;
                 var param = model.GetParam(BaseModelId);
                 BaseModel = param?.Value as SkinnedModel;
             }
@@ -323,7 +323,7 @@ namespace FlaxEditor.Windows.Assets
             /// <param name="window">The graph window.</param>
             public void OnSave(AnimationGraphWindow window)
             {
-                var model = window.PreviewModelActor;
+                var model = window.PreviewActor;
                 var param = model.GetParam(BaseModelId);
                 if (param != null)
                     param.Value = BaseModel;
@@ -361,7 +361,7 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// Gets the animated model actor used for the animation preview.
         /// </summary>
-        public AnimatedModel PreviewModelActor => _preview.PreviewModelActor;
+        public AnimatedModel PreviewActor => _preview.PreviewActor;
 
         /// <inheritdoc />
         public AnimationGraphWindow(Editor editor, AssetItem item)
@@ -461,7 +461,7 @@ namespace FlaxEditor.Windows.Assets
                 }
 
                 // Reset any root motion
-                _preview.PreviewModelActor.ResetLocalTransform();
+                _preview.PreviewActor.ResetLocalTransform();
             }
 
             return false;
@@ -540,7 +540,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void UnlinkItem()
         {
             _properties.OnClean();
-            PreviewModelActor.AnimationGraph = null;
+            PreviewActor.AnimationGraph = null;
             _isWaitingForSurfaceLoad = false;
 
             base.UnlinkItem();
@@ -549,7 +549,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void OnAssetLinked()
         {
-            PreviewModelActor.AnimationGraph = _asset;
+            PreviewActor.AnimationGraph = _asset;
             _isWaitingForSurfaceLoad = true;
 
             base.OnAssetLinked();

@@ -23,7 +23,7 @@ namespace FlaxEditor.Viewport.Previews
             "Cone"
         };
 
-        private ModelActor _previewModel;
+        private StaticModel _previewModel;
         private Decal _decal;
         private MaterialBase _material;
         private int _selectedModelIndex;
@@ -70,7 +70,7 @@ namespace FlaxEditor.Viewport.Previews
         : base(useWidgets)
         {
             // Setup preview scene
-            _previewModel = ModelActor.New();
+            _previewModel = StaticModel.New();
             _previewModel.Transform = new Transform(Vector3.Zero, Quaternion.RotationY(Mathf.Pi), new Vector3(0.45f));
             SelectedModelIndex = 0;
 

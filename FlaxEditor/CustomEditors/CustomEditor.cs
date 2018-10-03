@@ -41,6 +41,7 @@ namespace FlaxEditor.CustomEditors
         private readonly List<CustomEditor> _children = new List<CustomEditor>();
         private ValueContainer _values;
         private bool _isSetBlocked;
+        private bool _skipChildrenRefresh;
         private bool _hasValueDirty;
         private bool _rebuildOnRefresh;
         private object _valueToSet;
@@ -164,6 +165,14 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Sets the request to skip the custom editor children refresh during next update. Can be used when editor layout has to be rebuild during the update itself.
+        /// </summary>
+        public void SkipChildrenRefresh()
+        {
+            _skipChildrenRefresh = true;
+        }
+
+        /// <summary>
         /// Initializes this editor.
         /// </summary>
         /// <param name="layout">The layout builder.</param>
@@ -201,8 +210,19 @@ namespace FlaxEditor.CustomEditors
 
         internal void RefreshRoot()
         {
-            for (int i = 0; i < _children.Count; i++)
-                _children[i].RefreshRootChild();
+            try
+            {
+                for (int i = 0; i < _children.Count; i++)
+                    _children[i].RefreshRootChild();
+            }
+            catch (TargetException ex)
+            {
+                // This happens when something (from root editor) calls the error.
+                // Just handle it and rebuild UI. Some parts of the pipeline can report data problems via that exception.
+                Editor.LogWarning("Exception while updating the root editors");
+                Editor.LogWarning(ex);
+                Presenter.BuildLayoutOnUpdate();
+            }
         }
 
         internal void RefreshRootChild()
@@ -251,8 +271,10 @@ namespace FlaxEditor.CustomEditors
             // Update children
             try
             {
-                for (int i = 0; i < _children.Count; i++)
+                var childrenCount = _skipChildrenRefresh ? 0 : _children.Count;
+                for (int i = 0; i < childrenCount; i++)
                     _children[i].RefreshInternal();
+                _skipChildrenRefresh = false;
             }
             catch (TargetException ex)
             {
@@ -261,7 +283,7 @@ namespace FlaxEditor.CustomEditors
                 // It's valid, just rebuild the child editors and log the warning to keep it tracking.
                 Editor.LogWarning("Exception while updating the child editors");
                 Editor.LogWarning(ex);
-                RebuildLayout();
+                RebuildLayoutOnRefresh();
             }
 
             // Rebuild if flag is set

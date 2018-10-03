@@ -43,9 +43,9 @@ namespace FlaxEditor.CustomEditors.Editors
                 && ParentEditor?.ParentEditor != null
                 && ParentEditor.ParentEditor.Values.Count > 0)
             {
-                if (ParentEditor.ParentEditor.Values[0] is ModelActor modelActor)
+                if (ParentEditor.ParentEditor.Values[0] is StaticModel staticModel)
                 {
-                    var model = modelActor.Model;
+                    var model = staticModel.Model;
                     if (model && model.IsLoaded)
                     {
                         _group.Panel.HeaderText = "Entry " + model.MaterialSlots[entry.Index].Name;

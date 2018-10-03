@@ -20,7 +20,7 @@ namespace FlaxEditor.SceneGraph.Actors
             /// <summary>
             /// Gets the animated model actor.
             /// </summary>
-            public AnimatedModel ModelActor => (AnimatedModel)_actor.Actor;
+            public AnimatedModel Model => (AnimatedModel)_actor.Actor;
 
             /// <summary>
             /// Gets the entry.

@@ -17,7 +17,7 @@ namespace FlaxEditor.Windows.Profiler
         private readonly ToolStripButton _clearButton;
         private readonly ToolStripButton _prevFrameButton;
         private readonly ToolStripButton _nextFrameButton;
-        private readonly ToolStripButton _lastframeButton;
+        private readonly ToolStripButton _lastFrameButton;
         private readonly ToolStripButton _showOnlyLastUpdateEventsButton;
         private readonly Tabs _tabs;
         private int _frameIndex = -1;
@@ -101,8 +101,8 @@ namespace FlaxEditor.Windows.Profiler
             _prevFrameButton.LinkTooltip("Previous frame");
             _nextFrameButton = toolstrip.AddButton(editor.Icons.ArrowRight32, () => ViewFrameIndex++);
             _nextFrameButton.LinkTooltip("Next frame");
-            _lastframeButton = toolstrip.AddButton(editor.Icons.Step32, () => ViewFrameIndex = -1);
-            _lastframeButton.LinkTooltip("Current frame");
+            _lastFrameButton = toolstrip.AddButton(editor.Icons.Step32, () => ViewFrameIndex = -1);
+            _lastFrameButton.LinkTooltip("Current frame");
             toolstrip.AddSeparator();
             _showOnlyLastUpdateEventsButton = toolstrip.AddButton(editor.Icons.PageScale32, () => ShowOnlyLastUpdateEvents = !ShowOnlyLastUpdateEvents);
             _showOnlyLastUpdateEventsButton.LinkTooltip("Show only last update events and hide events from the other callbacks (e.g. draw or fixed update)");
@@ -168,7 +168,7 @@ namespace FlaxEditor.Windows.Profiler
             _clearButton.Enabled = _framesCount > 0;
             _prevFrameButton.Enabled = _frameIndex > 0;
             _nextFrameButton.Enabled = (_framesCount - _frameIndex - 1) > 0;
-            _lastframeButton.Enabled = _framesCount > 0;
+            _lastFrameButton.Enabled = _framesCount > 0;
             _showOnlyLastUpdateEventsButton.Checked = _showOnlyLastUpdateEvents;
         }
 

@@ -632,10 +632,10 @@ namespace FlaxEditor.Viewport
             {
             case ContentDomain.Material:
             {
-                if (hit is ModelActorNode.EntryNode meshNode)
+                if (hit is StaticModelNode.EntryNode meshNode)
                 {
                     var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                    using (new UndoBlock(Undo, meshNode.ModelActor, "Change material"))
+                    using (new UndoBlock(Undo, meshNode.Model, "Change material"))
                         meshNode.Entry.Material = material;
                 }
                 else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
@@ -661,7 +661,7 @@ namespace FlaxEditor.Viewport
                 else
                 {
                     var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
-                    var actor = ModelActor.New();
+                    var actor = StaticModel.New();
                     actor.Name = item.ShortName;
                     actor.Model = model;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);

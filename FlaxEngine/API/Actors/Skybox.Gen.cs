@@ -62,8 +62,8 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
-            get { return Internal_GetCustomMatrial(unmanagedPtr); }
-            set { Internal_SetCustomMatrial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            get { return Internal_GetCustomMaterial(unmanagedPtr); }
+            set { Internal_SetCustomMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -92,10 +92,10 @@ namespace FlaxEngine
         internal static extern void Internal_SetCubeTexture(IntPtr obj, IntPtr val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern MaterialBase Internal_GetCustomMatrial(IntPtr obj);
+        internal static extern MaterialBase Internal_GetCustomMaterial(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetCustomMatrial(IntPtr obj, IntPtr val);
+        internal static extern void Internal_SetCustomMaterial(IntPtr obj, IntPtr val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetColor(IntPtr obj, out Color resultAsRef);

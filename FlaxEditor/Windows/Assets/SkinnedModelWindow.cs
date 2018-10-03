@@ -404,7 +404,7 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private void UpdateEffectsOnAsset()
         {
-            var entries = _preview.PreviewModelActor.Entries;
+            var entries = _preview.PreviewActor.Entries;
             if (entries != null)
             {
                 for (int i = 0; i < entries.Length; i++)
@@ -440,7 +440,7 @@ namespace FlaxEditor.Windows.Assets
             // Sync highlight actor size with actual preview model (preview scales model for better usage experience)
             if (_highlightActor && _highlightActor.IsActive)
             {
-                _highlightActor.Transform = _preview.PreviewModelActor.Transform;
+                _highlightActor.Transform = _preview.PreviewActor.Transform;
             }
 
             // Model is loaded but meshes data may be during streaming so refresh properties on fully loaded
@@ -514,7 +514,7 @@ namespace FlaxEditor.Windows.Assets
             ClearEditedFlag();
 
             // Reset any root motion
-            _preview.PreviewModelActor.ResetLocalTransform();
+            _preview.PreviewActor.ResetLocalTransform();
 
             base.OnAssetLoaded();
         }

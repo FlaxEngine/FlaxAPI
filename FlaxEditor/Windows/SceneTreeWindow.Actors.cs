@@ -35,7 +35,7 @@ namespace FlaxEditor.Windows
             },
             new ActorsGroup
             {
-                Types = new[] { new KeyValuePair<string, Type>("Model", typeof(ModelActor)) }
+                Types = new[] { new KeyValuePair<string, Type>("Model", typeof(StaticModel)) }
             },
             new ActorsGroup
             {

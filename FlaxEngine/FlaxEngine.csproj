@@ -77,10 +77,7 @@
     <Compile Include="API\Actors\Joint.Gen.cs" />
     <Compile Include="API\Actors\Light.cs" />
     <Compile Include="API\Actors\Light.Gen.cs" />
-    <Compile Include="API\Actors\ModelActor.cs" />
-    <Compile Include="API\Actors\ModelActor.Gen.cs">
-      <DependentUpon>ModelActor.cs</DependentUpon>
-    </Compile>
+    <Compile Include="API\Actors\StaticModel.cs" />
     <Compile Include="API\Actors\PostFxVolume.cs" />
     <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
     <Compile Include="API\Actors\RigidBody.cs" />
@@ -95,6 +92,7 @@
     <Compile Include="API\Actors\Skybox.Gen.cs">
       <DependentUpon>Skybox.cs</DependentUpon>
     </Compile>
+    <Compile Include="API\Actors\StaticModel.Gen.cs" />
     <Compile Include="API\Actors\TextRender.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />

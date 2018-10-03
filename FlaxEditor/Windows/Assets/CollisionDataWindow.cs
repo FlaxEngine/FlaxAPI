@@ -152,7 +152,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly CustomEditorPresenter _propertiesPresenter;
         private readonly PropertiesProxy _properties;
         private Model _collisionWiresModel;
-        private ModelActor _collisionWiresShowActor;
+        private StaticModel _collisionWiresShowActor;
         private bool _updateWireMesh;
 
         /// <inheritdoc />
@@ -191,7 +191,7 @@ namespace FlaxEditor.Windows.Assets
             // Sync helper actor size with actual preview model (preview scales model for better usage experience)
             if (_collisionWiresShowActor && _collisionWiresShowActor.IsActive)
             {
-                _collisionWiresShowActor.Transform = _preview.PreviewModelActor.Transform;
+                _collisionWiresShowActor.Transform = _preview.PreviewStaticModel.Transform;
             }
 
             base.Update(deltaTime);
@@ -219,7 +219,7 @@ namespace FlaxEditor.Windows.Assets
                 _collisionWiresModel.LODs[0].Meshes[0].UpdateMesh(triangles, indices);
             if (_collisionWiresShowActor == null)
             {
-                _collisionWiresShowActor = ModelActor.New();
+                _collisionWiresShowActor = StaticModel.New();
                 _preview.Task.CustomActors.Add(_collisionWiresShowActor);
             }
             _collisionWiresShowActor.Model = _collisionWiresModel;

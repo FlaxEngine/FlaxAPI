@@ -14,7 +14,7 @@ namespace FlaxEditor.Viewport.Previews
     /// <seealso cref="AssetPreview" />
     public class ModelPreview : AssetPreview
     {
-        private ModelActor _previewModel;
+        private StaticModel _previewModel;
 
         /// <summary>
         /// Gets or sets the model asset to preview.
@@ -28,7 +28,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <summary>
         /// Gets the model actor used to preview selected asset.
         /// </summary>
-        public ModelActor PreviewModelActor => _previewModel;
+        public StaticModel PreviewStaticModel => _previewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelPreview"/> class.
@@ -40,7 +40,7 @@ namespace FlaxEditor.Viewport.Previews
             Task.Begin += OnBegin;
 
             // Setup preview scene
-            _previewModel = ModelActor.New();
+            _previewModel = StaticModel.New();
 
             // Link actors for rendering
             Task.CustomActors.Add(_previewModel);

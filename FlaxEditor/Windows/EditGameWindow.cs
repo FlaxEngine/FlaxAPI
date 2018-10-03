@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.States;
@@ -310,6 +311,47 @@ namespace FlaxEditor.Windows
             HideAllCameraPreviews();
 
             base.OnDestroy();
+        }
+
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
+
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("GridEnabled", Viewport.Grid.Enabled.ToString());
+            writer.WriteAttributeString("NearPlane", Viewport.NearPlane.ToString());
+            writer.WriteAttributeString("FarPlane", Viewport.FarPlane.ToString());
+            writer.WriteAttributeString("FieldOfView", Viewport.FieldOfView.ToString());
+            writer.WriteAttributeString("MovementSpeed", Viewport.MovementSpeed.ToString());
+        }
+
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            bool value1;
+            float value2;
+
+            if (bool.TryParse(node.GetAttribute("GridEnabled"), out value1))
+                Viewport.Grid.Enabled = value1;
+            if (float.TryParse(node.GetAttribute("NearPlane"), out value2))
+                Viewport.NearPlane = value2;
+            if (float.TryParse(node.GetAttribute("FarPlane"), out value2))
+                Viewport.FarPlane = value2;
+            if (float.TryParse(node.GetAttribute("FieldOfView"), out value2))
+                Viewport.FieldOfView = value2;
+            if (float.TryParse(node.GetAttribute("MovementSpeed"), out value2))
+                Viewport.MovementSpeed = value2;
+        }
+
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize()
+        {
+            Viewport.Grid.Enabled = true;
+            Viewport.NearPlane = 2.0f;
+            Viewport.FarPlane = 10000.0f;
+            Viewport.FieldOfView = 60.0f;
+            Viewport.MovementSpeed = 1.0f;
         }
     }
 }

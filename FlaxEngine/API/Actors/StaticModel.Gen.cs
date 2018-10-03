@@ -11,34 +11,34 @@ namespace FlaxEngine
     /// Renders model on the screen.
     /// </summary>
     [Serializable]
-    public sealed partial class ModelActor : Actor
+    public sealed partial class StaticModel : Actor
     {
         /// <summary>
-        /// Creates new <see cref="ModelActor"/> object.
+        /// Creates new <see cref="StaticModel"/> object.
         /// </summary>
-        private ModelActor() : base()
+        private StaticModel() : base()
         {
         }
 
         /// <summary>
-        /// Creates new instance of <see cref="ModelActor"/> object.
+        /// Creates new instance of <see cref="StaticModel"/> object.
         /// </summary>
         /// <returns>Created object.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static ModelActor New()
+        public static StaticModel New()
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_Create(typeof(ModelActor)) as ModelActor;
+            return Internal_Create(typeof(StaticModel)) as StaticModel;
 #endif
         }
 
         /// <summary>
-        /// Gets or sets model scale in lightmap parameter
+        /// Gets or sets model scale in lightmap parameter.
         /// </summary>
         [UnmanagedCall]
         [EditorOrder(10), EditorDisplay("Model", "Scale In Lightmap"), Tooltip("Model meshes master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
@@ -86,7 +86,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets model asset
+        /// Gets or sets model asset to draw.
         /// </summary>
         [UnmanagedCall]
         [EditorOrder(20), EditorDisplay("Model"), Tooltip("Model asset to draw")]
