@@ -346,7 +346,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Multi Blend 1D",
                 Description = "Animation blending in 1D",
                 Flags = NodeFlags.AnimGraphOnly,
-                Size = new Vector2(420, 400),
+                Size = new Vector2(420, 300),
                 DefaultValues = new object[]
                 {
                     // Node data
