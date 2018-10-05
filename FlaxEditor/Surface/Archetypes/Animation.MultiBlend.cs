@@ -15,12 +15,12 @@ namespace FlaxEditor.Surface.Archetypes
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public abstract class BlendPointsEditor : ContainerControl
     {
-        private bool _is2D;
+        private readonly bool _is2D;
         private Vector2 _rangeX;
         private Vector2 _rangeY;
-        private BlendPoint[] _blendPoints = new BlendPoint[Animation.MultiBlend1D.MaxAnimationsCount];
-        private Guid[] _pointsAnims = new Guid[Animation.MultiBlend1D.MaxAnimationsCount];
-        private Vector2[] _pointsLocations = new Vector2[Animation.MultiBlend1D.MaxAnimationsCount];
+        private readonly BlendPoint[] _blendPoints = new BlendPoint[Animation.MultiBlend1D.MaxAnimationsCount];
+        private readonly Guid[] _pointsAnims = new Guid[Animation.MultiBlend1D.MaxAnimationsCount];
+        private readonly Vector2[] _pointsLocations = new Vector2[Animation.MultiBlend1D.MaxAnimationsCount];
 
         /// <summary>
         /// Represents single blend point.
@@ -28,13 +28,15 @@ namespace FlaxEditor.Surface.Archetypes
         /// <seealso cref="FlaxEngine.GUI.Control" />
         protected class BlendPoint : Control
         {
-            private BlendPointsEditor _editor;
-            private int _index;
+            private static Matrix3x3 _transform = Matrix3x3.RotationZ(45.0f * Mathf.Deg2Rad) * Matrix3x3.Translation2D(4.0f, 0.5f);
+            private readonly BlendPointsEditor _editor;
+            private readonly int _index;
+            private bool _isMouseDown;
 
             /// <summary>
             /// The default size for the blend points.
             /// </summary>
-            public const float DefaultSize = 4.0f;
+            public const float DefaultSize = 8.0f;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="BlendPoint"/> class.
@@ -46,8 +48,96 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 _editor = editor;
                 _index = index;
+            }
 
-                BackgroundColor = Color.Red;
+            /// <inheritdoc />
+            public override void OnGotFocus()
+            {
+                base.OnGotFocus();
+
+                _editor.SelectedIndex = _index;
+            }
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                // Cache data
+                var isSelected = _editor.SelectedIndex == _index;
+
+                // Draw rotated rectangle
+                Render2D.PushTransform(ref _transform);
+                Render2D.FillRectangle(new Rectangle(0, 0, 5, 5), isSelected ? Color.Orange : Color.DarkGreen);
+                Render2D.PopTransform();
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (buttons == MouseButton.Left)
+                {
+                    Focus();
+                    _isMouseDown = true;
+                    StartMouseCapture();
+                    return true;
+                }
+
+                return base.OnMouseDown(location, buttons);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (buttons == MouseButton.Left && _isMouseDown)
+                {
+                    _isMouseDown = false;
+                    EndMouseCapture();
+                    return true;
+                }
+
+                return base.OnMouseUp(location, buttons);
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseMove(Vector2 location)
+            {
+                if (_isMouseDown)
+                {
+                    _editor.SetLocation(_index, _editor.BlendPointPosToBlendSpacePos(location));
+                }
+
+                base.OnMouseMove(location);
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseLeave()
+            {
+                if (_isMouseDown)
+                {
+                    _isMouseDown = false;
+                    EndMouseCapture();
+                }
+
+                base.OnMouseLeave();
+            }
+
+            /// <inheritdoc />
+            public override void OnLostFocus()
+            {
+                if (_isMouseDown)
+                {
+                    _isMouseDown = false;
+                    EndMouseCapture();
+                }
+
+                base.OnLostFocus();
+            }
+
+            /// <inheritdoc />
+            public override void OnEndMouseCapture()
+            {
+                _isMouseDown = false;
+
+                base.OnEndMouseCapture();
             }
         }
 
@@ -67,6 +157,7 @@ namespace FlaxEditor.Surface.Archetypes
         public BlendPointsEditor(bool is2D, float x, float y, float width, float height)
         : base(x, y, width, height)
         {
+            _is2D = is2D;
         }
 
         /// <summary>
@@ -76,14 +167,84 @@ namespace FlaxEditor.Surface.Archetypes
         /// <param name="rangeY">The space range for Y axis (X-width, Y-height).</param>
         /// <param name="pointsAnims">The points anims (input array to fill of size equal 14).</param>
         /// <param name="pointsLocations">The points locations (input array to fill of size equal 14).</param>
-        protected abstract void GetData(out Vector2 rangeX, out Vector2 rangeY, Guid[] pointsAnims, Vector2[] pointsLocations);
+        public abstract void GetData(out Vector2 rangeX, out Vector2 rangeY, Guid[] pointsAnims, Vector2[] pointsLocations);
+
+        /// <summary>
+        /// Gets or sets the index of the selected blend point.
+        /// </summary>
+        public abstract int SelectedIndex { get; set; }
+
+        /// <summary>
+        /// Sets the blend point location.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <param name="location">The location.</param>
+        public abstract void SetLocation(int index, Vector2 location);
+
+        /// <summary>
+        /// Gets the blend points area.
+        /// </summary>
+        /// <param name="pointsArea">The control-space area.</param>
+        public void GetPointsArea(out Rectangle pointsArea)
+        {
+            pointsArea = new Rectangle(Vector2.Zero, Size);
+            pointsArea.Expand(-10.0f);
+        }
+
+        /// <summary>
+        /// Converts the blend point position into the blend space position (defined by min/max per axis).
+        /// </summary>
+        /// <param name="pos">The blend point control position.</param>
+        /// <returns>The blend space position.</returns>
+        public Vector2 BlendPointPosToBlendSpacePos(Vector2 pos)
+        {
+            GetPointsArea(out var pointsArea);
+            pos += new Vector2(BlendPoint.DefaultSize * 0.5f);
+            if (_is2D)
+            {
+                pos = new Vector2(
+                    Mathf.Map(pos.X, pointsArea.Left, pointsArea.Right, _rangeX.X, _rangeX.Y),
+                    Mathf.Map(pos.Y, pointsArea.Right, pointsArea.Bottom, _rangeY.X, _rangeY.Y)
+                );
+            }
+            else
+            {
+                pos = new Vector2(
+                    Mathf.Map(pos.X, pointsArea.Left, pointsArea.Right, _rangeX.X, _rangeX.Y),
+                    0
+                );
+            }
+            return pos;
+        }
+
+        /// <summary>
+        /// Converts the blend space position into the blend point position.
+        /// </summary>
+        /// <param name="pos">The blend space position.</param>
+        /// <returns>The blend point control position.</returns>
+        public Vector2 BlendSpacePosToBlendPointPos(Vector2 pos)
+        {
+            GetPointsArea(out var pointsArea);
+            if (_is2D)
+            {
+                pos = new Vector2(
+                    Mathf.Map(pos.X, _rangeX.X, _rangeX.Y, pointsArea.Left, pointsArea.Right),
+                    Mathf.Map(pos.Y, _rangeY.X, _rangeY.Y, pointsArea.Right, pointsArea.Bottom)
+                );
+            }
+            else
+            {
+                pos = new Vector2(
+                    Mathf.Map(pos.X, _rangeX.X, _rangeX.Y, pointsArea.Left, pointsArea.Right),
+                    pointsArea.Center.Y
+                );
+            }
+            return pos - new Vector2(BlendPoint.DefaultSize * 0.5f);
+        }
 
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            var pointsArea = new Rectangle(Vector2.Zero, Size);
-            pointsArea.Expand(-10.0f);
-
             // Synchronize blend points collection
             GetData(out _rangeX, out _rangeY, _pointsAnims, _pointsLocations);
             for (int i = 0; i < Animation.MultiBlend1D.MaxAnimationsCount; i++)
@@ -100,23 +261,7 @@ namespace FlaxEditor.Surface.Archetypes
                     }
 
                     // Update blend point
-                    var location = _pointsLocations[i];
-                    Vector2 pos;
-                    if (_is2D)
-                    {
-                        pos = new Vector2(
-                            Mathf.Map(location.X, _rangeX.X, _rangeX.Y, pointsArea.Left, pointsArea.Right),
-                            Mathf.Map(location.Y, _rangeY.X, _rangeY.Y, pointsArea.Right, pointsArea.Bottom)
-                        );
-                    }
-                    else
-                    {
-                        pos = new Vector2(
-                            Mathf.Map(location.X, _rangeX.X, _rangeX.Y, pointsArea.Left, pointsArea.Right),
-                            pointsArea.Center.Y
-                        );
-                    }
-                    _blendPoints[i].Location = pos - new Vector2(BlendPoint.DefaultSize * 0.5f);
+                    _blendPoints[i].Location = BlendSpacePosToBlendPointPos(_pointsLocations[i]);
                 }
                 else
                 {
@@ -206,7 +351,7 @@ namespace FlaxEditor.Surface.Archetypes
                 }
 
                 /// <inheritdoc />
-                protected override void GetData(out Vector2 rangeX, out Vector2 rangeY, Guid[] pointsAnims, Vector2[] pointsLocations)
+                public override void GetData(out Vector2 rangeX, out Vector2 rangeY, Guid[] pointsAnims, Vector2[] pointsLocations)
                 {
                     var data0 = (Vector4)_node.Values[0];
                     rangeX = new Vector2(data0.X, data0.Y);
@@ -219,6 +364,23 @@ namespace FlaxEditor.Surface.Archetypes
                         pointsAnims[i] = dataB;
                         pointsLocations[i] = new Vector2(dataA.X, 0.0f);
                     }
+                }
+
+                /// <inheritdoc />
+                public override int SelectedIndex
+                {
+                    get => _node.SelectedAnimationIndex;
+                    set => _node.SelectedAnimationIndex = value;
+                }
+
+                /// <inheritdoc />
+                public override void SetLocation(int index, Vector2 location)
+                {
+                    var dataA = (Vector4)_node.Values[4 + index * 2];
+
+                    dataA.X = location.X;
+                    
+                    _node.Values[4 + index * 2] = dataA;
                 }
             }
 

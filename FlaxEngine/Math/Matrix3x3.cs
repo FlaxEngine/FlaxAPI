@@ -312,24 +312,15 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                case 0:
-                    return M11;
-                case 1:
-                    return M12;
-                case 2:
-                    return M13;
-                case 3:
-                    return M21;
-                case 4:
-                    return M22;
-                case 5:
-                    return M23;
-                case 6:
-                    return M31;
-                case 7:
-                    return M32;
-                case 8:
-                    return M33;
+                case 0: return M11;
+                case 1: return M12;
+                case 2: return M13;
+                case 3: return M21;
+                case 4: return M22;
+                case 5: return M23;
+                case 6: return M31;
+                case 7: return M32;
+                case 8: return M33;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3x3 run from 0 to 8, inclusive.");
@@ -365,8 +356,7 @@ namespace FlaxEngine
                 case 8:
                     M33 = value;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3x3 run from 0 to 8, inclusive.");
+                default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix3x3 run from 0 to 8, inclusive.");
                 }
             }
         }
@@ -1898,9 +1888,26 @@ namespace FlaxEngine
         /// <returns>The result.</returns>
         public static Matrix3x3 Translation2D(Vector2 translation)
         {
-            Matrix3x3 result;
-            Translation2D(ref translation, out result);
-            return result;
+            return new Matrix3x3(
+                1, 0, 0,
+                0, 1, 0,
+                translation.X, translation.Y, 1
+            );
+        }
+
+        /// <summary>
+        /// Creates 2D translation matrix.
+        /// </summary>
+        /// <param name="x">The translation vector X.</param>
+        /// <param name="y">The translation vector Y.</param>
+        /// <returns>The result.</returns>
+        public static Matrix3x3 Translation2D(float x, float y)
+        {
+            return new Matrix3x3(
+                1, 0, 0,
+                0, 1, 0,
+                x, y, 1
+            );
         }
 
         /// <summary>
