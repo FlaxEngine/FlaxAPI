@@ -338,20 +338,40 @@ namespace FlaxEditor.Surface.Archetypes
     public static partial class Animation
     {
         /// <summary>
-        /// Customized <see cref="SurfaceNode" /> for the blending multiple animations in 1D.
+        /// Customized <see cref="SurfaceNode" /> for the blending multiple animations.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-        public class MultiBlend1D : SurfaceNode
+        public abstract class MultiBlend : SurfaceNode
         {
-            private readonly Label _selectedAnimationLabel;
-            private readonly ComboBox _selectedAnimation;
-            private readonly AssetPicker _animationPicker;
-            private readonly Label _animationSpeedLabel;
-            private readonly FloatValueBox _animationSpeed;
-            private readonly Label _animationXLabel;
-            private readonly FloatValueBox _animationX;
-            private readonly Editor _editor;
-            private bool _isUpdatingUI;
+            /// <summary>
+            /// The selected animation label.
+            /// </summary>
+            protected readonly Label _selectedAnimationLabel;
+
+            /// <summary>
+            /// The selected animation combobox;
+            /// </summary>
+            protected readonly ComboBox _selectedAnimation;
+
+            /// <summary>
+            /// The animation picker.
+            /// </summary>
+            protected readonly AssetPicker _animationPicker;
+
+            /// <summary>
+            /// The animation speed label.
+            /// </summary>
+            protected readonly Label _animationSpeedLabel;
+
+            /// <summary>
+            /// The animation speed editor.
+            /// </summary>
+            protected readonly FloatValueBox _animationSpeed;
+
+            /// <summary>
+            /// Flag for editor UI updating. Used to skip value change events to prevent looping data flow.
+            /// </summary>
+            protected bool _isUpdatingUI;
 
             /// <summary>
             /// The maximum animations amount to blend per node.
@@ -366,6 +386,173 @@ namespace FlaxEditor.Surface.Archetypes
                 get => _selectedAnimation.SelectedIndex;
                 set => _selectedAnimation.SelectedIndex = value;
             }
+
+            /// <inheritdoc />
+            public MultiBlend(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, surface, nodeArch, groupArch)
+            {
+                var layoutOffsetY = FlaxEditor.Surface.Constants.LayoutOffsetY;
+
+                _selectedAnimationLabel = new Label(300, 3 * layoutOffsetY, 120.0f, layoutOffsetY);
+                _selectedAnimationLabel.HorizontalAlignment = TextAlignment.Near;
+                _selectedAnimationLabel.Text = "Selected Animation:";
+                _selectedAnimationLabel.Parent = this;
+
+                _selectedAnimation = new ComboBox(_selectedAnimationLabel.X, 4 * layoutOffsetY, _selectedAnimationLabel.Width);
+                _selectedAnimation.PopupShowing += OnSelectedAnimationPopupShowing;
+                _selectedAnimation.SelectedIndexChanged += OnSelectedAnimationChanged;
+                _selectedAnimation.Parent = this;
+
+                var items = new List<string>(MaxAnimationsCount);
+                while (items.Count < MaxAnimationsCount)
+                    items.Add(string.Empty);
+                _selectedAnimation.Items = items;
+
+                _animationPicker = new AssetPicker(typeof(FlaxEngine.Animation), new Vector2(_selectedAnimation.Left, _selectedAnimation.Bottom + 4));
+                _animationPicker.SelectedItemChanged += OnAnimationPickerItemChanged;
+                _animationPicker.Parent = this;
+
+                _animationSpeedLabel = new Label(_animationPicker.Left, _animationPicker.Bottom + 4, 40, TextBox.DefaultHeight);
+                _animationSpeedLabel.HorizontalAlignment = TextAlignment.Near;
+                _animationSpeedLabel.Text = "Speed:";
+                _animationSpeedLabel.Parent = this;
+
+                _animationSpeed = new FloatValueBox(1.0f, _animationSpeedLabel.Right + 4, _animationSpeedLabel.Y, _selectedAnimation.Right - _animationSpeedLabel.Right - 4);
+                _animationSpeed.SlideSpeed = 0.01f;
+                _animationSpeed.ValueChanged += OnAnimationSpeedValueChanged;
+                _animationSpeed.Parent = this;
+            }
+
+            private void OnSelectedAnimationPopupShowing(ComboBox comboBox)
+            {
+                var items = comboBox.Items;
+                items.Clear();
+                for (var i = 0; i < MaxAnimationsCount; i++)
+                {
+                    var animId = (Guid)Values[5 + i * 2];
+                    var path = string.Empty;
+                    if (FlaxEngine.Content.GetAssetInfo(animId, out _, out path))
+                        path = Path.GetFileNameWithoutExtension(path);
+                    items.Add(string.Format("[{0}] {1}", i, path));
+                }
+            }
+
+            private void OnSelectedAnimationChanged(ComboBox comboBox)
+            {
+                UpdateUI();
+            }
+
+            private void OnAnimationPickerItemChanged()
+            {
+                if (_isUpdatingUI)
+                    return;
+
+                var selectedIndex = _selectedAnimation.SelectedIndex;
+                if (selectedIndex != -1)
+                {
+                    var index = 5 + selectedIndex * 2;
+                    SetValue(index, _animationPicker.SelectedID);
+                }
+            }
+
+            private void OnAnimationSpeedValueChanged()
+            {
+                if (_isUpdatingUI)
+                    return;
+
+                var selectedIndex = _selectedAnimation.SelectedIndex;
+                if (selectedIndex != -1)
+                {
+                    var index = 4 + selectedIndex * 2;
+                    var data0 = (Vector4)Values[index];
+                    data0.W = _animationSpeed.Value;
+                    SetValue(index, data0);
+                }
+            }
+
+            /// <summary>
+            /// Updates the editor UI.
+            /// </summary>
+            /// <param name="selectedIndex">Index of the selected blend point.</param>
+            /// <param name="isValid">if set to <c>true</c> is selection valid.</param>
+            /// <param name="data0">The packed data 0.</param>
+            /// <param name="data1">The packed data 1.</param>
+            protected virtual void UpdateUI(int selectedIndex, bool isValid, ref Vector4 data0, ref Guid data1)
+            {
+                if (isValid)
+                {
+                    _animationPicker.SelectedID = data1;
+                    _animationSpeed.Value = data0.W;
+
+                    var path = string.Empty;
+                    if (FlaxEngine.Content.GetAssetInfo(data1, out _, out path))
+                        path = Path.GetFileNameWithoutExtension(path);
+                    _selectedAnimation.Items[selectedIndex] = string.Format("[{0}] {1}", selectedIndex, path);
+                }
+                else
+                {
+                    _animationPicker.SelectedID = Guid.Empty;
+                    _animationSpeed.Value = 1.0f;
+                }
+                _animationPicker.Enabled = isValid;
+                _animationSpeedLabel.Enabled = isValid;
+                _animationSpeed.Enabled = isValid;
+            }
+
+            /// <summary>
+            /// Updates the editor UI.
+            /// </summary>
+            protected void UpdateUI()
+            {
+                if (_isUpdatingUI)
+                    return;
+                _isUpdatingUI = true;
+
+                var selectedIndex = _selectedAnimation.SelectedIndex;
+                var isValid = selectedIndex != -1;
+                Vector4 data0;
+                Guid data1;
+                if (isValid)
+                {
+                    data0 = (Vector4)Values[4 + selectedIndex * 2];
+                    data1 = (Guid)Values[5 + selectedIndex * 2];
+                }
+                else
+                {
+                    data0 = Vector4.Zero;
+                    data1 = Guid.Empty;
+                }
+                UpdateUI(selectedIndex, isValid, ref data0, ref data1);
+
+                _isUpdatingUI = false;
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                UpdateUI();
+            }
+
+            /// <inheritdoc />
+            public override void SetValue(int index, object value)
+            {
+                base.SetValue(index, value);
+
+                UpdateUI();
+            }
+        }
+
+        /// <summary>
+        /// Customized <see cref="SurfaceNode" /> for the blending multiple animations in 1D.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+        public class MultiBlend1D : MultiBlend
+        {
+            private readonly Label _animationXLabel;
+            private readonly FloatValueBox _animationX;
+            private readonly Editor _editor;
 
             /// <summary>
             /// The Multi Blend 1D blend space editor.
@@ -429,37 +616,6 @@ namespace FlaxEditor.Surface.Archetypes
             public MultiBlend1D(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
             {
-                var layoutOffsetY = FlaxEditor.Surface.Constants.LayoutOffsetY;
-
-                _selectedAnimationLabel = new Label(300, 3 * layoutOffsetY, 120.0f, layoutOffsetY);
-                _selectedAnimationLabel.HorizontalAlignment = TextAlignment.Near;
-                _selectedAnimationLabel.Text = "Selected Animation:";
-                _selectedAnimationLabel.Parent = this;
-
-                _selectedAnimation = new ComboBox(_selectedAnimationLabel.X, 4 * layoutOffsetY, _selectedAnimationLabel.Width);
-                _selectedAnimation.PopupShowing += OnSelectedAnimationPopupShowing;
-                _selectedAnimation.SelectedIndexChanged += OnSelectedAnimationChanged;
-                _selectedAnimation.Parent = this;
-
-                var items = new List<string>(MaxAnimationsCount);
-                while (items.Count < MaxAnimationsCount)
-                    items.Add(string.Empty);
-                _selectedAnimation.Items = items;
-
-                _animationPicker = new AssetPicker(typeof(FlaxEngine.Animation), new Vector2(_selectedAnimation.Left, _selectedAnimation.Bottom + 4));
-                _animationPicker.SelectedItemChanged += OnAnimationPickerItemChanged;
-                _animationPicker.Parent = this;
-
-                _animationSpeedLabel = new Label(_animationPicker.Left, _animationPicker.Bottom + 4, 40, TextBox.DefaultHeight);
-                _animationSpeedLabel.HorizontalAlignment = TextAlignment.Near;
-                _animationSpeedLabel.Text = "Speed:";
-                _animationSpeedLabel.Parent = this;
-
-                _animationSpeed = new FloatValueBox(1.0f, _animationSpeedLabel.Right + 4, _animationSpeedLabel.Y, _selectedAnimation.Right - _animationSpeedLabel.Right - 4);
-                _animationSpeed.SlideSpeed = 0.01f;
-                _animationSpeed.ValueChanged += OnAnimationSpeedValueChanged;
-                _animationSpeed.Parent = this;
-
                 _animationXLabel = new Label(_animationSpeedLabel.Left, _animationSpeedLabel.Bottom + 4, 40, TextBox.DefaultHeight);
                 _animationXLabel.HorizontalAlignment = TextAlignment.Near;
                 _animationXLabel.Text = "X:";
@@ -478,53 +634,6 @@ namespace FlaxEditor.Surface.Archetypes
                 _editor.Parent = this;
             }
 
-            private void OnSelectedAnimationPopupShowing(ComboBox comboBox)
-            {
-                var items = comboBox.Items;
-                items.Clear();
-                for (var i = 0; i < MaxAnimationsCount; i++)
-                {
-                    var animId = (Guid)Values[5 + i * 2];
-                    var path = string.Empty;
-                    if (FlaxEngine.Content.GetAssetInfo(animId, out _, out path))
-                        path = Path.GetFileNameWithoutExtension(path);
-                    items.Add(string.Format("[{0}] {1}", i, path));
-                }
-            }
-
-            private void OnSelectedAnimationChanged(ComboBox comboBox)
-            {
-                UpdateUI();
-            }
-
-            private void OnAnimationPickerItemChanged()
-            {
-                if (_isUpdatingUI)
-                    return;
-
-                var selectedIndex = _selectedAnimation.SelectedIndex;
-                if (selectedIndex != -1)
-                {
-                    var index = 5 + selectedIndex * 2;
-                    SetValue(index, _animationPicker.SelectedID);
-                }
-            }
-
-            private void OnAnimationSpeedValueChanged()
-            {
-                if (_isUpdatingUI)
-                    return;
-
-                var selectedIndex = _selectedAnimation.SelectedIndex;
-                if (selectedIndex != -1)
-                {
-                    var index = 4 + selectedIndex * 2;
-                    var data0 = (Vector4)Values[index];
-                    data0.W = _animationSpeed.Value;
-                    SetValue(index, data0);
-                }
-            }
-
             private void OnAnimationXChanged()
             {
                 if (_isUpdatingUI)
@@ -540,57 +649,21 @@ namespace FlaxEditor.Surface.Archetypes
                 }
             }
 
-            private void UpdateUI()
+            /// <inheritdoc />
+            protected override void UpdateUI(int selectedIndex, bool isValid, ref Vector4 data0, ref Guid data1)
             {
-                if (_isUpdatingUI)
-                    return;
-                _isUpdatingUI = true;
+                base.UpdateUI(selectedIndex, isValid, ref data0, ref data1);
 
-                var selectedIndex = _selectedAnimation.SelectedIndex;
-                var isValid = selectedIndex != -1;
                 if (isValid)
                 {
-                    var data0 = (Vector4)Values[4 + selectedIndex * 2];
-                    var data1 = (Guid)Values[5 + selectedIndex * 2];
-
-                    _animationPicker.SelectedID = data1;
-                    _animationSpeed.Value = data0.W;
                     _animationX.Value = data0.X;
-
-                    var path = string.Empty;
-                    if (FlaxEngine.Content.GetAssetInfo(data1, out _, out path))
-                        path = Path.GetFileNameWithoutExtension(path);
-                    _selectedAnimation.Items[selectedIndex] = string.Format("[{0}] {1}", selectedIndex, path);
                 }
                 else
                 {
-                    _animationPicker.SelectedID = Guid.Empty;
-                    _animationSpeed.Value = 1.0f;
                     _animationX.Value = 0.0f;
                 }
-                _animationPicker.Enabled = isValid;
-                _animationSpeedLabel.Enabled = isValid;
-                _animationSpeed.Enabled = isValid;
                 _animationXLabel.Enabled = isValid;
                 _animationX.Enabled = isValid;
-
-                _isUpdatingUI = false;
-            }
-
-            /// <inheritdoc />
-            public override void OnSurfaceLoaded()
-            {
-                base.OnSurfaceLoaded();
-
-                UpdateUI();
-            }
-
-            /// <inheritdoc />
-            public override void SetValue(int index, object value)
-            {
-                base.SetValue(index, value);
-
-                UpdateUI();
             }
         }
     }
