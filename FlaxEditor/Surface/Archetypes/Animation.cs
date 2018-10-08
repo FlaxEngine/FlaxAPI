@@ -388,6 +388,61 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Float(145, 4 * Surface.Constants.LayoutOffsetY, 0, 1),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 13,
+                Create = (id, surface, arch, groupArch) => new MultiBlend2D(id, surface, arch, groupArch),
+                Title = "Multi Blend 2D",
+                Description = "Animation blending in 2D",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(420, 320),
+                DefaultValues = new object[]
+                {
+                    // Node data
+                    new Vector4(0, 100.0f, 0, 100.0f),
+                    1.0f,
+                    true,
+                    0.0f,
+
+                    // Per blend sample data
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    // Output
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+
+                    // Options
+                    NodeElementArchetype.Factory.Input(0, "Speed", true, ConnectionType.Float, 1, 1),
+                    NodeElementArchetype.Factory.Input(1, "Loop", true, ConnectionType.Bool, 2, 2),
+                    NodeElementArchetype.Factory.Input(2, "Start Position", true, ConnectionType.Float, 3, 3),
+
+                    // Axis X
+                    NodeElementArchetype.Factory.Input(4, "X", true, ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Text(30, 4 * Surface.Constants.LayoutOffsetY, "(min:                   max:                   )"),
+                    NodeElementArchetype.Factory.Float(60, 4 * Surface.Constants.LayoutOffsetY, 0, 0),
+                    NodeElementArchetype.Factory.Float(145, 4 * Surface.Constants.LayoutOffsetY, 0, 1),
+
+                    // Axis Y
+                    NodeElementArchetype.Factory.Input(5, "Y", true, ConnectionType.Float, 5),
+                    NodeElementArchetype.Factory.Text(30, 5 * Surface.Constants.LayoutOffsetY, "(min:                   max:                   )"),
+                    NodeElementArchetype.Factory.Float(60, 5 * Surface.Constants.LayoutOffsetY, 0, 2),
+                    NodeElementArchetype.Factory.Float(145, 5 * Surface.Constants.LayoutOffsetY, 0, 3),
+                }
+            },
         };
     }
 }

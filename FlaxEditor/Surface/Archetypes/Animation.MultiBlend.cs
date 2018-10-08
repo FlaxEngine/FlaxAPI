@@ -204,7 +204,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 pos = new Vector2(
                     Mathf.Map(pos.X, pointsArea.Left, pointsArea.Right, _rangeX.X, _rangeX.Y),
-                    Mathf.Map(pos.Y, pointsArea.Right, pointsArea.Bottom, _rangeY.X, _rangeY.Y)
+                    Mathf.Map(pos.Y, pointsArea.Top, pointsArea.Bottom, _rangeY.X, _rangeY.Y)
                 );
             }
             else
@@ -229,7 +229,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 pos = new Vector2(
                     Mathf.Map(pos.X, _rangeX.X, _rangeX.Y, pointsArea.Left, pointsArea.Right),
-                    Mathf.Map(pos.Y, _rangeY.X, _rangeY.Y, pointsArea.Right, pointsArea.Bottom)
+                    Mathf.Map(pos.Y, _rangeY.X, _rangeY.Y, pointsArea.Top, pointsArea.Bottom)
                 );
             }
             else
@@ -247,7 +247,7 @@ namespace FlaxEditor.Surface.Archetypes
         {
             // Synchronize blend points collection
             GetData(out _rangeX, out _rangeY, _pointsAnims, _pointsLocations);
-            for (int i = 0; i < Animation.MultiBlend1D.MaxAnimationsCount; i++)
+            for (int i = 0; i < Animation.MultiBlend.MaxAnimationsCount; i++)
             {
                 if (_pointsAnims[i] != Guid.Empty)
                 {
@@ -664,6 +664,161 @@ namespace FlaxEditor.Surface.Archetypes
                 }
                 _animationXLabel.Enabled = isValid;
                 _animationX.Enabled = isValid;
+            }
+        }
+
+        /// <summary>
+        /// Customized <see cref="SurfaceNode" /> for the blending multiple animations in 2D.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+        public class MultiBlend2D : MultiBlend
+        {
+            private readonly Label _animationXLabel;
+            private readonly FloatValueBox _animationX;
+            private readonly Label _animationYLabel;
+            private readonly FloatValueBox _animationY;
+            private readonly Editor _editor;
+
+            /// <summary>
+            /// The Multi Blend 2D blend space editor.
+            /// </summary>
+            /// <seealso cref="FlaxEditor.Surface.Archetypes.BlendPointsEditor" />
+            protected class Editor : BlendPointsEditor
+            {
+                private MultiBlend2D _node;
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="Editor"/> class.
+                /// </summary>
+                /// <param name="node">The parent Visject Node node.</param>
+                /// <param name="x">The X location.</param>
+                /// <param name="y">The Y location.</param>
+                /// <param name="width">The width.</param>
+                /// <param name="height">The height.</param>
+                public Editor(MultiBlend2D node, float x, float y, float width, float height)
+                : base(true, x, y, width, height)
+                {
+                    _node = node;
+                }
+
+                /// <inheritdoc />
+                public override void GetData(out Vector2 rangeX, out Vector2 rangeY, Guid[] pointsAnims, Vector2[] pointsLocations)
+                {
+                    var data0 = (Vector4)_node.Values[0];
+                    rangeX = new Vector2(data0.X, data0.Y);
+                    rangeY = new Vector2(data0.Z, data0.W);
+                    for (int i = 0; i < MaxAnimationsCount; i++)
+                    {
+                        var dataA = (Vector4)_node.Values[4 + i * 2];
+                        var dataB = (Guid)_node.Values[5 + i * 2];
+
+                        pointsAnims[i] = dataB;
+                        pointsLocations[i] = new Vector2(dataA.X, dataA.Y);
+                    }
+                }
+
+                /// <inheritdoc />
+                public override int SelectedIndex
+                {
+                    get => _node.SelectedAnimationIndex;
+                    set => _node.SelectedAnimationIndex = value;
+                }
+
+                /// <inheritdoc />
+                public override void SetLocation(int index, Vector2 location)
+                {
+                    var dataA = (Vector4)_node.Values[4 + index * 2];
+
+                    dataA.X = location.X;
+                    dataA.Y = location.Y;
+
+                    _node.Values[4 + index * 2] = dataA;
+
+                    _node.UpdateUI();
+                }
+            }
+
+            /// <inheritdoc />
+            public MultiBlend2D(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, surface, nodeArch, groupArch)
+            {
+                _animationXLabel = new Label(_animationSpeedLabel.Left, _animationSpeedLabel.Bottom + 4, 40, TextBox.DefaultHeight);
+                _animationXLabel.HorizontalAlignment = TextAlignment.Near;
+                _animationXLabel.Text = "X:";
+                _animationXLabel.Parent = this;
+
+                _animationX = new FloatValueBox(0.0f, _animationXLabel.Right + 4, _animationXLabel.Y, _selectedAnimation.Right - _animationXLabel.Right - 4);
+                _animationX.SlideSpeed = 0.01f;
+                _animationX.ValueChanged += OnAnimationXChanged;
+                _animationX.Parent = this;
+
+                _animationYLabel = new Label(_animationXLabel.Left, _animationXLabel.Bottom + 4, 40, TextBox.DefaultHeight);
+                _animationYLabel.HorizontalAlignment = TextAlignment.Near;
+                _animationYLabel.Text = "Y:";
+                _animationYLabel.Parent = this;
+
+                _animationY = new FloatValueBox(0.0f, _animationYLabel.Right + 4, _animationYLabel.Y, _selectedAnimation.Right - _animationYLabel.Right - 4);
+                _animationY.SlideSpeed = 0.01f;
+                _animationY.ValueChanged += OnAnimationYChanged;
+                _animationY.Parent = this;
+
+                _editor = new Editor(this,
+                                     FlaxEditor.Surface.Constants.NodeMarginX,
+                                     _animationY.Bottom + 4.0f,
+                                     Width - FlaxEditor.Surface.Constants.NodeMarginX * 2.0f,
+                                     120.0f);
+                _editor.Parent = this;
+            }
+
+            private void OnAnimationXChanged()
+            {
+                if (_isUpdatingUI)
+                    return;
+
+                var selectedIndex = _selectedAnimation.SelectedIndex;
+                if (selectedIndex != -1)
+                {
+                    var index = 4 + selectedIndex * 2;
+                    var data0 = (Vector4)Values[index];
+                    data0.X = _animationX.Value;
+                    SetValue(index, data0);
+                }
+            }
+
+            private void OnAnimationYChanged()
+            {
+                if (_isUpdatingUI)
+                    return;
+
+                var selectedIndex = _selectedAnimation.SelectedIndex;
+                if (selectedIndex != -1)
+                {
+                    var index = 4 + selectedIndex * 2;
+                    var data0 = (Vector4)Values[index];
+                    data0.Y = _animationY.Value;
+                    SetValue(index, data0);
+                }
+            }
+
+            /// <inheritdoc />
+            protected override void UpdateUI(int selectedIndex, bool isValid, ref Vector4 data0, ref Guid data1)
+            {
+                base.UpdateUI(selectedIndex, isValid, ref data0, ref data1);
+
+                if (isValid)
+                {
+                    _animationX.Value = data0.X;
+                    _animationY.Value = data0.Y;
+                }
+                else
+                {
+                    _animationX.Value = 0.0f;
+                    _animationY.Value = 0.0f;
+                }
+                _animationXLabel.Enabled = isValid;
+                _animationX.Enabled = isValid;
+                _animationYLabel.Enabled = isValid;
+                _animationY.Enabled = isValid;
             }
         }
     }
