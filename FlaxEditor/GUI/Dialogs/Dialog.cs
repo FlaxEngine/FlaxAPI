@@ -75,7 +75,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <returns>The dialog result.</returns>
         public DialogResult ShowDialog(Control control)
         {
-            return ShowDialog(control?.Root);
+            return ShowDialog(control?.RootWindow);
         }
 
         /// <summary>
