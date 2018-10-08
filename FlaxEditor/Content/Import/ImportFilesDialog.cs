@@ -150,5 +150,21 @@ namespace FlaxEditor.Content.Import
             settings.MinimumSize = new Vector2(300, 400);
             settings.HasSizingFrame = true;
         }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            switch (key)
+            {
+            case Keys.Escape:
+                OnCancel();
+                return true;
+            case Keys.Return:
+                OnImport();
+                return true;
+            }
+
+            return base.OnKeyDown(key);
+        }
     }
 }

@@ -425,6 +425,7 @@ namespace FlaxEditor.Modules
                     {
                         var dialog = new ImportFilesDialog(entries);
                         dialog.Show(Editor.Windows.MainWindow);
+                        dialog.Focus();
                     }
                     else
                     {
