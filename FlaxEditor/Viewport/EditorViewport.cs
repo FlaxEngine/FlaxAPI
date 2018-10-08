@@ -989,7 +989,6 @@ namespace FlaxEditor.Viewport
         {
             new ViewFlagOptions(ViewFlags.AntiAliasing, "Anti Aliasing"),
             new ViewFlagOptions(ViewFlags.Shadows, "Shadows"),
-            new ViewFlagOptions(ViewFlags.DynamicActors, "Dynamic Actors"),
             new ViewFlagOptions(ViewFlags.EditorSprites, "Editor Sprites"),
             new ViewFlagOptions(ViewFlags.Reflections, "Reflections"),
             new ViewFlagOptions(ViewFlags.SSR, "Screen Space Reflections"),

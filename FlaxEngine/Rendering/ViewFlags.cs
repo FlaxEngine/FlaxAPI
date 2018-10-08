@@ -11,9 +11,11 @@ namespace FlaxEngine.Rendering
     public enum ViewFlags : long
     {
         /// <summary>
-        /// Shows/hides dynamic actors
+        /// Nothing.
         /// </summary>
-        DynamicActors = 1 << 0,
+        None = 0,
+
+        //DynamicActors = 1 << 0,
 
         /// <summary>
         /// Shows/hides Editor sprites
@@ -133,21 +135,21 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Default flags for Game
         /// </summary>
-        DefaultGame = DynamicActors | Reflections | DepthOfField | Fog | Decals | MotionBlur
+        DefaultGame = Reflections | DepthOfField | Fog | Decals | MotionBlur
                       | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                       | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
 
         /// <summary>
         /// Default flags for Editor
         /// </summary>
-        DefaultEditor = DynamicActors | Reflections | Fog | Decals
+        DefaultEditor = Reflections | Fog | Decals
                         | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
                         | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares | EditorSprites,
 
         /// <summary>
         /// Default flags for materials/models previews generating
         /// </summary>
-        DefaultAssetPreview = DynamicActors | Reflections | Decals
+        DefaultAssetPreview = Reflections | Decals
                               | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
                               | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
     }
