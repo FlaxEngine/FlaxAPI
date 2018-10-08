@@ -277,6 +277,19 @@ namespace FlaxEditor.Surface.Archetypes
             base.Update(deltaTime);
         }
 
+        /// <summary>
+        /// Gets the blend area rect (in local control space for the range min-max).
+        /// </summary>
+        protected Rectangle BlendAreaRect
+        {
+            get
+            {
+                var upperLeft = BlendSpacePosToBlendPointPos(new Vector2(_rangeX.X, _rangeY.X));
+                var bottomRight = BlendSpacePosToBlendPointPos(new Vector2(_rangeX.Y, _rangeY.Y));
+                return new Rectangle(upperLeft, bottomRight - upperLeft);
+            }
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {
@@ -284,9 +297,35 @@ namespace FlaxEditor.Surface.Archetypes
             var style = Style.Current;
             var rect = new Rectangle(Vector2.Zero, Size);
             var containsFocus = ContainsFocus;
+            GetPointsArea(out var pointsArea);
 
             // Background
             Render2D.DrawRectangle(rect, IsMouseOver ? style.TextBoxBackgroundSelected : style.TextBoxBackground);
+            //Render2D.DrawRectangle(pointsArea, Color.Red);
+
+            // Grid
+            int splits = 10;
+            var gridColor = style.TextBoxBackgroundSelected * 1.1f;
+            //var blendArea = BlendAreaRect;
+            var blendArea = pointsArea;
+            for (int i = 0; i < splits; i++)
+            {
+                float x = blendArea.Left + blendArea.Width * i / splits;
+                Render2D.DrawLine(new Vector2(x, 1), new Vector2(x, rect.Height - 2), gridColor);
+            }
+            if (_is2D)
+            {
+                for (int i = 0; i < splits; i++)
+                {
+                    float y = blendArea.Top + blendArea.Height * i / splits;
+                    Render2D.DrawLine(new Vector2(1, y), new Vector2(rect.Width - 2, y), gridColor);
+                }
+            }
+            else
+            {
+                float y = blendArea.Center.Y;
+                Render2D.DrawLine(new Vector2(1, y), new Vector2(rect.Width - 2, y), gridColor);
+            }
 
             // Base
             base.Draw();
@@ -379,7 +418,7 @@ namespace FlaxEditor.Surface.Archetypes
                     var dataA = (Vector4)_node.Values[4 + index * 2];
 
                     dataA.X = location.X;
-                    
+
                     _node.Values[4 + index * 2] = dataA;
 
                     _node.UpdateUI();
