@@ -102,7 +102,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 if (_isMouseDown)
                 {
-                    _editor.SetLocation(_index, _editor.BlendPointPosToBlendSpacePos(location));
+                    _editor.SetLocation(_index, _editor.BlendPointPosToBlendSpacePos(Location + location));
                 }
 
                 base.OnMouseMove(location);
@@ -381,6 +381,8 @@ namespace FlaxEditor.Surface.Archetypes
                     dataA.X = location.X;
                     
                     _node.Values[4 + index * 2] = dataA;
+
+                    _node.UpdateUI();
                 }
             }
 
