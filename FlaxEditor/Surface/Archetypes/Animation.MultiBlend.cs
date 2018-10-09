@@ -204,7 +204,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 pos = new Vector2(
                     Mathf.Map(pos.X, pointsArea.Left, pointsArea.Right, _rangeX.X, _rangeX.Y),
-                    Mathf.Map(pos.Y, pointsArea.Top, pointsArea.Bottom, _rangeY.X, _rangeY.Y)
+                    Mathf.Map(pos.Y, pointsArea.Bottom, pointsArea.Top, _rangeY.X, _rangeY.Y)
                 );
             }
             else
@@ -229,7 +229,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 pos = new Vector2(
                     Mathf.Map(pos.X, _rangeX.X, _rangeX.Y, pointsArea.Left, pointsArea.Right),
-                    Mathf.Map(pos.Y, _rangeY.X, _rangeY.Y, pointsArea.Top, pointsArea.Bottom)
+                    Mathf.Map(pos.Y, _rangeY.X, _rangeY.Y, pointsArea.Bottom, pointsArea.Top)
                 );
             }
             else
