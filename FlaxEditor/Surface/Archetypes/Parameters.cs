@@ -23,6 +23,7 @@ namespace FlaxEditor.Surface.Archetypes
             private readonly List<ISurfaceNodeElement> _dynamicChildren = new List<ISurfaceNodeElement>();
             private bool _isUpdateLocked;
             private float _layoutHeight;
+            private ParameterType _layoutType;
 
             static NodeElementArchetype[] Prototypes =
             {
@@ -83,14 +84,15 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void UpdateLayout()
             {
-                // Clean
-                ClearDynamicElements();
-
-                // Add elements and calculate node size
+                // Add elements and calculate node size if type changes
                 float height = 60;
                 var selected = GetSelected();
-                if (selected != null)
+                if (selected != null && _layoutType != selected.Type)
                 {
+                    // Clean
+                    ClearDynamicElements();
+
+                    // Build layout
                     switch (selected.Type)
                     {
                     case ParameterType.Bool:
@@ -173,9 +175,11 @@ namespace FlaxEditor.Surface.Archetypes
                     case ParameterType.Rectangle: break;
                     default: break;
                     }
-                }
 
-                _layoutHeight = height;
+                    // Cache state
+                    _layoutType = selected.Type;
+                    _layoutHeight = height;
+                }
 
                 UpdateTitle();
             }
