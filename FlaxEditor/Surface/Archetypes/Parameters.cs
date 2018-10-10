@@ -200,6 +200,7 @@ namespace FlaxEditor.Surface.Archetypes
                 int toSelect = -1;
                 Guid loadedSelected = (Guid)Values[0];
                 _combobox.ClearItems();
+                int index = 0;
                 for (int i = 0; i < Surface.Parameters.Count; i++)
                 {
                     var param = Surface.Parameters[i];
@@ -209,8 +210,10 @@ namespace FlaxEditor.Surface.Archetypes
 
                         if (param.ID == loadedSelected)
                         {
-                            toSelect = i;
+                            toSelect = index;
                         }
+
+                        index++;
                     }
                 }
                 _combobox.SelectedIndex = toSelect;
@@ -315,6 +318,15 @@ namespace FlaxEditor.Surface.Archetypes
                 // Setup
                 UpdateCombo();
                 UpdateLayout();
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                // Setup
+                UpdateTitle();
             }
 
             private void UpdateTitle()
