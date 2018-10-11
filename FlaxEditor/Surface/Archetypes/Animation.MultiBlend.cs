@@ -18,9 +18,9 @@ namespace FlaxEditor.Surface.Archetypes
         private readonly bool _is2D;
         private Vector2 _rangeX;
         private Vector2 _rangeY;
-        private readonly BlendPoint[] _blendPoints = new BlendPoint[Animation.MultiBlend1D.MaxAnimationsCount];
-        private readonly Guid[] _pointsAnims = new Guid[Animation.MultiBlend1D.MaxAnimationsCount];
-        private readonly Vector2[] _pointsLocations = new Vector2[Animation.MultiBlend1D.MaxAnimationsCount];
+        private readonly BlendPoint[] _blendPoints = new BlendPoint[Animation.MultiBlend.MaxAnimationsCount];
+        private readonly Guid[] _pointsAnims = new Guid[Animation.MultiBlend.MaxAnimationsCount];
+        private readonly Vector2[] _pointsLocations = new Vector2[Animation.MultiBlend.MaxAnimationsCount];
 
         /// <summary>
         /// Represents single blend point.
