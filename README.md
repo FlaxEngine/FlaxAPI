@@ -38,9 +38,11 @@ This repository contains an open source public C# API as well as full source cod
 
 # Flax plugin for Visual Studio
 
-For better programming workflow we recommend installing an extension for Visual Studio.
-It provides scripts debugging functionality and allows to attach to running engine instance.
-Extension is available to download [here](https://marketplace.visualstudio.com/items?itemName=Flax.FlaxVS).
+Flax Visual Studio extension provides better programming workflow, scripts debugging functionality and allows to attach to running engine instance.
+
+***Info**: All FlaxAPI projects use Flax Visual Studio extension by-default, it is required to install this plugin to properly run the solution.*
+
+This extension is available to download [here](https://marketplace.visualstudio.com/items?itemName=Flax.FlaxVS).
 
 # Screenshots
 

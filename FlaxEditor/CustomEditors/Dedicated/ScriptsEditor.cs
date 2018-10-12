@@ -82,7 +82,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var size = Size;
 
             // Info
-            Render2D.DrawText(style.FontSmall, "Drag scripts here", new Rectangle(2, 22, size.X - 4, size.Y - 4 - 20), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords);
+            Render2D.DrawText(style.FontSmall, "Drag scripts here", new Rectangle(2, 22, size.X - 4, size.Y - 4 - 20), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
 
             // Check if drag is over
             if (IsDragOver && _dragScriptItems != null && _dragScriptItems.HasValidDrag)
