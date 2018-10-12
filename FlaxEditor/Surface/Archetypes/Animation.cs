@@ -1,6 +1,8 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -57,6 +59,47 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = asset?.ShortName ?? "Animation";
                 var style = Style.Current;
                 Resize(Mathf.Max(230, style.FontLarge.MeasureText(Title).X + 20), 160);
+            }
+        }
+
+        /// <summary>
+        /// Customized <see cref="SurfaceNode"/> for the animation poses blending.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+        public class BlendPose : SurfaceNode
+        {
+            private readonly List<InputBox> _blendPoses = new List<InputBox>(MaxBlendPoses);
+
+            /// <summary>
+            /// The maximum amount of the blend poses to support.
+            /// </summary>
+            public const int MaxBlendPoses = 8;
+
+            /// <summary>
+            /// The index of the first input blend pose box.
+            /// </summary>
+            public const int FirstBlendPoseBoxIndex = 3;
+
+            /// <summary>
+            /// Gets or sets used blend poses count (visible to the user).
+            /// </summary>
+            public int BlendPosesCount
+            {
+                get => (int)Values[2];
+                set
+                {
+                    value = Mathf.Clamp(value, 0, 8);
+                    if (value != BlendPosesCount)
+                    {
+
+                    }
+                }
+            }
+
+            /// <inheritdoc />
+            public BlendPose(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, surface, nodeArch, groupArch)
+            {
             }
         }
 
@@ -441,6 +484,32 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Text(30, 5 * Surface.Constants.LayoutOffsetY, "(min:                   max:                   )"),
                     NodeElementArchetype.Factory.Float(60, 5 * Surface.Constants.LayoutOffsetY, 0, 2),
                     NodeElementArchetype.Factory.Float(145, 5 * Surface.Constants.LayoutOffsetY, 0, 3),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 14,
+                Create = (id, surface, arch, groupArch) => new BlendPose(id, surface, arch, groupArch),
+                Title = "Blend Poses",
+                Description = "Select animation pose to pass by index (with blending)",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(200, 200),
+                DefaultValues = new object[]
+                {
+                    0,
+                    0.2f,
+                    4,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, "Pose Index", true, ConnectionType.Integer, 1, 0),
+                    NodeElementArchetype.Factory.Input(1, "Blend Duration", true, ConnectionType.Float, 2, 1),
+
+                    NodeElementArchetype.Factory.Input(2, "Pose 0", true, ConnectionType.Impulse, 3),
+                    NodeElementArchetype.Factory.Input(3, "Pose 1", true, ConnectionType.Impulse, 4),
+                    NodeElementArchetype.Factory.Input(4, "Pose 2", true, ConnectionType.Impulse, 5),
+                    NodeElementArchetype.Factory.Input(5, "Pose 3", true, ConnectionType.Impulse, 6),
                 }
             },
         };
