@@ -14,6 +14,33 @@ namespace FlaxEditor.Utilities
     /// </summary>
     public static class Utils
     {
+        private static readonly string[] MemorySizePostfixes =
+        {
+            "B",
+            "kB",
+            "MB",
+            "GB",
+            "TB",
+            "PB"
+        };
+
+        /// <summary>
+        /// Formats the amount of bytes to get a human-readable data size in bytes with abbreviation. Eg. 32 kB
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <returns>The formatted amount of bytes.</returns>
+        public static string FormatBytesCount(int bytes)
+        {
+            int order = 0;
+            while (bytes >= 1024 && order < MemorySizePostfixes.Length - 1)
+            {
+                order++;
+                bytes = bytes / 1024;
+            }
+
+            return string.Format("{0:0.##} {1}", bytes, MemorySizePostfixes[order]);
+        }
+
         /// <summary>
         /// Formats the amount of bytes to get a human-readable data size in bytes with abbreviation. Eg. 32 kB
         /// </summary>
@@ -21,24 +48,14 @@ namespace FlaxEditor.Utilities
         /// <returns>The formatted amount of bytes.</returns>
         public static string FormatBytesCount(ulong bytes)
         {
-            string[] sizes =
-            {
-                "B",
-                "kB",
-                "MB",
-                "GB",
-                "TB",
-                "PB"
-            };
-
             int order = 0;
-            while (bytes >= 1024 && order < sizes.Length - 1)
+            while (bytes >= 1024 && order < MemorySizePostfixes.Length - 1)
             {
                 order++;
                 bytes = bytes / 1024;
             }
 
-            return string.Format("{0:0.##} {1}", bytes, sizes[order]);
+            return string.Format("{0:0.##} {1}", bytes, MemorySizePostfixes[order]);
         }
 
         /// <summary>
