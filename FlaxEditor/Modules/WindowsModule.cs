@@ -781,7 +781,7 @@ namespace FlaxEditor.Modules
         {
             // Auto save workspace layout every few seconds
             var now = DateTime.UtcNow;
-            if (_lastLayoutSaveTime.Ticks > 10 && now - _lastLayoutSaveTime >= TimeSpan.FromSeconds(5))
+            if (_lastLayoutSaveTime.Ticks > 10 && now - _lastLayoutSaveTime >= TimeSpan.FromSeconds(10))
             {
                 SaveCurrentLayout();
             }

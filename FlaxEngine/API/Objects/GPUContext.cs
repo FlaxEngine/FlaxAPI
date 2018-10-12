@@ -32,10 +32,14 @@ namespace FlaxEngine.Rendering
         private static IntPtr[] _cachedActors;
         private static List<PostProcessEffect> _cachedPostFxA;
         private static IntPtr[] _cachedPostFxB;
+        private static PostFxComparer _postFxComparer = new PostFxComparer();
 
-        private int ComparePostFx(PostProcessEffect x, PostProcessEffect y)
+        internal sealed class PostFxComparer : IComparer<PostProcessEffect>
         {
-            return x.Order - y.Order;
+            public int Compare(PostProcessEffect x, PostProcessEffect y)
+            {
+                return x.Order - y.Order;
+            }
         }
 
         private IntPtr[] GetActors(Actor[] customActors, out int actorsCount)
@@ -97,7 +101,7 @@ namespace FlaxEngine.Rendering
                         _cachedPostFxA.Add(e);
                 }
 
-                _cachedPostFxA.Sort(ComparePostFx);
+                _cachedPostFxA.Sort(_postFxComparer);
 
                 postFxCount = _cachedPostFxA.Count;
                 if (_cachedPostFxB == null || _cachedPostFxB.Length < postFxCount)
