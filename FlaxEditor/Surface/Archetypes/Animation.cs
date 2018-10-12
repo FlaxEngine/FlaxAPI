@@ -88,10 +88,10 @@ namespace FlaxEditor.Surface.Archetypes
                 get => (int)Values[2];
                 set
                 {
-                    value = Mathf.Clamp(value, 0, 8);
+                    value = Mathf.Clamp(value, 0, MaxBlendPoses);
                     if (value != BlendPosesCount)
                     {
-
+                        SetValue(2, value);
                     }
                 }
             }
@@ -100,6 +100,88 @@ namespace FlaxEditor.Surface.Archetypes
             public BlendPose(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
             {
+                // Add buttons for adding/removing blend poses
+                var addButton = new Button(70, 80, 20, 20)
+                {
+                    Text = "+",
+                    Parent = this
+                };
+                addButton.Clicked += () => BlendPosesCount++;
+                var removeButton = new Button(addButton.Right + 4, addButton.Y, 20, 20)
+                {
+                    Text = "-",
+                    Parent = this
+                };
+                removeButton.Clicked += () => BlendPosesCount--;
+            }
+
+            private void UpdateBoxes()
+            {
+                while (_blendPoses.Count > BlendPosesCount)
+                {
+                    var boxIndex = _blendPoses.Count - 1;
+                    var box = _blendPoses[boxIndex];
+                    _blendPoses.RemoveAt(boxIndex);
+                    box.RemoveConnections();
+                    box.Dispose();
+                }
+                while (_blendPoses.Count < BlendPosesCount)
+                {
+                    var ylevel = 2 + _blendPoses.Count;
+                    var arch = new NodeElementArchetype
+                    {
+                        Type = NodeElementType.Input,
+                        Position = new Vector2(
+                            FlaxEditor.Surface.Constants.NodeMarginX - FlaxEditor.Surface.Constants.BoxOffsetX,
+                            FlaxEditor.Surface.Constants.NodeMarginY + FlaxEditor.Surface.Constants.NodeHeaderSize + ylevel * FlaxEditor.Surface.Constants.LayoutOffsetY),
+                        Text = "Pose " + _blendPoses.Count,
+                        Single = true,
+                        ValueIndex = -1,
+                        BoxID = FirstBlendPoseBoxIndex + _blendPoses.Count,
+                        ConnectionsType = ConnectionType.Impulse
+                    };
+                    var box = new InputBox(this, arch);
+                    AddElement(box);
+                    _blendPoses.Add(box);
+                }
+            }
+
+            private void UpdateHeight()
+            {
+                float nodeHeight = 10 + (Mathf.Max(_blendPoses.Count, 1) + 2) * FlaxEditor.Surface.Constants.LayoutOffsetY;
+                Height = nodeHeight + FlaxEditor.Surface.Constants.NodeMarginY * 2 + FlaxEditor.Surface.Constants.NodeHeaderSize + FlaxEditor.Surface.Constants.NodeFooterSize;
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                // Peek deserialized boxes
+                _blendPoses.Clear();
+                for (int i = 0; i < Elements.Count; i++)
+                {
+                    if (Elements[i] is InputBox box && box.Archetype.BoxID >= FirstBlendPoseBoxIndex)
+                    {
+                        _blendPoses.Add(box);
+                    }
+                }
+
+                UpdateBoxes();
+                UpdateHeight();
+            }
+
+            /// <inheritdoc />
+            public override void SetValue(int index, object value)
+            {
+                // Check if update amount of blend pose inputs
+                if (index == 2 && _blendPoses.Count != BlendPosesCount)
+                {
+                    UpdateBoxes();
+                    UpdateHeight();
+                }
+
+                base.SetValue(index, value);
             }
         }
 
@@ -498,7 +580,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     0,
                     0.2f,
-                    4,
+                    8,
                 },
                 Elements = new[]
                 {
@@ -510,6 +592,10 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(3, "Pose 1", true, ConnectionType.Impulse, 4),
                     NodeElementArchetype.Factory.Input(4, "Pose 2", true, ConnectionType.Impulse, 5),
                     NodeElementArchetype.Factory.Input(5, "Pose 3", true, ConnectionType.Impulse, 6),
+                    NodeElementArchetype.Factory.Input(6, "Pose 4", true, ConnectionType.Impulse, 7),
+                    NodeElementArchetype.Factory.Input(7, "Pose 5", true, ConnectionType.Impulse, 8),
+                    NodeElementArchetype.Factory.Input(8, "Pose 6", true, ConnectionType.Impulse, 9),
+                    NodeElementArchetype.Factory.Input(9, "Pose 7", true, ConnectionType.Impulse, 10),
                 }
             },
         };
