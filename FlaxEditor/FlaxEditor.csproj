@@ -477,6 +477,7 @@
     <Compile Include="Windows\PluginsWindow.cs" />
     <Compile Include="Windows\Profiler\CPU.cs" />
     <Compile Include="Windows\Profiler\GPU.cs" />
+    <Compile Include="Windows\Profiler\Memory.cs" />
     <Compile Include="Windows\Profiler\Overall.cs" />
     <Compile Include="Windows\Profiler\ProfilerMode.cs" />
     <Compile Include="Windows\Profiler\ProfilerWindow.cs" />

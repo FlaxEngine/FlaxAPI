@@ -89,12 +89,19 @@ namespace FlaxEditor.Windows.Profiler
                         TitleBackgroundColor = headerColor,
                         FormatValue = FormatCellMs,
                     },
+                    new ColumnDefinition
+                    {
+                        Title = "Memory",
+                        TitleBackgroundColor = headerColor,
+                        FormatValue = FormatCellBytes,
+                    },
                 },
                 Parent = layout,
             };
             _table.Splits = new[]
             {
-                0.6f,
+                0.5f,
+                0.1f,
                 0.1f,
                 0.1f,
                 0.1f,
@@ -112,6 +119,11 @@ namespace FlaxEditor.Windows.Profiler
             return ((float)x).ToString("0.00");
         }
 
+        private string FormatCellBytes(object x)
+        {
+            return Utilities.Utils.FormatBytesCount((int)x);
+        }
+
         /// <inheritdoc />
         public override void Clear()
         {
@@ -120,13 +132,12 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <inheritdoc />
-        public override void Update()
+        public override void Update(ref SharedUpdateData sharedData)
         {
-            var stats = ProfilingTools.Stats;
-            _mainChart.AddSample(stats.UpdateTimeMs);
+            _mainChart.AddSample(sharedData.Stats.UpdateTimeMs);
 
             // Gather CPU events
-            var data = ProfilingTools.GetEventsCPU();
+            var data = sharedData.GetEventsCPU();
             _events.Add(data);
 
             // Update timeline if using the last frame
@@ -388,6 +399,9 @@ namespace FlaxEditor.Windows.Profiler
 
                             // Self ms
                             (float)(((time - subEventsTimeTotal) * 10000.0f) / 10000.0f),
+
+                            // Memory Alloc
+                            e.MemoryAllocation,
                         },
                         Depth = e.Depth,
                         Width = _table.Width,

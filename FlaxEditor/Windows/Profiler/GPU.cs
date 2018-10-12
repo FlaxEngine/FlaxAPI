@@ -112,14 +112,14 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <inheritdoc />
-        public override void Update()
+        public override void Update(ref SharedUpdateData sharedData)
         {
             // Gather GPU events
-            var data = ProfilingTools.GetEventsGPU();
+            var data = sharedData.GetEventsGPU();
             _events.Add(data);
 
             // Peek draw time
-            float drawTime = ProfilingTools.Stats.DrawTimeMs;
+            float drawTime = sharedData.Stats.DrawTimeMs;
             if (data != null && data.Length > 0)
                 drawTime = data[0].Time;
             _mainChart.AddSample(drawTime);
