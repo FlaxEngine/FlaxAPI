@@ -41,6 +41,7 @@ namespace FlaxEditor.Modules
         private ContextMenuButton _menuSceneMoveActorToViewport;
         private ContextMenuButton _menuSceneAlignActorWithViewport;
         private ContextMenuButton _menuSceneAlignViewportWtihActor;
+        private ContextMenuButton _menuSceneCreateTerrain;
         private ContextMenuButton _menuGamePlay;
         private ContextMenuButton _menuGamePause;
         private ContextMenuButton _menuToolsBakeLightmaps;
@@ -414,7 +415,9 @@ namespace FlaxEditor.Modules
             cm.VisibleChanged += OnMenuSceneShowHide;
             _menuSceneMoveActorToViewport = cm.AddButton("Move actor to viewport", MoveActorToViewport);
             _menuSceneAlignActorWithViewport = cm.AddButton("Align actor with viewport", AlignActorWithViewport);
-            _menuSceneAlignViewportWtihActor = cm.AddButton("Align viewport with actor", AlignViewportWtihActor);
+            _menuSceneAlignViewportWtihActor = cm.AddButton("Align viewport with actor", AlignViewportWtithActor);
+            cm.AddSeparator();
+            _menuSceneCreateTerrain = cm.AddButton("Create terrain", CreateTerrain);
 
             // Game
             MenuGame = MainMenu.AddButton("Game");
@@ -601,6 +604,7 @@ namespace FlaxEditor.Modules
             _menuSceneMoveActorToViewport.Enabled = hasActorSelected;
             _menuSceneAlignActorWithViewport.Enabled = hasActorSelected;
             _menuSceneAlignViewportWtihActor.Enabled = hasActorSelected;
+            _menuSceneCreateTerrain.Enabled = SceneManager.IsAnySceneLoaded;
 
             control.PerformLayout();
         }
@@ -638,7 +642,7 @@ namespace FlaxEditor.Modules
             c.PerformLayout();
         }
 
-        private void AlignViewportWtihActor()
+        private void AlignViewportWtithActor()
         {
             var selection = Editor.SceneEditing;
             if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
@@ -676,6 +680,17 @@ namespace FlaxEditor.Modules
                     actor.Orientation = viewport.ViewOrientation;
                 }
             }
+        }
+
+        private void CreateTerrain()
+        {
+            var terrain = Terrain.New();
+            terrain.Setup();
+            terrain.AddPatch(0, 0);
+            terrain.AddPatch(0, 1);
+            terrain.AddPatch(1, 0);
+            terrain.AddPatch(1, 1);
+            SceneManager.SpawnActor(terrain);
         }
 
         private void BakeAllEnvProbes()
