@@ -93,6 +93,8 @@
       <DependentUpon>Skybox.cs</DependentUpon>
     </Compile>
     <Compile Include="API\Actors\StaticModel.Gen.cs" />
+    <Compile Include="API\Actors\Terrain.cs" />
+    <Compile Include="API\Actors\Terrain.Gen.cs" />
     <Compile Include="API\Actors\TextRender.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />
