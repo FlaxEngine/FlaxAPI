@@ -212,7 +212,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
             public bool GetValue(object instance)
             {
-                if (Target is FieldInfo fieldInfo)
+                if (Source is FieldInfo fieldInfo)
                     return (bool)fieldInfo.GetValue(instance);
                 return (bool)((PropertyInfo)Source).GetValue(instance, null);
             }
@@ -321,6 +321,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     Debug.LogError("Invalid VisibleIf rule. Field has to be bool type " + visibleIf.MemberName);
                     return null;
                 }
+
+                return field;
             }
 
             Debug.LogError("Invalid VisibleIf rule. Cannot find member " + visibleIf.MemberName);
