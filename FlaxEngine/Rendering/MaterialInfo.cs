@@ -29,6 +29,11 @@ namespace FlaxEngine.Rendering
         /// The GUI shader. Can be used to draw custom control interface elements or to add custom effects to the GUI.
         /// </summary>
         GUI = 3,
+
+        /// <summary>
+        /// The terrain shader. Can be used only with landscape chunks geometry that use optimized vertex data and support multi-layered blending.
+        /// </summary>
+        Terrain = 4,
     }
 
     /// <summary>

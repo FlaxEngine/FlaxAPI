@@ -140,6 +140,8 @@ namespace FlaxEditor.Viewport.Previews
                     case MaterialDomain.GUI:
                         guiMaterial = _material;
                         break;
+                    case MaterialDomain.Terrain:
+                        break;
                     default: throw new ArgumentOutOfRangeException();
                     }
                 }

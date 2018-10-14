@@ -154,6 +154,7 @@ namespace FlaxEditor.Surface.Archetypes
                 switch (info.Domain)
                 {
                 case MaterialDomain.Surface:
+                case MaterialDomain.Terrain:
                 {
                     bool isNotUnlit = info.ShadingModel != MaterialShadingModel.Unlit;
                     bool isTransparent = info.BlendMode == MaterialBlendMode.Transparent;
