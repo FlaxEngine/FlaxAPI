@@ -215,10 +215,23 @@ namespace FlaxEditor.Content
         {
             if (IsFocused)
             {
-                if (key == Keys.F2)
+                switch (key)
                 {
+                case Keys.F2:
                     StartRenaming();
                     return true;
+                case Keys.Delete:
+                    Editor.Instance.Windows.ContentWin.Delete(Folder);
+                    return true;
+                }
+                if (RootWindow.GetKey(Keys.Control))
+                {
+                    switch (key)
+                    {
+                    case Keys.D:
+                        Editor.Instance.Windows.ContentWin.Clone(Folder);
+                        return true;
+                    }
                 }
             }
 
