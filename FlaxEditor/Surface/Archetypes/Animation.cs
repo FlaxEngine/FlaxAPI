@@ -603,6 +603,50 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(9, "Pose 7", true, ConnectionType.Impulse, 10),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 15,
+                Title = "Get Root Motion",
+                Description = "Gets the computed root motion from the pose",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(180, 60),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Translation", ConnectionType.Vector3, 0),
+                    NodeElementArchetype.Factory.Output(1, "Rotation", ConnectionType.Rotation, 1),
+                    NodeElementArchetype.Factory.Input(0, "Pose", true, ConnectionType.Impulse, 2),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 16,
+                Title = "Set Root Motion",
+                Description = "Overrides the root motion of the pose",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(180, 60),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, "Pose", true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 14,
+                Title = "Add Root Motion",
+                Description = "Applies the custom root motion transformation the root motion of the pose",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(180, 60),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, "Pose", true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
+                }
+            },
         };
     }
 }
