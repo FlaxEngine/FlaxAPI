@@ -69,6 +69,8 @@ namespace FlaxEditor.Surface.Archetypes
         public class BlendPose : SurfaceNode
         {
             private readonly List<InputBox> _blendPoses = new List<InputBox>(MaxBlendPoses);
+            private Button _addButton;
+            private Button _removeButton;
 
             /// <summary>
             /// The maximum amount of the blend poses to support.
@@ -101,31 +103,31 @@ namespace FlaxEditor.Surface.Archetypes
             : base(id, surface, nodeArch, groupArch)
             {
                 // Add buttons for adding/removing blend poses
-                var addButton = new Button(70, 80, 20, 20)
+                _addButton = new Button(70, 70, 20, 20)
                 {
                     Text = "+",
                     Parent = this
                 };
-                addButton.Clicked += () => BlendPosesCount++;
-                var removeButton = new Button(addButton.Right + 4, addButton.Y, 20, 20)
+                _addButton.Clicked += () => BlendPosesCount++;
+                _removeButton = new Button(_addButton.Right + 4, _addButton.Y, 20, 20)
                 {
                     Text = "-",
                     Parent = this
                 };
-                removeButton.Clicked += () => BlendPosesCount--;
+                _removeButton.Clicked += () => BlendPosesCount--;
             }
 
             private void UpdateBoxes()
             {
-                while (_blendPoses.Count > BlendPosesCount)
+                var posesCount = BlendPosesCount;
+                while (_blendPoses.Count > posesCount)
                 {
                     var boxIndex = _blendPoses.Count - 1;
                     var box = _blendPoses[boxIndex];
                     _blendPoses.RemoveAt(boxIndex);
-                    box.RemoveConnections();
-                    box.Dispose();
+                    RemoveElement(box);
                 }
-                while (_blendPoses.Count < BlendPosesCount)
+                while (_blendPoses.Count < posesCount)
                 {
                     var ylevel = 2 + _blendPoses.Count;
                     var arch = new NodeElementArchetype
@@ -144,6 +146,9 @@ namespace FlaxEditor.Surface.Archetypes
                     AddElement(box);
                     _blendPoses.Add(box);
                 }
+
+                _addButton.Enabled = posesCount < MaxBlendPoses;
+                _removeButton.Enabled = posesCount > 0;
             }
 
             private void UpdateHeight()
@@ -174,14 +179,14 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override void SetValue(int index, object value)
             {
+                base.SetValue(index, value);
+
                 // Check if update amount of blend pose inputs
                 if (index == 2 && _blendPoses.Count != BlendPosesCount)
                 {
                     UpdateBoxes();
                     UpdateHeight();
                 }
-
-                base.SetValue(index, value);
             }
         }
 
