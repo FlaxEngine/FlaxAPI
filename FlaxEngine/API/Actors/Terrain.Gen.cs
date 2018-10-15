@@ -68,6 +68,45 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the terrain Level Of Detail count.
+        /// </summary>
+        [UnmanagedCall]
+        public int LODCount
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetLODCount(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the terrain chunk vertices amount per edge (square).
+        /// </summary>
+        [UnmanagedCall]
+        public int ChunkSize
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetChunkSize(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the terrain patches count. Each patch contains 16 chunks arranged into a 4x4 square.
+        /// </summary>
+        [UnmanagedCall]
+        public int PatchesCount
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetPatchesCount(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Creates the terrain.
         /// </summary>
         /// <param name="lodCount">The LODs count.</param>
@@ -89,17 +128,17 @@ namespace FlaxEngine
         /// Adds the patch.
         /// </summary>
         /// <param name="x">The patch location x.</param>
-        /// <param name="y">The patch location y</param>
+        /// <param name="z">The patch location z.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void AddPatch(int x, int y)
+        public void AddPatch(int x, int z)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_AddPatch(unmanagedPtr, x, y);
+            Internal_AddPatch(unmanagedPtr, x, z);
 #endif
         }
 
@@ -107,17 +146,17 @@ namespace FlaxEngine
         /// Removes the patch.
         /// </summary>
         /// <param name="x">The patch location x.</param>
-        /// <param name="y">The patch location y</param>
+        /// <param name="z">The patch location z.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void RemovePatch(int x, int y)
+        public void RemovePatch(int x, int z)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_RemovePatch(unmanagedPtr, x, y);
+            Internal_RemovePatch(unmanagedPtr, x, z);
 #endif
         }
 
@@ -137,13 +176,22 @@ namespace FlaxEngine
         internal static extern void Internal_SetForcedLOD(IntPtr obj, int val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetLODCount(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetChunkSize(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetPatchesCount(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Setup(IntPtr obj, int lodCount, int chunkSize);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_AddPatch(IntPtr obj, int x, int y);
+        internal static extern void Internal_AddPatch(IntPtr obj, int x, int z);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_RemovePatch(IntPtr obj, int x, int y);
+        internal static extern void Internal_RemovePatch(IntPtr obj, int x, int z);
 #endif
 
         #endregion
