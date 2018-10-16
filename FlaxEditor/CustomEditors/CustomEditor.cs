@@ -307,6 +307,11 @@ namespace FlaxEditor.CustomEditors
                     var style = FlaxEngine.GUI.Style.Current;
                     LinkedLabel.HighlightStripColor = CanRevertReferenceValue ? style.BackgroundSelected * 0.8f : Color.Transparent;
                 }
+                // Default value diff
+                else if (Values.HasDefaultValue)
+                {
+                    LinkedLabel.HighlightStripColor = CanRevertDefaultValue ? Color.Yellow * 0.8f : Color.Transparent;
+                }
             }
         }
 
@@ -315,7 +320,92 @@ namespace FlaxEditor.CustomEditors
             LinkedLabel = label;
         }
 
-        private void RevertDiffTOReference(CustomEditor editor)
+        private void RevertDiffToDefault(CustomEditor editor)
+        {
+            if (editor.ChildrenEditors.Count == 0)
+            {
+                // Skip if no change detected
+                if (!editor.Values.IsDefaultValueModified)
+                    return;
+
+                editor.SetValueToDefault();
+            }
+            else
+            {
+                for (int i = 0; i < editor.ChildrenEditors.Count; i++)
+                {
+                    RevertDiffToDefault(editor.ChildrenEditors[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this editor can revert the value to default value.
+        /// </summary>
+        public bool CanRevertDefaultValue
+        {
+            get
+            {
+                if (!Values.IsDefaultValueModified)
+                    return false;
+
+                // Skip array items (show diff only on a bottom level properties and fields)
+                if (ParentEditor != null && ParentEditor.Values.Type != null && ParentEditor.Values.Type.IsArray)
+                    return false;
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Reverts the property value to default value (if has). Handles undo.
+        /// </summary>
+        public void RevertToDefaultValue()
+        {
+            if (!Values.HasDefaultValue)
+                return;
+
+            Editor.Log("Reverting object changes to default");
+
+            RevertDiffToDefault(this);
+        }
+
+        /// <summary>
+        /// Updates the default value assigned to the editor's values container. Sends the event down the custom editors hierarchy to propagate the change.
+        /// </summary>
+        /// <remarks>
+        /// Has no effect on editors that don't have default value assigned.
+        /// </remarks>
+        public void RefreshDefaultValue()
+        {
+            if (!Values.HasDefaultValue)
+                return;
+
+            if (ParentEditor?.Values?.HasDefaultValue ?? false)
+            {
+                Values.RefreshDefaultValue(ParentEditor.Values.DefaultValue);
+            }
+
+            for (int i = 0; i < ChildrenEditors.Count; i++)
+            {
+                ChildrenEditors[i].RefreshDefaultValue();
+            }
+        }
+
+        /// <summary>
+        /// Clears all the default value of the container in the whole custom editors tree (this container and all children).
+        /// </summary>
+        public void ClearDefaultValueAll()
+        {
+            Values.ClearDefaultValue();
+
+            for (int i = 0; i < ChildrenEditors.Count; i++)
+            {
+                ChildrenEditors[i].ClearDefaultValueAll();
+            }
+        }
+
+        private void RevertDiffToReference(CustomEditor editor)
         {
             if (editor.ChildrenEditors.Count == 0)
             {
@@ -329,7 +419,7 @@ namespace FlaxEditor.CustomEditors
             {
                 for (int i = 0; i < editor.ChildrenEditors.Count; i++)
                 {
-                    RevertDiffTOReference(editor.ChildrenEditors[i]);
+                    RevertDiffToReference(editor.ChildrenEditors[i]);
                 }
             }
         }
@@ -362,7 +452,7 @@ namespace FlaxEditor.CustomEditors
 
             Editor.Log("Reverting object changes to prefab");
 
-            RevertDiffTOReference(this);
+            RevertDiffToReference(this);
         }
 
         /// <summary>
@@ -445,6 +535,14 @@ namespace FlaxEditor.CustomEditors
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Sets the editor value to the default value (if assigned).
+        /// </summary>
+        public void SetValueToDefault()
+        {
+            SetValue(Values.DefaultValue);
         }
 
         /// <summary>
