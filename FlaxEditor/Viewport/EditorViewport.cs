@@ -16,8 +16,6 @@ namespace FlaxEditor.Viewport
     /// <seealso cref="FlaxEngine.GUI.RenderOutputControl" />
     public class EditorViewport : RenderOutputControl
     {
-        // TODO: maybe cache view/projection matricies to reuse them
-
         /// <summary>
         /// Gathered input data.
         /// </summary>
@@ -733,6 +731,9 @@ namespace FlaxEditor.Viewport
                     OnRightMouseButtonUp();
             }
 
+            // Get clamped delta time (more stable during lags)
+            var dt = Math.Min(Time.UnscaledDeltaTime, 1.0f);
+
             // Check if update mouse
             Vector2 size = Size;
             if (_isControllingMouse)
@@ -823,9 +824,6 @@ namespace FlaxEditor.Viewport
                     _mouseDeltaRightLast = currentDelta;
                 }
 
-                // Get clamped delta time (more stable during lags)
-                var dt = Math.Min(Time.UnscaledDeltaTime, 1.0f);
-
                 // Update
                 moveDelta *= dt * (60.0f * 4.0f);
                 mouseDelta *= 200.0f * MouseSpeed;
@@ -842,6 +840,41 @@ namespace FlaxEditor.Viewport
             else
             {
                 _mouseDeltaRight = _mouseDeltaRightLast = Vector2.Zero;
+
+                if (ContainsFocus)
+                {
+                    _input.IsPanning = false;
+                    _input.IsRotating = false;
+                    _input.IsMoving = true;
+                    _input.IsZooming = false;
+                    _input.IsOrbiting = false;
+
+                    // Get input movement
+                    Vector3 moveDelta = Vector3.Zero;
+                    if (win.GetKey(Keys.ArrowRight))
+                    {
+                        moveDelta += Vector3.Right;
+                    }
+                    if (win.GetKey(Keys.ArrowLeft))
+                    {
+                        moveDelta += Vector3.Left;
+                    }
+                    if (win.GetKey(Keys.ArrowUp))
+                    {
+                        moveDelta += Vector3.Up;
+                    }
+                    if (win.GetKey(Keys.ArrowDown))
+                    {
+                        moveDelta += Vector3.Down;
+                    }
+                    moveDelta.Normalize(); // normalize direction
+                    moveDelta *= _movementSpeed;
+
+                    // Update
+                    moveDelta *= dt * (60.0f * 4.0f);
+                    Vector2 mouseDelta = Vector2.Zero;
+                    UpdateView(dt, ref moveDelta, ref mouseDelta, out _);
+                }
             }
             if (_input.IsMouseLeftDown)
             {
