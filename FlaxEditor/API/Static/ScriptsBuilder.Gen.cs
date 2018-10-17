@@ -147,40 +147,6 @@ namespace FlaxEditor.Scripting
         }
 
         /// <summary>
-        /// Opens the solution file using dedicated code editor.
-        /// </summary>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
-        public static void OpenSolution()
-        {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            Internal_OpenSolution();
-#endif
-        }
-
-        /// <summary>
-        /// Opens the file using dedicated code editor.
-        /// </summary>
-        /// <param name="path">The file path to open.</param>
-        /// <param name="line">The line number to navigate to. Use 0 to not use it.</param>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
-        public static void OpenFile(string path, int line = 0)
-        {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            Internal_OpenFile(path, line);
-#endif
-        }
-
-        /// <summary>
         /// Tries to find a script type with the given name.
         /// </summary>
         /// <param name="name">The script full name.</param>
@@ -249,12 +215,6 @@ namespace FlaxEditor.Scripting
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GenerateProject(bool forceGenerateSolution, bool forceGenerateProject);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_OpenSolution();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_OpenFile(string path, int line);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Type Internal_FindScript(string name);

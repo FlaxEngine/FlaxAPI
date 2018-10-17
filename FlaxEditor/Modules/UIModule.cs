@@ -377,7 +377,7 @@ namespace FlaxEditor.Modules
             _menuFileSaveScenes = cm.AddButton("Save scenes", Editor.Scene.SaveScenes);
             _menuFileCloseScenes = cm.AddButton("Close scenes", Editor.Scene.CloseAllScenes);
             cm.AddSeparator();
-            cm.AddButton("Open Visual Studio project", ScriptsBuilder.OpenSolution);
+            cm.AddButton("Open Visual Studio project", Editor.Instance.CodeEditing.OpenSolution);
             cm.AddButton("Regenerate solution file", () => ScriptsBuilder.GenerateProject(true, true));
             cm.AddButton("Recompile scripts", ScriptsBuilder.Compile);
             cm.AddSeparator();

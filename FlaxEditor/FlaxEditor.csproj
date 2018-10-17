@@ -271,7 +271,6 @@
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
     <Compile Include="IEditable.cs" />
-    <Compile Include="Modules\CodeEditingModule.cs" />
     <Compile Include="Modules\ContentDatabaseModule.cs" />
     <Compile Include="Modules\ContentEditingModule.cs" />
     <Compile Include="Modules\ContentImportingModule.cs" />
@@ -283,6 +282,7 @@
     <Compile Include="Modules\SceneModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
     <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
+    <Compile Include="Modules\SourceCodeEditing\InBuildSourceCodeEditor.cs" />
     <Compile Include="Modules\UIModule.cs" />
     <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="Options\Editor.cs" />
@@ -418,6 +418,8 @@
     <Compile Include="Utilities\MemberInfoPath.cs" />
     <Compile Include="Utilities\ObjectSnapshot.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />
+    <Compile Include="Modules\SourceCodeEditing\CodeEditingModule.cs" />
+    <Compile Include="Modules\SourceCodeEditing\ISourceCodeEditor.cs" />
     <Compile Include="Viewport\Cameras\ArcBallCamera.cs" />
     <Compile Include="Viewport\Cameras\FPSCamera.cs" />
     <Compile Include="Viewport\Cameras\IViewportCamera.cs" />

@@ -10,6 +10,7 @@ using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
+using FlaxEditor.Modules.SourceCodeEditing;
 using FlaxEditor.Options;
 using FlaxEditor.Scripting;
 using FlaxEditor.States;
