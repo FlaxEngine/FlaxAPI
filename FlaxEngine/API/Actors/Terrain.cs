@@ -22,7 +22,7 @@ namespace FlaxEngine
         /// <summary>
         /// Red:16 bit, Green:16 bit, Blue:16 bit, Alpha:16 bit, uncompressed, raw data. See <see cref="PixelFormat.R16G16B16A16_UNorm"/>.
         /// </summary>
-        R16G16B16A16_Raw = 0,
+        R16G16B16A16_Raw = 1,
     };
 
     public sealed partial class Terrain
