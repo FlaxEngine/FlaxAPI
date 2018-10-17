@@ -110,7 +110,7 @@ namespace FlaxEngine
         /// Creates the terrain.
         /// </summary>
         /// <param name="lodCount">The LODs count.</param>
-        /// <param name="chunkSize">The size of the chunk (amount of vertices per edge for the highest LOD).</param>
+        /// <param name="chunkSize">The size of the chunk (amount of quads per edge for the highest LOD).</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
