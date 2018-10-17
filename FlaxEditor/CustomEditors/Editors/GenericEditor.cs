@@ -69,6 +69,11 @@ namespace FlaxEditor.CustomEditors.Editors
             public VisibleIfAttribute VisibleIf;
 
             /// <summary>
+            /// The read-only attribute usage flag.
+            /// </summary>
+            public bool IsReadOnly;
+
+            /// <summary>
             /// The expand groups flag.
             /// </summary>
             public bool ExpandGroups;
@@ -128,6 +133,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 Space = (SpaceAttribute)attributes.FirstOrDefault(x => x is SpaceAttribute);
                 Header = (HeaderAttribute)attributes.FirstOrDefault(x => x is HeaderAttribute);
                 VisibleIf = (VisibleIfAttribute)attributes.FirstOrDefault(x => x is VisibleIfAttribute);
+                IsReadOnly = attributes.FirstOrDefault(x => x is ReadOnlyAttribute) != null;
                 ExpandGroups = attributes.FirstOrDefault(x => x is ExpandGroupsAttribute) != null;
 
                 if (Display?.Name != null)
@@ -336,13 +342,34 @@ namespace FlaxEditor.CustomEditors.Editors
         protected virtual void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
         {
             int labelIndex = 0;
-            if (item.VisibleIf != null && itemLayout.Children.Count > 0 && itemLayout.Children[itemLayout.Children.Count - 1] is PropertiesListElement propertiesListElement)
+            if ((item.IsReadOnly || item.VisibleIf != null) &&
+                itemLayout.Children.Count > 0 &&
+                itemLayout.Children[itemLayout.Children.Count - 1] is PropertiesListElement propertiesListElement)
             {
                 labelIndex = propertiesListElement.Labels.Count;
             }
 
             itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor, item.TooltipText);
 
+            if (item.IsReadOnly)
+            {
+                PropertiesListElement list;
+                if (itemLayout.Children.Count > 0 && itemLayout.Children[itemLayout.Children.Count - 1] is PropertiesListElement list1)
+                {
+                    list = list1;
+
+                    // Disable controls added to the editor
+                    var label = list.Labels[labelIndex];
+                    for (int j = label.FirstChildControlIndex; j < list.Properties.Children.Count; j++)
+                    {
+                        var child = list.Properties.Children[j];
+                        if (child is PropertyNameLabel)
+                            break;
+
+                        child.Enabled = false;
+                    }
+                }
+            }
             if (item.VisibleIf != null)
             {
                 PropertiesListElement list;
@@ -362,7 +389,6 @@ namespace FlaxEditor.CustomEditors.Editors
                     return;
 
                 // Find the target control to show/hide
-
 
                 // Resize cache
                 if (_visibleIfCaches == null)
