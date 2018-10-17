@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.ComponentModel;
 
 namespace FlaxEngine
 {
@@ -161,7 +162,7 @@ namespace FlaxEngine
         /// Gets or sets active state of actor
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-70), Tooltip("Enable/disable object")]
+        [EditorDisplay("General"), DefaultValue(true), EditorOrder(-70), Tooltip("Enable/disable object")]
         public bool IsActive
         {
 #if UNIT_TEST_COMPILANT
@@ -250,7 +251,7 @@ namespace FlaxEngine
         /// Gets or sets actor's local transform position
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Transform", "Position"), EditorOrder(-30), NoSerialize, Tooltip("Local position of the object (in the parent object space)")]
+        [EditorDisplay("Transform", "Position"), DefaultValue(typeof(Vector3), "0,0,0"), EditorOrder(-30), NoSerialize, Tooltip("Local position of the object (in the parent object space)")]
         public Vector3 LocalPosition
         {
 #if UNIT_TEST_COMPILANT
@@ -265,7 +266,7 @@ namespace FlaxEngine
         /// Gets or sets actor's local transform orientation
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Transform", "Rotation"), EditorOrder(-20), NoSerialize, Tooltip("Local orientation of the object (in the parent object space)")]
+        [EditorDisplay("Transform", "Rotation"), DefaultValue(typeof(Quaternion), "0,0,0,1"), EditorOrder(-20), NoSerialize, Tooltip("Local orientation of the object (in the parent object space)")]
         public Quaternion LocalOrientation
         {
 #if UNIT_TEST_COMPILANT
@@ -280,7 +281,7 @@ namespace FlaxEngine
         /// Gets or sets actor's local transform scale
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Transform", "Scale"), Limit(float.MinValue, float.MaxValue, 0.01f), EditorOrder(-10), NoSerialize, Tooltip("Local scale of the object (in the parent object space)")]
+        [EditorDisplay("Transform", "Scale"), DefaultValue(typeof(Vector3), "1,1,1"), Limit(float.MinValue, float.MaxValue, 0.01f), EditorOrder(-10), NoSerialize, Tooltip("Local scale of the object (in the parent object space)")]
         public Vector3 LocalScale
         {
 #if UNIT_TEST_COMPILANT

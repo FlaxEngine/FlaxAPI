@@ -154,12 +154,14 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Custom import geometry rotation.
         /// </summary>
+        [DefaultValue(typeof(Quaternion), "0,0,0,1")]
         [EditorOrder(510), EditorDisplay("Transform"), Tooltip("Custom import geometry rotation")]
         public Quaternion Rotation { get; set; } = Quaternion.Identity;
 
         /// <summary>
         /// Custom import geometry offset.
         /// </summary>
+        [DefaultValue(typeof(Vector3), "0,0,0")]
         [EditorOrder(520), EditorDisplay("Transform"), Tooltip("Custom import geometry offset")]
         public Vector3 Translation { get; set; } = Vector3.Zero;
 
