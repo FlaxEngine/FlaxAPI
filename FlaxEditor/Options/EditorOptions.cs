@@ -21,5 +21,10 @@ namespace FlaxEditor.Options
         /// The visual options.
         /// </summary>
         public VisualOptions Visual = new VisualOptions();
+
+        /// <summary>
+        /// The source code options.
+        /// </summary>
+        public SourceCodeOptions SourceCode = new SourceCodeOptions();
     }
 }

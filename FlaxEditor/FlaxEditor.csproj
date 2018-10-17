@@ -282,6 +282,7 @@
     <Compile Include="Modules\SceneModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
     <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
+    <Compile Include="Modules\SourceCodeEditing\DefaultSourceCodeEditor.cs" />
     <Compile Include="Modules\SourceCodeEditing\InBuildSourceCodeEditor.cs" />
     <Compile Include="Modules\UIModule.cs" />
     <Compile Include="Modules\WindowsModule.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="Options\GeneralOptions.cs" />
     <Compile Include="Options\InterfaceOptions.cs" />
     <Compile Include="Options\OptionsModule.cs" />
+    <Compile Include="Options\SourceCodeOptions.cs" />
     <Compile Include="Options\VisualOptions.cs" />
     <Compile Include="Plugins\EditorPlugin.cs" />
     <Compile Include="Plugins\PluginUtils.cs" />

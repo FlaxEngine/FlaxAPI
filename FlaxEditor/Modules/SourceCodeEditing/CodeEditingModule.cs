@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using FlaxEditor.Options;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -73,6 +74,16 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         {
         }
 
+        internal InBuildSourceCodeEditor GetInBuildEditor(ScriptsBuilder.InBuildEditorTypes editorType)
+        {
+            for (var i = 0; i < Editors.Count; i++)
+            {
+                if (Editors[i] is InBuildSourceCodeEditor inBuild && inBuild.Type == editorType)
+                    return inBuild;
+            }
+            return null;
+        }
+
         /// <summary>
         /// Adds the editor to the collection.
         /// </summary>
@@ -140,26 +151,47 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         {
             var resultArray = stackalloc byte[(int)ScriptsBuilder.InBuildEditorTypes.MAX];
             ScriptsBuilder.Internal_GetExistingEditors(resultArray);
-            ISourceCodeEditor last = null;
             for (int i = 0; i < (int)ScriptsBuilder.InBuildEditorTypes.MAX; i++)
             {
                 if (resultArray[i] != 0)
                 {
                     var editor = new InBuildSourceCodeEditor((ScriptsBuilder.InBuildEditorTypes)i);
                     AddEditor(editor);
-                    last = editor;
                 }
             }
-            SelectedEditor = last;
         }
 
         /// <inheritdoc />
         public override void OnInit()
         {
             ScriptsBuilder.ScriptsReload += OnScriptsReload;
+            Editor.Options.OptionsChanged += OnOptionsChanged;
 
             // Add default code editors (in-build)
             GetInBuildEditors();
+            AddEditor(new DefaultSourceCodeEditor());
+
+            // Editor options are loaded before this module so pick the code editor
+            OnOptionsChanged(Editor.Options.Options);
+        }
+
+        private void OnOptionsChanged(EditorOptions options)
+        {
+            // Sync code editor
+            ISourceCodeEditor editor = null;
+            var codeEditor = options.SourceCode.SourceCodeEditor;
+            if (codeEditor != "None")
+            {
+                foreach (var e in Editor.Instance.CodeEditing.Editors)
+                {
+                    if (string.Equals(codeEditor, e.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        editor = e;
+                        break;
+                    }
+                }
+            }
+            Editor.Instance.CodeEditing.SelectedEditor = editor;
         }
 
         /// <inheritdoc />
