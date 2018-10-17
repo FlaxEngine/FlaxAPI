@@ -110,6 +110,10 @@ namespace FlaxEditor.CustomEditors.GUI
                     revertToPrefab.Enabled = LinkedEditor.CanRevertReferenceValue;
                     var resetToDefault = menu.AddButton("Reset to default", LinkedEditor.RevertToDefaultValue);
                     resetToDefault.Enabled = LinkedEditor.CanRevertDefaultValue;
+                    menu.AddSeparator();
+                    menu.AddButton("Copy", LinkedEditor.Copy);
+                    var paste = menu.AddButton("Paste", LinkedEditor.Paste);
+                    paste.Enabled = LinkedEditor.CanPaste;
                 }
                 SetupContextMenu?.Invoke(this, menu);
                 menu.Show(this, location);

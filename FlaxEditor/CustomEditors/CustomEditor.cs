@@ -6,6 +6,9 @@ using System.Reflection;
 using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Newtonsoft.Json;
+using JsonSerializer = FlaxEngine.Json.JsonSerializer;
+using Object = System.Object;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -488,6 +491,102 @@ namespace FlaxEditor.CustomEditors
             for (int i = 0; i < ChildrenEditors.Count; i++)
             {
                 ChildrenEditors[i].ClearReferenceValueAll();
+            }
+        }
+
+        /// <summary>
+        /// Copies the value to the system clipboard.
+        /// </summary>
+        public void Copy()
+        {
+            Editor.Log("Copy custom editor value");
+
+            try
+            {
+                string text;
+                if (typeof(FlaxEngine.Object).IsAssignableFrom(Values.Type))
+                {
+                    text = JsonSerializer.GetStringID(Values[0] as FlaxEngine.Object);
+                }
+                else
+                {
+                    text = JsonSerializer.Serialize(Values[0]);
+                }
+
+                Application.ClipboardText = text;
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                Editor.LogError("Cannot copy property. See log for more info.");
+            }
+        }
+
+        private bool GetClipboardObject(out object result)
+        {
+            result = null;
+            var text = Application.ClipboardText;
+            if (string.IsNullOrEmpty(text))
+                return false;
+
+            object obj;
+            if (typeof(FlaxEngine.Object).IsAssignableFrom(Values.Type))
+            {
+                if (text.Length != 32)
+                    return false;
+                JsonSerializer.ParseID(text, out var id);
+                obj = FlaxEngine.Object.Find<FlaxEngine.Object>(ref id);
+            }
+            else
+            {
+                obj = JsonConvert.DeserializeObject(text, Values.Type, JsonSerializer.Settings);
+            }
+
+            if (obj == null || Values.Type.IsInstanceOfType(obj))
+            {
+                result = obj;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether can paste value from the system clipboard to the property value container.
+        /// </summary>
+        public bool CanPaste
+        {
+            get
+            {
+                try
+                {
+                    return GetClipboardObject(out _);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the value from the system clipboard.
+        /// </summary>
+        public void Paste()
+        {
+            Editor.Log("Paste custom editor value");
+
+            try
+            {
+                if (GetClipboardObject(out var obj))
+                {
+                    SetValue(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                Editor.LogError("Cannot paste property value. See log for more info.");
             }
         }
 
