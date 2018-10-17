@@ -50,6 +50,7 @@
 */
 
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -60,6 +61,7 @@ namespace FlaxEngine
     /// Represents a four dimensional mathematical quaternion.
     /// </summary>
     [Serializable]
+    [TypeConverter(typeof(TypeConverters.QuaternionConverter))]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Quaternion : IEquatable<Quaternion>, IFormattable
     {

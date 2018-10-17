@@ -50,6 +50,7 @@
 */
 
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -60,6 +61,7 @@ namespace FlaxEngine
     /// Represents a two dimensional mathematical vector.
     /// </summary>
     [Serializable]
+    [TypeConverter(typeof(TypeConverters.Vector2Converter))]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Vector2 : IEquatable<Vector2>, IFormattable
     {
