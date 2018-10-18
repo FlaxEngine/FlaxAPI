@@ -103,7 +103,7 @@ namespace FlaxEditor.Surface.Archetypes
             : base(id, surface, nodeArch, groupArch)
             {
                 // Add buttons for adding/removing blend poses
-                _addButton = new Button(70, 70, 20, 20)
+                _addButton = new Button(70, 94, 20, 20)
                 {
                     Text = "+",
                     Parent = this
@@ -129,7 +129,7 @@ namespace FlaxEditor.Surface.Archetypes
                 }
                 while (_blendPoses.Count < posesCount)
                 {
-                    var ylevel = 2 + _blendPoses.Count;
+                    var ylevel = 3 + _blendPoses.Count;
                     var arch = new NodeElementArchetype
                     {
                         Type = NodeElementType.Input,
@@ -153,7 +153,7 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void UpdateHeight()
             {
-                float nodeHeight = 10 + (Mathf.Max(_blendPoses.Count, 1) + 2) * FlaxEditor.Surface.Constants.LayoutOffsetY;
+                float nodeHeight = 10 + (Mathf.Max(_blendPoses.Count, 1) + 3) * FlaxEditor.Surface.Constants.LayoutOffsetY;
                 Height = nodeHeight + FlaxEditor.Surface.Constants.NodeMarginY * 2 + FlaxEditor.Surface.Constants.NodeHeaderSize + FlaxEditor.Surface.Constants.NodeFooterSize;
             }
 
@@ -586,21 +586,24 @@ namespace FlaxEditor.Surface.Archetypes
                     0,
                     0.2f,
                     8,
+                    (int)AlphaBlendMode.HermiteCubic,
                 },
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
                     NodeElementArchetype.Factory.Input(0, "Pose Index", true, ConnectionType.Integer, 1, 0),
                     NodeElementArchetype.Factory.Input(1, "Blend Duration", true, ConnectionType.Float, 2, 1),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2, "Mode:"),
+                    NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 2, 100, 3, typeof(AlphaBlendMode)),
 
-                    NodeElementArchetype.Factory.Input(2, "Pose 0", true, ConnectionType.Impulse, 3),
-                    NodeElementArchetype.Factory.Input(3, "Pose 1", true, ConnectionType.Impulse, 4),
-                    NodeElementArchetype.Factory.Input(4, "Pose 2", true, ConnectionType.Impulse, 5),
-                    NodeElementArchetype.Factory.Input(5, "Pose 3", true, ConnectionType.Impulse, 6),
-                    NodeElementArchetype.Factory.Input(6, "Pose 4", true, ConnectionType.Impulse, 7),
-                    NodeElementArchetype.Factory.Input(7, "Pose 5", true, ConnectionType.Impulse, 8),
-                    NodeElementArchetype.Factory.Input(8, "Pose 6", true, ConnectionType.Impulse, 9),
-                    NodeElementArchetype.Factory.Input(9, "Pose 7", true, ConnectionType.Impulse, 10),
+                    NodeElementArchetype.Factory.Input(3, "Pose 0", true, ConnectionType.Impulse, 3),
+                    NodeElementArchetype.Factory.Input(4, "Pose 1", true, ConnectionType.Impulse, 4),
+                    NodeElementArchetype.Factory.Input(5, "Pose 2", true, ConnectionType.Impulse, 5),
+                    NodeElementArchetype.Factory.Input(6, "Pose 3", true, ConnectionType.Impulse, 6),
+                    NodeElementArchetype.Factory.Input(7, "Pose 4", true, ConnectionType.Impulse, 7),
+                    NodeElementArchetype.Factory.Input(8, "Pose 5", true, ConnectionType.Impulse, 8),
+                    NodeElementArchetype.Factory.Input(9, "Pose 6", true, ConnectionType.Impulse, 9),
+                    NodeElementArchetype.Factory.Input(10, "Pose 7", true, ConnectionType.Impulse, 10),
                 }
             },
             new NodeArchetype
