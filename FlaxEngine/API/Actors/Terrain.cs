@@ -33,7 +33,7 @@ namespace FlaxEngine
         /// <param name="x">The patch location x.</param>
         /// <param name="z">The patch location z.</param>
         /// <param name="format">The heightmap storage format.</param>
-        /// <param name="heightMap">The height map. Each array item contains a height value. It should has size equal (chunkSize+1)*(chunkSize+1)*16.</param>
+        /// <param name="heightMap">The height map. Each array item contains a height value. It should has size equal (chunkSize*4+1)^2.</param>
         /// <param name="visibilityMap">The visibility map (optional). Normalized to 0-1 range values with visibility per-vertex. Must match the heightmap dimensions.</param>
         /// <param name="forceUseVirtualStorage">If set to <c>true</c> patch will use virtual storage by force. Otherwise it can use normal texture asset storage on drive (valid only during Editor). Runtime-created terrain can only use virtual storage (in RAM).</param>
         /// <returns>True if failed, otherwise false.</returns>
