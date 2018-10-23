@@ -637,7 +637,7 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
-                TypeID = 14,
+                TypeID = 17,
                 Title = "Add Root Motion",
                 Description = "Applies the custom root motion transformation the root motion of the pose",
                 Flags = NodeFlags.AnimGraphOnly,
@@ -648,6 +648,27 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(0, "Pose", true, ConnectionType.Impulse, 1),
                     NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 18,
+                Create = (id, surface, arch, groupArch) => new StateMachine(id, surface, arch, groupArch),
+                Title = "State Machine",
+                Description = "The animation states machine output node",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(270, 100),
+                DefaultValues = new object[]
+                {
+                    "Locomotion",
+                    0,
+                    3,
+                    true,
+                    true,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0)
                 }
             },
         };
