@@ -42,12 +42,20 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// Gets the state machine entry node (surface node object).
             /// </summary>
-            public SurfaceNode StateMachineEntryNode
+            public StateMachineEntry StateMachineEntryNode
             {
                 get
                 {
                     var nodeId = (int)Values[1];
-                    return Surface.FindNode((uint)nodeId);
+                    return (StateMachineEntry)Surface.FindNode((uint)nodeId);
+                }
+                private set
+                {
+                    int nodeId = value != null ? (int)value.ID : 0;
+                    if (nodeId != (int)Values[1])
+                    {
+                        SetValue(1, nodeId);
+                    }
                 }
             }
 
@@ -128,6 +136,8 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             public void Edit()
             {
+                var entryNode = EnsureEntryNodeExists();
+
                 // TODO: focus state machine
             }
 
@@ -144,6 +154,22 @@ namespace FlaxEditor.Surface.Archetypes
             private void OnRenamed(RenamePopup renamePopup)
             {
                 StateMachineTitle = renamePopup.Text;
+            }
+
+            /// <summary>
+            /// Ensures the entry node of the state machine exists and has valid linkage to this node.
+            /// </summary>
+            /// <returns>The valid entry node.</returns>
+            public SurfaceNode EnsureEntryNodeExists()
+            {
+                var entryNode = StateMachineEntryNode;
+                if (entryNode == null)
+                {
+                    entryNode = (StateMachineEntry)Surface.SpawnNode(9, 19, BottomRight + new Vector2(10));
+                    StateMachineEntryNode = entryNode;
+                }
+
+                return entryNode;
             }
 
             /// <summary>
@@ -168,6 +194,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSurfaceLoaded();
 
+                EnsureEntryNodeExists();
                 UpdateUI();
             }
 
@@ -177,6 +204,19 @@ namespace FlaxEditor.Surface.Archetypes
                 base.SetValue(index, value);
 
                 UpdateUI();
+            }
+        }
+        
+        /// <summary>
+        /// Customized <see cref="SurfaceNode" /> for the state machine entry node.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+        public class StateMachineEntry : SurfaceNode
+        {
+            /// <inheritdoc />
+            public StateMachineEntry(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, surface, nodeArch, groupArch)
+            {
             }
         }
     }

@@ -827,7 +827,8 @@ namespace FlaxEditor.Surface
         protected virtual void OnNodeLoaded(SurfaceNode node)
         {
             // Create child elements of the node based on it's archetype
-            for (int i = 0; i < node.Archetype.Elements.Length; i++)
+            int elementsCount = node.Archetype.Elements?.Length ?? 0;
+            for (int i = 0; i < elementsCount; i++)
             {
                 var arch = node.Archetype.Elements[i];
                 ISurfaceNodeElement element = null;

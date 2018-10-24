@@ -671,6 +671,15 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0)
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 19,
+                Create = (id, surface, arch, groupArch) => new StateMachineEntry(id, surface, arch, groupArch),
+                Title = "Entry",
+                Description = "The animation states machine entry node",
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Size = new Vector2(100, 0),
+            },
         };
     }
 }
