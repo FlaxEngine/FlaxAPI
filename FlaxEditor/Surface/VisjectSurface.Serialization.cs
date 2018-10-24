@@ -198,7 +198,12 @@ namespace FlaxEditor.Surface
                                    stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
                 break;
             }
-
+            case 16: // CommonType::Blob
+            {
+                int length = stream.ReadInt32();
+                value = stream.ReadBytes(length);
+                break;
+            }
             default: throw new SystemException();
             }
         }
@@ -285,6 +290,12 @@ namespace FlaxEditor.Surface
                 stream.Write(asMatrix.M42);
                 stream.Write(asMatrix.M43);
                 stream.Write(asMatrix.M44);
+            }
+            else if (value is byte[] asBlob)
+            {
+                stream.Write((byte)16);
+                stream.Write(asBlob.Length);
+                stream.Write(asBlob);
             }
             else
             {
@@ -410,6 +421,10 @@ namespace FlaxEditor.Surface
                 stream.WriteValue(asMatrix.M44);
 
                 stream.WriteEndObject();
+            }
+            else if (value is byte[] asBlob)
+            {
+                stream.WriteValue(Convert.ToBase64String(asBlob));
             }
             else
             {

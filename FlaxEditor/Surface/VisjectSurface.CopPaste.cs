@@ -435,6 +435,10 @@ namespace FlaxEditor.Surface
                                 {
                                     src = Convert.ToSingle(src);
                                 }
+                                else if (dst is byte[] && src is string)
+                                {
+                                    src = Convert.FromBase64String((string)src);
+                                }
 
                                 node.Values[l] = src;
                             }
