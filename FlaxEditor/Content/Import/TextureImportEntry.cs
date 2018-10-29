@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -198,62 +199,62 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Texture format type
         /// </summary>
-        [EditorOrder(0), Tooltip("Texture import format type")]
+        [EditorOrder(0), DefaultValue(CustomTextureFormatType.ColorRGB), Tooltip("Texture import format type")]
         public CustomTextureFormatType Type { get; set; } = CustomTextureFormatType.ColorRGB;
 
         /// <summary>
         /// True if texture should be imported as a texture atlas resource
         /// </summary>
-        [EditorOrder(10), Tooltip("True if texture should be imported as a texture atlas (with sprites)")]
+        [EditorOrder(10), DefaultValue(false), Tooltip("True if texture should be imported as a texture atlas (with sprites)")]
         public bool IsAtlas { get; set; }
 
         /// <summary>
         /// True if disable dynamic texture streaming
         /// </summary>
-        [EditorOrder(20), Tooltip("True if disable dynamic texture streaming")]
+        [EditorOrder(20), DefaultValue(false), Tooltip("True if disable dynamic texture streaming")]
         public bool NeverStream { get; set; }
 
         /// <summary>
         /// Enables/disables texture data compression.
         /// </summary>
-        [EditorOrder(30), Tooltip("True if comrpess texture data")]
+        [EditorOrder(30), DefaultValue(true), Tooltip("True if compress texture data")]
         public bool Compress { get; set; } = true;
 
         /// <summary>
         /// True if texture channels have independent data
         /// </summary>
-        [EditorOrder(40), Tooltip("True if texture channels have independent data (for compression methods)")]
+        [EditorOrder(40), DefaultValue(false), Tooltip("True if texture channels have independent data (for compression methods)")]
         public bool IndependentChannels { get; set; }
 
         /// <summary>
         /// True if texture contains sRGB format and engine should keep that data format
         /// </summary>
-        [EditorOrder(50), EditorDisplay(null, "Is sRGB"), Tooltip("True if texture contains colors in sRGB format data")]
+        [EditorOrder(50), DefaultValue(false), EditorDisplay(null, "Is sRGB"), Tooltip("True if texture contains colors in sRGB format data")]
         public bool IsSRGB { get; set; }
 
         /// <summary>
         /// True if generate mip maps chain for the texture.
         /// </summary>
-        [EditorOrder(60), Tooltip("True if generate mip maps chain for the texture")]
+        [EditorOrder(60), DefaultValue(true), Tooltip("True if generate mip maps chain for the texture")]
         public bool GenerateMipMaps { get; set; } = true;
 
         /// <summary>
         /// True if flip Y coordinate of the texture.
         /// </summary>
-        [EditorOrder(65), EditorDisplay(null, "Flip Y"), Tooltip("True if flip Y coordinate of the texture.")]
+        [EditorOrder(65), DefaultValue(false), EditorDisplay(null, "Flip Y"), Tooltip("True if flip Y coordinate of the texture.")]
         public bool FlipY { get; set; } = false;
 
         /// <summary>
         /// The import texture scale.
         /// </summary>
-        [EditorOrder(70), Tooltip("Texture scale. Default is 1.")]
+        [EditorOrder(70), DefaultValue(1.0f), Tooltip("Texture scale. Default is 1.")]
         public float Scale { get; set; } = 1.0f;
 
         /// <summary>
         /// Maximum size of the texture (for both width and height).
         /// Higher resolution textures will be resized during importing process.
         /// </summary>
-        [EditorOrder(80), Tooltip("Maximum texture size (will be resized if need to)")]
+        [EditorOrder(80), DefaultValue(CustomMaxSizeType._8192), Tooltip("Maximum texture size (will be resized if need to)")]
         public CustomMaxSizeType MaxSize { get; set; } = CustomMaxSizeType._8192;
 
         /// <summary>

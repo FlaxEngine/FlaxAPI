@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -11,6 +12,9 @@ namespace FlaxEditor.Content.GUI
     /// <seealso cref="FlaxEngine.GUI.Button" />
     public class NavigationButton : Button
     {
+        private DragItems _dragOverItems;
+        private bool _validDragOver;
+
         /// <summary>
         /// The default margin (horizontal).
         /// </summary>
@@ -45,7 +49,11 @@ namespace FlaxEditor.Content.GUI
             var textRect = new Rectangle(4, 0, clientRect.Width - 4, clientRect.Height);
 
             // Draw background
-            if (_mouseDown)
+            if (IsDragOver && _validDragOver)
+            {
+                Render2D.FillRectangle(clientRect, Style.Current.BackgroundSelected * 0.6f);
+            }
+            else if (_mouseDown)
             {
                 Render2D.FillRectangle(clientRect, style.BackgroundSelected);
             }
@@ -76,6 +84,86 @@ namespace FlaxEditor.Content.GUI
             Editor.Instance.Windows.ContentWin.Navigate(TargetNode);
 
             base.OnClick();
+        }
+
+
+        private DragDropEffect GetDragEffect(DragData data)
+        {
+            if (data is DragDataFiles)
+            {
+                if (TargetNode.CanHaveAssets)
+                    return DragDropEffect.Copy;
+            }
+            else
+            {
+                if (_dragOverItems.HasValidDrag)
+                    return DragDropEffect.Move;
+            }
+
+            return DragDropEffect.None;
+        }
+
+        private bool ValidateDragItem(ContentItem item)
+        {
+            // Reject itself and any parent
+            return item != TargetNode.Folder && !item.Find(TargetNode.Folder) && !TargetNode.IsRoot;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+        {
+            base.OnDragEnter(ref location, data);
+
+            if (_dragOverItems == null)
+                _dragOverItems = new DragItems(ValidateDragItem);
+
+            _dragOverItems.OnDragEnter(data);
+            var result = GetDragEffect(data);
+            _validDragOver = result != DragDropEffect.None;
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+        {
+            base.OnDragMove(ref location, data);
+
+            return GetDragEffect(data);
+        }
+
+        /// <inheritdoc />
+        public override void OnDragLeave()
+        {
+            base.OnDragLeave();
+
+            _dragOverItems.OnDragLeave();
+            _validDragOver = false;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+        {
+            var result = DragDropEffect.None;
+            base.OnDragDrop(ref location, data);
+
+            // Check if drop element or files
+            if (data is DragDataFiles files)
+            {
+                // Import files
+                Editor.Instance.ContentImporting.Import(files.Files, TargetNode.Folder);
+                result = DragDropEffect.Copy;
+            }
+            else if (_dragOverItems.HasValidDrag)
+            {
+                // Move items
+                Editor.Instance.ContentDatabase.Move(_dragOverItems.Objects, TargetNode.Folder);
+                result = DragDropEffect.Move;
+            }
+
+            _dragOverItems.OnDragDrop();
+            _validDragOver = false;
+
+            return result;
         }
     }
 }

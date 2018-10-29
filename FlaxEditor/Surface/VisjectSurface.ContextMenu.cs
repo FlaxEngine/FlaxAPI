@@ -54,10 +54,10 @@ namespace FlaxEditor.Surface
 
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
-            var node = SpawnNode(
+            var node = Context.SpawnNode(
                 visjectCmItem.GroupArchetype,
                 visjectCmItem.NodeArchetype,
-                _surface.PointFromParent(_cmStartPos),
+                _rootControl.PointFromParent(_cmStartPos),
                 visjectCmItem.Data
             );
 

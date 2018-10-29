@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,6 +11,7 @@ namespace FlaxEngine
     /// Representation of RGBA colors.
     /// </summary>
     [Serializable]
+    [TypeConverter(typeof(TypeConverters.ColorConverter))]
     [StructLayout(LayoutKind.Sequential)]
     public partial struct Color
     {

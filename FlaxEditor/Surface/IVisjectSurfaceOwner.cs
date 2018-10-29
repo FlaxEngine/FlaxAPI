@@ -7,13 +7,8 @@ namespace FlaxEditor.Surface
     /// <summary>
     /// Interface for Visject Surface parent objects.
     /// </summary>
-    public interface IVisjectSurfaceOwner
+    public interface IVisjectSurfaceOwner : ISurfaceContext
     {
-        /// <summary>
-        /// On surface save command
-        /// </summary>
-        void OnSurfaceSave();
-
         /// <summary>
         /// On surface edited state gets changed
         /// </summary>
@@ -23,11 +18,5 @@ namespace FlaxEditor.Surface
         /// On surface graph edited
         /// </summary>
         void OnSurfaceGraphEdited();
-
-        /// <summary>
-        /// Gets the surface background texture.
-        /// </summary>
-        /// <returns>The background texture.</returns>
-        Texture GetSurfaceBackground();
     }
 }

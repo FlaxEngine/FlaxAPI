@@ -100,6 +100,20 @@ namespace FlaxEditor.Content
             Text = _folder.ShortName;
         }
 
+        /// <summary>
+        /// Shows the rename popup for the item.
+        /// </summary>
+        public void StartRenaming()
+        {
+            if (!_folder.CanRename)
+                return;
+
+            // Start renaming the folder
+            var dialog = RenamePopup.Show(this, HeaderRect, _folder.ShortName, false);
+            dialog.Tag = _folder;
+            dialog.Renamed += popup => Editor.Instance.Windows.ContentWin.Rename((ContentFolder)popup.Tag, popup.Text);
+        }
+
         /// <inheritdoc />
         public override void OnDestroy()
         {
@@ -193,14 +207,35 @@ namespace FlaxEditor.Content
         {
             Select();
 
-            // Check if can rename it
-            if (_folder.CanRename)
+            StartRenaming();
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (IsFocused)
             {
-                // Start renaming the folder
-                var dialog = RenamePopup.Show(this, HeaderRect, _folder.ShortName, false);
-                dialog.Tag = _folder;
-                dialog.Renamed += popup => Editor.Instance.Windows.ContentWin.Rename((ContentFolder)popup.Tag, popup.Text);
+                switch (key)
+                {
+                case Keys.F2:
+                    StartRenaming();
+                    return true;
+                case Keys.Delete:
+                    Editor.Instance.Windows.ContentWin.Delete(Folder);
+                    return true;
+                }
+                if (RootWindow.GetKey(Keys.Control))
+                {
+                    switch (key)
+                    {
+                    case Keys.D:
+                        Editor.Instance.Windows.ContentWin.Clone(Folder);
+                        return true;
+                    }
+                }
             }
+
+            return base.OnKeyDown(key);
         }
     }
 }

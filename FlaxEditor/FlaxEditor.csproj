@@ -274,7 +274,6 @@
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
     <Compile Include="IEditable.cs" />
-    <Compile Include="Modules\CodeEditingModule.cs" />
     <Compile Include="Modules\ContentDatabaseModule.cs" />
     <Compile Include="Modules\ContentEditingModule.cs" />
     <Compile Include="Modules\ContentImportingModule.cs" />
@@ -286,6 +285,8 @@
     <Compile Include="Modules\SceneModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
     <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
+    <Compile Include="Modules\SourceCodeEditing\DefaultSourceCodeEditor.cs" />
+    <Compile Include="Modules\SourceCodeEditing\InBuildSourceCodeEditor.cs" />
     <Compile Include="Modules\UIModule.cs" />
     <Compile Include="Modules\WindowsModule.cs" />
     <Compile Include="Options\Editor.cs" />
@@ -293,6 +294,7 @@
     <Compile Include="Options\GeneralOptions.cs" />
     <Compile Include="Options\InterfaceOptions.cs" />
     <Compile Include="Options\OptionsModule.cs" />
+    <Compile Include="Options\SourceCodeOptions.cs" />
     <Compile Include="Options\VisualOptions.cs" />
     <Compile Include="Plugins\EditorPlugin.cs" />
     <Compile Include="Plugins\PluginUtils.cs" />
@@ -349,7 +351,10 @@
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Surface\AnimGraphSurface.cs" />
+    <Compile Include="Surface\Archetypes\AlphaBlendMode.cs" />
     <Compile Include="Surface\Archetypes\Animation.cs" />
+    <Compile Include="Surface\Archetypes\Animation.MultiBlend.cs" />
+    <Compile Include="Surface\Archetypes\Animation.StateMachine.cs" />
     <Compile Include="Surface\Archetypes\Constants.cs" />
     <Compile Include="Surface\Archetypes\Layers.cs" />
     <Compile Include="Surface\Archetypes\Material.cs" />
@@ -392,9 +397,11 @@
     <Compile Include="Surface\ISurfaceNodeElement.cs" />
     <Compile Include="Surface\SurfaceNodeElementControl.cs" />
     <Compile Include="Surface\SurfaceParameter.cs" />
+    <Compile Include="Surface\SurfaceRootControl.cs" />
     <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\TransformCoordinateSystem.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
+    <Compile Include="Surface\VisjectSurface.Context.cs" />
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
     <Compile Include="Surface\VisjectSurface.DragDrop.cs" />
@@ -402,6 +409,9 @@
     <Compile Include="Surface\VisjectSurface.Input.cs" />
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
+    <Compile Include="Surface\ISurfaceContext.cs" />
+    <Compile Include="Surface\VisjectSurfaceContext.cs" />
+    <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
     <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />
     <Compile Include="Undo\Actions\ChangeScriptAction.cs" />
@@ -421,6 +431,8 @@
     <Compile Include="Utilities\MemberInfoPath.cs" />
     <Compile Include="Utilities\ObjectSnapshot.cs" />
     <Compile Include="Utilities\QueryFilterHelper.cs" />
+    <Compile Include="Modules\SourceCodeEditing\CodeEditingModule.cs" />
+    <Compile Include="Modules\SourceCodeEditing\ISourceCodeEditor.cs" />
     <Compile Include="Viewport\Cameras\ArcBallCamera.cs" />
     <Compile Include="Viewport\Cameras\FPSCamera.cs" />
     <Compile Include="Viewport\Cameras\IViewportCamera.cs" />
@@ -502,7 +514,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Surface\VisjectSurface.CopPaste.cs" />
+    <Compile Include="Surface\VisjectSurface.CopyPaste.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

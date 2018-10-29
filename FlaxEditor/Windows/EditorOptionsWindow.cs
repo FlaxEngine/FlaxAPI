@@ -48,6 +48,7 @@ namespace FlaxEditor.Windows
             CreateTab("General", () => _options.General);
             CreateTab("Interface", () => _options.Interface);
             CreateTab("Visual", () => _options.Visual);
+            CreateTab("Source Code", () => _options.SourceCode);
 
             GatherData();
 
@@ -98,6 +99,7 @@ namespace FlaxEditor.Windows
             _options.General = Editor.Options.Options.General.DeepClone();
             _options.Interface = Editor.Options.Options.Interface.DeepClone();
             _options.Visual = Editor.Options.Options.Visual.DeepClone();
+            _options.SourceCode = Editor.Options.Options.SourceCode.DeepClone();
 
             // Refresh tabs
             foreach (var c in _tabs.Children)

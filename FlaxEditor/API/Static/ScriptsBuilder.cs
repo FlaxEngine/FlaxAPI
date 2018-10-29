@@ -13,6 +13,20 @@ namespace FlaxEditor.Scripting
     {
         // TODO: expose api to inject custom defines to compilation and more customizations
 
+        internal enum InBuildEditorTypes
+        {
+            Custom,
+            Text,
+            VS2008,
+            VS2010,
+            VS2012,
+            VS2013,
+            VS2015,
+            VS2017,
+
+            MAX
+        };
+
         /// <summary>
         /// Compilation end event delegate.
         /// </summary>
@@ -172,6 +186,15 @@ namespace FlaxEditor.Scripting
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern unsafe void Internal_GetExistingEditors(byte* resultArray);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_OpenSolution(InBuildEditorTypes editorType);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_OpenFile(InBuildEditorTypes editorType, string path, int line);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GenerateApi(ApiEngineType type);
 #endif

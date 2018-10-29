@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using FlaxEditor.Content;
@@ -14,13 +15,13 @@ namespace FlaxEditor.Surface
     public class MaterialSurface : VisjectSurface
     {
         /// <inheritdoc />
-        public MaterialSurface(IVisjectSurfaceOwner owner)
-        : base(owner)
+        public MaterialSurface(IVisjectSurfaceOwner owner, Action onSave)
+        : base(owner, onSave)
         {
         }
 
         /// <inheritdoc />
-        protected override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
             if ((nodeArchetype.Flags & NodeFlags.AnimGraphOnly) != 0 || (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
                 return false;
@@ -66,19 +67,19 @@ namespace FlaxEditor.Surface
                         }
                     }
 
-                    node = SpawnNode(5, (ushort)(isNormalMap ? 4 : 1), args.SurfaceLocation, new object[] { item.ID });
+                    node = Context.SpawnNode(5, (ushort)(isNormalMap ? 4 : 1), args.SurfaceLocation, new object[] { item.ID });
                     break;
                 }
 
                 case ContentDomain.CubeTexture:
                 {
-                    node = SpawnNode(5, 3, args.SurfaceLocation, new object[] { item.ID });
+                    node = Context.SpawnNode(5, 3, args.SurfaceLocation, new object[] { item.ID });
                     break;
                 }
 
                 case ContentDomain.Material:
                 {
-                    node = SpawnNode(8, 1, args.SurfaceLocation, new object[] { item.ID });
+                    node = Context.SpawnNode(8, 1, args.SurfaceLocation, new object[] { item.ID });
                     break;
                 }
                 }

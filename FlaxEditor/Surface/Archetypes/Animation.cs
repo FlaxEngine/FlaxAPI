@@ -1,6 +1,9 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -9,7 +12,7 @@ namespace FlaxEditor.Surface.Archetypes
     /// <summary>
     /// Contains archetypes for nodes from the Animation group.
     /// </summary>
-    public static class Animation
+    public static partial class Animation
     {
         /// <summary>
         /// Customized <see cref="SurfaceNode"/> for the main animation graph node.
@@ -57,6 +60,134 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = asset?.ShortName ?? "Animation";
                 var style = Style.Current;
                 Resize(Mathf.Max(230, style.FontLarge.MeasureText(Title).X + 20), 160);
+            }
+        }
+
+        /// <summary>
+        /// Customized <see cref="SurfaceNode"/> for the animation poses blending.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+        public class BlendPose : SurfaceNode
+        {
+            private readonly List<InputBox> _blendPoses = new List<InputBox>(MaxBlendPoses);
+            private Button _addButton;
+            private Button _removeButton;
+
+            /// <summary>
+            /// The maximum amount of the blend poses to support.
+            /// </summary>
+            public const int MaxBlendPoses = 8;
+
+            /// <summary>
+            /// The index of the first input blend pose box.
+            /// </summary>
+            public const int FirstBlendPoseBoxIndex = 3;
+
+            /// <summary>
+            /// Gets or sets used blend poses count (visible to the user).
+            /// </summary>
+            public int BlendPosesCount
+            {
+                get => (int)Values[2];
+                set
+                {
+                    value = Mathf.Clamp(value, 0, MaxBlendPoses);
+                    if (value != BlendPosesCount)
+                    {
+                        SetValue(2, value);
+                    }
+                }
+            }
+
+            /// <inheritdoc />
+            public BlendPose(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, surface, nodeArch, groupArch)
+            {
+                // Add buttons for adding/removing blend poses
+                _addButton = new Button(70, 94, 20, 20)
+                {
+                    Text = "+",
+                    Parent = this
+                };
+                _addButton.Clicked += () => BlendPosesCount++;
+                _removeButton = new Button(_addButton.Right + 4, _addButton.Y, 20, 20)
+                {
+                    Text = "-",
+                    Parent = this
+                };
+                _removeButton.Clicked += () => BlendPosesCount--;
+            }
+
+            private void UpdateBoxes()
+            {
+                var posesCount = BlendPosesCount;
+                while (_blendPoses.Count > posesCount)
+                {
+                    var boxIndex = _blendPoses.Count - 1;
+                    var box = _blendPoses[boxIndex];
+                    _blendPoses.RemoveAt(boxIndex);
+                    RemoveElement(box);
+                }
+                while (_blendPoses.Count < posesCount)
+                {
+                    var ylevel = 3 + _blendPoses.Count;
+                    var arch = new NodeElementArchetype
+                    {
+                        Type = NodeElementType.Input,
+                        Position = new Vector2(
+                            FlaxEditor.Surface.Constants.NodeMarginX - FlaxEditor.Surface.Constants.BoxOffsetX,
+                            FlaxEditor.Surface.Constants.NodeMarginY + FlaxEditor.Surface.Constants.NodeHeaderSize + ylevel * FlaxEditor.Surface.Constants.LayoutOffsetY),
+                        Text = "Pose " + _blendPoses.Count,
+                        Single = true,
+                        ValueIndex = -1,
+                        BoxID = FirstBlendPoseBoxIndex + _blendPoses.Count,
+                        ConnectionsType = ConnectionType.Impulse
+                    };
+                    var box = new InputBox(this, arch);
+                    AddElement(box);
+                    _blendPoses.Add(box);
+                }
+
+                _addButton.Enabled = posesCount < MaxBlendPoses;
+                _removeButton.Enabled = posesCount > 0;
+            }
+
+            private void UpdateHeight()
+            {
+                float nodeHeight = 10 + (Mathf.Max(_blendPoses.Count, 1) + 3) * FlaxEditor.Surface.Constants.LayoutOffsetY;
+                Height = nodeHeight + FlaxEditor.Surface.Constants.NodeMarginY * 2 + FlaxEditor.Surface.Constants.NodeHeaderSize + FlaxEditor.Surface.Constants.NodeFooterSize;
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                // Peek deserialized boxes
+                _blendPoses.Clear();
+                for (int i = 0; i < Elements.Count; i++)
+                {
+                    if (Elements[i] is InputBox box && box.Archetype.BoxID >= FirstBlendPoseBoxIndex)
+                    {
+                        _blendPoses.Add(box);
+                    }
+                }
+
+                UpdateBoxes();
+                UpdateHeight();
+            }
+
+            /// <inheritdoc />
+            public override void SetValue(int index, object value)
+            {
+                base.SetValue(index, value);
+
+                // Check if update amount of blend pose inputs
+                if (index == 2 && _blendPoses.Count != BlendPosesCount)
+                {
+                    UpdateBoxes();
+                    UpdateHeight();
+                }
             }
         }
 
@@ -158,7 +289,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 3,
                 Title = "Transform Bone (local space)",
-                Description = "Trnsforms the skeleton bone",
+                Description = "Transforms the skeleton bone",
                 Flags = NodeFlags.AnimGraphOnly,
                 Size = new Vector2(270, 130),
                 DefaultValues = new object[]
@@ -183,7 +314,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 4,
                 Title = "Transform Bone (global space)",
-                Description = "Trnsforms the skeleton bone",
+                Description = "Transforms the skeleton bone",
                 Flags = NodeFlags.AnimGraphOnly,
                 Size = new Vector2(270, 130),
                 DefaultValues = new object[]
@@ -208,7 +339,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 5,
                 Title = "Local To Global",
-                Description = "Trnsforms the skeleton bones from local into global space",
+                Description = "Transforms the skeleton bones from local into global space",
                 Flags = NodeFlags.AnimGraphOnly,
                 Size = new Vector2(150, 40),
                 Elements = new[]
@@ -221,7 +352,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 6,
                 Title = "Global To Local",
-                Description = "Trnsforms the skeleton bones from global into local space",
+                Description = "Transforms the skeleton bones from global into local space",
                 Flags = NodeFlags.AnimGraphOnly,
                 Size = new Vector2(150, 40),
                 Elements = new[]
@@ -338,6 +469,217 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 3, 0),
                     NodeElementArchetype.Factory.Asset(100, 20, 1, ContentDomain.SkeletonMask),
                 }
+            },
+            new NodeArchetype
+            {
+                TypeID = 12,
+                Create = (id, surface, arch, groupArch) => new MultiBlend1D(id, surface, arch, groupArch),
+                Title = "Multi Blend 1D",
+                Description = "Animation blending in 1D",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(420, 300),
+                DefaultValues = new object[]
+                {
+                    // Node data
+                    new Vector4(0, 100.0f, 0, 0),
+                    1.0f,
+                    true,
+                    0.0f,
+
+                    // Per blend sample data
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    // Output
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+
+                    // Options
+                    NodeElementArchetype.Factory.Input(0, "Speed", true, ConnectionType.Float, 1, 1),
+                    NodeElementArchetype.Factory.Input(1, "Loop", true, ConnectionType.Bool, 2, 2),
+                    NodeElementArchetype.Factory.Input(2, "Start Position", true, ConnectionType.Float, 3, 3),
+
+                    // Axis X
+                    NodeElementArchetype.Factory.Input(4, "X", true, ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Text(30, 4 * Surface.Constants.LayoutOffsetY, "(min:                   max:                   )"),
+                    NodeElementArchetype.Factory.Float(60, 4 * Surface.Constants.LayoutOffsetY, 0, 0),
+                    NodeElementArchetype.Factory.Float(145, 4 * Surface.Constants.LayoutOffsetY, 0, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 13,
+                Create = (id, surface, arch, groupArch) => new MultiBlend2D(id, surface, arch, groupArch),
+                Title = "Multi Blend 2D",
+                Description = "Animation blending in 2D",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(420, 320),
+                DefaultValues = new object[]
+                {
+                    // Node data
+                    new Vector4(0, 100.0f, 0, 100.0f),
+                    1.0f,
+                    true,
+                    0.0f,
+
+                    // Per blend sample data
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                    new Vector4(0, 0, 0, 1.0f), Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    // Output
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+
+                    // Options
+                    NodeElementArchetype.Factory.Input(0, "Speed", true, ConnectionType.Float, 1, 1),
+                    NodeElementArchetype.Factory.Input(1, "Loop", true, ConnectionType.Bool, 2, 2),
+                    NodeElementArchetype.Factory.Input(2, "Start Position", true, ConnectionType.Float, 3, 3),
+
+                    // Axis X
+                    NodeElementArchetype.Factory.Input(4, "X", true, ConnectionType.Float, 4),
+                    NodeElementArchetype.Factory.Text(30, 4 * Surface.Constants.LayoutOffsetY, "(min:                   max:                   )"),
+                    NodeElementArchetype.Factory.Float(60, 4 * Surface.Constants.LayoutOffsetY, 0, 0),
+                    NodeElementArchetype.Factory.Float(145, 4 * Surface.Constants.LayoutOffsetY, 0, 1),
+
+                    // Axis Y
+                    NodeElementArchetype.Factory.Input(5, "Y", true, ConnectionType.Float, 5),
+                    NodeElementArchetype.Factory.Text(30, 5 * Surface.Constants.LayoutOffsetY, "(min:                   max:                   )"),
+                    NodeElementArchetype.Factory.Float(60, 5 * Surface.Constants.LayoutOffsetY, 0, 2),
+                    NodeElementArchetype.Factory.Float(145, 5 * Surface.Constants.LayoutOffsetY, 0, 3),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 14,
+                Create = (id, surface, arch, groupArch) => new BlendPose(id, surface, arch, groupArch),
+                Title = "Blend Poses",
+                Description = "Select animation pose to pass by index (with blending)",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(200, 200),
+                DefaultValues = new object[]
+                {
+                    0,
+                    0.2f,
+                    8,
+                    (int)AlphaBlendMode.HermiteCubic,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, "Pose Index", true, ConnectionType.Integer, 1, 0),
+                    NodeElementArchetype.Factory.Input(1, "Blend Duration", true, ConnectionType.Float, 2, 1),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2, "Mode:"),
+                    NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 2, 100, 3, typeof(AlphaBlendMode)),
+
+                    NodeElementArchetype.Factory.Input(3, "Pose 0", true, ConnectionType.Impulse, 3),
+                    NodeElementArchetype.Factory.Input(4, "Pose 1", true, ConnectionType.Impulse, 4),
+                    NodeElementArchetype.Factory.Input(5, "Pose 2", true, ConnectionType.Impulse, 5),
+                    NodeElementArchetype.Factory.Input(6, "Pose 3", true, ConnectionType.Impulse, 6),
+                    NodeElementArchetype.Factory.Input(7, "Pose 4", true, ConnectionType.Impulse, 7),
+                    NodeElementArchetype.Factory.Input(8, "Pose 5", true, ConnectionType.Impulse, 8),
+                    NodeElementArchetype.Factory.Input(9, "Pose 6", true, ConnectionType.Impulse, 9),
+                    NodeElementArchetype.Factory.Input(10, "Pose 7", true, ConnectionType.Impulse, 10),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 15,
+                Title = "Get Root Motion",
+                Description = "Gets the computed root motion from the pose",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(180, 60),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Translation", ConnectionType.Vector3, 0),
+                    NodeElementArchetype.Factory.Output(1, "Rotation", ConnectionType.Rotation, 1),
+                    NodeElementArchetype.Factory.Input(0, "Pose", true, ConnectionType.Impulse, 2),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 16,
+                Title = "Set Root Motion",
+                Description = "Overrides the root motion of the pose",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(180, 60),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, "Pose", true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 17,
+                Title = "Add Root Motion",
+                Description = "Applies the custom root motion transformation the root motion of the pose",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(180, 60),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, "Pose", true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 18,
+                Create = (id, surface, arch, groupArch) => new StateMachine(id, surface, arch, groupArch),
+                Title = "State Machine",
+                Description = "The animation states machine output node",
+                Flags = NodeFlags.AnimGraphOnly,
+                Size = new Vector2(270, 100),
+                DefaultValues = new object[]
+                {
+                    "Locomotion",
+                    Enumerable.Empty<byte>() as byte[],
+                    3,
+                    true,
+                    true,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 19,
+                Create = (id, surface, arch, groupArch) => new StateMachineEntry(id, surface, arch, groupArch),
+                Title = "Entry",
+                Description = "The animation states machine entry node",
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Size = new Vector2(100, 0),
             },
         };
     }

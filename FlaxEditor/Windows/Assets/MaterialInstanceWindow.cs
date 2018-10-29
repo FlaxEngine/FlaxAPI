@@ -211,12 +211,13 @@ namespace FlaxEditor.Windows.Assets
                 if (parameters.Length != 0)
                 {
                     var parametersGroup = layout.Group("Parameters");
-                    InitializeProperties(parametersGroup, parameters);
+                    InitializeProperties(parametersGroup, parameters, material.BaseMaterial);
                 }
             }
 
-            private void InitializeProperties(LayoutElementsContainer layout, MaterialParameter[] parameters)
+            private void InitializeProperties(LayoutElementsContainer layout, MaterialParameter[] parameters, Material baseMaterial)
             {
+                var baseMaterialParameters = baseMaterial?.Parameters;
                 for (int i = 0; i < parameters.Length; i++)
                 {
                     var p = parameters[i];
@@ -271,6 +272,13 @@ namespace FlaxEditor.Windows.Assets
                         },
                         attributes
                     );
+
+                    // Try to get default value (from the base material)
+                    if (baseMaterialParameters != null && baseMaterialParameters.Length > i && baseMaterialParameters[i].Type == p.Type)
+                    {
+                        var defaultValue = baseMaterialParameters[i].Value;
+                        propertyValue.SetDefaultValue(defaultValue);
+                    }
 
                     layout.Property(p.Name, propertyValue);
                 }

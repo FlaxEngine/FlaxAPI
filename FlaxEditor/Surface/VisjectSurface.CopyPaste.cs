@@ -70,7 +70,7 @@ namespace FlaxEditor.Surface
 
                         for (int j = 0; j < node.Values.Length; j++)
                         {
-                            WriteCommonValue(jsonWriter, node.Values[j]);
+                            Utilities.Utils.WriteCommonValue(jsonWriter, node.Values[j]);
                         }
 
                         jsonWriter.WriteEndArray();
@@ -139,10 +139,10 @@ namespace FlaxEditor.Surface
                     jsonWriter.WriteValue(comment.Title);
 
                     jsonWriter.WritePropertyName("Color");
-                    WriteCommonValue(jsonWriter, comment.Color);
+                    Utilities.Utils.WriteCommonValue(jsonWriter, comment.Color);
 
                     jsonWriter.WritePropertyName("Bounds");
-                    WriteCommonValue(jsonWriter, comment.Bounds);
+                    Utilities.Utils.WriteCommonValue(jsonWriter, comment.Bounds);
 
                     jsonWriter.WriteEndObject();
                 }
@@ -308,9 +308,9 @@ namespace FlaxEditor.Surface
                         }
                         else
                         {
-                            for (int j = 0; j < _nodes.Count; j++)
+                            for (int j = 0; j < Nodes.Count; j++)
                             {
-                                if (_nodes[j].ID == result)
+                                if (Nodes[j].ID == result)
                                 {
                                     result++;
                                     valid = false;
@@ -371,7 +371,7 @@ namespace FlaxEditor.Surface
                     var node = NodeFactory.CreateNode(idsMapping[nodeData.ID], this, groupArchetype, nodeArchetype);
                     if (node == null)
                         throw new InvalidOperationException("Failed to create node.");
-                    _nodes.Add(node);
+                    Nodes.Add(node);
                     nodes.Add(nodeData.ID, node);
                     nodesData.Add(nodeData.ID, nodeData);
 
@@ -435,6 +435,10 @@ namespace FlaxEditor.Surface
                                 {
                                     src = Convert.ToSingle(src);
                                 }
+                                else if (dst is byte[] && src is string)
+                                {
+                                    src = Convert.FromBase64String((string)src);
+                                }
 
                                 node.Values[l] = src;
                             }
@@ -445,7 +449,7 @@ namespace FlaxEditor.Surface
                         }
                     }
 
-                    OnControlLoaded(node);
+                    Context.OnControlLoaded(node);
                 }
 
                 // Setup connections
@@ -477,7 +481,7 @@ namespace FlaxEditor.Surface
                     var commentData = model.Comments[i];
 
                     // Create
-                    var comment = SpawnComment(ref commentData.Bounds);
+                    var comment = Context.SpawnComment(ref commentData.Bounds);
                     if (comment == null)
                         throw new InvalidOperationException("Failed to create comment.");
                     comments.Add(comment);
@@ -485,7 +489,7 @@ namespace FlaxEditor.Surface
                     comment.Title = commentData.Title;
                     comment.Color = commentData.Color;
 
-                    OnControlLoaded(comment);
+                    Context.OnControlLoaded(comment);
                 }
 
                 // Arrange controls

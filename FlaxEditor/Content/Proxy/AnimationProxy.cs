@@ -1,9 +1,13 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.IO;
+using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
+using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
@@ -36,5 +40,16 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override Type AssetType => typeof(Animation);
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
+        {
+            guiRoot.AddChild(new Label
+            {
+                Text = Path.GetFileNameWithoutExtension(request.Asset.Path),
+                Size = guiRoot.Size,
+                Wrapping = TextWrapping.WrapWords
+            });
+        }
     }
 }

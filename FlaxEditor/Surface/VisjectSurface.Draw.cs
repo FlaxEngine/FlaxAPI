@@ -11,11 +11,11 @@ namespace FlaxEditor.Surface
         public override void Update(float deltaTime)
         {
             // Update scale
-            var currentScale = _surface.Scale.X;
+            var currentScale = _rootControl.Scale.X;
             if (Mathf.Abs(_targetScale - currentScale) > 0.001f)
             {
                 var scale = new Vector2(Mathf.Lerp(currentScale, _targetScale, deltaTime * 10.0f));
-                _surface.Scale = scale;
+                _rootControl.Scale = scale;
             }
 
             // Navigate when mouse is near the edge and is doing sth
@@ -44,7 +44,7 @@ namespace FlaxEditor.Surface
                 isMovingWithMouse = moveVector.LengthSquared > Mathf.Epsilon;
                 if (isMovingWithMouse)
                 {
-                    _surface.Location -= moveVector * _moveViewWithMouseDragSpeed;
+                    _rootControl.Location -= moveVector * _moveViewWithMouseDragSpeed;
                 }
             }
             _moveViewWithMouseDragSpeed = isMovingWithMouse ? Mathf.Clamp(_moveViewWithMouseDragSpeed + deltaTime * 20.0f, 1.0f, 8.0f) : 1.0f;
@@ -57,7 +57,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         protected virtual void DrawBackground()
         {
-            var background = Owner.GetSurfaceBackground();
+            var background = Style.Background;
             if (background && background.ResidentMipLevels > 0)
             {
                 var bSize = background.Size;
@@ -111,9 +111,9 @@ namespace FlaxEditor.Surface
         protected virtual void DrawConnections()
         {
             // Draw all connections at once to boost batching process
-            for (int i = 0; i < _nodes.Count; i++)
+            for (int i = 0; i < Nodes.Count; i++)
             {
-                var node = _nodes[i];
+                var node = Nodes[i];
                 for (int j = 0; j < node.Elements.Count; j++)
                 {
                     if (node.Elements[j] is OutputBox ob && ob.HasAnyConnection)
@@ -134,7 +134,7 @@ namespace FlaxEditor.Surface
             Vector2 startPos = _startBox.ConnectionOrigin;
 
             // Check if mouse is over any of box
-            Vector2 endPos = _cmPrimaryMenu.Visible ? _surface.PointFromParent(_cmStartPos) : _surface.PointFromParent(_mousePos);
+            Vector2 endPos = _cmPrimaryMenu.Visible ? _rootControl.PointFromParent(_cmStartPos) : _rootControl.PointFromParent(_mousePos);
             Color lineColor = Style.Colors.Connecting;
             if (_lastBoxUnderMouse != null)
             {
@@ -164,7 +164,7 @@ namespace FlaxEditor.Surface
 
             DrawBackground();
 
-            _surface.DrawComments();
+            _rootControl.DrawComments();
 
             if (IsCreatingComment)
             {
@@ -176,7 +176,7 @@ namespace FlaxEditor.Surface
             }
 
             // Push surface view transform (scale and offset)
-            Render2D.PushTransform(ref _surface._cachedTransform);
+            Render2D.PushTransform(ref _rootControl._cachedTransform);
 
             DrawConnections();
 
@@ -189,7 +189,7 @@ namespace FlaxEditor.Surface
 
             DrawContents();
 
-            //Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", _surface.Scale), rect, Enabled ? Color.Red : Color.Black);
+            //Render2D.DrawText(style.FontTitle, string.Format("Scale: {0}", _rootControl.Scale), rect, Enabled ? Color.Red : Color.Black);
 
             // Draw border
             if (ContainsFocus)

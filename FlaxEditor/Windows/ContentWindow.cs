@@ -108,7 +108,7 @@ namespace FlaxEditor.Windows
         /// Shows popup dialog with UI to rename content item.
         /// </summary>
         /// <param name="item">The item to rename.</param>
-        private void Rename(ContentItem item)
+        public void Rename(ContentItem item)
         {
             // Show element in view
             Select(item);
@@ -136,7 +136,12 @@ namespace FlaxEditor.Windows
             }
         }
 
-        internal void Rename(ContentItem item, string newShortName)
+        /// <summary>
+        /// Renames the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="newShortName">New name (without extension, just the filename).</param>
+        public void Rename(ContentItem item, string newShortName)
         {
             if (item == null)
                 throw new ArgumentNullException();
@@ -230,12 +235,21 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void Delete(ContentItem item)
+        
+        /// <summary>
+        /// Deletes the specified item. Asks user first and uses some GUI.
+        /// </summary>
+        /// <param name="item">The item to delete.</param>
+        public void Delete(ContentItem item)
         {
             Delete(new List<ContentItem> { item });
         }
 
-        private void Delete(List<ContentItem> items)
+        /// <summary>
+        /// Deletes the specified items. Asks user first and uses some GUI.
+        /// </summary>
+        /// <param name="items">The items to delete.</param>
+        public void Delete(List<ContentItem> items)
         {
             // TODO: remove items that depend on different items in the list: use wants to remove `folderA` and `folderA/asset.x`, we should just remove `folderA`
             var toDelete = new List<ContentItem>(items);
@@ -313,7 +327,11 @@ namespace FlaxEditor.Windows
             return destinationPath;
         }
 
-        private void Clone(ContentItem item)
+        /// <summary>
+        /// Clones the specified item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        public void Clone(ContentItem item)
         {
             // Skip null
             if (item == null)
@@ -337,7 +355,11 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void Clone(List<ContentItem> items)
+        /// <summary>
+        /// Clones the specified items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        public void Clone(List<ContentItem> items)
         {
             // Skip empty or null case
             if (items == null || items.Count == 0)
@@ -364,7 +386,11 @@ namespace FlaxEditor.Windows
             }
         }
 
-        private void Paste(string[] files)
+        /// <summary>
+        /// Pastes the specified files.
+        /// </summary>
+        /// <param name="files">The files paths to import.</param>
+        public void Paste(string[] files)
         {
             Editor.ContentImporting.Import(files, CurrentViewFolder);
         }
@@ -372,7 +398,7 @@ namespace FlaxEditor.Windows
         /// <summary>
         /// Stars creating the folder.
         /// </summary>
-        private void NewFolder()
+        public void NewFolder()
         {
             // Construct path
             var parentFolder = SelectedNode.Folder;
@@ -526,7 +552,11 @@ namespace FlaxEditor.Windows
             RefreshView(SelectedNode);
         }
 
-        private void RefreshView(ContentTreeNode target)
+        /// <summary>
+        /// Refreshes the view.
+        /// </summary>
+        /// <param name="target">The target location.</param>
+        public void RefreshView(ContentTreeNode target)
         {
             if (target == _root)
             {

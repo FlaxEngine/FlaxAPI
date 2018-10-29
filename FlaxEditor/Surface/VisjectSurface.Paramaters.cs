@@ -1,5 +1,6 @@
-﻿// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 
 namespace FlaxEditor.Surface
@@ -9,14 +10,37 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The collection of the surface parameters.
         /// </summary>
-        public readonly List<SurfaceParameter> Parameters = new List<SurfaceParameter>();
+        /// <remarks>From the root context only.</remarks>
+        public List<SurfaceParameter> Parameters => RootContext.Parameters;
+
+        /// <summary>
+        /// Gets the parameter by the given ID.
+        /// </summary>
+        /// <remarks>From the root context only.</remarks>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Found parameter instance or null if missing.</returns>
+        public SurfaceParameter GetParameter(Guid id)
+        {
+            return RootContext.GetParameter(id);
+        }
+
+        /// <summary>
+        /// Gets the parameter by the given name.
+        /// </summary>
+        /// <remarks>From the root context only.</remarks>
+        /// <param name="name">The name.</param>
+        /// <returns>Found parameter instance or null if missing.</returns>
+        public SurfaceParameter GetParameter(string name)
+        {
+            return RootContext.GetParameter(name);
+        }
 
         /// <inheritdoc />
         public void OnParamCreated(SurfaceParameter param)
         {
-            for (int i = 0; i < _nodes.Count; i++)
+            for (int i = 0; i < Nodes.Count; i++)
             {
-                if (_nodes[i] is IParametersDependantNode node)
+                if (Nodes[i] is IParametersDependantNode node)
                     node.OnParamCreated(param);
             }
             MarkAsEdited();
@@ -25,9 +49,9 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public void OnParamRenamed(SurfaceParameter param)
         {
-            for (int i = 0; i < _nodes.Count; i++)
+            for (int i = 0; i < Nodes.Count; i++)
             {
-                if (_nodes[i] is IParametersDependantNode node)
+                if (Nodes[i] is IParametersDependantNode node)
                     node.OnParamRenamed(param);
             }
             MarkAsEdited();
@@ -36,9 +60,9 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public void OnParamDeleted(SurfaceParameter param)
         {
-            for (int i = 0; i < _nodes.Count; i++)
+            for (int i = 0; i < Nodes.Count; i++)
             {
-                if (_nodes[i] is IParametersDependantNode node)
+                if (Nodes[i] is IParametersDependantNode node)
                     node.OnParamDeleted(param);
             }
             MarkAsEdited();

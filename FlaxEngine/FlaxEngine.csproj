@@ -251,6 +251,7 @@
     <Compile Include="Attributes\Editor\LimitAttribute.cs" />
     <Compile Include="Attributes\Editor\MultilineTextAttribute.cs" />
     <Compile Include="Attributes\Editor\RangeAttribute.cs" />
+    <Compile Include="Attributes\Editor\ReadOnlyAttribute.cs" />
     <Compile Include="Attributes\Editor\ShowInEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\SpaceAttribute.cs" />
     <Compile Include="Attributes\Editor\VisibleIfAttribute.cs" />
@@ -400,6 +401,11 @@
     <Compile Include="Math\Rectangle.cs" />
     <Compile Include="Math\SphericalHarmonics.cs" />
     <Compile Include="Math\Transform.cs" />
+    <Compile Include="Math\TypeConverters\ColorConverter.cs" />
+    <Compile Include="Math\TypeConverters\QuaternionConverter.cs" />
+    <Compile Include="Math\TypeConverters\Vector2Converter.cs" />
+    <Compile Include="Math\TypeConverters\Vector3Converter.cs" />
+    <Compile Include="Math\TypeConverters\Vector4Converter.cs" />
     <Compile Include="Math\Viewport.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Math\Plane.cs" />

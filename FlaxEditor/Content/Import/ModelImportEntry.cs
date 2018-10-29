@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FlaxEngine;
@@ -93,139 +94,141 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// True if calculate model normals, otherwise will import them.
         /// </summary>
-        [EditorOrder(20), EditorDisplay("Geometry"), Tooltip("Enable model normal vectors recalculating")]
+        [EditorOrder(20), DefaultValue(false), EditorDisplay("Geometry"), Tooltip("Enable model normal vectors recalculating")]
         public bool CalculateNormals { get; set; } = false;
 
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
-        [EditorOrder(30), Limit(0, 175, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two face normals at the same vertex position that their are smoothed together. The default value is 175.")]
+        [EditorOrder(30), DefaultValue(175.0f), Limit(0, 175, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two face normals at the same vertex position that their are smoothed together. The default value is 175.")]
         public float SmoothingNormalsAngle { get; set; } = 175.0f;
 
         /// <summary>
         /// True if calculate model tangents, otherwise will import them.
         /// </summary>
-        [EditorOrder(40), EditorDisplay("Geometry"), Tooltip("Enable model tangent vectors recalculating")]
+        [EditorOrder(40), DefaultValue(true), EditorDisplay("Geometry"), Tooltip("Enable model tangent vectors recalculating")]
         public bool CalculateTangents { get; set; } = true;
 
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
-        [EditorOrder(45), Limit(0, 45, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two vertex tangents that their tangents and bi-tangents are smoothed. The default value is 45.")]
+        [EditorOrder(45), DefaultValue(45.0f), Limit(0, 45, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two vertex tangents that their tangents and bi-tangents are smoothed. The default value is 45.")]
         public float SmoothingTangentsAngle { get; set; } = 45.0f;
 
         /// <summary>
         /// Enable/disable meshes geometry optimization.
         /// </summary>
-        [EditorOrder(50), EditorDisplay("Geometry"), Tooltip("Enable/disable meshes geometry optimization")]
+        [EditorOrder(50), DefaultValue(true), EditorDisplay("Geometry"), Tooltip("Enable/disable meshes geometry optimization")]
         public bool OptimizeMeshes { get; set; } = true;
 
         /// <summary>
         /// Enable/disable geometry merge for meshes with the same materials.
         /// </summary>
-        [EditorOrder(60), EditorDisplay("Geometry"), Tooltip("Enable/disable geometry merge for meshes with the same materials")]
+        [EditorOrder(60), DefaultValue(true), EditorDisplay("Geometry"), Tooltip("Enable/disable geometry merge for meshes with the same materials")]
         public bool MergeMeshes { get; set; } = true;
 
         /// <summary>
         /// Enable/disable importing meshes Level of Details.
         /// </summary>
-        [EditorOrder(70), EditorDisplay("Geometry", "Import LODs"), Tooltip("Enable/disable importing meshes Level of Details")]
+        [EditorOrder(70), DefaultValue(true), EditorDisplay("Geometry", "Import LODs"), Tooltip("Enable/disable importing meshes Level of Details")]
         public bool ImportLODs { get; set; } = true;
 
         /// <summary>
         /// Enable/disable importing vertex colors (channel 0 only).
         /// </summary>
-        [EditorOrder(80), EditorDisplay("Geometry"), Tooltip("Enable/disable importing vertex colors (channel 0 only)")]
+        [EditorOrder(80), DefaultValue(true), EditorDisplay("Geometry"), Tooltip("Enable/disable importing vertex colors (channel 0 only)")]
         public bool ImportVertexColors { get; set; } = true;
 
         /// <summary>
         /// The lightmap UVs source.
         /// </summary>
-        [EditorOrder(90), EditorDisplay("Geometry", "Lightmap UVs Source"), Tooltip("Model lightmap UVs source")]
+        [EditorOrder(90), DefaultValue(ModelLightmapUVsSource.Disable), EditorDisplay("Geometry", "Lightmap UVs Source"), Tooltip("Model lightmap UVs source")]
         public ModelLightmapUVsSource LightmapUVsSource { get; set; } = ModelLightmapUVsSource.Disable;
 
         /// <summary>
         /// Custom uniform import scale.
         /// </summary>
-        [EditorOrder(500), EditorDisplay("Transform"), Tooltip("Custom uniform import scale")]
+        [EditorOrder(500), DefaultValue(1.0f), EditorDisplay("Transform"), Tooltip("Custom uniform import scale")]
         public float Scale { get; set; } = 1.0f;
 
         /// <summary>
         /// Custom import geometry rotation.
         /// </summary>
+        [DefaultValue(typeof(Quaternion), "0,0,0,1")]
         [EditorOrder(510), EditorDisplay("Transform"), Tooltip("Custom import geometry rotation")]
         public Quaternion Rotation { get; set; } = Quaternion.Identity;
 
         /// <summary>
         /// Custom import geometry offset.
         /// </summary>
+        [DefaultValue(typeof(Vector3), "0,0,0")]
         [EditorOrder(520), EditorDisplay("Transform"), Tooltip("Custom import geometry offset")]
         public Vector3 Translation { get; set; } = Vector3.Zero;
 
         /// <summary>
         /// If checked, the imported geometry will be shifted to the center of mass.
         /// </summary>
-        [EditorOrder(530), EditorDisplay("Transform"), Tooltip("If checked, the imported geometry will be shifted to the center of mass.")]
+        [EditorOrder(530), DefaultValue(false), EditorDisplay("Transform"), Tooltip("If checked, the imported geometry will be shifted to the center of mass.")]
         public bool CenterGeometry { get; set; } = false;
 
         /// <summary>
         /// The imported animation duration mode.
         /// </summary>
-        [EditorOrder(1000), EditorDisplay("Animation"), Tooltip("Imported animation duration mode. Can use the original value or overriden by settings.")]
+        [EditorOrder(1000), DefaultValue(AnimationDuration.Imported), EditorDisplay("Animation"), Tooltip("Imported animation duration mode. Can use the original value or overriden by settings.")]
         public AnimationDuration Duration { get; set; } = AnimationDuration.Imported;
 
         /// <summary>
         /// The imported animation first frame index. Used only if Duration mode is set to Custom.
         /// </summary>
-        [EditorOrder(1010), Limit(0), EditorDisplay("Animation"), Tooltip("Imported animation first frame index. Used only if Duration mode is set to Custom.")]
+        [EditorOrder(1010), DefaultValue(0.0f), Limit(0), EditorDisplay("Animation"), Tooltip("Imported animation first frame index. Used only if Duration mode is set to Custom.")]
         public float FramesRangeStart { get; set; } = 0;
 
         /// <summary>
         /// The imported animation end frame index. Used only if Duration mode is set to Custom.
         /// </summary>
-        [EditorOrder(1020), Limit(0), EditorDisplay("Animation"), Tooltip("Imported animation last frame index. Used only if Duration mode is set to Custom.")]
+        [EditorOrder(1020), DefaultValue(0.0f), Limit(0), EditorDisplay("Animation"), Tooltip("Imported animation last frame index. Used only if Duration mode is set to Custom.")]
         public float FramesRangeEnd { get; set; } = 0;
 
         /// <summary>
         /// The imported animation default frame rate. Can specify the default frames per second amount for imported animation. If value is 0 then the original animation frame rate will be used.
         /// </summary>
-        [EditorOrder(1025), Limit(0, 1000, 0.01f), EditorDisplay("Animation"), Tooltip("The imported animation default frame rate. Can specify the default frames per second amount for imported animation. If value is 0 then the original animation frame rate will be used.")]
+        [EditorOrder(1025), DefaultValue(0.0f), Limit(0, 1000, 0.01f), EditorDisplay("Animation"), Tooltip("The imported animation default frame rate. Can specify the default frames per second amount for imported animation. If value is 0 then the original animation frame rate will be used.")]
         public float DefaultFrameRate { get; set; } = 0.0f;
 
         /// <summary>
         /// The imported animation sampling rate. If value is 0 then the original animation speed will be used.
         /// </summary>
-        [EditorOrder(1030), Limit(0, 1000, 0.01f), EditorDisplay("Animation"), Tooltip("The imported animation sampling rate. If value is 0 then the original animation speed will be used.")]
+        [EditorOrder(1030), DefaultValue(0.0f), Limit(0, 1000, 0.01f), EditorDisplay("Animation"), Tooltip("The imported animation sampling rate. If value is 0 then the original animation speed will be used.")]
         public float SamplingRate { get; set; } = 0.0f;
 
         /// <summary>
         /// The imported animation will have removed tracks with no keyframes or unspecified data.
         /// </summary>
-        [EditorOrder(1040), EditorDisplay("Animation"), Tooltip("The imported animation will have removed tracks with no keyframes or unspecified data.")]
+        [EditorOrder(1040), DefaultValue(true), EditorDisplay("Animation"), Tooltip("The imported animation will have removed tracks with no keyframes or unspecified data.")]
         public bool SkipEmptyCurves { get; set; } = true;
 
         /// <summary>
         /// The imported animation channels will be optimized to remove redundant keyframes.
         /// </summary>
-        [EditorOrder(1050), EditorDisplay("Animation"), Tooltip("The imported animation channels will be optimized to remove redundant keyframes.")]
+        [EditorOrder(1050), DefaultValue(true), EditorDisplay("Animation"), Tooltip("The imported animation channels will be optimized to remove redundant keyframes.")]
         public bool OptimizeKeyframes { get; set; } = true;
 
         /// <summary>
         /// Enables root motion extraction support from this animation.
         /// </summary>
-        [EditorOrder(1060), EditorDisplay("Animation"), Tooltip("Enables root motion extraction support from this animation.")]
+        [EditorOrder(1060), DefaultValue(false), EditorDisplay("Animation"), Tooltip("Enables root motion extraction support from this animation.")]
         public bool EnableRootMotion { get; set; } = false;
 
         /// <summary>
         /// The custom node name to be used as a root motion source. If not specified the actual root node will be used.
         /// </summary>
-        [EditorOrder(1070), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
+        [EditorOrder(1070), DefaultValue(""), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
         public string RootNodeName { get; set; }
 
         /// <summary>
         /// If checked, the importer will try to restore the model material slots.
         /// </summary>
-        [EditorOrder(1100), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the model material slots.")]
+        [EditorOrder(1100), DefaultValue(false), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the model material slots.")]
         public bool RestoreMaterialsOnReimport { get; set; }
 
         [StructLayout(LayoutKind.Sequential)]

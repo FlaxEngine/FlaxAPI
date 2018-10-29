@@ -134,6 +134,11 @@ namespace FlaxEngine.GUI
         public event Action<ComboBox> SelectedIndexChanged;
 
         /// <summary>
+        /// Occurs when popup is showing (before event). Can be used to update items collection before showing it to the user.
+        /// </summary>
+        public event Action<ComboBox> PopupShowing;
+
+        /// <summary>
         /// Gets a value indicating whether this popup menu is opened.
         /// </summary>
         public bool IsPopupOpened => _popupMenu != null && _popupMenu.IsOpened;
@@ -447,6 +452,8 @@ namespace FlaxEngine.GUI
                     _popupMenu.Hide();
                     return true;
                 }
+
+                PopupShowing?.Invoke(this);
 
                 // Check if has any items
                 if (_items.Count > 0)

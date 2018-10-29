@@ -30,8 +30,8 @@ namespace FlaxEditor.Surface
         /// <returns>The node or null if no intersection.</returns>
         public SurfaceNode GetNodeUnderMouse()
         {
-            var pos = _surface.PointFromParent(_mousePos);
-            if (_surface.GetChildAt(pos) is SurfaceNode node)
+            var pos = _rootControl.PointFromParent(_mousePos);
+            if (_rootControl.GetChildAt(pos) is SurfaceNode node)
                 return node;
             return null;
         }
@@ -42,22 +42,22 @@ namespace FlaxEditor.Surface
         /// <returns>The control or null if no intersection.</returns>
         public SurfaceControl GetControlUnderMouse()
         {
-            var pos = _surface.PointFromParent(_mousePos);
-            if (_surface.GetChildAt(pos) is SurfaceControl control)
+            var pos = _rootControl.PointFromParent(_mousePos);
+            if (_rootControl.GetChildAt(pos) is SurfaceControl control)
                 return control;
             return null;
         }
 
         private void UpdateSelectionRectangle()
         {
-            var p1 = _surface.PointFromParent(_leftMouseDownPos);
-            var p2 = _surface.PointFromParent(_mousePos);
+            var p1 = _rootControl.PointFromParent(_leftMouseDownPos);
+            var p2 = _rootControl.PointFromParent(_mousePos);
             var selectionRect = Rectangle.FromPoints(p1, p2);
 
             // Find controls to select
-            for (int i = 0; i < _surface.Children.Count; i++)
+            for (int i = 0; i < _rootControl.Children.Count; i++)
             {
-                if (_surface.Children[i] is SurfaceControl control)
+                if (_rootControl.Children[i] is SurfaceControl control)
                 {
                     control.IsSelected = control.IsSelectionIntersecting(ref selectionRect);
                 }
@@ -92,7 +92,7 @@ namespace FlaxEditor.Surface
                 {
                     // Move view
                     _mouseMoveAmount += delta.Length;
-                    _surface.Location += delta;
+                    _rootControl.Location += delta;
                     _rightMouseDownPos = location;
                     Cursor = CursorType.SizeAll;
                 }
@@ -112,16 +112,16 @@ namespace FlaxEditor.Surface
                 else if (_isMovingSelection)
                 {
                     // Calculate delta (apply view offset)
-                    Vector2 viewDelta = _surface.Location - _movingSelectionViewPos;
-                    _movingSelectionViewPos = _surface.Location;
+                    Vector2 viewDelta = _rootControl.Location - _movingSelectionViewPos;
+                    _movingSelectionViewPos = _rootControl.Location;
                     Vector2 delta = location - _leftMouseDownPos - viewDelta;
                     if (delta.LengthSquared > 0.01f)
                     {
                         // Move selected surface control
                         delta /= _targetScale;
-                        for (int i = 0; i < _surface.Children.Count; i++)
+                        for (int i = 0; i < _rootControl.Children.Count; i++)
                         {
-                            if (_surface.Children[i] is SurfaceControl control && control.IsSelected)
+                            if (_rootControl.Children[i] is SurfaceControl control && control.IsSelected)
                             {
                                 control.Location += delta;
                             }
@@ -215,7 +215,7 @@ namespace FlaxEditor.Surface
 
             // Check if any node is under the mouse
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
-            Vector2 cLocation = _surface.PointFromParent(location);
+            Vector2 cLocation = _rootControl.PointFromParent(location);
             if (controlUnderMouse != null)
             {
                 // Check if mouse is over header and user is pressing mouse left button
@@ -237,7 +237,7 @@ namespace FlaxEditor.Surface
                     // Start moving selected nodes
                     StartMouseCapture();
                     _isMovingSelection = true;
-                    _movingSelectionViewPos = _surface.Location;
+                    _movingSelectionViewPos = _rootControl.Location;
                     Focus();
                     return true;
                 }
@@ -300,10 +300,10 @@ namespace FlaxEditor.Surface
                 // Commenting
                 if (_isCommentCreateKeyDown)
                 {
-                    var p1 = _surface.PointFromParent(_leftMouseDownPos);
-                    var p2 = _surface.PointFromParent(_mousePos);
+                    var p1 = _rootControl.PointFromParent(_leftMouseDownPos);
+                    var p2 = _rootControl.PointFromParent(_mousePos);
                     var selectionRect = Rectangle.FromPoints(p1, p2);
-                    CreateComment(ref selectionRect);
+                    Context.CreateComment(ref selectionRect);
                 }
                 // Selecting
                 else if (!_isMovingSelection && _startBox == null)
@@ -402,11 +402,11 @@ namespace FlaxEditor.Surface
             var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(box => box.IsOutput);
             if (firstOutputBox == null) return;
 
-            _cmStartPos = _surface.PointToParent(_surface.Parent, PositionAfterNode(node));
+            _cmStartPos = _rootControl.PointToParent(_rootControl.Parent, PositionAfterNode(node));
             _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
 
             // If the menu is not fully visible, move the surface a bit 
-            Vector2 overflow = (_cmStartPos + _cmPrimaryMenu.Size) - _surface.Parent.Size;
+            Vector2 overflow = (_cmStartPos + _cmPrimaryMenu.Size) - _rootControl.Parent.Size;
             overflow = Vector2.Max(overflow, Vector2.Zero);
 
             ViewPosition += overflow;

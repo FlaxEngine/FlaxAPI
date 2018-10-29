@@ -6,6 +6,9 @@ using System.Reflection;
 using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Newtonsoft.Json;
+using JsonSerializer = FlaxEngine.Json.JsonSerializer;
+using Object = System.Object;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -307,6 +310,11 @@ namespace FlaxEditor.CustomEditors
                     var style = FlaxEngine.GUI.Style.Current;
                     LinkedLabel.HighlightStripColor = CanRevertReferenceValue ? style.BackgroundSelected * 0.8f : Color.Transparent;
                 }
+                // Default value diff
+                else if (Values.HasDefaultValue)
+                {
+                    LinkedLabel.HighlightStripColor = CanRevertDefaultValue ? Color.Yellow * 0.8f : Color.Transparent;
+                }
             }
         }
 
@@ -315,7 +323,92 @@ namespace FlaxEditor.CustomEditors
             LinkedLabel = label;
         }
 
-        private void RevertDiffTOReference(CustomEditor editor)
+        private void RevertDiffToDefault(CustomEditor editor)
+        {
+            if (editor.ChildrenEditors.Count == 0)
+            {
+                // Skip if no change detected
+                if (!editor.Values.IsDefaultValueModified)
+                    return;
+
+                editor.SetValueToDefault();
+            }
+            else
+            {
+                for (int i = 0; i < editor.ChildrenEditors.Count; i++)
+                {
+                    RevertDiffToDefault(editor.ChildrenEditors[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this editor can revert the value to default value.
+        /// </summary>
+        public bool CanRevertDefaultValue
+        {
+            get
+            {
+                if (!Values.IsDefaultValueModified)
+                    return false;
+
+                // Skip array items (show diff only on a bottom level properties and fields)
+                if (ParentEditor != null && ParentEditor.Values.Type != null && ParentEditor.Values.Type.IsArray)
+                    return false;
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Reverts the property value to default value (if has). Handles undo.
+        /// </summary>
+        public void RevertToDefaultValue()
+        {
+            if (!Values.HasDefaultValue)
+                return;
+
+            Editor.Log("Reverting object changes to default");
+
+            RevertDiffToDefault(this);
+        }
+
+        /// <summary>
+        /// Updates the default value assigned to the editor's values container. Sends the event down the custom editors hierarchy to propagate the change.
+        /// </summary>
+        /// <remarks>
+        /// Has no effect on editors that don't have default value assigned.
+        /// </remarks>
+        public void RefreshDefaultValue()
+        {
+            if (!Values.HasDefaultValue)
+                return;
+
+            if (ParentEditor?.Values?.HasDefaultValue ?? false)
+            {
+                Values.RefreshDefaultValue(ParentEditor.Values.DefaultValue);
+            }
+
+            for (int i = 0; i < ChildrenEditors.Count; i++)
+            {
+                ChildrenEditors[i].RefreshDefaultValue();
+            }
+        }
+
+        /// <summary>
+        /// Clears all the default value of the container in the whole custom editors tree (this container and all children).
+        /// </summary>
+        public void ClearDefaultValueAll()
+        {
+            Values.ClearDefaultValue();
+
+            for (int i = 0; i < ChildrenEditors.Count; i++)
+            {
+                ChildrenEditors[i].ClearDefaultValueAll();
+            }
+        }
+
+        private void RevertDiffToReference(CustomEditor editor)
         {
             if (editor.ChildrenEditors.Count == 0)
             {
@@ -329,7 +422,7 @@ namespace FlaxEditor.CustomEditors
             {
                 for (int i = 0; i < editor.ChildrenEditors.Count; i++)
                 {
-                    RevertDiffTOReference(editor.ChildrenEditors[i]);
+                    RevertDiffToReference(editor.ChildrenEditors[i]);
                 }
             }
         }
@@ -362,7 +455,7 @@ namespace FlaxEditor.CustomEditors
 
             Editor.Log("Reverting object changes to prefab");
 
-            RevertDiffTOReference(this);
+            RevertDiffToReference(this);
         }
 
         /// <summary>
@@ -398,6 +491,102 @@ namespace FlaxEditor.CustomEditors
             for (int i = 0; i < ChildrenEditors.Count; i++)
             {
                 ChildrenEditors[i].ClearReferenceValueAll();
+            }
+        }
+
+        /// <summary>
+        /// Copies the value to the system clipboard.
+        /// </summary>
+        public void Copy()
+        {
+            Editor.Log("Copy custom editor value");
+
+            try
+            {
+                string text;
+                if (typeof(FlaxEngine.Object).IsAssignableFrom(Values.Type))
+                {
+                    text = JsonSerializer.GetStringID(Values[0] as FlaxEngine.Object);
+                }
+                else
+                {
+                    text = JsonSerializer.Serialize(Values[0]);
+                }
+
+                Application.ClipboardText = text;
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                Editor.LogError("Cannot copy property. See log for more info.");
+            }
+        }
+
+        private bool GetClipboardObject(out object result)
+        {
+            result = null;
+            var text = Application.ClipboardText;
+            if (string.IsNullOrEmpty(text))
+                return false;
+
+            object obj;
+            if (typeof(FlaxEngine.Object).IsAssignableFrom(Values.Type))
+            {
+                if (text.Length != 32)
+                    return false;
+                JsonSerializer.ParseID(text, out var id);
+                obj = FlaxEngine.Object.Find<FlaxEngine.Object>(ref id);
+            }
+            else
+            {
+                obj = JsonConvert.DeserializeObject(text, Values.Type, JsonSerializer.Settings);
+            }
+
+            if (obj == null || Values.Type.IsInstanceOfType(obj))
+            {
+                result = obj;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether can paste value from the system clipboard to the property value container.
+        /// </summary>
+        public bool CanPaste
+        {
+            get
+            {
+                try
+                {
+                    return GetClipboardObject(out _);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the value from the system clipboard.
+        /// </summary>
+        public void Paste()
+        {
+            Editor.Log("Paste custom editor value");
+
+            try
+            {
+                if (GetClipboardObject(out var obj))
+                {
+                    SetValue(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                Editor.LogError("Cannot paste property value. See log for more info.");
             }
         }
 
@@ -445,6 +634,14 @@ namespace FlaxEditor.CustomEditors
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Sets the editor value to the default value (if assigned).
+        /// </summary>
+        public void SetValueToDefault()
+        {
+            SetValue(Values.DefaultValue);
         }
 
         /// <summary>

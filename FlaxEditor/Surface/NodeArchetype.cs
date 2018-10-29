@@ -65,6 +65,9 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Default node values.
         /// </summary>
+        /// <remarks>
+        /// The limit for the node values array is 32 (must match GRAPH_NODE_MAX_VALUES in C++ engine core).
+        /// </remarks>
         public object[] DefaultValues;
 
         /// <summary>

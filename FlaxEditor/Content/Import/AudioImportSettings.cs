@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -62,31 +63,31 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// The audio data format to import the audio clip as. 
         /// </summary>
-        [EditorOrder(10), Tooltip("The audio data format to import the audio clip as.")]
+        [EditorOrder(10), DefaultValue(AudioFormat.Vorbis), Tooltip("The audio data format to import the audio clip as.")]
         public AudioFormat Format { get; set; } = AudioFormat.Vorbis;
 
         /// <summary>
         /// The audio data compression quality. Used only if target format is using compression. Value 0 means the smallest size, value 1 means the best quality.
         /// </summary>
-        [EditorOrder(15), Limit(0, 1, 0.01f), Tooltip("The audio data compression quality. Used only if target format is using compression. Value 0 means the smallest size, value 1 means the best quality.")]
+        [EditorOrder(15), DefaultValue(0.4f), Limit(0, 1, 0.01f), Tooltip("The audio data compression quality. Used only if target format is using compression. Value 0 means the smallest size, value 1 means the best quality.")]
         public float CompressionQuality { get; set; } = 0.4f;
 
         /// <summary>
         /// Disables dynamic audio streaming. The whole clip will be loaded into the memory. Useful for small clips (eg. gunfire sounds).
         /// </summary>
-        [EditorOrder(20), Tooltip("Disables dynamic audio streaming. The whole clip will be loaded into the memory. Useful for small clips (eg. gunfire sounds).")]
+        [EditorOrder(20), DefaultValue(false), Tooltip("Disables dynamic audio streaming. The whole clip will be loaded into the memory. Useful for small clips (eg. gunfire sounds).")]
         public bool DisableStreaming { get; set; } = false;
 
         /// <summary>
         /// Checks should the clip be played as spatial (3D) audio or as normal audio. 3D audio is stored in Mono format.
         /// </summary>
-        [EditorOrder(30), EditorDisplay(null, "Is 3D"), Tooltip("Checks should the clip be played as spatial (3D) audio or as normal audio. 3D audio is stored in Mono format.")]
+        [EditorOrder(30), DefaultValue(false), EditorDisplay(null, "Is 3D"), Tooltip("Checks should the clip be played as spatial (3D) audio or as normal audio. 3D audio is stored in Mono format.")]
         public bool Is3D { get; set; } = false;
 
         /// <summary>
         /// The size of a single sample in bits. The clip will be converted to this bit depth on import.
         /// </summary>
-        [EditorOrder(40), Tooltip("The size of a single sample in bits. The clip will be converted to this bit depth on import.")]
+        [EditorOrder(40), DefaultValue(CustomBitDepth._16), Tooltip("The size of a single sample in bits. The clip will be converted to this bit depth on import.")]
         public CustomBitDepth BitDepth { get; set; } = CustomBitDepth._16;
 
         [StructLayout(LayoutKind.Sequential)]

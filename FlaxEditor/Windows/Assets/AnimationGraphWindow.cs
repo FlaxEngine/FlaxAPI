@@ -12,6 +12,7 @@ using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 // ReSharper disable MemberCanBePrivate.Local
 
@@ -30,12 +31,38 @@ namespace FlaxEditor.Windows.Assets
 
         private sealed class Preview : AnimatedModelPreview
         {
-            private AnimationGraphWindow _window;
+            private readonly AnimationGraphWindow _window;
+            private ContextMenuButton _showFloorButton;
+            private StaticModel _floorModel;
 
             public Preview(AnimationGraphWindow window)
             : base(true)
             {
                 _window = window;
+
+                // Show floor widget
+                _showFloorButton = ViewWidgetButtonMenu.AddButton("Show floor", OnShowFloorModelClicked);
+                _showFloorButton.Icon = Style.Current.CheckBoxTick;
+                _showFloorButton.IndexInParent = 1;
+
+                // Floor model
+                _floorModel = StaticModel.New();
+                _floorModel.Position = new Vector3(0, -25, 0);
+                _floorModel.Scale = new Vector3(5, 0.5f, 5);
+                _floorModel.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
+                Task.CustomActors.Add(_floorModel);
+
+                // Enable shadows
+                PreviewLight.ShadowsMode = ShadowsCastingMode.All;
+                PreviewLight.CascadeCount = 2;
+                PreviewLight.ShadowsDistance = 1000.0f;
+                Task.Flags |= ViewFlags.Shadows;
+            }
+
+            private void OnShowFloorModelClicked(ContextMenuButton obj)
+            {
+                _floorModel.IsActive = !_floorModel.IsActive;
+                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : Sprite.Invalid;
             }
 
             /// <inheritdoc />
@@ -43,7 +70,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 base.Draw();
 
-                var style = FlaxEngine.GUI.Style.Current;
+                var style = Style.Current;
                 if (_window.Asset == null || !_window.Asset.IsLoaded)
                 {
                     Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
@@ -52,6 +79,15 @@ namespace FlaxEditor.Windows.Assets
                 {
                     Render2D.DrawText(style.FontLarge, "Missing Base Model", new Rectangle(Vector2.Zero, Size), Color.Red, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords);
                 }
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                FlaxEngine.Object.Destroy(ref _floorModel);
+                _showFloorButton = null;
+
+                base.Dispose();
             }
         }
 
@@ -400,7 +436,7 @@ namespace FlaxEditor.Windows.Assets
             propertiesEditor.Modified += OnGraphPropertyEdited;
 
             // Surface
-            _surface = new AnimGraphSurface(this)
+            _surface = new AnimGraphSurface(this, Save)
             {
                 Parent = _split1.Panel1,
                 Enabled = false
@@ -442,26 +478,8 @@ namespace FlaxEditor.Windows.Assets
                 // Sync edited parameters
                 _properties.OnSave(this);
 
-                // Save surface
-                var data = _surface.Save();
-                if (data == null)
-                {
-                    // Error
-                    Editor.LogError("Failed to save animation graph surface");
-                    return true;
-                }
-
-                // Save data to the temporary asset
-                if (_asset.SaveSurface(data))
-                {
-                    // Error
-                    _surface.MarkAsEdited();
-                    Editor.LogError("Failed to save animation graph surface data");
-                    return true;
-                }
-
-                // Reset any root motion
-                _preview.PreviewActor.ResetLocalTransform();
+                // Save surface (will call SurfaceData setter)
+                _surface.Save();
             }
 
             return false;
@@ -556,9 +574,30 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public void OnSurfaceSave()
+        public byte[] SurfaceData
         {
-            Save();
+            get => _asset.LoadSurface();
+            set
+            {
+                if (value == null)
+                {
+                    // Error
+                    Editor.LogError("Failed to save animation graph surface");
+                    return;
+                }
+
+                // Save data to the temporary asset
+                if (_asset.SaveSurface(value))
+                {
+                    // Error
+                    _surface.MarkAsEdited();
+                    Editor.LogError("Failed to save animation graph surface data");
+                    return;
+                }
+
+                // Reset any root motion
+                _preview.PreviewActor.ResetLocalTransform();
+            }
         }
 
         /// <inheritdoc />
@@ -573,12 +612,6 @@ namespace FlaxEditor.Windows.Assets
         {
             // Mark as dirty
             _tmpAssetIsDirty = true;
-        }
-
-        /// <inheritdoc />
-        public Texture GetSurfaceBackground()
-        {
-            return Editor.UI.VisjectSurfaceBackground;
         }
 
         /// <inheritdoc />

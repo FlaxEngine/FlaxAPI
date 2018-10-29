@@ -23,6 +23,7 @@ namespace FlaxEditor.Surface.Archetypes
             private readonly List<ISurfaceNodeElement> _dynamicChildren = new List<ISurfaceNodeElement>();
             private bool _isUpdateLocked;
             private float _layoutHeight;
+            private ParameterType _layoutType;
 
             static NodeElementArchetype[] Prototypes =
             {
@@ -83,14 +84,15 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void UpdateLayout()
             {
-                // Clean
-                ClearDynamicElements();
-
-                // Add elements and calculate node size
+                // Add elements and calculate node size if type changes
                 float height = 60;
                 var selected = GetSelected();
-                if (selected != null)
+                if (selected != null && _layoutType != selected.Type)
                 {
+                    // Clean
+                    ClearDynamicElements();
+
+                    // Build layout
                     switch (selected.Type)
                     {
                     case ParameterType.Bool:
@@ -173,9 +175,11 @@ namespace FlaxEditor.Surface.Archetypes
                     case ParameterType.Rectangle: break;
                     default: break;
                     }
-                }
 
-                _layoutHeight = height;
+                    // Cache state
+                    _layoutType = selected.Type;
+                    _layoutHeight = height;
+                }
 
                 UpdateTitle();
             }
@@ -200,6 +204,7 @@ namespace FlaxEditor.Surface.Archetypes
                 int toSelect = -1;
                 Guid loadedSelected = (Guid)Values[0];
                 _combobox.ClearItems();
+                int index = 0;
                 for (int i = 0; i < Surface.Parameters.Count; i++)
                 {
                     var param = Surface.Parameters[i];
@@ -209,8 +214,10 @@ namespace FlaxEditor.Surface.Archetypes
 
                         if (param.ID == loadedSelected)
                         {
-                            toSelect = i;
+                            toSelect = index;
                         }
+
+                        index++;
                     }
                 }
                 _combobox.SelectedIndex = toSelect;
@@ -315,6 +322,15 @@ namespace FlaxEditor.Surface.Archetypes
                 // Setup
                 UpdateCombo();
                 UpdateLayout();
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                // Setup
+                UpdateTitle();
             }
 
             private void UpdateTitle()

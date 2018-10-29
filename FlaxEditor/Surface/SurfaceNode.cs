@@ -14,9 +14,20 @@ namespace FlaxEditor.Surface
     /// <seealso cref="SurfaceControl" />
     public class SurfaceNode : SurfaceControl
     {
-        private Rectangle _headerRect;
-        private Rectangle _closeButtonRect;
-        private Rectangle _footerRect;
+        /// <summary>
+        /// The header rectangle (local space).
+        /// </summary>
+        protected Rectangle _headerRect;
+
+        /// <summary>
+        /// The close button rectangle (local space).
+        /// </summary>
+        protected Rectangle _closeButtonRect;
+
+        /// <summary>
+        /// The footer rectangle (local space).
+        /// </summary>
+        protected Rectangle _footerRect;
 
         /// <summary>
         /// The node archetype.

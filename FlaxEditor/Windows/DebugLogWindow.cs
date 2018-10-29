@@ -194,7 +194,7 @@ namespace FlaxEditor.Windows
             public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
             {
                 // Show the location
-                ScriptsBuilder.OpenFile(Desc.LocationFile, Desc.LocationLine);
+                Editor.Instance.CodeEditing.OpenFile(Desc.LocationFile, Desc.LocationLine);
 
                 return true;
             }

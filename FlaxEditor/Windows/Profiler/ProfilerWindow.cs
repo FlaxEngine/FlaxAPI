@@ -210,5 +210,24 @@ namespace FlaxEditor.Windows.Profiler
                 UpdateButtons();
             }
         }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (base.OnKeyDown(key))
+                return true;
+
+            switch (key)
+            {
+            case Keys.ArrowLeft:
+                ViewFrameIndex--;
+                return true;
+            case Keys.ArrowRight:
+                ViewFrameIndex++;
+                return true;
+            }
+
+            return false;
+        }
     }
 }

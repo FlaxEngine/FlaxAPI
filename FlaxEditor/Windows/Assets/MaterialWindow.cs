@@ -467,7 +467,7 @@ namespace FlaxEditor.Windows.Assets
             propertiesEditor.Modified += OnMaterialPropertyEdited;
 
             // Surface
-            _surface = new MaterialSurface(this)
+            _surface = new MaterialSurface(this, Save)
             {
                 Parent = _split1.Panel1,
                 Enabled = false
@@ -534,27 +534,7 @@ namespace FlaxEditor.Windows.Assets
             // Check if surface has been edited
             if (_surface.IsEdited)
             {
-                // Save surface
-                var data = _surface.Save();
-                if (data == null)
-                {
-                    // Error
-                    Editor.LogError("Failed to save material surface");
-                    return true;
-                }
-
-                // Create material info
-                MaterialInfo info;
-                FillMaterialInfo(out info);
-
-                // Save data to the temporary material
-                if (_asset.SaveSurface(data, info))
-                {
-                    // Error
-                    _surface.MarkAsEdited();
-                    Editor.LogError("Failed to save material surface data");
-                    return true;
-                }
+                _surface.Save();
             }
 
             return false;
@@ -681,9 +661,23 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public void OnSurfaceSave()
+        public byte[] SurfaceData
         {
-            Save();
+            get => _asset.LoadSurface(true);
+            set
+            {
+                // Create material info
+                MaterialInfo info;
+                FillMaterialInfo(out info);
+
+                // Save data to the temporary material
+                if (_asset.SaveSurface(value, info))
+                {
+                    // Error
+                    _surface.MarkAsEdited();
+                    Editor.LogError("Failed to save material surface data");
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -698,12 +692,6 @@ namespace FlaxEditor.Windows.Assets
         {
             // Mark as dirty
             _tmpMaterialIsDirty = true;
-        }
-
-        /// <inheritdoc />
-        public Texture GetSurfaceBackground()
-        {
-            return Editor.UI.VisjectSurfaceBackground;
         }
 
         /// <inheritdoc />

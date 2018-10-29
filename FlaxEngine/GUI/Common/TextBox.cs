@@ -979,7 +979,20 @@ namespace FlaxEngine.GUI
                 OnSelectingBegin();
 
                 // Calculate char index under the mouse location
-                SetSelection(CharIndexAtPoint(ref location));
+                var hitPos = CharIndexAtPoint(ref location);
+
+                // Select range with shift
+                if (_selectionStart != -1 && RootWindow.GetKey(Keys.Shift) && SelectionLength == 0)
+                {
+                    if (hitPos < _selectionStart)
+                        SetSelection(hitPos, _selectionStart);
+                    else
+                        SetSelection(_selectionStart, hitPos);
+                }
+                else
+                {
+                    SetSelection(hitPos);
+                }
             }
 
             // Base
