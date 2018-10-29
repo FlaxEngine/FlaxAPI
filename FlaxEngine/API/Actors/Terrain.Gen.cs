@@ -71,7 +71,7 @@ namespace FlaxEngine
         /// Gets or sets the terrain LODs distribution parameter. Adjusts terrain chunks transitions distances.
         /// </summary>
         /// <remarks>
-        /// Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.75.
+        /// Use lower value to increase terrain quality or higher value to increase performance. Default value is 1.
         /// </remarks>
         [UnmanagedCall]
         [EditorOrder(70), Limit(0, 5, 0.01f), EditorDisplay("Terrain", "LOD Distribution"), Tooltip("Terrain LODs distribution parameter. Adjusts terrain chunks transitions distances. Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.75.")]
