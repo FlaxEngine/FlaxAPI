@@ -81,7 +81,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the terrain chunk vertices amount per edge (square).
+        /// Gets the terrain chunk quads amount per edge (square).
         /// </summary>
         [UnmanagedCall]
         public int ChunkSize
@@ -109,7 +109,7 @@ namespace FlaxEngine
         /// <summary>
         /// Creates the terrain.
         /// </summary>
-        /// <param name="lodCount">The LODs count. The actual amount of LODs may be lower due to provided chunk size (each LOD has 4 times less vertices).</param>
+        /// <param name="lodCount">The LODs count. The actual amount of LODs may be lower due to provided chunk size (each LOD has 4 times less quads).</param>
         /// <param name="chunkSize">The size of the chunk (amount of quads per edge for the highest LOD). Must be power of two minus one (eg. 63).</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]

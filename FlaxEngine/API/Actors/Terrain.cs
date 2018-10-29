@@ -33,7 +33,7 @@ namespace FlaxEngine
         /// <param name="x">The patch location x.</param>
         /// <param name="z">The patch location z.</param>
         /// <param name="format">The heightmap storage format.</param>
-        /// <param name="heightMap">The height map. Each array item contains a height value. It should has size equal (chunkSize*4+1)^2.</param>
+        /// <param name="heightMap">The height map. Each array item contains a height value (2D inlined array). It should has size equal (chunkSize*4+1)^2.</param>
         /// <param name="visibilityMap">The visibility map (optional). Normalized to 0-1 range values with visibility per-vertex. Must match the heightmap dimensions.</param>
         /// <param name="forceUseVirtualStorage">If set to <c>true</c> patch will use virtual storage by force. Otherwise it can use normal texture asset storage on drive (valid only during Editor). Runtime-created terrain can only use virtual storage (in RAM).</param>
         /// <returns>True if failed, otherwise false.</returns>
@@ -54,12 +54,12 @@ namespace FlaxEngine
         /// <param name="x">The patch location x.</param>
         /// <param name="z">The patch location z.</param>
         /// <param name="format">The heightmap storage format.</param>
-        /// <param name="heightMapLength">The height map array length. It must match the terrain descriptor, so it should be (chunkSize+1)*(chunkSize+1)*16. Patch is a 4 by 4 square made of chunks. Each chunk has chunkSize quads on edge.</param>
-        /// <param name="heightMap">The height map. Each array item contains a height value.</param>
+        /// <param name="heightMapLength">The height map array length. It must match the terrain descriptor, so it should be equal (chunkSize*4+1)^2. Patch is a 4 by 4 square made of chunks. Each chunk has chunkSize quads on edge.</param>
+        /// <param name="heightMap">The height map. Each array item contains a height value (2D inlined array).</param>
         /// <param name="visibilityMap">The visibility map (optional). Normalized to 0-1 range values with visibility per-vertex. Must match the heightmap dimensions.</param>
         /// <param name="forceUseVirtualStorage">If set to <c>true</c> patch will use virtual storage by force. Otherwise it can use normal texture asset storage on drive (valid only during Editor). Runtime-created terrain can only use virtual storage (in RAM).</param>
         /// <returns>True if failed, otherwise false.</returns>
-        public unsafe void SetupPatch(int x, int z, TerrainHeightmapFormat format, float heightMapLength, float* heightMap, float* visibilityMap = null, bool forceUseVirtualStorage = false)
+        public unsafe void SetupPatch(int x, int z, TerrainHeightmapFormat format, int heightMapLength, float* heightMap, float* visibilityMap = null, bool forceUseVirtualStorage = false)
         {
             if (Internal_SetupPatch(unmanagedPtr, x, z, format, heightMapLength, heightMap, visibilityMap, forceUseVirtualStorage))
                 throw new Exception("Failed to setup terrain patch. See log for more info.");
@@ -69,7 +69,7 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern unsafe bool Internal_SetupPatch(IntPtr obj, int x, int z, TerrainHeightmapFormat format, float heightMapLength, float* heightMap, float* visibilityMap, bool forceUseVirtualStorage);
+        internal static extern unsafe bool Internal_SetupPatch(IntPtr obj, int x, int z, TerrainHeightmapFormat format, int heightMapLength, float* heightMap, float* visibilityMap, bool forceUseVirtualStorage);
 #endif
 
         #endregion
