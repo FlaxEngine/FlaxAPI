@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -661,7 +662,7 @@ namespace FlaxEditor.Surface.Archetypes
                 DefaultValues = new object[]
                 {
                     "Locomotion",
-                    0,
+                    Enumerable.Empty<byte>() as byte[],
                     3,
                     true,
                     true,

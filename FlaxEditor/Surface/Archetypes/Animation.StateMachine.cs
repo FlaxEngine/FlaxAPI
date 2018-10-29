@@ -13,7 +13,8 @@ namespace FlaxEditor.Surface.Archetypes
         /// Customized <see cref="SurfaceNode" /> for the state machine output node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-        public class StateMachine : SurfaceNode
+        /// <seealso cref="FlaxEditor.Surface.ISurfaceContext" />
+        public class StateMachine : SurfaceNode, ISurfaceContext
         {
             private IntValueBox _maxTransitionsPerUpdate;
             private CheckBox _reinitializeOnBecomingRelevant;
@@ -23,7 +24,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// Flag for editor UI updating. Used to skip value change events to prevent looping data flow.
             /// </summary>
             protected bool _isUpdatingUI;
-            
+
             /// <summary>
             /// Gets or sets the node title text.
             /// </summary>
@@ -35,26 +36,6 @@ namespace FlaxEditor.Surface.Archetypes
                     if (!string.Equals(value, (string)Values[0], StringComparison.Ordinal))
                     {
                         SetValue(0, value);
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Gets the state machine entry node (surface node object).
-            /// </summary>
-            public StateMachineEntry StateMachineEntryNode
-            {
-                get
-                {
-                    var nodeId = (int)Values[1];
-                    return (StateMachineEntry)Surface.FindNode((uint)nodeId);
-                }
-                private set
-                {
-                    int nodeId = value != null ? (int)value.ID : 0;
-                    if (nodeId != (int)Values[1])
-                    {
-                        SetValue(1, nodeId);
                     }
                 }
             }
@@ -85,7 +66,7 @@ namespace FlaxEditor.Surface.Archetypes
                 get => (bool)Values[4];
                 set => SetValue(4, value);
             }
-            
+
             /// <inheritdoc />
             public StateMachine(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
@@ -136,9 +117,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             public void Edit()
             {
-                var entryNode = EnsureEntryNodeExists();
-
-                // TODO: focus state machine
+                // TODO: open sub graph of the state machine
             }
 
             /// <summary>
@@ -150,26 +129,10 @@ namespace FlaxEditor.Surface.Archetypes
                 var dialog = RenamePopup.Show(this, _headerRect, Title, false);
                 dialog.Renamed += OnRenamed;
             }
-            
+
             private void OnRenamed(RenamePopup renamePopup)
             {
                 StateMachineTitle = renamePopup.Text;
-            }
-
-            /// <summary>
-            /// Ensures the entry node of the state machine exists and has valid linkage to this node.
-            /// </summary>
-            /// <returns>The valid entry node.</returns>
-            public SurfaceNode EnsureEntryNodeExists()
-            {
-                var entryNode = StateMachineEntryNode;
-                if (entryNode == null)
-                {
-                    entryNode = (StateMachineEntry)Surface.SpawnNode(9, 19, BottomRight + new Vector2(10));
-                    StateMachineEntryNode = entryNode;
-                }
-
-                return entryNode;
             }
 
             /// <summary>
@@ -194,7 +157,6 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSurfaceLoaded();
 
-                EnsureEntryNodeExists();
                 UpdateUI();
             }
 
@@ -205,8 +167,15 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateUI();
             }
+
+            /// <inheritdoc />
+            public byte[] SurfaceData
+            {
+                get => (byte[])Values[1];
+                set => SetValue(1, value);
+            }
         }
-        
+
         /// <summary>
         /// Customized <see cref="SurfaceNode" /> for the state machine entry node.
         /// </summary>
