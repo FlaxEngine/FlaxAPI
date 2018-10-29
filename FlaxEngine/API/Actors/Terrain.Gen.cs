@@ -68,6 +68,84 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the default material used for terrain rendering (chunks can override this).
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(100), EditorDisplay("Terrain"), Tooltip("The default material used for terrain rendering (chunks can override this).")]
+        public MaterialBase Material
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetMaterial(unmanagedPtr); }
+            set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the terrain scale in lightmap (applied to all the chunks).
+        /// </summary>
+        /// <remarks>
+        /// Use value higher than 1 to increase baked lighting resolution.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(110), Limit(0, 10000, 0.1f), EditorDisplay("Terrain"), Tooltip("Terrain scale in lightmap (applied to all the chunks). Use value higher than 1 to increase baked lighting resolution.")]
+        public float ScaleInLightmap
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetScaleInLightmap(unmanagedPtr); }
+            set { Internal_SetScaleInLightmap(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the terrain chunks bounds extent. Values used to expand terrain chunks bounding boxes. Use it when your terrain material is performing vertex offset operations on a GPU.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(120), EditorDisplay("Terrain"), Tooltip("Terrain chunks bounds extent. Values used to expand terrain chunks bounding boxes. Use it when your terrain material is performing vertex offset operations on a GPU.")]
+        public Vector3 BoundsExtent
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { Vector3 resultAsRef; Internal_GetBoundsExtent(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetBoundsExtent(unmanagedPtr, ref value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the terrain geometry LOD index used for collision.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(500), Limit(-1, 100, 0.1f), EditorDisplay("Collision", "Collision LOD"), Tooltip("Terrain geometry LOD index used for collision.")]
+        public int CollisionLOD
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetCollisionLOD(unmanagedPtr); }
+            set { Internal_SetCollisionLOD(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the default physical material used to define the terrain collider physical properties.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(500), Limit(-1, 100, 0.1f), EditorDisplay("Collision"), Tooltip("Terrain default physical material used to define the collider physical properties.")]
+        public JsonAsset PhysicalMaterial
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetPhysicalMaterial(unmanagedPtr); }
+            set { Internal_SetPhysicalMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+        }
+
+        /// <summary>
         /// Gets the terrain Level Of Detail count.
         /// </summary>
         [UnmanagedCall]
@@ -174,6 +252,36 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetForcedLOD(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern MaterialBase Internal_GetMaterial(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetMaterial(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetScaleInLightmap(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetScaleInLightmap(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetBoundsExtent(IntPtr obj, out Vector3 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetBoundsExtent(IntPtr obj, ref Vector3 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetCollisionLOD(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetCollisionLOD(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern JsonAsset Internal_GetPhysicalMaterial(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetPhysicalMaterial(IntPtr obj, IntPtr val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetLODCount(IntPtr obj);
