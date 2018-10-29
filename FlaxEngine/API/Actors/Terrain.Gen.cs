@@ -68,6 +68,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the terrain LODs distribution parameter. Adjusts terrain chunks transitions distances.
+        /// </summary>
+        /// <remarks>
+        /// Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.75.
+        /// </remarks>
+        [UnmanagedCall]
+        [EditorOrder(70), Limit(0, 5, 0.01f), EditorDisplay("Terrain", "LOD Distribution"), Tooltip("Terrain LODs distribution parameter. Adjusts terrain chunks transitions distances. Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.75.")]
+        public float LODDistribution
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetLODDistribution(unmanagedPtr); }
+            set { Internal_SetLODDistribution(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the default material used for terrain rendering (chunks can override this).
         /// </summary>
         [UnmanagedCall]
@@ -252,6 +270,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetForcedLOD(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetLODDistribution(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetLODDistribution(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern MaterialBase Internal_GetMaterial(IntPtr obj);
