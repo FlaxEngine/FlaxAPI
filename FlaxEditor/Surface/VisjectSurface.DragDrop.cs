@@ -76,7 +76,7 @@ namespace FlaxEditor.Surface
 
             var args = new DragDropEventArgs
             {
-                SurfaceLocation = _surface.PointFromParent(location)
+                SurfaceLocation = _rootControl.PointFromParent(location)
             };
 
             // Drag assets
@@ -143,7 +143,7 @@ namespace FlaxEditor.Surface
                 if (parameter == null)
                     throw new InvalidDataException();
 
-                var node = SpawnNode(6, 1, args.SurfaceLocation, new object[]
+                var node = Context.SpawnNode(6, 1, args.SurfaceLocation, new object[]
                 {
                     parameter.ID
                 });

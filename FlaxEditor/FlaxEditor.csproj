@@ -393,9 +393,11 @@
     <Compile Include="Surface\ISurfaceNodeElement.cs" />
     <Compile Include="Surface\SurfaceNodeElementControl.cs" />
     <Compile Include="Surface\SurfaceParameter.cs" />
+    <Compile Include="Surface\SurfaceRootControl.cs" />
     <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\TransformCoordinateSystem.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
+    <Compile Include="Surface\VisjectSurface.Context.cs" />
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />
     <Compile Include="Surface\VisjectSurface.cs" />
     <Compile Include="Surface\VisjectSurface.DragDrop.cs" />
@@ -403,6 +405,9 @@
     <Compile Include="Surface\VisjectSurface.Input.cs" />
     <Compile Include="Surface\VisjectSurface.Paramaters.cs" />
     <Compile Include="Surface\VisjectSurface.Serialization.cs" />
+    <Compile Include="Surface\ISurfaceContext.cs" />
+    <Compile Include="Surface\VisjectSurfaceContext.cs" />
+    <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
     <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />
     <Compile Include="Undo\Actions\ChangeScriptAction.cs" />
@@ -504,7 +509,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Surface\VisjectSurface.CopPaste.cs" />
+    <Compile Include="Surface\VisjectSurface.CopyPaste.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

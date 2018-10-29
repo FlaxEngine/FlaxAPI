@@ -128,6 +128,11 @@ namespace FlaxEditor.Surface
         public IconsData Icons;
 
         /// <summary>
+        /// The background image (tiled).
+        /// </summary>
+        public Texture Background;
+
+        /// <summary>
         /// Gets the color for the connection.
         /// </summary>
         /// <param name="type">The connection type.</param>
@@ -219,7 +224,8 @@ namespace FlaxEditor.Surface
                     BoxClose = editor.Icons.VisjectBoxClose,
                     ArrowOpen = editor.Icons.VisjectArrowOpen,
                     ArrowClose = editor.Icons.VisjectArrowClose,
-                }
+                },
+                Background = editor.UI.VisjectSurfaceBackground,
             };
         }
     }

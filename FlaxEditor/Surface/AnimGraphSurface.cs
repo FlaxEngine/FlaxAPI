@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEngine;
@@ -13,13 +14,13 @@ namespace FlaxEditor.Surface
     public class AnimGraphSurface : VisjectSurface
     {
         /// <inheritdoc />
-        public AnimGraphSurface(IVisjectSurfaceOwner owner)
-        : base(owner)
+        public AnimGraphSurface(IVisjectSurfaceOwner owner, Action onSave)
+        : base(owner, onSave)
         {
         }
 
         /// <inheritdoc />
-        protected override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
             if ((nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0 || (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
                 return false;
@@ -51,7 +52,7 @@ namespace FlaxEditor.Surface
                 {
                 case ContentDomain.Animation:
                 {
-                    node = SpawnNode(9, 2, args.SurfaceLocation, new object[]
+                    node = Context.SpawnNode(9, 2, args.SurfaceLocation, new object[]
                     {
                         item.ID,
                         1.0f,
@@ -62,7 +63,7 @@ namespace FlaxEditor.Surface
                 }
                 case ContentDomain.SkeletonMask:
                 {
-                    node = SpawnNode(9, 11, args.SurfaceLocation, new object[]
+                    node = Context.SpawnNode(9, 11, args.SurfaceLocation, new object[]
                     {
                         0.0f,
                         item.ID,

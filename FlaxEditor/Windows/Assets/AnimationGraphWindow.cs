@@ -436,7 +436,7 @@ namespace FlaxEditor.Windows.Assets
             propertiesEditor.Modified += OnGraphPropertyEdited;
 
             // Surface
-            _surface = new AnimGraphSurface(this)
+            _surface = new AnimGraphSurface(this, Save)
             {
                 Parent = _split1.Panel1,
                 Enabled = false
@@ -478,26 +478,8 @@ namespace FlaxEditor.Windows.Assets
                 // Sync edited parameters
                 _properties.OnSave(this);
 
-                // Save surface
-                var data = _surface.Save();
-                if (data == null)
-                {
-                    // Error
-                    Editor.LogError("Failed to save animation graph surface");
-                    return true;
-                }
-
-                // Save data to the temporary asset
-                if (_asset.SaveSurface(data))
-                {
-                    // Error
-                    _surface.MarkAsEdited();
-                    Editor.LogError("Failed to save animation graph surface data");
-                    return true;
-                }
-
-                // Reset any root motion
-                _preview.PreviewActor.ResetLocalTransform();
+                // Save surface (will call SurfaceData setter)
+                _surface.Save();
             }
 
             return false;
@@ -592,9 +574,30 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public void OnSurfaceSave()
+        public byte[] SurfaceData
         {
-            Save();
+            get => _asset.LoadSurface();
+            set
+            {
+                if (value == null)
+                {
+                    // Error
+                    Editor.LogError("Failed to save animation graph surface");
+                    return;
+                }
+
+                // Save data to the temporary asset
+                if (_asset.SaveSurface(value))
+                {
+                    // Error
+                    _surface.MarkAsEdited();
+                    Editor.LogError("Failed to save animation graph surface data");
+                    return;
+                }
+
+                // Reset any root motion
+                _preview.PreviewActor.ResetLocalTransform();
+            }
         }
 
         /// <inheritdoc />
@@ -609,12 +612,6 @@ namespace FlaxEditor.Windows.Assets
         {
             // Mark as dirty
             _tmpAssetIsDirty = true;
-        }
-
-        /// <inheritdoc />
-        public Texture GetSurfaceBackground()
-        {
-            return Editor.UI.VisjectSurfaceBackground;
         }
 
         /// <inheritdoc />

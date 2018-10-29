@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using FlaxEngine;
+using Newtonsoft.Json;
 using Object = System.Object;
 
 namespace FlaxEditor.Utilities
@@ -266,6 +268,427 @@ namespace FlaxEditor.Utilities
                     string tmp = Path.Combine(dstDirectoryPath, dirs[i].Name);
                     DirectoryCopy(dirs[i].FullName, tmp, true, overrideFiles);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Converts the raw bytes into the structure. Supported only for structures with simple types and no GC objects.
+        /// </summary>
+        /// <typeparam name="T">The structure type.</typeparam>
+        /// <param name="bytes">The data bytes.</param>
+        /// <returns>The structure.</returns>
+        public static T ByteArrayToStructure<T>(byte[] bytes) where T : struct
+        {
+            // #stupid c#
+            GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+            T stuff = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
+            handle.Free();
+            return stuff;
+        }
+
+        /// <summary>
+        /// Converts the raw bytes into the structure. Supported only for structures with simple types and no GC objects.
+        /// </summary>
+        /// <typeparam name="T">The structure type.</typeparam>
+        /// <param name="bytes">The data bytes.</param>
+        /// <param name="result">The result.</param>
+        public static void ByteArrayToStructure<T>(byte[] bytes, out T result) where T : struct
+        {
+            // #stupid c#
+            GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+            result = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
+            handle.Free();
+        }
+
+        /// <summary>
+        /// Converts the structure to the raw bytes. Supported only for structures with simple types and no GC objects.
+        /// </summary>
+        /// <typeparam name="T">The structure type.</typeparam>
+        /// <param name="value">The structure value.</param>
+        /// <returns>The bytes array that contains a structure data.</returns>
+        public static byte[] StructureToByteArray<T>(ref T value) where T : struct
+        {
+            // #stupid c#
+            int size = Marshal.SizeOf(typeof(T));
+            byte[] arr = new byte[size];
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(value, ptr, true);
+            Marshal.Copy(ptr, arr, 0, size);
+            Marshal.FreeHGlobal(ptr);
+            return arr;
+        }
+
+        internal static unsafe string ReadStr(BinaryReader stream, int check)
+        {
+            int length = stream.ReadInt32();
+            if (length > 0 && length < 2000)
+            {
+                var str = stream.ReadBytes(length * 2);
+                fixed (byte* strPtr = str)
+                {
+                    var ptr = (char*)strPtr;
+                    for (int j = 0; j < length; j++)
+                        ptr[j] = (char)(ptr[j] ^ check);
+                }
+                return System.Text.Encoding.Unicode.GetString(str);
+            }
+
+            return string.Empty;
+        }
+
+        internal static unsafe void WriteStr(BinaryWriter stream, string str, int check)
+        {
+            int length = str.Length;
+            stream.Write(length);
+            var bytes = System.Text.Encoding.Unicode.GetBytes(str);
+            if (bytes.Length != length * 2)
+                throw new ArgumentException();
+            fixed (byte* bytesPtr = bytes)
+            {
+                var ptr = (char*)bytesPtr;
+                for (int j = 0; j < length; j++)
+                    ptr[j] = (char)(ptr[j] ^ check);
+            }
+            stream.Write(bytes);
+        }
+
+        internal static void ReadCommonValue(BinaryReader stream, ref object value)
+        {
+            byte type = stream.ReadByte();
+
+            switch (type)
+            {
+            case 0: // CommonType::Bool:
+                value = stream.ReadByte() != 0;
+                break;
+            case 1: // CommonType::Integer:
+            {
+                value = stream.ReadInt32();
+            }
+                break;
+            case 2: // CommonType::Float:
+            {
+                value = stream.ReadSingle();
+            }
+                break;
+            case 3: // CommonType::Vector2:
+            {
+                value = new Vector2(stream.ReadSingle(), stream.ReadSingle());
+            }
+                break;
+            case 4: // CommonType::Vector3:
+            {
+                value = new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+            }
+                break;
+            case 5: // CommonType::Vector4:
+            {
+                value = new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+            }
+                break;
+            case 6: // CommonType::Color:
+            {
+                value = new Color(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+            }
+                break;
+            case 7: // CommonType::Guid:
+            {
+                value = new Guid(stream.ReadBytes(16));
+            }
+                break;
+            case 8: // CommonType::String:
+            {
+                int length = stream.ReadInt32();
+                if (length <= 0)
+                {
+                    value = string.Empty;
+                }
+                else
+                {
+                    var data = new char[length];
+                    for (int i = 0; i < length; i++)
+                    {
+                        var c = stream.ReadUInt16();
+                        data[i] = (char)(c ^ 953);
+                    }
+                    value = new string(data);
+                }
+                break;
+            }
+            /*case 9:// CommonType::Box:
+            {
+                BoundingBox v;
+                ReadBox(&v);
+                data.Set(v);
+            }
+                break;
+            case 10:// CommonType::Rotation:
+            {
+                Quaternion v;
+                ReadQuaternion(&v);
+                data.Set(v);
+            }
+                break;
+            case 11:// CommonType::Transform:
+            {
+                Transform v;
+                ReadTransform(&v);
+                data.Set(v);
+            }
+                break;
+            case 12:// CommonType::Sphere:
+            {
+                BoundingSphere v;
+                ReadSphere(&v);
+                data.Set(v);
+            }
+                break;
+            case 13:// CommonType::Rect:
+            {
+                Rect v;
+                ReadRect(&v);
+                data.Set(v);
+            }
+                break;*/
+            case 15: // CommonType::Matrix
+            {
+                value = new Matrix(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
+                                   stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                break;
+            }
+            case 16: // CommonType::Blob
+            {
+                int length = stream.ReadInt32();
+                value = stream.ReadBytes(length);
+                break;
+            }
+            default: throw new SystemException();
+            }
+        }
+
+        internal static void WriteCommonValue(BinaryWriter stream, object value)
+        {
+            if (value is bool asBool)
+            {
+                stream.Write((byte)0);
+                stream.Write((byte)(asBool ? 1 : 0));
+            }
+            else if (value is int asInt)
+            {
+                stream.Write((byte)1);
+                stream.Write(asInt);
+            }
+            else if (value is float asFloat)
+            {
+                stream.Write((byte)2);
+                stream.Write(asFloat);
+            }
+            else if (value is double asDouble)
+            {
+                stream.Write((byte)2);
+                stream.Write((float)asDouble);
+            }
+            else if (value is Vector2 asVector2)
+            {
+                stream.Write((byte)3);
+                stream.Write(asVector2.X);
+                stream.Write(asVector2.Y);
+            }
+            else if (value is Vector3 asVector3)
+            {
+                stream.Write((byte)4);
+                stream.Write(asVector3.X);
+                stream.Write(asVector3.Y);
+                stream.Write(asVector3.Z);
+            }
+            else if (value is Vector4 asVector4)
+            {
+                stream.Write((byte)5);
+                stream.Write(asVector4.X);
+                stream.Write(asVector4.Y);
+                stream.Write(asVector4.Z);
+                stream.Write(asVector4.W);
+            }
+            else if (value is Color asColor)
+            {
+                stream.Write((byte)6);
+                stream.Write(asColor.R);
+                stream.Write(asColor.G);
+                stream.Write(asColor.B);
+                stream.Write(asColor.A);
+            }
+            else if (value is Guid asGuid)
+            {
+                stream.Write((byte)7);
+                stream.Write(asGuid.ToByteArray());
+            }
+            else if (value is string asString)
+            {
+                stream.Write((byte)8);
+                stream.Write(asString.Length);
+                for (int i = 0; i < asString.Length; i++)
+                    stream.Write((ushort)(asString[i] ^ 953));
+            }
+            else if (value is Matrix asMatrix)
+            {
+                stream.Write((byte)15);
+                stream.Write(asMatrix.M11);
+                stream.Write(asMatrix.M12);
+                stream.Write(asMatrix.M13);
+                stream.Write(asMatrix.M14);
+                stream.Write(asMatrix.M21);
+                stream.Write(asMatrix.M22);
+                stream.Write(asMatrix.M23);
+                stream.Write(asMatrix.M24);
+                stream.Write(asMatrix.M31);
+                stream.Write(asMatrix.M32);
+                stream.Write(asMatrix.M33);
+                stream.Write(asMatrix.M34);
+                stream.Write(asMatrix.M41);
+                stream.Write(asMatrix.M42);
+                stream.Write(asMatrix.M43);
+                stream.Write(asMatrix.M44);
+            }
+            else if (value is byte[] asBlob)
+            {
+                stream.Write((byte)16);
+                stream.Write(asBlob.Length);
+                stream.Write(asBlob);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        internal static void WriteCommonValue(JsonWriter stream, object value)
+        {
+            if (value is bool asBool)
+            {
+                stream.WriteValue(asBool);
+            }
+            else if (value is int asInt)
+            {
+                stream.WriteValue(asInt);
+            }
+            else if (value is float asFloat)
+            {
+                stream.WriteValue(asFloat);
+            }
+            else if (value is Vector2 asVector2)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("X");
+                stream.WriteValue(asVector2.X);
+                stream.WritePropertyName("Y");
+                stream.WriteValue(asVector2.Y);
+                stream.WriteEndObject();
+            }
+            else if (value is Vector3 asVector3)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("X");
+                stream.WriteValue(asVector3.X);
+                stream.WritePropertyName("Y");
+                stream.WriteValue(asVector3.Y);
+                stream.WritePropertyName("Z");
+                stream.WriteValue(asVector3.Z);
+                stream.WriteEndObject();
+            }
+            else if (value is Vector4 asVector4)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("X");
+                stream.WriteValue(asVector4.X);
+                stream.WritePropertyName("Y");
+                stream.WriteValue(asVector4.Y);
+                stream.WritePropertyName("Z");
+                stream.WriteValue(asVector4.Z);
+                stream.WritePropertyName("W");
+                stream.WriteValue(asVector4.W);
+                stream.WriteEndObject();
+            }
+            else if (value is Color asColor)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("R");
+                stream.WriteValue(asColor.R);
+                stream.WritePropertyName("G");
+                stream.WriteValue(asColor.G);
+                stream.WritePropertyName("B");
+                stream.WriteValue(asColor.B);
+                stream.WritePropertyName("A");
+                stream.WriteValue(asColor.A);
+                stream.WriteEndObject();
+            }
+            else if (value is Rectangle asRectangle)
+            {
+                stream.WriteStartObject();
+                stream.WritePropertyName("Location");
+                WriteCommonValue(stream, asRectangle.Location);
+                stream.WritePropertyName("Size");
+                WriteCommonValue(stream, asRectangle.Size);
+                stream.WriteEndObject();
+            }
+            else if (value is Guid asGuid)
+            {
+                stream.WriteValue(asGuid);
+            }
+            else if (value is string asString)
+            {
+                stream.WriteValue(asString);
+            }
+            else if (value is Matrix asMatrix)
+            {
+                stream.WriteStartObject();
+
+                stream.WritePropertyName("M11");
+                stream.WriteValue(asMatrix.M11);
+                stream.WritePropertyName("M12");
+                stream.WriteValue(asMatrix.M12);
+                stream.WritePropertyName("M13");
+                stream.WriteValue(asMatrix.M13);
+                stream.WritePropertyName("M14");
+                stream.WriteValue(asMatrix.M14);
+
+                stream.WritePropertyName("M21");
+                stream.WriteValue(asMatrix.M21);
+                stream.WritePropertyName("M22");
+                stream.WriteValue(asMatrix.M22);
+                stream.WritePropertyName("M23");
+                stream.WriteValue(asMatrix.M23);
+                stream.WritePropertyName("M24");
+                stream.WriteValue(asMatrix.M24);
+
+                stream.WritePropertyName("M31");
+                stream.WriteValue(asMatrix.M31);
+                stream.WritePropertyName("M32");
+                stream.WriteValue(asMatrix.M32);
+                stream.WritePropertyName("M33");
+                stream.WriteValue(asMatrix.M33);
+                stream.WritePropertyName("M34");
+                stream.WriteValue(asMatrix.M34);
+
+                stream.WritePropertyName("M41");
+                stream.WriteValue(asMatrix.M41);
+                stream.WritePropertyName("M42");
+                stream.WriteValue(asMatrix.M42);
+                stream.WritePropertyName("M43");
+                stream.WriteValue(asMatrix.M43);
+                stream.WritePropertyName("M44");
+                stream.WriteValue(asMatrix.M44);
+
+                stream.WriteEndObject();
+            }
+            else if (value is byte[] asBlob)
+            {
+                stream.WriteValue(Convert.ToBase64String(asBlob));
+            }
+            else
+            {
+                throw new NotSupportedException();
             }
         }
     }
