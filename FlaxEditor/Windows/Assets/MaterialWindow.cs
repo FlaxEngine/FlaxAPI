@@ -684,6 +684,11 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public void OnContextCreated(VisjectSurfaceContext context)
+        {
+        }
+
+        /// <inheritdoc />
         public void OnSurfaceEditedChanged()
         {
             if (_surface.IsEdited)

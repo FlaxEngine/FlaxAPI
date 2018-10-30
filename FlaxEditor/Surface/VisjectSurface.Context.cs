@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FlaxEditor.Surface
 {
@@ -59,13 +58,22 @@ namespace FlaxEditor.Surface
             if (!_contextCache.TryGetValue(context, out surfaceContext))
             {
                 surfaceContext = CreateContext(_context, context);
+                surfaceContext.Modified += (_) => MarkAsEdited();
                 _context?.Children.Add(surfaceContext);
                 _contextCache.Add(context, surfaceContext);
+                context.OnContextCreated(surfaceContext);
             }
             if (_root == null)
                 _root = surfaceContext;
             else if (ContextStack.Contains(surfaceContext))
                 throw new ArgumentException("Context has been already added to the stack.");
+
+            // Load context
+            if (_root != surfaceContext)
+            {
+                if (surfaceContext.Load())
+                    throw new Exception("Failed to load graph.");
+            }
 
             // Change stack
             ContextStack.Push(surfaceContext);

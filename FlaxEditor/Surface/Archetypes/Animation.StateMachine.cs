@@ -177,6 +177,22 @@ namespace FlaxEditor.Surface.Archetypes
                 get => (byte[])Values[1];
                 set => SetValue(1, value);
             }
+
+            /// <inheritdoc />
+            public void OnContextCreated(VisjectSurfaceContext context)
+            {
+                context.Loaded += OnSurfaceLoaded;
+            }
+
+            private void OnSurfaceLoaded(VisjectSurfaceContext context)
+            {
+                // Ensure that loaded surface has entry node for state machine
+                var entryNode = context.FindNode(9, 19);
+                if (entryNode == null)
+                {
+                    entryNode = context.SpawnNode(9, 19, new Vector2(100.0f));
+                }
+            }
         }
 
         /// <summary>

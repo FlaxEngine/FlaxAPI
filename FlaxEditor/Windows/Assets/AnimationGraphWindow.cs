@@ -459,7 +459,7 @@ namespace FlaxEditor.Windows.Assets
                 Parent = this
             };
         }
-        
+
         private void OnGraphPropertyEdited()
         {
             _surface.MarkAsEdited(!_paramValueChange);
@@ -615,6 +615,11 @@ namespace FlaxEditor.Windows.Assets
                 // Reset any root motion
                 _preview.PreviewActor.ResetLocalTransform();
             }
+        }
+
+        /// <inheritdoc />
+        public void OnContextCreated(VisjectSurfaceContext context)
+        {
         }
 
         /// <inheritdoc />
