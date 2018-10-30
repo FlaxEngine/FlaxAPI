@@ -117,7 +117,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             public void Edit()
             {
-                // TODO: open sub graph of the state machine
+                Surface.OpenContext(this);
             }
 
             /// <summary>
@@ -167,6 +167,9 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateUI();
             }
+
+            /// <inheritdoc />
+            public string SurfaceName => StateMachineTitle;
 
             /// <inheritdoc />
             public byte[] SurfaceData

@@ -574,6 +574,9 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public string SurfaceName => "Anim Graph";
+
+        /// <inheritdoc />
         public byte[] SurfaceData
         {
             get => _asset.LoadSurface();

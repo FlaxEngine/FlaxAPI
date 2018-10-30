@@ -661,6 +661,9 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public string SurfaceName => "Material";
+
+        /// <inheritdoc />
         public byte[] SurfaceData
         {
             get => _asset.LoadSurface(true);

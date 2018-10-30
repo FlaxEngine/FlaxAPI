@@ -72,6 +72,10 @@ namespace FlaxEditor.Surface
             _context = surfaceContext;
 
             // Show surface
+            if (_rootControl != null)
+            {
+                _rootControl.Parent = null;
+            }
             _rootControl = _context.RootControl;
             _rootControl.Parent = this;
 

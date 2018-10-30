@@ -8,6 +8,11 @@ namespace FlaxEditor.Surface
     public interface ISurfaceContext
     {
         /// <summary>
+        /// Gets the name of the surface (for UI).
+        /// </summary>
+        string SurfaceName { get; }
+
+        /// <summary>
         /// Gets or sets the surface data. Used to load or save the surface to the data source.
         /// </summary>
         byte[] SurfaceData { get; set; }
