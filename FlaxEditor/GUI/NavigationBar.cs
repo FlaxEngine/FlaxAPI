@@ -1,12 +1,12 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEditor.Windows;
 
-namespace FlaxEditor.Content.GUI
+namespace FlaxEditor.GUI
 {
     /// <summary>
-    /// A <see cref="ContentWindow"/> navigation bar control.
+    /// A navigation bar control. Shows the current location path with UI buttons to navigate around.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.Panel" />
     public class NavigationBar : Panel
@@ -22,6 +22,7 @@ namespace FlaxEditor.Content.GUI
         public NavigationBar()
         : base(ScrollBars.Horizontal)
         {
+            Height = 32;
         }
 
         /// <inheritdoc />
@@ -35,6 +36,23 @@ namespace FlaxEditor.Content.GUI
                 child.X = x;
                 x += child.Width + DefaultButtonsMargin;
             }
+        }
+
+        /// <summary>
+        /// Updates the bar bounds and positions it after the last toolstrip button. Ensures to fit the toolstrip area (navigation bar horizontal scroll bar can be used to view the full path).
+        /// </summary>
+        /// <param name="toolstrip">The toolstrip.</param>
+        public void UpdateBounds(ToolStrip toolstrip)
+        {
+            if (toolstrip == null)
+                return;
+
+            var lastToolstripButton = toolstrip.LastButton;
+            var bounds = new Rectangle(
+                new Vector2(lastToolstripButton.Right + 8.0f, 0),
+                new Vector2(Parent.Width - X - 8.0f, Height)
+            );
+            Bounds = bounds;
         }
     }
 }

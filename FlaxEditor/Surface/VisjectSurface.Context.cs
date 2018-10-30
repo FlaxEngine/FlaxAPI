@@ -69,17 +69,9 @@ namespace FlaxEditor.Surface
 
             // Change stack
             ContextStack.Push(surfaceContext);
-            _context = surfaceContext;
 
-            // Show surface
-            if (_rootControl != null)
-            {
-                _rootControl.Parent = null;
-            }
-            _rootControl = _context.RootControl;
-            _rootControl.Parent = this;
-
-            ContextChanged?.Invoke(_context);
+            // Update
+            OnContextChanged();
         }
 
         /// <summary>
@@ -92,7 +84,69 @@ namespace FlaxEditor.Surface
 
             // Change stack
             ContextStack.Pop();
-            _context = ContextStack.Peek();
+
+            // Update
+            OnContextChanged();
+        }
+
+        /// <summary>
+        /// Changes the current opened context to the given one. Used as a navigation method.
+        /// </summary>
+        /// <param name="context">The target context.</param>
+        public void ChangeContext(ISurfaceContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (_context == null)
+            {
+                OpenContext(context);
+                return;
+            }
+            if (_context.Context == context)
+                return;
+
+            // Check if already in a path
+            VisjectSurfaceContext surfaceContext;
+            if (_contextCache.TryGetValue(context, out surfaceContext) && ContextStack.Contains(surfaceContext))
+            {
+                // Change stack
+                do
+                {
+                    ContextStack.Pop();
+                } while (ContextStack.Peek() != surfaceContext);
+            }
+            else
+            {
+                // TODO: implement this case (need to find first parent of the context that is in path)
+                throw new NotSupportedException("TODO: support changing context to one not in the active path");
+            }
+
+            // Update
+            OnContextChanged();
+        }
+
+        /// <summary>
+        /// Called when context gets changed. Updates current context and UI. Updates the current context based on the first element in teh stack.
+        /// </summary>
+        protected virtual void OnContextChanged()
+        {
+            var context = ContextStack.Count > 0 ? ContextStack.Peek() : null;
+            _context = context;
+
+            // Update root control linkage
+            if (_rootControl != null)
+            {
+                _rootControl.Parent = null;
+            }
+            if (context != null)
+            {
+                _rootControl = _context.RootControl;
+                _rootControl.Parent = this;
+            }
+            else
+            {
+                _rootControl = null;
+            }
 
             ContextChanged?.Invoke(_context);
         }

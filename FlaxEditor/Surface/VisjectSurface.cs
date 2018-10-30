@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
+using FlaxEditor.Surface.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -17,6 +19,8 @@ namespace FlaxEditor.Surface
     /// <seealso cref="IParametersDependantNode" />
     public partial class VisjectSurface : ContainerControl, IParametersDependantNode
     {
+        private static readonly List<VisjectSurfaceContext> NavUpdateCache = new List<VisjectSurfaceContext>(8);
+
         /// <summary>
         /// The surface control.
         /// </summary>
@@ -295,6 +299,50 @@ namespace FlaxEditor.Surface
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
             DragHandlers.Add(_dragParameters = new DragSurfaceParameters<DragDropEventArgs>(ValidateDragParameter));
+        }
+
+        /// <summary>
+        /// Updates the navigation bar of the toolstrip from window that uses this surface. Updates the navigation bar panel buttons to match the current view path.
+        /// </summary>
+        /// <param name="navigationBar">The navigation bar to update.</param>
+        /// <param name="toolStrip">The toolstrip to use as layout reference.</param>
+        /// <param name="hideIfRoot">True if skip showing nav button if the current context is the root location (user has no option to change context).</param>
+        public void UpdateNavigationBar(NavigationBar navigationBar, ToolStrip toolStrip, bool hideIfRoot = true)
+        {
+            if (navigationBar == null || toolStrip == null)
+                return;
+
+            bool wasLayoutLocked = navigationBar.IsLayoutLocked;
+            navigationBar.IsLayoutLocked = true;
+
+            // Remove previous buttons
+            navigationBar.DisposeChildren();
+
+            // Spawn buttons
+            var nodes = NavUpdateCache;
+            nodes.Clear();
+            var context = Context;
+            if (hideIfRoot && context == RootContext)
+                context = null;
+            while (context != null)
+            {
+                nodes.Add(context);
+                context = context.Parent;
+            }
+            float x = NavigationBar.DefaultButtonsMargin;
+            float h = toolStrip.ItemsHeight - 2 * ToolStrip.DefaultMarginV;
+            for (int i = nodes.Count - 1; i >= 0; i--)
+            {
+                var button = new VisjectContextNavigationButton(this, nodes[i].Context, x, ToolStrip.DefaultMarginV, h);
+                button.PerformLayout();
+                x += button.Width + NavigationBar.DefaultButtonsMargin;
+                navigationBar.AddChild(button);
+            }
+            nodes.Clear();
+
+            // Update
+            navigationBar.IsLayoutLocked = wasLayoutLocked;
+            navigationBar.PerformLayout();
         }
 
         /// <summary>
