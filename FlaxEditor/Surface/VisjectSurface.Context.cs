@@ -58,7 +58,6 @@ namespace FlaxEditor.Surface
             if (!_contextCache.TryGetValue(context, out surfaceContext))
             {
                 surfaceContext = CreateContext(_context, context);
-                surfaceContext.Modified += (_) => MarkAsEdited();
                 _context?.Children.Add(surfaceContext);
                 _contextCache.Add(context, surfaceContext);
                 context.OnContextCreated(surfaceContext);

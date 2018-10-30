@@ -17,6 +17,13 @@ namespace FlaxEditor.Surface
         /// <param name="context">The context.</param>
         public delegate void ContextDelegate(VisjectSurfaceContext context);
 
+        /// <summary>
+        /// Visject context modification delegate type.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value). Otherwise just UI elements has been modified (node moved, comment resized).</param>
+        public delegate void ContextModifiedDelegate(VisjectSurfaceContext context, bool graphEdited);
+
         private bool _isModified;
         private VisjectSurface _surface;
         private SurfaceMeta _meta = new SurfaceMeta();
@@ -109,7 +116,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Occurs when surface gets modified (graph edited, node moved, comment resized).
         /// </summary>
-        public event ContextDelegate Modified;
+        public event ContextModifiedDelegate Modified;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurfaceContext"/> class.
@@ -347,16 +354,14 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Marks the context as modified and sends the event to the parent context.
         /// </summary>
-        public void MarkAsModified()
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value). Otherwise just UI elements has been modified (node moved, comment resized).</param>
+        public void MarkAsModified(bool graphEdited = true)
         {
-            if (!_isModified)
-            {
-                _isModified = true;
+            _isModified = true;
 
-                Modified?.Invoke(this);
+            Modified?.Invoke(this, graphEdited);
 
-                Parent?.MarkAsModified();
-            }
+            Parent?.MarkAsModified(graphEdited);
         }
 
         /// <summary>

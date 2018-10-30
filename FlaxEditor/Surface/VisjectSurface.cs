@@ -265,6 +265,7 @@ namespace FlaxEditor.Surface
 
             // Initialize with the root context
             OpenContext(owner);
+            RootContext.Modified += OnRootContextModified;
 
             // Create primary menu (for nodes spawning)
             _cmPrimaryMenu = primaryContextMenu ?? new VisjectCM(NodeArchetypes, CanSpawnNodeType, () => Parameters);
@@ -299,6 +300,20 @@ namespace FlaxEditor.Surface
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
             DragHandlers.Add(_dragParameters = new DragSurfaceParameters<DragDropEventArgs>(ValidateDragParameter));
+        }
+
+        private void OnRootContextModified(VisjectSurfaceContext context, bool graphEdited)
+        {
+            bool wasEdited = IsEdited;
+            if (!wasEdited && IsEdited)
+            {
+                Owner.OnSurfaceEditedChanged();
+            }
+
+            if (graphEdited)
+            {
+                Owner.OnSurfaceGraphEdited();
+            }
         }
 
         /// <summary>
@@ -387,17 +402,7 @@ namespace FlaxEditor.Surface
         /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value).</param>
         public void MarkAsEdited(bool graphEdited = true)
         {
-            bool wasEdited = IsEdited;
-            _context.MarkAsModified();
-            if (!wasEdited && IsEdited)
-            {
-                Owner.OnSurfaceEditedChanged();
-            }
-
-            if (graphEdited)
-            {
-                Owner.OnSurfaceGraphEdited();
-            }
+            _context.MarkAsModified(graphEdited);
         }
 
         /// <summary>

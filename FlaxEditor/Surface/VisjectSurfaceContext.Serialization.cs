@@ -104,6 +104,8 @@ namespace FlaxEditor.Surface
                         control.OnSurfaceLoaded();
                 }
 
+                RootControl.UnlockChildrenRecursive();
+
                 // Update boxes types for nodes that dependant box types based on incoming connections
                 {
                     bool keepUpdating = false;
