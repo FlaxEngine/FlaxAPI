@@ -40,14 +40,21 @@ namespace FlaxEditor.Surface
                 // Prepare
                 Clear();
 
+                Loading?.Invoke(this);
+
                 // Load bytes
                 var bytes = Context.SurfaceData;
+                if (bytes == null)
+                    throw new Exception("Failed to load surface data.");
 
-                // Load graph
-                using (var stream = new MemoryStream(bytes))
-                using (var reader = new BinaryReader(stream))
+                // Load graph (empty bytes data means empty graph for simplicity when using subgraphs)
+                if (bytes.Length > 0)
                 {
-                    LoadGraph(reader);
+                    using (var stream = new MemoryStream(bytes))
+                    using (var reader = new BinaryReader(stream))
+                    {
+                        LoadGraph(reader);
+                    }
                 }
 
                 // Load surface meta
@@ -114,6 +121,8 @@ namespace FlaxEditor.Surface
                     } while (keepUpdating && updateLimit-- > 0);
                 }
 
+                Loaded?.Invoke(this);
+
                 // Clear modification flag
                 _isModified = false;
             }
@@ -145,6 +154,8 @@ namespace FlaxEditor.Surface
             }
 
             _meta.Release();
+
+            Saving?.Invoke(this);
 
             // Save surface meta
             _meta.AddEntry(10, Utils.StructureToByteArray(ref CachedSurfaceMeta));
@@ -202,6 +213,8 @@ namespace FlaxEditor.Surface
 
                     // Send data to the container
                     Context.SurfaceData = bytes;
+
+                    Saved?.Invoke(this);
 
                     // Clear modification flag
                     _isModified = false;
