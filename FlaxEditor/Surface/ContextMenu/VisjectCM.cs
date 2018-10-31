@@ -112,12 +112,14 @@ namespace FlaxEditor.Surface.ContextMenu
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].UpdateFilter(_searchBox.Text);
-            //If no item is selected (or it's not visible anymore), select the top one
+
+            // If no item is selected (or it's not visible anymore), select the top one
             if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
             {
                 SelectedItem = _groups.Find(g => g.Visible)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
             }
-            if (SelectedItem != null) _panel1.ScrollViewTo(SelectedItem);
+            if (SelectedItem != null)
+                _panel1.ScrollViewTo(SelectedItem);
             PerformLayout();
             _searchBox.Focus();
         }
@@ -170,6 +172,8 @@ namespace FlaxEditor.Surface.ContextMenu
                 // TODO: cache the allocated memory to reduce dynamic allocations
                 var archetypes = new NodeArchetype[count];
                 int archetypeIndex = 0;
+
+                // ReSharper disable once PossibleNullReferenceException
                 for (int i = 0; i < parameters.Count; i++)
                 {
                     if (!parameters[i].IsPublic)
@@ -192,6 +196,7 @@ namespace FlaxEditor.Surface.ContextMenu
                         }
                     };
                 }
+
                 var groupArchetype = new GroupArchetype
                 {
                     GroupID = 6,
@@ -199,6 +204,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     Color = new Color(52, 73, 94),
                     Archetypes = archetypes
                 };
+
                 var group = new VisjectCMGroup(this, groupArchetype);
                 group.Close(false);
                 archetypeIndex = 0;
@@ -213,6 +219,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 group.SortChildren();
                 group.UnlockChildrenRecursive();
                 group.Parent = _panel2;
+
                 _groups.Add(group);
                 _surfaceParametersGroup = group;
             }
@@ -248,13 +255,16 @@ namespace FlaxEditor.Surface.ContextMenu
             }
             else if (key == Keys.Return)
             {
-                if (SelectedItem != null) OnClickItem(SelectedItem);
-                else Hide();
+                if (SelectedItem != null)
+                    OnClickItem(SelectedItem);
+                else
+                    Hide();
                 return true;
             }
             else if (key == Keys.ArrowUp)
             {
-                if (SelectedItem == null) return true;
+                if (SelectedItem == null)
+                    return true;
 
                 var previousSelectedItem = GetPreviousSiblings<VisjectCMItem>(SelectedItem).FirstOrDefault(c => c.Visible) ??
                                            (GetPreviousSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault(c => c.Visible)?.Children
@@ -273,7 +283,8 @@ namespace FlaxEditor.Surface.ContextMenu
             }
             else if (key == Keys.ArrowDown)
             {
-                if (SelectedItem == null) return true;
+                if (SelectedItem == null)
+                    return true;
 
                 var nextSelectedItem = GetNextSiblings<VisjectCMItem>(SelectedItem).FirstOrDefault(c => c.Visible) ??
                                        (GetNextSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault(c => c.Visible)?.Children
@@ -304,7 +315,8 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <returns>An <see cref="IEnumerable{Control}"/> with the siblings that come after the current one.</returns>
         private IEnumerable<Control> GetNextSiblings(Control item)
         {
-            if (item == null || item.Parent == null) yield break;
+            if (item?.Parent == null)
+                yield break;
 
             var parent = item.Parent;
             for (int i = item.IndexInParent + 1; i < parent.ChildrenCount; i++)
@@ -331,7 +343,8 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <returns>An <see cref="IEnumerable{Control}"/> with the siblings that come before the current one.</returns>
         private IEnumerable<Control> GetPreviousSiblings(Control item)
         {
-            if (item == null || item.Parent == null) yield break;
+            if (item == null || item.Parent == null)
+                yield break;
 
             var parent = item.Parent;
             for (int i = item.IndexInParent - 1; i >= 0; i--)
