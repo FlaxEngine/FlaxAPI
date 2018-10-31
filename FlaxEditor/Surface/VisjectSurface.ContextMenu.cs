@@ -19,12 +19,23 @@ namespace FlaxEditor.Surface
         private ContextMenuButton _cmRemoveBoxConnectionsButton;
 
         /// <summary>
+        /// Sets the primary menu for the Visject nodes spawning. Can be overriden per surface or surface context. Set to null to restore the default menu.
+        /// </summary>
+        /// <param name="menu">The menu to override with (use null if restore the default value).</param>
+        protected void SetPrimaryMenu(VisjectCM menu)
+        {
+            menu = menu ?? _cmPrimaryMenu;
+
+            _activeVisjectCM = menu;
+        }
+
+        /// <summary>
         /// Shows the primary menu.
         /// </summary>
         /// <param name="location">The location in the Surface Space.</param>
         public void ShowPrimaryMenu(Vector2 location)
         {
-            _cmPrimaryMenu.Show(this, location);
+            _activeVisjectCM.Show(this, location);
             _cmStartPos = location;
         }
 
@@ -52,7 +63,11 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu.Show(this, location);
         }
 
-        private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
+        /// <summary>
+        /// Handles Visject CM item click event by spawning the selected item.
+        /// </summary>
+        /// <param name="visjectCmItem">The item.</param>
+        protected void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
             var node = Context.SpawnNode(
                 visjectCmItem.GroupArchetype,

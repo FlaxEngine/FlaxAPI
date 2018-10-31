@@ -134,7 +134,7 @@ namespace FlaxEditor.Surface
             Vector2 startPos = _startBox.ConnectionOrigin;
 
             // Check if mouse is over any of box
-            Vector2 endPos = _cmPrimaryMenu.Visible ? _rootControl.PointFromParent(_cmStartPos) : _rootControl.PointFromParent(_mousePos);
+            Vector2 endPos = _activeVisjectCM.Visible ? _rootControl.PointFromParent(_cmStartPos) : _rootControl.PointFromParent(_mousePos);
             Color lineColor = Style.Colors.Connecting;
             if (_lastBoxUnderMouse != null)
             {

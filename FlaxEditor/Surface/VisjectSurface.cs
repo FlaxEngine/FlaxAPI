@@ -30,6 +30,7 @@ namespace FlaxEditor.Surface
         private float _moveViewWithMouseDragSpeed = 1.0f;
         private bool _wasMouseDownSinceCommentCreatingStart;
         private bool _isReleasing;
+        private VisjectCM _activeVisjectCM;
 
         /// <summary>
         /// The left mouse down flag.
@@ -271,6 +272,7 @@ namespace FlaxEditor.Surface
             // Create primary menu (for nodes spawning)
             _cmPrimaryMenu = primaryContextMenu ?? new VisjectCM(NodeArchetypes, CanSpawnNodeType, () => Parameters);
             _cmPrimaryMenu.OnItemClicked += OnPrimaryMenuButtonClick;
+            _activeVisjectCM = _cmPrimaryMenu;
 
             // Create secondary menu (for other actions)
             _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();
@@ -624,6 +626,7 @@ namespace FlaxEditor.Surface
             _contextCache.Clear();
 
             // Cleanup
+            _activeVisjectCM = null;
             _cmPrimaryMenu.Dispose();
             _cmSecondaryMenu.Dispose();
 

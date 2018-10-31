@@ -20,7 +20,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private VisjectCMGroup _surfaceParametersGroup;
         private Panel _panel1;
         private VerticalPanel _panel2;
-        private Func<List<SurfaceParameter>> _parametersGetter;
+        private readonly Func<List<SurfaceParameter>> _parametersGetter;
 
         /// <summary>
         /// The selected item
@@ -35,11 +35,15 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCM"/> class.
         /// </summary>
-        /// <param name="groups">The group archetypes.</param>
-        /// <param name="canSpawnNodeType">The surface node type validation helper.</param>
-        /// <param name="parametersGetter">The surface parameters getter callback.</param>
-        public VisjectCM(List<GroupArchetype> groups, Func<NodeArchetype, bool> canSpawnNodeType, Func<List<SurfaceParameter>> parametersGetter)
+        /// <param name="groups">The group archetypes. Cannot be null.</param>
+        /// <param name="canSpawnNodeType">The surface node type validation helper. Cannot be null.</param>
+        /// <param name="parametersGetter">The surface parameters getter callback. Can be null.</param>
+        public VisjectCM(List<GroupArchetype> groups, Func<NodeArchetype, bool> canSpawnNodeType, Func<List<SurfaceParameter>> parametersGetter = null)
         {
+            if (groups == null)
+                throw new ArgumentNullException(nameof(groups));
+            if (canSpawnNodeType == null)
+                throw new ArgumentNullException(nameof(canSpawnNodeType));
             _parametersGetter = parametersGetter;
 
             // Context menu dimensions
@@ -165,7 +169,7 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             // Check if surface has any parameters
-            var parameters = _parametersGetter();
+            var parameters = _parametersGetter != null ? _parametersGetter() : null;
             int count = parameters?.Count(x => x.IsPublic) ?? 0;
             if (count > 0)
             {
