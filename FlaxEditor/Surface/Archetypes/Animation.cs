@@ -681,6 +681,44 @@ namespace FlaxEditor.Surface.Archetypes
                 Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(100, 0),
             },
+            new NodeArchetype
+            {
+                TypeID = 20,
+                Create = (id, surface, arch, groupArch) => new StateMachineState(id, surface, arch, groupArch),
+                Title = "State",
+                Description = "The animation states machine state node",
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoSpawnViaGUI,
+                DefaultValues = new object[]
+                {
+                    "State",
+                    Enumerable.Empty<byte>() as byte[],
+                },
+                Size = new Vector2(100, 0),
+            },
+            new NodeArchetype
+            {
+                TypeID = 21,
+                Title = "State Output",
+                Description = "The animation states machine state output node",
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Size = new Vector2(120, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Pose", true, ConnectionType.Impulse, 0)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 22,
+                Title = "Rule Output",
+                Description = "The animation states machine transition rule output node",
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Size = new Vector2(120, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Can Start Transition", true, ConnectionType.Bool, 0)
+                }
+            },
         };
     }
 }
