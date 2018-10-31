@@ -86,7 +86,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void CloseContext()
         {
-            if (ContextStack.Count < 2)
+            if (ContextStack.Count == 0)
                 throw new ArgumentException("No context to close.");
 
             // Change stack
@@ -94,6 +94,41 @@ namespace FlaxEditor.Surface
 
             // Update
             OnContextChanged();
+        }
+
+        /// <summary>
+        /// Removes the context from the surface and any related cached data.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        public void RemoveContext(ISurfaceContext context)
+        {
+            // Skip if surface is already disposing
+            if (IsDisposing || _isReleasing)
+                return;
+
+            // Validate input
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            // Removing root requires to close every context
+            if (RootContext != null && context == RootContext.Context)
+            {
+                while (ContextStack.Count > 0)
+                    CloseContext();
+            }
+
+            // Check if has context in cache
+            VisjectSurfaceContext surfaceContext;
+            if (_contextCache.TryGetValue(context, out surfaceContext))
+            {
+                // Remove from navigation path
+                while (ContextStack.Contains(surfaceContext))
+                    CloseContext();
+
+                // Dispose
+                surfaceContext.Clear();
+                _contextCache.Remove(context);
+            }
         }
 
         /// <summary>
@@ -139,6 +174,8 @@ namespace FlaxEditor.Surface
         {
             var context = ContextStack.Count > 0 ? ContextStack.Peek() : null;
             _context = context;
+            if (ContextStack.Count == 0)
+                _root = null;
 
             // Update root control linkage
             if (_rootControl != null)

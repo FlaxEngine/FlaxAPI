@@ -29,6 +29,7 @@ namespace FlaxEditor.Surface
         private float _targetScale = 1.0f;
         private float _moveViewWithMouseDragSpeed = 1.0f;
         private bool _wasMouseDownSinceCommentCreatingStart;
+        private bool _isReleasing;
 
         /// <summary>
         /// The left mouse down flag.
@@ -610,6 +611,17 @@ namespace FlaxEditor.Surface
         {
             if (IsDisposing)
                 return;
+            _isReleasing = true;
+
+            // Cleanup context cache
+            _root = null;
+            _context = null;
+            ContextStack.Clear();
+            foreach (var context in _contextCache.Values)
+            {
+                context.Clear();
+            }
+            _contextCache.Clear();
 
             // Cleanup
             _cmPrimaryMenu.Dispose();
