@@ -33,6 +33,11 @@ namespace FlaxEditor.Surface.ContextMenu
         public event Action<VisjectCMItem> OnItemClicked;
 
         /// <summary>
+        /// Gets or sets a value indicating whether show groups expanded or collapsed.
+        /// </summary>
+        public bool ShowExpanded { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCM"/> class.
         /// </summary>
         /// <param name="groups">The group archetypes. Cannot be null.</param>
@@ -136,6 +141,16 @@ namespace FlaxEditor.Surface.ContextMenu
         {
             Hide();
             OnItemClicked?.Invoke(item);
+        }
+
+        /// <summary>
+        /// Expands all the groups.
+        /// </summary>
+        /// <param name="animate">Enable/disable animation feature.</param>
+        public void ExpandAll(bool animate = false)
+        {
+            for (int i = 0; i < _groups.Count; i++)
+                _groups[i].Open(animate);
         }
 
         /// <summary>
