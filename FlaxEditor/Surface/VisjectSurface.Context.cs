@@ -60,19 +60,20 @@ namespace FlaxEditor.Surface
                 surfaceContext = CreateContext(_context, context);
                 _context?.Children.Add(surfaceContext);
                 _contextCache.Add(context, surfaceContext);
+
                 context.OnContextCreated(surfaceContext);
+
+                // Load context
+                if (_root != null)
+                {
+                    if (surfaceContext.Load())
+                        throw new Exception("Failed to load graph.");
+                }
             }
             if (_root == null)
                 _root = surfaceContext;
             else if (ContextStack.Contains(surfaceContext))
                 throw new ArgumentException("Context has been already added to the stack.");
-
-            // Load context
-            if (_root != surfaceContext)
-            {
-                if (surfaceContext.Load())
-                    throw new Exception("Failed to load graph.");
-            }
 
             // Change stack
             ContextStack.Push(surfaceContext);
