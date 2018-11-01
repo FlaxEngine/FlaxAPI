@@ -19,8 +19,8 @@ namespace FlaxEngine
         private Vector3 _impulse;
         private Vector3 _velocityA;
         private Vector3 _velocityB;
-        private Collider _colliderA;
-        private Collider _colliderB;
+        private Actor _actorA;
+        private Actor _actorB;
         private ContactPoint[] _contacts;
 
         /// <summary>
@@ -58,14 +58,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// The first collider (this instance). It may be null if this actor is not the <see cref="Collider"/> (eg. <see cref="Terrain"/>).
+        /// </summary>
+        public Collider ThisCollider => _actorA as Collider;
+
+        /// <summary>
+        /// The second collider (other instance). It may be null if this actor is not the <see cref="Collider"/> (eg. <see cref="Terrain"/>).
+        /// </summary>
+        public Collider OtherCollider => _actorB as Collider;
+
+        /// <summary>
         /// The first collider (this instance).
         /// </summary>
-        public Collider ThisCollider => _colliderA;
+        public Actor ThisActor => _actorA;
 
         /// <summary>
         /// The second collider (other instance).
         /// </summary>
-        public Collider OtherCollider => _colliderB;
+        public Actor OtherActor => _actorB;
 
         /// <summary>
         /// The contacts locations.
@@ -149,17 +159,17 @@ namespace FlaxEngine
             for (int i = 0; i < newCount;)
             {
                 c = _data[newStart + i++];
-                c.ThisCollider.OnCollisionEnter(c);
+                c.ThisCollider?.OnCollisionEnter(c);
                 c = _data[newStart + i++];
-                c.ThisCollider.OnCollisionEnter(c);
+                c.ThisCollider?.OnCollisionEnter(c);
             }
 
             for (int i = 0; i < removedCount;)
             {
                 c = _data[removedStart + i++];
-                c.ThisCollider.OnCollisionExit(c);
+                c.ThisCollider?.OnCollisionExit(c);
                 c = _data[removedStart + i++];
-                c.ThisCollider.OnCollisionExit(c);
+                c.ThisCollider?.OnCollisionExit(c);
             }
 
             for (int i = 0; i < _dataUsed; i++)
@@ -173,15 +183,15 @@ namespace FlaxEngine
             _impulse = data->Impulse;
             _velocityA = data->VelocityA;
             _velocityB = data->VelocityB;
-            _colliderA = Object.Find<Collider>(ref data->ColliderA);
-            _colliderB = Object.Find<Collider>(ref data->ColliderB);
+            _actorA = Object.Find<Actor>(ref data->ActorA);
+            _actorB = Object.Find<Actor>(ref data->ActorB);
 
             Assert.AreEqual(data->ContactsCount, _contacts.Length);
 
             ContactPointData* ptr = &data->Contacts0;
             for (int i = 0; i < data->ContactsCount; i++)
             {
-                _contacts[i] = new ContactPoint(ref ptr[i], ref data->ColliderA, ref data->ColliderB);
+                _contacts[i] = new ContactPoint(ref ptr[i], ref data->ActorA, ref data->ActorB);
             }
         }
 
@@ -190,8 +200,8 @@ namespace FlaxEngine
             _impulse = data._impulse;
             _velocityA = data._velocityA;
             _velocityB = data._velocityB;
-            _colliderA = data._colliderA;
-            _colliderB = data._colliderB;
+            _actorA = data._actorA;
+            _actorB = data._actorB;
 
             for (int i = 0; i < _contacts.Length; i++)
                 _contacts[i] = data._contacts[i];
@@ -203,9 +213,9 @@ namespace FlaxEngine
             _velocityA = _velocityB;
             _velocityB = tmp1;
 
-            var tmp2 = _colliderA;
-            _colliderA = _colliderB;
-            _colliderB = tmp2;
+            var tmp2 = _actorA;
+            _actorA = _actorB;
+            _actorB = tmp2;
 
             for (int i = 0; i < _contacts.Length; i++)
                 _contacts[i].SwapObjects();
@@ -222,8 +232,8 @@ namespace FlaxEngine
         [StructLayout(LayoutKind.Sequential)]
         internal struct CollisionData
         {
-            public Guid ColliderA;
-            public Guid ColliderB;
+            public Guid ActorA;
+            public Guid ActorB;
             public Vector3 Impulse;
             public Vector3 VelocityA;
             public Vector3 VelocityB;
