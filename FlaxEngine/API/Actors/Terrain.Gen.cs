@@ -107,7 +107,7 @@ namespace FlaxEngine
         /// Use value higher than 1 to increase baked lighting resolution.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(110), Limit(0, 10000, 0.1f), EditorDisplay("Terrain"), Tooltip("Terrain scale in lightmap (applied to all the chunks). Use value higher than 1 to increase baked lighting resolution.")]
+        [EditorOrder(110), Limit(0, 10000, 0.1f), EditorDisplay("Terrain", "Scale In Lightmap"), Tooltip("Terrain scale in lightmap (applied to all the chunks). Use value higher than 1 to increase baked lighting resolution.")]
         public float ScaleInLightmap
         {
 #if UNIT_TEST_COMPILANT
