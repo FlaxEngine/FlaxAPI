@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
@@ -507,6 +508,71 @@ namespace FlaxEditor.Gizmo
 
             // Update
             UpdateMatricies();
+        }
+
+        /// <inheritdoc />
+        public override void Pick()
+        {
+            // Ensure player is not moving objects
+            if (ActiveAxis != Axis.None)
+                return;
+
+            // Get mouse ray and try to hit any object
+            var ray = Owner.MouseRay;
+            float closest = float.MaxValue;
+            bool selectColliders = (Owner.RenderTask.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
+            SceneGraphNode.RayCastData.FlagTypes rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.None;
+            if (!selectColliders)
+                rayCastFlags |= SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, rayCastFlags);
+
+            // Update selection
+            var sceneEditing = Editor.Instance.SceneEditing;
+            if (hit != null)
+            {
+                // For child actor nodes (mesh, link or sth) we need to select it's owning actor node first or any other child node (but not a child actor)
+                if (hit is ActorChildNode actorChildNode)
+                {
+                    var parentNode = actorChildNode.ParentNode;
+                    bool canChildBeSelected = sceneEditing.Selection.Contains(parentNode);
+                    if (!canChildBeSelected)
+                    {
+                        for (int i = 0; i < parentNode.ChildNodes.Count; i++)
+                        {
+                            if (sceneEditing.Selection.Contains(parentNode.ChildNodes[i]))
+                            {
+                                canChildBeSelected = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!canChildBeSelected)
+                    {
+                        // Select parent
+                        hit = parentNode;
+                    }
+                }
+
+                bool addRemove = Owner.IsControlDown;
+                bool isSelected = sceneEditing.Selection.Contains(hit);
+
+                if (addRemove)
+                {
+                    if (isSelected)
+                        sceneEditing.Deselect(hit);
+                    else
+                        sceneEditing.Select(hit, true);
+                }
+                else
+                {
+                    sceneEditing.Select(hit);
+                }
+            }
+            else
+            {
+                sceneEditing.Deselect();
+            }
         }
     }
 }

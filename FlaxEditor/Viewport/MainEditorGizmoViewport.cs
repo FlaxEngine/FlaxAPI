@@ -90,7 +90,7 @@ namespace FlaxEditor.Viewport
         /// </summary>
         /// <param name="editor">Editor instance.</param>
         public MainEditorGizmoViewport(Editor editor)
-        : base(RenderTask.Create<SceneRenderTask>(), editor.Undo)
+        : base(FlaxEngine.Rendering.RenderTask.Create<SceneRenderTask>(), editor.Undo)
         {
             _editor = editor;
 
@@ -511,74 +511,8 @@ namespace FlaxEditor.Viewport
             if (_prevInput.IsControllingMouse || !Bounds.Contains(ref _viewMousePos))
                 return;
 
-            if (TransformGizmo.IsActive)
-            {
-                // Ensure player is not moving objects
-                if (TransformGizmo.ActiveAxis != TransformGizmo.Axis.None)
-                    return;
-            }
-            else
-            {
-                // For now just pick objects in transform gizmo mode
-                return;
-            }
-
-            // Get mouse ray and try to hit any object
-            var ray = MouseRay;
-            float closest = float.MaxValue;
-            bool selectColliders = (Task.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
-            SceneGraphNode.RayCastData.FlagTypes rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.None;
-            if (!selectColliders)
-                rayCastFlags |= SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, rayCastFlags);
-
-            // Update selection
-            var sceneEditing = Editor.Instance.SceneEditing;
-            if (hit != null)
-            {
-                // For child actor nodes (mesh, link or sth) we need to select it's owning actor node first or any other child node (but not a child actor)
-                if (hit is ActorChildNode actorChildNode)
-                {
-                    var parentNode = actorChildNode.ParentNode;
-                    bool canChildBeSelected = sceneEditing.Selection.Contains(parentNode);
-                    if (!canChildBeSelected)
-                    {
-                        for (int i = 0; i < parentNode.ChildNodes.Count; i++)
-                        {
-                            if (sceneEditing.Selection.Contains(parentNode.ChildNodes[i]))
-                            {
-                                canChildBeSelected = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!canChildBeSelected)
-                    {
-                        // Select parent
-                        hit = parentNode;
-                    }
-                }
-
-                bool addRemove = Root.GetKey(Keys.Control);
-                bool isSelected = sceneEditing.Selection.Contains(hit);
-
-                if (addRemove)
-                {
-                    if (isSelected)
-                        sceneEditing.Deselect(hit);
-                    else
-                        sceneEditing.Select(hit, true);
-                }
-                else
-                {
-                    sceneEditing.Select(hit);
-                }
-            }
-            else
-            {
-                sceneEditing.Deselect();
-            }
+            // Try to pick something with the current gizmo
+            Gizmos.Active?.Pick();
 
             // Keep focus
             Focus();
