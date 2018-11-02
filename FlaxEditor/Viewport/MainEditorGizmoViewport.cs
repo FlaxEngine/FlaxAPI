@@ -28,7 +28,7 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
 
-        private readonly ViewportWidgetButton _translateSnappng;
+        private readonly ViewportWidgetButton _translateSnapping;
         private readonly ViewportWidgetButton _rotateSnapping;
         private readonly ViewportWidgetButton _scaleSnapping;
 
@@ -193,8 +193,8 @@ namespace FlaxEditor.Viewport
             };
             enableTranslateSnapping.OnToggle += OnTranslateSnappingToggle;
             var translateSnappingCM = new ContextMenu();
-            _translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
-            _translateSnappng.TooltipText = "Position snapping values";
+            _translateSnapping = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
+            _translateSnapping.TooltipText = "Position snapping values";
             for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
             {
                 var v = EditorViewportTranslateSnapValues[i];
@@ -203,7 +203,7 @@ namespace FlaxEditor.Viewport
             }
             translateSnappingCM.ButtonClicked += OnWidgetTranslateSnapClick;
             translateSnappingCM.VisibleChanged += OnWidgetTranslateSnapShowHide;
-            _translateSnappng.Parent = translateSnappingWidget;
+            _translateSnapping.Parent = translateSnappingWidget;
             translateSnappingWidget.Parent = this;
 
             // Gizmo mode widget
@@ -421,7 +421,7 @@ namespace FlaxEditor.Viewport
         {
             var v = (float)button.Tag;
             TransformGizmo.TranslationSnapValue = v;
-            _translateSnappng.Text = v.ToString();
+            _translateSnapping.Text = v.ToString();
         }
 
         private void OnWidgetTranslateSnapShowHide(Control control)
