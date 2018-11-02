@@ -13,8 +13,34 @@ namespace FlaxEditor.Tools.Terrain
     /// <seealso cref="FlaxEditor.GUI.Tab" />
     internal class CarveTab : Tab
     {
+        /// <summary>
+        /// The terrain properties editing modes.
+        /// </summary>
+        public enum EditModes
+        {
+            /// <summary>
+            /// Terrain chunks editing mode.
+            /// </summary>
+            Edit,
+
+            /// <summary>
+            /// Terrain patches adding mode.
+            /// </summary>
+            Add,
+
+            /// <summary>
+            /// Terrain patches removing mode.
+            /// </summary>
+            Remove
+        }
+
         private readonly Editor _editor;
         private readonly Tabs _modes;
+
+        /// <summary>
+        /// The active edit mode.
+        /// </summary>
+        public EditModes EditMode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CarveTab"/> class.
@@ -81,10 +107,17 @@ namespace FlaxEditor.Tools.Terrain
                 DockStyle = DockStyle.Fill,
                 Parent = tab
             };
-
-            var info = panel.AddChild<Label>();
-            info.Text = "Edit Mode";
-            info.DockStyle = DockStyle.Fill;
+            
+            
+            // Mode: Edit, Add, Remove
+            // Patch
+            // - x - z - terrain actor name
+            // - bounds
+            // TODO: moving patch
+            // Chunk
+            // - x - y
+            // - bounds
+            // - OverrideMaterial
         }
 
         /// <inheritdoc />
