@@ -13,9 +13,15 @@ namespace FlaxEditor.Tools.Terrain
     /// <seealso cref="FlaxEditor.Gizmo.GizmoBase" />
     internal sealed class EditTerrainGizmo : GizmoBase
     {
-        public EditTerrainGizmo(IGizmoOwner owner)
+        /// <summary>
+        /// The parent mode.
+        /// </summary>
+        public readonly EditTerrainGizmoMode Mode;
+
+        public EditTerrainGizmo(IGizmoOwner owner, EditTerrainGizmoMode mode)
         : base(owner)
         {
+            Mode = mode;
         }
 
         /// <inheritdoc />
@@ -42,6 +48,10 @@ namespace FlaxEditor.Tools.Terrain
             var sceneEditing = Editor.Instance.SceneEditing;
             if (hit != null)
             {
+                // Perform detailed tracing
+                var terrain = (FlaxEngine.Terrain)hit.Actor;
+                TerrainTools.RayCastChunk(terrain, ray, out closest, out Mode.PatchCoord, out Mode.ChunkCoord);
+
                 sceneEditing.Select(hit);
             }
             else

@@ -2,6 +2,7 @@
 
 using FlaxEditor.Viewport;
 using FlaxEditor.Viewport.Modes;
+using FlaxEngine;
 
 namespace FlaxEditor.Tools.Terrain
 {
@@ -15,13 +16,23 @@ namespace FlaxEditor.Tools.Terrain
         /// The terrain editing gizmo.
         /// </summary>
         public EditTerrainGizmo Gizmo;
+        
+        /// <summary>
+        /// The patch coordinates of the last picked patch.
+        /// </summary>
+        public Int2 PatchCoord;
+
+        /// <summary>
+        /// The chunk coordinates (relative to the patch) of the last picked chunk.
+        /// </summary>
+        public Int2 ChunkCoord;
 
         /// <inheritdoc />
         public override void Init(MainEditorGizmoViewport viewport)
         {
             base.Init(viewport);
 
-            Gizmo = new EditTerrainGizmo(viewport);
+            Gizmo = new EditTerrainGizmo(viewport, this);
         }
 
         /// <inheritdoc />
