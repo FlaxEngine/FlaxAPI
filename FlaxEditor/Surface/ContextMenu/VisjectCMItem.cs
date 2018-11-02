@@ -51,6 +51,8 @@ namespace FlaxEditor.Surface.ContextMenu
         /// </value>
         public object[] Data { get; set; }
 
+        public bool Starred { get; internal set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCMItem"/> class.
         /// </summary>
@@ -158,7 +160,7 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             // Draw name
-            Render2D.DrawText(style.FontSmall, _archetype.Title, new Rectangle(2, 0, rect.Width - 4, rect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontSmall, (Starred ? "> " : "") + _archetype.Title, new Rectangle(2, 0, rect.Width - 4, rect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
         }
 
         /// <inheritdoc />

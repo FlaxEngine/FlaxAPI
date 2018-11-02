@@ -21,12 +21,14 @@ namespace FlaxEditor.Surface.ContextMenu
         private Panel _panel1;
         private VerticalPanel _panel2;
         private Func<List<SurfaceParameter>> _parametersGetter;
+        private Elements.Box _startBox;
+        private bool _isNewStartBox;
 
         /// <summary>
         /// The selected item
         /// </summary>
         public VisjectCMItem SelectedItem;
-        
+
         /// <summary>
         /// Event fired when any item in this popup menu gets clicked.
         /// </summary>
@@ -73,6 +75,7 @@ namespace FlaxEditor.Surface.ContextMenu
             _panel2 = panel2;
 
             // Init groups
+            int index = 0;
             var nodes = new List<NodeArchetype>();
             foreach (var groupArchetype in groups)
             {
@@ -98,6 +101,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     }
                     group.SortChildren();
                     group.Parent = panel2;
+                    group.DefaultIndex = index++;
                     _groups.Add(group);
                 }
             }
@@ -108,6 +112,35 @@ namespace FlaxEditor.Surface.ContextMenu
             // Skip events during setup or init stuff
             if (IsLayoutLocked)
                 return;
+
+            // Sort groups
+            Tuple<float, VisjectCMGroup>[] scores = new Tuple<float, VisjectCMGroup>[_groups.Count];
+            for (int i = 0; i < _groups.Count; i++)
+            {
+                float groupScore = _groups[i].SortChildrenWithStartBox(_startBox);
+                scores[i] = new Tuple<float, VisjectCMGroup>(groupScore, _groups[i]);
+            }
+
+            // Code duplication..
+            Array.Sort(scores, (a, b) =>
+            {
+                // Sort by score (highest to lowest)
+                int sortValue = -1 * a.Item1.CompareTo(b.Item1);
+                if (sortValue == 0)
+                {
+                    // Otherwise, sort them the usual way
+                    sortValue = a.Item2.DefaultIndex.CompareTo(b.Item2.DefaultIndex);
+                }
+                return sortValue;
+            });
+
+            for (int i = 0; i < scores.Length; i++)
+            {
+                _groups[i] = scores[i].Item2;
+                _groups[i].Parent.Children[i] = scores[i].Item2;
+            }
+
+            PerformLayout();
 
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
@@ -216,6 +249,30 @@ namespace FlaxEditor.Surface.ContextMenu
                 _groups.Add(group);
                 _surfaceParametersGroup = group;
             }
+        }
+
+        /// <inheritdoc />
+        public override void Show(Control parent, Vector2 location)
+        {
+            if (!_isNewStartBox)
+            {
+                _startBox = null;
+            }
+            _isNewStartBox = false;
+            base.Show(parent, location);
+        }
+
+        /// <summary>
+        /// Show context menu over given control.
+        /// </summary>
+        /// <param name="parent">Parent control to attach to it.</param>
+        /// <param name="location">Popup menu origin location in parent control coordinates.</param>
+        /// <param name="startBox">The currently selected box that the new node will get connected to. Can be null</param>
+        public void Show(Control parent, Vector2 location, Elements.Box startBox)
+        {
+            _startBox = startBox;
+            _isNewStartBox = true;
+            Show(parent, location);
         }
 
         /// <inheritdoc />

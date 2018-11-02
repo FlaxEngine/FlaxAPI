@@ -24,7 +24,14 @@ namespace FlaxEditor.Surface
         /// <param name="location">The location in the Surface Space.</param>
         public void ShowPrimaryMenu(Vector2 location)
         {
-            _cmPrimaryMenu.Show(this, location);
+            if (_startBox != null)
+            {
+                _cmPrimaryMenu.Show(this, location, _startBox);
+            }
+            else
+            {
+                _cmPrimaryMenu.Show(this, location);
+            }
             _cmStartPos = location;
         }
 
