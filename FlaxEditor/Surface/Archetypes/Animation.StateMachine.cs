@@ -335,6 +335,36 @@ namespace FlaxEditor.Surface.Archetypes
                 Transitions.Clear();
             }
 
+            /// <summary>
+            /// Starts the state renaming by showing a rename popup to the user.
+            /// </summary>
+            public void StartRenaming()
+            {
+                Surface.Select(this);
+                var dialog = RenamePopup.Show(this, _headerRect, Title, false);
+                dialog.Renamed += OnRenamed;
+            }
+
+            private void OnRenamed(RenamePopup renamePopup)
+            {
+                StateTitle = renamePopup.Text;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDoubleClick(location, buttons))
+                    return true;
+
+                if (_headerRect.Contains(ref location))
+                {
+                    StartRenaming();
+                    return true;
+                }
+
+                return false;
+            }
+
             /// <inheritdoc />
             public override void Dispose()
             {
