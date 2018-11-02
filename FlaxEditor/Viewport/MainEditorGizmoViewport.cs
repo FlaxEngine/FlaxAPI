@@ -19,7 +19,7 @@ namespace FlaxEditor.Viewport
     /// Main editor gizmo viewport used by the <see cref="EditGameWindow"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.EditorGizmoViewport" />
-    public class MainEditorGizmoViewport : EditorGizmoViewport, IEditorPrimitivesOwner
+    public partial class MainEditorGizmoViewport : EditorGizmoViewport, IEditorPrimitivesOwner
     {
         private readonly Editor _editor;
 
@@ -243,6 +243,8 @@ namespace FlaxEditor.Viewport
 
             DragHandlers.Add(_dragActorType);
             DragHandlers.Add(_dragAssets);
+
+            InitModes();
         }
 
         private void CreateCameraAtView()
@@ -884,6 +886,10 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            if (IsDisposing)
+                return;
+
+            DisposeModes();
             _debugDrawData.Dispose();
             FlaxEngine.Object.Destroy(ref SelectionOutline);
             FlaxEngine.Object.Destroy(ref EditorPrimitives);
