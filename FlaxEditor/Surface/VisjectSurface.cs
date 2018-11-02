@@ -307,11 +307,7 @@ namespace FlaxEditor.Surface
 
         private void OnRootContextModified(VisjectSurfaceContext context, bool graphEdited)
         {
-            bool wasEdited = IsEdited;
-            if (!wasEdited && IsEdited)
-            {
-                Owner.OnSurfaceEditedChanged();
-            }
+            Owner.OnSurfaceEditedChanged();
 
             if (graphEdited)
             {
