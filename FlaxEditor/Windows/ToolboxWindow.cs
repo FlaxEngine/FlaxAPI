@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.GUI;
+using FlaxEditor.Viewport.Modes;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -44,17 +45,12 @@ namespace FlaxEditor.Windows
             InitCarveTab(TabsControl);
 
             TabsControl.SelectedTabIndex = 0;
-            TabsControl.SelectedTabChanged += OnSelectedTabChanged;
-        }
-
-        private void OnSelectedTabChanged(Tabs tabs)
-        {
-            // TODO: send proper event and adapt the editor to the current mode (hide gizmos, etc.)
         }
 
         private void InitSpawnTab(Tabs tabs)
         {
             var spawnTab = tabs.AddTab(new Tab(string.Empty, Editor.Icons.Add48));
+            spawnTab.Selected += (tab) => Editor.Windows.EditWin.Viewport.SetActiveMode<TransformGizmoMode>();
             var actorGroups = new Tabs
             {
                 Orientation = Orientation.Vertical,
@@ -138,8 +134,7 @@ namespace FlaxEditor.Windows
 
         private void InitCarveTab(Tabs tabs)
         {
-            var carveTab = tabs.AddTab(new Tab(string.Empty, Editor.Icons.Mountain48));
-            //carveTab.LinkTooltip("Terrain carving tool"));
+            var carveTab = tabs.AddTab(new Tools.Terrain.CarveTab(Editor.Icons.Mountain48, Editor));
 
             var info = carveTab.AddChild<Label>();
             info.Text = "Terrain carving coming soon...";

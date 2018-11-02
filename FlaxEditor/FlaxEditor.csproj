@@ -412,6 +412,10 @@
     <Compile Include="Surface\ISurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
+    <Compile Include="Tools\Terrain\CarveTab.cs" />
+    <Compile Include="Tools\Terrain\EditTerrainGizmoMode.cs" />
+    <Compile Include="Tools\Terrain\PaintTerrainGizmoMode.cs" />
+    <Compile Include="Tools\Terrain\SculpTerrainGizmoMode.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
     <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />
     <Compile Include="Undo\Actions\ChangeScriptAction.cs" />
@@ -440,6 +444,9 @@
     <Compile Include="Viewport\EditorGizmoViewport.cs" />
     <Compile Include="Viewport\EditorViewport.cs" />
     <Compile Include="Viewport\MainEditorGizmoViewport.cs" />
+    <Compile Include="Viewport\MainEditorGizmoViewport.Modes.cs" />
+    <Compile Include="Viewport\Modes\EditorGizmoMode.cs" />
+    <Compile Include="Viewport\Modes\TransformGizmoMode.cs" />
     <Compile Include="Viewport\PrefabWindowViewport.cs" />
     <Compile Include="Viewport\Previews\AnimatedModelPreview.cs" />
     <Compile Include="Viewport\Previews\AssetPreview.cs" />
@@ -519,6 +526,7 @@
   <ItemGroup>
     <None Include=".editorconfig" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot; -Editor" Condition=" '$(OS)' == 'Windows_NT' " />
