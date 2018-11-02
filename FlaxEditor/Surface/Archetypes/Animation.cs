@@ -693,7 +693,7 @@ namespace FlaxEditor.Surface.Archetypes
                     "State",
                     Enumerable.Empty<byte>() as byte[],
                 },
-                Size = new Vector2(100, 0),
+                Size = new Vector2(100, 20),
             },
             new NodeArchetype
             {

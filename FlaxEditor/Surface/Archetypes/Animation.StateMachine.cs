@@ -236,7 +236,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// Customized <see cref="SurfaceNode" /> for the state machine state node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-        public class StateMachineState : SurfaceNode
+        public class StateMachineState : SurfaceNode, ISurfaceContext
         {
             private bool _isSavingData;
 
@@ -264,6 +264,13 @@ namespace FlaxEditor.Surface.Archetypes
             public StateMachineState(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
             {
+                var marginX = FlaxEditor.Surface.Constants.NodeMarginX;
+                var uiStartPosY = FlaxEditor.Surface.Constants.NodeMarginY + FlaxEditor.Surface.Constants.NodeHeaderSize;
+
+                var editButton = new Button(marginX, uiStartPosY, Width - marginX * 2, 20);
+                editButton.Text = "Edit";
+                editButton.Parent = this;
+                editButton.Clicked += Edit;
             }
 
             /// <inheritdoc />
@@ -336,6 +343,14 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <summary>
+            /// Opens the state editing UI.
+            /// </summary>
+            public void Edit()
+            {
+                Surface.OpenContext(this);
+            }
+
+            /// <summary>
             /// Starts the state renaming by showing a rename popup to the user.
             /// </summary>
             public void StartRenaming()
@@ -374,6 +389,32 @@ namespace FlaxEditor.Surface.Archetypes
                 ClearData();
 
                 base.Dispose();
+            }
+
+            /// <inheritdoc />
+            public string SurfaceName => StateTitle;
+
+            /// <inheritdoc />
+            public byte[] SurfaceData
+            {
+                get => (byte[])Values[1];
+                set => SetValue(1, value);
+            }
+
+            /// <inheritdoc />
+            public void OnContextCreated(VisjectSurfaceContext context)
+            {
+                context.Loaded += OnSurfaceLoaded;
+            }
+
+            private void OnSurfaceLoaded(VisjectSurfaceContext context)
+            {
+                // Ensure that loaded surface has output node for state
+                var entryNode = context.FindNode(9, 21);
+                if (entryNode == null)
+                {
+                    entryNode = context.SpawnNode(9, 21, new Vector2(100.0f));
+                }
             }
         }
 
