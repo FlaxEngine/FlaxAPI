@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -75,17 +76,12 @@ namespace FlaxEditor.Surface.Archetypes
                 var marginX = FlaxEditor.Surface.Constants.NodeMarginX;
                 var uiStartPosY = FlaxEditor.Surface.Constants.NodeMarginY + FlaxEditor.Surface.Constants.NodeHeaderSize;
 
-                var renameButton = new Button(marginX, uiStartPosY, 120, 20);
-                renameButton.Text = "Rename";
-                renameButton.Parent = this;
-                renameButton.Clicked += StartRenaming;
-
-                var editButton = new Button(renameButton.Right + 4, renameButton.Y, 120, 20);
+                var editButton = new Button(marginX, uiStartPosY, 246, 20);
                 editButton.Text = "Edit";
                 editButton.Parent = this;
                 editButton.Clicked += Edit;
 
-                var maxTransitionsPerUpdateLabel = new Label(marginX, renameButton.Bottom + 4, 153, TextBox.DefaultHeight);
+                var maxTransitionsPerUpdateLabel = new Label(marginX, editButton.Bottom + 4, 153, TextBox.DefaultHeight);
                 maxTransitionsPerUpdateLabel.HorizontalAlignment = TextAlignment.Near;
                 maxTransitionsPerUpdateLabel.Text = "Max Transitions Per Update:";
                 maxTransitionsPerUpdateLabel.Parent = this;
@@ -167,6 +163,21 @@ namespace FlaxEditor.Surface.Archetypes
                 base.SetValue(index, value);
 
                 UpdateUI();
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDoubleClick(location, buttons))
+                    return true;
+
+                if (_headerRect.Contains(ref location))
+                {
+                    StartRenaming();
+                    return true;
+                }
+
+                return false;
             }
 
             /// <inheritdoc />
