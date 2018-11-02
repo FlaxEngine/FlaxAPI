@@ -16,7 +16,7 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Occurs when active gizmo tool gets changed.
         /// </summary>
-        public event Action OnActiveChanged;
+        public event Action ActiveChanged;
 
         /// <summary>
         /// Gets or sets the active gizmo.
@@ -31,8 +31,10 @@ namespace FlaxEditor.Gizmo
                 if (value != null && !Contains(value))
                     throw new InvalidOperationException("Invalid Gizmo.");
 
+                _active?.OnDeactivated();
                 _active = value;
-                OnActiveChanged?.Invoke();
+                _active?.OnActivated();
+                ActiveChanged?.Invoke();
             }
         }
 

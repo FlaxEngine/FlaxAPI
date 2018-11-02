@@ -41,10 +41,31 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <summary>
+        /// Called when gizmo gets activated.
+        /// </summary>
+        public virtual void OnActivated()
+        {
+        }
+
+        /// <summary>
+        /// Called when gizmo gets deactivated.
+        /// </summary>
+        public virtual void OnDeactivated()
+        {
+        }
+
+        /// <summary>
         /// Updates the gizmo logic (called even if not active).
         /// </summary>
         /// <param name="dt">Update delta time (in seconds).</param>
         public virtual void Update(float dt)
+        {
+        }
+
+        /// <summary>
+        /// Performs scene object picking. Called by the viewport on left mouse button released.
+        /// </summary>
+        public virtual void Pick()
         {
         }
 
