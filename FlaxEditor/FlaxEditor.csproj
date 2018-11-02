@@ -62,10 +62,11 @@
     <Compile Include="Content\Create\CreateFileEntry.cs" />
     <Compile Include="Content\Create\CreateFilesDialog.cs" />
     <Compile Include="Content\Create\SettingsCreateEntry.cs" />
+    <Compile Include="Content\GUI\ContentNavigationButton.cs" />
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\ContentView.DragDrop.cs" />
-    <Compile Include="Content\GUI\NavigationBar.cs" />
-    <Compile Include="Content\GUI\NavigationButton.cs" />
+    <Compile Include="GUI\NavigationBar.cs" />
+    <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
     <Compile Include="Content\Import\AssetImportEntry.cs" />
     <Compile Include="Content\Import\AudioImportSettings.cs" />
@@ -381,6 +382,7 @@
     <Compile Include="Surface\Elements\TextBoxView.cs" />
     <Compile Include="Surface\Elements\TextView.cs" />
     <Compile Include="Surface\GroupArchetype.cs" />
+    <Compile Include="Surface\GUI\VisjectContextNavigationButton.cs" />
     <Compile Include="Surface\IParametersDependantNode.cs" />
     <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
     <Compile Include="Surface\MaterialSurface.cs" />

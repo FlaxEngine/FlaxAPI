@@ -44,7 +44,10 @@ namespace FlaxEditor.Surface.ContextMenu
                     item.UpdateFilter(null);
             }
 
-            Close(false);
+            if (ContextMenu.ShowExpanded)
+                Open(false);
+            else
+                Close(false);
             Visible = true;
         }
 

@@ -661,6 +661,9 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public string SurfaceName => "Material";
+
+        /// <inheritdoc />
         public byte[] SurfaceData
         {
             get => _asset.LoadSurface(true);
@@ -678,6 +681,11 @@ namespace FlaxEditor.Windows.Assets
                     Editor.LogError("Failed to save material surface data");
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public void OnContextCreated(VisjectSurfaceContext context)
+        {
         }
 
         /// <inheritdoc />

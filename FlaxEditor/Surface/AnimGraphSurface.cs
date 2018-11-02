@@ -2,8 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.Content;
+using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
+using Animation = FlaxEditor.Surface.Archetypes.Animation;
 
 namespace FlaxEditor.Surface
 {
@@ -13,6 +16,39 @@ namespace FlaxEditor.Surface
     /// <seealso cref="FlaxEditor.Surface.VisjectSurface" />
     public class AnimGraphSurface : VisjectSurface
     {
+        private static readonly List<GroupArchetype> StateMachineGroupArchetypes = new List<GroupArchetype>(new[]
+        {
+            // Customized Animations group with special nodes to use here
+            new GroupArchetype
+            {
+                GroupID = 9,
+                Name = "State Machine",
+                Color = new Color(105, 179, 160),
+                Archetypes = new[]
+                {
+                    new NodeArchetype
+                    {
+                        TypeID = 20,
+                        Create = (id, surface, arch, groupArch) => new Animation.StateMachineState(id, surface, arch, groupArch),
+                        Title = "State",
+                        Description = "The animation states machine state node",
+                        Flags = NodeFlags.AnimGraphOnly,
+                        DefaultValues = new object[]
+                        {
+                            "State",
+                            Enumerable.Empty<byte>() as byte[],
+                        },
+                        Size = new Vector2(100, 0),
+                    },
+                }
+            }
+        });
+
+        /// <summary>
+        /// The state machine editing context menu.
+        /// </summary>
+        protected VisjectCM _cmStateMachineMenu;
+
         /// <inheritdoc />
         public AnimGraphSurface(IVisjectSurfaceOwner owner, Action onSave)
         : base(owner, onSave)
@@ -20,11 +56,27 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
+        protected override void OnContextChanged()
+        {
+            base.OnContextChanged();
+
+            // Override surface primary context menu for state machine editing
+            bool isStateMachineOpen = Context?.Context is Archetypes.Animation.StateMachine;
+            if (isStateMachineOpen && _cmStateMachineMenu == null)
+            {
+                _cmStateMachineMenu = new VisjectCM(StateMachineGroupArchetypes, (arch) => true);
+                _cmStateMachineMenu.ShowExpanded = true;
+                _cmStateMachineMenu.OnItemClicked += OnPrimaryMenuButtonClick;
+            }
+            var menu = isStateMachineOpen ? _cmStateMachineMenu : null;
+            SetPrimaryMenu(menu);
+        }
+
+        /// <inheritdoc />
         public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
             if ((nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0 || (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
                 return false;
-
             return base.CanSpawnNodeType(nodeArchetype);
         }
 
@@ -36,7 +88,6 @@ namespace FlaxEditor.Surface
             case ContentDomain.SkeletonMask:
             case ContentDomain.Animation: return true;
             }
-
             return base.ValidateDragItem(assetItem);
         }
 
@@ -47,7 +98,6 @@ namespace FlaxEditor.Surface
             {
                 var item = objects[i];
                 SurfaceNode node = null;
-
                 switch (item.ItemDomain)
                 {
                 case ContentDomain.Animation:
@@ -71,14 +121,23 @@ namespace FlaxEditor.Surface
                     break;
                 }
                 }
-
                 if (node != null)
                 {
                     args.SurfaceLocation.X += node.Width + 10;
                 }
             }
-
             base.HandleDragDropAssets(objects, args);
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_cmStateMachineMenu != null)
+            {
+                _cmStateMachineMenu.Dispose();
+                _cmStateMachineMenu = null;
+            }
+            base.Dispose();
         }
     }
 }

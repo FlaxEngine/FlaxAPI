@@ -76,7 +76,6 @@ namespace FlaxEditor.Windows
             // Navigation bar
             _navigationBar = new NavigationBar
             {
-                Height = 32,
                 Parent = this
             };
 
@@ -90,7 +89,7 @@ namespace FlaxEditor.Windows
 
             // Content structure tree
             _tree = new Tree(false);
-            _tree.SelectedChanged += treeOnSelectedChanged;
+            _tree.SelectedChanged += OnTreeSelectionChanged;
             _tree.Parent = _split.Panel1;
 
             // Content View
@@ -235,7 +234,7 @@ namespace FlaxEditor.Windows
             }
         }
 
-        
+
         /// <summary>
         /// Deletes the specified item. Asks user first and uses some GUI.
         /// </summary>
@@ -707,16 +706,7 @@ namespace FlaxEditor.Windows
         {
             base.PerformLayoutSelf();
 
-            // Update navigation panel
-            if (_toolStrip != null && _navigationBar != null)
-            {
-                var lastTiilstripButton = _toolStrip.LastButton;
-                var bounds = new Rectangle(
-                    new Vector2(lastTiilstripButton.Right + 8.0f, 0),
-                    new Vector2(Width - _navigationBar.X - 8.0f, _navigationBar.Height)
-                );
-                _navigationBar.Bounds = bounds;
-            }
+            _navigationBar?.UpdateBounds(_toolStrip);
         }
 
         /// <inheritdoc />

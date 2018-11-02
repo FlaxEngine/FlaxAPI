@@ -20,7 +20,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private VisjectCMGroup _surfaceParametersGroup;
         private Panel _panel1;
         private VerticalPanel _panel2;
-        private Func<List<SurfaceParameter>> _parametersGetter;
+        private readonly Func<List<SurfaceParameter>> _parametersGetter;
 
         /// <summary>
         /// The selected item
@@ -33,13 +33,22 @@ namespace FlaxEditor.Surface.ContextMenu
         public event Action<VisjectCMItem> OnItemClicked;
 
         /// <summary>
+        /// Gets or sets a value indicating whether show groups expanded or collapsed.
+        /// </summary>
+        public bool ShowExpanded { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCM"/> class.
         /// </summary>
-        /// <param name="groups">The group archetypes.</param>
-        /// <param name="canSpawnNodeType">The surface node type validation helper.</param>
-        /// <param name="parametersGetter">The surface parameters getter callback.</param>
-        public VisjectCM(List<GroupArchetype> groups, Func<NodeArchetype, bool> canSpawnNodeType, Func<List<SurfaceParameter>> parametersGetter)
+        /// <param name="groups">The group archetypes. Cannot be null.</param>
+        /// <param name="canSpawnNodeType">The surface node type validation helper. Cannot be null.</param>
+        /// <param name="parametersGetter">The surface parameters getter callback. Can be null.</param>
+        public VisjectCM(List<GroupArchetype> groups, Func<NodeArchetype, bool> canSpawnNodeType, Func<List<SurfaceParameter>> parametersGetter = null)
         {
+            if (groups == null)
+                throw new ArgumentNullException(nameof(groups));
+            if (canSpawnNodeType == null)
+                throw new ArgumentNullException(nameof(canSpawnNodeType));
             _parametersGetter = parametersGetter;
 
             // Context menu dimensions
@@ -112,12 +121,14 @@ namespace FlaxEditor.Surface.ContextMenu
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].UpdateFilter(_searchBox.Text);
-            //If no item is selected (or it's not visible anymore), select the top one
+
+            // If no item is selected (or it's not visible anymore), select the top one
             if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
             {
                 SelectedItem = _groups.Find(g => g.Visible)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
             }
-            if (SelectedItem != null) _panel1.ScrollViewTo(SelectedItem);
+            if (SelectedItem != null)
+                _panel1.ScrollViewTo(SelectedItem);
             PerformLayout();
             _searchBox.Focus();
         }
@@ -130,6 +141,16 @@ namespace FlaxEditor.Surface.ContextMenu
         {
             Hide();
             OnItemClicked?.Invoke(item);
+        }
+
+        /// <summary>
+        /// Expands all the groups.
+        /// </summary>
+        /// <param name="animate">Enable/disable animation feature.</param>
+        public void ExpandAll(bool animate = false)
+        {
+            for (int i = 0; i < _groups.Count; i++)
+                _groups[i].Open(animate);
         }
 
         /// <summary>
@@ -163,13 +184,15 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             // Check if surface has any parameters
-            var parameters = _parametersGetter();
+            var parameters = _parametersGetter != null ? _parametersGetter() : null;
             int count = parameters?.Count(x => x.IsPublic) ?? 0;
             if (count > 0)
             {
                 // TODO: cache the allocated memory to reduce dynamic allocations
                 var archetypes = new NodeArchetype[count];
                 int archetypeIndex = 0;
+
+                // ReSharper disable once PossibleNullReferenceException
                 for (int i = 0; i < parameters.Count; i++)
                 {
                     if (!parameters[i].IsPublic)
@@ -192,6 +215,7 @@ namespace FlaxEditor.Surface.ContextMenu
                         }
                     };
                 }
+
                 var groupArchetype = new GroupArchetype
                 {
                     GroupID = 6,
@@ -199,6 +223,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     Color = new Color(52, 73, 94),
                     Archetypes = archetypes
                 };
+
                 var group = new VisjectCMGroup(this, groupArchetype);
                 group.Close(false);
                 archetypeIndex = 0;
@@ -213,6 +238,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 group.SortChildren();
                 group.UnlockChildrenRecursive();
                 group.Parent = _panel2;
+
                 _groups.Add(group);
                 _surfaceParametersGroup = group;
             }
@@ -248,13 +274,16 @@ namespace FlaxEditor.Surface.ContextMenu
             }
             else if (key == Keys.Return)
             {
-                if (SelectedItem != null) OnClickItem(SelectedItem);
-                else Hide();
+                if (SelectedItem != null)
+                    OnClickItem(SelectedItem);
+                else
+                    Hide();
                 return true;
             }
             else if (key == Keys.ArrowUp)
             {
-                if (SelectedItem == null) return true;
+                if (SelectedItem == null)
+                    return true;
 
                 var previousSelectedItem = GetPreviousSiblings<VisjectCMItem>(SelectedItem).FirstOrDefault(c => c.Visible) ??
                                            (GetPreviousSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault(c => c.Visible)?.Children
@@ -273,7 +302,8 @@ namespace FlaxEditor.Surface.ContextMenu
             }
             else if (key == Keys.ArrowDown)
             {
-                if (SelectedItem == null) return true;
+                if (SelectedItem == null)
+                    return true;
 
                 var nextSelectedItem = GetNextSiblings<VisjectCMItem>(SelectedItem).FirstOrDefault(c => c.Visible) ??
                                        (GetNextSiblings<VisjectCMGroup>(SelectedItem.Group).FirstOrDefault(c => c.Visible)?.Children
@@ -304,7 +334,8 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <returns>An <see cref="IEnumerable{Control}"/> with the siblings that come after the current one.</returns>
         private IEnumerable<Control> GetNextSiblings(Control item)
         {
-            if (item == null || item.Parent == null) yield break;
+            if (item?.Parent == null)
+                yield break;
 
             var parent = item.Parent;
             for (int i = item.IndexInParent + 1; i < parent.ChildrenCount; i++)
@@ -331,7 +362,8 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <returns>An <see cref="IEnumerable{Control}"/> with the siblings that come before the current one.</returns>
         private IEnumerable<Control> GetPreviousSiblings(Control item)
         {
-            if (item == null || item.Parent == null) yield break;
+            if (item == null || item.Parent == null)
+                yield break;
 
             var parent = item.Parent;
             for (int i = item.IndexInParent - 1; i >= 0; i--)

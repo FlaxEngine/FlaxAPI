@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FlaxEditor.Surface
 {
@@ -61,6 +60,15 @@ namespace FlaxEditor.Surface
                 surfaceContext = CreateContext(_context, context);
                 _context?.Children.Add(surfaceContext);
                 _contextCache.Add(context, surfaceContext);
+
+                context.OnContextCreated(surfaceContext);
+
+                // Load context
+                if (_root != null)
+                {
+                    if (surfaceContext.Load())
+                        throw new Exception("Failed to load graph.");
+                }
             }
             if (_root == null)
                 _root = surfaceContext;
@@ -69,13 +77,9 @@ namespace FlaxEditor.Surface
 
             // Change stack
             ContextStack.Push(surfaceContext);
-            _context = surfaceContext;
 
-            // Show surface
-            _rootControl = _context.RootControl;
-            _rootControl.Parent = this;
-
-            ContextChanged?.Invoke(_context);
+            // Update
+            OnContextChanged();
         }
 
         /// <summary>
@@ -83,12 +87,111 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void CloseContext()
         {
-            if (ContextStack.Count < 2)
+            if (ContextStack.Count == 0)
                 throw new ArgumentException("No context to close.");
 
             // Change stack
             ContextStack.Pop();
-            _context = ContextStack.Peek();
+
+            // Update
+            OnContextChanged();
+        }
+
+        /// <summary>
+        /// Removes the context from the surface and any related cached data.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        public void RemoveContext(ISurfaceContext context)
+        {
+            // Skip if surface is already disposing
+            if (IsDisposing || _isReleasing)
+                return;
+
+            // Validate input
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            // Removing root requires to close every context
+            if (RootContext != null && context == RootContext.Context)
+            {
+                while (ContextStack.Count > 0)
+                    CloseContext();
+            }
+
+            // Check if has context in cache
+            VisjectSurfaceContext surfaceContext;
+            if (_contextCache.TryGetValue(context, out surfaceContext))
+            {
+                // Remove from navigation path
+                while (ContextStack.Contains(surfaceContext))
+                    CloseContext();
+
+                // Dispose
+                surfaceContext.Clear();
+                _contextCache.Remove(context);
+            }
+        }
+
+        /// <summary>
+        /// Changes the current opened context to the given one. Used as a navigation method.
+        /// </summary>
+        /// <param name="context">The target context.</param>
+        public void ChangeContext(ISurfaceContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (_context == null)
+            {
+                OpenContext(context);
+                return;
+            }
+            if (_context.Context == context)
+                return;
+
+            // Check if already in a path
+            VisjectSurfaceContext surfaceContext;
+            if (_contextCache.TryGetValue(context, out surfaceContext) && ContextStack.Contains(surfaceContext))
+            {
+                // Change stack
+                do
+                {
+                    ContextStack.Pop();
+                } while (ContextStack.Peek() != surfaceContext);
+            }
+            else
+            {
+                // TODO: implement this case (need to find first parent of the context that is in path)
+                throw new NotSupportedException("TODO: support changing context to one not in the active path");
+            }
+
+            // Update
+            OnContextChanged();
+        }
+
+        /// <summary>
+        /// Called when context gets changed. Updates current context and UI. Updates the current context based on the first element in teh stack.
+        /// </summary>
+        protected virtual void OnContextChanged()
+        {
+            var context = ContextStack.Count > 0 ? ContextStack.Peek() : null;
+            _context = context;
+            if (ContextStack.Count == 0)
+                _root = null;
+
+            // Update root control linkage
+            if (_rootControl != null)
+            {
+                _rootControl.Parent = null;
+            }
+            if (context != null)
+            {
+                _rootControl = _context.RootControl;
+                _rootControl.Parent = this;
+            }
+            else
+            {
+                _rootControl = null;
+            }
 
             ContextChanged?.Invoke(_context);
         }

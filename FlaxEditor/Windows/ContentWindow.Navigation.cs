@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
-using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
 {
     public partial class ContentWindow
     {
-        private void treeOnSelectedChanged(List<TreeNode> from, List<TreeNode> to)
+        private static readonly List<ContentTreeNode> NavUpdateCache = new List<ContentTreeNode>(8);
+
+        private void OnTreeSelectionChanged(List<TreeNode> from, List<TreeNode> to)
         {
             // Navigate
             var source = from.Count > 0 ? from[0] as ContentTreeNode : null;
             var target = to.Count > 0 ? to[0] as ContentTreeNode : null;
-            navigate(source, target);
+            Navigate(source, target);
 
             target?.Focus();
         }
@@ -26,10 +27,10 @@ namespace FlaxEditor.Windows
         /// <param name="target">The target.</param>
         public void Navigate(ContentTreeNode target)
         {
-            navigate(SelectedNode, target);
+            Navigate(SelectedNode, target);
         }
 
-        private void navigate(ContentTreeNode source, ContentTreeNode target)
+        private void Navigate(ContentTreeNode source, ContentTreeNode target)
         {
             if (target == null)
                 target = _root;
@@ -182,7 +183,8 @@ namespace FlaxEditor.Windows
             _navigationBar.DisposeChildren();
 
             // Spawn buttons
-            List<ContentTreeNode> nodes = new List<ContentTreeNode>(8);
+            var nodes = NavUpdateCache;
+            nodes.Clear();
             ContentTreeNode node = SelectedNode;
             while (node != null)
             {
@@ -193,11 +195,12 @@ namespace FlaxEditor.Windows
             float h = _toolStrip.ItemsHeight - 2 * ToolStrip.DefaultMarginV;
             for (int i = nodes.Count - 1; i >= 0; i--)
             {
-                var button = new NavigationButton(nodes[i], x, ToolStrip.DefaultMarginV, h);
+                var button = new ContentNavigationButton(nodes[i], x, ToolStrip.DefaultMarginV, h);
                 button.PerformLayout();
                 x += button.Width + NavigationBar.DefaultButtonsMargin;
                 _navigationBar.AddChild(button);
             }
+            nodes.Clear();
 
             // Update
             _navigationBar.IsLayoutLocked = wasLayoutLocked;

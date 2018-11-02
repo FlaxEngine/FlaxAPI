@@ -345,7 +345,7 @@ namespace FlaxEditor.Surface
 
             if (buttons == MouseButton.Left)
             {
-                if (!_cmPrimaryMenu.Visible) ConnectingEnd(null);
+                if (!_activeVisjectCM.Visible) ConnectingEnd(null);
                 EndMouseCapture();
             }
 
@@ -390,7 +390,7 @@ namespace FlaxEditor.Surface
             if (selection.Count != 1) return;
             if (string.IsNullOrEmpty(currentInputText)) return;
             if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey)) return;
-            if (_cmPrimaryMenu.Visible) return;
+            if (_activeVisjectCM.Visible) return;
 
             // # => color
             // 1,43 => Vector2
@@ -406,7 +406,7 @@ namespace FlaxEditor.Surface
             _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
 
             // If the menu is not fully visible, move the surface a bit 
-            Vector2 overflow = (_cmStartPos + _cmPrimaryMenu.Size) - _rootControl.Parent.Size;
+            Vector2 overflow = (_cmStartPos + _activeVisjectCM.Size) - _rootControl.Parent.Size;
             overflow = Vector2.Max(overflow, Vector2.Zero);
 
             ViewPosition += overflow;
@@ -419,9 +419,9 @@ namespace FlaxEditor.Surface
             foreach (char character in currentInputText)
             {
                 // OnKeyDown-- > VisjectCM focuses on the text-thingy
-                _cmPrimaryMenu.OnKeyDown(Keys.None);
-                _cmPrimaryMenu.OnCharInput(character);
-                _cmPrimaryMenu.OnKeyUp(Keys.None);
+                _activeVisjectCM.OnKeyDown(Keys.None);
+                _activeVisjectCM.OnCharInput(character);
+                _activeVisjectCM.OnKeyUp(Keys.None);
             }
             ResetInputSelection();
         }

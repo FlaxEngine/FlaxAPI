@@ -8,6 +8,7 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface;
+using FlaxEditor.Surface.GUI;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -382,6 +383,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly SplitPanel _split2;
         private readonly Preview _preview;
         private readonly AnimGraphSurface _surface;
+        private readonly NavigationBar _navigationBar;
 
         private readonly ToolStripButton _saveButton;
         private readonly PropertiesProxy _properties;
@@ -441,6 +443,7 @@ namespace FlaxEditor.Windows.Assets
                 Parent = _split1.Panel1,
                 Enabled = false
             };
+            _surface.ContextChanged += OnSurfaceContextChanged;
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save asset to the file");
@@ -449,12 +452,23 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddButton(editor.Icons.Bone32, () => _preview.ShowBones = !_preview.ShowBones).SetAutoCheck(true).LinkTooltip("Show animated model bones debug view");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/anim-graph/index.html")).LinkTooltip("See documentation to learn more");
+
+            // Navigation bar
+            _navigationBar = new NavigationBar
+            {
+                Parent = this
+            };
         }
 
         private void OnGraphPropertyEdited()
         {
             _surface.MarkAsEdited(!_paramValueChange);
             _paramValueChange = false;
+        }
+
+        private void OnSurfaceContextChanged(VisjectSurfaceContext context)
+        {
+            _surface.UpdateNavigationBar(_navigationBar, _toolstrip);
         }
 
         /// <summary>
@@ -574,6 +588,9 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public string SurfaceName => "Anim Graph";
+
+        /// <inheritdoc />
         public byte[] SurfaceData
         {
             get => _asset.LoadSurface();
@@ -598,6 +615,11 @@ namespace FlaxEditor.Windows.Assets
                 // Reset any root motion
                 _preview.PreviewActor.ResetLocalTransform();
             }
+        }
+
+        /// <inheritdoc />
+        public void OnContextCreated(VisjectSurfaceContext context)
+        {
         }
 
         /// <inheritdoc />
@@ -658,9 +680,18 @@ namespace FlaxEditor.Windows.Assets
                 _properties.OnLoad(this);
 
                 // Setup
+                _surface.UpdateNavigationBar(_navigationBar, _toolstrip);
                 _surface.Enabled = true;
                 ClearEditedFlag();
             }
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            base.PerformLayoutSelf();
+
+            _navigationBar?.UpdateBounds(_toolstrip);
         }
 
         /// <inheritdoc />

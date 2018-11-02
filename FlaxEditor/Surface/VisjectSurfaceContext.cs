@@ -11,6 +11,19 @@ namespace FlaxEditor.Surface
     /// </summary>
     public partial class VisjectSurfaceContext
     {
+        /// <summary>
+        /// Visject context delegate type.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        public delegate void ContextDelegate(VisjectSurfaceContext context);
+
+        /// <summary>
+        /// Visject context modification delegate type.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value). Otherwise just UI elements has been modified (node moved, comment resized).</param>
+        public delegate void ContextModifiedDelegate(VisjectSurfaceContext context, bool graphEdited);
+
         private bool _isModified;
         private VisjectSurface _surface;
         private SurfaceMeta _meta = new SurfaceMeta();
@@ -79,6 +92,31 @@ namespace FlaxEditor.Surface
         /// The surface meta (cached after opening the context, used to store it back into the data container).
         /// </summary>
         internal VisjectSurface.Meta10 CachedSurfaceMeta;
+
+        /// <summary>
+        /// Occurs when surface starts saving graph to bytes. Can be used to inject or cleanup surface data.
+        /// </summary>
+        public event ContextDelegate Saving;
+
+        /// <summary>
+        /// Occurs when surface ends saving graph to bytes. Can be used to inject or cleanup surface data.
+        /// </summary>
+        public event ContextDelegate Saved;
+
+        /// <summary>
+        /// Occurs when surface starts loading graph from data.
+        /// </summary>
+        public event ContextDelegate Loading;
+
+        /// <summary>
+        /// Occurs when surface graph gets loaded from data. Can be used to post-process it or perform validation.
+        /// </summary>
+        public event ContextDelegate Loaded;
+
+        /// <summary>
+        /// Occurs when surface gets modified (graph edited, node moved, comment resized).
+        /// </summary>
+        public event ContextModifiedDelegate Modified;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurfaceContext"/> class.
@@ -190,7 +228,7 @@ namespace FlaxEditor.Surface
             }
             return result;
         }
-        
+
         private uint GetFreeNodeID()
         {
             uint result = 1;
@@ -211,7 +249,7 @@ namespace FlaxEditor.Surface
             }
             return result;
         }
-        
+
         /// <summary>
         /// Spawns the comment object. Used by the <see cref="CreateComment"/> and loading method. Can be overriden to provide custom comment object implementations.
         /// </summary>
@@ -245,7 +283,7 @@ namespace FlaxEditor.Surface
 
             return comment;
         }
-        
+
         /// <summary>
         /// Spawns the node.
         /// </summary>
@@ -278,7 +316,7 @@ namespace FlaxEditor.Surface
         {
             if (groupArchetype == null || nodeArchetype == null)
                 throw new ArgumentNullException();
-            
+
             if (!_surface.CanSpawnNodeType(nodeArchetype))
             {
                 Editor.LogWarning("Cannot spawn given node type.");
@@ -316,13 +354,14 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Marks the context as modified and sends the event to the parent context.
         /// </summary>
-        public void MarkAsModified()
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value). Otherwise just UI elements has been modified (node moved, comment resized).</param>
+        public void MarkAsModified(bool graphEdited = true)
         {
-            if (!_isModified)
-            {
-                _isModified = true;
-                Parent?.MarkAsModified();
-            }
+            _isModified = true;
+
+            Modified?.Invoke(this, graphEdited);
+
+            Parent?.MarkAsModified(graphEdited);
         }
 
         /// <summary>
