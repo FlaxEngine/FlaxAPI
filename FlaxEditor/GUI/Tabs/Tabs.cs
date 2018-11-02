@@ -322,6 +322,7 @@ namespace FlaxEditor.GUI
         protected virtual void OnSelectedTabChanged()
         {
             SelectedTabChanged?.Invoke(this);
+            SelectedTab?.OnSelected();
         }
 
         /// <inheritdoc />

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -20,6 +21,11 @@ namespace FlaxEditor.GUI
         /// Gets or sets the icon.
         /// </summary>
         public Sprite Icon;
+        
+        /// <summary>
+        /// Occurs when tab gets selected.
+        /// </summary>
+        public event Action<Tab> Selected;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tab"/> class.
@@ -48,6 +54,14 @@ namespace FlaxEditor.GUI
         {
             Text = text;
             Icon = icon;
+        }
+
+        /// <summary>
+        /// Called when tab gets selected.
+        /// </summary>
+        public virtual void OnSelected()
+        {
+            Selected?.Invoke(this);
         }
     }
 }
