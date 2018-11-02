@@ -135,10 +135,6 @@ namespace FlaxEditor.Windows
         private void InitCarveTab(Tabs tabs)
         {
             var carveTab = tabs.AddTab(new Tools.Terrain.CarveTab(Editor.Icons.Mountain48, Editor));
-
-            var info = carveTab.AddChild<Label>();
-            info.Text = "Terrain carving coming soon...";
-            info.DockStyle = DockStyle.Fill;
         }
 
         private Item CreateEditorAssetItem(string name, string path)
