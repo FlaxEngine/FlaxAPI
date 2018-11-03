@@ -259,36 +259,34 @@ namespace FlaxEngine
         /// <summary>
         /// Adds the patch.
         /// </summary>
-        /// <param name="x">The patch location x.</param>
-        /// <param name="z">The patch location z.</param>
+        /// <param name="patchCoord">The patch location (x and z coordinates).</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void AddPatch(int x, int z)
+        public void AddPatch(ref Int2 patchCoord)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_AddPatch(unmanagedPtr, x, z);
+            Internal_AddPatch(unmanagedPtr, ref patchCoord);
 #endif
         }
 
         /// <summary>
         /// Removes the patch.
         /// </summary>
-        /// <param name="x">The patch location x.</param>
-        /// <param name="z">The patch location z.</param>
+        /// <param name="patchCoord">The patch location (x and z coordinates).</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void RemovePatch(int x, int z)
+        public void RemovePatch(ref Int2 patchCoord)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_RemovePatch(unmanagedPtr, x, z);
+            Internal_RemovePatch(unmanagedPtr, ref patchCoord);
 #endif
         }
 
@@ -362,10 +360,10 @@ namespace FlaxEngine
         internal static extern void Internal_Setup(IntPtr obj, int lodCount, int chunkSize);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_AddPatch(IntPtr obj, int x, int z);
+        internal static extern void Internal_AddPatch(IntPtr obj, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_RemovePatch(IntPtr obj, int x, int z);
+        internal static extern void Internal_RemovePatch(IntPtr obj, ref Int2 patchCoord);
 #endif
 
         #endregion

@@ -48,22 +48,32 @@ namespace FlaxEngine
         public const int PatchEdgeChunksCount = 4;
 
         /// <summary>
+        /// Adds the patch.
+        /// </summary>
+        /// <param name="patchX">The patch X location (coordinate).</param>
+        /// <param name="patchZ">The patch Z location (coordinate).</param>
+        public void AddPatch(int patchX, int patchZ)
+        {
+            var patchCoord = new Int2(patchX, patchZ);
+            AddPatch(ref patchCoord);
+        }
+
+        /// <summary>
         /// Setups the terrain patch using the specified heightmap data.
         /// </summary>
-        /// <param name="x">The patch location x.</param>
-        /// <param name="z">The patch location z.</param>
+        /// <param name="patchCoord">The patch location (x and z coordinates).</param>
         /// <param name="format">The heightmap storage format.</param>
         /// <param name="heightMap">The height map. Each array item contains a height value (2D inlined array). It should has size equal (chunkSize*4+1)^2.</param>
         /// <param name="visibilityMap">The visibility map (optional). Normalized to 0-1 range values with visibility per-vertex. Must match the heightmap dimensions.</param>
         /// <param name="forceUseVirtualStorage">If set to <c>true</c> patch will use virtual storage by force. Otherwise it can use normal texture asset storage on drive (valid only during Editor). Runtime-created terrain can only use virtual storage (in RAM).</param>
         /// <returns>True if failed, otherwise false.</returns>
-        public unsafe void SetupPatch(int x, int z, TerrainHeightmapFormat format, float[] heightMap, float[] visibilityMap = null, bool forceUseVirtualStorage = false)
+        public unsafe void SetupPatch(ref Int2 patchCoord, TerrainHeightmapFormat format, float[] heightMap, float[] visibilityMap = null, bool forceUseVirtualStorage = false)
         {
             fixed (float* heightMapPtr = heightMap)
             {
                 fixed (float* visibilityMapPtr = visibilityMap)
                 {
-                    SetupPatch(x, z, format, heightMap.Length, heightMapPtr, visibilityMapPtr, forceUseVirtualStorage);
+                    SetupPatch(ref patchCoord, format, heightMap.Length, heightMapPtr, visibilityMapPtr, forceUseVirtualStorage);
                 }
             }
         }
@@ -71,17 +81,16 @@ namespace FlaxEngine
         /// <summary>
         /// Setups the terrain patch using the specified heightmap data.
         /// </summary>
-        /// <param name="x">The patch location x.</param>
-        /// <param name="z">The patch location z.</param>
+        /// <param name="patchCoord">The patch location (x and z coordinates).</param>
         /// <param name="format">The heightmap storage format.</param>
         /// <param name="heightMapLength">The height map array length. It must match the terrain descriptor, so it should be equal (chunkSize*4+1)^2. Patch is a 4 by 4 square made of chunks. Each chunk has chunkSize quads on edge.</param>
         /// <param name="heightMap">The height map. Each array item contains a height value (2D inlined array).</param>
         /// <param name="visibilityMap">The visibility map (optional). Normalized to 0-1 range values with visibility per-vertex. Must match the heightmap dimensions.</param>
         /// <param name="forceUseVirtualStorage">If set to <c>true</c> patch will use virtual storage by force. Otherwise it can use normal texture asset storage on drive (valid only during Editor). Runtime-created terrain can only use virtual storage (in RAM).</param>
         /// <returns>True if failed, otherwise false.</returns>
-        public unsafe void SetupPatch(int x, int z, TerrainHeightmapFormat format, int heightMapLength, float* heightMap, float* visibilityMap = null, bool forceUseVirtualStorage = false)
+        public unsafe void SetupPatch(ref Int2 patchCoord, TerrainHeightmapFormat format, int heightMapLength, float* heightMap, float* visibilityMap = null, bool forceUseVirtualStorage = false)
         {
-            if (Internal_SetupPatch(unmanagedPtr, x, z, format, heightMapLength, heightMap, visibilityMap, forceUseVirtualStorage))
+            if (Internal_SetupPatch(unmanagedPtr, ref patchCoord, format, heightMapLength, heightMap, visibilityMap, forceUseVirtualStorage))
                 throw new Exception("Failed to setup terrain patch. See log for more info.");
         }
 
@@ -162,7 +171,7 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern unsafe bool Internal_SetupPatch(IntPtr obj, int x, int z, TerrainHeightmapFormat format, int heightMapLength, float* heightMap, float* visibilityMap, bool forceUseVirtualStorage);
+        internal static extern unsafe bool Internal_SetupPatch(IntPtr obj, ref Int2 patchCoord, TerrainHeightmapFormat format, int heightMapLength, float* heightMap, float* visibilityMap, bool forceUseVirtualStorage);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_RayCast1(IntPtr obj, ref Vector3 origin, ref Vector3 direction, float maxDistance);

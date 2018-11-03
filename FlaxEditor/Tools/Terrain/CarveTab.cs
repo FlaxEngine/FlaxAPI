@@ -235,7 +235,7 @@ namespace FlaxEditor.Tools.Terrain
                         return;
                     }
 
-                    terrain.RemovePatch(_patchCoord.X, _patchCoord.Y);
+                    terrain.RemovePatch(ref _patchCoord);
 
                     _editor.Scene.MarkSceneEdited(terrain.Scene);
                 }
@@ -250,7 +250,7 @@ namespace FlaxEditor.Tools.Terrain
                         return;
                     }
 
-                    terrain.AddPatch(_patchCoord.X, _patchCoord.Y);
+                    terrain.AddPatch(ref _patchCoord);
                     TerrainTools.DeserializePatch(terrain, ref _patchCoord, _data);
 
                     _editor.Scene.MarkSceneEdited(terrain.Scene);

@@ -700,8 +700,9 @@ namespace FlaxEditor.Modules
                     heightmap[z * vertexCount + x] = Mathf.Sin((float)x / chunkSize * Mathf.PiOverFour * 3.0f) * 1000.0f;
                 }
             }
-            //terrain.SetupPatch(patchX, patchZ, TerrainHeightmapFormat.R8G8B8A8_Raw, heightmap, null, true);
-            terrain.SetupPatch(patchX, patchZ, TerrainHeightmapFormat.R8G8B8A8_Raw, heightmap);
+            var patchCoord = new Int2(patchX, patchZ);
+            //terrain.SetupPatch(ref patchCoord, TerrainHeightmapFormat.R8G8B8A8_Raw, heightmap, null, true);
+            terrain.SetupPatch(ref patchCoord, TerrainHeightmapFormat.R8G8B8A8_Raw, heightmap);
         }
 
         private void CreateTerrain()
