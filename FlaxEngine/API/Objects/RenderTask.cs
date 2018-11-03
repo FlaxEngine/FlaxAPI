@@ -43,14 +43,21 @@ namespace FlaxEngine.Rendering
         [StructLayout(LayoutKind.Sequential)]
         internal struct DrawCall
         {
+            public enum Types : byte
+            {
+                Mesh,
+                TerrainChunk,
+            }
+
             public StaticFlags Flags;
             public int LodIndex;
-            public int MeshIndex;
-            public bool ReceiveDecals;
+            public Int2 Index0;
+            public Int2 Index1;
+            public Types Type;
             public byte Padding0;
             public short Padding1;
-            public IntPtr AssetModel;
-            public IntPtr AssetMaterialBase;
+            public IntPtr Object;
+            public IntPtr Material;
             public Matrix World;
         }
 
