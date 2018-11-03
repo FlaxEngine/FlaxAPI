@@ -113,6 +113,37 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Adds the draw call (single terrain patch drawing).
+        /// </summary>
+        /// <param name="terrain">The terrain to render. Cannot be null.</param>
+        /// <param name="patchCoord">The terrain patch coordinates.</param>
+        /// <param name="material">The material to apply during rendering. Cannot be null.</param>
+        /// <param name="lodIndex">The geometry Level Of Detail index.</param>
+        public void AddDrawCall(Terrain terrain, ref Int2 patchCoord, MaterialBase material, int lodIndex = -1)
+        {
+            if (terrain == null)
+                throw new ArgumentNullException(nameof(terrain));
+            if (material == null)
+                throw new ArgumentNullException(nameof(material));
+
+            for (int i = 0; i < 16; i++)
+            {
+                var drawCall = new RenderTask.DrawCall
+                {
+                    Type = RenderTask.DrawCall.Types.TerrainChunk,
+                    Flags = StaticFlags.None,
+                    LodIndex = lodIndex,
+                    Index0 = patchCoord,
+                    Index1 = new Int2(i % 4, i / 4),
+                    Object = terrain.unmanagedPtr,
+                    Material = Object.GetUnmanagedPtr(material),
+                };
+
+                _drawCalls.Add(drawCall);
+            }
+        }
+
+        /// <summary>
         /// Executes the draw calls.
         /// </summary>
         /// <param name="context">The GPU command context.</param>

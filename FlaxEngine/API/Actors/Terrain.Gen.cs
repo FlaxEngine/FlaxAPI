@@ -203,6 +203,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Check if terrain has the patch at the given coordinates.
+        /// </summary>
+        /// <param name="patchCoord">The patch location (x and z coordinates).</param>
+        /// <returns>True if has patch added, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public bool HasPatch(ref Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_HasPatch(unmanagedPtr, ref patchCoord);
+#endif
+        }
+
+        /// <summary>
         /// Creates the terrain.
         /// </summary>
         /// <param name="lodCount">The LODs count. The actual amount of LODs may be lower due to provided chunk size (each LOD has 4 times less quads).</param>
@@ -315,6 +333,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetPatchesCount(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasPatch(IntPtr obj, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Setup(IntPtr obj, int lodCount, int chunkSize);

@@ -37,11 +37,55 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Serializes the terrain chunk data to JSON string.
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z).</param>
+        /// <returns>The serialized chunk data.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static string SerializePatch(Terrain terrain, ref Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_SerializePatch(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+#endif
+        }
+
+        /// <summary>
+        /// Deserializes the terrain chunk data from the JSON string.
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z).</param>
+        /// <param name="value">The JSON string with serialized patch data.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DeserializePatch(Terrain terrain, ref Int2 patchCoord, string value)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DeserializePatch(Object.GetUnmanagedPtr(terrain), ref patchCoord, value);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_RayCastChunk(IntPtr terrain, ref Ray ray, out float resultHitDistance, out Int2 resultPatchCoord, out Int2 resultChunkCoord, float maxDistance);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_SerializePatch(IntPtr terrain, ref Int2 patchCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DeserializePatch(IntPtr terrain, ref Int2 patchCoord, string value);
 #endif
 
         #endregion

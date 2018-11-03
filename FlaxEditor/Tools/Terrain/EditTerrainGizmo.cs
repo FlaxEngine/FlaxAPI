@@ -64,7 +64,9 @@ namespace FlaxEditor.Tools.Terrain
             }
             case EditTerrainGizmoMode.Modes.Remove:
             {
-                // TODO: highlight selected patch to delete
+                // Highlight selected patch
+                var patchCoord = Mode.SelectedPatchCoord;
+                collector.AddDrawCall(terrain, ref patchCoord, highlightMaterial);
 
                 break;
             }

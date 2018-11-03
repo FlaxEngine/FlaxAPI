@@ -125,6 +125,7 @@ namespace FlaxEditor.Tools.Terrain
 
             private readonly ComboBox _modeComboBox;
             private readonly Label _selectionInfoLabel;
+            private readonly Button _deletePatchButton;
             private readonly ContainerControl _chunkProperties;
             private readonly AssetPicker _chunkOverrideMaterial;
             private bool _isUpdatingUI;
@@ -190,14 +191,89 @@ namespace FlaxEditor.Tools.Terrain
                 _chunkOverrideMaterial.SelectedItemChanged += OnSelectedChunkOverrideMaterialChanged;
                 _chunkProperties.Size = new Vector2(_chunkOverrideMaterial.Right + 4, _chunkOverrideMaterial.Bottom + 4);
 
+                // Delete patch
+                _deletePatchButton = new Button(_selectionInfoLabel.X, _selectionInfoLabel.Bottom + 4)
+                {
+                    Text = "Delete Patch",
+                    Parent = panel,
+                };
+                _deletePatchButton.Clicked += OnDeletePatchButtonClicked;
+
                 // Update UI to match the current state
                 OnSelectionChanged();
                 OnGizmoModeChanged();
             }
 
+            private class DeletePatchAction : IUndoAction
+            {
+                private readonly Editor _editor;
+                private Guid _terrainId;
+                private Int2 _patchCoord;
+                private string _data;
+
+                /// <inheritdoc />
+                public string ActionString => "Delete terrain patch";
+
+                public DeletePatchAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord)
+                {
+                    if (terrain == null)
+                        throw new ArgumentException(nameof(terrain));
+
+                    _editor = editor ?? throw new ArgumentException(nameof(editor));
+                    _terrainId = terrain.ID;
+                    _patchCoord = patchCoord;
+                    _data = TerrainTools.SerializePatch(terrain, ref patchCoord);
+                }
+
+                /// <inheritdoc />
+                public void Do()
+                {
+                    var terrain = Object.Find<FlaxEngine.Terrain>(ref _terrainId);
+                    if (terrain == null)
+                    {
+                        Editor.LogError("Missing terrain actor.");
+                        return;
+                    }
+
+                    terrain.RemovePatch(_patchCoord.X, _patchCoord.Y);
+
+                    _editor.Scene.MarkSceneEdited(terrain.Scene);
+                }
+
+                /// <inheritdoc />
+                public void Undo()
+                {
+                    var terrain = Object.Find<FlaxEngine.Terrain>(ref _terrainId);
+                    if (terrain == null)
+                    {
+                        Editor.LogError("Missing terrain actor.");
+                        return;
+                    }
+
+                    terrain.AddPatch(_patchCoord.X, _patchCoord.Y);
+                    TerrainTools.DeserializePatch(terrain, ref _patchCoord, _data);
+
+                    _editor.Scene.MarkSceneEdited(terrain.Scene);
+                }
+            }
+
+            private void OnDeletePatchButtonClicked()
+            {
+                if (_isUpdatingUI)
+                    return;
+
+                var patchCoord = Gizmo.SelectedPatchCoord;
+                if (!CarveTab.SelectedTerrain.HasPatch(ref patchCoord))
+                    return;
+
+                var action = new DeletePatchAction(CarveTab.Editor, CarveTab.SelectedTerrain, ref patchCoord);
+                action.Do();
+                CarveTab.Editor.Undo.AddAction(action);
+            }
+
             private class EditChunkMaterialAction : IUndoAction
             {
-                private Editor _editor;
+                private readonly Editor _editor;
                 private Guid _terrainId;
                 private Int2 _patchCoord;
                 private Int2 _chunkCoord;
@@ -205,7 +281,7 @@ namespace FlaxEditor.Tools.Terrain
                 private Guid _afterMaterial;
 
                 /// <inheritdoc />
-                public string ActionString => "Edit chunk material";
+                public string ActionString => "Edit terrain chunk material";
 
                 public EditChunkMaterialAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord, ref Int2 chunkCoord, MaterialBase toSet)
                 {
@@ -266,6 +342,7 @@ namespace FlaxEditor.Tools.Terrain
                 {
                     _selectionInfoLabel.Text = "Select a terrain to modify its properties.";
                     _chunkProperties.Visible = false;
+                    _deletePatchButton.Visible = false;
                 }
                 else
                 {
@@ -280,6 +357,7 @@ namespace FlaxEditor.Tools.Terrain
                             chunkCoord.X, chunkCoord.Y
                         );
                         _chunkProperties.Visible = true;
+                        _deletePatchButton.Visible = false;
 
                         _isUpdatingUI = true;
                         _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
@@ -293,6 +371,7 @@ namespace FlaxEditor.Tools.Terrain
                             patchCoord.X, patchCoord.Y
                         );
                         _chunkProperties.Visible = false;
+                        _deletePatchButton.Visible = Gizmo.EditMode == EditTerrainGizmoMode.Modes.Remove;
                     }
                 }
             }
