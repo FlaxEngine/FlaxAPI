@@ -415,6 +415,7 @@
     <Compile Include="Surface\VisjectSurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
     <Compile Include="Tools\Terrain\CarveTab.cs" />
+    <Compile Include="Tools\Terrain\EditTab.cs" />
     <Compile Include="Tools\Terrain\EditTerrainGizmo.cs" />
     <Compile Include="Tools\Terrain\EditTerrainGizmoMode.cs" />
     <Compile Include="Tools\Terrain\PaintTerrainGizmoMode.cs" />
