@@ -116,6 +116,28 @@ namespace FlaxEngine
             return result;
         }
 
+        /// <summary>
+        /// Gets the chunk material that overrides the terrain default one.
+        /// </summary>
+        /// <param name="patchCoord">The patch coordinates (x and z).</param>
+        /// <param name="chunkCoord">The chunk coordinates (x and z).</param>
+        /// <returns>The value.</returns>
+        public MaterialBase GetChunkOverrideMaterial(ref Int2 patchCoord, ref Int2 chunkCoord)
+        {
+            return Internal_GetChunkOverrideMaterial(unmanagedPtr, ref patchCoord, ref chunkCoord);
+        }
+
+        /// <summary>
+        /// Sets the chunk material to override the terrain default one.
+        /// </summary>
+        /// <param name="patchCoord">The patch coordinates (x and z).</param>
+        /// <param name="chunkCoord">The chunk coordinates (x and z).</param>
+        /// <param name="value">The value to set.</param>
+        public void SetChunkOverrideMaterial(ref Int2 patchCoord, ref Int2 chunkCoord, MaterialBase value)
+        {
+            Internal_SetChunkOverrideMaterial(unmanagedPtr, ref patchCoord, ref chunkCoord, Object.GetUnmanagedPtr(value));
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -133,6 +155,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ClosestPoint(IntPtr obj, ref Vector3 position, out Vector3 result);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern MaterialBase Internal_GetChunkOverrideMaterial(IntPtr obj, ref Int2 patchCoord, ref Int2 chunkCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetChunkOverrideMaterial(IntPtr obj, ref Int2 patchCoord, ref Int2 chunkCoord, IntPtr value);
 #endif
 
         #endregion
