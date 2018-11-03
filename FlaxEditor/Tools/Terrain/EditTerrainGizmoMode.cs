@@ -13,10 +13,31 @@ namespace FlaxEditor.Tools.Terrain
     internal class EditTerrainGizmoMode : EditorGizmoMode
     {
         /// <summary>
+        /// The terrain properties editing modes.
+        /// </summary>
+        public enum Modes
+        {
+            /// <summary>
+            /// Terrain chunks editing mode.
+            /// </summary>
+            Edit,
+
+            /// <summary>
+            /// Terrain patches adding mode.
+            /// </summary>
+            Add,
+
+            /// <summary>
+            /// Terrain patches removing mode.
+            /// </summary>
+            Remove
+        }
+
+        /// <summary>
         /// The terrain editing gizmo.
         /// </summary>
         public EditTerrainGizmo Gizmo;
-        
+
         /// <summary>
         /// The patch coordinates of the last picked patch.
         /// </summary>
@@ -27,11 +48,17 @@ namespace FlaxEditor.Tools.Terrain
         /// </summary>
         public Int2 ChunkCoord;
 
+        /// <summary>
+        /// The active edit mode.
+        /// </summary>
+        public Modes EditMode;
+
         /// <inheritdoc />
         public override void Init(MainEditorGizmoViewport viewport)
         {
             base.Init(viewport);
 
+            EditMode = Modes.Edit;
             Gizmo = new EditTerrainGizmo(viewport, this);
         }
 
