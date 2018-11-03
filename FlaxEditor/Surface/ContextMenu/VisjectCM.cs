@@ -139,8 +139,6 @@ namespace FlaxEditor.Surface.ContextMenu
                 _groups[i].Parent.Children[i] = scores[i].Item2;
             }
 
-            PerformLayout();
-
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].UpdateFilter(_searchBox.Text);
