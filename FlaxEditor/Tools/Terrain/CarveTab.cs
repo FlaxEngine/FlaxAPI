@@ -6,6 +6,7 @@ using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Tools.Terrain
 {
@@ -124,6 +125,9 @@ namespace FlaxEditor.Tools.Terrain
 
             private readonly ComboBox _modeComboBox;
             private readonly Label _selectionInfoLabel;
+            private readonly ContainerControl _chunkProperties;
+            private readonly AssetPicker _chunkOverrideMaterial;
+            private bool _isUpdatingUI;
 
             public EditModeTab(CarveTab tab, EditTerrainGizmoMode gizmo)
             : base("Edit")
@@ -166,11 +170,93 @@ namespace FlaxEditor.Tools.Terrain
                     Parent = panel,
                 };
 
-                // TODO: editing terrain chunk OverrideMaterial
+                // Chunk Properties
+                _chunkProperties = new Panel(ScrollBars.None)
+                {
+                    Location = new Vector2(_selectionInfoLabel.X, _selectionInfoLabel.Bottom + 4),
+                    Parent = panel,
+                };
+                var chunkOverrideMaterialLabel = new Label(0, 0, 90, 64)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Text = "Override Material",
+                    Parent = _chunkProperties,
+                };
+                _chunkOverrideMaterial = new AssetPicker(typeof(MaterialBase), new Vector2(chunkOverrideMaterialLabel.Right + 4, 0))
+                {
+                    Width = 300.0f,
+                    Parent = _chunkProperties,
+                };
+                _chunkOverrideMaterial.SelectedItemChanged += OnSelectedChunkOverrideMaterialChanged;
+                _chunkProperties.Size = new Vector2(_chunkOverrideMaterial.Right + 4, _chunkOverrideMaterial.Bottom + 4);
 
                 // Update UI to match the current state
                 OnSelectionChanged();
                 OnGizmoModeChanged();
+            }
+
+            private class EditChunkMaterialAction : IUndoAction
+            {
+                private Editor _editor;
+                private Guid _terrainId;
+                private Int2 _patchCoord;
+                private Int2 _chunkCoord;
+                private Guid _beforeMaterial;
+                private Guid _afterMaterial;
+
+                /// <inheritdoc />
+                public string ActionString => "Edit chunk material";
+
+                public EditChunkMaterialAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord, ref Int2 chunkCoord, MaterialBase toSet)
+                {
+                    if (terrain == null)
+                        throw new ArgumentException(nameof(terrain));
+
+                    _editor = editor ?? throw new ArgumentException(nameof(editor));
+                    _terrainId = terrain.ID;
+                    _patchCoord = patchCoord;
+                    _chunkCoord = chunkCoord;
+                    _beforeMaterial = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord)?.ID ?? Guid.Empty;
+                    _afterMaterial = toSet?.ID ?? Guid.Empty;
+                }
+
+                /// <inheritdoc />
+                public void Do()
+                {
+                    Set(ref _afterMaterial);
+                }
+
+                /// <inheritdoc />
+                public void Undo()
+                {
+                    Set(ref _beforeMaterial);
+                }
+
+                private void Set(ref Guid id)
+                {
+                    var terrain = Object.Find<FlaxEngine.Terrain>(ref _terrainId);
+                    if (terrain == null)
+                    {
+                        Editor.LogError("Missing terrain actor.");
+                        return;
+                    }
+
+                    terrain.SetChunkOverrideMaterial(ref _patchCoord, ref _chunkCoord, FlaxEngine.Content.LoadAsync<MaterialBase>(ref id));
+
+                    _editor.Scene.MarkSceneEdited(terrain.Scene);
+                }
+            }
+
+            private void OnSelectedChunkOverrideMaterialChanged()
+            {
+                if (_isUpdatingUI)
+                    return;
+
+                var patchCoord = Gizmo.SelectedPatchCoord;
+                var chunkCoord = Gizmo.SelectedChunkCoord;
+                var action = new EditChunkMaterialAction(CarveTab.Editor, CarveTab.SelectedTerrain, ref patchCoord, ref chunkCoord, _chunkOverrideMaterial.SelectedAsset as MaterialBase);
+                action.Do();
+                CarveTab.Editor.Undo.AddAction(action);
             }
 
             private void OnSelectionChanged()
@@ -179,6 +265,7 @@ namespace FlaxEditor.Tools.Terrain
                 if (terrain == null)
                 {
                     _selectionInfoLabel.Text = "Select a terrain to modify its properties.";
+                    _chunkProperties.Visible = false;
                 }
                 else
                 {
@@ -192,6 +279,11 @@ namespace FlaxEditor.Tools.Terrain
                             patchCoord.X, patchCoord.Y,
                             chunkCoord.X, chunkCoord.Y
                         );
+                        _chunkProperties.Visible = true;
+
+                        _isUpdatingUI = true;
+                        _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
+                        _isUpdatingUI = false;
                     }
                     else
                     {
@@ -200,6 +292,7 @@ namespace FlaxEditor.Tools.Terrain
                             terrain.Name,
                             patchCoord.X, patchCoord.Y
                         );
+                        _chunkProperties.Visible = false;
                     }
                 }
             }
