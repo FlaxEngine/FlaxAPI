@@ -221,6 +221,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the terrain patch coordinates (x and z) at the given idnex.
+        /// </summary>
+        /// <param name="index">The zero-based index of the terrain patch in the terrain patches collection.</param>
+        /// <param name="patchCoord">The patch location (x and z coordinates).</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void GetPatchCoord(int index, out Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_GetPatchCoord(unmanagedPtr, index, out patchCoord);
+#endif
+        }
+
+        /// <summary>
         /// Creates the terrain.
         /// </summary>
         /// <param name="lodCount">The LODs count. The actual amount of LODs may be lower due to provided chunk size (each LOD has 4 times less quads).</param>
@@ -336,6 +354,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_HasPatch(IntPtr obj, ref Int2 patchCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetPatchCoord(IntPtr obj, int index, out Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Setup(IntPtr obj, int lodCount, int chunkSize);

@@ -55,6 +55,37 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Adds the draw call (single model drawing). Calculates target mesh level of detail and picks a proper meshes to draw (based on a material slot index).
+        /// </summary>
+        /// <param name="model">The model mesh to render. Cannot be null.</param>
+        /// <param name="materialSlotIndex">The material slot index to draw.</param>
+        /// <param name="material">The material to apply during rendering. Cannot be null.</param>
+        /// <param name="lodIndex">The model Level Of Detail to draw (zero-based index).</param>
+        /// <param name="world">The world matrix used to transform mesh geometry during rendering. Use <see cref="Matrix.Identity"/> to render mesh 'as is'.</param>
+        /// <param name="flags">The static flags. Used to describe type of the geometry.</param>
+        /// <param name="receiveDecals">True if rendered geometry can receive decals, otherwise false.</param>
+        public void AddDrawCall(Model model, int materialSlotIndex, MaterialBase material, int lodIndex, ref Matrix world, StaticFlags flags = StaticFlags.None, bool receiveDecals = true)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            // Pick a proper LOD
+            var lods = model.LODs;
+            if (lods == null || lods.Length < lodIndex || lodIndex < 0)
+                return;
+            var lod = lods[lodIndex];
+
+            // Draw meshes
+            for (int i = 0; i < lod.Meshes.Length; i++)
+            {
+                if (lod.Meshes[i].MaterialSlotIndex == materialSlotIndex)
+                {
+                    AddDrawCall(lod.Meshes[i], material, ref world, flags);
+                }
+            }
+        }
+
+        /// <summary>
         /// Adds the draw call (single mesh drawing).
         /// </summary>
         /// <param name="mesh">The mesh to render. Cannot be null.</param>

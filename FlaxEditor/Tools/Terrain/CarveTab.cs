@@ -347,7 +347,9 @@ namespace FlaxEditor.Tools.Terrain
                 else
                 {
                     var patchCoord = Gizmo.SelectedPatchCoord;
-                    if (Gizmo.EditMode == EditTerrainGizmoMode.Modes.Edit)
+                    switch (Gizmo.EditMode)
+                    {
+                    case EditTerrainGizmoMode.Modes.Edit:
                     {
                         var chunkCoord = Gizmo.SelectedChunkCoord;
                         _selectionInfoLabel.Text = string.Format(
@@ -362,8 +364,30 @@ namespace FlaxEditor.Tools.Terrain
                         _isUpdatingUI = true;
                         _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
                         _isUpdatingUI = false;
+                        break;
                     }
-                    else
+                    case EditTerrainGizmoMode.Modes.Add:
+                    {
+                        if (terrain.HasPatch(ref patchCoord))
+                        {
+                            _selectionInfoLabel.Text = string.Format(
+                                "Selected terrain: {0}\nMove mouse cursor at location without a patch.",
+                                terrain.Name
+                            );
+                        }
+                        else
+                        {
+                            _selectionInfoLabel.Text = string.Format(
+                                "Selected terrain: {0}\nPatch to add: {1}x{2}\nTo add a new patch press the left mouse button.",
+                                terrain.Name,
+                                patchCoord.X, patchCoord.Y
+                            );
+                        }
+                        _chunkProperties.Visible = false;
+                        _deletePatchButton.Visible = false;
+                        break;
+                    }
+                    case EditTerrainGizmoMode.Modes.Remove:
                     {
                         _selectionInfoLabel.Text = string.Format(
                             "Selected terrain: {0}\nPatch: {1}x{2}",
@@ -371,7 +395,9 @@ namespace FlaxEditor.Tools.Terrain
                             patchCoord.X, patchCoord.Y
                         );
                         _chunkProperties.Visible = false;
-                        _deletePatchButton.Visible = Gizmo.EditMode == EditTerrainGizmoMode.Modes.Remove;
+                        _deletePatchButton.Visible = true;
+                        break;
+                    }
                     }
                 }
             }

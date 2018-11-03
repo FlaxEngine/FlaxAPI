@@ -75,6 +75,45 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Checks if a given ray hits any of the terrain patches sides to add a new patch there.
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="ray">The ray to use for tracing (eg. mouse ray in world space).</param>
+        /// <param name="patchCoord">The result patch coordinates (x and z). Valid only when method returns true.</param>
+        /// <returns>True if result is valid, otherwise nothing to add there.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool TryGetPatchCoordToAdd(Terrain terrain, Ray ray, out Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_TryGetPatchCoordToAdd(Object.GetUnmanagedPtr(terrain), ref ray, out patchCoord);
+#endif
+        }
+
+        /// <summary>
+        /// Initializes the patch heightmap and collision to the default flat level.
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z) to initialize it.</param>
+        /// <returns>True if failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool InitializePatch(Terrain terrain, ref Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_InitializePatch(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -86,6 +125,12 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DeserializePatch(IntPtr terrain, ref Int2 patchCoord, string value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_TryGetPatchCoordToAdd(IntPtr terrain, ref Ray ray, out Int2 patchCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_InitializePatch(IntPtr terrain, ref Int2 patchCoord);
 #endif
 
         #endregion

@@ -28,6 +28,26 @@ namespace FlaxEngine
     public sealed partial class Terrain
     {
         /// <summary>
+        /// The constant amount of units per terrain geometry vertex (can be adjusted per terrain instance using non-uniform scale factor).
+        /// </summary>
+        public const float UnitsPerVertex = 100.0f;
+
+        /// <summary>
+        /// The maximum amount of levels of detail for the terrain chunks.
+        /// </summary>
+        public const int MaxLODs = 6;
+
+        /// <summary>
+        /// The constant amount of terrain chunks per terrain patch object.
+        /// </summary>
+        public const int PatchChunksCount = 16;
+
+        /// <summary>
+        /// The constant amount of terrain chunks on terrain patch object edge.
+        /// </summary>
+        public const int PatchEdgeChunksCount = 4;
+
+        /// <summary>
         /// Setups the terrain patch using the specified heightmap data.
         /// </summary>
         /// <param name="x">The patch location x.</param>
