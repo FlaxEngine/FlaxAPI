@@ -27,6 +27,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
+        /// </summary>
+        /// <param name="id">Asset unique ID.</param>
+        /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
+        /// <returns>Asset instance if loaded, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static T LoadAsync<T>(ref Guid id) where T : Asset
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return (T)Internal_LoadAsync1(ref id, typeof(T));
+#endif
+        }
+
+        /// <summary>
         /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
@@ -34,7 +53,7 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Asset LoadAsync(Guid id)
         {
-            return LoadAsync<Asset>(id);
+            return LoadAsync<Asset>(ref id);
         }
 
         /// <summary>
@@ -108,7 +127,7 @@ namespace FlaxEngine
         /// <returns>Asset instance if loaded, null otherwise</returns>
         public static T Load<T>(Guid id, double timeoutInMiliseconds = 10000.0) where T : Asset
         {
-            var asset = LoadAsync<T>(id);
+            var asset = LoadAsync<T>(ref id);
             if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
                 return asset;
             return null;
