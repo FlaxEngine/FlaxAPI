@@ -22,8 +22,8 @@ namespace FlaxEditor.GUI
         private AssetItem _selected;
         private Type _type;
 
-        private bool _isMosueDown;
-        private Vector2 _mosueDownPos;
+        private bool _isMouseDown;
+        private Vector2 _mouseDownPos;
         private Vector2 _mousePos;
         private readonly DragAssets _dragOverElement;
 
@@ -161,7 +161,7 @@ namespace FlaxEditor.GUI
         private void DoDrag()
         {
             // Do the drag drop operation if has selected element
-            if (_selected != null && new Rectangle(Vector2.Zero, Size).Contains(ref _mosueDownPos))
+            if (_selected != null && new Rectangle(Vector2.Zero, Size).Contains(ref _mouseDownPos))
             {
                 DoDragDrop(DragAssets.GetDragData(_selected));
             }
@@ -264,10 +264,10 @@ namespace FlaxEditor.GUI
             _mousePos = Vector2.Minimum;
 
             // Check if start drag drop
-            if (_isMosueDown)
+            if (_isMouseDown)
             {
                 // Clear flag
-                _isMosueDown = false;
+                _isMouseDown = false;
 
                 // Do the drag
                 DoDrag();
@@ -280,7 +280,7 @@ namespace FlaxEditor.GUI
         public override void OnMouseEnter(Vector2 location)
         {
             _mousePos = location;
-            _mosueDownPos = Vector2.Minimum;
+            _mouseDownPos = Vector2.Minimum;
 
             base.OnMouseEnter(location);
         }
@@ -291,10 +291,10 @@ namespace FlaxEditor.GUI
             _mousePos = location;
 
             // Check if start drag drop
-            if (_isMosueDown && Vector2.Distance(location, _mosueDownPos) > 10.0f)
+            if (_isMouseDown && Vector2.Distance(location, _mouseDownPos) > 10.0f)
             {
                 // Clear flag
-                _isMosueDown = false;
+                _isMouseDown = false;
 
                 // Do the drag
                 DoDrag();
@@ -308,7 +308,7 @@ namespace FlaxEditor.GUI
         {
             if (buttons == MouseButton.Left)
             {
-                _isMosueDown = false;
+                _isMouseDown = false;
             }
 
             // Buttons logic
@@ -343,8 +343,8 @@ namespace FlaxEditor.GUI
             // Set flag for dragging asset
             if (buttons == MouseButton.Left && IconRect.Contains(location))
             {
-                _isMosueDown = true;
-                _mosueDownPos = location;
+                _isMouseDown = true;
+                _mouseDownPos = location;
             }
 
             // Handled

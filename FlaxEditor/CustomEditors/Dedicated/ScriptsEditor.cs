@@ -210,8 +210,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
     internal class ScriptDragIcon : Image
     {
         private ScriptsEditor _editor;
-        private bool _isMosueDown;
-        private Vector2 _mosueDownPos;
+        private bool _isMouseDown;
+        private Vector2 _mouseDownPos;
 
         /// <summary>
         /// Gets the target script.
@@ -236,7 +236,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// <inheritdoc />
         public override void OnMouseEnter(Vector2 location)
         {
-            _mosueDownPos = Vector2.Minimum;
+            _mouseDownPos = Vector2.Minimum;
 
             base.OnMouseEnter(location);
         }
@@ -245,10 +245,10 @@ namespace FlaxEditor.CustomEditors.Dedicated
         public override void OnMouseLeave()
         {
             // Check if start drag drop
-            if (_isMosueDown)
+            if (_isMouseDown)
             {
                 DoDrag();
-                _isMosueDown = false;
+                _isMouseDown = false;
             }
 
             base.OnMouseLeave();
@@ -258,10 +258,10 @@ namespace FlaxEditor.CustomEditors.Dedicated
         public override void OnMouseMove(Vector2 location)
         {
             // Check if start drag drop
-            if (_isMosueDown && Vector2.Distance(location, _mosueDownPos) > 10.0f)
+            if (_isMouseDown && Vector2.Distance(location, _mouseDownPos) > 10.0f)
             {
                 DoDrag();
-                _isMosueDown = false;
+                _isMouseDown = false;
             }
 
             base.OnMouseMove(location);
@@ -273,7 +273,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             if (buttons == MouseButton.Left)
             {
                 // Clear flag
-                _isMosueDown = false;
+                _isMouseDown = false;
             }
 
             return base.OnMouseUp(location, buttons);
@@ -285,8 +285,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
             if (buttons == MouseButton.Left)
             {
                 // Set flag
-                _isMosueDown = true;
-                _mosueDownPos = location;
+                _isMouseDown = true;
+                _mouseDownPos = location;
             }
 
             return base.OnMouseDown(location, buttons);
