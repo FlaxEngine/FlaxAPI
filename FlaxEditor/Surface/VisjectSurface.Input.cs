@@ -284,10 +284,11 @@ namespace FlaxEditor.Surface
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
 
             // Right clicking while attempting to connect a node to something
-            if (!_rightMouseDown && buttons == MouseButton.Right && !_isMovingSelection && _startBox != null)
+            if (!_rightMouseDown && !_isMovingSelection && _startBox != null)
             {
                 _cmStartPos = location;
                 ShowPrimaryMenu(_cmStartPos);
+                EndMouseCapture();
             }
 
             // Cache flags and state
@@ -343,15 +344,8 @@ namespace FlaxEditor.Surface
             if (base.OnMouseUp(location, buttons))
                 return true;
 
-            if (buttons == MouseButton.Left)
-            {
-                if (!_cmPrimaryMenu.Visible) ConnectingEnd(null);
-                EndMouseCapture();
-            }
-
             return true;
         }
-
 
         /// <inheritdoc />
         public override bool OnCharInput(char c)
@@ -405,14 +399,14 @@ namespace FlaxEditor.Surface
             _cmStartPos = _surface.PointToParent(_surface.Parent, PositionAfterNode(node));
             _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
 
-            // If the menu is not fully visible, move the surface a bit 
+            // If the menu is not fully visible, move the surface a bit
             Vector2 overflow = (_cmStartPos + _cmPrimaryMenu.Size) - _surface.Parent.Size;
             overflow = Vector2.Max(overflow, Vector2.Zero);
 
             ViewPosition += overflow;
             _cmStartPos -= overflow;
 
-            // Show it 
+            // Show it
             _startBox = firstOutputBox;
             ShowPrimaryMenu(_cmStartPos);
 
@@ -429,7 +423,7 @@ namespace FlaxEditor.Surface
         private Vector2 PositionAfterNode(SurfaceNode node)
         {
             const float DistanceBetweenNodes = 40;
-            //TODO: Doge the other nodes 
+            //TODO: Doge the other nodes
             return node.Location + new Vector2(node.Width + DistanceBetweenNodes, 0);
         }
 
@@ -452,15 +446,19 @@ namespace FlaxEditor.Surface
                 case Keys.A:
                     SelectAll();
                     return true;
+
                 case Keys.C:
                     Copy();
                     return true;
+
                 case Keys.V:
                     Paste();
                     return true;
+
                 case Keys.X:
                     Cut();
                     return true;
+
                 case Keys.D:
                     Duplicate();
                     return true;

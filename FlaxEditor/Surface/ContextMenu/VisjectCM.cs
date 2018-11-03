@@ -22,7 +22,6 @@ namespace FlaxEditor.Surface.ContextMenu
         private VerticalPanel _panel2;
         private Func<List<SurfaceParameter>> _parametersGetter;
         private Elements.Box _startBox;
-        private bool _isNewStartBox;
 
         /// <summary>
         /// The selected item
@@ -254,12 +253,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <inheritdoc />
         public override void Show(Control parent, Vector2 location)
         {
-            if (!_isNewStartBox)
-            {
-                _startBox = null;
-            }
-            _isNewStartBox = false;
-            base.Show(parent, location);
+            Show(parent, location, null);
         }
 
         /// <summary>
@@ -271,8 +265,7 @@ namespace FlaxEditor.Surface.ContextMenu
         public void Show(Control parent, Vector2 location, Elements.Box startBox)
         {
             _startBox = startBox;
-            _isNewStartBox = true;
-            Show(parent, location);
+            base.Show(parent, location);
         }
 
         /// <inheritdoc />

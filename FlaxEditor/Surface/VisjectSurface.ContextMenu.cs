@@ -59,6 +59,14 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu.Show(this, location);
         }
 
+        private void OnPrimaryMenuVisibleChanged(Control primaryMenu)
+        {
+            if (!primaryMenu.Visible)
+            {
+                _startBox = null;
+            }
+        }
+
         private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
         {
             var node = SpawnNode(
@@ -69,7 +77,7 @@ namespace FlaxEditor.Surface
             );
 
             // And, if the user is patiently waiting for his box to get connected to the newly created one
-            //   fulfill his wish! #MagicLamp? #Genie?
+            //   fulfill his wish!
             if (_startBox != null)
             {
                 Box alternativeBox = null;
