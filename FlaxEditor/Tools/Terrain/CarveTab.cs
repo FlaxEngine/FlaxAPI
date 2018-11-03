@@ -61,7 +61,7 @@ namespace FlaxEditor.Tools.Terrain
             // Init tool modes
             InitSculpMode();
             InitPaintMode();
-            _modes.AddTab(new EditModeTab(this, editor.Windows.EditWin.Viewport.EditTerrainGizmo));
+            InitEditMode();
 
             _modes.SelectedTabIndex = 0;
         }
@@ -105,6 +105,12 @@ namespace FlaxEditor.Tools.Terrain
             var info = panel.AddChild<Label>();
             info.Text = "Paint Mode";
             info.DockStyle = DockStyle.Fill;
+        }
+
+        private void InitEditMode()
+        {
+            var tab = _modes.AddTab(new EditModeTab(this, Editor.Windows.EditWin.Viewport.EditTerrainGizmo));
+            tab.Selected += OnTabSelected;
         }
 
         /// <summary>
@@ -407,14 +413,6 @@ namespace FlaxEditor.Tools.Terrain
                 _modeComboBox.SelectedIndex = (int)Gizmo.EditMode;
                 OnSelectionChanged();
             }
-
-            /// <inheritdoc />
-            public override void OnSelected()
-            {
-                base.OnSelected();
-
-                CarveTab.Editor.Windows.EditWin.Viewport.SetActiveMode<EditTerrainGizmoMode>();
-            }
         }
 
         /// <inheritdoc />
@@ -443,7 +441,9 @@ namespace FlaxEditor.Tools.Terrain
             case 1:
                 Editor.Windows.EditWin.Viewport.SetActiveMode<PaintTerrainGizmoMode>();
                 break;
-            case 2: break;
+            case 2:
+                Editor.Windows.EditWin.Viewport.SetActiveMode<EditTerrainGizmoMode>();
+                break;
             default: throw new IndexOutOfRangeException("Invalid carve tab mode.");
             }
         }

@@ -91,7 +91,10 @@ namespace FlaxEditor.Tools.Terrain
                     var patchSize = terrain.ChunkSize * FlaxEngine.Terrain.UnitsPerVertex * FlaxEngine.Terrain.PatchEdgeChunksCount;
                     Matrix world = Matrix.RotationZ(-Mathf.PiOverTwo) *
                                    Matrix.Scaling(patchSize / planeSize) *
-                                   Matrix.Translation(patchSize * (0.5f + patchCoord.X), 0, patchSize * (0.5f + patchCoord.Y));
+                                   Matrix.Translation(patchSize * (0.5f + patchCoord.X), 0, patchSize * (0.5f + patchCoord.Y)) *
+                                   Matrix.Scaling(terrain.Scale) *
+                                   Matrix.RotationQuaternion(terrain.Orientation) *
+                                   Matrix.Translation(terrain.Position);
                     collector.AddDrawCall(_planeModel, 0, _highlightMaterial, 0, ref world);
                 }
 
