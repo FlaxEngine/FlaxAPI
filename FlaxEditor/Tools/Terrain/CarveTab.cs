@@ -2,6 +2,8 @@
 
 using System;
 using FlaxEditor.GUI;
+using FlaxEditor.Modules;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -11,10 +13,26 @@ namespace FlaxEditor.Tools.Terrain
     /// Terrain carving tab. Supports different modes for terrain editing including: carving, painting and managing tools.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Tab" />
-    internal class CarveTab : Tab
+    public class CarveTab : Tab
     {
-        private readonly Editor _editor;
         private readonly Tabs _modes;
+        private SculpTerrainGizmoMode _sculpTerrainGizmo;
+        private PaintTerrainGizmoMode _paintTerrainGizmo;
+
+        /// <summary>
+        /// The editor instance.
+        /// </summary>
+        public readonly Editor Editor;
+
+        /// <summary>
+        /// The cached selected terrain. It's synchronized with <see cref="SceneEditingModule.Selection"/>.
+        /// </summary>
+        public FlaxEngine.Terrain SelectedTerrain;
+
+        /// <summary>
+        /// Occurs when selected terrain gets changed (to a different value).
+        /// </summary>
+        public event Action SelectedTerrainChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CarveTab"/> class.
@@ -24,7 +42,11 @@ namespace FlaxEditor.Tools.Terrain
         public CarveTab(Sprite icon, Editor editor)
         : base(string.Empty, icon)
         {
-            _editor = editor;
+            Editor = editor;
+            Editor.SceneEditing.SelectionChanged += OnSelectionChanged;
+
+            _sculpTerrainGizmo = editor.Windows.EditWin.Viewport.SculpTerrainGizmo;
+            _paintTerrainGizmo = editor.Windows.EditWin.Viewport.PaintTerrainGizmo;
 
             _modes = new Tabs
             {
@@ -35,11 +57,23 @@ namespace FlaxEditor.Tools.Terrain
                 Parent = this
             };
 
+            // Init tool modes
             InitSculpMode();
             InitPaintMode();
-            InitEditMode();
+            _modes.AddTab(new EditModeTab(this, editor.Windows.EditWin.Viewport.EditTerrainGizmo));
 
             _modes.SelectedTabIndex = 0;
+        }
+
+        private void OnSelectionChanged()
+        {
+            var terrainNode = Editor.SceneEditing.SelectionCount > 0 ? Editor.SceneEditing.Selection[0] as TerrainNode : null;
+            var terrain = terrainNode?.Actor as FlaxEngine.Terrain;
+            if (terrain != SelectedTerrain)
+            {
+                SelectedTerrain = terrain;
+                SelectedTerrainChanged?.Invoke();
+            }
         }
 
         private void InitSculpMode()
@@ -72,25 +106,117 @@ namespace FlaxEditor.Tools.Terrain
             info.DockStyle = DockStyle.Fill;
         }
 
-        private void InitEditMode()
+        /// <summary>
+        /// Carve tab related to terrain editing. Allows to pick a terrain patch and remove it or add new patches. Can be used to modify selected chunk properties.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.GUI.Tab" />
+        private class EditModeTab : Tab
         {
-            var tab = _modes.AddTab(new Tab("Edit"));
-            tab.Selected += OnTabSelected;
-            var panel = new Panel(ScrollBars.Both)
-            {
-                DockStyle = DockStyle.Fill,
-                Parent = tab
-            };
+            /// <summary>
+            /// The parent carve tab.
+            /// </summary>
+            public readonly CarveTab CarveTab;
 
-            // Mode: Edit, Add, Remove
-            // Patch
-            // - x - z - terrain actor name
-            // - bounds
-            // TODO: moving patch
-            // Chunk
-            // - x - y
-            // - bounds
-            // - OverrideMaterial
+            /// <summary>
+            /// The related edit terrain gizmo.
+            /// </summary>
+            public readonly EditTerrainGizmoMode Gizmo;
+
+            private readonly ComboBox _modeComboBox;
+            private readonly Label _selectionInfoLabel;
+
+            public EditModeTab(CarveTab tab, EditTerrainGizmoMode gizmo)
+            : base("Edit")
+            {
+                CarveTab = tab;
+                Gizmo = gizmo;
+                CarveTab.SelectedTerrainChanged += OnSelectionChanged;
+                Gizmo.SelectedChunkCoordChanged += OnSelectionChanged;
+
+                // Main panel
+                var panel = new Panel(ScrollBars.Both)
+                {
+                    DockStyle = DockStyle.Fill,
+                    Parent = this
+                };
+
+                // Mode
+                var modeLabel = new Label(4, 4, 40, 18)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Text = "Mode:",
+                    Parent = panel,
+                };
+                _modeComboBox = new ComboBox(modeLabel.Right + 4, 4, 110)
+                {
+                    Parent = panel,
+                };
+                _modeComboBox.AddItem("Edit Chunk");
+                _modeComboBox.AddItem("Add Patch");
+                _modeComboBox.AddItem("Remove Patch");
+                _modeComboBox.SelectedIndex = 0;
+                _modeComboBox.SelectedIndexChanged += (combobox) => Gizmo.EditMode = (EditTerrainGizmoMode.Modes)combobox.SelectedIndex;
+                Gizmo.ModeChanged += OnGizmoModeChanged;
+
+                // Info
+                _selectionInfoLabel = new Label(modeLabel.X, modeLabel.Bottom + 4, 40, 18 * 3)
+                {
+                    VerticalAlignment = TextAlignment.Near,
+                    HorizontalAlignment = TextAlignment.Near,
+                    Parent = panel,
+                };
+
+                // TODO: editing terrain chunk OverrideMaterial
+
+                // Update UI to match the current state
+                OnSelectionChanged();
+                OnGizmoModeChanged();
+            }
+
+            private void OnSelectionChanged()
+            {
+                var terrain = CarveTab.SelectedTerrain;
+                if (terrain == null)
+                {
+                    _selectionInfoLabel.Text = "Select a terrain to modify its properties.";
+                }
+                else
+                {
+                    var patchCoord = Gizmo.SelectedPatchCoord;
+                    if (Gizmo.EditMode == EditTerrainGizmoMode.Modes.Edit)
+                    {
+                        var chunkCoord = Gizmo.SelectedChunkCoord;
+                        _selectionInfoLabel.Text = string.Format(
+                            "Selected terrain: {0}\nPatch: {1}x{2}\nChunk: {3}x{4}",
+                            terrain.Name,
+                            patchCoord.X, patchCoord.Y,
+                            chunkCoord.X, chunkCoord.Y
+                        );
+                    }
+                    else
+                    {
+                        _selectionInfoLabel.Text = string.Format(
+                            "Selected terrain: {0}\nPatch: {1}x{2}",
+                            terrain.Name,
+                            patchCoord.X, patchCoord.Y
+                        );
+                    }
+                }
+            }
+
+            private void OnGizmoModeChanged()
+            {
+                _modeComboBox.SelectedIndex = (int)Gizmo.EditMode;
+                OnSelectionChanged();
+            }
+
+            /// <inheritdoc />
+            public override void OnSelected()
+            {
+                base.OnSelected();
+
+                CarveTab.Editor.Windows.EditWin.Viewport.SetActiveMode<EditTerrainGizmoMode>();
+            }
         }
 
         /// <inheritdoc />
@@ -114,14 +240,12 @@ namespace FlaxEditor.Tools.Terrain
             switch (_modes.SelectedTabIndex)
             {
             case 0:
-                _editor.Windows.EditWin.Viewport.SetActiveMode<SculpTerrainGizmoMode>();
+                Editor.Windows.EditWin.Viewport.SetActiveMode<SculpTerrainGizmoMode>();
                 break;
             case 1:
-                _editor.Windows.EditWin.Viewport.SetActiveMode<PaintTerrainGizmoMode>();
+                Editor.Windows.EditWin.Viewport.SetActiveMode<PaintTerrainGizmoMode>();
                 break;
-            case 2:
-                _editor.Windows.EditWin.Viewport.SetActiveMode<EditTerrainGizmoMode>();
-                break;
+            case 2: break;
             default: throw new IndexOutOfRangeException("Invalid carve tab mode.");
             }
         }

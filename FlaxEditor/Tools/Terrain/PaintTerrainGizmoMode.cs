@@ -8,7 +8,7 @@ namespace FlaxEditor.Tools.Terrain
     /// Terrain painting tool mode.
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.Modes.EditorGizmoMode" />
-    internal class PaintTerrainGizmoMode : EditorGizmoMode
+    public class PaintTerrainGizmoMode : EditorGizmoMode
     {
     }
 }

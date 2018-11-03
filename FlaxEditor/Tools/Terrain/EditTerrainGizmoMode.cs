@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Viewport;
 using FlaxEditor.Viewport.Modes;
 using FlaxEngine;
@@ -10,7 +11,7 @@ namespace FlaxEditor.Tools.Terrain
     /// Terrain management and editing tool. 
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.Modes.EditorGizmoMode" />
-    internal class EditTerrainGizmoMode : EditorGizmoMode
+    public class EditTerrainGizmoMode : EditorGizmoMode
     {
         /// <summary>
         /// The terrain properties editing modes.
@@ -33,6 +34,8 @@ namespace FlaxEditor.Tools.Terrain
             Remove
         }
 
+        private Modes _mode;
+
         /// <summary>
         /// The terrain editing gizmo.
         /// </summary>
@@ -41,17 +44,38 @@ namespace FlaxEditor.Tools.Terrain
         /// <summary>
         /// The patch coordinates of the last picked patch.
         /// </summary>
-        public Int2 PatchCoord;
+        public Int2 SelectedPatchCoord { get; private set; }
 
         /// <summary>
         /// The chunk coordinates (relative to the patch) of the last picked chunk.
         /// </summary>
-        public Int2 ChunkCoord;
+        public Int2 SelectedChunkCoord { get; private set; }
+
+        /// <summary>
+        /// Occurs when mode gets changed.
+        /// </summary>
+        public event Action ModeChanged;
 
         /// <summary>
         /// The active edit mode.
         /// </summary>
-        public Modes EditMode;
+        public Modes EditMode
+        {
+            get => _mode;
+            set
+            {
+                if (_mode != value)
+                {
+                    _mode = value;
+                    ModeChanged?.Invoke();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Occurs when selected patch or/and chunk coord gets changed (after picking by user).
+        /// </summary>
+        public event Action SelectedChunkCoordChanged;
 
         /// <inheritdoc />
         public override void Init(MainEditorGizmoViewport viewport)
@@ -68,6 +92,26 @@ namespace FlaxEditor.Tools.Terrain
             base.OnActivated();
 
             Viewport.Gizmos.Active = Gizmo;
+        }
+
+        /// <summary>
+        /// Sets the selected chunk coordinates.
+        /// </summary>
+        /// <param name="patchCoord">The patch coord.</param>
+        /// <param name="chunkCoord">The chunk coord.</param>
+        public void SetSelectedChunk(ref Int2 patchCoord, ref Int2 chunkCoord)
+        {
+            if (SelectedPatchCoord != patchCoord || SelectedChunkCoord != chunkCoord)
+            {
+                SelectedPatchCoord = patchCoord;
+                SelectedChunkCoord = chunkCoord;
+                OnSelectedTerrainChunkChanged();
+            }
+        }
+
+        private void OnSelectedTerrainChunkChanged()
+        {
+            SelectedChunkCoordChanged?.Invoke();
         }
     }
 }

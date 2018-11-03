@@ -21,13 +21,28 @@ namespace FlaxEditor.Viewport
         /// </summary>
         public event Action<EditorGizmoMode> ActiveModeChanged;
 
+        /// <summary>
+        /// The sculp terrain gizmo.
+        /// </summary>
+        public Tools.Terrain.SculpTerrainGizmoMode SculpTerrainGizmo;
+
+        /// <summary>
+        /// The paint terrain gizmo.
+        /// </summary>
+        public Tools.Terrain.PaintTerrainGizmoMode PaintTerrainGizmo;
+
+        /// <summary>
+        /// The edit terrain gizmo
+        /// </summary>
+        public Tools.Terrain.EditTerrainGizmoMode EditTerrainGizmo;
+
         private void InitModes()
         {
             // Add default modes used by the editor
             _modes.Add(new TransformGizmoMode());
-            _modes.Add(new Tools.Terrain.SculpTerrainGizmoMode());
-            _modes.Add(new Tools.Terrain.PaintTerrainGizmoMode());
-            _modes.Add(new Tools.Terrain.EditTerrainGizmoMode());
+            _modes.Add(SculpTerrainGizmo = new Tools.Terrain.SculpTerrainGizmoMode());
+            _modes.Add(PaintTerrainGizmo = new Tools.Terrain.PaintTerrainGizmoMode());
+            _modes.Add(EditTerrainGizmo = new Tools.Terrain.EditTerrainGizmoMode());
             for (int i = 0; i < _modes.Count; i++)
             {
                 _modes[i].Init(this);

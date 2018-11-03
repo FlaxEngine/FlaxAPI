@@ -12,13 +12,18 @@ namespace FlaxEditor.Tools.Terrain
     /// Gizmo for picking terrain chunks and patches. Managed by the <see cref="EditTerrainGizmoMode"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Gizmo.GizmoBase" />
-    internal sealed class EditTerrainGizmo : GizmoBase
+    public sealed class EditTerrainGizmo : GizmoBase
     {
         /// <summary>
         /// The parent mode.
         /// </summary>
         public readonly EditTerrainGizmoMode Mode;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditTerrainGizmo"/> class.
+        /// </summary>
+        /// <param name="owner">The owner.</param>
+        /// <param name="mode">The mode.</param>
         public EditTerrainGizmo(IGizmoOwner owner, EditTerrainGizmoMode mode)
         : base(owner)
         {
@@ -45,7 +50,9 @@ namespace FlaxEditor.Tools.Terrain
             case EditTerrainGizmoMode.Modes.Edit:
             {
                 // Highlight selected chunk
-                collector.AddDrawCall(terrain, ref Mode.PatchCoord, ref Mode.ChunkCoord, highlightMaterial);
+                var patchCoord = Mode.SelectedPatchCoord;
+                var chunkCoord = Mode.SelectedChunkCoord;
+                collector.AddDrawCall(terrain, ref patchCoord, ref chunkCoord, highlightMaterial);
 
                 break;
             }
@@ -79,7 +86,8 @@ namespace FlaxEditor.Tools.Terrain
             {
                 // Perform detailed tracing
                 var terrain = (FlaxEngine.Terrain)hit.Actor;
-                TerrainTools.RayCastChunk(terrain, ray, out closest, out Mode.PatchCoord, out Mode.ChunkCoord);
+                TerrainTools.RayCastChunk(terrain, ray, out closest, out var patchCoord, out var chunkCoord);
+                Mode.SetSelectedChunk(ref patchCoord, ref chunkCoord);
 
                 sceneEditing.Select(hit);
             }
