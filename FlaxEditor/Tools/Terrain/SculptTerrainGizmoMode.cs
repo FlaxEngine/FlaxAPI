@@ -8,7 +8,7 @@ namespace FlaxEditor.Tools.Terrain
     /// Terrain carving tool mode.
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.Modes.EditorGizmoMode" />
-    public class SculpTerrainGizmoMode : EditorGizmoMode
+    public class SculptTerrainGizmoMode : EditorGizmoMode
     {
     }
 }

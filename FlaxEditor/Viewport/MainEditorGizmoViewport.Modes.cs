@@ -22,9 +22,9 @@ namespace FlaxEditor.Viewport
         public event Action<EditorGizmoMode> ActiveModeChanged;
 
         /// <summary>
-        /// The sculp terrain gizmo.
+        /// The sculpt terrain gizmo.
         /// </summary>
-        public Tools.Terrain.SculpTerrainGizmoMode SculpTerrainGizmo;
+        public Tools.Terrain.SculptTerrainGizmoMode SculptTerrainGizmo;
 
         /// <summary>
         /// The paint terrain gizmo.
@@ -40,7 +40,7 @@ namespace FlaxEditor.Viewport
         {
             // Add default modes used by the editor
             _modes.Add(new TransformGizmoMode());
-            _modes.Add(SculpTerrainGizmo = new Tools.Terrain.SculpTerrainGizmoMode());
+            _modes.Add(SculptTerrainGizmo = new Tools.Terrain.SculptTerrainGizmoMode());
             _modes.Add(PaintTerrainGizmo = new Tools.Terrain.PaintTerrainGizmoMode());
             _modes.Add(EditTerrainGizmo = new Tools.Terrain.EditTerrainGizmoMode());
             for (int i = 0; i < _modes.Count; i++)

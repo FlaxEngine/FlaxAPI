@@ -6,7 +6,6 @@ using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Tools.Terrain
 {
@@ -17,7 +16,6 @@ namespace FlaxEditor.Tools.Terrain
     public class CarveTab : Tab
     {
         private readonly Tabs _modes;
-        private SculpTerrainGizmoMode _sculpTerrainGizmo;
         private PaintTerrainGizmoMode _paintTerrainGizmo;
 
         /// <summary>
@@ -46,7 +44,6 @@ namespace FlaxEditor.Tools.Terrain
             Editor = editor;
             Editor.SceneEditing.SelectionChanged += OnSelectionChanged;
 
-            _sculpTerrainGizmo = editor.Windows.EditWin.Viewport.SculpTerrainGizmo;
             _paintTerrainGizmo = editor.Windows.EditWin.Viewport.PaintTerrainGizmo;
 
             _modes = new Tabs
@@ -59,7 +56,7 @@ namespace FlaxEditor.Tools.Terrain
             };
 
             // Init tool modes
-            InitSculpMode();
+            InitSculptMode();
             InitPaintMode();
             InitEditMode();
 
@@ -77,19 +74,10 @@ namespace FlaxEditor.Tools.Terrain
             }
         }
 
-        private void InitSculpMode()
+        private void InitSculptMode()
         {
-            var tab = _modes.AddTab(new Tab("Sculp"));
+            var tab = _modes.AddTab(new SculptTab(this, Editor.Windows.EditWin.Viewport.SculptTerrainGizmo));
             tab.Selected += OnTabSelected;
-            var panel = new Panel(ScrollBars.Both)
-            {
-                DockStyle = DockStyle.Fill,
-                Parent = tab
-            };
-
-            var info = panel.AddChild<Label>();
-            info.Text = "Sculp Mode";
-            info.DockStyle = DockStyle.Fill;
         }
 
         private void InitPaintMode()
@@ -134,7 +122,7 @@ namespace FlaxEditor.Tools.Terrain
             switch (_modes.SelectedTabIndex)
             {
             case 0:
-                Editor.Windows.EditWin.Viewport.SetActiveMode<SculpTerrainGizmoMode>();
+                Editor.Windows.EditWin.Viewport.SetActiveMode<SculptTerrainGizmoMode>();
                 break;
             case 1:
                 Editor.Windows.EditWin.Viewport.SetActiveMode<PaintTerrainGizmoMode>();

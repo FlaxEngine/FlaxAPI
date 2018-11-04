@@ -31,6 +31,11 @@ namespace FlaxEditor.Tools.Terrain
         private readonly AssetPicker _chunkOverrideMaterial;
         private bool _isUpdatingUI;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditTab"/> class.
+        /// </summary>
+        /// <param name="tab">The parent tab.</param>
+        /// <param name="gizmo">The related gizmo.</param>
         public EditTab(CarveTab tab, EditTerrainGizmoMode gizmo)
         : base("Edit")
         {

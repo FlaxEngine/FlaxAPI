@@ -419,7 +419,9 @@
     <Compile Include="Tools\Terrain\EditTerrainGizmo.cs" />
     <Compile Include="Tools\Terrain\EditTerrainGizmoMode.cs" />
     <Compile Include="Tools\Terrain\PaintTerrainGizmoMode.cs" />
-    <Compile Include="Tools\Terrain\SculpTerrainGizmoMode.cs" />
+    <Compile Include="Tools\Terrain\SculptTab.cs" />
+    <Compile Include="Tools\Terrain\SculptTerrainGizmoMode.cs" />
+    <Compile Include="Tools\Terrain\Sculpt\Mode.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
     <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />
     <Compile Include="Undo\Actions\ChangeScriptAction.cs" />
