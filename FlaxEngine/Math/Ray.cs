@@ -85,6 +85,16 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets a point at distance long ray.
+        /// </summary>
+        /// <param name="distance">The distance from ray origin.</param>
+        /// <returns>The calculated point.</returns>
+        public Vector3 GetPoint(float distance)
+        {
+            return Position + Direction * distance;
+        }
+
+        /// <summary>
         /// Determines if there is an intersection between the current object and a point.
         /// </summary>
         /// <param name="point">The point to test.</param>
@@ -101,8 +111,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Ray ray)
         {
-            Vector3 point;
-            return CollisionsHelper.RayIntersectsRay(ref this, ref ray, out point);
+            return CollisionsHelper.RayIntersectsRay(ref this, ref ray, out _);
         }
 
         /// <summary>
@@ -126,8 +135,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Plane plane)
         {
-            float distance;
-            return CollisionsHelper.RayIntersectsPlane(ref this, ref plane, out distance);
+            return CollisionsHelper.RayIntersectsPlane(ref this, ref plane, out float _);
         }
 
         /// <summary>
@@ -167,8 +175,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref Vector3 vertex1, ref Vector3 vertex2, ref Vector3 vertex3)
         {
-            float distance;
-            return CollisionsHelper.RayIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3, out distance);
+            return CollisionsHelper.RayIntersectsTriangle(ref this, ref vertex1, ref vertex2, ref vertex3, out float _);
         }
 
         /// <summary>
@@ -210,8 +217,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingBox box)
         {
-            float distance;
-            return CollisionsHelper.RayIntersectsBox(ref this, ref box, out distance);
+            return CollisionsHelper.RayIntersectsBox(ref this, ref box, out float _);
         }
 
         /// <summary>
@@ -259,8 +265,7 @@ namespace FlaxEngine
         /// <returns>Whether the two objects intersected.</returns>
         public bool Intersects(ref BoundingSphere sphere)
         {
-            float distance;
-            return CollisionsHelper.RayIntersectsSphere(ref this, ref sphere, out distance);
+            return CollisionsHelper.RayIntersectsSphere(ref this, ref sphere, out float _);
         }
 
         /// <summary>
@@ -299,6 +304,28 @@ namespace FlaxEngine
         public bool Intersects(ref BoundingSphere sphere, out Vector3 point)
         {
             return CollisionsHelper.RayIntersectsSphere(ref this, ref sphere, out point);
+        }
+
+        /// <summary>
+        /// Calculates a world space ray from 2d screen coordinates.
+        /// </summary>
+        /// <param name="x">The X coordinate on 2d screen.</param>
+        /// <param name="y">The Y coordinate on 2d screen.</param>
+        /// <param name="viewport">The screen viewport.</param>
+        /// <param name="vp">The View*Projection matrix.</param>
+        /// <returns>The resulting ray.</returns>
+        public static Ray GetPickRay(float x, float y, ref Viewport viewport, ref Matrix vp)
+        {
+            Vector3 nearPoint = new Vector3(x, y, 0.0f);
+            Vector3 farPoint = new Vector3(x, y, 1.0f);
+
+            nearPoint = Vector3.Unproject(nearPoint, viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth, vp);
+            farPoint = Vector3.Unproject(farPoint, viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth, vp);
+
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            return new Ray(nearPoint, direction);
         }
 
         /// <summary>
