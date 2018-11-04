@@ -576,16 +576,19 @@ namespace FlaxEditor.CustomEditors.Editors
                             }
                         }
 
-                        // Apply the visibility
-                        var label = c.PropertiesList.Labels[c.LabelIndex];
-                        label.Visible = visible;
-                        for (int j = label.FirstChildControlIndex; j < c.PropertiesList.Properties.Children.Count; j++)
+                        // Apply the visibility (note: there may be no label)
+                        if (c.LabelIndex != -1 && c.PropertiesList.Labels.Count > c.LabelIndex)
                         {
-                            var child = c.PropertiesList.Properties.Children[j];
-                            if (child is PropertyNameLabel)
-                                break;
+                            var label = c.PropertiesList.Labels[c.LabelIndex];
+                            label.Visible = visible;
+                            for (int j = label.FirstChildControlIndex; j < c.PropertiesList.Properties.Children.Count; j++)
+                            {
+                                var child = c.PropertiesList.Properties.Children[j];
+                                if (child is PropertyNameLabel)
+                                    break;
 
-                            child.Visible = visible;
+                                child.Visible = visible;
+                            }
                         }
                     }
                 }
