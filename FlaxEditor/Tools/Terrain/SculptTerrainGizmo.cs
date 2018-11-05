@@ -51,13 +51,16 @@ namespace FlaxEditor.Tools.Terrain
             var terrain = SelectedTerrain;
             if (!terrain)
                 return;
-
-            // TODO: highlight chunks with brush visualization
-
+            
             if (Mode.HasValidHit)
             {
-                var patchCoord = new Int2(0, 0);
-                collector.AddDrawCall(terrain, ref patchCoord, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightTerrainMaterial));
+                for (int i = 0; i < Mode.ChunksUnderCursor.Count; i++)
+                {
+                    var chunk = Mode.ChunksUnderCursor[i];
+
+                    // TODO: drawing proper brush visualization
+                    collector.AddDrawCall(terrain, ref chunk.PatchCoord, ref chunk.ChunkCoord, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightTerrainMaterial));
+                }
             }
         }
 

@@ -141,14 +141,41 @@ namespace FlaxEditor.Tools.Terrain
         public bool HasValidHit { get; private set; }
 
         /// <summary>
-        /// The selected terrain patches coordinates collection that are under cursor (affected by the brush).
+        /// Describes the terrain patch link.
         /// </summary>
-        public readonly List<Int2> PatchesUnderCursor = new List<Int2>();
+        public struct PatchLocation
+        {
+            /// <summary>
+            /// The patch coordinates.
+            /// </summary>
+            public Int2 PatchCoord;
+        }
 
         /// <summary>
-        /// The selected terrain chunk coordinates collection that are under cursor (affected by the brush). A XY components contain patch coordinates, ZW components contain chunk coordinates.
+        /// The selected terrain patches collection that are under cursor (affected by the brush).
         /// </summary>
-        public readonly List<Int4> ChunksUnderCursor = new List<Int4>();
+        public readonly List<PatchLocation> PatchesUnderCursor = new List<PatchLocation>();
+
+        /// <summary>
+        /// Describes the terrain chunk link.
+        /// </summary>
+        public struct ChunkLocation
+        {
+            /// <summary>
+            /// The patch coordinates.
+            /// </summary>
+            public Int2 PatchCoord;
+
+            /// <summary>
+            /// The chunk coordinates.
+            /// </summary>
+            public Int2 ChunkCoord;
+        }
+
+        /// <summary>
+        /// The selected terrain chunk collection that are under cursor (affected by the brush).
+        /// </summary>
+        public readonly List<ChunkLocation> ChunksUnderCursor = new List<ChunkLocation>();
 
         /// <summary>
         /// Gets the selected terrain actor (see <see cref="Modules.SceneEditingModule"/>).
@@ -216,9 +243,35 @@ namespace FlaxEditor.Tools.Terrain
         {
             HasValidHit = true;
             CursorPosition = hitPosition;
+            PatchesUnderCursor.Clear();
+            ChunksUnderCursor.Clear();
 
             // Find patches and chunks affected by the brush
-            DebugDraw.DrawBox(CursorBrushBounds, Color.Red);
+            var terrain = SelectedTerrain;
+            if (terrain == null)
+                throw new InvalidOperationException("Cannot set cursor then no terrain is selected.");
+            var brushBounds = CursorBrushBounds;
+            var patchesCount = terrain.PatchesCount;
+            BoundingBox tmp;
+            for (int patchIndex = 0; patchIndex < patchesCount; patchIndex++)
+            {
+                terrain.GetPatchBounds(patchIndex, out tmp);
+                if (!tmp.Intersects(ref brushBounds))
+                    continue;
+
+                terrain.GetPatchCoord(patchIndex, out var patchCoord);
+                PatchesUnderCursor.Add(new PatchLocation() { PatchCoord = patchCoord });
+
+                for (int chunkIndex = 0; chunkIndex < FlaxEngine.Terrain.PatchChunksCount; chunkIndex++)
+                {
+                    terrain.GetChunkBounds(patchIndex, chunkIndex, out tmp);
+                    if (!tmp.Intersects(ref brushBounds))
+                        continue;
+
+                    var chunkCoord = new Int2(chunkIndex % FlaxEngine.Terrain.PatchEdgeChunksCount, chunkIndex / FlaxEngine.Terrain.PatchEdgeChunksCount);
+                    ChunksUnderCursor.Add(new ChunkLocation() { PatchCoord = patchCoord, ChunkCoord = chunkCoord });
+                }
+            }
         }
     }
 }

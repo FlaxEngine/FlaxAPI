@@ -221,20 +221,57 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the terrain patch coordinates (x and z) at the given idnex.
+        /// Gets the terrain patch coordinates (x and z) at the given index.
         /// </summary>
-        /// <param name="index">The zero-based index of the terrain patch in the terrain patches collection.</param>
+        /// <param name="patchIndex">The zero-based index of the terrain patch in the terrain patches collection.</param>
         /// <param name="patchCoord">The patch location (x and z coordinates).</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void GetPatchCoord(int index, out Int2 patchCoord)
+        public void GetPatchCoord(int patchIndex, out Int2 patchCoord)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_GetPatchCoord(unmanagedPtr, index, out patchCoord);
+            Internal_GetPatchCoord(unmanagedPtr, patchIndex, out patchCoord);
+#endif
+        }
+
+        /// <summary>
+        /// Gets the terrain patch world bounds at the given index.
+        /// </summary>
+        /// <param name="patchIndex">The zero-based index of the terrain patch in the terrain patches collection.</param>
+        /// <param name="bounds">The patch world bounds.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void GetPatchBounds(int patchIndex, out BoundingBox bounds)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_GetPatchBounds(unmanagedPtr, patchIndex, out bounds);
+#endif
+        }
+
+        /// <summary>
+        /// Gets the terrain chunk world bounds at the given index.
+        /// </summary>
+        /// <param name="patchIndex">The zero-based index of the terrain patch in the terrain patches collection.</param>
+        /// <param name="chunkIndex">The zero-based index of the terrain chunk in the terrain patches collection.</param>
+        /// <param name="bounds">The chunk world bounds.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void GetChunkBounds(int patchIndex, int chunkIndex, out BoundingBox bounds)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_GetChunkBounds(unmanagedPtr, patchIndex, chunkIndex, out bounds);
 #endif
         }
 
@@ -354,7 +391,13 @@ namespace FlaxEngine
         internal static extern bool Internal_HasPatch(IntPtr obj, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetPatchCoord(IntPtr obj, int index, out Int2 patchCoord);
+        internal static extern void Internal_GetPatchCoord(IntPtr obj, int patchIndex, out Int2 patchCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetPatchBounds(IntPtr obj, int patchIndex, out BoundingBox bounds);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetChunkBounds(IntPtr obj, int patchIndex, int chunkIndex, out BoundingBox bounds);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Setup(IntPtr obj, int lodCount, int chunkSize);
