@@ -21,7 +21,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private Panel _panel1;
         private VerticalPanel _groupsPanel;
         private Func<List<SurfaceParameter>> _parametersGetter;
-        private Elements.Box _startBox;
+        private Elements.Box _selectedBox;
 
         /// <summary>
         /// The selected item
@@ -31,7 +31,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Event fired when any item in this popup menu gets clicked.
         /// </summary>
-        public event Action<VisjectCMItem> OnItemClicked;
+        public event Action<VisjectCMItem, Elements.Box> OnItemClicked;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCM"/> class.
@@ -112,9 +112,12 @@ namespace FlaxEditor.Surface.ContextMenu
             if (IsLayoutLocked)
                 return;
 
+            // Update groups
             for (int i = 0; i < _groups.Count; i++)
             {
-                _groups[i].UpdateItemSort(_startBox);
+                _groups[i].UpdateFilter(_searchBox.Text);
+
+                _groups[i].UpdateItemSort(_selectedBox);
             }
 
             // Sort groups
@@ -129,9 +132,6 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
             }
 
-            // Update groups
-            for (int i = 0; i < _groups.Count; i++)
-                _groups[i].UpdateFilter(_searchBox.Text);
             //If no item is selected (or it's not visible anymore), select the top one
             if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
             {
@@ -149,7 +149,7 @@ namespace FlaxEditor.Surface.ContextMenu
         public void OnClickItem(VisjectCMItem item)
         {
             Hide();
-            OnItemClicked?.Invoke(item);
+            OnItemClicked?.Invoke(item, _selectedBox);
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="startBox">The currently selected box that the new node will get connected to. Can be null</param>
         public void Show(Control parent, Vector2 location, Elements.Box startBox)
         {
-            _startBox = startBox;
+            _selectedBox = startBox;
             base.Show(parent, location);
         }
 

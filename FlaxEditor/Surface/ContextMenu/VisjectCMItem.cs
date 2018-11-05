@@ -75,11 +75,10 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="selectedBox">The currently user-selected box</param>
         public void UpdateScore(Box selectedBox)
         {
-            if (selectedBox == null)
-            {
-                SortScore = 0;
-                return;
-            }
+            // Start off by resetting the score!
+            SortScore = 0;
+
+            if (selectedBox == null) return;
 
             if (CanConnectTo(selectedBox, NodeArchetype))
             {
@@ -90,6 +89,8 @@ namespace FlaxEditor.Surface.ContextMenu
         private bool CanConnectTo(Box startBox, NodeArchetype nodeArchetype)
         {
             if (startBox == null) return false;
+            if (!startBox.IsOutput) return false; // For now, I'm only handing the output box case
+
             for (int i = 0; i < nodeArchetype.Elements.Length; i++)
             {
                 if (nodeArchetype.Elements[i].Type == NodeElementType.Input &&

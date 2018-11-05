@@ -63,7 +63,7 @@ namespace FlaxEditor.Surface
             }
         }
 
-        private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
+        private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem, Box selectedBox)
         {
             var node = SpawnNode(
                 visjectCmItem.GroupArchetype,
@@ -74,18 +74,19 @@ namespace FlaxEditor.Surface
 
             // And, if the user is patiently waiting for his box to get connected to the newly created one
             //   fulfill his wish!
-            if (_startBox != null)
+            if (selectedBox != null)
             {
+                _startBox = selectedBox;
                 Box alternativeBox = null;
-                foreach (var box in node.GetBoxes().Where(box => box.IsOutput != _startBox.IsOutput))
+                foreach (var box in node.GetBoxes().Where(box => box.IsOutput != selectedBox.IsOutput))
                 {
-                    if ((_startBox.CurrentType & box.CurrentType) != 0)
+                    if ((selectedBox.CurrentType & box.CurrentType) != 0)
                     {
                         ConnectingEnd(box);
                         return;
                     }
 
-                    if (alternativeBox == null && _startBox.CanUseType(box.CurrentType))
+                    if (alternativeBox == null && selectedBox.CanUseType(box.CurrentType))
                     {
                         alternativeBox = box;
                     }

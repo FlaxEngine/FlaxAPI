@@ -96,22 +96,22 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="selectedBox">The currently user-selected box</param>
         public void UpdateItemSort(Box selectedBox)
         {
-            float maxScore = 0;
+            this.SortScore = 0;
             for (int i = 0; i < _children.Count; i++)
             {
                 if (_children[i] is VisjectCMItem item)
                 {
                     item.UpdateScore(selectedBox);
-                    if (item.SortScore > maxScore)
+
+                    // Invisible children are irrelevant to the score of this group
+                    if (_children[i].Visible && item.SortScore > this.SortScore)
                     {
-                        maxScore = item.SortScore;
+                        this.SortScore = item.SortScore;
                     }
                 }
             }
 
             SortChildren();
-
-            SortScore = maxScore;
         }
 
         public override int Compare(Control other)
