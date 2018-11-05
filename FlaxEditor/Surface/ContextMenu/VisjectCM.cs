@@ -19,7 +19,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private bool _waitingForInput;
         private VisjectCMGroup _surfaceParametersGroup;
         private Panel _panel1;
-        private VerticalPanel _panel2;
+        private VerticalPanel _groupsPanel;
         private Func<List<SurfaceParameter>> _parametersGetter;
         private Elements.Box _startBox;
 
@@ -71,7 +71,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 IsScrollable = true,
                 Parent = panel1
             };
-            _panel2 = panel2;
+            _groupsPanel = panel2;
 
             // Init groups
             int index = 0;
@@ -112,31 +112,21 @@ namespace FlaxEditor.Surface.ContextMenu
             if (IsLayoutLocked)
                 return;
 
-            // Sort groups
-            Tuple<float, VisjectCMGroup>[] scores = new Tuple<float, VisjectCMGroup>[_groups.Count];
             for (int i = 0; i < _groups.Count; i++)
             {
-                float groupScore = _groups[i].SortChildrenWithStartBox(_startBox);
-                scores[i] = new Tuple<float, VisjectCMGroup>(groupScore, _groups[i]);
+                _groups[i].UpdateItemSort(_startBox);
             }
 
-            // Code duplication..
-            Array.Sort(scores, (a, b) =>
+            // Sort groups
+            _groupsPanel.SortChildren();
+            // Synchronize with _groups[]
+            for (int i = 0, groupsIndex = 0; i < _groupsPanel.ChildrenCount; i++)
             {
-                // Sort by score (highest to lowest)
-                int sortValue = -1 * a.Item1.CompareTo(b.Item1);
-                if (sortValue == 0)
+                if (_groupsPanel.Children[i] is VisjectCMGroup group)
                 {
-                    // Otherwise, sort them the usual way
-                    sortValue = a.Item2.DefaultIndex.CompareTo(b.Item2.DefaultIndex);
+                    _groups[groupsIndex] = group;
+                    groupsIndex++;
                 }
-                return sortValue;
-            });
-
-            for (int i = 0; i < scores.Length; i++)
-            {
-                _groups[i] = scores[i].Item2;
-                _groups[i].Parent.Children[i] = scores[i].Item2;
             }
 
             // Update groups
@@ -242,7 +232,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
                 group.SortChildren();
                 group.UnlockChildrenRecursive();
-                group.Parent = _panel2;
+                group.Parent = _groupsPanel;
                 _groups.Add(group);
                 _surfaceParametersGroup = group;
             }

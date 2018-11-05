@@ -23,7 +23,13 @@ namespace FlaxEditor.Surface.ContextMenu
         /// </summary>
         public readonly GroupArchetype Archetype;
 
+        // A bit of a hack to make sure that the default group order is preserved
         internal int DefaultIndex;
+
+        /// <summary>
+        /// A computed score for the context menu order
+        /// </summary>
+        public float SortScore { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCMGroup"/> class.
@@ -83,76 +89,43 @@ namespace FlaxEditor.Surface.ContextMenu
             }
         }
 
-        public float SortChildrenWithStartBox(Box startBox)
+        /// <summary>
+        /// Updates the sorting of the <see cref="VisjectCMItem"/>s of this <see cref="VisjectCMGroup"/>
+        /// Also updates the <see cref="SortScore"/>
+        /// </summary>
+        /// <param name="selectedBox">The currently user-selected box</param>
+        public void UpdateItemSort(Box selectedBox)
         {
-            if (startBox == null)
-            {
-                SortChildren();
-                return -1;
-            }
-
-            // Calculate the scores
-            Tuple<float, Control>[] scores = CalculateScores(_children, startBox);
-
-            Array.Sort(scores, (a, b) =>
-            {
-                // Sort by score (highest to lowest)
-                int sortValue = -1 * a.Item1.CompareTo(b.Item1);
-                if (sortValue == 0)
-                {
-                    // Otherwise, sort them the usual way
-                    sortValue = a.Item2.CompareTo(b.Item2);
-                }
-                return sortValue;
-            });
-
+            float maxScore = 0;
             for (int i = 0; i < _children.Count; i++)
             {
-                if (scores[i].Item2 is VisjectCMItem item)
+                if (_children[i] is VisjectCMItem item)
                 {
-                    item.Starred = scores[i].Item1 > 0;
-                }
-                _children[i] = scores[i].Item2;
-            }
-            PerformLayout();
-
-            return scores[0].Item1; // Return the highest score
-        }
-
-        private Tuple<float, Control>[] CalculateScores(List<Control> children, Box startBox)
-        {
-            Tuple<float, Control>[] score = new Tuple<float, Control>[children.Count];
-
-            for (int i = 0; i < children.Count; i++)
-            {
-                score[i] = new Tuple<float, Control>(0, children[i]);
-                if (startBox != null)
-                {
-                    if (children[i] is VisjectCMItem item)
+                    item.UpdateScore(selectedBox);
+                    if (item.SortScore > maxScore)
                     {
-                        if (CanConnectTo(startBox, item.NodeArchetype))
-                        {
-                            score[i] = new Tuple<float, Control>(1, children[i]);
-                        }
+                        maxScore = item.SortScore;
                     }
                 }
             }
 
-            return score;
+            SortChildren();
+
+            SortScore = maxScore;
         }
 
-        private bool CanConnectTo(Box startBox, NodeArchetype nodeArchetype)
+        public override int Compare(Control other)
         {
-            for (int i = 0; i < nodeArchetype.Elements.Length; i++)
+            if (other is VisjectCMGroup otherGroup)
             {
-                if (nodeArchetype.Elements[i].Type == NodeElementType.Input &&
-                    //(startBox.CurrentType & nodeArchetype.Elements[i].ConnectionsType) != 0))
-                    startBox.CanUseType(nodeArchetype.Elements[i].ConnectionsType))
+                int order = -1 * SortScore.CompareTo(otherGroup.SortScore);
+                if (order == 0)
                 {
-                    return true;
+                    order = DefaultIndex.CompareTo(otherGroup.DefaultIndex);
                 }
+                return order;
             }
-            return false;
+            return base.Compare(other);
         }
     }
 }
