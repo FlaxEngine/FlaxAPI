@@ -278,6 +278,7 @@ namespace FlaxEditor.Surface
             // Initialize
             OnControlLoaded(comment);
             comment.OnSurfaceLoaded();
+            OnControlSpawned(comment);
 
             MarkAsModified();
 
@@ -345,6 +346,7 @@ namespace FlaxEditor.Surface
             OnControlLoaded(node);
             node.OnSurfaceLoaded();
             node.Location = location;
+            OnControlSpawned(node);
 
             MarkAsModified();
 

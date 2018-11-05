@@ -95,6 +95,13 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Called when after adding the control to the surface after user spawn (eg. add comment, add new node, etc.).
+        /// </summary>
+        public virtual void OnSpawned()
+        {
+        }
+
+        /// <summary>
         /// Updates the cached rectangles on control size change.
         /// </summary>
         protected abstract void UpdateRectangles();

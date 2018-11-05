@@ -531,6 +531,15 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Called when control gets added to the surface as spawn operation (eg. add new comment or add new node).
+        /// </summary>
+        /// <param name="control">The control.</param>
+        public virtual void OnControlSpawned(SurfaceControl control)
+        {
+            control.OnSpawned();
+        }
+
+        /// <summary>
         /// Called when control gets loaded and should be added to the surface. Handles surface nodes initialization.
         /// </summary>
         /// <param name="control">The control.</param>
