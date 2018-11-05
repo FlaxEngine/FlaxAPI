@@ -13,6 +13,6 @@ namespace FlaxEditor.Tools.Terrain.Brushes
         /// The brush size (in world units). Within this area, the brush will have at least some effect.
         /// </summary>
         [EditorOrder(0), Limit(0.0f, 1000000.0f, 10.0f), Tooltip("The brush size (in world units). Within this area, the brush will have at least some effect.")]
-        public float Size = 1000.0f;
+        public float Size = 4000.0f;
     }
 }

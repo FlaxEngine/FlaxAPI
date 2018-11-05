@@ -2,7 +2,6 @@
 
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
-using FlaxEditor.Tools.Terrain.Brushes;
 using FlaxEditor.Tools.Terrain.Sculpt;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -20,89 +19,53 @@ namespace FlaxEditor.Tools.Terrain
         /// </summary>
         private sealed class ProxyObject
         {
-            public enum Modes
+            private readonly SculptTerrainGizmoMode _mode;
+
+            public ProxyObject(SculptTerrainGizmoMode mode)
             {
-                Sculpt,
-                Smooth,
+                _mode = mode;
             }
-
-            public enum Brushes
-            {
-                CircleBrush,
-            }
-
-            private readonly Mode[] _modes =
-            {
-                new SculptMode(),
-                new SmoothMode(),
-            };
-
-            private readonly Brush[] _brushes =
-            {
-                new CircleBrush(),
-            };
-
-            private Modes _mode = Modes.Sculpt;
-            private Brushes _brush = Brushes.CircleBrush;
-
-            [HideInEditor]
-            public Mode CurrentMode => _modes[(int)_mode];
-
-            [HideInEditor]
-            public Brush CurrentBrush => _brushes[(int)_brush];
 
             [EditorOrder(0), EditorDisplay("Tool"), Tooltip("Sculpt tool mode to use.")]
-            public Modes ToolMode
+            public SculptTerrainGizmoMode.ModeTypes ToolMode
             {
-                get => _mode;
-                set
-                {
-                    if (_mode != value)
-                    {
-                        _mode = value;
-                    }
-                }
+                get => _mode.ToolModeType;
+                set => _mode.ToolModeType = value;
             }
 
             [EditorOrder(100), EditorDisplay("Tool", EditorDisplayAttribute.InlineStyle), VisibleIf("IsSculptMode")]
             public SculptMode AsSculptMode
             {
-                get => (SculptMode)_modes[(int)Modes.Sculpt];
+                get => _mode.SculptMode;
                 set { }
             }
 
-            private bool IsSculptMode => _mode == Modes.Sculpt;
+            private bool IsSculptMode => _mode.ToolModeType == SculptTerrainGizmoMode.ModeTypes.Sculpt;
 
             [EditorOrder(100), EditorDisplay("Tool", EditorDisplayAttribute.InlineStyle), VisibleIf("IsSmoothMode")]
             public SmoothMode AsSmoothMode
             {
-                get => (SmoothMode)_modes[(int)Modes.Smooth];
+                get => _mode.SmoothMode;
                 set { }
             }
 
-            private bool IsSmoothMode => _mode == Modes.Smooth;
+            private bool IsSmoothMode => _mode.ToolModeType == SculptTerrainGizmoMode.ModeTypes.Smooth;
 
             [EditorOrder(1000), EditorDisplay("Brush"), Tooltip("Sculpt brush type to use.")]
-            public Brushes BrushType
+            public SculptTerrainGizmoMode.BrushTypes BrushTypeType
             {
-                get => _brush;
-                set
-                {
-                    if (_brush != value)
-                    {
-                        _brush = value;
-                    }
-                }
+                get => _mode.ToolBrushType;
+                set => _mode.ToolBrushType = value;
             }
 
             [EditorOrder(1100), EditorDisplay("Brush", EditorDisplayAttribute.InlineStyle), VisibleIf("IsCircleBrush")]
-            public CircleBrush AsCircleBrush
+            public Brushes.CircleBrush AsCircleBrush
             {
-                get => (CircleBrush)_brushes[(int)Brushes.CircleBrush];
+                get => _mode.CircleBrush;
                 set { }
             }
 
-            private bool IsCircleBrush => _brush == Brushes.CircleBrush;
+            private bool IsCircleBrush => _mode.ToolBrushType == SculptTerrainGizmoMode.BrushTypes.CircleBrush;
         }
 
         private readonly ProxyObject _proxy;
@@ -118,16 +81,6 @@ namespace FlaxEditor.Tools.Terrain
         public readonly SculptTerrainGizmoMode Gizmo;
 
         /// <summary>
-        /// Gets the current tool mode.
-        /// </summary>
-        public Mode CurrentMode => _proxy.CurrentMode;
-
-        /// <summary>
-        /// Gets the current brush type.
-        /// </summary>
-        public Brush CurrentBrush => _proxy.CurrentBrush;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SculptTab"/> class.
         /// </summary>
         /// <param name="tab">The parent tab.</param>
@@ -137,7 +90,7 @@ namespace FlaxEditor.Tools.Terrain
         {
             CarveTab = tab;
             Gizmo = gizmo;
-            _proxy = new ProxyObject();
+            _proxy = new ProxyObject(gizmo);
 
             // Main panel
             var panel = new Panel(ScrollBars.Both)

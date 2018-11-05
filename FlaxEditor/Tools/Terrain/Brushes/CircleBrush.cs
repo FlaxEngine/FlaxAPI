@@ -39,7 +39,7 @@ namespace FlaxEditor.Tools.Terrain.Brushes
         /// <summary>
         /// The brush falloff that defines the percentage from the brush's extents where the falloff should begin. Essentially, this describes how hard the brush's edges are. A falloff of 0.0 means the brush will have full effect throughout with hard edges. A falloff of 1.0 means the brush will only have full effect at its center, and the effect will be reduced throughout its entire area to the edge.
         /// </summary>
-        [EditorOrder(10), Limit(0, 1, 0.01f), Tooltip("The brush falloff that defines the percentage from the brush's extents where the falloff should begin. Essentially, this describes how hard the brush's edges are. A falloff of 0.0 means the brush will have full effect throughout with hard edges. A falloff of 1.0 means the brush will only have full effect at its center, and the effect will be reduced throughout its entire area to the edge.")]
+        [EditorOrder(10), Limit(0, 1, 0.01f), Tooltip("The brush falloff that defines the percentage from the brush's extents where the falloff should begin.")]
         public float Falloff = 0.5f;
 
         /// <summary>
