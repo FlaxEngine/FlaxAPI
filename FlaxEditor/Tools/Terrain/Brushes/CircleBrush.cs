@@ -93,5 +93,22 @@ namespace FlaxEditor.Tools.Terrain.Brushes
             // Inverse elliptical falloff
             return 1.0f - Mathf.Sqrt(1.0f - Mathf.Square((falloff + radius - distance) / falloff));
         }
+
+        /// <inheritdoc />
+        public override MaterialInstance GetBrushMaterial(ref Vector3 position)
+        {
+            var material = CacheMaterial(EditorAssets.TerrainCircleBrushMaterial);
+            if (material)
+            {
+                // Data 0: XYZ: position, W: radius
+                // Data 1: X: falloff
+                float halfSize = Size * 0.5f;
+                float falloff = halfSize * Falloff;
+                float radius = halfSize - falloff;
+                material.GetParam("BrushData0").Value = new Vector4(position, radius);
+                material.GetParam("BrushData1").Value = new Vector4(falloff, 0, 0, 0);
+            }
+            return material;
+        }
     }
 }

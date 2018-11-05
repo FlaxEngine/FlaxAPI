@@ -30,7 +30,12 @@ namespace FlaxEditor
         /// <summary>
         /// The highlight terrain material.
         /// </summary>
-        public static string HighlightTerrainMaterial = "Editor/Highlight Terrain Material";
+        public static string HighlightTerrainMaterial = "Editor/Terrain/Highlight Terrain Material";
+
+        /// <summary>
+        /// The terrain circle brush material.
+        /// </summary>
+        public static string TerrainCircleBrushMaterial = "Editor/Terrain/Circle Brush Material";
 
         /// <summary>
         /// The debug material (wireframe).

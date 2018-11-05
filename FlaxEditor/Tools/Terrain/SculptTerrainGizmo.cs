@@ -54,12 +54,17 @@ namespace FlaxEditor.Tools.Terrain
             
             if (Mode.HasValidHit)
             {
+                var brushPosition = Mode.CursorPosition;
+                var brushMaterial = Mode.CurrentBrush.GetBrushMaterial(ref brushPosition);
+                if (!brushMaterial)
+                    return;
+                
                 for (int i = 0; i < Mode.ChunksUnderCursor.Count; i++)
                 {
                     var chunk = Mode.ChunksUnderCursor[i];
 
                     // TODO: drawing proper brush visualization
-                    collector.AddDrawCall(terrain, ref chunk.PatchCoord, ref chunk.ChunkCoord, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightTerrainMaterial));
+                    collector.AddDrawCall(terrain, ref chunk.PatchCoord, ref chunk.ChunkCoord, brushMaterial);
                 }
             }
         }
