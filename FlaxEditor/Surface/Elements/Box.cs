@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -10,7 +11,8 @@ namespace FlaxEditor.Surface.Elements
     /// Surface boxes base class (for input and output boxes). Boxes can be connected.
     /// </summary>
     /// <seealso cref="FlaxEditor.Surface.SurfaceNodeElementControl" />
-    public abstract class Box : SurfaceNodeElementControl
+    /// <seealso cref="IConnectionInstigator" />
+    public abstract class Box : SurfaceNodeElementControl, IConnectionInstigator
     {
         /// <summary>
         /// The current connection type. It's subset or equal to <see cref="DefaultType"/>.
@@ -88,11 +90,6 @@ namespace FlaxEditor.Surface.Elements
                 }
             }
         }
-
-        /// <summary>
-        /// Gets the connection origin point (in surface space).
-        /// </summary>
-        internal Vector2 ConnectionOrigin => Parent.PointToParent(Center);
 
         /// <inheritdoc />
         protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location)
@@ -361,7 +358,7 @@ namespace FlaxEditor.Surface.Elements
         /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
-            Surface.OnMouseOverBox(this);
+            Surface.ConnectingOver(this);
             base.OnMouseMove(location);
         }
 
@@ -377,6 +374,144 @@ namespace FlaxEditor.Surface.Elements
             }
 
             return result;
+        }
+
+        /// <inheritdoc />
+        public Vector2 ConnectionOrigin => Parent.PointToParent(Center);
+
+        private static bool CanCast(ConnectionType oB, ConnectionType iB)
+        {
+            return (oB != ConnectionType.Impulse && oB != ConnectionType.Object) &&
+                   (iB != ConnectionType.Impulse && iB != ConnectionType.Object) &&
+                   (Mathf.IsPowerOfTwo((int)oB) && Mathf.IsPowerOfTwo((int)iB));
+        }
+
+        /// <inheritdoc />
+        public bool AreConnected(IConnectionInstigator other)
+        {
+            return Connections.Contains(other as Box);
+        }
+
+        /// <inheritdoc />
+        public bool CanConnectWith(IConnectionInstigator other)
+        {
+            var start = this;
+            var end = other as Box;
+
+            // Allow only box with box connection
+            if (end == null)
+            {
+                // Cannot
+                return false;
+            }
+
+            // Disable for the same box
+            if (start == end)
+            {
+                // Cannot
+                return false;
+            }
+
+            // Check if boxes are connected
+            bool areConnected = start.AreConnected(end);
+
+            // Check if boxes are different or (one of them is disabled and both are disconnected)
+            if (end.IsOutput == start.IsOutput || !((end.Enabled && start.Enabled) || areConnected))
+            {
+                // Cannot
+                return false;
+            }
+
+            // Cache Input and Output box (since connection may be made in a different way)
+            InputBox iB;
+            OutputBox oB;
+            if (start.IsOutput)
+            {
+                iB = (InputBox)end;
+                oB = (OutputBox)start;
+            }
+            else
+            {
+                iB = (InputBox)start;
+                oB = (OutputBox)end;
+            }
+
+            // Validate connection type (also check if any of boxes parent can manage that connections types)
+            if (!iB.CanUseType(oB.CurrentType))
+            {
+                if (!CanCast(oB.CurrentType, iB.CurrentType))
+                {
+                    // Cannot
+                    return false;
+                }
+            }
+
+            // Can
+            return true;
+        }
+
+        /// <inheritdoc />
+        public void Connect(IConnectionInstigator other)
+        {
+            var start = this;
+            var end = (Box)other;
+
+            // Check if boxes are connected
+            bool areConnected = start.AreConnected(end);
+
+            // Check if boxes are different or (one of them is disabled and both are disconnected)
+            if (end.IsOutput == start.IsOutput || !((end.Enabled && start.Enabled) || areConnected))
+            {
+                // Back
+                return;
+            }
+
+            // Check if they are already connected
+            if (areConnected)
+            {
+                // Break link
+                start.BreakConnection(end);
+                Surface.MarkAsEdited();
+                return;
+            }
+
+            // Cache Input and Output box (since connection may be made in a different way)
+            InputBox iB;
+            OutputBox oB;
+            if (start.IsOutput)
+            {
+                iB = (InputBox)end;
+                oB = (OutputBox)start;
+            }
+            else
+            {
+                iB = (InputBox)start;
+                oB = (OutputBox)end;
+            }
+
+            // Validate connection type (also check if any of boxes parent can manage that connections types)
+            bool useCaster = false;
+            if (!iB.CanUseType(oB.CurrentType))
+            {
+                if (CanCast(oB.CurrentType, iB.CurrentType))
+                    useCaster = true;
+                else
+                    return;
+            }
+
+            // Connect boxes
+            if (useCaster)
+            {
+                // Connect via Caster
+                //AddCaster(oB, iB);
+                throw new NotImplementedException("AddCaster(..) function");
+            }
+            else
+            {
+                // Connect directly
+                iB.CreateConnection(oB);
+                Surface.MarkAsEdited();
+            }
         }
     }
 }

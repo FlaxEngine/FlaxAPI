@@ -78,14 +78,14 @@ namespace FlaxEditor.Surface
         protected Vector2 _movingSelectionViewPos;
 
         /// <summary>
-        /// The start box (for connecting).
+        /// The connection start.
         /// </summary>
-        protected Box _startBox;
+        protected IConnectionInstigator _connectionInstigator;
 
         /// <summary>
-        /// The last box under mouse.
+        /// The last connection instigator under mouse.
         /// </summary>
-        protected Box _lastBoxUnderMouse;
+        protected IConnectionInstigator _lastInstigatorUnderMouse;
 
         /// <summary>
         /// The primary context menu.
@@ -161,22 +161,22 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether user is selecting nodes.
         /// </summary>
-        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _startBox == null && !_isCommentCreateKeyDown;
+        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _connectionInstigator == null && !_isCommentCreateKeyDown;
 
         /// <summary>
         /// Gets a value indicating whether user is moving selected nodes.
         /// </summary>
-        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _startBox == null && !_isCommentCreateKeyDown;
+        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _connectionInstigator == null && !_isCommentCreateKeyDown;
 
         /// <summary>
         /// Gets a value indicating whether user is connecting nodes.
         /// </summary>
-        public bool IsConnecting => _startBox != null;
+        public bool IsConnecting => _connectionInstigator != null;
 
         /// <summary>
         /// Gets a value indicating whether user is creating comment.
         /// </summary>
-        public bool IsCreatingComment => _isCommentCreateKeyDown && _leftMouseDown && !_isMovingSelection && _startBox == null;
+        public bool IsCreatingComment => _isCommentCreateKeyDown && _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Returns true if any node is selected by the user (one or more).

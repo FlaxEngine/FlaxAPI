@@ -131,17 +131,17 @@ namespace FlaxEditor.Surface
         protected virtual void DrawConnectingLine()
         {
             // Get start position
-            Vector2 startPos = _startBox.ConnectionOrigin;
+            Vector2 startPos = _connectionInstigator.ConnectionOrigin;
 
             // Check if mouse is over any of box
             Vector2 endPos = _activeVisjectCM.Visible ? _rootControl.PointFromParent(_cmStartPos) : _rootControl.PointFromParent(_mousePos);
             Color lineColor = Style.Colors.Connecting;
-            if (_lastBoxUnderMouse != null)
+            if (_lastInstigatorUnderMouse != null)
             {
-                // Check if can connect boxes
-                bool canConnect = CanConnectBoxes(_startBox, _lastBoxUnderMouse);
+                // Check if can connect objects
+                bool canConnect = _connectionInstigator.CanConnectWith(_lastInstigatorUnderMouse);
                 lineColor = canConnect ? Style.Colors.ConnectingValid : Style.Colors.ConnectingInvalid;
-                endPos = _lastBoxUnderMouse.ConnectionOrigin;
+                endPos = _lastInstigatorUnderMouse.ConnectionOrigin;
             }
 
             // Draw connection

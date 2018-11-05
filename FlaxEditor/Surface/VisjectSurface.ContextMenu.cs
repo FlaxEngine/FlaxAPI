@@ -78,18 +78,18 @@ namespace FlaxEditor.Surface
 
             // And, if the user is patiently waiting for his box to get connected to the newly created one
             //   fulfill his wish! #MagicLamp? #Genie?
-            if (_startBox != null)
+            if (_connectionInstigator is Box startBox)
             {
                 Box alternativeBox = null;
-                foreach (var box in node.GetBoxes().Where(box => box.IsOutput != _startBox.IsOutput))
+                foreach (var box in node.GetBoxes().Where(box => box.IsOutput != startBox.IsOutput))
                 {
-                    if ((_startBox.CurrentType & box.CurrentType) != 0)
+                    if ((startBox.CurrentType & box.CurrentType) != 0)
                     {
                         ConnectingEnd(box);
                         return;
                     }
 
-                    if (alternativeBox == null && _startBox.CanUseType(box.CurrentType))
+                    if (alternativeBox == null && startBox.CanUseType(box.CurrentType))
                     {
                         alternativeBox = box;
                     }

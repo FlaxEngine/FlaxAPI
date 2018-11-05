@@ -6,62 +6,39 @@ using FlaxEngine;
 
 namespace FlaxEditor.Surface
 {
+    /// <summary>
+    /// The Visject Surface connection creation handler object.
+    /// </summary>
+    public interface IConnectionInstigator
+    {
+        /// <summary>
+        /// Gets the connection origin point (in surface space).
+        /// </summary>
+        Vector2 ConnectionOrigin { get; }
+
+        /// <summary>
+        /// Determines whether this surface object is connected with the specified other object.
+        /// </summary>
+        /// <param name="other">The other object to check.</param>
+        /// <returns><c>true</c> if connection between given two objects exists; otherwise, <c>false</c>.</returns>
+        bool AreConnected(IConnectionInstigator other);
+
+        /// <summary>
+        /// Determines whether this surface object can be connected with the specified other object.
+        /// </summary>
+        /// <param name="other">The other object to check.</param>
+        /// <returns><c>true</c> if connection can be created; otherwise, <c>false</c>.</returns>
+        bool CanConnectWith(IConnectionInstigator other);
+
+        /// <summary>
+        /// Created the new connection with the specified other object.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        void Connect(IConnectionInstigator other);
+    }
+
     public partial class VisjectSurface
     {
-        private static bool CanCast(ConnectionType oB, ConnectionType iB)
-        {
-            return (oB != ConnectionType.Impulse && oB != ConnectionType.Object) &&
-                   (iB != ConnectionType.Impulse && iB != ConnectionType.Object) &&
-                   (Mathf.IsPowerOfTwo((int)oB) && Mathf.IsPowerOfTwo((int)iB));
-        }
-
-        private static bool CanConnectBoxes(Box start, Box end)
-        {
-            // Disable for the same box
-            if (start == end)
-            {
-                // Cannot
-                return false;
-            }
-
-            // Check if boxes are connected
-            bool areConnected = start.AreConnected(end);
-
-            // Check if boxes are different or (one of them is disabled and both are disconnected)
-            if (end.IsOutput == start.IsOutput || !((end.Enabled && start.Enabled) || areConnected))
-            {
-                // Cannot
-                return false;
-            }
-
-            // Cache Input and Output box (since connection may be made in a different way)
-            InputBox iB;
-            OutputBox oB;
-            if (start.IsOutput)
-            {
-                iB = (InputBox)end;
-                oB = (OutputBox)start;
-            }
-            else
-            {
-                iB = (InputBox)start;
-                oB = (OutputBox)end;
-            }
-
-            // Validate connection type (also check if any of boxes parent can manage that connections types)
-            if (!iB.CanUseType(oB.CurrentType))
-            {
-                if (!CanCast(oB.CurrentType, iB.CurrentType))
-                {
-                    // Cannot
-                    return false;
-                }
-            }
-
-            // Can
-            return true;
-        }
-
         /// <summary>
         /// Checks if can use direct conversion from one type to another.
         /// </summary>
@@ -102,103 +79,47 @@ namespace FlaxEditor.Surface
             return result;
         }
 
-        internal void OnMouseOverBox(Box box)
-        {
-            _lastBoxUnderMouse = box;
-        }
-
         /// <summary>
-        /// Begins connecting boxes action.
+        /// Begins connecting surface objects action.
         /// </summary>
-        /// <param name="box">The start box.</param>
-        public void ConnectingStart(Box box)
+        /// <param name="instigator">The connection instigator (eg. start box).</param>
+        public void ConnectingStart(IConnectionInstigator instigator)
         {
-            if (box != null && box != _startBox)
+            if (instigator != null && instigator != _connectionInstigator)
             {
-                _startBox = box;
+                _connectionInstigator = instigator;
                 StartMouseCapture();
             }
         }
 
         /// <summary>
-        /// Ends connecting boxes action.
+        /// Callback for surface objects connections instigators to indicate mouse over control event (used to draw preview connections).
         /// </summary>
-        /// <param name="end">The end box.</param>
-        public void ConnectingEnd(Box end)
+        /// <param name="instigator">The instigator.</param>
+        public void ConnectingOver(IConnectionInstigator instigator)
+        {
+            _lastInstigatorUnderMouse = instigator;
+        }
+
+        /// <summary>
+        /// Ends connecting surface objects action.
+        /// </summary>
+        /// <param name="end">The end object (eg. end box).</param>
+        public void ConnectingEnd(IConnectionInstigator end)
         {
             // Ensure that there was a proper start box
-            if (_startBox == null)
+            if (_connectionInstigator == null)
                 return;
 
-            Box start = _startBox;
-            _startBox = null;
+            var start = _connectionInstigator;
+            _connectionInstigator = null;
 
             // Check if boxes are different and end box is specified
             if (start == end || end == null)
                 return;
 
-            // Check if boxes are connected
-            bool areConnected = start.AreConnected(end);
-
-            // Check if boxes are different or (one of them is disabled and both are disconnected)
-            if (end.IsOutput == start.IsOutput || !((end.Enabled && start.Enabled) || areConnected))
-            {
-                // Back
-                return;
-            }
-
-            // Check if they are already connected
-            if (areConnected)
-            {
-                // Break link
-                start.BreakConnection(end);
-
-                // Mark as edited
-                MarkAsEdited();
-
-                // Back
-                return;
-            }
-
-            // Cache Input and Output box (since connection may be made in a different way)
-            InputBox iB;
-            OutputBox oB;
-            if (start.IsOutput)
-            {
-                iB = (InputBox)end;
-                oB = (OutputBox)start;
-            }
-            else
-            {
-                iB = (InputBox)start;
-                oB = (OutputBox)end;
-            }
-
-            // Validate connection type (also check if any of boxes parent can manage that connections types)
-            bool useCaster = false;
-            if (!iB.CanUseType(oB.CurrentType))
-            {
-                if (CanCast(oB.CurrentType, iB.CurrentType))
-                    useCaster = true;
-                else
-                    return;
-            }
-
-            // Connect boxes
-            if (useCaster)
-            {
-                // Connect via Caster
-                //AddCaster(oB, iB);
-                throw new NotImplementedException("AddCaster(..) function");
-            }
-            else
-            {
-                // Connect directly
-                iB.CreateConnection(oB);
-            }
-
-            // Mark as edited
-            MarkAsEdited();
+            // Connect them
+            start.Connect(end);
         }
     }
 }

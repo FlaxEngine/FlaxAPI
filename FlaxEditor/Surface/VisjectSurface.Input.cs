@@ -67,7 +67,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override void OnMouseEnter(Vector2 location)
         {
-            _lastBoxUnderMouse = null;
+            _lastInstigatorUnderMouse = null;
 
             // Cache mouse location
             _mousePos = location;
@@ -78,7 +78,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
-            _lastBoxUnderMouse = null;
+            _lastInstigatorUnderMouse = null;
 
             // Cache mouse location
             _mousePos = location;
@@ -105,7 +105,7 @@ namespace FlaxEditor.Surface
             if (_leftMouseDown)
             {
                 // Connecting
-                if (_startBox != null)
+                if (_connectionInstigator != null)
                 {
                 }
                 // Moving
@@ -196,7 +196,7 @@ namespace FlaxEditor.Surface
             _wasMouseDownSinceCommentCreatingStart = true;
 
             // Check if user is connecting boxes
-            if (_startBox != null)
+            if (_connectionInstigator != null)
                 return true;
 
             // Cache data
@@ -284,7 +284,7 @@ namespace FlaxEditor.Surface
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
 
             // Right clicking while attempting to connect a node to something
-            if (!_rightMouseDown && buttons == MouseButton.Right && !_isMovingSelection && _startBox != null)
+            if (!_rightMouseDown && buttons == MouseButton.Right && !_isMovingSelection && _connectionInstigator != null)
             {
                 _cmStartPos = location;
                 ShowPrimaryMenu(_cmStartPos);
@@ -306,7 +306,7 @@ namespace FlaxEditor.Surface
                     Context.CreateComment(ref selectionRect);
                 }
                 // Selecting
-                else if (!_isMovingSelection && _startBox == null)
+                else if (!_isMovingSelection && _connectionInstigator == null)
                 {
                     UpdateSelectionRectangle();
                 }
@@ -413,7 +413,7 @@ namespace FlaxEditor.Surface
             _cmStartPos -= overflow;
 
             // Show it 
-            _startBox = firstOutputBox;
+            _connectionInstigator = firstOutputBox;
             ShowPrimaryMenu(_cmStartPos);
 
             foreach (char character in currentInputText)
