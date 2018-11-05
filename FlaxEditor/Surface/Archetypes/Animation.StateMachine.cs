@@ -247,7 +247,9 @@ namespace FlaxEditor.Surface.Archetypes
         public class StateMachineState : SurfaceNode, ISurfaceContext
         {
             private bool _isSavingData;
+            private bool _isMouseDown;
             private Rectangle _textRect;
+            private Rectangle _dragAreaRect;
             private Rectangle _renameButtonRect;
 
             /// <summary>
@@ -307,8 +309,11 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 Title = StateTitle;
                 var style = Style.Current;
-                var width = Mathf.Max(100, style.FontLarge.MeasureText(Title).X + 50);
+                var titleSize = style.FontLarge.MeasureText(Title);
+                var width = Mathf.Max(100, titleSize.X + 50);
                 Resize(width, 0);
+                titleSize.X += 8.0f;
+                _dragAreaRect = new Rectangle((Size - titleSize) * 0.5f, titleSize);
             }
 
             /// <inheritdoc />
@@ -320,6 +325,7 @@ namespace FlaxEditor.Surface.Archetypes
                 const float buttonSize = FlaxEditor.Surface.Constants.NodeCloseButtonSize;
                 _renameButtonRect = new Rectangle(_closeButtonRect.Left - buttonSize - buttonMargin, buttonMargin, buttonSize, buttonSize);
                 _textRect = new Rectangle(Vector2.Zero, Size);
+                _dragAreaRect = _headerRect;
             }
 
             /// <inheritdoc />
@@ -404,6 +410,11 @@ namespace FlaxEditor.Surface.Archetypes
                 StateTitle = renamePopup.Text;
             }
 
+            private void StartCreatingTransition()
+            {
+                // TODO: handle this thingy
+            }
+
             /// <inheritdoc />
             public override void Draw()
             {
@@ -413,7 +424,7 @@ namespace FlaxEditor.Surface.Archetypes
                 BackgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
                 if (IsMouseOver)
                     BackgroundColor *= 1.2f;
-                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), BackgroundColor);
+                Render2D.FillRectangle(_textRect, BackgroundColor);
 
                 // Push clipping mask
                 if (ClipChildren)
@@ -443,6 +454,12 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
+            public override bool CanSelect(ref Vector2 location)
+            {
+                return _dragAreaRect.MakeOffseted(Location).Contains(ref location);
+            }
+
+            /// <inheritdoc />
             public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
             {
                 if (base.OnMouseDoubleClick(location, buttons))
@@ -456,8 +473,31 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (buttons == MouseButton.Left && !_dragAreaRect.Contains(ref location))
+                {
+                    _isMouseDown = true;
+                    Cursor = CursorType.Hand;
+                    Focus();
+                    return true;
+                }
+
+                if (base.OnMouseDown(location, buttons))
+                    return true;
+
+                return false;
+            }
+
+            /// <inheritdoc />
             public override bool OnMouseUp(Vector2 location, MouseButton buttons)
             {
+                if (buttons == MouseButton.Left)
+                {
+                    _isMouseDown = false;
+                    Cursor = CursorType.Default;
+                }
+
                 if (base.OnMouseUp(location, buttons))
                     return true;
 
@@ -469,6 +509,20 @@ namespace FlaxEditor.Surface.Archetypes
                 }
 
                 return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseLeave()
+            {
+                base.OnMouseLeave();
+
+                if (_isMouseDown)
+                {
+                    _isMouseDown = false;
+                    Cursor = CursorType.Default;
+
+                    StartCreatingTransition();
+                }
             }
 
             /// <inheritdoc />
