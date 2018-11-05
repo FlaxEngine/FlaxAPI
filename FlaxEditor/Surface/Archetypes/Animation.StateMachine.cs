@@ -158,6 +158,14 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
+            public override void OnSpawned()
+            {
+                base.OnSpawned();
+
+                StartRenaming();
+            }
+
+            /// <inheritdoc />
             public override void SetValue(int index, object value)
             {
                 base.SetValue(index, value);
@@ -239,6 +247,8 @@ namespace FlaxEditor.Surface.Archetypes
         public class StateMachineState : SurfaceNode, ISurfaceContext
         {
             private bool _isSavingData;
+            private Rectangle _textRect;
+            private Rectangle _renameButtonRect;
 
             /// <summary>
             /// The transitions list from this state to the others.
@@ -260,17 +270,19 @@ namespace FlaxEditor.Surface.Archetypes
                 }
             }
 
+            /// <summary>
+            /// Gets or sets the state data (transitions list with rules graph and other options).
+            /// </summary>
+            public byte[] StateData
+            {
+                get => (byte[])Values[2];
+                set => SetValue(2, value);
+            }
+
             /// <inheritdoc />
             public StateMachineState(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
             {
-                var marginX = FlaxEditor.Surface.Constants.NodeMarginX;
-                var uiStartPosY = FlaxEditor.Surface.Constants.NodeMarginY + FlaxEditor.Surface.Constants.NodeHeaderSize;
-
-                var editButton = new Button(marginX, uiStartPosY, Width - marginX * 2, 20);
-                editButton.Text = "Edit";
-                editButton.Parent = this;
-                editButton.Clicked += Edit;
             }
 
             /// <inheritdoc />
@@ -279,16 +291,35 @@ namespace FlaxEditor.Surface.Archetypes
                 base.SetValue(index, value);
 
                 // Check for external state data changes (eg. via undo)
-                if (!_isSavingData && index == 1)
+                if (!_isSavingData && index == 2)
                 {
                     // Synchronize data
                     LoadData();
                 }
-                if (index == 0)
+                else if (index == 0)
                 {
                     // Update node title UI on change
-                    Title = StateTitle;
+                    UpdateTitle();
                 }
+            }
+
+            private void UpdateTitle()
+            {
+                Title = StateTitle;
+                var style = Style.Current;
+                var width = Mathf.Max(100, style.FontLarge.MeasureText(Title).X + 50);
+                Resize(width, 0);
+            }
+
+            /// <inheritdoc />
+            protected override void UpdateRectangles()
+            {
+                base.UpdateRectangles();
+
+                const float buttonMargin = FlaxEditor.Surface.Constants.NodeCloseButtonMargin;
+                const float buttonSize = FlaxEditor.Surface.Constants.NodeCloseButtonSize;
+                _renameButtonRect = new Rectangle(_closeButtonRect.Left - buttonSize - buttonMargin, buttonMargin, buttonSize, buttonSize);
+                _textRect = new Rectangle(Vector2.Zero, Size);
             }
 
             /// <inheritdoc />
@@ -296,8 +327,16 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSurfaceLoaded();
 
-                Title = StateTitle;
+                UpdateTitle();
                 LoadData();
+            }
+
+            /// <inheritdoc />
+            public override void OnSpawned()
+            {
+                base.OnSpawned();
+
+                StartRenaming();
             }
 
             /// <summary>
@@ -307,7 +346,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 ClearData();
 
-                var data = (byte[])Values[1];
+                var data = StateData;
                 if (data == null || data.Length == 0)
                 {
                     // Empty state
@@ -356,7 +395,7 @@ namespace FlaxEditor.Surface.Archetypes
             public void StartRenaming()
             {
                 Surface.Select(this);
-                var dialog = RenamePopup.Show(this, _headerRect, Title, false);
+                var dialog = RenamePopup.Show(this, _textRect, Title, false);
                 dialog.Renamed += OnRenamed;
             }
 
@@ -366,12 +405,64 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
+            public override void Draw()
+            {
+                var style = Style.Current;
+
+                // Paint Background
+                BackgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
+                if (IsMouseOver)
+                    BackgroundColor *= 1.2f;
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), BackgroundColor);
+
+                // Push clipping mask
+                if (ClipChildren)
+                {
+                    GetDesireClientArea(out var clientArea);
+                    Render2D.PushClip(ref clientArea);
+                }
+
+                DrawChildren();
+
+                // Pop clipping mask
+                if (ClipChildren)
+                {
+                    Render2D.PopClip();
+                }
+
+                // Name
+                Render2D.DrawText(style.FontLarge, Title, _textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
+
+                // Close button
+                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+
+                // Rename button
+                alpha = _renameButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
+                Render2D.DrawSprite(style.Settings, _renameButtonRect, new Color(alpha));
+            }
+
+            /// <inheritdoc />
             public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
             {
                 if (base.OnMouseDoubleClick(location, buttons))
                     return true;
 
-                if (_headerRect.Contains(ref location))
+                if (_renameButtonRect.Contains(ref location) || _closeButtonRect.Contains(ref location))
+                    return true;
+
+                Edit();
+                return true;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseUp(location, buttons))
+                    return true;
+
+                // Rename
+                if (_renameButtonRect.Contains(ref location))
                 {
                     StartRenaming();
                     return true;
