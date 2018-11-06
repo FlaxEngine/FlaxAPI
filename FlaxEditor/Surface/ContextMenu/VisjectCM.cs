@@ -14,6 +14,13 @@ namespace FlaxEditor.Surface.ContextMenu
     /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
     public class VisjectCM : ContextMenuBase
     {
+        /// <summary>
+        /// Visject context menu item clicked delegate.
+        /// </summary>
+        /// <param name="clickedItem">The item that was clicked</param>
+        /// <param name="selectedBox">The currently user-selected box. Can be null.</param>
+        public delegate void ItemClickedDelegate(VisjectCMItem clickedItem, Elements.Box selectedBox);
+
         private readonly List<VisjectCMGroup> _groups = new List<VisjectCMGroup>(16);
         private readonly TextBox _searchBox;
         private bool _waitingForInput;
@@ -31,7 +38,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Event fired when any item in this popup menu gets clicked.
         /// </summary>
-        public event Action<VisjectCMItem, Elements.Box> OnItemClicked;
+        public event ItemClickedDelegate OnItemClicked;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCM"/> class.
