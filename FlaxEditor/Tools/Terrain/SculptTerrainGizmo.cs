@@ -1,9 +1,9 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
-using FlaxEngine;
 using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Terrain
@@ -14,10 +14,27 @@ namespace FlaxEditor.Tools.Terrain
     /// <seealso cref="FlaxEditor.Gizmo.GizmoBase" />
     public sealed class SculptTerrainGizmo : GizmoBase
     {
+        private FlaxEngine.Terrain _paintTerrain;
+
         /// <summary>
         /// The parent mode.
         /// </summary>
         public readonly SculptTerrainGizmoMode Mode;
+
+        /// <summary>
+        /// Gets a value indicating whether gizmo tool is painting the terrain heightmap.
+        /// </summary>
+        public bool IsPainting => _paintTerrain != null;
+
+        /// <summary>
+        /// Occurs when terrain paint has been started.
+        /// </summary>
+        public event Action PaintStarted;
+
+        /// <summary>
+        /// Occurs when terrain paint has been ended.
+        /// </summary>
+        public event Action PaintEnded;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SculptTerrainGizmo"/> class.
@@ -51,22 +68,62 @@ namespace FlaxEditor.Tools.Terrain
             var terrain = SelectedTerrain;
             if (!terrain)
                 return;
-            
+
             if (Mode.HasValidHit)
             {
                 var brushPosition = Mode.CursorPosition;
                 var brushMaterial = Mode.CurrentBrush.GetBrushMaterial(ref brushPosition);
                 if (!brushMaterial)
                     return;
-                
+
                 for (int i = 0; i < Mode.ChunksUnderCursor.Count; i++)
                 {
                     var chunk = Mode.ChunksUnderCursor[i];
-
-                    // TODO: drawing proper brush visualization
                     collector.AddDrawCall(terrain, ref chunk.PatchCoord, ref chunk.ChunkCoord, brushMaterial);
                 }
             }
+        }
+
+        /// <summary>
+        /// Called to start terrain painting
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        private void PaintStart(FlaxEngine.Terrain terrain)
+        {
+            // Skip if already is painting
+            if (IsPainting)
+                return;
+
+            _paintTerrain = terrain;
+            PaintStarted?.Invoke();
+        }
+
+        /// <summary>
+        /// Called to update terrain painting logic.
+        /// </summary>
+        /// <param name="dt">The delta time (in seconds).</param>
+        private void PaintUpdate(float dt)
+        {
+            // Skip if is not painting
+            if (!IsPainting)
+                return;
+
+            FlaxEngine.Debug.Log("Painting!");
+            // TODO: update terrain under the brush cursor
+        }
+
+        /// <summary>
+        /// Called to end terrain painting.
+        /// </summary>
+        private void PaintEnd()
+        {
+            // Skip if nothing was painted
+            if (!IsPainting)
+                return;
+
+            // TODO: record undo action
+            _paintTerrain = null;
+            PaintEnded?.Invoke();
         }
 
         /// <inheritdoc />
@@ -74,12 +131,26 @@ namespace FlaxEditor.Tools.Terrain
         {
             base.Update(dt);
 
+            // Check if gizmo is not active
             if (!IsActive)
+            {
+                PaintEnd();
                 return;
+            }
 
+            // Check if no terrain is selected
             var terrain = SelectedTerrain;
             if (!terrain)
+            {
+                PaintEnd();
                 return;
+            }
+
+            // Check if selected terrain was changed during painting
+            if (terrain != _paintTerrain && IsPainting)
+            {
+                PaintEnd();
+            }
 
             // Perform detailed tracing to find cursor location on the terrain
             var mouseRay = Owner.MouseRay;
@@ -92,6 +163,13 @@ namespace FlaxEditor.Tools.Terrain
             {
                 Mode.ClearCursor();
             }
+
+            // Handle painting
+            if (Owner.IsLeftMouseButtonDown)
+                PaintStart(terrain);
+            else
+                PaintEnd();
+            PaintUpdate(dt);
         }
 
         /// <inheritdoc />
