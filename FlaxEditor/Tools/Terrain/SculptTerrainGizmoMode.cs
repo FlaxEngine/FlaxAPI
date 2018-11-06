@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Tools.Terrain.Brushes;
 using FlaxEditor.Tools.Terrain.Sculpt;
@@ -17,6 +18,9 @@ namespace FlaxEditor.Tools.Terrain
     /// <seealso cref="FlaxEditor.Viewport.Modes.EditorGizmoMode" />
     public class SculptTerrainGizmoMode : EditorGizmoMode
     {
+        private IntPtr _cachedHeightmapData;
+        private int _cachedHeightmapDataSize;
+
         /// <summary>
         /// The terrain carving gizmo.
         /// </summary>
@@ -208,6 +212,26 @@ namespace FlaxEditor.Tools.Terrain
             }
         }
 
+        /// <summary>
+        /// Gets the heightmap temporary scratch memory buffer used to modify terrain samples. Allocated memory is unmanaged by GC.
+        /// </summary>
+        /// <param name="size">The minimum buffer size (in bytes).</param>
+        /// <returns>The allocated memory using <see cref="Marshal"/> interface.</returns>
+        public IntPtr GetHeightmapTempBuffer(int size)
+        {
+            if (_cachedHeightmapDataSize < size)
+            {
+                if (_cachedHeightmapData != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(_cachedHeightmapData);
+                }
+                _cachedHeightmapData = Marshal.AllocHGlobal(size);
+                _cachedHeightmapDataSize = size;
+            }
+
+            return _cachedHeightmapData;
+        }
+
         /// <inheritdoc />
         public override void Init(MainEditorGizmoViewport viewport)
         {
@@ -223,6 +247,20 @@ namespace FlaxEditor.Tools.Terrain
 
             Viewport.Gizmos.Active = Gizmo;
             ClearCursor();
+        }
+
+        /// <inheritdoc />
+        public override void OnDeactivated()
+        {
+            base.OnDeactivated();
+
+            // Free temporary memory buffer
+            if (_cachedHeightmapData != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(_cachedHeightmapData);
+                _cachedHeightmapData = IntPtr.Zero;
+                _cachedHeightmapDataSize = 0;
+            }
         }
 
         /// <summary>

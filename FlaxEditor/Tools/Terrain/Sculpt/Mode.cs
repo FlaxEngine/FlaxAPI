@@ -37,12 +37,37 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         [EditorOrder(0), Limit(0, 1, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.")]
         public float Strength = 0.3f;
 
-        public void Apply(Brush brush, ref Options options)
+        public unsafe void Apply(Brush brush, ref Options options, SculptTerrainGizmoMode gizmo, FlaxEngine.Terrain terrain)
         {
             // Combine final apply strength
             float strength = Strength * options.Strength * options.DeltaTime;
             if (strength <= 0.0f)
                 return;
+
+            // Prepare
+            var chunkSize = terrain.ChunkSize;
+            var vertexCount = chunkSize * 4 + 1;
+            var heightmapLength = vertexCount * vertexCount;
+            float* tempBuffer = (float*)gizmo.GetHeightmapTempBuffer(heightmapLength * sizeof(float)).ToPointer();
+
+            // Process all the patches under the cursor
+            for (int patchIndex = 0; patchIndex < gizmo.PatchesUnderCursor.Count; patchIndex++)
+            {
+                var patch = gizmo.PatchesUnderCursor[patchIndex];
+
+                // Get the patch heightmap data (cached internally by the c++ core in editor)
+                var sourceHeightmap = (float*)TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord).ToPointer();
+                // TODO: record patch data if gizmo has just started editing this chunk (for undo)
+
+                // TODO: perform the actual heightmap modification
+
+                // temporary heightmap editing
+                for (int i = 0; i < heightmapLength; i++)
+                {
+                    sourceHeightmap[i] += 4.0f;
+                    //tempBuffer[i] = (float)i / heightmapLength * 1000.0f;
+                }
+            }
         }
     }
 }

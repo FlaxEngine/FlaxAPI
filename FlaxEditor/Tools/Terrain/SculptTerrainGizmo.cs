@@ -1,9 +1,11 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Runtime.InteropServices;
 using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
+using FlaxEditor.Tools.Terrain.Sculpt;
 using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Terrain
@@ -108,8 +110,14 @@ namespace FlaxEditor.Tools.Terrain
             if (!IsPainting)
                 return;
 
-            FlaxEngine.Debug.Log("Painting!");
-            // TODO: update terrain under the brush cursor
+            // Edit the terrain
+            var options = new Mode.Options
+            {
+                Strength = 1.0f,
+                DeltaTime = dt,
+                Invert = Owner.IsControlDown
+            };
+            Mode.CurrentMode.Apply(Mode.CurrentBrush, ref options, Mode, _paintTerrain);
         }
 
         /// <summary>
