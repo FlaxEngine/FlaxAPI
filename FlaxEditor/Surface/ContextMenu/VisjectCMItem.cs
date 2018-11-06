@@ -79,8 +79,15 @@ namespace FlaxEditor.Surface.ContextMenu
             SortScore = 0;
 
             if (selectedBox == null) return;
+            if (!(_highlights?.Count > 0)) return;
+            if (!Visible) return;
 
             if (CanConnectTo(selectedBox, NodeArchetype))
+            {
+                SortScore += 1;
+            }
+
+            if (Data != null)
             {
                 SortScore += 1;
             }

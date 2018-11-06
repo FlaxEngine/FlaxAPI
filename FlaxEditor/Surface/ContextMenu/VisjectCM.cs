@@ -127,6 +127,23 @@ namespace FlaxEditor.Surface.ContextMenu
                 _groups[i].UpdateItemSort(_selectedBox);
             }
 
+            SortGroups();
+
+            //If no item is selected (or it's not visible anymore), select the top one
+            if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
+            {
+                SelectedItem = _groups.Find(g => g.Visible)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
+            }
+            if (SelectedItem != null) _panel1.ScrollViewTo(SelectedItem);
+            PerformLayout();
+            _searchBox.Focus();
+        }
+
+        /// <summary>
+        /// Sort the groups and keeps <see cref="_groups"/> in sync
+        /// </summary>
+        private void SortGroups()
+        {
             // Sort groups
             _groupsPanel.SortChildren();
             // Synchronize with _groups[]
@@ -138,15 +155,6 @@ namespace FlaxEditor.Surface.ContextMenu
                     groupsIndex++;
                 }
             }
-
-            //If no item is selected (or it's not visible anymore), select the top one
-            if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
-            {
-                SelectedItem = _groups.Find(g => g.Visible)?.Children.Find(c => c.Visible && c is VisjectCMItem) as VisjectCMItem;
-            }
-            if (SelectedItem != null) _panel1.ScrollViewTo(SelectedItem);
-            PerformLayout();
-            _searchBox.Focus();
         }
 
         /// <summary>
@@ -170,6 +178,7 @@ namespace FlaxEditor.Surface.ContextMenu
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].ResetView();
 
+            SortGroups();
             _searchBox.Clear();
             SelectedItem = null;
             IsLayoutLocked = wasLayoutLocked;

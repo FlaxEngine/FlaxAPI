@@ -283,14 +283,6 @@ namespace FlaxEditor.Surface
             // Check if any control is under the mouse
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
 
-            // Right clicking while attempting to connect a node to something
-            if (!_rightMouseDown && !_isMovingSelection && _startBox != null)
-            {
-                _cmStartPos = location;
-                ShowPrimaryMenu(_cmStartPos);
-                EndMouseCapture();
-            }
-
             // Cache flags and state
             if (_leftMouseDown && buttons == MouseButton.Left)
             {
@@ -343,6 +335,14 @@ namespace FlaxEditor.Surface
             // Base
             if (base.OnMouseUp(location, buttons))
                 return true;
+
+            // Right clicking while attempting to connect a node to something
+            if (!_rightMouseDown && !_isMovingSelection && _startBox != null)
+            {
+                _cmStartPos = location;
+                ShowPrimaryMenu(_cmStartPos);
+                EndMouseCapture();
+            }
 
             return true;
         }

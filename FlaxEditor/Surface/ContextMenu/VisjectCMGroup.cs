@@ -48,13 +48,17 @@ namespace FlaxEditor.Surface.ContextMenu
         /// </summary>
         public void ResetView()
         {
+            SortScore = 0;
             // Remove filter
             for (int i = 0; i < _children.Count; i++)
             {
                 if (_children[i] is VisjectCMItem item)
+                {
                     item.UpdateFilter(null);
+                    item.UpdateScore(null);
+                }
             }
-
+            SortChildren();
             Close(false);
             Visible = true;
         }
@@ -96,24 +100,29 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="selectedBox">The currently user-selected box</param>
         public void UpdateItemSort(Box selectedBox)
         {
-            this.SortScore = 0;
+            SortScore = 0;
             for (int i = 0; i < _children.Count; i++)
             {
                 if (_children[i] is VisjectCMItem item)
                 {
                     item.UpdateScore(selectedBox);
 
-                    // Invisible children are irrelevant to the score of this group
-                    if (_children[i].Visible && item.SortScore > this.SortScore)
+                    if (item.SortScore > SortScore)
                     {
-                        this.SortScore = item.SortScore;
+                        SortScore = item.SortScore;
                     }
                 }
+            }
+
+            if (selectedBox == null)
+            {
+                SortScore = 0;
             }
 
             SortChildren();
         }
 
+        /// <inheritdoc/>
         public override int Compare(Control other)
         {
             if (other is VisjectCMGroup otherGroup)
