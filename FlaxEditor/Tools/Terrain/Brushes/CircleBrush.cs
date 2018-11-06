@@ -107,6 +107,7 @@ namespace FlaxEditor.Tools.Terrain.Brushes
                 float radius = halfSize - falloff;
                 material.GetParam("BrushData0").Value = new Vector4(position, radius);
                 material.GetParam("BrushData1").Value = new Vector4(falloff, 0, 0, 0);
+                // TODO: use material or param per circle brush mode: linear, tip, smooth, sphere to match the brush falloff effect
             }
             return material;
         }
