@@ -174,6 +174,18 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Found node or null if cannot.</returns>
+        public SurfaceNode FindNode(int id)
+        {
+            if (id < 0)
+                return null;
+            return FindNode((uint)id);
+        }
+
+        /// <summary>
+        /// Finds the node with the given ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Found node or null if cannot.</returns>
         public SurfaceNode FindNode(uint id)
         {
             SurfaceNode result = null;

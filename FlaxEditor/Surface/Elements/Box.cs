@@ -451,6 +451,12 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
+        public void DrawConnectingLine(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
+        {
+            OutputBox.DrawConnection(ref startPos, ref endPos, ref color);
+        }
+
+        /// <inheritdoc />
         public void Connect(IConnectionInstigator other)
         {
             var start = this;

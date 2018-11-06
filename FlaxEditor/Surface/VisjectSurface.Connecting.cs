@@ -1,7 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
-using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -12,7 +10,7 @@ namespace FlaxEditor.Surface
     public interface IConnectionInstigator
     {
         /// <summary>
-        /// Gets the connection origin point (in surface space).
+        /// Gets the connection origin point (in surface node space).
         /// </summary>
         Vector2 ConnectionOrigin { get; }
 
@@ -29,6 +27,14 @@ namespace FlaxEditor.Surface
         /// <param name="other">The other object to check.</param>
         /// <returns><c>true</c> if connection can be created; otherwise, <c>false</c>.</returns>
         bool CanConnectWith(IConnectionInstigator other);
+
+        /// <summary>
+        /// Draws the connecting line.
+        /// </summary>
+        /// <param name="startPos">The start position.</param>
+        /// <param name="endPos">The end position.</param>
+        /// <param name="color">The color.</param>
+        void DrawConnectingLine(ref Vector2 startPos, ref Vector2 endPos, ref Color color);
 
         /// <summary>
         /// Created the new connection with the specified other object.

@@ -113,14 +113,7 @@ namespace FlaxEditor.Surface
             // Draw all connections at once to boost batching process
             for (int i = 0; i < Nodes.Count; i++)
             {
-                var node = Nodes[i];
-                for (int j = 0; j < node.Elements.Count; j++)
-                {
-                    if (node.Elements[j] is OutputBox ob && ob.HasAnyConnection)
-                    {
-                        ob.DrawConnections();
-                    }
-                }
+                Nodes[i].DrawConnections();
             }
         }
 
@@ -145,7 +138,7 @@ namespace FlaxEditor.Surface
             }
 
             // Draw connection
-            OutputBox.DrawConnection(ref startPos, ref endPos, ref lineColor);
+            _connectionInstigator.DrawConnectingLine(ref startPos, ref endPos, ref lineColor);
         }
 
         /// <summary>

@@ -140,7 +140,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Removes all connections from and to that node.
         /// </summary>
-        public void RemoveConnections()
+        public virtual void RemoveConnections()
         {
             for (int i = 0; i < Elements.Count; i++)
             {
@@ -289,6 +289,20 @@ namespace FlaxEditor.Surface
             {
                 if (Elements[i] is Box box)
                     result.Add(box);
+            }
+        }
+
+        /// <summary>
+        /// Draws all the connections between surface objects related to this node.
+        /// </summary>
+        public virtual void DrawConnections()
+        {
+            for (int j = 0; j < Elements.Count; j++)
+            {
+                if (Elements[j] is OutputBox ob && ob.HasAnyConnection)
+                {
+                    ob.DrawConnections();
+                }
             }
         }
 
