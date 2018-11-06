@@ -114,6 +114,66 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Modifies the terrain patch heightmap with the given samples.
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z) to modify it.</param>
+        /// <param name="samples">The samples. The array length is size.X*size.Y.</param>
+        /// <param name="offset">The offset from the first row and column of the heightmap data (offset destination x and z start position).</param>
+        /// <param name="size">The size of the heightmap to modify (x and z). Amount of samples in each direction.</param>
+        /// <returns>True if failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool ModifyHeightmap(Terrain terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ModifyHeightmap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
+#endif
+        }
+
+        /// <summary>
+        /// Gets the raw pointer to the heightmap data (cached internally by the c++ core in editor).
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z) to gather it.</param>
+        /// <returns>The pointer to the array of floats with terrain patch heights data. Null if failed to gatehr the data.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static IntPtr GetHeightmapData(Terrain terrain, ref Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetHeightmapData(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+#endif
+        }
+
+        /// <summary>
+        /// Gets the raw pointer to the visibility mask data (cached internally by the c++ core in editor).
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z) to gather it.</param>
+        /// <returns>The pointer to the array of floats with terrain patch visibility mask data. Null if failed to gatehr the data.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static IntPtr GetVisibilityMapData(Terrain terrain, ref Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetVisibilityMapData(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -131,6 +191,15 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_InitializePatch(IntPtr terrain, ref Int2 patchCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ModifyHeightmap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern IntPtr Internal_GetHeightmapData(IntPtr terrain, ref Int2 patchCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern IntPtr Internal_GetVisibilityMapData(IntPtr terrain, ref Int2 patchCoord);
 #endif
 
         #endregion
