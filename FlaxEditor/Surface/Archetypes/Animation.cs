@@ -680,6 +680,10 @@ namespace FlaxEditor.Surface.Archetypes
                 Description = "The animation states machine entry node",
                 Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(100, 0),
+                DefaultValues = new object[]
+                {
+                    -1,
+                },
             },
             new NodeArchetype
             {
@@ -688,13 +692,13 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "State",
                 Description = "The animation states machine state node",
                 Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoSpawnViaGUI,
+                Size = new Vector2(100, 0),
                 DefaultValues = new object[]
                 {
                     "State",
                     Enumerable.Empty<byte>() as byte[],
                     Enumerable.Empty<byte>() as byte[],
                 },
-                Size = new Vector2(100, 0),
             },
             new NodeArchetype
             {

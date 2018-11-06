@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using FlaxEditor.GUI;
 using FlaxEngine;
@@ -231,12 +232,193 @@ namespace FlaxEditor.Surface.Archetypes
         /// Customized <see cref="SurfaceNode" /> for the state machine entry node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-        public class StateMachineEntry : SurfaceNode
+        /// <seealso cref="FlaxEditor.Surface.IConnectionInstigator" />
+        public class StateMachineEntry : SurfaceNode, IConnectionInstigator
         {
+            private bool _isMouseDown;
+            private Rectangle _textRect;
+            private Rectangle _dragAreaRect;
+
+            /// <summary>
+            /// Gets or sets the first state for the state machine pointed by the entry node.
+            /// </summary>
+            public StateMachineState FirstState
+            {
+                get => Surface.FindNode((int)Values[0]) as StateMachineState;
+                set
+                {
+                    if (FirstState != value)
+                    {
+                        var id = value != null ? (int)value.ID : -1;
+                        SetValue(0, id);
+                    }
+                }
+            }
+
             /// <inheritdoc />
             public StateMachineEntry(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
             {
+            }
+
+            private void StartCreatingTransition()
+            {
+                Surface.ConnectingStart(this);
+            }
+
+            /// <inheritdoc />
+            protected override void UpdateRectangles()
+            {
+                base.UpdateRectangles();
+
+                _textRect = new Rectangle(Vector2.Zero, Size);
+
+                var style = Style.Current;
+                var titleSize = style.FontLarge.MeasureText(Title);
+                var width = Mathf.Max(100, titleSize.X + 50);
+                Resize(width, 0);
+                titleSize.X += 8.0f;
+                _dragAreaRect = new Rectangle((Size - titleSize) * 0.5f, titleSize);
+            }
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                var style = Style.Current;
+
+                // Paint Background
+                BackgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
+                if (IsMouseOver)
+                    BackgroundColor *= 1.2f;
+                Render2D.FillRectangle(_textRect, BackgroundColor);
+
+                // Push clipping mask
+                if (ClipChildren)
+                {
+                    GetDesireClientArea(out var clientArea);
+                    Render2D.PushClip(ref clientArea);
+                }
+
+                DrawChildren();
+
+                // Pop clipping mask
+                if (ClipChildren)
+                {
+                    Render2D.PopClip();
+                }
+
+                // Name
+                Render2D.DrawText(style.FontLarge, Title, _textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
+            }
+
+            /// <inheritdoc />
+            public override bool CanSelect(ref Vector2 location)
+            {
+                return _dragAreaRect.MakeOffseted(Location).Contains(ref location);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (buttons == MouseButton.Left && !_dragAreaRect.Contains(ref location))
+                {
+                    _isMouseDown = true;
+                    Cursor = CursorType.Hand;
+                    Focus();
+                    return true;
+                }
+
+                if (base.OnMouseDown(location, buttons))
+                    return true;
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (buttons == MouseButton.Left)
+                {
+                    _isMouseDown = false;
+                    Cursor = CursorType.Default;
+                    Surface.ConnectingEnd(this);
+                }
+
+                if (base.OnMouseUp(location, buttons))
+                    return true;
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseMove(Vector2 location)
+            {
+                Surface.ConnectingOver(this);
+                base.OnMouseMove(location);
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseLeave()
+            {
+                base.OnMouseLeave();
+
+                if (_isMouseDown)
+                {
+                    _isMouseDown = false;
+                    Cursor = CursorType.Default;
+
+                    StartCreatingTransition();
+                }
+            }
+
+            /// <inheritdoc />
+            public override void DrawConnections()
+            {
+                var targetState = FirstState;
+                if (targetState != null)
+                {
+                    // Draw the connection
+                    var startPos = PointToParent(Size * 0.5f);
+                    var endPos = targetState.PointToParent(targetState.Size * 0.5f);
+                    Render2D.DrawLine(startPos, endPos, Color.White, 2.2f);
+                }
+            }
+
+            /// <inheritdoc />
+            public override void RemoveConnections()
+            {
+                base.RemoveConnections();
+
+                FirstState = null;
+            }
+
+            /// <inheritdoc />
+            public Vector2 ConnectionOrigin => Center;
+
+            /// <inheritdoc />
+            public bool AreConnected(IConnectionInstigator other)
+            {
+                return other is StateMachineState state && (int)state.ID == (int)Values[0];
+            }
+
+            /// <inheritdoc />
+            public bool CanConnectWith(IConnectionInstigator other)
+            {
+                return other is StateMachineState;
+            }
+
+            /// <inheritdoc />
+            public void DrawConnectingLine(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
+            {
+                Render2D.DrawLine(startPos, endPos, color, 2.2f);
+            }
+
+            /// <inheritdoc />
+            public void Connect(IConnectionInstigator other)
+            {
+                var state = (StateMachineState)other;
+
+                FirstState = state;
             }
         }
 
@@ -244,7 +426,9 @@ namespace FlaxEditor.Surface.Archetypes
         /// Customized <see cref="SurfaceNode" /> for the state machine state node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-        public class StateMachineState : SurfaceNode, ISurfaceContext
+        /// <seealso cref="FlaxEditor.Surface.IConnectionInstigator" />
+        /// <seealso cref="FlaxEditor.Surface.ISurfaceContext" />
+        public class StateMachineState : SurfaceNode, ISurfaceContext, IConnectionInstigator
         {
             private bool _isSavingData;
             private bool _isMouseDown;
@@ -412,7 +596,7 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void StartCreatingTransition()
             {
-                // TODO: handle this thingy
+                Surface.ConnectingStart(this);
             }
 
             /// <inheritdoc />
@@ -496,6 +680,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _isMouseDown = false;
                     Cursor = CursorType.Default;
+                    Surface.ConnectingEnd(this);
                 }
 
                 if (base.OnMouseUp(location, buttons))
@@ -512,6 +697,13 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
+            public override void OnMouseMove(Vector2 location)
+            {
+                Surface.ConnectingOver(this);
+                base.OnMouseMove(location);
+            }
+
+            /// <inheritdoc />
             public override void OnMouseLeave()
             {
                 base.OnMouseLeave();
@@ -523,6 +715,15 @@ namespace FlaxEditor.Surface.Archetypes
 
                     StartCreatingTransition();
                 }
+            }
+
+            /// <inheritdoc />
+            public override void RemoveConnections()
+            {
+                base.RemoveConnections();
+
+                Transitions.Clear();
+                SaveData();
             }
 
             /// <inheritdoc />
@@ -560,6 +761,40 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     entryNode = context.SpawnNode(9, 21, new Vector2(100.0f));
                 }
+            }
+
+            /// <inheritdoc />
+            public Vector2 ConnectionOrigin => Center;
+
+            /// <inheritdoc />
+            public bool AreConnected(IConnectionInstigator other)
+            {
+                if (other is StateMachineState otherState)
+                    return Transitions.Any(x => x.DestinationState == otherState);
+                return false;
+            }
+
+            /// <inheritdoc />
+            public bool CanConnectWith(IConnectionInstigator other)
+            {
+                if (other is StateMachineState otherState)
+                {
+                    // Can connect not connected states
+                    return Transitions.All(x => x.DestinationState != otherState);
+                }
+                return false;
+            }
+
+            /// <inheritdoc />
+            public void DrawConnectingLine(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <inheritdoc />
+            public void Connect(IConnectionInstigator other)
+            {
+                throw new NotImplementedException();
             }
         }
 
