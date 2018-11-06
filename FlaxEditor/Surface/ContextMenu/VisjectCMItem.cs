@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.Surface.Elements;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -52,6 +53,11 @@ namespace FlaxEditor.Surface.ContextMenu
         public object[] Data { get; set; }
 
         /// <summary>
+        /// A computed score for the context menu order
+        /// </summary>
+        public float SortScore { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectCMItem"/> class.
         /// </summary>
         /// <param name="group">The group.</param>
@@ -61,6 +67,46 @@ namespace FlaxEditor.Surface.ContextMenu
         {
             Group = group;
             _archetype = archetype;
+        }
+
+        /// <summary>
+        /// Updates the <see cref="SortScore"/>
+        /// </summary>
+        /// <param name="selectedBox">The currently user-selected box</param>
+        public void UpdateScore(Box selectedBox)
+        {
+            // Start off by resetting the score!
+            SortScore = 0;
+
+            if (selectedBox == null) return;
+            if (!(_highlights?.Count > 0)) return;
+            if (!Visible) return;
+
+            if (CanConnectTo(selectedBox, NodeArchetype))
+            {
+                SortScore += 1;
+            }
+
+            if (Data != null)
+            {
+                SortScore += 1;
+            }
+        }
+
+        private bool CanConnectTo(Box startBox, NodeArchetype nodeArchetype)
+        {
+            if (startBox == null) return false;
+            if (!startBox.IsOutput) return false; // For now, I'm only handing the output box case
+
+            for (int i = 0; i < nodeArchetype.Elements.Length; i++)
+            {
+                if (nodeArchetype.Elements[i].Type == NodeElementType.Input &&
+                    startBox.CanUseType(nodeArchetype.Elements[i].ConnectionsType))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -158,7 +204,7 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             // Draw name
-            Render2D.DrawText(style.FontSmall, _archetype.Title, new Rectangle(2, 0, rect.Width - 4, rect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontSmall, (SortScore > 0.1f ? "> " : "") + _archetype.Title, new Rectangle(2, 0, rect.Width - 4, rect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
         }
 
         /// <inheritdoc />
@@ -196,7 +242,14 @@ namespace FlaxEditor.Surface.ContextMenu
         public override int Compare(Control other)
         {
             if (other is VisjectCMItem otherItem)
-                return String.Compare(_archetype.Title, otherItem._archetype.Title, StringComparison.Ordinal);
+            {
+                int order = -1 * SortScore.CompareTo(otherItem.SortScore);
+                if (order == 0)
+                {
+                    order = string.Compare(_archetype.Title, otherItem._archetype.Title, StringComparison.Ordinal);
+                }
+                return order;
+            }
             return base.Compare(other);
         }
     }

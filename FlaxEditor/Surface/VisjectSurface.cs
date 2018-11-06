@@ -358,6 +358,7 @@ namespace FlaxEditor.Surface
             // Create primary menu (for nodes spawning)
             _cmPrimaryMenu = primaryContextMenu ?? new VisjectCM(NodeArchetypes, CanSpawnNodeType, () => Parameters);
             _cmPrimaryMenu.OnItemClicked += OnPrimaryMenuButtonClick;
+            _cmPrimaryMenu.VisibleChanged += OnPrimaryMenuVisibleChanged;
 
             // Create secondary menu (for other actions)
             _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();
@@ -836,33 +837,43 @@ namespace FlaxEditor.Surface
                 case NodeElementType.Input:
                     element = new InputBox(node, arch);
                     break;
+
                 case NodeElementType.Output:
                     element = new OutputBox(node, arch);
                     break;
+
                 case NodeElementType.BoolValue:
                     element = new BoolValue(node, arch);
                     break;
+
                 case NodeElementType.FloatValue:
                     element = new FloatValue(node, arch);
                     break;
+
                 case NodeElementType.IntegerValue:
                     element = new IntegerValue(node, arch);
                     break;
+
                 case NodeElementType.ColorValue:
                     element = new ColorValue(node, arch);
                     break;
+
                 case NodeElementType.ComboBox:
                     element = new ComboBoxElement(node, arch);
                     break;
+
                 case NodeElementType.Asset:
                     element = new AssetSelect(node, arch);
                     break;
+
                 case NodeElementType.Text:
                     element = new TextView(node, arch);
                     break;
+
                 case NodeElementType.TextBox:
                     element = new TextBoxView(node, arch);
                     break;
+
                 case NodeElementType.SkeletonNodeSelect:
                     element = new SkeletonNodeSelectElement(node, arch);
                     break;

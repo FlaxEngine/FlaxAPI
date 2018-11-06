@@ -24,7 +24,10 @@ namespace FlaxEditor.Surface
         /// <param name="location">The location in the Surface Space.</param>
         public void ShowPrimaryMenu(Vector2 location)
         {
-            _cmPrimaryMenu.Show(this, location);
+            // Offset added in case the user doesn't like the box and
+            //   wants to quickly get rid of it by clicking
+            location += new Vector2(5);
+            _cmPrimaryMenu.Show(this, location, _startBox);
             _cmStartPos = location;
         }
 
@@ -52,7 +55,15 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu.Show(this, location);
         }
 
-        private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem)
+        private void OnPrimaryMenuVisibleChanged(Control primaryMenu)
+        {
+            if (!primaryMenu.Visible)
+            {
+                _startBox = null;
+            }
+        }
+
+        private void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem, Box selectedBox)
         {
             var node = SpawnNode(
                 visjectCmItem.GroupArchetype,
@@ -62,19 +73,20 @@ namespace FlaxEditor.Surface
             );
 
             // And, if the user is patiently waiting for his box to get connected to the newly created one
-            //   fulfill his wish! #MagicLamp? #Genie?
-            if (_startBox != null)
+            //   fulfill his wish!
+            if (selectedBox != null)
             {
+                _startBox = selectedBox;
                 Box alternativeBox = null;
-                foreach (var box in node.GetBoxes().Where(box => box.IsOutput != _startBox.IsOutput))
+                foreach (var box in node.GetBoxes().Where(box => box.IsOutput != selectedBox.IsOutput))
                 {
-                    if ((_startBox.CurrentType & box.CurrentType) != 0)
+                    if ((selectedBox.CurrentType & box.CurrentType) != 0)
                     {
                         ConnectingEnd(box);
                         return;
                     }
 
-                    if (alternativeBox == null && _startBox.CanUseType(box.CurrentType))
+                    if (alternativeBox == null && selectedBox.CanUseType(box.CurrentType))
                     {
                         alternativeBox = box;
                     }
