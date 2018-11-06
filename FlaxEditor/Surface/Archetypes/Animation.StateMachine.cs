@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -380,7 +379,8 @@ namespace FlaxEditor.Surface.Archetypes
                     // Draw the connection
                     var startPos = PointToParent(Size * 0.5f);
                     var endPos = targetState.PointToParent(targetState.Size * 0.5f);
-                    Render2D.DrawLine(startPos, endPos, Color.White, 2.2f);
+                    var color = Color.White;
+                    StateMachineState.DrawConnection(ref startPos, ref endPos, ref color);
                 }
             }
 
@@ -410,7 +410,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void DrawConnectingLine(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
             {
-                Render2D.DrawLine(startPos, endPos, color, 2.2f);
+                StateMachineState.DrawConnection(ref startPos, ref endPos, ref color);
             }
 
             /// <inheritdoc />
@@ -469,6 +469,17 @@ namespace FlaxEditor.Surface.Archetypes
             public StateMachineState(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
             {
+            }
+
+            /// <summary>
+            /// Draws the connection between two state machine nodes.
+            /// </summary>
+            /// <param name="startPos">The start position.</param>
+            /// <param name="endPos">The end position.</param>
+            /// <param name="color">The line color.</param>
+            public static void DrawConnection(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
+            {
+                Render2D.DrawLine(startPos, endPos, color, 2.2f);
             }
 
             /// <inheritdoc />
@@ -764,6 +775,19 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
+            public override void DrawConnections()
+            {
+                var color = Color.White;
+                for (int i = 0; i < Transitions.Count; i++)
+                {
+                    var targetState = Transitions[i].DestinationState;
+                    var startPos = PointToParent(Size * 0.5f);
+                    var endPos = targetState.PointToParent(targetState.Size * 0.5f);
+                    DrawConnection(ref startPos, ref endPos, ref color);
+                }
+            }
+
+            /// <inheritdoc />
             public Vector2 ConnectionOrigin => Center;
 
             /// <inheritdoc />
@@ -788,7 +812,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void DrawConnectingLine(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
             {
-                throw new NotImplementedException();
+                DrawConnection(ref startPos, ref endPos, ref color);
             }
 
             /// <inheritdoc />
