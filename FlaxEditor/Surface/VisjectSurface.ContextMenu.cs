@@ -37,7 +37,7 @@ namespace FlaxEditor.Surface
         {
             // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
             location += new Vector2(5);
-            _activeVisjectCM.Show(this, location, _startBox);
+            _activeVisjectCM.Show(this, location, _connectionInstigator as Box);
             _cmStartPos = location;
         }
 
@@ -69,7 +69,7 @@ namespace FlaxEditor.Surface
         {
             if (!primaryMenu.Visible)
             {
-                _startBox = null;
+                _connectionInstigator = null;
             }
         }
 
@@ -87,11 +87,10 @@ namespace FlaxEditor.Surface
                 visjectCmItem.Data
             );
 
-            // And, if the user is patiently waiting for his box to get connected to the newly created one
-            //   fulfill his wish!
+            // And, if the user is patiently waiting for his box to get connected to the newly created one fulfill his wish!
             if (selectedBox is Box startBox)
             {
-                _startBox = startBox;
+                _connectionInstigator = startBox;
                 Box alternativeBox = null;
                 foreach (var box in node.GetBoxes().Where(box => box.IsOutput != selectedBox.IsOutput))
                 {

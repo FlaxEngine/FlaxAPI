@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System.Linq;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -337,7 +338,7 @@ namespace FlaxEditor.Surface
                 return true;
 
             // Right clicking while attempting to connect a node to something
-            if (!_rightMouseDown && !_isMovingSelection && _startBox != null)
+            if (!_rightMouseDown && !_isMovingSelection && _connectionInstigator != null)
             {
                 _cmStartPos = location;
                 ShowPrimaryMenu(_cmStartPos);
@@ -381,10 +382,14 @@ namespace FlaxEditor.Surface
         private void CurrentInputTextChanged(string currentInputText)
         {
             var selection = SelectedNodes;
-            if (selection.Count != 1) return;
-            if (string.IsNullOrEmpty(currentInputText)) return;
-            if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey)) return;
-            if (_activeVisjectCM.Visible) return;
+            if (selection.Count != 1)
+                return;
+            if (string.IsNullOrEmpty(currentInputText))
+                return;
+            if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey))
+                return;
+            if (_activeVisjectCM.Visible)
+                return;
 
             // # => color
             // 1,43 => Vector2
@@ -394,13 +399,18 @@ namespace FlaxEditor.Surface
 
             var node = selection[0];
             var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(box => box.IsOutput);
-            if (firstOutputBox == null) return;
+            if (firstOutputBox == null)
+                return;
 
             _cmStartPos = _rootControl.PointToParent(_rootControl.Parent, PositionAfterNode(node));
             _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
 
             // If the menu is not fully visible, move the surface a bit
-            Vector2 overflow = (_cmStartPos + _activeVisjectCM.Size) - _surface.Parent.Size;
+            Vector2 overflow = (_cmStartPos + _activeVisjectCM.Size);
+            if (_connectionInstigator is SurfaceNode instigatorAsSurfaceNode)
+                overflow -= instigatorAsSurfaceNode.Size;
+            else if (_connectionInstigator is Box instigatorAsBox)
+                overflow -= instigatorAsBox.Parent.Size;
             overflow = Vector2.Max(overflow, Vector2.Zero);
 
             ViewPosition += overflow;
