@@ -498,12 +498,12 @@ namespace FlaxEditor.Surface
                     var node = e.Value;
                     var nodeData = nodesData[e.Key];
                     var pos = new Vector2(nodeData.X, nodeData.Y) - upperLeft;
-                    node.Location = ViewPosition + pos + new Vector2(40);
+                    node.Location = ViewPosition + pos + _mousePos / ViewScale;
                 }
                 foreach (var comment in comments)
                 {
                     var pos = comment.Location - upperLeft;
-                    comment.Location = ViewPosition + pos + new Vector2(40);
+                    comment.Location = ViewPosition + pos + _mousePos / ViewScale;
                 }
 
                 // Post load

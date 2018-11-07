@@ -283,13 +283,6 @@ namespace FlaxEditor.Surface
             // Check if any control is under the mouse
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
 
-            // Right clicking while attempting to connect a node to something
-            if (!_rightMouseDown && buttons == MouseButton.Right && !_isMovingSelection && _connectionInstigator != null)
-            {
-                _cmStartPos = location;
-                ShowPrimaryMenu(_cmStartPos);
-            }
-
             // Cache flags and state
             if (_leftMouseDown && buttons == MouseButton.Left)
             {
@@ -343,15 +336,16 @@ namespace FlaxEditor.Surface
             if (base.OnMouseUp(location, buttons))
                 return true;
 
-            if (buttons == MouseButton.Left)
+            // Right clicking while attempting to connect a node to something
+            if (!_rightMouseDown && !_isMovingSelection && _startBox != null)
             {
-                if (!_activeVisjectCM.Visible) ConnectingEnd(null);
+                _cmStartPos = location;
+                ShowPrimaryMenu(_cmStartPos);
                 EndMouseCapture();
             }
 
             return true;
         }
-
 
         /// <inheritdoc />
         public override bool OnCharInput(char c)
@@ -405,14 +399,14 @@ namespace FlaxEditor.Surface
             _cmStartPos = _rootControl.PointToParent(_rootControl.Parent, PositionAfterNode(node));
             _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
 
-            // If the menu is not fully visible, move the surface a bit 
-            Vector2 overflow = (_cmStartPos + _activeVisjectCM.Size) - _rootControl.Parent.Size;
+            // If the menu is not fully visible, move the surface a bit
+            Vector2 overflow = (_cmStartPos + _activeVisjectCM.Size) - _surface.Parent.Size;
             overflow = Vector2.Max(overflow, Vector2.Zero);
 
             ViewPosition += overflow;
             _cmStartPos -= overflow;
 
-            // Show it 
+            // Show it
             _connectionInstigator = firstOutputBox;
             ShowPrimaryMenu(_cmStartPos);
 
@@ -429,7 +423,7 @@ namespace FlaxEditor.Surface
         private Vector2 PositionAfterNode(SurfaceNode node)
         {
             const float DistanceBetweenNodes = 40;
-            //TODO: Doge the other nodes 
+            //TODO: Doge the other nodes
             return node.Location + new Vector2(node.Width + DistanceBetweenNodes, 0);
         }
 
@@ -452,15 +446,19 @@ namespace FlaxEditor.Surface
                 case Keys.A:
                     SelectAll();
                     return true;
+
                 case Keys.C:
                     Copy();
                     return true;
+
                 case Keys.V:
                     Paste();
                     return true;
+
                 case Keys.X:
                     Cut();
                     return true;
+
                 case Keys.D:
                     Duplicate();
                     return true;

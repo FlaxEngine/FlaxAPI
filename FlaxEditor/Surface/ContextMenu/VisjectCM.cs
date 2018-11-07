@@ -14,13 +14,21 @@ namespace FlaxEditor.Surface.ContextMenu
     /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
     public class VisjectCM : ContextMenuBase
     {
+        /// <summary>
+        /// Visject context menu item clicked delegate.
+        /// </summary>
+        /// <param name="clickedItem">The item that was clicked</param>
+        /// <param name="selectedBox">The currently user-selected box. Can be null.</param>
+        public delegate void ItemClickedDelegate(VisjectCMItem clickedItem, Elements.Box selectedBox);
+
         private readonly List<VisjectCMGroup> _groups = new List<VisjectCMGroup>(16);
         private readonly TextBox _searchBox;
         private bool _waitingForInput;
         private VisjectCMGroup _surfaceParametersGroup;
         private Panel _panel1;
-        private VerticalPanel _panel2;
+        private VerticalPanel _groupsPanel;
         private readonly Func<List<SurfaceParameter>> _parametersGetter;
+        private Elements.Box _selectedBox;
 
         /// <summary>
         /// The selected item
@@ -30,7 +38,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Event fired when any item in this popup menu gets clicked.
         /// </summary>
-        public event Action<VisjectCMItem> OnItemClicked;
+        public event ItemClickedDelegate OnItemClicked;
 
         /// <summary>
         /// Gets or sets a value indicating whether show groups expanded or collapsed.
@@ -79,9 +87,10 @@ namespace FlaxEditor.Surface.ContextMenu
                 IsScrollable = true,
                 Parent = panel1
             };
-            _panel2 = panel2;
+            _groupsPanel = panel2;
 
             // Init groups
+            int index = 0;
             var nodes = new List<NodeArchetype>();
             foreach (var groupArchetype in groups)
             {
@@ -107,6 +116,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     }
                     group.SortChildren();
                     group.Parent = panel2;
+                    group.DefaultIndex = index++;
                     _groups.Add(group);
                 }
             }
@@ -120,7 +130,12 @@ namespace FlaxEditor.Surface.ContextMenu
 
             // Update groups
             for (int i = 0; i < _groups.Count; i++)
+            {
                 _groups[i].UpdateFilter(_searchBox.Text);
+                _groups[i].UpdateItemSort(_selectedBox);
+            }
+
+            SortGroups();
 
             // If no item is selected (or it's not visible anymore), select the top one
             if (SelectedItem == null || !SelectedItem.VisibleInHierarchy)
@@ -134,13 +149,31 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <summary>
+        /// Sort the groups and keeps <see cref="_groups"/> in sync
+        /// </summary>
+        private void SortGroups()
+        {
+            // Sort groups
+            _groupsPanel.SortChildren();
+            // Synchronize with _groups[]
+            for (int i = 0, groupsIndex = 0; i < _groupsPanel.ChildrenCount; i++)
+            {
+                if (_groupsPanel.Children[i] is VisjectCMGroup group)
+                {
+                    _groups[groupsIndex] = group;
+                    groupsIndex++;
+                }
+            }
+        }
+
+        /// <summary>
         /// Called when user clicks on an item.
         /// </summary>
         /// <param name="item">The item.</param>
         public void OnClickItem(VisjectCMItem item)
         {
             Hide();
-            OnItemClicked?.Invoke(item);
+            OnItemClicked?.Invoke(item, _selectedBox);
         }
 
         /// <summary>
@@ -164,6 +197,7 @@ namespace FlaxEditor.Surface.ContextMenu
             for (int i = 0; i < _groups.Count; i++)
                 _groups[i].ResetView();
 
+            SortGroups();
             _searchBox.Clear();
             SelectedItem = null;
             IsLayoutLocked = wasLayoutLocked;
@@ -237,11 +271,28 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
                 group.SortChildren();
                 group.UnlockChildrenRecursive();
-                group.Parent = _panel2;
-
+                group.Parent = _groupsPanel;
                 _groups.Add(group);
                 _surfaceParametersGroup = group;
             }
+        }
+
+        /// <inheritdoc />
+        public override void Show(Control parent, Vector2 location)
+        {
+            Show(parent, location, null);
+        }
+
+        /// <summary>
+        /// Show context menu over given control.
+        /// </summary>
+        /// <param name="parent">Parent control to attach to it.</param>
+        /// <param name="location">Popup menu origin location in parent control coordinates.</param>
+        /// <param name="startBox">The currently selected box that the new node will get connected to. Can be null</param>
+        public void Show(Control parent, Vector2 location, Elements.Box startBox)
+        {
+            _selectedBox = startBox;
+            base.Show(parent, location);
         }
 
         /// <inheritdoc />
