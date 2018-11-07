@@ -129,7 +129,7 @@ namespace FlaxEditor.Surface
             // Check if mouse is over any of box
             Vector2 endPos = _activeVisjectCM.Visible ? _rootControl.PointFromParent(_cmStartPos) : _rootControl.PointFromParent(_mousePos);
             Color lineColor = Style.Colors.Connecting;
-            if (_lastInstigatorUnderMouse != null)
+            if (_lastInstigatorUnderMouse != null && !_activeVisjectCM.Visible)
             {
                 // Check if can connect objects
                 bool canConnect = _connectionInstigator.CanConnectWith(_lastInstigatorUnderMouse);
