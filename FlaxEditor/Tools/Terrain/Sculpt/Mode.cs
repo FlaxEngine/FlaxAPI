@@ -54,6 +54,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             var patchSize = chunkSize * FlaxEngine.Terrain.UnitsPerVertex * FlaxEngine.Terrain.PatchEdgeChunksCount;
             float* tempBuffer = (float*)gizmo.GetHeightmapTempBuffer(heightmapLength * sizeof(float)).ToPointer();
             var brushPosition = gizmo.CursorPosition;
+            var unitsPerVertexInv = 1.0f / FlaxEngine.Terrain.UnitsPerVertex;
 
             // Get brush bounds in terrain local space
             var brushBounds = gizmo.CursorBrushBounds;
@@ -76,10 +77,21 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 var sourceData = (float*)sourceDataPtr.ToPointer();
                 // TODO: record patch data if gizmo has just started editing this chunk (for undo)
 
+                // Transform brush bounds from local terrain space into local patch vertex space
+                brushBoundsLocal.Minimum = (brushBoundsLocal.Minimum - patchPositionLocal) * unitsPerVertexInv;
+                brushBoundsLocal.Maximum = (brushBoundsLocal.Maximum - patchPositionLocal) * unitsPerVertexInv;
+
                 // Calculate patch heightmap area to modify by brush
-                var brushPatchMin = 0;
-                var modifiedOffset = new Int2(0);
-                var modifiedSize = new Int2(heightmapSize, heightmapSize);
+                var brushPatchMin = new Int2(Mathf.FloorToInt(brushBoundsLocal.Minimum.X), Mathf.FloorToInt(brushBoundsLocal.Minimum.Z));
+                var brushPatchMax = new Int2(Mathf.CeilToInt(brushBoundsLocal.Maximum.X), Mathf.FloorToInt(brushBoundsLocal.Maximum.Z));
+                var modifiedOffset = brushPatchMin;
+                var modifiedSize = brushPatchMax - brushPatchMin;
+
+                // Expand the modification area by one vertex in each direction to ensure normal vectors are updated for edge cases
+                modifiedOffset.X = Mathf.Max(modifiedOffset.X - 1, 0);
+                modifiedOffset.Y = Mathf.Max(modifiedOffset.Y - 1, 0);
+                modifiedSize.X = Mathf.Min(modifiedSize.X + 2, heightmapSize - modifiedOffset.X);
+                modifiedSize.Y = Mathf.Min(modifiedSize.Y + 2, heightmapSize - modifiedOffset.Y);
 
                 // Apply brush modification
                 Profiler.BeginEvent("Apply Brush");
