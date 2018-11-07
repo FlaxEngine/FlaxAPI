@@ -44,6 +44,8 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             float strength = Strength * options.Strength * options.DeltaTime;
             if (strength <= 0.0f)
                 return;
+            if (options.Invert)
+                strength *= -1;
 
             // Prepare
             var chunkSize = terrain.ChunkSize;
