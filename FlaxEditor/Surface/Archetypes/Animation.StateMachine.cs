@@ -378,7 +378,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Draw the connection
                     var startPos = PointToParent(Size * 0.5f);
-                    var endPos = targetState.PointToParent(targetState.Size * 0.5f);
+                    targetState.GetConnectionEndPoint(ref startPos, out var endPos);
                     var color = Color.White;
                     StateMachineState.DrawConnection(Surface, ref startPos, ref endPos, ref color);
                 }
@@ -493,12 +493,25 @@ namespace FlaxEditor.Surface.Archetypes
                     var arrowTransform = Matrix3x3.Translation2D(new Vector2(-16.0f, -8.0f)) * Matrix3x3.RotationZ(rotation * Mathf.PiOverTwo) * Matrix3x3.Translation2D(endPos);
 
                     Render2D.PushTransform(ref arrowTransform);
-                    Render2D.DrawSprite(surface.Style.Icons.ArrowClose, arrowRect);
+                    Render2D.DrawSprite(surface.Style.Icons.ArrowClose, arrowRect, color);
                     Render2D.PopTransform();
 
                     endPos -= dir * 4.0f;
                 }
                 Render2D.DrawLine(startPos, endPos, color, 2.2f);
+            }
+
+            /// <summary>
+            /// Gets the connection end point for the given input position. Puts the end point near the edge of the node bounds.
+            /// </summary>
+            /// <param name="startPos">The start position (in surface space).</param>
+            /// <param name="endPos">The end position (in surface space).</param>
+            public void GetConnectionEndPoint(ref Vector2 startPos, out Vector2 endPos)
+            {
+                var bounds = new Rectangle(Vector2.Zero, Size);
+                bounds.Expand(4.0f);
+                bounds = Rectangle.FromPoints(PointToParent(bounds.UpperLeft), PointToParent(bounds.BottomRight));
+                CollisionsHelper.ClosestPointRectanglePoint(ref bounds, ref startPos, out endPos);
             }
 
             /// <inheritdoc />
@@ -801,7 +814,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     var targetState = Transitions[i].DestinationState;
                     var startPos = PointToParent(Size * 0.5f);
-                    var endPos = targetState.PointToParent(targetState.Size * 0.5f);
+                    targetState.GetConnectionEndPoint(ref startPos, out var endPos);
                     DrawConnection(Surface, ref startPos, ref endPos, ref color);
                 }
             }
