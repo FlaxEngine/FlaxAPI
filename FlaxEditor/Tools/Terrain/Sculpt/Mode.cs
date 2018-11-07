@@ -57,7 +57,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
 
             // Get brush bounds in terrain local space
             var brushBounds = gizmo.CursorBrushBounds;
-            var terrainWorld = terrain.LocalToWorldMatrix;
+            terrain.GetLocalToWorldMatrix(out var terrainWorld);
             var terrainInvWorld = terrain.WorldToLocalMatrix;
             BoundingBox.Transform(ref brushBounds, ref terrainInvWorld, out var brushBoundsLocal);
 
