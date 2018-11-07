@@ -18,6 +18,7 @@ namespace FlaxEditor.Tools.Terrain
     public sealed class SculptTerrainGizmo : GizmoBase
     {
         private FlaxEngine.Terrain _paintTerrain;
+        private Ray _prevRay;
 
         /// <summary>
         /// The parent mode.
@@ -163,17 +164,24 @@ namespace FlaxEditor.Tools.Terrain
                 PaintEnd();
             }
 
-            // Perform detailed tracing to find cursor location on the terrain
+            // Special case if user is sculpting terrain and mouse is not moving then freeze the brush location to help painting vertical tip objects
             var mouseRay = Owner.MouseRay;
-            if (TerrainTools.RayCastChunk(terrain, mouseRay, out var closest, out var patchCoord, out var chunkCoord))
+            if (IsPainting && _prevRay == mouseRay)
+            {
+                // Freeze cursor
+            }
+            // Perform detailed tracing to find cursor location on the terrain
+            else if (TerrainTools.RayCastChunk(terrain, mouseRay, out var closest, out var patchCoord, out var chunkCoord))
             {
                 var hitLocation = mouseRay.GetPoint(closest);
                 Mode.SetCursor(ref hitLocation);
             }
+            // No hit
             else
             {
                 Mode.ClearCursor();
             }
+            _prevRay = mouseRay;
 
             // Handle painting
             if (Owner.IsLeftMouseButtonDown)
