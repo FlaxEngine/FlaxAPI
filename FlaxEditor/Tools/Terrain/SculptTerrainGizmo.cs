@@ -6,6 +6,7 @@ using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Tools.Terrain.Sculpt;
+using FlaxEngine;
 using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Terrain
@@ -111,6 +112,7 @@ namespace FlaxEditor.Tools.Terrain
                 return;
 
             // Edit the terrain
+            Profiler.BeginEvent("Edit Terrain");
             var options = new Mode.Options
             {
                 Strength = 1000.0f,
@@ -118,6 +120,7 @@ namespace FlaxEditor.Tools.Terrain
                 Invert = Owner.IsControlDown
             };
             Mode.CurrentMode.Apply(Mode.CurrentBrush, ref options, Mode, _paintTerrain);
+            Profiler.EndEvent();
         }
 
         /// <summary>

@@ -49,8 +49,9 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
 
             // Prepare
             var chunkSize = terrain.ChunkSize;
-            var vertexCount = chunkSize * 4 + 1;
+            var vertexCount = chunkSize * FlaxEngine.Terrain.PatchEdgeChunksCount + 1;
             var heightmapLength = vertexCount * vertexCount;
+            var patchSize = chunkSize * FlaxEngine.Terrain.UnitsPerVertex * FlaxEngine.Terrain.PatchEdgeChunksCount;
             float* tempBuffer = (float*)gizmo.GetHeightmapTempBuffer(heightmapLength * sizeof(float)).ToPointer();
             var brushPosition = gizmo.CursorPosition;
 
@@ -64,6 +65,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             for (int patchIndex = 0; patchIndex < gizmo.PatchesUnderCursor.Count; patchIndex++)
             {
                 var patch = gizmo.PatchesUnderCursor[patchIndex];
+                var patchPositionLocal = new Vector3(patch.PatchCoord.X * patchSize, 0, patch.PatchCoord.Y * patchSize);
 
                 // Get the patch data (cached internally by the c++ core in editor)
                 var sourceData = (float*)TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord).ToPointer();
@@ -73,18 +75,20 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 // TODO: use only area edited by brush
 
                 // Apply brush modification
+                Profiler.BeginEvent("Apply Brush");
                 for (int z = 0; z < vertexCount; z++)
                 {
                     for (int x = 0; x < vertexCount; x++)
                     {
                         var sourceHeight = sourceData[z * vertexCount + x];
-                        var samplePositionLocal = new Vector3(x * FlaxEngine.Terrain.UnitsPerVertex, sourceHeight, z * FlaxEngine.Terrain.UnitsPerVertex);
+                        var samplePositionLocal = patchPositionLocal + new Vector3(x * FlaxEngine.Terrain.UnitsPerVertex, sourceHeight, z * FlaxEngine.Terrain.UnitsPerVertex);
                         Vector3.Transform(ref samplePositionLocal, ref terrainWorld, out Vector3 samplePositionWorld);
                         var paintAmount = brush.Sample(ref brushPosition, ref samplePositionWorld);
 
                         tempBuffer[z * vertexCount + x] = sourceHeight + paintAmount * strength;
                     }
                 }
+                Profiler.EndEvent();
 
                 // Update terrain patch
                 var modifiedOffset = new Int2(0);
