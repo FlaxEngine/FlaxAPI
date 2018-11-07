@@ -239,6 +239,20 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Determines the closest point between a <see cref="Rectangle" /> and a point.
+        /// </summary>
+        /// <param name="rect">The rectangle to test.</param>
+        /// <param name="point">The point to test.</param>
+        /// <param name="result">When the method completes, contains the closest point between the two objects.</param>
+        public static void ClosestPointRectanglePoint(ref Rectangle rect, ref Vector2 point, out Vector2 result)
+        {
+            Vector2 temp;
+            Vector2 end = rect.Location + rect.Size;
+            Vector2.Max(ref point, ref rect.Location, out temp);
+            Vector2.Min(ref temp, ref end, out result);
+        }
+
+        /// <summary>
         /// Determines the closest point between a <see cref="BoundingSphere" /> and a point.
         /// </summary>
         /// <param name="sphere"></param>
