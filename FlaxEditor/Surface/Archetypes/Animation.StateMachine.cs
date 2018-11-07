@@ -380,7 +380,7 @@ namespace FlaxEditor.Surface.Archetypes
                     var startPos = PointToParent(Size * 0.5f);
                     var endPos = targetState.PointToParent(targetState.Size * 0.5f);
                     var color = Color.White;
-                    StateMachineState.DrawConnection(ref startPos, ref endPos, ref color);
+                    StateMachineState.DrawConnection(Surface, ref startPos, ref endPos, ref color);
                 }
             }
 
@@ -410,7 +410,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void DrawConnectingLine(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
             {
-                StateMachineState.DrawConnection(ref startPos, ref endPos, ref color);
+                StateMachineState.DrawConnection(Surface, ref startPos, ref endPos, ref color);
             }
 
             /// <inheritdoc />
@@ -474,11 +474,30 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// Draws the connection between two state machine nodes.
             /// </summary>
+            /// <param name="surface">The surface.</param>
             /// <param name="startPos">The start position.</param>
             /// <param name="endPos">The end position.</param>
             /// <param name="color">The line color.</param>
-            public static void DrawConnection(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
+            public static void DrawConnection(VisjectSurface surface, ref Vector2 startPos, ref Vector2 endPos, ref Color color)
             {
+                var sub = endPos - startPos;
+                var length = sub.Length;
+                if (length > Mathf.Epsilon)
+                {
+                    var dir = sub / length;
+                    var arrowRect = new Rectangle(0, 0, 16.0f, 16.0f);
+                    float rotation = Vector2.Dot(dir, Vector2.UnitY);
+                    if (endPos.X < startPos.X)
+                        rotation = 2 - rotation;
+                    // TODO: make it look better (fix the math)
+                    var arrowTransform = Matrix3x3.Translation2D(new Vector2(-16.0f, -8.0f)) * Matrix3x3.RotationZ(rotation * Mathf.PiOverTwo) * Matrix3x3.Translation2D(endPos);
+
+                    Render2D.PushTransform(ref arrowTransform);
+                    Render2D.DrawSprite(surface.Style.Icons.ArrowClose, arrowRect);
+                    Render2D.PopTransform();
+
+                    endPos -= dir * 4.0f;
+                }
                 Render2D.DrawLine(startPos, endPos, color, 2.2f);
             }
 
@@ -783,7 +802,7 @@ namespace FlaxEditor.Surface.Archetypes
                     var targetState = Transitions[i].DestinationState;
                     var startPos = PointToParent(Size * 0.5f);
                     var endPos = targetState.PointToParent(targetState.Size * 0.5f);
-                    DrawConnection(ref startPos, ref endPos, ref color);
+                    DrawConnection(Surface, ref startPos, ref endPos, ref color);
                 }
             }
 
@@ -812,7 +831,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void DrawConnectingLine(ref Vector2 startPos, ref Vector2 endPos, ref Color color)
             {
-                DrawConnection(ref startPos, ref endPos, ref color);
+                DrawConnection(Surface, ref startPos, ref endPos, ref color);
             }
 
             /// <inheritdoc />
