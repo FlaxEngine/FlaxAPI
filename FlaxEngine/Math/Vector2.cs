@@ -222,10 +222,8 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                case 0:
-                    return X;
-                case 1:
-                    return Y;
+                case 0: return X;
+                case 1: return Y;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
@@ -241,8 +239,7 @@ namespace FlaxEngine
                 case 1:
                     Y = value;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
+                default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
                 }
             }
         }
@@ -690,6 +687,17 @@ namespace FlaxEngine
         public static void Dot(ref Vector2 left, ref Vector2 right, out float result)
         {
             result = left.X * right.X + left.Y * right.Y;
+        }
+
+        /// <summary>
+        /// Calculates the dot product of two vectors.
+        /// </summary>
+        /// <param name="left">First source vector.</param>
+        /// <param name="right">Second source vector.</param>
+        /// <returns>The dot product of the two vectors.</returns>
+        public static float Dot(ref Vector2 left, ref Vector2 right)
+        {
+            return left.X * right.X + left.Y * right.Y;
         }
 
         /// <summary>

@@ -925,6 +925,17 @@ namespace FlaxEngine
         /// <param name="left">First source vector.</param>
         /// <param name="right">Second source vector.</param>
         /// <returns>The dot product of the two vectors.</returns>
+        public static float Dot(ref Vector3 left, ref Vector3 right)
+        {
+            return left.X * right.X + left.Y * right.Y + left.Z * right.Z;
+        }
+
+        /// <summary>
+        /// Calculates the dot product of two vectors.
+        /// </summary>
+        /// <param name="left">First source vector.</param>
+        /// <param name="right">Second source vector.</param>
+        /// <returns>The dot product of the two vectors.</returns>
         public static float Dot(Vector3 left, Vector3 right)
         {
             return left.X * right.X + left.Y * right.Y + left.Z * right.Z;
