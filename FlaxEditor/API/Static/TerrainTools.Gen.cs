@@ -127,12 +127,34 @@ namespace FlaxEditor
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static bool ModifyHeightmap(Terrain terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size)
+        public static bool ModifyHeightMap(Terrain terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ModifyHeightmap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
+            return Internal_ModifyHeightMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
+#endif
+        }
+
+        /// <summary>
+        /// Modifies the terrain patch visibility map (holes mask) with the given samples.
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z) to modify it.</param>
+        /// <param name="samples">The samples. The array length is size.X*size.Y.</param>
+        /// <param name="offset">The offset from the first row and column of the visibility data (offset destination x and z start position).</param>
+        /// <param name="size">The size of the visibility to modify (x and z). Amount of samples in each direction.</param>
+        /// <returns>True if failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool ModifyVisibilityMap(Terrain terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ModifyVisibilityMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
 #endif
         }
 
@@ -141,7 +163,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="patchCoord">The patch coordinates (x and z) to gather it.</param>
-        /// <returns>The pointer to the array of floats with terrain patch heights data. Null if failed to gatehr the data.</returns>
+        /// <returns>The pointer to the array of floats with terrain patch heights data. Null if failed to gather the data.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -160,7 +182,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="patchCoord">The patch coordinates (x and z) to gather it.</param>
-        /// <returns>The pointer to the array of floats with terrain patch visibility mask data. Null if failed to gatehr the data.</returns>
+        /// <returns>The pointer to the array of floats with terrain patch visibility mask data. Null if failed to gather the data.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -193,7 +215,10 @@ namespace FlaxEditor
         internal static extern bool Internal_InitializePatch(IntPtr terrain, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_ModifyHeightmap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
+        internal static extern bool Internal_ModifyHeightMap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ModifyVisibilityMap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Internal_GetHeightmapData(IntPtr terrain, ref Int2 patchCoord);

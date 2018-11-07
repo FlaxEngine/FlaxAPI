@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Tools.Terrain.Brushes;
 using FlaxEngine;
 
@@ -64,9 +65,14 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 // temporary heightmap editing
                 for (int i = 0; i < heightmapLength; i++)
                 {
-                    sourceHeightmap[i] += 4.0f;
+                    //sourceHeightmap[i] += 4.0f;
                     //tempBuffer[i] = (float)i / heightmapLength * 1000.0f;
+                    tempBuffer[i] = sourceHeightmap[i] + 100.0f;
                 }
+
+                var modifiedOffset = new Int2(0);
+                var modifiedSize = new Int2(vertexCount, vertexCount);
+                TerrainTools.ModifyHeightMap(terrain, ref patch.PatchCoord, new IntPtr(tempBuffer), ref modifiedOffset, ref modifiedSize);
             }
         }
     }
