@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
 
 namespace FlaxEditor.Tools.Terrain.Brushes
@@ -110,6 +111,24 @@ namespace FlaxEditor.Tools.Terrain.Brushes
                 // TODO: use material or param per circle brush mode: linear, tip, smooth, sphere to match the brush falloff effect
             }
             return material;
+        }
+
+        /// <inheritdoc />
+        public override float Sample(ref Vector3 brushPosition, ref Vector3 samplePosition)
+        {
+            Vector3.DistanceXZ(ref brushPosition, ref samplePosition, out var distanceXZ);
+            float halfSize = Size * 0.5f;
+            float falloff = halfSize * Falloff;
+            float radius = halfSize - falloff;
+
+            switch (FalloffType)
+            {
+            case FalloffTypes.Smooth: return CalculateFalloff_Smooth(distanceXZ, radius, falloff);
+            case FalloffTypes.Linear: return CalculateFalloff_Linear(distanceXZ, radius, falloff);
+            case FalloffTypes.Spherical: return CalculateFalloff_Spherical(distanceXZ, radius, falloff);
+            case FalloffTypes.Tip: return CalculateFalloff_Tip(distanceXZ, radius, falloff);
+            default: throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

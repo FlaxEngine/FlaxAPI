@@ -113,7 +113,7 @@ namespace FlaxEditor.Tools.Terrain
             // Edit the terrain
             var options = new Mode.Options
             {
-                Strength = 1.0f,
+                Strength = 1000.0f,
                 DeltaTime = dt,
                 Invert = Owner.IsControlDown
             };

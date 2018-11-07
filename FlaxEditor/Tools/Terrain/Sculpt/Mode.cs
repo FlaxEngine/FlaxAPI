@@ -35,8 +35,8 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         /// <summary>
         /// The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.
         /// </summary>
-        [EditorOrder(0), Limit(0, 1, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.")]
-        public float Strength = 0.3f;
+        [EditorOrder(0), Limit(0, 5, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.")]
+        public float Strength = 1.2f;
 
         public unsafe void Apply(Brush brush, ref Options options, SculptTerrainGizmoMode gizmo, FlaxEngine.Terrain terrain)
         {
@@ -50,26 +50,41 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             var vertexCount = chunkSize * 4 + 1;
             var heightmapLength = vertexCount * vertexCount;
             float* tempBuffer = (float*)gizmo.GetHeightmapTempBuffer(heightmapLength * sizeof(float)).ToPointer();
+            var brushPosition = gizmo.CursorPosition;
+
+            // Get brush bounds in terrain local space
+            var brushBounds = gizmo.CursorBrushBounds;
+            var terrainWorld = terrain.LocalToWorldMatrix;
+            var terrainInvWorld = terrain.WorldToLocalMatrix;
+            BoundingBox.Transform(ref brushBounds, ref terrainInvWorld, out var brushBoundsLocal);
 
             // Process all the patches under the cursor
             for (int patchIndex = 0; patchIndex < gizmo.PatchesUnderCursor.Count; patchIndex++)
             {
                 var patch = gizmo.PatchesUnderCursor[patchIndex];
 
-                // Get the patch heightmap data (cached internally by the c++ core in editor)
-                var sourceHeightmap = (float*)TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord).ToPointer();
+                // Get the patch data (cached internally by the c++ core in editor)
+                var sourceData = (float*)TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord).ToPointer();
                 // TODO: record patch data if gizmo has just started editing this chunk (for undo)
 
-                // TODO: perform the actual heightmap modification
+                // Calculate patch heightmap area to modify by brush
+                // TODO: use only area edited by brush
 
-                // temporary heightmap editing
-                for (int i = 0; i < heightmapLength; i++)
+                // Apply brush modification
+                for (int z = 0; z < vertexCount; z++)
                 {
-                    //sourceHeightmap[i] += 4.0f;
-                    //tempBuffer[i] = (float)i / heightmapLength * 1000.0f;
-                    tempBuffer[i] = sourceHeightmap[i] + 100.0f;
+                    for (int x = 0; x < vertexCount; x++)
+                    {
+                        var sourceHeight = sourceData[z * vertexCount + x];
+                        var samplePositionLocal = new Vector3(x * FlaxEngine.Terrain.UnitsPerVertex, sourceHeight, z * FlaxEngine.Terrain.UnitsPerVertex);
+                        Vector3.Transform(ref samplePositionLocal, ref terrainWorld, out Vector3 samplePositionWorld);
+                        var paintAmount = brush.Sample(ref brushPosition, ref samplePositionWorld);
+
+                        tempBuffer[z * vertexCount + x] = sourceHeight + paintAmount * strength;
+                    }
                 }
 
+                // Update terrain patch
                 var modifiedOffset = new Int2(0);
                 var modifiedSize = new Int2(vertexCount, vertexCount);
                 TerrainTools.ModifyHeightMap(terrain, ref patch.PatchCoord, new IntPtr(tempBuffer), ref modifiedOffset, ref modifiedSize);

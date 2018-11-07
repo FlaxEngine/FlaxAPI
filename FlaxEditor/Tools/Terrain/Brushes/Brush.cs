@@ -42,5 +42,13 @@ namespace FlaxEditor.Tools.Terrain.Brushes
             }
             return _material;
         }
+
+        /// <summary>
+        /// Samples the brush intensity at the specified position.
+        /// </summary>
+        /// <param name="brushPosition">The brush center position (world-space).</param>
+        /// <param name="samplePosition">The sample position (world-space).</param>
+        /// <returns>The sampled value. Normalized to range 0-1 as an intensity to apply.</returns>
+        public abstract float Sample(ref Vector3 brushPosition, ref Vector3 samplePosition);
     }
 }
