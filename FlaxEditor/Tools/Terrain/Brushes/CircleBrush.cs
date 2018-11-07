@@ -54,8 +54,8 @@ namespace FlaxEditor.Tools.Terrain.Brushes
         private float CalculateFalloff_Smooth(float distance, float radius, float falloff)
         {
             // Smooth-step linear falloff
-            float y = CalculateFalloff_Linear(distance, radius, falloff);
-            return y * y * (3 - 2 * y);
+            float alpha = CalculateFalloff_Linear(distance, radius, falloff);
+            return alpha * alpha * (3 - 2 * alpha);
         }
 
         private float CalculateFalloff_Linear(float distance, float radius, float falloff)
@@ -96,19 +96,20 @@ namespace FlaxEditor.Tools.Terrain.Brushes
         }
 
         /// <inheritdoc />
-        public override MaterialInstance GetBrushMaterial(ref Vector3 position)
+        public override MaterialInstance GetBrushMaterial(ref Vector3 position, ref Color color)
         {
             var material = CacheMaterial(EditorAssets.TerrainCircleBrushMaterial);
             if (material)
             {
                 // Data 0: XYZ: position, W: radius
-                // Data 1: X: falloff
+                // Data 1: X: falloff, Y: type
                 float halfSize = Size * 0.5f;
                 float falloff = halfSize * Falloff;
                 float radius = halfSize - falloff;
+                // TODO: cache parameters
+                material.GetParam("Color").Value = color;
                 material.GetParam("BrushData0").Value = new Vector4(position, radius);
-                material.GetParam("BrushData1").Value = new Vector4(falloff, 0, 0, 0);
-                // TODO: use material or param per circle brush mode: linear, tip, smooth, sphere to match the brush falloff effect
+                material.GetParam("BrushData1").Value = new Vector4(falloff, (float)FalloffType, 0, 0);
             }
             return material;
         }
