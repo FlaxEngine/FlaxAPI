@@ -67,7 +67,6 @@ namespace FlaxEditor.Surface
             {
                 _cmStateMachineMenu = new VisjectCM(StateMachineGroupArchetypes, (arch) => true);
                 _cmStateMachineMenu.ShowExpanded = true;
-                _cmStateMachineMenu.OnItemClicked += OnPrimaryMenuButtonClick;
             }
             var menu = isStateMachineOpen ? _cmStateMachineMenu : null;
             SetPrimaryMenu(menu);

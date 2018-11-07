@@ -271,9 +271,7 @@ namespace FlaxEditor.Surface
 
             // Create primary menu (for nodes spawning)
             _cmPrimaryMenu = primaryContextMenu ?? new VisjectCM(NodeArchetypes, CanSpawnNodeType, () => Parameters);
-            _cmPrimaryMenu.OnItemClicked += OnPrimaryMenuButtonClick;
-            _cmPrimaryMenu.VisibleChanged += OnPrimaryMenuVisibleChanged;
-            _activeVisjectCM = _cmPrimaryMenu;
+            SetPrimaryMenu(_cmPrimaryMenu);
 
             // Create secondary menu (for other actions)
             _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();

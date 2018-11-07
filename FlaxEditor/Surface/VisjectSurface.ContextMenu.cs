@@ -26,7 +26,22 @@ namespace FlaxEditor.Surface
         {
             menu = menu ?? _cmPrimaryMenu;
 
+            if (menu == _activeVisjectCM)
+                return;
+
+            if (_activeVisjectCM != null)
+            {
+                _activeVisjectCM.OnItemClicked -= OnPrimaryMenuButtonClick;
+                _activeVisjectCM.VisibleChanged -= OnPrimaryMenuVisibleChanged;
+            }
+
             _activeVisjectCM = menu;
+
+            if (_activeVisjectCM != null)
+            {
+                _activeVisjectCM.OnItemClicked += OnPrimaryMenuButtonClick;
+                _activeVisjectCM.VisibleChanged += OnPrimaryMenuVisibleChanged;
+            }
         }
 
         /// <summary>
