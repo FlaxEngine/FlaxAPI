@@ -38,13 +38,26 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         [EditorOrder(0), Limit(0, 5, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.")]
         public float Strength = 1.2f;
 
+        /// <summary>
+        /// Gets a value indicating whether this mode supports negative apply for terrain modification.
+        /// </summary>
+        public virtual bool SupportsNegativeApply => false;
+
+        /// <summary>
+        /// Applies the modification to the terrain.
+        /// </summary>
+        /// <param name="brush">The brush.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="gizmo">The gizmo.</param>
+        /// <param name="terrain">The terrain.</param>
+        /// <exception cref="FlaxException">Cannot modify terrain. Loading heightmap failed. See log for more info.</exception>
         public unsafe void Apply(Brush brush, ref Options options, SculptTerrainGizmoMode gizmo, FlaxEngine.Terrain terrain)
         {
             // Combine final apply strength
             float strength = Strength * options.Strength * options.DeltaTime;
             if (strength <= 0.0f)
                 return;
-            if (options.Invert)
+            if (options.Invert && SupportsNegativeApply)
                 strength *= -1;
 
             // Prepare
@@ -55,10 +68,20 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             float* tempBuffer = (float*)gizmo.GetHeightmapTempBuffer(heightmapLength * sizeof(float)).ToPointer();
             var brushPosition = gizmo.CursorPosition;
             var unitsPerVertexInv = 1.0f / FlaxEngine.Terrain.UnitsPerVertex;
+            ApplyParams p = new ApplyParams
+            {
+                Terrain = terrain,
+                Brush = brush,
+                Gizmo = gizmo,
+                Options = options,
+                Strength = strength,
+                HeightmapSize = heightmapSize,
+                TempBuffer = tempBuffer,
+            };
 
             // Get brush bounds in terrain local space
             var brushBounds = gizmo.CursorBrushBounds;
-            terrain.GetLocalToWorldMatrix(out var terrainWorld);
+            terrain.GetLocalToWorldMatrix(out p.TerrainWorld);
             terrain.GetWorldToLocalMatrix(out var terrainInvWorld);
             BoundingBox.Transform(ref brushBounds, ref terrainInvWorld, out var brushBoundsLocal);
 
@@ -93,29 +116,91 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 modifiedSize.X = Mathf.Min(modifiedSize.X + 2, heightmapSize - modifiedOffset.X);
                 modifiedSize.Y = Mathf.Min(modifiedSize.Y + 2, heightmapSize - modifiedOffset.Y);
 
-                // Apply brush modification
-                Profiler.BeginEvent("Apply Brush");
-                for (int z = 0; z < modifiedSize.Y; z++)
-                {
-                    var zz = z + modifiedOffset.Y;
-                    for (int x = 0; x < modifiedSize.X; x++)
-                    {
-                        var xx = x + modifiedOffset.X;
-                        var sourceHeight = sourceData[zz * heightmapSize + xx];
-
-                        var samplePositionLocal = patchPositionLocal + new Vector3(xx * FlaxEngine.Terrain.UnitsPerVertex, sourceHeight, zz * FlaxEngine.Terrain.UnitsPerVertex);
-                        Vector3.Transform(ref samplePositionLocal, ref terrainWorld, out Vector3 samplePositionWorld);
-
-                        var paintAmount = brush.Sample(ref brushPosition, ref samplePositionWorld);
-
-                        tempBuffer[z * modifiedSize.X + x] = sourceHeight + paintAmount * strength;
-                    }
-                }
-                Profiler.EndEvent();
-
-                // Update terrain patch
-                TerrainTools.ModifyHeightMap(terrain, ref patch.PatchCoord, new IntPtr(tempBuffer), ref modifiedOffset, ref modifiedSize);
+                // Apply modification
+                p.ModifiedOffset = modifiedOffset;
+                p.ModifiedSize = modifiedSize;
+                p.PatchCoord = patch.PatchCoord;
+                p.PatchPositionLocal = patchPositionLocal;
+                p.SourceData = sourceData;
+                Apply(ref p);
             }
         }
+
+        /// <summary>
+        /// The mode apply parameters.
+        /// </summary>
+        public unsafe struct ApplyParams
+        {
+            /// <summary>
+            /// The brush.
+            /// </summary>
+            public Brush Brush;
+
+            /// <summary>
+            /// The options.
+            /// </summary>
+            public Options Options;
+
+            /// <summary>
+            /// The gizmo.
+            /// </summary>
+            public SculptTerrainGizmoMode Gizmo;
+
+            /// <summary>
+            /// The terrain.
+            /// </summary>
+            public FlaxEngine.Terrain Terrain;
+
+            /// <summary>
+            /// The patch coordinates.
+            /// </summary>
+            public Int2 PatchCoord;
+
+            /// <summary>
+            /// The modified offset.
+            /// </summary>
+            public Int2 ModifiedOffset;
+
+            /// <summary>
+            /// The modified size.
+            /// </summary>
+            public Int2 ModifiedSize;
+
+            /// <summary>
+            /// The final calculated strength of the effect to apply (can be negative for inverted terrain modification if <see cref="SupportsNegativeApply"/> is set).
+            /// </summary>
+            public float Strength;
+
+            /// <summary>
+            /// The temporary data buffer (for modified data).
+            /// </summary>
+            public float* TempBuffer;
+
+            /// <summary>
+            /// The source data buffer.
+            /// </summary>
+            public float* SourceData;
+
+            /// <summary>
+            /// The heightmap size (edge).
+            /// </summary>
+            public int HeightmapSize;
+
+            /// <summary>
+            /// The patch position in terrain local-space.
+            /// </summary>
+            public Vector3 PatchPositionLocal;
+
+            /// <summary>
+            /// The terrain local-to-world matrix.
+            /// </summary>
+            public Matrix TerrainWorld;
+        }
+
+        /// <summary>
+        /// Applies the modification to the terrain.
+        /// </summary>
+        /// <param name="p">The parameters to use.</param>
+        public abstract unsafe void Apply(ref ApplyParams p);
     }
 }

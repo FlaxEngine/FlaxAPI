@@ -117,7 +117,7 @@ namespace FlaxEditor.Tools.Terrain
             Profiler.BeginEvent("Edit Terrain");
             var options = new Mode.Options
             {
-                Strength = 1000.0f,
+                Strength = 1.0f,
                 DeltaTime = dt,
                 Invert = Owner.IsControlDown
             };

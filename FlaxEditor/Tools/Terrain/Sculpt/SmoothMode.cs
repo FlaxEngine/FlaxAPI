@@ -8,5 +8,10 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
     /// <seealso cref="FlaxEditor.Tools.Terrain.Sculpt.Mode" />
     public sealed class SmoothMode : Mode
     {
+        /// <inheritdoc />
+        public override unsafe void Apply(ref ApplyParams p)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
