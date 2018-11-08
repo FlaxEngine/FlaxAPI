@@ -66,7 +66,6 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             var heightmapLength = heightmapSize * heightmapSize;
             var patchSize = chunkSize * FlaxEngine.Terrain.UnitsPerVertex * FlaxEngine.Terrain.PatchEdgeChunksCount;
             float* tempBuffer = (float*)gizmo.GetHeightmapTempBuffer(heightmapLength * sizeof(float)).ToPointer();
-            var brushPosition = gizmo.CursorPosition;
             var unitsPerVertexInv = 1.0f / FlaxEngine.Terrain.UnitsPerVertex;
             ApplyParams p = new ApplyParams
             {
@@ -85,11 +84,33 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             terrain.GetWorldToLocalMatrix(out var terrainInvWorld);
             BoundingBox.Transform(ref brushBounds, ref terrainInvWorld, out var brushBoundsLocal);
 
+            // TODO: try caching brush weights before apply to reduce complexity and batch brush sampling
+
             // Process all the patches under the cursor
             for (int patchIndex = 0; patchIndex < gizmo.PatchesUnderCursor.Count; patchIndex++)
             {
                 var patch = gizmo.PatchesUnderCursor[patchIndex];
                 var patchPositionLocal = new Vector3(patch.PatchCoord.X * patchSize, 0, patch.PatchCoord.Y * patchSize);
+
+                // Transform brush bounds from local terrain space into local patch vertex space
+                var brushBoundsPatchLocalMin = (brushBoundsLocal.Minimum - patchPositionLocal) * unitsPerVertexInv;
+                var brushBoundsPatchLocalMax = (brushBoundsLocal.Maximum - patchPositionLocal) * unitsPerVertexInv;
+
+                // Calculate patch heightmap area to modify by brush
+                var brushPatchMin = new Int2(Mathf.FloorToInt(brushBoundsPatchLocalMin.X), Mathf.FloorToInt(brushBoundsPatchLocalMin.Z));
+                var brushPatchMax = new Int2(Mathf.CeilToInt(brushBoundsPatchLocalMax.X), Mathf.FloorToInt(brushBoundsPatchLocalMax.Z));
+                var modifiedOffset = brushPatchMin;
+                var modifiedSize = brushPatchMax - brushPatchMin;
+
+                // Expand the modification area by one vertex in each direction to ensure normal vectors are updated for edge cases
+                modifiedOffset.X = Mathf.Max(modifiedOffset.X - 1, 0);
+                modifiedOffset.Y = Mathf.Max(modifiedOffset.Y - 1, 0);
+                modifiedSize.X = Mathf.Min(modifiedSize.X + 2, heightmapSize - modifiedOffset.X);
+                modifiedSize.Y = Mathf.Min(modifiedSize.Y + 2, heightmapSize - modifiedOffset.Y);
+
+                // Skip patch won't be modified at all
+                if (modifiedSize.X <= 0 || modifiedSize.Y <= 0)
+                    continue;
 
                 // Get the patch data (cached internally by the c++ core in editor)
                 var sourceDataPtr = TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord);
@@ -99,22 +120,6 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 }
                 var sourceData = (float*)sourceDataPtr.ToPointer();
                 // TODO: record patch data if gizmo has just started editing this chunk (for undo)
-
-                // Transform brush bounds from local terrain space into local patch vertex space
-                brushBoundsLocal.Minimum = (brushBoundsLocal.Minimum - patchPositionLocal) * unitsPerVertexInv;
-                brushBoundsLocal.Maximum = (brushBoundsLocal.Maximum - patchPositionLocal) * unitsPerVertexInv;
-
-                // Calculate patch heightmap area to modify by brush
-                var brushPatchMin = new Int2(Mathf.FloorToInt(brushBoundsLocal.Minimum.X), Mathf.FloorToInt(brushBoundsLocal.Minimum.Z));
-                var brushPatchMax = new Int2(Mathf.CeilToInt(brushBoundsLocal.Maximum.X), Mathf.FloorToInt(brushBoundsLocal.Maximum.Z));
-                var modifiedOffset = brushPatchMin;
-                var modifiedSize = brushPatchMax - brushPatchMin;
-
-                // Expand the modification area by one vertex in each direction to ensure normal vectors are updated for edge cases
-                modifiedOffset.X = Mathf.Max(modifiedOffset.X - 1, 0);
-                modifiedOffset.Y = Mathf.Max(modifiedOffset.Y - 1, 0);
-                modifiedSize.X = Mathf.Min(modifiedSize.X + 2, heightmapSize - modifiedOffset.X);
-                modifiedSize.Y = Mathf.Min(modifiedSize.Y + 2, heightmapSize - modifiedOffset.Y);
 
                 // Apply modification
                 p.ModifiedOffset = modifiedOffset;
@@ -201,6 +206,6 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         /// Applies the modification to the terrain.
         /// </summary>
         /// <param name="p">The parameters to use.</param>
-        public abstract unsafe void Apply(ref ApplyParams p);
+        public abstract void Apply(ref ApplyParams p);
     }
 }
