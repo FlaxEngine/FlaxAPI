@@ -303,8 +303,8 @@ namespace FlaxEngine
         /// <summary>
         /// Calculates a rectangle that contains the union of a and b rectangles
         /// </summary>
-        /// <param name="a">First rectangle</param>
-        /// <param name="b">Second rectangle</param>
+        /// <param name="a">The first rectangle.</param>
+        /// <param name="b">The second rectangle.</param>
         /// <returns>Rectangle that contains both a and b rectangles</returns>
         public static Rectangle Union(Rectangle a, Rectangle b)
         {
@@ -316,11 +316,26 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Calculates a rectangle that contains the shared part of a and b rectangles
+        /// Calculates a rectangle that contains the union of a and b rectangles
         /// </summary>
         /// <param name="a">First rectangle</param>
         /// <param name="b">Second rectangle</param>
-        /// <returns>Rectangle that contains shared part of a and b rectangles</returns>
+        /// <param name="result">When the method completes, contains the rectangle that both a and b rectangles.</param>
+        public static void Union(ref Rectangle a, ref Rectangle b, out Rectangle result)
+        {
+            float left = Mathf.Min(a.Left, b.Left);
+            float right = Mathf.Max(a.Right, b.Right);
+            float top = Mathf.Min(a.Top, b.Top);
+            float bottom = Mathf.Max(a.Bottom, b.Bottom);
+            result = new Rectangle(left, top, Mathf.Max(right - left, 0.0f), Mathf.Max(bottom - top, 0.0f));
+        }
+
+        /// <summary>
+        /// Calculates a rectangle that contains the shared part of a and b rectangles.
+        /// </summary>
+        /// <param name="a">The first rectangle.</param>
+        /// <param name="b">The second rectangle.</param>
+        /// <returns>Rectangle that contains shared part of a and b rectangles.</returns>
         public static Rectangle Shared(Rectangle a, Rectangle b)
         {
             float left = Mathf.Max(a.Left, b.Left);
@@ -331,17 +346,45 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates rectangle from two points
+        /// Calculates a rectangle that contains the shared part of a and b rectangles.
+        /// </summary>
+        /// <param name="a">The first rectangle.</param>
+        /// <param name="b">The second rectangle.</param>
+        /// <param name="result">When the method completes, contains the rectangle that shared part of a and b rectangles.</param>
+        public static void Shared(ref Rectangle a, ref Rectangle b, out Rectangle result)
+        {
+            float left = Mathf.Max(a.Left, b.Left);
+            float right = Mathf.Min(a.Right, b.Right);
+            float top = Mathf.Max(a.Top, b.Top);
+            float bottom = Mathf.Min(a.Bottom, b.Bottom);
+            result = new Rectangle(left, top, Mathf.Max(right - left, 0.0f), Mathf.Max(bottom - top, 0.0f));
+        }
+
+        /// <summary>
+        /// Creates rectangle from two points.
         /// </summary>
         /// <param name="p1">First point</param>
         /// <param name="p2">Second point</param>
         /// <returns>Rectangle that contains both p1 and p2</returns>
         public static Rectangle FromPoints(Vector2 p1, Vector2 p2)
         {
-            Vector2 upperLeft, rightBottom;
-            Vector2.Min(ref p1, ref p2, out upperLeft);
-            Vector2.Max(ref p1, ref p2, out rightBottom);
+            Vector2.Min(ref p1, ref p2, out var upperLeft);
+            Vector2.Max(ref p1, ref p2, out var rightBottom);
             return new Rectangle(upperLeft, Vector2.Max(rightBottom - upperLeft, Vector2.Zero));
+        }
+
+        /// <summary>
+        /// Creates rectangle from two points.
+        /// </summary>
+        /// <param name="p1">First point</param>
+        /// <param name="p2">Second point</param>
+        /// <returns>Rectangle that contains both p1 and p2</returns>
+        /// <param name="result">When the method completes, contains the rectangle that contains both p1 and p2 points.</param>
+        public static void FromPoints(ref Vector2 p1, ref Vector2 p2, out Rectangle result)
+        {
+            Vector2.Min(ref p1, ref p2, out var upperLeft);
+            Vector2.Max(ref p1, ref p2, out var rightBottom);
+            result = new Rectangle(upperLeft, Vector2.Max(rightBottom - upperLeft, Vector2.Zero));
         }
 
         #region Operators
