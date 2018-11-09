@@ -864,6 +864,26 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Calculates the 2D vector perpendicular to the given 2D vector. The result is always rotated 90-degrees in a counter-clockwise direction for a 2D coordinate system where the positive Y axis goes up.
+        /// </summary>
+        /// <param name="inDirection">The input direction.</param>
+        /// <returns>The result.</returns>
+        public static Vector2 Perpendicular(Vector2 inDirection)
+        {
+            return new Vector2(-inDirection.Y, inDirection.X);
+        }
+
+        /// <summary>
+        /// Calculates the 2D vector perpendicular to the given 2D vector. The result is always rotated 90-degrees in a counter-clockwise direction for a 2D coordinate system where the positive Y axis goes up.
+        /// </summary>
+        /// <param name="inDirection">The in direction.</param>
+        /// <param name="result">When the method completes, contains the result of the calculation.</param>
+        public static void Perpendicular(ref Vector2 inDirection, out Vector2 result)
+        {
+            result = new Vector2(-inDirection.Y, inDirection.X);
+        }
+
+        /// <summary>
         /// Performs a Catmull-Rom interpolation using the specified positions.
         /// </summary>
         /// <param name="value1">The first position in the interpolation.</param>
