@@ -812,9 +812,47 @@ namespace FlaxEditor.Surface.Archetypes
                 var color = Color.White;
                 for (int i = 0; i < Transitions.Count; i++)
                 {
+                    var sourceState = this;
                     var targetState = Transitions[i].DestinationState;
-                    var startPos = PointToParent(Size * 0.5f);
-                    targetState.GetConnectionEndPoint(ref startPos, out var endPos);
+                    var isBothDirection = targetState.Transitions.Any(x => x.DestinationState == this);
+
+                    Vector2 startPos, endPos;
+                    if (isBothDirection)
+                    {
+                        bool diff = sourceState.Location.GetHashCode() > targetState.Location.GetHashCode();
+                        var s1 = diff ? sourceState : targetState;
+                        var s2 = diff ? targetState : sourceState;
+
+                        // Two aligned arrows in the opposite direction
+                        startPos = s1.PointToParent(s1.Size * 0.5f);
+                        s2.GetConnectionEndPoint(ref startPos, out endPos);
+                        s1.GetConnectionEndPoint(ref endPos, out startPos);
+
+                        // Offset a little to not overlap
+                        var offset = diff ? -6.0f : 6.0f;
+                        var dir = startPos - endPos;
+                        dir.Normalize();
+                        Vector2.Perpendicular(ref dir, out var nrm);
+                        nrm *= offset;
+                        startPos += nrm;
+                        endPos += nrm;
+
+                        // Swap fo the other arrow
+                        if (diff)
+                        {
+                            var tmp = startPos;
+                            startPos = endPos;
+                            endPos = tmp;
+                        }
+                    }
+                    else
+                    {
+                        // Single connection over the closest path
+                        startPos = PointToParent(Size * 0.5f);
+                        targetState.GetConnectionEndPoint(ref startPos, out endPos);
+                        sourceState.GetConnectionEndPoint(ref endPos, out startPos);
+                    }
+
                     DrawConnection(Surface, ref startPos, ref endPos, ref color);
                 }
             }
@@ -850,7 +888,24 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void Connect(IConnectionInstigator other)
             {
-                throw new NotImplementedException();
+                var state = (StateMachineState)other;
+
+                // Create a new transition
+                var transition = new StateMachineTransition
+                {
+                    SourceState = this,
+                    DestinationState = state,
+                    Enabled = true,
+                    Solo = false,
+                    UseDefaultRule = true,
+                    Order = 0,
+                    BlendDuration = 0.1f,
+                    BlendMode = AlphaBlendMode.HermiteCubic,
+                    RuleGraph = Enumerable.Empty<byte>() as byte[],
+                };
+                Transitions.Add(transition);
+
+                SaveData();
             }
         }
 
