@@ -465,10 +465,16 @@ namespace FlaxEditor.Surface.Archetypes
                 set => SetValue(2, value);
             }
 
+            /// <summary>
+            /// The transitions rectangle (in surface-space).
+            /// </summary>
+            public Rectangle TransitionsRectangle;
+
             /// <inheritdoc />
             public StateMachineState(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, surface, nodeArch, groupArch)
             {
+                TransitionsRectangle = Rectangle.Empty;
             }
 
             /// <summary>
@@ -587,6 +593,8 @@ namespace FlaxEditor.Surface.Archetypes
                 }
 
                 // TODO: load data from bytes and update UI
+
+                UpdateTransitions();
             }
 
             /// <summary>
@@ -612,6 +620,7 @@ namespace FlaxEditor.Surface.Archetypes
             public void ClearData()
             {
                 Transitions.Clear();
+                TransitionsRectangle = Rectangle.Empty;
             }
 
             /// <summary>
@@ -620,6 +629,74 @@ namespace FlaxEditor.Surface.Archetypes
             public void Edit()
             {
                 Surface.OpenContext(this);
+            }
+
+            /// <summary>
+            /// Updates the transitions rectangles.
+            /// </summary>
+            public void UpdateTransitions()
+            {
+                for (int i = 0; i < Transitions.Count; i++)
+                {
+                    var t = Transitions[i];
+                    var sourceState = this;
+                    var targetState = t.DestinationState;
+                    var isBothDirection = targetState.Transitions.Any(x => x.DestinationState == this);
+
+                    Vector2 startPos, endPos;
+                    if (isBothDirection)
+                    {
+                        bool diff = string.Compare(sourceState.Title, targetState.Title, StringComparison.Ordinal) > 0;
+                        var s1 = diff ? sourceState : targetState;
+                        var s2 = diff ? targetState : sourceState;
+
+                        // Two aligned arrows in the opposite direction
+                        startPos = s1.PointToParent(s1.Size * 0.5f);
+                        s2.GetConnectionEndPoint(ref startPos, out endPos);
+                        s1.GetConnectionEndPoint(ref endPos, out startPos);
+
+                        // Offset a little to not overlap
+                        var offset = diff ? -6.0f : 6.0f;
+                        var dir = startPos - endPos;
+                        dir.Normalize();
+                        Vector2.Perpendicular(ref dir, out var nrm);
+                        nrm *= offset;
+                        startPos += nrm;
+                        endPos += nrm;
+
+                        // Swap fo the other arrow
+                        if (diff)
+                        {
+                            var tmp = startPos;
+                            startPos = endPos;
+                            endPos = tmp;
+                        }
+                    }
+                    else
+                    {
+                        // Single connection over the closest path
+                        startPos = PointToParent(Size * 0.5f);
+                        targetState.GetConnectionEndPoint(ref startPos, out endPos);
+                        sourceState.GetConnectionEndPoint(ref endPos, out startPos);
+                    }
+
+                    t.StartPos = startPos;
+                    t.EndPos = endPos;
+                    Rectangle.FromPoints(ref startPos, ref endPos, out t.Bounds);
+                }
+
+                if (Transitions.Count > 0)
+                {
+                    TransitionsRectangle = Transitions[0].Bounds;
+                    for (int i = 1; i < Transitions.Count; i++)
+                    {
+                        Rectangle.Union(ref TransitionsRectangle, ref Transitions[i].Bounds, out TransitionsRectangle);
+                    }
+                }
+                else
+                {
+                    TransitionsRectangle = Rectangle.Empty;
+                }
             }
 
             /// <summary>
@@ -640,6 +717,15 @@ namespace FlaxEditor.Surface.Archetypes
             private void StartCreatingTransition()
             {
                 Surface.ConnectingStart(this);
+            }
+
+            /// <inheritdoc />
+            public override void Update(float deltaTime)
+            {
+                base.Update(deltaTime);
+
+                // TODO: maybe update only on actual transitions change?
+                UpdateTransitions();
             }
 
             /// <inheritdoc />
@@ -812,48 +898,8 @@ namespace FlaxEditor.Surface.Archetypes
                 var color = Color.White;
                 for (int i = 0; i < Transitions.Count; i++)
                 {
-                    var sourceState = this;
-                    var targetState = Transitions[i].DestinationState;
-                    var isBothDirection = targetState.Transitions.Any(x => x.DestinationState == this);
-
-                    Vector2 startPos, endPos;
-                    if (isBothDirection)
-                    {
-                        bool diff = sourceState.Location.GetHashCode() > targetState.Location.GetHashCode();
-                        var s1 = diff ? sourceState : targetState;
-                        var s2 = diff ? targetState : sourceState;
-
-                        // Two aligned arrows in the opposite direction
-                        startPos = s1.PointToParent(s1.Size * 0.5f);
-                        s2.GetConnectionEndPoint(ref startPos, out endPos);
-                        s1.GetConnectionEndPoint(ref endPos, out startPos);
-
-                        // Offset a little to not overlap
-                        var offset = diff ? -6.0f : 6.0f;
-                        var dir = startPos - endPos;
-                        dir.Normalize();
-                        Vector2.Perpendicular(ref dir, out var nrm);
-                        nrm *= offset;
-                        startPos += nrm;
-                        endPos += nrm;
-
-                        // Swap fo the other arrow
-                        if (diff)
-                        {
-                            var tmp = startPos;
-                            startPos = endPos;
-                            endPos = tmp;
-                        }
-                    }
-                    else
-                    {
-                        // Single connection over the closest path
-                        startPos = PointToParent(Size * 0.5f);
-                        targetState.GetConnectionEndPoint(ref startPos, out endPos);
-                        sourceState.GetConnectionEndPoint(ref endPos, out startPos);
-                    }
-
-                    DrawConnection(Surface, ref startPos, ref endPos, ref color);
+                    var t = Transitions[i];
+                    DrawConnection(Surface, ref t.StartPos, ref t.EndPos, ref color);
                 }
             }
 
@@ -960,6 +1006,21 @@ namespace FlaxEditor.Surface.Archetypes
             /// The rule graph data.
             /// </summary>
             public byte[] RuleGraph;
+
+            /// <summary>
+            /// The start position (cached).
+            /// </summary>
+            public Vector2 StartPos;
+
+            /// <summary>
+            /// The end position (cached).
+            /// </summary>
+            public Vector2 EndPos;
+
+            /// <summary>
+            /// The bounds of the transition connection line (cached).
+            /// </summary>
+            public Rectangle Bounds;
 
             /// <inheritdoc />
             public string SurfaceName => string.Format("{0} to {1}", SourceState.StateTitle, DestinationState.StateTitle);
