@@ -12,10 +12,30 @@ namespace FlaxEditor.GUI.Docking
     public class DockPanelProxy : ContainerControl
     {
         private DockPanel _panel;
+
+        /// <summary>
+        /// The is mouse down flag.
+        /// </summary>
         public bool IsMouseDown;
+
+        /// <summary>
+        /// The is mouse down over cross button flag.
+        /// </summary>
         public bool IsMouseDownOverCross;
+
+        /// <summary>
+        /// The mouse down window.
+        /// </summary>
         public DockWindow MouseDownWindow;
+
+        /// <summary>
+        /// The mouse position.
+        /// </summary>
         public Vector2 MousePosition;
+
+        /// <summary>
+        /// The start drag asynchronous window.
+        /// </summary>
         public DockWindow StartDragAsyncWindow;
 
         private Rectangle HeaderRectangle => new Rectangle(0, 0, Width, DockPanel.DefaultHeaderHeight);
@@ -33,7 +53,7 @@ namespace FlaxEditor.GUI.Docking
             DockStyle = DockStyle.Fill;
         }
 
-        private DockWindow getTabAtPos(Vector2 position, out bool closeButton)
+        private DockWindow GetTabAtPos(Vector2 position, out bool closeButton)
         {
             DockWindow result = null;
             closeButton = false;
@@ -72,7 +92,7 @@ namespace FlaxEditor.GUI.Docking
             return result;
         }
 
-        private void getTabRect(DockWindow win, out Rectangle bounds)
+        private void GetTabRect(DockWindow win, out Rectangle bounds)
         {
             FlaxEngine.Assertions.Assert.IsTrue(_panel.ContainsTab(win));
 
@@ -102,19 +122,19 @@ namespace FlaxEditor.GUI.Docking
             bounds = Rectangle.Empty;
         }
 
-        private void startDrag(DockWindow win)
+        private void StartDrag(DockWindow win)
         {
             // Clear cache
             MouseDownWindow = null;
             StartDragAsyncWindow = win;
 
             // Register for late update in an async manner (to prevent from crash due to changing UI structure on window undock)
-            FlaxEngine.Scripting.LateUpdate += startDragAsync;
+            FlaxEngine.Scripting.LateUpdate += StartDragAsync;
         }
 
-        private void startDragAsync()
+        private void StartDragAsync()
         {
-            FlaxEngine.Scripting.LateUpdate -= startDragAsync;
+            FlaxEngine.Scripting.LateUpdate -= StartDragAsync;
 
             if (StartDragAsyncWindow != null)
             {
@@ -264,7 +284,7 @@ namespace FlaxEditor.GUI.Docking
             {
                 // Cache data
                 IsMouseDown = true;
-                MouseDownWindow = getTabAtPos(location, out IsMouseDownOverCross);
+                MouseDownWindow = GetTabAtPos(location, out IsMouseDownOverCross);
                 if (!IsMouseDownOverCross && MouseDownWindow != null)
                     _panel.SelectTab(MouseDownWindow);
             }
@@ -282,8 +302,7 @@ namespace FlaxEditor.GUI.Docking
                 IsMouseDown = false;
 
                 // Check tabs under mouse position at the beginning and at the end
-                bool overCross;
-                var tab = getTabAtPos(location, out overCross);
+                var tab = GetTabAtPos(location, out var overCross);
 
                 // Check if tabs are the same and cross was pressed
                 if (tab != null && tab == MouseDownWindow && IsMouseDownOverCross && overCross)
@@ -311,7 +330,7 @@ namespace FlaxEditor.GUI.Docking
 
                     // Check tab under the mouse
                     if (!IsMouseDownOverCross && MouseDownWindow != null)
-                        startDrag(MouseDownWindow);
+                        StartDrag(MouseDownWindow);
                     MouseDownWindow = null;
                 }
                 // Check if has more than one tab to change order
@@ -319,7 +338,7 @@ namespace FlaxEditor.GUI.Docking
                 {
                     // Check if mouse left current tab rect
                     Rectangle currWinRect;
-                    getTabRect(MouseDownWindow, out currWinRect);
+                    GetTabRect(MouseDownWindow, out currWinRect);
                     if (!currWinRect.Contains(location))
                     {
                         int index = _panel.GetTabIndex(MouseDownWindow);
@@ -356,7 +375,7 @@ namespace FlaxEditor.GUI.Docking
 
                 // Check tabs under mouse position
                 if (!IsMouseDownOverCross && MouseDownWindow != null)
-                    startDrag(MouseDownWindow);
+                    StartDrag(MouseDownWindow);
                 MouseDownWindow = null;
             }
 
@@ -397,7 +416,7 @@ namespace FlaxEditor.GUI.Docking
 
         private bool TrySelectTabUnderLocation(ref Vector2 location)
         {
-            var tab = getTabAtPos(location, out _);
+            var tab = GetTabAtPos(location, out _);
             if (tab != null)
             {
                 _panel.SelectTab(tab);

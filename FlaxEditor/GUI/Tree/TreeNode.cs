@@ -13,7 +13,14 @@ namespace FlaxEditor.GUI
     [HideInEditor]
     public class TreeNode : ContainerControl
     {
+        /// <summary>
+        /// The default drag insert position margin.
+        /// </summary>
         public const float DefaultDragInsertPositionMargin = 2.0f;
+
+        /// <summary>
+        /// The default node offset on Y axis.
+        /// </summary>
         public const float DefaultNodeOffsetY = 1;
 
         private Tree _tree;

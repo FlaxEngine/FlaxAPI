@@ -51,6 +51,12 @@ namespace FlaxEditor.Surface.Elements
             Set(ParentNode, Archetype, Value);
         }
 
+        /// <summary>
+        /// Gets the integer value from the specified parent node. Handles type casting and components gather.
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="arch">The node element archetype.</param>
+        /// <returns>The result value.</returns>
         public static int Get(SurfaceNode parentNode, NodeElementArchetype arch)
         {
             if (arch.ValueIndex < 0)
@@ -89,6 +95,12 @@ namespace FlaxEditor.Surface.Elements
             return result;
         }
 
+        /// <summary>
+        /// Sets the integer value of the specified parent node. Handles type casting and components assignment.
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="arch">The node element archetype.</param>
+        /// <param name="toSet">The value to set.</param>
         public static void Set(SurfaceNode parentNode, NodeElementArchetype arch, int toSet)
         {
             if (arch.ValueIndex < 0)

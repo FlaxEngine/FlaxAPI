@@ -135,16 +135,36 @@ namespace FlaxEditor.Viewport
         // Input
 
         private bool _isControllingMouse;
-        protected Input _prevInput;
-        protected Input _input;
         private int _deltaFilteringStep;
-        protected Vector2 _viewMousePos;
-        protected Vector2 _mouseDeltaRight;
-        protected Vector2 _mouseDeltaLeft;
         private Vector2 _startPosRight;
         private Vector2 _startPosLeft;
         private Vector2 _mouseDeltaRightLast;
         private Vector2[] _deltaFilteringBuffer = new Vector2[FpsCameraFilteringFrames];
+
+        /// <summary>
+        /// The previous input (from the previous update).
+        /// </summary>
+        protected Input _prevInput;
+
+        /// <summary>
+        /// The input data (from the current frame).
+        /// </summary>
+        protected Input _input;
+
+        /// <summary>
+        /// The view mouse position.
+        /// </summary>
+        protected Vector2 _viewMousePos;
+
+        /// <summary>
+        /// The mouse delta (right button down).
+        /// </summary>
+        protected Vector2 _mouseDeltaRight;
+
+        /// <summary>
+        /// The mouse delta (left button down).
+        /// </summary>
+        protected Vector2 _mouseDeltaLeft;
 
         // Camera
 
