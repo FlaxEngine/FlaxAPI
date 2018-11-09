@@ -26,6 +26,31 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Occurs when handling custom mouse button down event.
+        /// </summary>
+        public event Window.MouseButtonDelegate CustomMouseDown;
+
+        /// <summary>
+        /// Occurs when handling custom mouse button up event.
+        /// </summary>
+        public event Window.MouseButtonDelegate CustomMouseUp;
+
+        /// <summary>
+        /// Occurs when handling custom mouse double click event.
+        /// </summary>
+        public event Window.MouseButtonDelegate CustomMouseDoubleClick;
+
+        /// <summary>
+        /// Occurs when handling custom mouse move event.
+        /// </summary>
+        public event Window.MouseMoveDelegate CustomMouseMove;
+
+        /// <summary>
+        /// Occurs when handling custom mouse wheel event.
+        /// </summary>
+        public event Window.MouseWheelDelegate CustomMouseWheel;
+
+        /// <summary>
         /// Gets the node under the mouse location.
         /// </summary>
         /// <returns>The node or null if no intersection.</returns>
@@ -152,6 +177,7 @@ namespace FlaxEditor.Surface
             }
 
             base.OnMouseMove(location);
+            CustomMouseMove?.Invoke(ref location);
         }
 
         /// <inheritdoc />
@@ -176,8 +202,14 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool OnMouseWheel(Vector2 location, float delta)
         {
-            if (base.OnMouseWheel(location, delta))
+            // Base
+            bool handled = base.OnMouseWheel(location, delta);
+            if (!handled)
+                CustomMouseWheel?.Invoke(ref location, delta, ref handled);
+            if (handled)
+            {
                 return true;
+            }
 
             // Change scale (disable scaling during selecting nodes)
             if (IsMouseOver && !_leftMouseDown)
@@ -185,6 +217,21 @@ namespace FlaxEditor.Surface
                 var viewCenter = ViewCenterPosition;
                 ViewScale += delta * 0.1f;
                 ViewCenterPosition = viewCenter;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        {
+            // Base
+            bool handled = base.OnMouseDoubleClick(location, buttons);
+            if (!handled)
+                CustomMouseDoubleClick?.Invoke(ref location, buttons, ref handled);
+            if (handled)
+            {
                 return true;
             }
 
@@ -264,7 +311,10 @@ namespace FlaxEditor.Surface
             }
 
             // Base
-            if (base.OnMouseDown(location, buttons))
+            bool handled = base.OnMouseDown(location, buttons);
+            if (!handled)
+                CustomMouseDown?.Invoke(ref location, buttons, ref handled);
+            if (handled)
             {
                 // Clear flags to disable handling mouse events by itself (children should do)
                 _leftMouseDown = _rightMouseDown = false;
@@ -334,8 +384,13 @@ namespace FlaxEditor.Surface
             }
 
             // Base
-            if (base.OnMouseUp(location, buttons))
+            bool handled = base.OnMouseUp(location, buttons);
+            if (!handled)
+                CustomMouseUp?.Invoke(ref location, buttons, ref handled);
+            if (handled)
+            {
                 return true;
+            }
 
             // Right clicking while attempting to connect a node to something
             if (!_rightMouseDown && !_isMovingSelection && _connectionInstigator != null)
