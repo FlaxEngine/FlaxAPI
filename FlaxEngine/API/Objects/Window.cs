@@ -23,27 +23,29 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="mouse">The mouse position.</param>
         /// <returns>Hit result.</returns>
-        public delegate WindowHitCodes HitTestDelegate(Vector2 mouse);
+        public delegate WindowHitCodes HitTestDelegate(ref Vector2 mouse);
 
         /// <summary>
         /// Perform mouse buttons action.
         /// </summary>
         /// <param name="mouse">The mouse position.</param>
         /// <param name="buttons">The mouse buttons state.</param>
-        public delegate void MouseButtonDelegate(Vector2 mouse, MouseButton buttons);
+        /// <param name="handled">The flag that indicated that event has been handled by the custom code and should not be passed further. By default it is set to false.</param>
+        public delegate void MouseButtonDelegate(ref Vector2 mouse, MouseButton buttons, ref bool handled);
 
         /// <summary>
         /// Perform mouse move action.
         /// </summary>
         /// <param name="mouse">The mouse position.</param>
-        public delegate void MouseMoveDelegate(Vector2 mouse);
+        public delegate void MouseMoveDelegate(ref Vector2 mouse);
 
         /// <summary>
         /// Perform mouse wheel action.
         /// </summary>
         /// <param name="mouse">The mouse position.</param>
         /// <param name="delta">The mouse wheel move delta (can be positive or negative; normalized to [-1;1] range).</param>
-        public delegate void MouseWheelDelegate(Vector2 mouse, float delta);
+        /// <param name="handled">The flag that indicated that event has been handled by the custom code and should not be passed further. By default it is set to false.</param>
+        public delegate void MouseWheelDelegate(ref Vector2 mouse, float delta, ref bool handled);
 
         /// <summary>
         /// Perform input character action.
@@ -65,73 +67,73 @@ namespace FlaxEngine
         /// <summary>
         /// Event fired on key pressed.
         /// </summary>
-        public event KeyboardDelegate OnKeyDown;
+        public event KeyboardDelegate KeyDown;
 
         /// <summary>
         /// Event fired on key released.
         /// </summary>
-        public event KeyboardDelegate OnKeyUp;
+        public event KeyboardDelegate KeyUp;
 
         /// <summary>
         /// Event fired when mouse goes down.
         /// </summary>
-        public event MouseButtonDelegate OnMouseDown;
+        public event MouseButtonDelegate MouseDown;
 
         /// <summary>
         /// Event fired when mouse goes up.
         /// </summary>
-        public event MouseButtonDelegate OnMouseUp;
+        public event MouseButtonDelegate MouseUp;
 
         /// <summary>
         /// Event fired when mouse double clicks.
         /// </summary>
-        public event MouseButtonDelegate OnMouseDoubleClick;
+        public event MouseButtonDelegate MouseDoubleClick;
 
         /// <summary>
         /// Event fired when mouse wheel is scrolling.
         /// </summary>
-        public event MouseWheelDelegate OnMouseWheel;
+        public event MouseWheelDelegate MouseWheel;
 
         /// <summary>
         /// Event fired when mouse moves
         /// </summary>
-        public event MouseMoveDelegate OnMouseMove;
+        public event MouseMoveDelegate MouseMove;
 
         /// <summary>
         /// Event fired when mouse leaves window.
         /// </summary>
-        public event Action OnMouseLeave;
+        public event Action MouseLeave;
 
         /// <summary>
         /// Event fired when window gets focus.
         /// </summary>
-        public event Action OnGotFocus;
+        public event Action GotFocus;
 
         /// <summary>
-        /// Event fired when window losts focus.
+        /// Event fired when window lost focus.
         /// </summary>
-        public event Action OnLostFocus;
+        public event Action LostFocus;
 
         /// <summary>
         /// Event fired when window performs hit test, parameter is a mouse position
         /// </summary>
-        public HitTestDelegate OnHitTest;
+        public HitTestDelegate HitTest;
 
         /// <summary>
         /// Event fired when left mouse button goes down (hit test performed etc.).
         /// Returns true if event has been processed and further actions should be canceled, otherwise false.
         /// </summary>
-        public Func<WindowHitCodes, bool> OnLButtonHit;
+        public Func<WindowHitCodes, bool> LeftButtonHit;
 
         /// <summary>
         /// Event fired when windows wants to be closed. Should return true if suspend window closing, otherwise returns false
         /// </summary>
-        public event ClosingDelegate OnClosing;
+        public event ClosingDelegate Closing;
 
         /// <summary>
         /// Event fired when gets closed and deleted, all references to the window object should be removed at this point.
         /// </summary>
-        public event Action OnClosed;
+        public event Action Closed;
 
         /// <summary>
         /// Gets a value indicating whether this window is in windowed mode.
@@ -228,78 +230,94 @@ namespace FlaxEngine
 
         internal void Internal_OnKeyDown(Keys key)
         {
-            OnKeyDown?.Invoke(key);
+            KeyDown?.Invoke(key);
             GUI.OnKeyDown(key);
         }
 
         internal void Internal_OnKeyUp(Keys key)
         {
-            OnKeyUp?.Invoke(key);
+            KeyUp?.Invoke(key);
             GUI.OnKeyUp(key);
         }
 
         internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButton buttons)
         {
-            OnMouseDown?.Invoke(mousePos, buttons);
+            bool handled = false;
+            MouseDown?.Invoke(ref mousePos, buttons, ref handled);
+            if (handled)
+                return;
+
             GUI.OnMouseDown(mousePos, buttons);
         }
 
         internal void Internal_OnMouseUp(ref Vector2 mousePos, MouseButton buttons)
         {
-            OnMouseUp?.Invoke(mousePos, buttons);
+            bool handled = false;
+            MouseUp?.Invoke(ref mousePos, buttons, ref handled);
+            if (handled)
+                return;
+
             GUI.OnMouseUp(mousePos, buttons);
         }
 
         internal void Internal_OnMouseDoubleClick(ref Vector2 mousePos, MouseButton buttons)
         {
-            OnMouseDoubleClick?.Invoke(mousePos, buttons);
+            bool handled = false;
+            MouseDoubleClick?.Invoke(ref mousePos, buttons, ref handled);
+            if (handled)
+                return;
+
             GUI.OnMouseDoubleClick(mousePos, buttons);
         }
 
         internal void Internal_OnMouseWheel(ref Vector2 mousePos, float delta)
         {
-            OnMouseWheel?.Invoke(mousePos, delta);
+            bool handled = false;
+            MouseWheel?.Invoke(ref mousePos, delta, ref handled);
+            if (handled)
+                return;
+
             GUI.OnMouseWheel(mousePos, delta);
         }
 
         internal void Internal_OnMouseMove(ref Vector2 mousePos)
         {
-            OnMouseMove?.Invoke(mousePos);
+            MouseMove?.Invoke(ref mousePos);
             GUI.OnMouseMove(mousePos);
         }
 
         internal void Internal_OnMouseLeave()
         {
-            OnMouseLeave?.Invoke();
+            MouseLeave?.Invoke();
             GUI.OnMouseLeave();
         }
 
         internal void Internal_OnGotFocus()
         {
-            OnGotFocus?.Invoke();
+            GotFocus?.Invoke();
             GUI.OnGotFocus();
         }
 
         internal void Internal_OnLostFocus()
         {
-            OnLostFocus?.Invoke();
+            LostFocus?.Invoke();
             GUI.OnLostFocus();
         }
 
         internal void Internal_OnHitTest(ref Vector2 mousePos, ref WindowHitCodes result, ref bool handled)
         {
-            if (OnHitTest != null)
+            if (HitTest != null)
             {
-                result = OnHitTest(mousePos);
+                result = HitTest(ref mousePos);
                 handled = true;
             }
         }
 
         internal void Internal_OnLButtonHit(WindowHitCodes hit, ref bool result)
         {
-            if (OnLButtonHit != null)
+            if (LeftButtonHit != null)
             {
-                result = OnLButtonHit(hit);
+                result = LeftButtonHit(hit);
             }
         }
 
@@ -340,32 +358,32 @@ namespace FlaxEngine
 
         internal void Internal_OnClosing(ClosingReason reason, ref bool cancel)
         {
-            OnClosing?.Invoke(reason, ref cancel);
+            Closing?.Invoke(reason, ref cancel);
         }
 
         internal void Internal_OnClosed()
         {
-            OnClosed?.Invoke();
+            Closed?.Invoke();
 
             GUI.Dispose();
 
             Windows.Remove(this);
 
             // Force clear all events (we cannot use window after close)
-            OnKeyDown = null;
-            OnKeyUp = null;
-            OnMouseLeave = null;
-            OnMouseDown = null;
-            OnMouseUp = null;
-            OnMouseDoubleClick = null;
-            OnMouseWheel = null;
-            OnMouseMove = null;
-            OnGotFocus = null;
-            OnLostFocus = null;
-            OnLButtonHit = null;
-            OnHitTest = null;
-            OnClosing = null;
-            OnClosed = null;
+            KeyDown = null;
+            KeyUp = null;
+            MouseLeave = null;
+            MouseDown = null;
+            MouseUp = null;
+            MouseDoubleClick = null;
+            MouseWheel = null;
+            MouseMove = null;
+            GotFocus = null;
+            LostFocus = null;
+            LeftButtonHit = null;
+            HitTest = null;
+            Closing = null;
+            Closed = null;
         }
 
         #endregion

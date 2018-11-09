@@ -151,8 +151,8 @@ namespace FlaxEditor.GUI.Dialogs
             var windowGUI = _window.GUI;
 
             // Attach events
-            _window.OnClosing += OnClosing;
-            _window.OnClosed += OnClosed;
+            _window.Closing += OnClosing;
+            _window.Closed += OnClosed;
 
             // Link to the window
             Parent = windowGUI;

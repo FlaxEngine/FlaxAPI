@@ -609,8 +609,8 @@ namespace FlaxEditor.Modules
             UpdateWindowTitle();
 
             // Link for main window events
-            MainWindow.OnClosing += MainWindow_OnClosing;
-            MainWindow.OnClosed += MainWindow_OnClosed;
+            MainWindow.Closing += MainWindow_OnClosing;
+            MainWindow.Closed += MainWindow_OnClosed;
 
             // Create default editor windows
             ContentWin = new ContentWindow(Editor);

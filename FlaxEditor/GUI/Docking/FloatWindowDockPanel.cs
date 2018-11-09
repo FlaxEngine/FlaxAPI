@@ -38,8 +38,8 @@ namespace FlaxEditor.GUI.Docking
             // Link
             _masterPanel.FloatingPanels.Add(this);
             Parent = window;
-            _window.Window.OnClosing += onClosing;
-            _window.Window.OnLButtonHit += onLButtonHit;
+            _window.Window.Closing += onClosing;
+            _window.Window.LeftButtonHit += onLButtonHit;
         }
 
         /// <summary>
@@ -121,8 +121,8 @@ namespace FlaxEditor.GUI.Docking
             }
 
             // Unlink
-            _window.Window.OnClosing -= onClosing;
-            _window.Window.OnLButtonHit = null;
+            _window.Window.Closing -= onClosing;
+            _window.Window.LeftButtonHit = null;
             _window = null;
 
             // Remove object

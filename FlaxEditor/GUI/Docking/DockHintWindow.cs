@@ -48,9 +48,9 @@ namespace FlaxEditor.GUI.Docking
             Proxy.Init(ref _defaultWindowSize);
 
             // Bind events
-            Proxy.Window.OnMouseUp += OnMouseUp;
-            Proxy.Window.OnMouseMove += OnMouseMove;
-            Proxy.Window.OnLostFocus += OnLostFocus;
+            Proxy.Window.MouseUp += OnMouseUp;
+            Proxy.Window.MouseMove += OnMouseMove;
+            Proxy.Window.LostFocus += OnLostFocus;
 
             // Start tracking mouse
             Proxy.Window.StartTrackingMouse(false);
@@ -80,9 +80,9 @@ namespace FlaxEditor.GUI.Docking
             Proxy.Window.RenderingEnabled = false;
 
             // Unbind events
-            Proxy.Window.OnMouseUp -= OnMouseUp;
-            Proxy.Window.OnMouseMove -= OnMouseMove;
-            Proxy.Window.OnLostFocus -= OnLostFocus;
+            Proxy.Window.MouseUp -= OnMouseUp;
+            Proxy.Window.MouseMove -= OnMouseMove;
+            Proxy.Window.LostFocus -= OnLostFocus;
 
             // Hide the proxy
             Proxy.Hide();
@@ -315,7 +315,7 @@ namespace FlaxEditor.GUI.Docking
             Proxy.Window.ClientBounds = _rectWindow;
         }
 
-        private void OnMouseUp(Vector2 location, MouseButton buttons)
+        private void OnMouseUp(ref Vector2 location, MouseButton buttons, ref bool handled)
         {
             if (buttons == MouseButton.Left)
             {
@@ -323,7 +323,7 @@ namespace FlaxEditor.GUI.Docking
             }
         }
 
-        private void OnMouseMove(Vector2 mousePos)
+        private void OnMouseMove(ref Vector2 mousePos)
         {
             UpdateRects();
         }

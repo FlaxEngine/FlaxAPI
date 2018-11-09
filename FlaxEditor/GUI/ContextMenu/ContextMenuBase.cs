@@ -138,7 +138,7 @@ namespace FlaxEngine.GUI
             desc.IsRegularWindow = false;
             desc.HasSizingFrame = false;
             _window = FlaxEngine.Window.Create(desc);
-            _window.OnLostFocus += onWindowLostFocus;
+            _window.LostFocus += onWindowLostFocus;
 
             // Attach to the window
             _parentCM = parent as ContextMenuBase;
