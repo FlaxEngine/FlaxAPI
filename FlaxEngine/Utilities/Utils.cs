@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
@@ -11,6 +12,18 @@ namespace FlaxEngine
     /// </summary>
     public static class Utils
     {
+        /// <summary>
+        /// Copies data from one memory location to another using an unmanaged memory pointers.
+        /// </summary>
+        /// <remarks>
+        /// Uses low-level memcpy call.
+        /// </remarks>
+        /// <param name="source">The source location.</param>
+        /// <param name="destination">The destination location.</param>
+        /// <param name="length">The length (amount of bytes to copy).</param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void MemoryCopy(IntPtr source, IntPtr destination, int length);
+
         /// <summary>
         /// Rounds the floating point value up to 1 decimal place.
         /// </summary>
