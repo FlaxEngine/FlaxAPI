@@ -414,6 +414,7 @@
     <Compile Include="Surface\ISurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
+    <Compile Include="Tools\PerlinNoise.cs" />
     <Compile Include="Tools\Terrain\Brushes\Brush.cs" />
     <Compile Include="Tools\Terrain\Brushes\CircleBrush.cs" />
     <Compile Include="Tools\Terrain\CarveTab.cs" />
@@ -426,6 +427,7 @@
     <Compile Include="Tools\Terrain\SculptTerrainGizmoMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\FlattenMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\Mode.cs" />
+    <Compile Include="Tools\Terrain\Sculpt\NoiseMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\SculptMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\SmoothMode.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />

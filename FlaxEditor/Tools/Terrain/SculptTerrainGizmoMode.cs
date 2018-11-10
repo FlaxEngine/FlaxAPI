@@ -45,6 +45,11 @@ namespace FlaxEditor.Tools.Terrain
             /// The flatten mode.
             /// </summary>
             Flatten,
+
+            /// <summary>
+            /// The noise mode.
+            /// </summary>
+            Noise,
         }
 
         /// <summary>
@@ -63,6 +68,7 @@ namespace FlaxEditor.Tools.Terrain
             new SculptMode(),
             new SmoothMode(),
             new FlattenMode(),
+            new NoiseMode(),
         };
 
         private readonly Brush[] _brushes =
