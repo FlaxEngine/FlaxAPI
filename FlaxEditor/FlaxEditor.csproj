@@ -424,6 +424,7 @@
     <Compile Include="Tools\Terrain\SculptTab.cs" />
     <Compile Include="Tools\Terrain\SculptTerrainGizmo.cs" />
     <Compile Include="Tools\Terrain\SculptTerrainGizmoMode.cs" />
+    <Compile Include="Tools\Terrain\Sculpt\FlattenMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\Mode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\SculptMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\SmoothMode.cs" />
