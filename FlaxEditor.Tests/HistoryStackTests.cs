@@ -48,6 +48,10 @@ namespace FlaxEditor.Tests
             }
 
             public string ActionString { get; set; }
+
+            public void Dispose()
+            {
+            }
         }
 
         [Test]

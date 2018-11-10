@@ -85,6 +85,12 @@ namespace FlaxEditor.Actions
                 DoBreak();
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _prefabObjectIds.Clear();
+        }
+
         private void DoLink()
         {
             if (_prefabObjectIds == null)

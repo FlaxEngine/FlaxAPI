@@ -191,6 +191,11 @@ namespace FlaxEditor.Tools.Terrain
 
                 _editor.Scene.MarkSceneEdited(terrain.Scene);
             }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+            }
         }
 
         private bool TryAddPatch()

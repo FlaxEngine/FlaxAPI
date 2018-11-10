@@ -58,19 +58,6 @@ namespace FlaxEditor.Tools.Terrain.Undo
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="EditTerrainMapAction"/> class.
-        /// </summary>
-        ~EditTerrainMapAction()
-        {
-            // Ensure to release memory
-            for (int i = 0; i < _patches.Count; i++)
-            {
-                Marshal.FreeHGlobal(_patches[i].Before);
-                Marshal.FreeHGlobal(_patches[i].After);
-            }
-        }
-
-        /// <summary>
         /// Checks if the patch at the given coordinates has been already added.
         /// </summary>
         /// <param name="patchCoord">The patch coordinates.</param>
@@ -134,6 +121,18 @@ namespace FlaxEditor.Tools.Terrain.Undo
         public void Undo()
         {
             Set(x => x.Before);
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            // Ensure to release memory
+            for (int i = 0; i < _patches.Count; i++)
+            {
+                Marshal.FreeHGlobal(_patches[i].Before);
+                Marshal.FreeHGlobal(_patches[i].After);
+            }
+            _patches.Clear();
         }
 
         private void Set(Func<PatchData, IntPtr> dataGetter)

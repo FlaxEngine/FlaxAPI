@@ -177,8 +177,21 @@ namespace FlaxEditor.History
         /// </summary>
         public void Clear()
         {
-            _historyActions.Clear();
-            _reverseActions.Clear();
+            if (_historyActions.Count > 0)
+            {
+                var actions = _historyActions.ToArray();
+                for (int i = 0; i < actions.Length; i++)
+                    actions[i].Dispose();
+                _historyActions.Clear();
+            }
+
+            if (_reverseActions.Count > 0)
+            {
+                var actions = _reverseActions.ToArray();
+                for (int i = 0; i < actions.Length; i++)
+                    actions[i].Dispose();
+                _reverseActions.Clear();
+            }
         }
     }
 }

@@ -74,6 +74,11 @@ namespace FlaxEditor.Actions
         }
 
         /// <inheritdoc />
+        public void Dispose()
+        {
+        }
+
+        /// <inheritdoc />
         public void MarkSceneEdited(SceneModule sceneModule)
         {
             var script = FlaxEngine.Object.Find<Script>(ref _scriptId);

@@ -115,7 +115,7 @@ namespace FlaxEditor.Tools.Terrain
             private readonly Editor _editor;
             private Guid _terrainId;
             private Int2 _patchCoord;
-            private readonly string _data;
+            private string _data;
 
             /// <inheritdoc />
             public string ActionString => "Delete terrain patch";
@@ -160,6 +160,12 @@ namespace FlaxEditor.Tools.Terrain
                 TerrainTools.DeserializePatch(terrain, ref _patchCoord, _data);
 
                 _editor.Scene.MarkSceneEdited(terrain.Scene);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                _data = null;
             }
         }
 
@@ -212,6 +218,11 @@ namespace FlaxEditor.Tools.Terrain
             public void Undo()
             {
                 Set(ref _beforeMaterial);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
             }
 
             private void Set(ref Guid id)
