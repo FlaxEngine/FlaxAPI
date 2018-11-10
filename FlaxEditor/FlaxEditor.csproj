@@ -430,6 +430,8 @@
     <Compile Include="Tools\Terrain\Sculpt\NoiseMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\SculptMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\SmoothMode.cs" />
+    <Compile Include="Tools\Terrain\Undo\EditTerrainHeightMapAction.cs" />
+    <Compile Include="Tools\Terrain\Undo\EditTerrainMapAction.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
     <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />
     <Compile Include="Undo\Actions\ChangeScriptAction.cs" />

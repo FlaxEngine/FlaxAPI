@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Tools.Terrain.Brushes;
 using FlaxEditor.Tools.Terrain.Sculpt;
+using FlaxEditor.Tools.Terrain.Undo;
 using FlaxEditor.Viewport;
 using FlaxEditor.Viewport.Modes;
 using FlaxEngine;
@@ -20,6 +21,7 @@ namespace FlaxEditor.Tools.Terrain
     {
         private IntPtr _cachedHeightmapData;
         private int _cachedHeightmapDataSize;
+        private EditTerrainMapAction _activeAction;
 
         /// <summary>
         /// The terrain carving gizmo.
@@ -94,6 +96,9 @@ namespace FlaxEditor.Tools.Terrain
             {
                 if (_modeType != value)
                 {
+                    if (_activeAction != null)
+                        throw new InvalidOperationException("Cannot change sculpt tool mode during terrain editing.");
+
                     _modeType = value;
                     ToolModeChanged?.Invoke();
                 }
@@ -130,6 +135,9 @@ namespace FlaxEditor.Tools.Terrain
             {
                 if (_brushType != value)
                 {
+                    if (_activeAction != null)
+                        throw new InvalidOperationException("Cannot change sculpt tool brush type during terrain editing.");
+
                     _brushType = value;
                     ToolBrushChanged?.Invoke();
                 }
@@ -244,12 +252,19 @@ namespace FlaxEditor.Tools.Terrain
             return _cachedHeightmapData;
         }
 
+        /// <summary>
+        /// Gets the current edit terrain undo system action. Use it to record the data for the undo restoring after terrain editing.
+        /// </summary>
+        public EditTerrainMapAction CurrentEditUndoAction => _activeAction;
+
         /// <inheritdoc />
         public override void Init(MainEditorGizmoViewport viewport)
         {
             base.Init(viewport);
 
             Gizmo = new SculptTerrainGizmo(viewport, this);
+            Gizmo.PaintStarted += OnPaintStarted;
+            Gizmo.PaintEnded += OnPaintEnded;
         }
 
         /// <inheritdoc />
@@ -321,6 +336,29 @@ namespace FlaxEditor.Tools.Terrain
                     var chunkCoord = new Int2(chunkIndex % FlaxEngine.Terrain.PatchEdgeChunksCount, chunkIndex / FlaxEngine.Terrain.PatchEdgeChunksCount);
                     ChunksUnderCursor.Add(new ChunkLocation() { PatchCoord = patchCoord, ChunkCoord = chunkCoord });
                 }
+            }
+        }
+
+        private void OnPaintStarted()
+        {
+            if (_activeAction != null)
+                throw new InvalidOperationException("Terrain paint start/end resynchronization.");
+
+            // TODO: support visibility mask editing with undo
+            var terrain = SelectedTerrain;
+            _activeAction = new EditTerrainHeightMapAction(terrain);
+        }
+
+        private void OnPaintEnded()
+        {
+            if (_activeAction != null)
+            {
+                if (_activeAction.HasAnyModification)
+                {
+                    _activeAction.OnEditingEnd();
+                    Editor.Instance.Undo.AddAction(_activeAction);
+                }
+                _activeAction = null;
             }
         }
     }

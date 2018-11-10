@@ -119,7 +119,12 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                     throw new FlaxException("Cannot modify terrain. Loading heightmap failed. See log for more info.");
                 }
                 var sourceData = (float*)sourceDataPtr.ToPointer();
-                // TODO: record patch data if gizmo has just started editing this chunk (for undo)
+
+                // Record patch data before editing it
+                if (!gizmo.CurrentEditUndoAction.HashPatch(ref patch.PatchCoord))
+                {
+                    gizmo.CurrentEditUndoAction.AddPatch(ref patch.PatchCoord);
+                }
 
                 // Apply modification
                 p.ModifiedOffset = modifiedOffset;
