@@ -32,6 +32,9 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             // Prepare
             var brushPosition = p.Gizmo.CursorPosition;
             var noise = new PerlinNoise(0, NoiseScale, p.Strength * NoiseAmount);
+            var chunkSize = p.Terrain.ChunkSize;
+            var patchSize = chunkSize * FlaxEngine.Terrain.PatchEdgeChunksCount;
+            var patchOffset = p.PatchCoord * patchSize;
 
             // Apply brush modification
             Profiler.BeginEvent("Apply Brush");
@@ -46,7 +49,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                     var samplePositionLocal = p.PatchPositionLocal + new Vector3(xx * FlaxEngine.Terrain.UnitsPerVertex, sourceHeight, zz * FlaxEngine.Terrain.UnitsPerVertex);
                     Vector3.Transform(ref samplePositionLocal, ref p.TerrainWorld, out Vector3 samplePositionWorld);
 
-                    var noiseSample = noise.Sample(xx, zz);
+                    var noiseSample = noise.Sample(xx + patchOffset.X, zz + patchOffset.Y);
                     var paintAmount = p.Brush.Sample(ref brushPosition, ref samplePositionWorld);
 
                     p.TempBuffer[z * p.ModifiedSize.X + x] = sourceHeight + noiseSample * paintAmount;
