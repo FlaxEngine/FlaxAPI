@@ -20,6 +20,14 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         /// <inheritdoc />
         public override unsafe void Apply(ref ApplyParams p)
         {
+            // If used with invert mode pick the target height level
+            if (p.Options.Invert)
+            {
+                var center = p.ModifiedOffset + p.ModifiedSize / 2;
+                TargetHeight = p.SourceData[center.Y * p.HeightmapSize + center.X];
+                return;
+            }
+
             // Prepare
             var brushPosition = p.Gizmo.CursorPosition;
             var targetHeight = TargetHeight;
