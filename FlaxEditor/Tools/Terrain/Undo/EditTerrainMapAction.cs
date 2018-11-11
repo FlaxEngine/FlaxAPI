@@ -94,6 +94,9 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// </summary>
         public void OnEditingEnd()
         {
+            if (_patches.Count == 0)
+                return;
+
             for (int i = 0; i < _patches.Count; i++)
             {
                 var patch = _patches[i];
@@ -106,6 +109,8 @@ namespace FlaxEditor.Tools.Terrain.Undo
                 patch.After = data;
                 _patches[i] = patch;
             }
+
+            Editor.Instance.Scene.MarkSceneEdited(_terrain.Scene);
         }
 
         /// <inheritdoc />
