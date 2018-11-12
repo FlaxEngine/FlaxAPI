@@ -660,6 +660,28 @@ namespace FlaxEngine
         /// Calculates the squared distance between two vectors.
         /// </summary>
         /// <param name="value1">The first vector.</param>
+        /// <param name="value2">The second vector</param>
+        /// <returns>The squared distance between the two vectors.</returns>
+        /// <remarks>
+        /// Distance squared is the value before taking the square root.
+        /// Distance squared can often be used in place of distance if relative comparisons are being made.
+        /// For example, consider three points A, B, and C. To determine whether B or C is further from A,
+        /// compare the distance between A and B to the distance between A and C. Calculating the two distances
+        /// involves two square roots, which are computationally expensive. However, using distance squared
+        /// provides the same information and avoids calculating two square roots.
+        /// </remarks>
+        public static float DistanceSquared(ref Vector2 value1, ref Vector2 value2)
+        {
+            float x = value1.X - value2.X;
+            float y = value1.Y - value2.Y;
+
+            return x * x + y * y;
+        }
+
+        /// <summary>
+        /// Calculates the squared distance between two vectors.
+        /// </summary>
+        /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <returns>The squared distance between the two vectors.</returns>
         /// <remarks>
