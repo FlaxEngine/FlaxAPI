@@ -108,12 +108,13 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Draws all the connections between surface nodes.
         /// </summary>
-        protected virtual void DrawConnections()
+        /// <param name="mousePosition">The current mouse position (in surface-space).</param>
+        protected virtual void DrawConnections(ref Vector2 mousePosition)
         {
             // Draw all connections at once to boost batching process
             for (int i = 0; i < Nodes.Count; i++)
             {
-                Nodes[i].DrawConnections();
+                Nodes[i].DrawConnections(ref mousePosition);
             }
         }
 
@@ -171,7 +172,8 @@ namespace FlaxEditor.Surface
             // Push surface view transform (scale and offset)
             Render2D.PushTransform(ref _rootControl._cachedTransform);
 
-            DrawConnections();
+            var mousePos = _rootControl.PointFromParent(_mousePos);
+            DrawConnections(ref mousePos);
 
             if (IsConnecting)
             {

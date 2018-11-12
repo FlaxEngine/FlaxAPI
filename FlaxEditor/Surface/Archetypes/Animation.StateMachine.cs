@@ -371,7 +371,7 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void DrawConnections()
+            public override void DrawConnections(ref Vector2 mousePosition)
             {
                 var targetState = FirstState;
                 if (targetState != null)
@@ -893,12 +893,18 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void DrawConnections()
+            public override void DrawConnections(ref Vector2 mousePosition)
             {
-                var color = Color.White;
                 for (int i = 0; i < Transitions.Count; i++)
                 {
                     var t = Transitions[i];
+                    var isMouseOver = t.Bounds.Contains(ref mousePosition);
+                    if (isMouseOver)
+                    {
+                        CollisionsHelper.ClosestPointPointLine(ref mousePosition, ref t.StartPos, ref t.EndPos, out var point);
+                        isMouseOver = Vector2.DistanceSquared(ref mousePosition, ref point) < 25.0f;
+                    }
+                    var color = isMouseOver ? Color.Wheat : Color.White;
                     DrawConnection(Surface, ref t.StartPos, ref t.EndPos, ref color);
                 }
             }

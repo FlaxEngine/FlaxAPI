@@ -295,7 +295,8 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Draws all the connections between surface objects related to this node.
         /// </summary>
-        public virtual void DrawConnections()
+        /// <param name="mousePosition">The current mouse position (in surface-space).</param>
+        public virtual void DrawConnections(ref Vector2 mousePosition)
         {
             for (int j = 0; j < Elements.Count; j++)
             {
