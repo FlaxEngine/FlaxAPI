@@ -93,10 +93,10 @@ namespace FlaxEngine
                 var c = Control;
                 while (c != canvasRoot)
                 {
-                    p1 = c.PointToParent(p1);
-                    p2 = c.PointToParent(p2);
-                    p3 = c.PointToParent(p3);
-                    p4 = c.PointToParent(p4);
+                    p1 = c.PointToParent(ref p1);
+                    p2 = c.PointToParent(ref p2);
+                    p3 = c.PointToParent(ref p3);
+                    p4 = c.PointToParent(ref p4);
 
                     c = c.Parent;
                 }

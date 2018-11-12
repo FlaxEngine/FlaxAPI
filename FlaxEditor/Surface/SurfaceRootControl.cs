@@ -22,7 +22,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
         {
-            location = PointFromParent(locationParent);
+            location = PointFromParent(ref locationParent);
             return true;
         }
 

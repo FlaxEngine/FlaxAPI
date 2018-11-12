@@ -76,7 +76,7 @@ namespace FlaxEditor.Surface
 
             var args = new DragDropEventArgs
             {
-                SurfaceLocation = _rootControl.PointFromParent(location)
+                SurfaceLocation = _rootControl.PointFromParent(ref location)
             };
 
             // Drag assets

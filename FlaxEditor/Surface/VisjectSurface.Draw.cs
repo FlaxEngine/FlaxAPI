@@ -128,7 +128,7 @@ namespace FlaxEditor.Surface
             Vector2 startPos = _connectionInstigator.ConnectionOrigin;
 
             // Check if mouse is over any of box
-            Vector2 endPos = _activeVisjectCM.Visible ? _rootControl.PointFromParent(_cmStartPos) : _rootControl.PointFromParent(_mousePos);
+            Vector2 endPos = _activeVisjectCM.Visible ? _rootControl.PointFromParent(ref _cmStartPos) : _rootControl.PointFromParent(ref _mousePos);
             Color lineColor = Style.Colors.Connecting;
             if (_lastInstigatorUnderMouse != null && !_activeVisjectCM.Visible)
             {
@@ -172,7 +172,7 @@ namespace FlaxEditor.Surface
             // Push surface view transform (scale and offset)
             Render2D.PushTransform(ref _rootControl._cachedTransform);
 
-            var mousePos = _rootControl.PointFromParent(_mousePos);
+            var mousePos = _rootControl.PointFromParent(ref _mousePos);
             DrawConnections(ref mousePos);
 
             if (IsConnecting)

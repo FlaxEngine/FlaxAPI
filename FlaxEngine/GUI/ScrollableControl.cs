@@ -59,20 +59,20 @@ namespace FlaxEngine.GUI
         {
             // Little workaround to prevent applying offset when performing intersection test with this scrollable control.
             // Note that overriden PointFromParent applies view offset.
-            location = base.PointFromParent(locationParent);
+            location = base.PointFromParent(ref locationParent);
             return ContainsPoint(ref location);
         }
 
         /// <inheritdoc />
-        public override Vector2 PointToParent(Vector2 location)
+        public override Vector2 PointToParent(ref Vector2 location)
         {
-            return base.PointToParent(location) + _viewOffset;
+            return base.PointToParent(ref location) + _viewOffset;
         }
 
         /// <inheritdoc />
-        public override Vector2 PointFromParent(Vector2 location)
+        public override Vector2 PointFromParent(ref Vector2 location)
         {
-            return base.PointFromParent(location) - _viewOffset;
+            return base.PointFromParent(ref location) - _viewOffset;
         }
     }
 }

@@ -377,7 +377,14 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        public Vector2 ConnectionOrigin => Parent.PointToParent(Center);
+        public Vector2 ConnectionOrigin
+        {
+            get
+            {
+                var center = Center;
+                return Parent.PointToParent(ref center);
+            }
+        }
 
         private static bool CanCast(ConnectionType oB, ConnectionType iB)
         {

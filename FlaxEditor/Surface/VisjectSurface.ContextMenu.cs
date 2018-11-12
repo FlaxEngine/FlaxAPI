@@ -98,7 +98,7 @@ namespace FlaxEditor.Surface
             var node = Context.SpawnNode(
                 visjectCmItem.GroupArchetype,
                 visjectCmItem.NodeArchetype,
-                _rootControl.PointFromParent(_cmStartPos),
+                _rootControl.PointFromParent(ref _cmStartPos),
                 visjectCmItem.Data
             );
 

@@ -411,7 +411,8 @@ namespace FlaxEditor.Surface
             {
                 if (!IsSelected)
                     Surface.Select(this);
-                Surface.ShowSecondaryCM(Parent.PointToParent(PointToParent(location)));
+                var tmp = PointToParent(ref location);
+                Surface.ShowSecondaryCM(Parent.PointToParent(ref tmp));
                 return true;
             }
 

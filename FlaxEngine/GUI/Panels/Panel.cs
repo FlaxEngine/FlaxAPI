@@ -130,7 +130,7 @@ namespace FlaxEngine.GUI
             while (c.HasParent && c.Parent != this)
             {
                 c = c.Parent;
-                location = c.PointToParent(location);
+                location = c.PointToParent(ref location);
             }
 
             if (c.HasParent)
@@ -183,9 +183,9 @@ namespace FlaxEngine.GUI
                 return true;
 
             // Roll back to scroll bars
-            if (VScrollBar != null && VScrollBar.Visible && VScrollBar.OnMouseWheel(VScrollBar.PointFromParent(location), delta))
+            if (VScrollBar != null && VScrollBar.Visible && VScrollBar.OnMouseWheel(VScrollBar.PointFromParent(ref location), delta))
                 return true;
-            if (HScrollBar != null && HScrollBar.Visible && HScrollBar.OnMouseWheel(HScrollBar.PointFromParent(location), delta))
+            if (HScrollBar != null && HScrollBar.Visible && HScrollBar.OnMouseWheel(HScrollBar.PointFromParent(ref location), delta))
                 return true;
 
             // No event handled
@@ -246,7 +246,7 @@ namespace FlaxEngine.GUI
                 // Check if has v scroll bar to reject points on it
                 if (VScrollBar != null && VScrollBar.Visible)
                 {
-                    Vector2 pos = VScrollBar.PointFromParent(location);
+                    Vector2 pos = VScrollBar.PointFromParent(ref location);
                     if (VScrollBar.ContainsPoint(ref pos))
                     {
                         childSpaceLocation = Vector2.Zero;
@@ -257,7 +257,7 @@ namespace FlaxEngine.GUI
                 // Check if has h scroll bar to reject points on it
                 if (HScrollBar != null && HScrollBar.Visible)
                 {
-                    Vector2 pos = HScrollBar.PointFromParent(location);
+                    Vector2 pos = HScrollBar.PointFromParent(ref location);
                     if (HScrollBar.ContainsPoint(ref pos))
                     {
                         childSpaceLocation = Vector2.Zero;

@@ -113,10 +113,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override Vector2 PointToParent(Vector2 location)
+        public override Vector2 PointToParent(ref Vector2 location)
         {
             if (Is2D)
-                return base.PointToParent(location);
+                return base.PointToParent(ref location);
 
             var camera = Camera.MainCamera;
             if (!camera)

@@ -48,11 +48,13 @@ namespace FlaxEditor.Surface.Elements
         {
             // Draw all the connections
             var center = Size * 0.5f;
-            var startPos = Parent.PointToParent(PointToParent(center));
+            var tmp = PointToParent(ref center);
+            var startPos = Parent.PointToParent(ref tmp);
             for (int i = 0; i < Connections.Count; i++)
             {
                 Box targetBox = Connections[i];
-                Vector2 endPos = targetBox.Parent.PointToParent(targetBox.PointToParent(center));
+                tmp = targetBox.PointToParent(ref center);
+                Vector2 endPos = targetBox.Parent.PointToParent(ref tmp);
                 DrawConnection(ref startPos, ref endPos, ref _currentTypeColor);
             }
         }

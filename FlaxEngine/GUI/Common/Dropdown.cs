@@ -509,7 +509,7 @@ namespace FlaxEngine.GUI
                     var parent = Parent;
                     while (parent != null && parent != Root)
                     {
-                        locationRootSpace = parent.PointToParent(location);
+                        locationRootSpace = parent.PointToParent(ref location);
                         parent = parent.Parent;
                     }
                     _popup.Location = locationRootSpace;

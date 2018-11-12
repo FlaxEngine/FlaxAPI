@@ -56,7 +56,7 @@ namespace FlaxEditor.Surface
         /// <returns>The node or null if no intersection.</returns>
         public SurfaceNode GetNodeUnderMouse()
         {
-            var pos = _rootControl.PointFromParent(_mousePos);
+            var pos = _rootControl.PointFromParent(ref _mousePos);
             if (_rootControl.GetChildAt(pos) is SurfaceNode node)
                 return node;
             return null;
@@ -68,7 +68,7 @@ namespace FlaxEditor.Surface
         /// <returns>The control or null if no intersection.</returns>
         public SurfaceControl GetControlUnderMouse()
         {
-            var pos = _rootControl.PointFromParent(_mousePos);
+            var pos = _rootControl.PointFromParent(ref _mousePos);
             if (_rootControl.GetChildAt(pos) is SurfaceControl control)
                 return control;
             return null;
@@ -76,8 +76,8 @@ namespace FlaxEditor.Surface
 
         private void UpdateSelectionRectangle()
         {
-            var p1 = _rootControl.PointFromParent(_leftMouseDownPos);
-            var p2 = _rootControl.PointFromParent(_mousePos);
+            var p1 = _rootControl.PointFromParent(ref _leftMouseDownPos);
+            var p2 = _rootControl.PointFromParent(ref _mousePos);
             var selectionRect = Rectangle.FromPoints(p1, p2);
 
             // Find controls to select
@@ -263,7 +263,7 @@ namespace FlaxEditor.Surface
 
             // Check if any node is under the mouse
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
-            Vector2 cLocation = _rootControl.PointFromParent(location);
+            Vector2 cLocation = _rootControl.PointFromParent(ref location);
             if (controlUnderMouse != null)
             {
                 // Check if mouse is over header and user is pressing mouse left button
@@ -344,8 +344,8 @@ namespace FlaxEditor.Surface
                 // Commenting
                 if (_isCommentCreateKeyDown)
                 {
-                    var p1 = _rootControl.PointFromParent(_leftMouseDownPos);
-                    var p2 = _rootControl.PointFromParent(_mousePos);
+                    var p1 = _rootControl.PointFromParent(ref _leftMouseDownPos);
+                    var p2 = _rootControl.PointFromParent(ref _mousePos);
                     var selectionRect = Rectangle.FromPoints(p1, p2);
                     Context.CreateComment(ref selectionRect);
                 }

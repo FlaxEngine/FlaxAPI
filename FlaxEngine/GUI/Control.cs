@@ -827,7 +827,7 @@ namespace FlaxEngine.GUI
         /// <returns></returns>
         public virtual bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
         {
-            location = PointFromParent(locationParent);
+            location = PointFromParent(ref locationParent);
             return ContainsPoint(ref location);
         }
 
@@ -858,7 +858,7 @@ namespace FlaxEngine.GUI
             Control c = this;
             while (c != null)
             {
-                location = c.PointToParent(location);
+                location = c.PointToParent(ref location);
 
                 c = c.Parent;
                 if (c == parent)
@@ -869,11 +869,11 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Converts point in local control's space into parent control coordinates
+        /// Converts point in local control's space into parent control coordinates.
         /// </summary>
-        /// <param name="location">Input location of the point to convert</param>
-        /// <returns>Converted point location in parent control coordinates</returns>
-        public virtual Vector2 PointToParent(Vector2 location)
+        /// <param name="location">The input location of the point to convert.</param>
+        /// <returns>The converted point location in parent control coordinates.</returns>
+        public virtual Vector2 PointToParent(ref Vector2 location)
         {
             Vector2 result;
             Matrix3x3.Transform2D(ref location, ref _cachedTransform, out result);
@@ -881,11 +881,11 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Converts point in parent control coordinates into local control's space
+        /// Converts point in parent control coordinates into local control's space.
         /// </summary>
-        /// <param name="locationParent">Input location of the point to convert</param>
-        /// <returns>Converted point location in control's space</returns>
-        public virtual Vector2 PointFromParent(Vector2 locationParent)
+        /// <param name="locationParent">The input location of the point to convert.</param>
+        /// <returns>The converted point location in control's space.</returns>
+        public virtual Vector2 PointFromParent(ref Vector2 locationParent)
         {
             Vector2 result;
             Matrix3x3.Transform2D(ref locationParent, ref _cachedTransformInv, out result);
@@ -899,7 +899,7 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in window coordinates</returns>
         public Vector2 PointToWindow(Vector2 location)
         {
-            location = PointToParent(location);
+            location = PointToParent(ref location);
             if (HasParent)
             {
                 location = _parent.PointToWindow(location);
@@ -916,7 +916,7 @@ namespace FlaxEngine.GUI
         {
             if (HasParent)
                 location = _parent.PointFromWindow(location);
-            return PointFromParent(location);
+            return PointFromParent(ref location);
         }
 
         /// <summary>
@@ -926,7 +926,7 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in screen coordinates</returns>
         public virtual Vector2 ClientToScreen(Vector2 location)
         {
-            location = PointToParent(location);
+            location = PointToParent(ref location);
             if (HasParent)
             {
                 location = _parent.ClientToScreen(location);
@@ -941,7 +941,7 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in local control's space</returns>
         public virtual Vector2 ScreenToClient(Vector2 location)
         {
-            location = PointFromParent(location);
+            location = PointFromParent(ref location);
             if (HasParent)
             {
                 location = _parent.ScreenToClient(location);
