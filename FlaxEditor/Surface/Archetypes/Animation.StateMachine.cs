@@ -377,7 +377,8 @@ namespace FlaxEditor.Surface.Archetypes
                 if (targetState != null)
                 {
                     // Draw the connection
-                    var startPos = PointToParent(Size * 0.5f);
+                    var center = Size * 0.5f;
+                    var startPos = PointToParent(ref center);
                     targetState.GetConnectionEndPoint(ref startPos, out var endPos);
                     var color = Color.White;
                     StateMachineState.DrawConnection(Surface, ref startPos, ref endPos, ref color);
@@ -516,7 +517,9 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 var bounds = new Rectangle(Vector2.Zero, Size);
                 bounds.Expand(4.0f);
-                bounds = Rectangle.FromPoints(PointToParent(bounds.UpperLeft), PointToParent(bounds.BottomRight));
+                var upperLeft = bounds.UpperLeft;
+                var bottomRight = bounds.BottomRight;
+                bounds = Rectangle.FromPoints(PointToParent(ref upperLeft), PointToParent(ref bottomRight));
                 CollisionsHelper.ClosestPointRectanglePoint(ref bounds, ref startPos, out endPos);
             }
 
@@ -568,6 +571,48 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateTitle();
                 LoadData();
+
+                // Register for surface mouse events to handle transition arrows interactions
+                Surface.CustomMouseUp += OnSurfaceMouseUp;
+            }
+
+            private void OnSurfaceMouseUp(ref Vector2 mouse, MouseButton buttons, ref bool handled)
+            {
+                // Check click over the connection
+                var mousePosition = Surface.SurfaceRoot.PointFromParent(ref mouse);
+                for (int i = 0; i < Transitions.Count; i++)
+                {
+                    var t = Transitions[i];
+                    if (t.Bounds.Contains(ref mousePosition))
+                    {
+                        CollisionsHelper.ClosestPointPointLine(ref mousePosition, ref t.StartPos, ref t.EndPos, out var point);
+                        if (Vector2.DistanceSquared(ref mousePosition, ref point) < 25.0f)
+                        {
+                            OnTransitionClicked(t, ref mouse, ref mousePosition, buttons);
+                            handled = true;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            private void OnTransitionClicked(StateMachineTransition transition, ref Vector2 mouse, ref Vector2 mousePosition, MouseButton buttons)
+            {
+                switch (buttons)
+                {
+                case MouseButton.Left:
+                    // TODO: show transition editor popup
+                    MessageBox.Show("clicked! (editor)");
+                    break;
+                case MouseButton.Right:
+                    // TODO: show transition context menu
+                    MessageBox.Show("clicked! (context menu)");
+                    break;
+                case MouseButton.Middle:
+                    // TODO: remove transition
+                    MessageBox.Show("clicked! (fast delete)");
+                    break;
+                }
             }
 
             /// <inheritdoc />
@@ -651,7 +696,8 @@ namespace FlaxEditor.Surface.Archetypes
                         var s2 = diff ? targetState : sourceState;
 
                         // Two aligned arrows in the opposite direction
-                        startPos = s1.PointToParent(s1.Size * 0.5f);
+                        var center = s1.Size * 0.5f;
+                        startPos = s1.PointToParent(ref center);
                         s2.GetConnectionEndPoint(ref startPos, out endPos);
                         s1.GetConnectionEndPoint(ref endPos, out startPos);
 
@@ -675,7 +721,8 @@ namespace FlaxEditor.Surface.Archetypes
                     else
                     {
                         // Single connection over the closest path
-                        startPos = PointToParent(Size * 0.5f);
+                        var center = Size * 0.5f;
+                        startPos = PointToParent(ref center);
                         targetState.GetConnectionEndPoint(ref startPos, out endPos);
                         sourceState.GetConnectionEndPoint(ref endPos, out startPos);
                     }
