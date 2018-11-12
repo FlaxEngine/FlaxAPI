@@ -118,6 +118,11 @@ namespace FlaxEditor.Surface
         public bool IsEdited => RootContext.IsModified;
 
         /// <summary>
+        /// Gets the current context surface root control (nodes and all other surface elements container).
+        /// </summary>
+        public SurfaceRootControl SurfaceRoot => _rootControl;
+
+        /// <summary>
         /// Gets or sets the view position (upper left corner of the view) in the surface space.
         /// </summary>
         public Vector2 ViewPosition
