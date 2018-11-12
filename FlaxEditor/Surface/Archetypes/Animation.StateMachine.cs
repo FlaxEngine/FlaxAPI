@@ -683,6 +683,7 @@ namespace FlaxEditor.Surface.Archetypes
                     t.StartPos = startPos;
                     t.EndPos = endPos;
                     Rectangle.FromPoints(ref startPos, ref endPos, out t.Bounds);
+                    t.Bounds.Expand(10.0f);
                 }
 
                 if (Transitions.Count > 0)
