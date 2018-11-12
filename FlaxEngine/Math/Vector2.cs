@@ -712,6 +712,39 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Calculates the cross product of two vectors.
+        /// </summary>
+        /// <param name="left">First source vector.</param>
+        /// <param name="right">Second source vector.</param>
+        /// <param name="result">When the method completes, contains the cross product of the two vectors.</param>
+        public static void Cross(ref Vector2 left, ref Vector2 right, out float result)
+        {
+            result = left.X * right.Y - left.Y * right.X;
+        }
+
+        /// <summary>
+        /// Calculates the cross product of two vectors.
+        /// </summary>
+        /// <param name="left">First source vector.</param>
+        /// <param name="right">Second source vector.</param>
+        /// <returns>The cross product of the two vectors.</returns>
+        public static float Cross(ref Vector2 left, ref Vector2 right)
+        {
+            return left.X * right.Y - left.Y * right.X;
+        }
+
+        /// <summary>
+        /// Calculates the cross product of two vectors.
+        /// </summary>
+        /// <param name="left">First source vector.</param>
+        /// <param name="right">Second source vector.</param>
+        /// <returns>The cross product of the two vectors.</returns>
+        public static float Cross(Vector2 left, Vector2 right)
+        {
+            return left.X * right.Y - left.Y * right.X;
+        }
+
+        /// <summary>
         /// Converts the vector into a unit vector.
         /// </summary>
         /// <param name="value">The vector to normalize.</param>
