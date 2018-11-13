@@ -417,9 +417,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void Connect(IConnectionInstigator other)
             {
-                var state = other as StateMachineState;
-                if (state == null)
-                    return;
+                var state = (StateMachineState)other;
 
                 FirstState = state;
             }
@@ -721,7 +719,7 @@ namespace FlaxEditor.Surface.Archetypes
                         endPos += nrm;
 
                         // Swap fo the other arrow
-                        if (diff)
+                        if (!diff)
                         {
                             var tmp = startPos;
                             startPos = endPos;
@@ -998,9 +996,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void Connect(IConnectionInstigator other)
             {
-                var state = other as StateMachineState;
-                if (state == null)
-                    return;
+                var state = (StateMachineState)other;
 
                 // Create a new transition
                 var transition = new StateMachineTransition
