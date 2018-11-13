@@ -365,13 +365,12 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Initializes a new instance of the <see cref="TextureImportEntry"/> class.
         /// </summary>
-        /// <param name="url">The source file url.</param>
-        /// <param name="resultUrl">The result file url.</param>
-        public TextureImportEntry(string url, string resultUrl)
-        : base(url, resultUrl)
+        /// <param name="request">The import request.</param>
+        public TextureImportEntry(ref Request request)
+        : base(ref request)
         {
             // Try to guess format type based on file name
-            var shortName = System.IO.Path.GetFileNameWithoutExtension(url);
+            var shortName = System.IO.Path.GetFileNameWithoutExtension(SourceUrl);
             string snl = shortName.ToLower();
             if (_settings.Type != TextureImportSettings.CustomTextureFormatType.ColorRGB)
             {
@@ -423,7 +422,7 @@ namespace FlaxEditor.Content.Import
             }
 
             // Try to restore target asset texture import options (useful for fast reimport)
-            TextureImportSettings.TryRestore(ref _settings, resultUrl);
+            TextureImportSettings.TryRestore(ref _settings, ResultUrl);
         }
 
         /// <inheritdoc />

@@ -702,7 +702,7 @@ namespace FlaxEditor.Modules
             }
             var patchCoord = new Int2(patchX, patchZ);
             //terrain.SetupPatch(ref patchCoord, TerrainHeightmapFormat.R8G8B8A8_Raw, heightmap, null, true);
-            terrain.SetupPatch(ref patchCoord, TerrainHeightmapFormat.R8G8B8A8_Raw, heightmap);
+            terrain.SetupPatch(ref patchCoord, TerrainHeightmapFormat.R16G16B16A16_Raw, heightmap);
         }
 
         private void CreateTerrain()

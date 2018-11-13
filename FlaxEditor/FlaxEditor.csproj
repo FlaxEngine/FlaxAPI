@@ -65,6 +65,7 @@
     <Compile Include="Content\GUI\ContentNavigationButton.cs" />
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\ContentView.DragDrop.cs" />
+    <Compile Include="Content\Import\Request.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
