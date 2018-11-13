@@ -35,13 +35,18 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         /// <summary>
         /// The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.
         /// </summary>
-        [EditorOrder(0), Limit(0, 5, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.")]
+        [EditorOrder(0), Limit(0, 6, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.")]
         public float Strength = 1.2f;
 
         /// <summary>
         /// Gets a value indicating whether this mode supports negative apply for terrain modification.
         /// </summary>
         public virtual bool SupportsNegativeApply => false;
+
+        /// <summary>
+        /// Gets a value indicating whether this mode modifies the terrain visibility mask rather than heightmap.
+        /// </summary>
+        public virtual bool EditsVisibilityMap => false;
 
         /// <summary>
         /// Applies the modification to the terrain.
@@ -102,9 +107,17 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 var modifiedOffset = brushPatchMin;
                 var modifiedSize = brushPatchMax - brushPatchMin;
 
-                // Expand the modification area by one vertex in each direction to ensure normal vectors are updated for edge cases
-                modifiedOffset.X = Mathf.Max(modifiedOffset.X - 1, 0);
-                modifiedOffset.Y = Mathf.Max(modifiedOffset.Y - 1, 0);
+                // Expand the modification area by one vertex in each direction to ensure normal vectors are updated for edge cases, also clamp to prevent overflows
+                if (modifiedOffset.X < 0)
+                {
+                    modifiedSize.X += modifiedOffset.X;
+                    modifiedOffset.X = 0;
+                }
+                if (modifiedOffset.Y < 0)
+                {
+                    modifiedSize.Y += modifiedOffset.Y;
+                    modifiedOffset.Y = 0;
+                }
                 modifiedSize.X = Mathf.Min(modifiedSize.X + 2, heightmapSize - modifiedOffset.X);
                 modifiedSize.Y = Mathf.Min(modifiedSize.Y + 2, heightmapSize - modifiedOffset.Y);
 
@@ -113,7 +126,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                     continue;
 
                 // Get the patch data (cached internally by the c++ core in editor)
-                var sourceDataPtr = TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord);
+                var sourceDataPtr = EditsVisibilityMap ? TerrainTools.GetVisibilityMapData(terrain, ref patch.PatchCoord) : TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord);
                 if (sourceDataPtr == IntPtr.Zero)
                 {
                     throw new FlaxException("Cannot modify terrain. Loading heightmap failed. See log for more info.");

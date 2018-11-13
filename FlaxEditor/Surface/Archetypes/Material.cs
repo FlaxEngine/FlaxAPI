@@ -547,6 +547,18 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Pixel Shader", ConnectionType.Vector4, 1),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 21,
+                Title = "Terrain Holes Mask",
+                Description = "Scalar terrain visibility mask used mostly for creating holes in terrain",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
+                }
+            },
         };
     }
 }

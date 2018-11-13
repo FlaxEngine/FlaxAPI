@@ -427,12 +427,14 @@
     <Compile Include="Tools\Terrain\SculptTerrainGizmo.cs" />
     <Compile Include="Tools\Terrain\SculptTerrainGizmoMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\FlattenMode.cs" />
+    <Compile Include="Tools\Terrain\Sculpt\HolesMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\Mode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\NoiseMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\SculptMode.cs" />
     <Compile Include="Tools\Terrain\Sculpt\SmoothMode.cs" />
     <Compile Include="Tools\Terrain\Undo\EditTerrainHeightMapAction.cs" />
     <Compile Include="Tools\Terrain\Undo\EditTerrainMapAction.cs" />
+    <Compile Include="Tools\Terrain\Undo\EditTerrainVisibilityMapAction.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
     <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />
     <Compile Include="Undo\Actions\ChangeScriptAction.cs" />

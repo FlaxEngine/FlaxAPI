@@ -71,7 +71,7 @@ namespace FlaxEngine
         /// Gets or sets the terrain LODs distribution parameter. Adjusts terrain chunks transitions distances.
         /// </summary>
         /// <remarks>
-        /// Use lower value to increase terrain quality or higher value to increase performance. Default value is 1.
+        /// Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.6.
         /// </remarks>
         [UnmanagedCall]
         [EditorOrder(70), Limit(0, 5, 0.01f), EditorDisplay("Terrain", "LOD Distribution"), Tooltip("Terrain LODs distribution parameter. Adjusts terrain chunks transitions distances. Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.75.")]
@@ -149,10 +149,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the terrain holes threshold value. Uses terrain vertices visibility mask to create holes where visibility is lower than the given threshold. Value equal 0 disables holes feature..
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(510), Limit(0, 1, 0.01f), EditorDisplay("Collision", "Collision LOD"), Tooltip("Terrain holes threshold value. Uses terrain vertices visibility mask to create holes where visibility is lower than the given threshold. Value equal 0 disables holes feature.")]
+        public float HolesThreshold
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetHolesThreshold(unmanagedPtr); }
+            set { Internal_SetHolesThreshold(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the default physical material used to define the terrain collider physical properties.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(500), Limit(-1, 100, 0.1f), EditorDisplay("Collision"), Tooltip("Terrain default physical material used to define the collider physical properties.")]
+        [EditorOrder(520), Limit(-1, 100, 0.1f), EditorDisplay("Collision"), Tooltip("Terrain default physical material used to define the collider physical properties.")]
         public JsonAsset PhysicalMaterial
         {
 #if UNIT_TEST_COMPILANT
@@ -371,6 +386,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetCollisionLOD(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetHolesThreshold(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetHolesThreshold(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern JsonAsset Internal_GetPhysicalMaterial(IntPtr obj);

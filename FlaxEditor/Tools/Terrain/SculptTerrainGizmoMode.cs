@@ -52,6 +52,11 @@ namespace FlaxEditor.Tools.Terrain
             /// The noise mode.
             /// </summary>
             Noise,
+
+            /// <summary>
+            /// The holes mode.
+            /// </summary>
+            Holes,
         }
 
         /// <summary>
@@ -71,6 +76,7 @@ namespace FlaxEditor.Tools.Terrain
             new SmoothMode(),
             new FlattenMode(),
             new NoiseMode(),
+            new HolesMode(),
         };
 
         private readonly Brush[] _brushes =
@@ -344,9 +350,11 @@ namespace FlaxEditor.Tools.Terrain
             if (_activeAction != null)
                 throw new InvalidOperationException("Terrain paint start/end resynchronization.");
 
-            // TODO: support visibility mask editing with undo
             var terrain = SelectedTerrain;
-            _activeAction = new EditTerrainHeightMapAction(terrain);
+            if (CurrentMode.EditsVisibilityMap)
+                _activeAction = new EditTerrainVisibilityMapAction(terrain);
+            else
+                _activeAction = new EditTerrainHeightMapAction(terrain);
         }
 
         private void OnPaintEnded()
