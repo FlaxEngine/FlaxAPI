@@ -34,6 +34,21 @@ namespace FlaxEditor.Tools.Terrain
         public event Action SelectedTerrainChanged;
 
         /// <summary>
+        /// The sculpt tab;
+        /// </summary>
+        public SculptTab Sculpt;
+
+        /// <summary>
+        /// The paint tab;
+        /// </summary>
+        public Tab Paint;
+
+        /// <summary>
+        /// The edit tab;
+        /// </summary>
+        public EditTab Edit;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CarveTab"/> class.
         /// </summary>
         /// <param name="icon">The icon.</param>
@@ -76,13 +91,13 @@ namespace FlaxEditor.Tools.Terrain
 
         private void InitSculptMode()
         {
-            var tab = _modes.AddTab(new SculptTab(this, Editor.Windows.EditWin.Viewport.SculptTerrainGizmo));
+            var tab = _modes.AddTab(Sculpt = new SculptTab(this, Editor.Windows.EditWin.Viewport.SculptTerrainGizmo));
             tab.Selected += OnTabSelected;
         }
 
         private void InitPaintMode()
         {
-            var tab = _modes.AddTab(new Tab("Paint"));
+            var tab = _modes.AddTab(Paint = new Tab("Paint"));
             tab.Selected += OnTabSelected;
             var panel = new Panel(ScrollBars.Both)
             {
@@ -97,7 +112,7 @@ namespace FlaxEditor.Tools.Terrain
 
         private void InitEditMode()
         {
-            var tab = _modes.AddTab(new EditTab(this, Editor.Windows.EditWin.Viewport.EditTerrainGizmo));
+            var tab = _modes.AddTab(Edit = new EditTab(this, Editor.Windows.EditWin.Viewport.EditTerrainGizmo));
             tab.Selected += OnTabSelected;
         }
 

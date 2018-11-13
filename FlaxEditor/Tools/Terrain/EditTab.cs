@@ -12,7 +12,7 @@ namespace FlaxEditor.Tools.Terrain
     /// Carve tab related to terrain editing. Allows to pick a terrain patch and remove it or add new patches. Can be used to modify selected chunk properties.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Tab" />
-    internal class EditTab : Tab
+    public class EditTab : Tab
     {
         /// <summary>
         /// The parent carve tab.

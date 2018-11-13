@@ -11,7 +11,7 @@ namespace FlaxEditor.Tools.Terrain
     /// Carve tab related to terrain carving. Allows to modify terrain height and visibility using brush.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Tab" />
-    internal class SculptTab : Tab
+    public class SculptTab : Tab
     {
         /// <summary>
         /// The object for sculp mode settings adjusting via Custom Editor.
