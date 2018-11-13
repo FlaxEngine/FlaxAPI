@@ -25,7 +25,7 @@ namespace FlaxEngine.TypeConverters
             if (value is string str)
             {
                 string[] v = str.Split(',');
-                return new Vector3(float.Parse(v[0]), float.Parse(v[1]), float.Parse(v[2]));
+                return new Vector2(float.Parse(v[0]), float.Parse(v[1]));
             }
 
             return base.ConvertFrom(context, culture, value);
@@ -36,7 +36,7 @@ namespace FlaxEngine.TypeConverters
         {
             if (destinationType == typeof(string))
             {
-                return ((Vector3)value).X + "," + ((Vector3)value).Y + "," + ((Vector3)value).Z;
+                return ((Vector2)value).X + "," + ((Vector2)value).Y;
             }
 
             return base.ConvertTo(context, culture, value, destinationType);
