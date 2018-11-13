@@ -718,7 +718,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Rule Output",
                 Description = "The animation states machine transition rule output node",
                 Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
-                Size = new Vector2(120, 30),
+                Size = new Vector2(150, 30),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Can Start Transition", true, ConnectionType.Bool, 0)

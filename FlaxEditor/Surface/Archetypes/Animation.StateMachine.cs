@@ -1145,8 +1145,10 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             public void Edit()
             {
-                // TODO: implement it
-                MessageBox.Show("clicked! (editor)");
+                var surface = SourceState.Surface;
+                var center = Bounds.Center;
+                var editor = new TransitionEditor(this);
+                editor.Show(surface, surface.SurfaceRoot.PointToParent(ref center));
             }
 
             /// <summary>
