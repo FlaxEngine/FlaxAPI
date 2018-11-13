@@ -605,15 +605,19 @@ namespace FlaxEditor.Surface.Archetypes
                 switch (buttons)
                 {
                 case MouseButton.Left:
-                    // TODO: show transition editor popup
-                    MessageBox.Show("clicked! (editor)");
+                    transition.Edit();
                     break;
                 case MouseButton.Right:
-                    // TODO: show transition context menu
-                    MessageBox.Show("clicked! (context menu)");
+                    var contextMenu = new FlaxEngine.GUI.ContextMenu();
+                    contextMenu.AddButton("Edit").Clicked += transition.Edit;
+                    contextMenu.AddSeparator();
+                    contextMenu.AddButton("Delete").Clicked += transition.Delete;
+                    contextMenu.AddButton("Select source state").Clicked += transition.SelectSourceState;
+                    contextMenu.AddButton("Select destination state").Clicked += transition.SelectDestinationState;
+                    contextMenu.Show(Surface, mouse);
                     break;
                 case MouseButton.Middle:
-                    RemoveTransition(transition);
+                    transition.Delete();
                     break;
                 }
             }
@@ -677,17 +681,6 @@ namespace FlaxEditor.Surface.Archetypes
             public void Edit()
             {
                 Surface.OpenContext(this);
-            }
-
-            /// <summary>
-            /// Removes the transition.
-            /// </summary>
-            /// <param name="transition">The transition.</param>
-            public void RemoveTransition(StateMachineTransition transition)
-            {
-                Transitions.Remove(transition);
-                UpdateTransitions();
-                SaveData();
             }
 
             /// <summary>
@@ -1120,6 +1113,41 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     ruleOutputNode = context.SpawnNode(9, 22, new Vector2(100.0f));
                 }
+            }
+
+            /// <summary>
+            /// Removes the transition.
+            /// </summary>
+            public void Delete()
+            {
+                SourceState.Transitions.Remove(this);
+                SourceState.UpdateTransitions();
+                SourceState.SaveData();
+            }
+
+            /// <summary>
+            /// Selects the source state node of the transition
+            /// </summary>
+            public void SelectSourceState()
+            {
+                SourceState.Surface.Select(SourceState);
+            }
+
+            /// <summary>
+            /// Selects the destination state node of the transition
+            /// </summary>
+            public void SelectDestinationState()
+            {
+                DestinationState.Surface.Select(DestinationState);
+            }
+
+            /// <summary>
+            /// Opens the transition editor popup.
+            /// </summary>
+            public void Edit()
+            {
+                // TODO: implement it
+                MessageBox.Show("clicked! (editor)");
             }
         }
     }
