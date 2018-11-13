@@ -417,7 +417,9 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void Connect(IConnectionInstigator other)
             {
-                var state = (StateMachineState)other;
+                var state = other as StateMachineState;
+                if (state == null)
+                    return;
 
                 FirstState = state;
             }
@@ -580,6 +582,8 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 // Check click over the connection
                 var mousePosition = Surface.SurfaceRoot.PointFromParent(ref mouse);
+                if (!TransitionsRectangle.Contains(ref mousePosition))
+                    return;
                 for (int i = 0; i < Transitions.Count; i++)
                 {
                     var t = Transitions[i];
@@ -609,8 +613,7 @@ namespace FlaxEditor.Surface.Archetypes
                     MessageBox.Show("clicked! (context menu)");
                     break;
                 case MouseButton.Middle:
-                    // TODO: remove transition
-                    MessageBox.Show("clicked! (fast delete)");
+                    RemoveTransition(transition);
                     break;
                 }
             }
@@ -674,6 +677,17 @@ namespace FlaxEditor.Surface.Archetypes
             public void Edit()
             {
                 Surface.OpenContext(this);
+            }
+
+            /// <summary>
+            /// Removes the transition.
+            /// </summary>
+            /// <param name="transition">The transition.</param>
+            public void RemoveTransition(StateMachineTransition transition)
+            {
+                Transitions.Remove(transition);
+                UpdateTransitions();
+                SaveData();
             }
 
             /// <summary>
@@ -988,7 +1002,9 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void Connect(IConnectionInstigator other)
             {
-                var state = (StateMachineState)other;
+                var state = other as StateMachineState;
+                if (state == null)
+                    return;
 
                 // Create a new transition
                 var transition = new StateMachineTransition
