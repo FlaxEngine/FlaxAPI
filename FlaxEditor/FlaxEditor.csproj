@@ -419,6 +419,7 @@
     <Compile Include="Tools\Terrain\Brushes\Brush.cs" />
     <Compile Include="Tools\Terrain\Brushes\CircleBrush.cs" />
     <Compile Include="Tools\Terrain\CarveTab.cs" />
+    <Compile Include="Tools\Terrain\CreateTerrainDialog.cs" />
     <Compile Include="Tools\Terrain\EditTab.cs" />
     <Compile Include="Tools\Terrain\EditTerrainGizmo.cs" />
     <Compile Include="Tools\Terrain\EditTerrainGizmoMode.cs" />

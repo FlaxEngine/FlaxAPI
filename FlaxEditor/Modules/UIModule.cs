@@ -707,6 +707,9 @@ namespace FlaxEditor.Modules
 
         private void CreateTerrain()
         {
+            new Tools.Terrain.CreateTerrainDialog().Show(Editor.Windows.MainWindow);
+            return;
+
             var terrain = Terrain.New();
             terrain.StaticFlags = StaticFlags.FullyStatic;
             terrain.Setup(6, 63);
