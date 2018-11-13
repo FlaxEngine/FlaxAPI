@@ -580,6 +580,9 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void OnSurfaceMouseUp(ref Vector2 mouse, MouseButton buttons, ref bool handled)
             {
+                if (handled)
+                    return;
+
                 // Check click over the connection
                 var mousePosition = Surface.SurfaceRoot.PointFromParent(ref mouse);
                 if (!TransitionsRectangle.Contains(ref mousePosition))
