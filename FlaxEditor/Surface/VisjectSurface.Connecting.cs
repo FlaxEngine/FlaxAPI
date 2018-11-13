@@ -125,7 +125,10 @@ namespace FlaxEditor.Surface
                 return;
 
             // Connect them
-            start.Connect(end);
+            if (start.CanConnectWith(end))
+            {
+                start.Connect(end);
+            }
         }
     }
 }
