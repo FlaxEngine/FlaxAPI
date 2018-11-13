@@ -1148,6 +1148,14 @@ namespace FlaxEditor.Surface.Archetypes
                 // TODO: implement it
                 MessageBox.Show("clicked! (editor)");
             }
+
+            /// <summary>
+            /// Opens the transition rule editing UI.
+            /// </summary>
+            public void EditRule()
+            {
+                SourceState.Surface.OpenContext(this);
+            }
         }
     }
 }
