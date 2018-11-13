@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -12,6 +13,7 @@ namespace FlaxEngine
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [TypeConverter(typeof(TypeConverters.Int4Converter))]
     public struct Int4 : IEquatable<Int4>, IFormattable
     {
         private static readonly string _formatString = "X:{0} Y:{1} Z:{2} W:{3}";
@@ -202,14 +204,10 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                case 0:
-                    return X;
-                case 1:
-                    return Y;
-                case 2:
-                    return Z;
-                case 3:
-                    return W;
+                case 0: return X;
+                case 1: return Y;
+                case 2: return Z;
+                case 3: return W;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Int4 run from 0 to 3, inclusive.");
@@ -231,8 +229,7 @@ namespace FlaxEngine
                 case 3:
                     W = value;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Int4 run from 0 to 3, inclusive.");
+                default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Int4 run from 0 to 3, inclusive.");
                 }
             }
         }

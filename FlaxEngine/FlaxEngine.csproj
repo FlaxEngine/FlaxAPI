@@ -402,6 +402,9 @@
     <Compile Include="Math\SphericalHarmonics.cs" />
     <Compile Include="Math\Transform.cs" />
     <Compile Include="Math\TypeConverters\ColorConverter.cs" />
+    <Compile Include="Math\TypeConverters\Int2Converter.cs" />
+    <Compile Include="Math\TypeConverters\Int3Converter.cs" />
+    <Compile Include="Math\TypeConverters\Int4Converter.cs" />
     <Compile Include="Math\TypeConverters\QuaternionConverter.cs" />
     <Compile Include="Math\TypeConverters\Vector2Converter.cs" />
     <Compile Include="Math\TypeConverters\Vector3Converter.cs" />
