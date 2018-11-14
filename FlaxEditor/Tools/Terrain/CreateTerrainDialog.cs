@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using System.ComponentModel;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.Dialogs;
@@ -139,7 +140,28 @@ namespace FlaxEditor.Tools.Terrain
         {
             Close(DialogResult.OK);
 
-            // TODO: create terrain using the given options...
+            var scene = SceneManager.GetScene(0);
+            if (scene == null)
+                throw new InvalidOperationException("No scene found to add terrain to it!");
+
+            // Create terrain object and setup some options
+            var terrain = FlaxEngine.Terrain.New();
+            terrain.Setup(_options.LODCount, (int)_options.ChunkSize);
+            terrain.Transform = new Transform(_options.Position, _options.Orientation, _options.Scale);
+            terrain.Material = _options.Material;
+            terrain.PhysicalMaterial = _options.PhysicalMaterial;
+            terrain.CollisionLOD = _options.CollisionLOD;
+            terrain.HolesThreshold = _options.HolesThreshold;
+
+            // Add to scene (even if generation fails user gets a terrain in the scene)
+            terrain.Parent = scene;
+            Editor.Instance.Scene.MarkSceneEdited(scene);
+
+            // Call tool to generate the terrain patches from the input data
+            if (TerrainTools.GenerateTerrain(terrain, ref _options.NumberOfPatches, _options.Format, _options.Heightmap, _options.HeightmapScale, _options.Splatmap1, _options.Splatmap2))
+            {
+                Editor.LogError("Failed to generate terrain. See log for more info.");
+            }
         }
 
         private void OnCancel()
