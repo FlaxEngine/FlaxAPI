@@ -5,7 +5,7 @@ namespace FlaxEditor.Surface.Archetypes
     /// <summary>
     /// Alpha blending modes.
     /// </summary>
-    public enum AlphaBlendMode : byte
+    public enum AlphaBlendMode
     {
         /// <summary>
         /// Linear interpolation.
