@@ -6,9 +6,11 @@ using FlaxEditor.GUI.Dialogs;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
+// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
 #pragma warning disable 649
+#pragma warning disable 414
 
 namespace FlaxEditor.Tools.Terrain
 {
@@ -18,32 +20,60 @@ namespace FlaxEditor.Tools.Terrain
     /// <seealso cref="FlaxEditor.GUI.Dialogs.Dialog" />
     public sealed class CreateTerrainDialog : Dialog
     {
+        private enum ChunkSizes
+        {
+            _31 = 31,
+            _63 = 63,
+            _127 = 127,
+            _255 = 255,
+        }
+
         private class Options
         {
-            [EditorOrder(10), EditorDisplay("Transform", "Position"), DefaultValue(typeof(Vector3), "0,0,0"), Tooltip("Position of the terrain")]
-            public Vector3 Position = Vector3.Zero;
-
-            [EditorOrder(20), EditorDisplay("Transform", "Rotation"), DefaultValue(typeof(Quaternion), "0,0,0,1"), Tooltip("Orientation of the terrain")]
-            public Quaternion Orientation = Quaternion.Identity;
-
-            [EditorOrder(30), EditorDisplay("Transform", "Scale"), DefaultValue(typeof(Vector3), "1,1,1"), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("Scale of the terrain")]
-            public Vector3 Scale = Vector3.One;
-
             [EditorOrder(100), EditorDisplay("Layout", "Number Of Patches"), DefaultValue(typeof(Int2), "4,4"), Limit(0, 512), Tooltip("Amount of terrain patches in each direction (X and Z). Each terrain patch contains a grid of 16 chunks. Patches can be later added or removed from terrain using a terrain editor tool.")]
             public Int2 NumberOfPatches = new Int2(4, 4);
 
-            // TODO: implement rest of the options
+            [EditorOrder(110), EditorDisplay("Layout"), DefaultValue(ChunkSizes._63), Tooltip("The size of the chunk (amount of quads per edge for the highest LOD). Must be power of two minus one (eg. 63).")]
+            public ChunkSizes ChunkSize = ChunkSizes._63;
 
-            // ChunkSize
-            // LODCount
-            // material
+            [EditorOrder(120), EditorDisplay("Layout", "LOD Count"), DefaultValue(6), Limit(1, FlaxEngine.Terrain.MaxLODs), Tooltip("The maximum Level Of Details count. The actual amount of LODs may be lower due to provided chunk size (each LOD has 4 times less quads).")]
+            public int LODCount = 6;
 
-            // physical material
-            // collision lod
-            // HolesThreshold
+            [EditorOrder(130), EditorDisplay("Layout"), DefaultValue(null), Tooltip("The default material used for terrain rendering (chunks can override this). It must have Domain set to terrain.")]
+            public MaterialBase Material;
 
-            // heightmap
-            // splatmap
+            [EditorOrder(140), EditorDisplay("Layout"), EnumDisplay(EnumDisplayAttribute.FormatMode.None), DefaultValue(TerrainHeightmapFormat.R16G16B16A16_Raw), Tooltip("The heightmap storage format. Using lower precision may affect the quality of the terrain.")]
+            public TerrainHeightmapFormat Format = TerrainHeightmapFormat.R16G16B16A16_Raw;
+
+            [EditorOrder(200), EditorDisplay("Collision"), DefaultValue(null), AssetReference(typeof(PhysicalMaterial), true), Tooltip("Terrain default physical material used to define the collider physical properties.")]
+            public JsonAsset PhysicalMaterial;
+
+            [EditorOrder(210), EditorDisplay("Collision", "Collision LOD"), DefaultValue(-1), Limit(-1, 100, 0.1f), Tooltip("Terrain geometry LOD index used for collision.")]
+            public int CollisionLOD = -1;
+
+            [EditorOrder(220), EditorDisplay("Collision"), DefaultValue(0.3f), Limit(0, 1, 0.01f), Tooltip("Terrain holes threshold value. Uses terrain vertices visibility mask to create holes where visibility is lower than the given threshold. Value equal 0 disables holes feature.")]
+            public float HolesThreshold = 0.3f;
+
+            [EditorOrder(300), EditorDisplay("Import Data"), DefaultValue(null), Tooltip("Custom heightmap texture to import. Used as a source for height field values (from channel Red).")]
+            public Texture Heightmap;
+
+            [EditorOrder(310), EditorDisplay("Import Data"), DefaultValue(5000.0f), Tooltip("Custom heightmap texture values scale. Applied to adjust the normalized heightmap values into the world units.")]
+            public float HeightmapScale = 5000.0f;
+
+            [EditorOrder(320), EditorDisplay("Import Data"), DefaultValue(null), Tooltip("Custom terrain splat map used as a source of the terrain layers weights. Each channel from RGBA is used as an independent layer weight for terrain layers compositing.")]
+            public Texture Splatmap1;
+
+            [EditorOrder(330), EditorDisplay("Import Data"), DefaultValue(null), Tooltip("Custom terrain splat map used as a source of the terrain layers weights. Each channel from RGBA is used as an independent layer weight for terrain layers compositing.")]
+            public Texture Splatmap2;
+
+            [EditorOrder(400), EditorDisplay("Transform", "Position"), DefaultValue(typeof(Vector3), "0,0,0"), Tooltip("Position of the terrain")]
+            public Vector3 Position = Vector3.Zero;
+
+            [EditorOrder(410), EditorDisplay("Transform", "Rotation"), DefaultValue(typeof(Quaternion), "0,0,0,1"), Tooltip("Orientation of the terrain")]
+            public Quaternion Orientation = Quaternion.Identity;
+
+            [EditorOrder(420), EditorDisplay("Transform", "Scale"), DefaultValue(typeof(Vector3), "1,1,1"), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("Scale of the terrain")]
+            public Vector3 Scale = Vector3.One;
         }
 
         private readonly Options _options = new Options();
@@ -55,7 +85,7 @@ namespace FlaxEditor.Tools.Terrain
         : base("Create terrain")
         {
             const float TotalWidth = 450;
-            const float EditorHeight = 450;
+            const float EditorHeight = 600;
             Width = TotalWidth;
 
             // Header and help description
