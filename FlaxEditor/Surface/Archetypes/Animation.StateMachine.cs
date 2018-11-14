@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using FlaxEditor.GUI;
@@ -1002,7 +1003,7 @@ namespace FlaxEditor.Surface.Archetypes
                 // Create a new transition
                 var data = new StateMachineTransition.Data
                 {
-                    Flags = StateMachineTransition.Data.FlagTypes.Enabled | StateMachineTransition.Data.FlagTypes.UseDefaultRule,
+                    Flags = StateMachineTransition.Data.FlagTypes.Enabled,
                     Order = 0,
                     BlendDuration = 0.1f,
                     BlendMode = AlphaBlendMode.HermiteCubic,
@@ -1139,6 +1140,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// If checked, the transition can be triggered, otherwise it will be ignored.
             /// </summary>
+            [EditorOrder(10), DefaultValue(true), Tooltip("If checked, the transition can be triggered, otherwise it will be ignored.")]
             public bool Enabled
             {
                 get => _data.HasFlag(Data.FlagTypes.Enabled);
@@ -1152,6 +1154,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// If checked, animation graph will ignore other transitions from the source state and use only this transition.
             /// </summary>
+            [EditorOrder(20), DefaultValue(false), Tooltip("If checked, animation graph will ignore other transitions from the source state and use only this transition.")]
             public bool Solo
             {
                 get => _data.HasFlag(Data.FlagTypes.Solo);
@@ -1165,6 +1168,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// If checked, animation graph will perform automatic transition based on the state animation pose (single shot animation play).
             /// </summary>
+            [EditorOrder(30), DefaultValue(false), Tooltip("If checked, animation graph will perform automatic transition based on the state animation pose (single shot animation play).")]
             public bool UseDefaultRule
             {
                 get => _data.HasFlag(Data.FlagTypes.UseDefaultRule);
@@ -1178,6 +1182,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// The transition order (higher first).
             /// </summary>
+            [EditorOrder(40), DefaultValue(0), Tooltip("The transition order. Transitions with the higher order are handled before the ones with the lower order.")]
             public int Order
             {
                 get => _data.Order;
@@ -1191,6 +1196,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// The blend duration (in seconds).
             /// </summary>
+            [EditorOrder(50), DefaultValue(0.1f), Limit(0, 20.0f, 0.1f), Tooltip("Transition blend duration (in seconds).")]
             public float BlendDuration
             {
                 get => _data.BlendDuration;
@@ -1204,6 +1210,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// The blend mode.
             /// </summary>
+            [EditorOrder(60), DefaultValue(AlphaBlendMode.HermiteCubic), Tooltip("Transition blending mode for blend alpha.")]
             public AlphaBlendMode BlendMode
             {
                 get => _data.BlendMode;
