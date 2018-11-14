@@ -576,6 +576,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Register for surface mouse events to handle transition arrows interactions
                 Surface.CustomMouseUp += OnSurfaceMouseUp;
+                Surface.CustomMouseDoubleClick += OnSurfaceMouseDoubleClick;
             }
 
             private void OnSurfaceMouseUp(ref Vector2 mouse, MouseButton buttons, ref bool handled)
@@ -596,6 +597,31 @@ namespace FlaxEditor.Surface.Archetypes
                         if (Vector2.DistanceSquared(ref mousePosition, ref point) < 25.0f)
                         {
                             OnTransitionClicked(t, ref mouse, ref mousePosition, buttons);
+                            handled = true;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            private void OnSurfaceMouseDoubleClick(ref Vector2 mouse, MouseButton buttons, ref bool handled)
+            {
+                if (handled)
+                    return;
+
+                // Check double click over the connection
+                var mousePosition = Surface.SurfaceRoot.PointFromParent(ref mouse);
+                if (!TransitionsRectangle.Contains(ref mousePosition))
+                    return;
+                for (int i = 0; i < Transitions.Count; i++)
+                {
+                    var t = Transitions[i];
+                    if (t.Bounds.Contains(ref mousePosition))
+                    {
+                        CollisionsHelper.ClosestPointPointLine(ref mousePosition, ref t.StartPos, ref t.EndPos, out var point);
+                        if (Vector2.DistanceSquared(ref mousePosition, ref point) < 25.0f)
+                        {
+                            t.EditRule();
                             handled = true;
                             return;
                         }
@@ -1330,7 +1356,7 @@ namespace FlaxEditor.Surface.Archetypes
             public void Edit()
             {
                 var surface = SourceState.Surface;
-                var center = Bounds.Center;
+                var center = Bounds.Center + new Vector2(3.0f);
                 var editor = new TransitionEditor(this);
                 editor.Show(surface, surface.SurfaceRoot.PointToParent(ref center));
             }
