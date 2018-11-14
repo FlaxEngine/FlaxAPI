@@ -66,6 +66,9 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\ContentView.DragDrop.cs" />
     <Compile Include="Content\Import\Request.cs" />
+    <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
+    <Compile Include="CustomEditors\Editors\Int3Editor.cs" />
+    <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
