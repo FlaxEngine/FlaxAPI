@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 
@@ -23,13 +24,20 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
+            var mode = EnumDisplayAttribute.FormatMode.Default;
+            var attributes = Values.GetAttributes();
+            if (attributes?.FirstOrDefault(x => x is EnumDisplayAttribute) is EnumDisplayAttribute enumDisplay)
+            {
+                mode = enumDisplay.Mode;
+            }
+
             if (HasDifferentTypes)
             {
                 // No support for different enum types
             }
             else
             {
-                element = layout.Enum(Values[0].GetType());
+                element = layout.Enum(Values[0].GetType(), null, mode);
                 element.ValueChanged += OnValueChanged;
             }
         }

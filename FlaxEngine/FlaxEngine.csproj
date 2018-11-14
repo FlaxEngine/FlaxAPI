@@ -246,6 +246,7 @@
     <Compile Include="Attributes\Editor\CustomEditorAliasAttribute.cs" />
     <Compile Include="Attributes\Editor\DefaultEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
+    <Compile Include="Attributes\Editor\EnumDisplayAttribute.cs" />
     <Compile Include="Attributes\Editor\ExpandGroupsAttribute.cs" />
     <Compile Include="Attributes\Editor\HeaderAttribute.cs" />
     <Compile Include="Attributes\Editor\LimitAttribute.cs" />
