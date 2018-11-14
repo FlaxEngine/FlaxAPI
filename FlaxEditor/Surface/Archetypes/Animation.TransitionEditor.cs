@@ -2,7 +2,6 @@
 
 using System;
 using FlaxEditor.CustomEditors;
-using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -33,25 +32,37 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Context menu dimensions
                 const float width = 280.0f;
-                const float height = 300.0f;
+                const float height = 220.0f;
                 Size = new Vector2(width, height);
 
+                // Title
+                var title = new Label(2, 2, width - 4, 23.0f)
+                {
+                    Font = new FontReference(Style.Current.FontLarge),
+                    Text = transition.SurfaceName,
+                    Parent = this
+                };
+
                 // Buttons
-                float buttonsWidth = (width - 6.0f) * 0.5f;
+                float buttonsWidth = (width - 8.0f) * 0.5f;
                 float buttonsHeight = 20.0f;
-                var editRuleButton = new Button(2.0f, 2.0f, buttonsWidth, buttonsHeight);
-                editRuleButton.Text = "Edit Rule";
-                editRuleButton.Parent = this;
+                var editRuleButton = new Button(2.0f, title.Bottom + 2.0f, buttonsWidth, buttonsHeight)
+                {
+                    Text = "Edit Rule",
+                    Parent = this
+                };
                 editRuleButton.Clicked += OnEditRuleButtonClicked;
-                var deleteButton = new Button(editRuleButton.Right + 2.0f, 2.0f, buttonsWidth, buttonsHeight);
-                deleteButton.Text = "Delete";
-                deleteButton.Parent = this;
+                var deleteButton = new Button(editRuleButton.Right + 2.0f, editRuleButton.Y, buttonsWidth, buttonsHeight)
+                {
+                    Text = "Delete",
+                    Parent = this
+                };
                 deleteButton.Clicked += OnDeleteButtonClicked;
 
                 // Actual panel
                 var panel1 = new Panel(ScrollBars.Vertical)
                 {
-                    Bounds = new Rectangle(0, deleteButton.Bottom + 2.0f, Width, Height - deleteButton.Bottom - 2.0f),
+                    Bounds = new Rectangle(0, deleteButton.Bottom + 2.0f, width, height - deleteButton.Bottom - 2.0f),
                     Parent = this
                 };
                 var editor = new CustomEditorPresenter(null);
