@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -53,12 +54,12 @@ namespace FlaxEditor.Surface.Archetypes
                     Bounds = new Rectangle(0, deleteButton.Bottom + 2.0f, Width, Height - deleteButton.Bottom - 2.0f),
                     Parent = this
                 };
-                var tree = new Tree
-                {
-                    DockStyle = DockStyle.Top,
-                    IsScrollable = true,
-                    Parent = panel1
-                };
+                var editor = new CustomEditorPresenter(null);
+                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.IsScrollable = true;
+                editor.Panel.Parent = panel1;
+
+                editor.Select(_transition);
             }
 
             private void OnEditRuleButtonClicked()

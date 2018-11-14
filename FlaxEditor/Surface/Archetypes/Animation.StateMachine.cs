@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -999,18 +1000,14 @@ namespace FlaxEditor.Surface.Archetypes
                 var state = (StateMachineState)other;
 
                 // Create a new transition
-                var transition = new StateMachineTransition
+                var data = new StateMachineTransition.Data
                 {
-                    SourceState = this,
-                    DestinationState = state,
-                    Enabled = true,
-                    Solo = false,
-                    UseDefaultRule = true,
+                    Flags = StateMachineTransition.Data.FlagTypes.Enabled | StateMachineTransition.Data.FlagTypes.UseDefaultRule,
                     Order = 0,
                     BlendDuration = 0.1f,
                     BlendMode = AlphaBlendMode.HermiteCubic,
-                    RuleGraph = Enumerable.Empty<byte>() as byte[],
                 };
+                var transition = new StateMachineTransition(this, state, ref data);
                 Transitions.Add(transition);
 
                 SaveData();
@@ -1025,77 +1022,255 @@ namespace FlaxEditor.Surface.Archetypes
         public class StateMachineTransition : ISurfaceContext
         {
             /// <summary>
+            /// The packed data container for the transition data storage. Helps with serialization and versioning the data.
+            /// </summary>
+            /// <remarks>
+            /// It does not store GC objects references to make it more lightweight. Transition rule bytes data is stores in a separate way.
+            /// </remarks>
+            [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 32)]
+            public struct Data
+            {
+                /// <summary>
+                /// The transition flag types.
+                /// </summary>
+                [Flags]
+                public enum FlagTypes
+                {
+                    /// <summary>
+                    /// The none.
+                    /// </summary>
+                    None = 0,
+
+                    /// <summary>
+                    /// The enabled flag.
+                    /// </summary>
+                    Enabled = 1,
+
+                    /// <summary>
+                    /// The solo flag.
+                    /// </summary>
+                    Solo = 2,
+
+                    /// <summary>
+                    /// The use default rule flag.
+                    /// </summary>
+                    UseDefaultRule = 4,
+                }
+
+                /// <summary>
+                /// The destination state node ID.
+                /// </summary>
+                public uint Destination;
+
+                /// <summary>
+                /// The flags.
+                /// </summary>
+                public FlagTypes Flags;
+
+                /// <summary>
+                /// The order.
+                /// </summary>
+                public int Order;
+
+                /// <summary>
+                /// The blend duration (in seconds).
+                /// </summary>
+                public float BlendDuration;
+
+                /// <summary>
+                /// The blend mode.
+                /// </summary>
+                public AlphaBlendMode BlendMode;
+
+                /// <summary>
+                /// The unused data 0.
+                /// </summary>
+                public int Unused0;
+
+                /// <summary>
+                /// The unused data 1.
+                /// </summary>
+                public int Unused1;
+
+                /// <summary>
+                /// The unused data 2.
+                /// </summary>
+                public int Unused2;
+
+                /// <summary>
+                /// Determines whether the data has a given flag set.
+                /// </summary>
+                /// <param name="flag">The flag.</param>
+                /// <returns><c>true</c> if the specified flag is set; otherwise, <c>false</c>.</returns>
+                public bool HasFlag(FlagTypes flag)
+                {
+                    return (Flags & flag) == flag;
+                }
+
+                /// <summary>
+                /// Sets the flag to the given value.
+                /// </summary>
+                /// <param name="flag">The flag.</param>
+                /// <param name="value">If set to <c>true</c> the flag will be set, otherwise it will be cleared.</param>
+                public void SetFlag(FlagTypes flag, bool value)
+                {
+                    if (value)
+                        Flags |= flag;
+                    else
+                        Flags &= ~flag;
+                }
+            }
+
+            private Data _data;
+            private byte[] _ruleGraph;
+
+            /// <summary>
             /// The transition start state.
             /// </summary>
-            public StateMachineState SourceState;
+            [HideInEditor]
+            public readonly StateMachineState SourceState;
 
             /// <summary>
             /// The transition end state.
             /// </summary>
-            public StateMachineState DestinationState;
+            [HideInEditor]
+            public readonly StateMachineState DestinationState;
 
             /// <summary>
             /// If checked, the transition can be triggered, otherwise it will be ignored.
             /// </summary>
-            public bool Enabled;
+            public bool Enabled
+            {
+                get => _data.HasFlag(Data.FlagTypes.Enabled);
+                set
+                {
+                    _data.SetFlag(Data.FlagTypes.Enabled, value);
+                    SourceState.SaveData();
+                }
+            }
 
             /// <summary>
             /// If checked, animation graph will ignore other transitions from the source state and use only this transition.
             /// </summary>
-            public bool Solo;
+            public bool Solo
+            {
+                get => _data.HasFlag(Data.FlagTypes.Solo);
+                set
+                {
+                    _data.SetFlag(Data.FlagTypes.Solo, value);
+                    SourceState.SaveData();
+                }
+            }
 
             /// <summary>
             /// If checked, animation graph will perform automatic transition based on the state animation pose (single shot animation play).
             /// </summary>
-            public bool UseDefaultRule;
+            public bool UseDefaultRule
+            {
+                get => _data.HasFlag(Data.FlagTypes.UseDefaultRule);
+                set
+                {
+                    _data.SetFlag(Data.FlagTypes.UseDefaultRule, value);
+                    SourceState.SaveData();
+                }
+            }
 
             /// <summary>
             /// The transition order (higher first).
             /// </summary>
-            public int Order;
+            public int Order
+            {
+                get => _data.Order;
+                set
+                {
+                    _data.Order = value;
+                    SourceState.SaveData();
+                }
+            }
 
             /// <summary>
             /// The blend duration (in seconds).
             /// </summary>
-            public float BlendDuration;
+            public float BlendDuration
+            {
+                get => _data.BlendDuration;
+                set
+                {
+                    _data.BlendDuration = value;
+                    SourceState.SaveData();
+                }
+            }
 
             /// <summary>
             /// The blend mode.
             /// </summary>
-            public AlphaBlendMode BlendMode;
+            public AlphaBlendMode BlendMode
+            {
+                get => _data.BlendMode;
+                set
+                {
+                    _data.BlendMode = value;
+                    SourceState.SaveData();
+                }
+            }
 
             /// <summary>
             /// The rule graph data.
             /// </summary>
-            public byte[] RuleGraph;
+            [HideInEditor]
+            public byte[] RuleGraph
+            {
+                get => _ruleGraph;
+                set
+                {
+                    _ruleGraph = value ?? Enumerable.Empty<byte>() as byte[];
+                    SourceState.SaveData();
+                }
+            }
 
             /// <summary>
             /// The start position (cached).
             /// </summary>
+            [HideInEditor]
             public Vector2 StartPos;
 
             /// <summary>
             /// The end position (cached).
             /// </summary>
+            [HideInEditor]
             public Vector2 EndPos;
 
             /// <summary>
             /// The bounds of the transition connection line (cached).
             /// </summary>
+            [HideInEditor]
             public Rectangle Bounds;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="StateMachineTransition"/> class.
+            /// </summary>
+            /// <param name="source">The source.</param>
+            /// <param name="destination">The destination.</param>
+            /// <param name="data">The transition data container.</param>
+            /// <param name="ruleGraph">The transition rule graph. Can be null.</param>
+            public StateMachineTransition(StateMachineState source, StateMachineState destination, ref Data data, byte[] ruleGraph = null)
+            {
+                SourceState = source;
+                DestinationState = destination;
+                _data = data;
+                _data.Destination = destination.ID;
+                _ruleGraph = ruleGraph ?? Enumerable.Empty<byte>() as byte[];
+            }
 
             /// <inheritdoc />
             public string SurfaceName => string.Format("{0} to {1}", SourceState.StateTitle, DestinationState.StateTitle);
 
             /// <inheritdoc />
+            [HideInEditor]
             public byte[] SurfaceData
             {
                 get => RuleGraph;
-                set
-                {
-                    RuleGraph = value;
-                    SourceState.SaveData();
-                }
+                set => RuleGraph = value;
             }
 
             /// <inheritdoc />
@@ -1111,6 +1286,8 @@ namespace FlaxEditor.Surface.Archetypes
                 if (ruleOutputNode == null)
                 {
                     ruleOutputNode = context.SpawnNode(9, 22, new Vector2(100.0f));
+
+                    // TODO: add default rule nodes for easier usage
                 }
             }
 
