@@ -39,8 +39,9 @@ namespace FlaxEngine.GUI
     {
         private ContextMenuDirection _direction;
         private ContextMenuBase _parentCM;
+        private bool _isSubMenu;
         private ContextMenuBase _childCM;
-        private FlaxEngine.Window _window;
+        private Window _window;
 
         /// <summary>
         /// Returns true if context menu is opened
@@ -61,7 +62,23 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets the topmost context menu.
         /// </summary>
-        public ContextMenuBase TopmostCM => _parentCM != null ? _parentCM.TopmostCM : this;
+        public ContextMenuBase TopmostCM
+        {
+            get
+            {
+                var cm = this;
+                while (cm._parentCM != null && cm._isSubMenu)
+                {
+                    cm = cm._parentCM;
+                }
+                return cm;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this context menu is a sub-menu. Sub menus are treated like child context menus of the other menu (eg. hierarchy).
+        /// </summary>
+        public bool IsSubMenu => _isSubMenu;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuBase"/> class.
@@ -73,6 +90,7 @@ namespace FlaxEngine.GUI
             Visible = false;
 
             _performChildrenLayoutFirst = true;
+            _isSubMenu = true;
         }
 
         /// <summary>
@@ -87,14 +105,23 @@ namespace FlaxEngine.GUI
             // Ensure to be closed
             Hide();
 
+            // Peek parent control window
+            var parentWin = parent.RootWindow;
+            if (parentWin == null)
+                return;
+
+            // Check if show menu inside the other menu - then link as a child to prevent closing the calling menu window on lost focus
+            if (_parentCM == null && parentWin.ChildrenCount == 1 && parentWin.Children[0] is ContextMenuBase parentCM)
+            {
+                parentCM.ShowChild(this, parentCM.ScreenToClient(parent.ClientToScreen(location)), false);
+                return;
+            }
+
             // Unlock and perform controls update
             UnlockChildrenRecursive();
             PerformLayout();
 
             // Calculate popup direction and initial location (fit on a single monitor)
-            var parentWin = parent.RootWindow;
-            if (parentWin == null)
-                return;
             Vector2 locationWS = parent.PointToWindow(location);
             Vector2 locationSS = parentWin.ClientToScreen(locationWS);
             Location = Vector2.Zero;
@@ -137,8 +164,8 @@ namespace FlaxEngine.GUI
             desc.IsTopmost = true;
             desc.IsRegularWindow = false;
             desc.HasSizingFrame = false;
-            _window = FlaxEngine.Window.Create(desc);
-            _window.LostFocus += onWindowLostFocus;
+            _window = Window.Create(desc);
+            _window.LostFocus += OnWindowLostFocus;
 
             // Attach to the window
             _parentCM = parent as ContextMenuBase;
@@ -192,7 +219,8 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="child">The child menu.</param>
         /// <param name="location">The child menu initial location.</param>
-        public void ShowChild(ContextMenuBase child, Vector2 location)
+        /// <param name="isSubMenu">True if context menu is a normal sub-menu, otherwise it is a custom menu popup linked as child.</param>
+        public void ShowChild(ContextMenuBase child, Vector2 location, bool isSubMenu = true)
         {
             // Hide current child
             HideChild();
@@ -200,6 +228,7 @@ namespace FlaxEngine.GUI
             // Set child
             _childCM = child;
             _childCM._parentCM = this;
+            _childCM._isSubMenu = isSubMenu;
 
             // Show child
             _childCM.Show(this, location);
@@ -244,7 +273,7 @@ namespace FlaxEngine.GUI
             // Nothing to do
         }
 
-        private void onWindowLostFocus()
+        private void OnWindowLostFocus()
         {
             // Skip for parent menus (child should handle lost of focus)
             if (_childCM != null)
