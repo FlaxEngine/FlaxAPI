@@ -167,7 +167,7 @@ namespace FlaxEngine
         /// Gets or sets the default physical material used to define the terrain collider physical properties.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(520), Limit(-1, 100, 0.1f), EditorDisplay("Collision"), Tooltip("Terrain default physical material used to define the collider physical properties.")]
+        [EditorOrder(520), Limit(-1, 100, 0.1f), EditorDisplay("Collision"), AssetReference(typeof(PhysicalMaterial), true), Tooltip("Terrain default physical material used to define the collider physical properties.")]
         public JsonAsset PhysicalMaterial
         {
 #if UNIT_TEST_COMPILANT
