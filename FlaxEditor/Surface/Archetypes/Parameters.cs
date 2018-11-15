@@ -80,6 +80,8 @@ namespace FlaxEditor.Surface.Archetypes
             public SurfaceNodeParamsGet(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
             {
+                // Force first layout init for every param type
+                _layoutType = (ParameterType)int.MaxValue;
             }
 
             private void UpdateLayout()
