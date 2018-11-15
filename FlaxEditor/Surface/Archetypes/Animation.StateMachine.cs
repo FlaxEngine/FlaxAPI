@@ -721,6 +721,7 @@ namespace FlaxEditor.Surface.Archetypes
                 finally
                 {
                     UpdateTransitions();
+                    UpdateTransitionsColors();
                 }
             }
 
@@ -796,6 +797,41 @@ namespace FlaxEditor.Surface.Archetypes
             public void Edit()
             {
                 Surface.OpenContext(this);
+            }
+
+            private bool IsSoloAndEnabled(StateMachineTransition t)
+            {
+                return t.Solo && t.Enabled;
+            }
+
+            /// <summary>
+            /// Updates the transitions colors (for disabled/enabled/solo transitions matching).
+            /// </summary>
+            public void UpdateTransitionsColors()
+            {
+                if (Transitions.Count == 0)
+                    return;
+
+                bool anySolo = Transitions.Any(IsSoloAndEnabled);
+                if (anySolo)
+                {
+                    var sorted = Transitions.ToArray();
+                    Array.Sort(sorted, (a, b) => b.Order - a.Order);
+                    var firstSolo = sorted.First(IsSoloAndEnabled);
+                    for (int i = 0; i < Transitions.Count; i++)
+                    {
+                        var t = Transitions[i];
+                        t.LineColor = t == firstSolo ? Color.White : Color.Gray;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < Transitions.Count; i++)
+                    {
+                        var t = Transitions[i];
+                        t.LineColor = t.Enabled ? Color.White : Color.Gray;
+                    }
+                }
             }
 
             /// <summary>
@@ -1074,7 +1110,7 @@ namespace FlaxEditor.Surface.Archetypes
                         CollisionsHelper.ClosestPointPointLine(ref mousePosition, ref t.StartPos, ref t.EndPos, out var point);
                         isMouseOver = Vector2.DistanceSquared(ref mousePosition, ref point) < 25.0f;
                     }
-                    var color = isMouseOver ? Color.Wheat : Color.White;
+                    var color = isMouseOver ? Color.Wheat : t.LineColor;
                     DrawConnection(Surface, ref t.StartPos, ref t.EndPos, ref color);
                 }
             }
@@ -1124,6 +1160,9 @@ namespace FlaxEditor.Surface.Archetypes
                 Transitions.Add(transition);
 
                 SaveData();
+
+                UpdateTransitions();
+                UpdateTransitionsColors();
             }
         }
 
@@ -1260,6 +1299,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _data.SetFlag(Data.FlagTypes.Enabled, value);
                     SourceState.SaveData();
+                    SourceState.UpdateTransitionsColors();
                 }
             }
 
@@ -1274,6 +1314,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _data.SetFlag(Data.FlagTypes.Solo, value);
                     SourceState.SaveData();
+                    SourceState.UpdateTransitionsColors();
                 }
             }
 
@@ -1302,6 +1343,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _data.Order = value;
                     SourceState.SaveData();
+                    SourceState.UpdateTransitionsColors();
                 }
             }
 
@@ -1366,6 +1408,12 @@ namespace FlaxEditor.Surface.Archetypes
             public Rectangle Bounds;
 
             /// <summary>
+            /// The color of the transition connection line (cached).
+            /// </summary>
+            [HideInEditor]
+            public Color LineColor;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="StateMachineTransition"/> class.
             /// </summary>
             /// <param name="source">The source.</param>
@@ -1426,6 +1474,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 SourceState.Transitions.Remove(this);
                 SourceState.UpdateTransitions();
+                SourceState.UpdateTransitionsColors();
                 SourceState.SaveData();
             }
 
