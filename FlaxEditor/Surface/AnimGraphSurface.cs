@@ -29,7 +29,7 @@ namespace FlaxEditor.Surface
                     new NodeArchetype
                     {
                         TypeID = 20,
-                        Create = (id, surface, arch, groupArch) => new Animation.StateMachineState(id, surface, arch, groupArch),
+                        Create = (id, context, arch, groupArch) => new Animation.StateMachineState(id, context, arch, groupArch),
                         Title = "State",
                         Description = "The animation states machine state node",
                         Flags = NodeFlags.AnimGraphOnly,

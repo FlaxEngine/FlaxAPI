@@ -21,8 +21,8 @@ namespace FlaxEditor.Surface.Archetypes
         public class Output : SurfaceNode
         {
             /// <inheritdoc />
-            public Output(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(id, surface, nodeArch, groupArch)
+            public Output(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
             {
             }
         }
@@ -34,8 +34,8 @@ namespace FlaxEditor.Surface.Archetypes
         public class Sample : SurfaceNode
         {
             /// <inheritdoc />
-            public Sample(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(id, surface, nodeArch, groupArch)
+            public Sample(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
             {
             }
 
@@ -100,8 +100,8 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public BlendPose(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(id, surface, nodeArch, groupArch)
+            public BlendPose(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
             {
                 // Add buttons for adding/removing blend poses
                 _addButton = new Button(70, 94, 20, 20)
@@ -241,7 +241,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 1,
-                Create = (id, surface, arch, groupArch) => new Output(id, surface, arch, groupArch),
+                Create = (id, context, arch, groupArch) => new Output(id, context, arch, groupArch),
                 Title = "Animation Output",
                 Description = "Main animation graph output node",
                 Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
@@ -260,7 +260,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 2,
-                Create = (id, surface, arch, groupArch) => new Sample(id, surface, arch, groupArch),
+                Create = (id, context, arch, groupArch) => new Sample(id, context, arch, groupArch),
                 Title = "Animation",
                 Description = "Animation sampling",
                 Flags = NodeFlags.AnimGraphOnly,
@@ -473,7 +473,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 12,
-                Create = (id, surface, arch, groupArch) => new MultiBlend1D(id, surface, arch, groupArch),
+                Create = (id, context, arch, groupArch) => new MultiBlend1D(id, context, arch, groupArch),
                 Title = "Multi Blend 1D",
                 Description = "Animation blending in 1D",
                 Flags = NodeFlags.AnimGraphOnly,
@@ -522,7 +522,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 13,
-                Create = (id, surface, arch, groupArch) => new MultiBlend2D(id, surface, arch, groupArch),
+                Create = (id, context, arch, groupArch) => new MultiBlend2D(id, context, arch, groupArch),
                 Title = "Multi Blend 2D",
                 Description = "Animation blending in 2D",
                 Flags = NodeFlags.AnimGraphOnly,
@@ -577,7 +577,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 14,
-                Create = (id, surface, arch, groupArch) => new BlendPose(id, surface, arch, groupArch),
+                Create = (id, context, arch, groupArch) => new BlendPose(id, context, arch, groupArch),
                 Title = "Blend Poses",
                 Description = "Select animation pose to pass by index (with blending)",
                 Flags = NodeFlags.AnimGraphOnly,
@@ -654,7 +654,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 18,
-                Create = (id, surface, arch, groupArch) => new StateMachine(id, surface, arch, groupArch),
+                Create = (id, context, arch, groupArch) => new StateMachine(id, context, arch, groupArch),
                 Title = "State Machine",
                 Description = "The animation states machine output node",
                 Flags = NodeFlags.AnimGraphOnly,
@@ -675,7 +675,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 19,
-                Create = (id, surface, arch, groupArch) => new StateMachineEntry(id, surface, arch, groupArch),
+                Create = (id, context, arch, groupArch) => new StateMachineEntry(id, context, arch, groupArch),
                 Title = "Entry",
                 Description = "The animation states machine entry node",
                 Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
@@ -688,7 +688,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 20,
-                Create = (id, surface, arch, groupArch) => new StateMachineState(id, surface, arch, groupArch),
+                Create = (id, context, arch, groupArch) => new StateMachineState(id, context, arch, groupArch),
                 Title = "State",
                 Description = "The animation states machine state node",
                 Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoSpawnViaGUI,

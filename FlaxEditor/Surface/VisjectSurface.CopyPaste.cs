@@ -368,7 +368,7 @@ namespace FlaxEditor.Surface
                         continue;
 
                     // Create
-                    var node = NodeFactory.CreateNode(idsMapping[nodeData.ID], this, groupArchetype, nodeArchetype);
+                    var node = NodeFactory.CreateNode(idsMapping[nodeData.ID], Context, groupArchetype, nodeArchetype);
                     if (node == null)
                         throw new InvalidOperationException("Failed to create node.");
                     Nodes.Add(node);

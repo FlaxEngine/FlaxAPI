@@ -76,11 +76,11 @@ namespace FlaxEditor.Surface
         /// Initializes a new instance of the <see cref="SurfaceNode"/> class.
         /// </summary>
         /// <param name="id">The node id.</param>
-        /// <param name="surface">The surface.</param>
+        /// <param name="context">The surface context.</param>
         /// <param name="nodeArch">The node archetype.</param>
         /// <param name="groupArch">The group archetype.</param>
-        public SurfaceNode(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-        : base(surface, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
+        public SurfaceNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+        : base(context, nodeArch.Size.X + Constants.NodeMarginX * 2, nodeArch.Size.Y + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize)
         {
             Title = nodeArch.Title;
             ID = id;

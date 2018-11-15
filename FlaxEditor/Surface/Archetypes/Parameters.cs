@@ -77,8 +77,8 @@ namespace FlaxEditor.Surface.Archetypes
             };
 
             /// <inheritdoc />
-            public SurfaceNodeParamsGet(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(id, surface, nodeArch, groupArch)
+            public SurfaceNodeParamsGet(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
             {
             }
 
@@ -351,13 +351,13 @@ namespace FlaxEditor.Surface.Archetypes
         /// Creates the get node.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <param name="surface">The surface.</param>
+        /// <param name="context">The surface.</param>
         /// <param name="arch">The node archetype.</param>
         /// <param name="groupArch">The group archetype.</param>
-        /// <returns></returns>
-        public static SurfaceNode CreateGetNode(uint id, VisjectSurface surface, NodeArchetype arch, GroupArchetype groupArch)
+        /// <returns>The created node.</returns>
+        public static SurfaceNode CreateGetNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
         {
-            return new SurfaceNodeParamsGet(id, surface, arch, groupArch);
+            return new SurfaceNodeParamsGet(id, context, arch, groupArch);
         }
 
         /// <summary>

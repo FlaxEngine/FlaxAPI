@@ -22,6 +22,11 @@ namespace FlaxEditor.Surface
         protected bool _isSelected;
 
         /// <summary>
+        /// The context.
+        /// </summary>
+        public readonly VisjectSurfaceContext Context;
+
+        /// <summary>
         /// The surface.
         /// </summary>
         public readonly VisjectSurface Surface;
@@ -38,15 +43,16 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceControl"/> class.
         /// </summary>
-        /// <param name="surface">The surface.</param>
+        /// <param name="context">The context.</param>
         /// <param name="width">The initial width.</param>
         /// <param name="height">The initial height.</param>
-        protected SurfaceControl(VisjectSurface surface, float width, float height)
+        protected SurfaceControl(VisjectSurfaceContext context, float width, float height)
         : base(0, 0, width, height)
         {
             ClipChildren = false;
 
-            Surface = surface;
+            Surface = context.Surface;
+            Context = context;
         }
 
         /// <summary>

@@ -339,7 +339,7 @@ namespace FlaxEditor.Surface
             var id = GetFreeNodeID();
 
             // Create node
-            var node = NodeFactory.CreateNode(id, _surface, groupArchetype, nodeArchetype);
+            var node = NodeFactory.CreateNode(id, this, groupArchetype, nodeArchetype);
             if (node == null)
             {
                 Editor.LogWarning("Failed to create node.");

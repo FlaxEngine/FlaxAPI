@@ -391,7 +391,7 @@ namespace FlaxEditor.Surface
                     ushort groupId = stream.ReadUInt16();
 
                     // Create node
-                    var node = NodeFactory.CreateNode(_surface.NodeArchetypes, id, _surface, groupId, typeId);
+                    var node = NodeFactory.CreateNode(_surface.NodeArchetypes, id, this, groupId, typeId);
                     if (node == null)
                     {
                         // Error

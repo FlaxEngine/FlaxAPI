@@ -20,7 +20,12 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Create custom node callback.
         /// </summary>
-        public delegate SurfaceNode CreateCustomNodeFunc(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch);
+        /// <param name="id">The node identifier.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="nodeArch">The node archetype.</param>
+        /// <param name="groupArch">The node parent group archetype.</param>
+        /// <returns>The created node object.</returns>
+        public delegate SurfaceNode CreateCustomNodeFunc(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch);
 
         /// <summary>
         /// Unique node type ID within a single group.
