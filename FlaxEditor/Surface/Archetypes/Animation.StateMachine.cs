@@ -720,6 +720,7 @@ namespace FlaxEditor.Surface.Archetypes
                 }
                 finally
                 {
+                    UpdateTransitionsOrder();
                     UpdateTransitions();
                     UpdateTransitionsColors();
                 }
@@ -805,6 +806,14 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <summary>
+            /// Updates the transitions order in the list vy using the <see cref="StateMachineTransition.Order"/> property.
+            /// </summary>
+            public void UpdateTransitionsOrder()
+            {
+                Transitions.Sort((a, b) => b.Order - a.Order);
+            }
+
+            /// <summary>
             /// Updates the transitions colors (for disabled/enabled/solo transitions matching).
             /// </summary>
             public void UpdateTransitionsColors()
@@ -815,9 +824,7 @@ namespace FlaxEditor.Surface.Archetypes
                 bool anySolo = Transitions.Any(IsSoloAndEnabled);
                 if (anySolo)
                 {
-                    var sorted = Transitions.ToArray();
-                    Array.Sort(sorted, (a, b) => b.Order - a.Order);
-                    var firstSolo = sorted.First(IsSoloAndEnabled);
+                    var firstSolo = Transitions.First(IsSoloAndEnabled);
                     for (int i = 0; i < Transitions.Count; i++)
                     {
                         var t = Transitions[i];
@@ -1159,10 +1166,11 @@ namespace FlaxEditor.Surface.Archetypes
                 var transition = new StateMachineTransition(this, state, ref data);
                 Transitions.Add(transition);
 
-                SaveData();
-
+                UpdateTransitionsOrder();
                 UpdateTransitions();
                 UpdateTransitionsColors();
+
+                SaveData();
             }
         }
 
@@ -1298,8 +1306,8 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.SetFlag(Data.FlagTypes.Enabled, value);
-                    SourceState.SaveData();
                     SourceState.UpdateTransitionsColors();
+                    SourceState.SaveData();
                 }
             }
 
@@ -1313,8 +1321,8 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.SetFlag(Data.FlagTypes.Solo, value);
-                    SourceState.SaveData();
                     SourceState.UpdateTransitionsColors();
+                    SourceState.SaveData();
                 }
             }
 
@@ -1342,8 +1350,9 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.Order = value;
-                    SourceState.SaveData();
+                    SourceState.UpdateTransitionsOrder();
                     SourceState.UpdateTransitionsColors();
+                    SourceState.SaveData();
                 }
             }
 
@@ -1473,8 +1482,11 @@ namespace FlaxEditor.Surface.Archetypes
             public void Delete()
             {
                 SourceState.Transitions.Remove(this);
+
+                SourceState.UpdateTransitionsOrder();
                 SourceState.UpdateTransitions();
                 SourceState.UpdateTransitionsColors();
+
                 SourceState.SaveData();
             }
 
