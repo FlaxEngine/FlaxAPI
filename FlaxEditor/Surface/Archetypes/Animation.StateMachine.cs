@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using FlaxEditor.GUI;
@@ -72,8 +73,8 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public StateMachine(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(id, surface, nodeArch, groupArch)
+            public StateMachine(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
             {
                 var marginX = FlaxEditor.Surface.Constants.NodeMarginX;
                 var uiStartPosY = FlaxEditor.Surface.Constants.NodeMarginY + FlaxEditor.Surface.Constants.NodeHeaderSize;
@@ -257,8 +258,8 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public StateMachineEntry(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(id, surface, nodeArch, groupArch)
+            public StateMachineEntry(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
             {
             }
 
@@ -474,8 +475,8 @@ namespace FlaxEditor.Surface.Archetypes
             public Rectangle TransitionsRectangle;
 
             /// <inheritdoc />
-            public StateMachineState(uint id, VisjectSurface surface, NodeArchetype nodeArch, GroupArchetype groupArch)
-            : base(id, surface, nodeArch, groupArch)
+            public StateMachineState(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
             {
                 TransitionsRectangle = Rectangle.Empty;
             }
@@ -666,16 +667,61 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 ClearData();
 
-                var data = StateData;
-                if (data == null || data.Length == 0)
+                var bytes = StateData;
+                if (bytes == null || bytes.Length == 0)
                 {
                     // Empty state
                     return;
                 }
 
-                // TODO: load data from bytes and update UI
+                try
+                {
+                    StateMachineTransition.Data data;
+                    using (var stream = new MemoryStream(bytes))
+                    using (var reader = new BinaryReader(stream))
+                    {
+                        int version = reader.ReadInt32();
+                        if (version != 1)
+                        {
+                            Editor.LogError("Invalid state machine state data version.");
+                            return;
+                        }
 
-                UpdateTransitions();
+                        int tCount = reader.ReadInt32();
+                        Transitions.Capacity = Mathf.Max(Transitions.Capacity, tCount);
+
+                        for (int i = 0; i < tCount; i++)
+                        {
+                            data.Destination = reader.ReadUInt32();
+                            data.Flags = (StateMachineTransition.Data.FlagTypes)reader.ReadInt32();
+                            data.Order = reader.ReadInt32();
+                            data.BlendDuration = reader.ReadSingle();
+                            data.BlendMode = (AlphaBlendMode)reader.ReadInt32();
+                            data.Unused0 = reader.ReadInt32();
+                            data.Unused1 = reader.ReadInt32();
+                            data.Unused2 = reader.ReadInt32();
+
+                            int ruleSize = reader.ReadInt32();
+                            byte[] rule = null;
+                            if (ruleSize != 0)
+                                rule = reader.ReadBytes(ruleSize);
+
+                            var destination = Context.FindNode(data.Destination) as StateMachineState;
+                            if (destination == null)
+                            {
+                                Editor.LogWarning("Missing state machine state destination node.");
+                                continue;
+                            }
+
+                            var t = new StateMachineTransition(this, destination, ref data, rule);
+                            Transitions.Add(t);
+                        }
+                    }
+                }
+                finally
+                {
+                    UpdateTransitions();
+                }
             }
 
             /// <summary>
@@ -687,7 +733,47 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _isSavingData = true;
 
-                    // TODO: save data to bytes and set node value
+                    if (Transitions.Count == 0)
+                    {
+                        StateData = Enumerable.Empty<byte>() as byte[];
+                    }
+                    else
+                    {
+                        StateMachineTransition.Data data;
+                        using (var stream = new MemoryStream(512))
+                        using (var writer = new BinaryWriter(stream))
+                        {
+                            writer.Write(1);
+                            writer.Write(Transitions.Count);
+                            for (int i = 0; i < Transitions.Count; i++)
+                            {
+                                var t = Transitions[i];
+                                t.GetData(out data);
+                                var rule = t.RuleGraph;
+
+                                writer.Write(data.Destination);
+                                writer.Write((int)data.Flags);
+                                writer.Write(data.Order);
+                                writer.Write(data.BlendDuration);
+                                writer.Write((int)data.BlendMode);
+                                writer.Write(data.Unused0);
+                                writer.Write(data.Unused1);
+                                writer.Write(data.Unused2);
+
+                                if (rule == null || rule.Length == 0)
+                                {
+                                    writer.Write(0);
+                                }
+                                else
+                                {
+                                    writer.Write(rule.Length);
+                                    writer.Write(rule);
+                                }
+                            }
+
+                            StateData = stream.ToArray();
+                        }
+                    }
                 }
                 finally
                 {
@@ -1293,6 +1379,15 @@ namespace FlaxEditor.Surface.Archetypes
                 _data = data;
                 _data.Destination = destination.ID;
                 _ruleGraph = ruleGraph ?? Enumerable.Empty<byte>() as byte[];
+            }
+
+            /// <summary>
+            /// Gets the transition data.
+            /// </summary>
+            /// <param name="data">The data.</param>
+            public void GetData(out Data data)
+            {
+                data = _data;
             }
 
             /// <inheritdoc />
