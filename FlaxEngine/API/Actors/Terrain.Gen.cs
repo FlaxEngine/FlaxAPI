@@ -294,12 +294,12 @@ namespace FlaxEngine
         /// Creates the terrain.
         /// </summary>
         /// <param name="lodCount">The LODs count. The actual amount of LODs may be lower due to provided chunk size (each LOD has 4 times less quads).</param>
-        /// <param name="chunkSize">The size of the chunk (amount of quads per edge for the highest LOD). Must be power of two minus one (eg. 63).</param>
+        /// <param name="chunkSize">The size of the chunk (amount of quads per edge for the highest LOD). Must be power of two minus one (eg. 63 or 127).</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Setup(int lodCount = 6, int chunkSize = 63)
+        public void Setup(int lodCount = 6, int chunkSize = 127)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");

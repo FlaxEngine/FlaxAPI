@@ -34,8 +34,8 @@ namespace FlaxEditor.Tools.Terrain
             [EditorOrder(100), EditorDisplay("Layout", "Number Of Patches"), DefaultValue(typeof(Int2), "4,4"), Limit(0, 512), Tooltip("Amount of terrain patches in each direction (X and Z). Each terrain patch contains a grid of 16 chunks. Patches can be later added or removed from terrain using a terrain editor tool.")]
             public Int2 NumberOfPatches = new Int2(4, 4);
 
-            [EditorOrder(110), EditorDisplay("Layout"), DefaultValue(ChunkSizes._63), Tooltip("The size of the chunk (amount of quads per edge for the highest LOD). Must be power of two minus one (eg. 63).")]
-            public ChunkSizes ChunkSize = ChunkSizes._63;
+            [EditorOrder(110), EditorDisplay("Layout"), DefaultValue(ChunkSizes._127), Tooltip("The size of the chunk (amount of quads per edge for the highest LOD). Must be power of two minus one (eg. 63).")]
+            public ChunkSizes ChunkSize = ChunkSizes._127;
 
             [EditorOrder(120), EditorDisplay("Layout", "LOD Count"), DefaultValue(6), Limit(1, FlaxEngine.Terrain.MaxLODs), Tooltip("The maximum Level Of Details count. The actual amount of LODs may be lower due to provided chunk size (each LOD has 4 times less quads).")]
             public int LODCount = 6;
