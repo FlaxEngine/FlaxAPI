@@ -559,6 +559,23 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 22,
+                Title = "Terrain Layer Weight",
+                Description = "Terrain layer weight mask used for blending terrain layers",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(220, 30),
+                DefaultValues = new object[]
+                {
+                    0,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, 0, 70.0f, 0, FlaxEditor.Tools.Terrain.PaintTerrainGizmoMode.TerrainLayerNames),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
+                }
+            },
         };
     }
 }

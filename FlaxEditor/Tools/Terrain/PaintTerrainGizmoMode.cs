@@ -19,6 +19,21 @@ namespace FlaxEditor.Tools.Terrain
     /// <seealso cref="FlaxEditor.Viewport.Modes.EditorGizmoMode" />
     public class PaintTerrainGizmoMode : EditorGizmoMode
     {
+        /// <summary>
+        /// The terrain layer names.
+        /// </summary>
+        public static readonly string[] TerrainLayerNames =
+        {
+            "Layer 0",
+            "Layer 1",
+            "Layer 2",
+            "Layer 3",
+            "Layer 4",
+            "Layer 5",
+            "Layer 6",
+            "Layer 7",
+        };
+
         private IntPtr _cachedSplatmapData;
         private int _cachedSplatmapDataSize;
         private EditTerrainMapAction _activeAction;
