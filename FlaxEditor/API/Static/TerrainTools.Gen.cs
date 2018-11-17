@@ -119,7 +119,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="patchCoord">The patch coordinates (x and z) to modify it.</param>
-        /// <param name="samples">The samples. The array length is size.X*size.Y.</param>
+        /// <param name="samples">The samples. The array length is size.X*size.Y. It has to be type of float.</param>
         /// <param name="offset">The offset from the first row and column of the heightmap data (offset destination x and z start position).</param>
         /// <param name="size">The size of the heightmap to modify (x and z). Amount of samples in each direction.</param>
         /// <returns>True if failed, otherwise false.</returns>
@@ -141,7 +141,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="patchCoord">The patch coordinates (x and z) to modify it.</param>
-        /// <param name="samples">The samples. The array length is size.X*size.Y.</param>
+        /// <param name="samples">The samples. The array length is size.X*size.Y. It has to be type of float.</param>
         /// <param name="offset">The offset from the first row and column of the visibility data (offset destination x and z start position).</param>
         /// <param name="size">The size of the visibility to modify (x and z). Amount of samples in each direction.</param>
         /// <returns>True if failed, otherwise false.</returns>
@@ -155,6 +155,28 @@ namespace FlaxEditor
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             return Internal_ModifyVisibilityMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
+#endif
+        }
+
+        /// <summary>
+        /// Modifies the terrain patch splat map (layers mask) with the given samples.
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z) to modify it.</param>
+        /// <param name="samples">The samples. The array length is size.X*size.Y. It has to be type of <see cref="Color32"/>.</param>
+        /// <param name="offset">The offset from the first row and column of the splatmap data (offset destination x and z start position).</param>
+        /// <param name="size">The size of the splatmap to modify (x and z). Amount of samples in each direction.</param>
+        /// <returns>True if failed, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool ModifySplatMap(Terrain terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ModifySplatMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
 #endif
         }
 
@@ -262,6 +284,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ModifyVisibilityMap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ModifySplatMap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Internal_GetHeightmapData(IntPtr terrain, ref Int2 patchCoord);
