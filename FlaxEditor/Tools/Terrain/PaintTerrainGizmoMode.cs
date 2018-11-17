@@ -337,7 +337,7 @@ namespace FlaxEditor.Tools.Terrain
                 throw new InvalidOperationException("Terrain paint start/end resynchronization.");
 
             var terrain = SelectedTerrain;
-            _activeAction = new EditTerrainHeightMapAction(terrain);
+            _activeAction = new EditTerrainSplatMapAction(terrain);
         }
 
         private void OnPaintEnded()

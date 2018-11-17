@@ -35,7 +35,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
         /// <summary>
         /// The tool strength (normalized to range 0-1). Defines the intensity of the paint operation to make it stronger or mre subtle.
         /// </summary>
-        [EditorOrder(0), Limit(0, 1, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the paint operation to make it stronger or mre subtle.")]
+        [EditorOrder(0), Limit(0, 1, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the paint operation to make it stronger or more subtle.")]
         public float Strength = 1.0f;
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
                 var modifiedOffset = brushPatchMin;
                 var modifiedSize = brushPatchMax - brushPatchMin;
 
-                // Expand the modification area by one vertex in each direction to ensure normal vectors are updated for edge cases, also clamp to prevent overflows
+                // Clamp to prevent overflows
                 if (modifiedOffset.X < 0)
                 {
                     modifiedSize.X += modifiedOffset.X;
@@ -112,8 +112,8 @@ namespace FlaxEditor.Tools.Terrain.Paint
                     modifiedSize.Y += modifiedOffset.Y;
                     modifiedOffset.Y = 0;
                 }
-                modifiedSize.X = Mathf.Min(modifiedSize.X + 2, heightmapSize - modifiedOffset.X);
-                modifiedSize.Y = Mathf.Min(modifiedSize.Y + 2, heightmapSize - modifiedOffset.Y);
+                modifiedSize.X = Mathf.Min(modifiedSize.X, heightmapSize - modifiedOffset.X);
+                modifiedSize.Y = Mathf.Min(modifiedSize.Y, heightmapSize - modifiedOffset.Y);
 
                 // Skip patch won't be modified at all
                 if (modifiedSize.X <= 0 || modifiedSize.Y <= 0)
