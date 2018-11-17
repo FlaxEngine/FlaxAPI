@@ -11,12 +11,68 @@ namespace FlaxEditor.Tools.Terrain.Paint
     /// <seealso cref="FlaxEditor.Tools.Terrain.Paint.Mode" />
     public sealed class SingleLayerMode : Mode
     {
+        /// <summary>
+        /// The paint layers.
+        /// </summary>
+        public enum Layers
+        {
+            /// <summary>
+            /// The layer 0.
+            /// </summary>
+            Layer0,
+
+            /// <summary>
+            /// The layer 0.
+            /// </summary>
+            Layer1,
+
+            /// <summary>
+            /// The layer 2.
+            /// </summary>
+            Layer2,
+
+            /// <summary>
+            /// The layer 3.
+            /// </summary>
+            Layer3,
+
+            /// <summary>
+            /// The layer 4.
+            /// </summary>
+            Layer4,
+
+            /// <summary>
+            /// The layer 5.
+            /// </summary>
+            Layer5,
+
+            /// <summary>
+            /// The layer 6.
+            /// </summary>
+            Layer6,
+
+            /// <summary>
+            /// The layer 7.
+            /// </summary>
+            Layer7,
+        }
+
+        /// <summary>
+        /// The layer to paint with it.
+        /// </summary>
+        [EditorOrder(10), Tooltip("The layer to paint with it. Terrain material can access per-layer blend weight to perform materials or textures blending.")]
+        public Layers Layer = Layers.Layer0;
+
         /// <inheritdoc />
         public override unsafe void Apply(ref ApplyParams p)
         {
             var strength = p.Strength;
-            var layer = 0; // TODO: paint layer selecting
+            var layer = (int)Layer;
             var brushPosition = p.Gizmo.CursorPosition;
+            var layerMask = layer < 4 ? 0x0F : 0xF0;
+            var otherLayerMask = layer < 4 ? 0xF0 : 0x0F;
+            var layerShift = layer < 4 ? 0 : 4;
+            var layerComponent = layer % 4;
 
             // Apply brush modification
             Profiler.BeginEvent("Apply Brush");
@@ -31,9 +87,31 @@ namespace FlaxEditor.Tools.Terrain.Paint
                     var samplePositionLocal = p.PatchPositionLocal + new Vector3(xx * FlaxEngine.Terrain.UnitsPerVertex, 0, zz * FlaxEngine.Terrain.UnitsPerVertex);
                     Vector3.Transform(ref samplePositionLocal, ref p.TerrainWorld, out Vector3 samplePositionWorld);
 
-                    var paintAmount = p.Brush.Sample(ref brushPosition, ref samplePositionWorld);
+                    var paintAmount = p.Brush.Sample(ref brushPosition, ref samplePositionWorld) * strength;
 
-                    p.TempBuffer[z * p.ModifiedSize.X + x] = new Color32(255, 0, 0, 0); //sourceHeight + paintAmount * strength;
+                    // Extract layer weight
+                    byte* srcPtr = &src.R;
+                    var srcLayer = ((*(srcPtr + layerComponent) & layerMask) >> layerShift) / 15.0f;
+
+                    // Accumulate weight
+                    float layerValue = srcLayer + paintAmount;
+
+                    // Check for solid layer case
+                    if (layerValue >= 1.0f)
+                    {
+                        // Erase other layers
+                        src = Color32.Transparent;
+
+                        // Use limit value
+                        layerValue = 1.0f;
+                    }
+
+                    // Modify packed weight
+                    var otherLayer = *(srcPtr + layerComponent) & otherLayerMask;
+                    *(srcPtr + layerComponent) = (byte)(otherLayer | (int)(layerValue * 15.0f) << layerShift);
+
+                    // Write back
+                    p.TempBuffer[z * p.ModifiedSize.X + x] = src;
                 }
             }
             Profiler.EndEvent();

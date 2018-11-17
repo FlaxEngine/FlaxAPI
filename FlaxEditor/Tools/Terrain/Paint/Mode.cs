@@ -35,7 +35,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
         /// <summary>
         /// The tool strength (normalized to range 0-1). Defines the intensity of the paint operation to make it stronger or mre subtle.
         /// </summary>
-        [EditorOrder(0), Limit(0, 1, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the paint operation to make it stronger or more subtle.")]
+        [EditorOrder(0), Limit(0, 10, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the paint operation to make it stronger or more subtle.")]
         public float Strength = 1.0f;
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
         public unsafe void Apply(Brush brush, ref Options options, PaintTerrainGizmoMode gizmo, FlaxEngine.Terrain terrain)
         {
             // Combine final apply strength
-            float strength = Strength * options.Strength * options.DeltaTime;
+            float strength = Strength * options.Strength * options.DeltaTime * 10.0f;
             if (strength <= 0.0f)
                 return;
             if (options.Invert && SupportsNegativeApply)
