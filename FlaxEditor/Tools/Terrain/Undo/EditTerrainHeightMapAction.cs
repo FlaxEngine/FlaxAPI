@@ -17,7 +17,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         public EditTerrainHeightMapAction(FlaxEngine.Terrain terrain)
-        : base(terrain)
+        : base(terrain, sizeof(float))
         {
         }
 

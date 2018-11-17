@@ -16,7 +16,6 @@ namespace FlaxEditor.Tools.Terrain
     public class CarveTab : Tab
     {
         private readonly Tabs _modes;
-        private PaintTerrainGizmoMode _paintTerrainGizmo;
 
         /// <summary>
         /// The editor instance.
@@ -41,7 +40,7 @@ namespace FlaxEditor.Tools.Terrain
         /// <summary>
         /// The paint tab;
         /// </summary>
-        public Tab Paint;
+        public PaintTab Paint;
 
         /// <summary>
         /// The edit tab;
@@ -58,8 +57,6 @@ namespace FlaxEditor.Tools.Terrain
         {
             Editor = editor;
             Editor.SceneEditing.SelectionChanged += OnSelectionChanged;
-
-            _paintTerrainGizmo = editor.Windows.EditWin.Viewport.PaintTerrainGizmo;
 
             _modes = new Tabs
             {
@@ -97,17 +94,8 @@ namespace FlaxEditor.Tools.Terrain
 
         private void InitPaintMode()
         {
-            var tab = _modes.AddTab(Paint = new Tab("Paint"));
+            var tab = _modes.AddTab(Paint = new PaintTab(this, Editor.Windows.EditWin.Viewport.PaintTerrainGizmo));
             tab.Selected += OnTabSelected;
-            var panel = new Panel(ScrollBars.Both)
-            {
-                DockStyle = DockStyle.Fill,
-                Parent = tab
-            };
-
-            var info = panel.AddChild<Label>();
-            info.Text = "Paint Mode";
-            info.DockStyle = DockStyle.Fill;
         }
 
         private void InitEditMode()

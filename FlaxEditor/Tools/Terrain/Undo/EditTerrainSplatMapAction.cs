@@ -6,28 +6,28 @@ using FlaxEngine;
 namespace FlaxEditor.Tools.Terrain.Undo
 {
     /// <summary>
-    /// The terrain visibility map editing action that records before and after states to swap between unmodified and modified terrain data.
+    /// The terrain splatmap editing action that records before and after states to swap between unmodified and modified terrain data.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
     /// <seealso cref="EditTerrainMapAction" />
-    public class EditTerrainVisibilityMapAction : EditTerrainMapAction
+    public class EditTerrainSplatMapAction : EditTerrainMapAction
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditTerrainVisibilityMapAction"/> class.
+        /// Initializes a new instance of the <see cref="EditTerrainSplatMapAction"/> class.
         /// </summary>
         /// <param name="terrain">The terrain.</param>
-        public EditTerrainVisibilityMapAction(FlaxEngine.Terrain terrain)
-        : base(terrain, sizeof(float))
+        public EditTerrainSplatMapAction(FlaxEngine.Terrain terrain)
+        : base(terrain, Color32.SizeInBytes)
         {
         }
 
         /// <inheritdoc />
-        public override string ActionString => "Edit terrain visibility map";
+        public override string ActionString => "Edit terrain splatmap";
 
         /// <inheritdoc />
         protected override IntPtr GetData(ref Int2 patchCoord)
         {
-            return TerrainTools.GetVisibilityMapData(_terrain, ref patchCoord);
+            return TerrainTools.GetSplatMapData(_terrain, ref patchCoord);
         }
 
         /// <inheritdoc />
@@ -35,8 +35,8 @@ namespace FlaxEditor.Tools.Terrain.Undo
         {
             var offset = Int2.Zero;
             var size = new Int2((int)Mathf.Sqrt(_heightmapLength));
-            if (TerrainTools.ModifyVisibilityMap(_terrain, ref patchCoord, data, ref offset, ref size))
-                throw new FlaxException("Failed to modify the visibility map.");
+            //if (TerrainTools.ModifyHeightMap(_terrain, ref patchCoord, data, ref offset, ref size))
+            throw new FlaxException("Failed to modify the splatmap.");
         }
     }
 }

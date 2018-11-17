@@ -426,7 +426,11 @@
     <Compile Include="Tools\Terrain\EditTab.cs" />
     <Compile Include="Tools\Terrain\EditTerrainGizmo.cs" />
     <Compile Include="Tools\Terrain\EditTerrainGizmoMode.cs" />
+    <Compile Include="Tools\Terrain\PaintTab.cs" />
+    <Compile Include="Tools\Terrain\PaintTerrainGizmo.cs" />
     <Compile Include="Tools\Terrain\PaintTerrainGizmoMode.cs" />
+    <Compile Include="Tools\Terrain\Paint\Mode.cs" />
+    <Compile Include="Tools\Terrain\Paint\SingleLayerMode.cs" />
     <Compile Include="Tools\Terrain\SculptTab.cs" />
     <Compile Include="Tools\Terrain\SculptTerrainGizmo.cs" />
     <Compile Include="Tools\Terrain\SculptTerrainGizmoMode.cs" />
@@ -438,6 +442,7 @@
     <Compile Include="Tools\Terrain\Sculpt\SmoothMode.cs" />
     <Compile Include="Tools\Terrain\Undo\EditTerrainHeightMapAction.cs" />
     <Compile Include="Tools\Terrain\Undo\EditTerrainMapAction.cs" />
+    <Compile Include="Tools\Terrain\Undo\EditTerrainSplatMapAction.cs" />
     <Compile Include="Tools\Terrain\Undo\EditTerrainVisibilityMapAction.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
     <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />

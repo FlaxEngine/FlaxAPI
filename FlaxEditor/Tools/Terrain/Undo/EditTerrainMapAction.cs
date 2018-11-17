@@ -47,14 +47,15 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// </summary>
         /// <remarks>Use <see cref="AddPatch"/> to mark new patches to record and <see cref="OnEditingEnd"/> to finalize patches data after editing action.</remarks>
         /// <param name="terrain">The terrain.</param>
-        protected EditTerrainMapAction(FlaxEngine.Terrain terrain)
+        /// <param name="stride">The data stride (eg. sizeof(float)).</param>
+        protected EditTerrainMapAction(FlaxEngine.Terrain terrain, int stride)
         {
             _terrain = terrain;
             _patches = new List<PatchData>(4);
             var chunkSize = terrain.ChunkSize;
             var heightmapSize = chunkSize * FlaxEngine.Terrain.PatchEdgeChunksCount + 1;
             _heightmapLength = heightmapSize * heightmapSize;
-            _heightmapDataSize = _heightmapLength * sizeof(float);
+            _heightmapDataSize = _heightmapLength * stride;
         }
 
         /// <summary>

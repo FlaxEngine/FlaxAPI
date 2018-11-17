@@ -4,10 +4,10 @@ using System;
 using FlaxEditor.Tools.Terrain.Brushes;
 using FlaxEngine;
 
-namespace FlaxEditor.Tools.Terrain.Sculpt
+namespace FlaxEditor.Tools.Terrain.Paint
 {
     /// <summary>
-    /// The base class for terran sculpt tool modes.
+    /// The base class for terran paint tool modes.
     /// </summary>
     public abstract class Mode
     {
@@ -33,20 +33,15 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         }
 
         /// <summary>
-        /// The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.
+        /// The tool strength (normalized to range 0-1). Defines the intensity of the paint operation to make it stronger or mre subtle.
         /// </summary>
-        [EditorOrder(0), Limit(0, 6, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the sculpt operation to make it stronger or mre subtle.")]
-        public float Strength = 1.2f;
+        [EditorOrder(0), Limit(0, 1, 0.01f), Tooltip("The tool strength (normalized to range 0-1). Defines the intensity of the paint operation to make it stronger or mre subtle.")]
+        public float Strength = 1.0f;
 
         /// <summary>
         /// Gets a value indicating whether this mode supports negative apply for terrain modification.
         /// </summary>
         public virtual bool SupportsNegativeApply => false;
-
-        /// <summary>
-        /// Gets a value indicating whether this mode modifies the terrain visibility mask rather than heightmap.
-        /// </summary>
-        public virtual bool EditsVisibilityMap => false;
 
         /// <summary>
         /// Applies the modification to the terrain.
@@ -55,7 +50,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         /// <param name="options">The options.</param>
         /// <param name="gizmo">The gizmo.</param>
         /// <param name="terrain">The terrain.</param>
-        public unsafe void Apply(Brush brush, ref Options options, SculptTerrainGizmoMode gizmo, FlaxEngine.Terrain terrain)
+        public unsafe void Apply(Brush brush, ref Options options, PaintTerrainGizmoMode gizmo, FlaxEngine.Terrain terrain)
         {
             // Combine final apply strength
             float strength = Strength * options.Strength * options.DeltaTime;
@@ -69,7 +64,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             var heightmapSize = chunkSize * FlaxEngine.Terrain.PatchEdgeChunksCount + 1;
             var heightmapLength = heightmapSize * heightmapSize;
             var patchSize = chunkSize * FlaxEngine.Terrain.UnitsPerVertex * FlaxEngine.Terrain.PatchEdgeChunksCount;
-            var tempBuffer = (float*)gizmo.GetHeightmapTempBuffer(heightmapLength * sizeof(float)).ToPointer();
+            var tempBuffer = (Color32*)gizmo.GetSplatmapTempBuffer(heightmapLength * Color32.SizeInBytes).ToPointer();
             var unitsPerVertexInv = 1.0f / FlaxEngine.Terrain.UnitsPerVertex;
             ApplyParams p = new ApplyParams
             {
@@ -125,12 +120,12 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                     continue;
 
                 // Get the patch data (cached internally by the c++ core in editor)
-                var sourceDataPtr = EditsVisibilityMap ? TerrainTools.GetVisibilityMapData(terrain, ref patch.PatchCoord) : TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord);
+                var sourceDataPtr = TerrainTools.GetSplatMapData(terrain, ref patch.PatchCoord);
                 if (sourceDataPtr == IntPtr.Zero)
                 {
-                    throw new FlaxException("Cannot modify terrain. Loading heightmap failed. See log for more info.");
+                    throw new FlaxException("Cannot modify terrain. Loading splatmap failed. See log for more info.");
                 }
-                var sourceData = (float*)sourceDataPtr.ToPointer();
+                var sourceData = (Color32*)sourceDataPtr.ToPointer();
 
                 // Record patch data before editing it
                 if (!gizmo.CurrentEditUndoAction.HashPatch(ref patch.PatchCoord))
@@ -166,7 +161,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             /// <summary>
             /// The gizmo.
             /// </summary>
-            public SculptTerrainGizmoMode Gizmo;
+            public PaintTerrainGizmoMode Gizmo;
 
             /// <summary>
             /// The terrain.
@@ -196,12 +191,12 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             /// <summary>
             /// The temporary data buffer (for modified data).
             /// </summary>
-            public float* TempBuffer;
+            public Color32* TempBuffer;
 
             /// <summary>
             /// The source data buffer.
             /// </summary>
-            public float* SourceData;
+            public Color32* SourceData;
 
             /// <summary>
             /// The heightmap size (edge).

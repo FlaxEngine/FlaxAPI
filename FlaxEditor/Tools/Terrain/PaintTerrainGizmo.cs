@@ -1,21 +1,20 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Runtime.InteropServices;
 using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
-using FlaxEditor.Tools.Terrain.Sculpt;
+using FlaxEditor.Tools.Terrain.Paint;
 using FlaxEngine;
 using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Terrain
 {
     /// <summary>
-    /// Gizmo for carving terrain. Managed by the <see cref="SculptTerrainGizmoMode"/>.
+    /// Gizmo for painting terrain. Managed by the <see cref="PaintTerrainGizmoMode"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Gizmo.GizmoBase" />
-    public sealed class SculptTerrainGizmo : GizmoBase
+    public sealed class PaintTerrainGizmo : GizmoBase
     {
         private FlaxEngine.Terrain _paintTerrain;
         private Ray _prevRay;
@@ -23,10 +22,10 @@ namespace FlaxEditor.Tools.Terrain
         /// <summary>
         /// The parent mode.
         /// </summary>
-        public readonly SculptTerrainGizmoMode Mode;
+        public readonly PaintTerrainGizmoMode Mode;
 
         /// <summary>
-        /// Gets a value indicating whether gizmo tool is painting the terrain heightmap.
+        /// Gets a value indicating whether gizmo tool is painting the terrain splatmap.
         /// </summary>
         public bool IsPainting => _paintTerrain != null;
 
@@ -41,11 +40,11 @@ namespace FlaxEditor.Tools.Terrain
         public event Action PaintEnded;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SculptTerrainGizmo"/> class.
+        /// Initializes a new instance of the <see cref="PaintTerrainGizmo"/> class.
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="mode">The mode.</param>
-        public SculptTerrainGizmo(IGizmoOwner owner, SculptTerrainGizmoMode mode)
+        public PaintTerrainGizmo(IGizmoOwner owner, PaintTerrainGizmoMode mode)
         : base(owner)
         {
             Mode = mode;
@@ -114,7 +113,7 @@ namespace FlaxEditor.Tools.Terrain
                 return;
 
             // Edit the terrain
-            Profiler.BeginEvent("Edit Terrain");
+            Profiler.BeginEvent("Paint Terrain");
             var options = new Mode.Options
             {
                 Strength = 1.0f,

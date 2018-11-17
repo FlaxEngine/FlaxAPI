@@ -197,6 +197,25 @@ namespace FlaxEditor
         }
 
         /// <summary>
+        /// Gets the raw pointer to the splatmap data (cached internally by the c++ core in editor).
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="patchCoord">The patch coordinates (x and z) to gather it.</param>
+        /// <returns>The pointer to the array of Color32 with terrain patch packed splatmap data. Null if failed to gather the data.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static IntPtr GetSplatMapData(Terrain terrain, ref Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetSplatMapData(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+#endif
+        }
+
+        /// <summary>
         /// Generates the terrain from the input heightmap and splat maps.
         /// </summary>
         /// <param name="terrain">The terrain.</param>
@@ -249,6 +268,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Internal_GetVisibilityMapData(IntPtr terrain, ref Int2 patchCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern IntPtr Internal_GetSplatMapData(IntPtr terrain, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GenerateTerrain(IntPtr terrain, ref Int2 numberOfPatches, TerrainHeightmapFormat format, IntPtr heightmap, float heightmapScale, IntPtr splatmap1, IntPtr splatmap2);
