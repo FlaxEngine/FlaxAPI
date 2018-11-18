@@ -50,7 +50,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Occurs when main editor window is being closed.
         /// </summary>
-        public event Action OnMainWindowClosing;
+        public event Action MainWindowClosing;
 
         /// <summary>
         /// The content window.
@@ -727,7 +727,7 @@ namespace FlaxEditor.Modules
                 }
             }
 
-            OnMainWindowClosing?.Invoke();
+            MainWindowClosing?.Invoke();
         }
 
         private void MainWindow_OnClosed()

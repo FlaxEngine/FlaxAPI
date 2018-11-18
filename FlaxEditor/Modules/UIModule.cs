@@ -245,7 +245,7 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
-            Editor.Windows.OnMainWindowClosing += OnOnMainWindowClosing;
+            Editor.Windows.MainWindowClosing += OnMainWindowClosing;
             var mainWindow = Editor.Windows.MainWindow.GUI;
 
             // Update window background
@@ -440,7 +440,7 @@ namespace FlaxEditor.Modules
             cm.AddSeparator();
             cm.AddButton("Profiler", Editor.Windows.ProfilerWin.FocusOrShow);
             cm.AddSeparator();
-            _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefualt);
+            _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefault);
             cm.AddButton("Take screenshot!", "F12", Editor.Windows.TakeScreenshot);
             cm.AddSeparator();
             cm.AddButton("Plugin Exporter", PluginExporterDialog.ShowIt);
@@ -750,7 +750,7 @@ namespace FlaxEditor.Modules
             Editor.Scene.MarkSceneEdited(scenes);
         }
 
-        private void SetTheCurrentSceneViewAsDefualt()
+        private void SetTheCurrentSceneViewAsDefault()
         {
             var projectInfo = Editor.ProjectInfo;
             projectInfo.DefaultSceneId = SceneManager.Scenes[0].ID;
@@ -758,7 +758,7 @@ namespace FlaxEditor.Modules
             projectInfo.Save();
         }
 
-        private void OnOnMainWindowClosing()
+        private void OnMainWindowClosing()
         {
             // Clear UI references (GUI cannot be used after window closing)
             MainMenu = null;
