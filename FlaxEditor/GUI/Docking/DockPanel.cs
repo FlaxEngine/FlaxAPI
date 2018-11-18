@@ -607,6 +607,15 @@ namespace FlaxEditor.GUI.Docking
             _parentPanel?._childPanels.Remove(this);
 
             base.OnDestroy();
+
+            // Clear other tabs (not in the view)
+            for (int i = 0; i < _tabs.Count; i++)
+            {
+                if (!_tabs[i].IsDisposing)
+                {
+                    _tabs[i].Dispose();
+                }
+            }
         }
     }
 }
