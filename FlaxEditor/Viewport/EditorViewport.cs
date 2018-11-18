@@ -439,7 +439,7 @@ namespace FlaxEditor.Viewport
                 // Far Plane
                 {
                     var farPlane = ViewWidgetButtonMenu.AddButton("Far Plane");
-                    var farPlaneValue = new FloatValueBox(1000, 75, 2, 50.0f, 10.0f, 100000.0f);
+                    var farPlaneValue = new FloatValueBox(1000, 75, 2, 50.0f, 10.0f, 200000.0f);
                     farPlaneValue.Parent = farPlane;
                     farPlaneValue.ValueChanged += () => _farPlane = farPlaneValue.Value;
                     ViewWidgetButtonMenu.VisibleChanged += control => farPlaneValue.Value = _farPlane;
