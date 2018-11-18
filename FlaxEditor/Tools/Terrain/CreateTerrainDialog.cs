@@ -78,6 +78,10 @@ namespace FlaxEditor.Tools.Terrain
         }
 
         private readonly Options _options = new Options();
+        private bool _isDone;
+        private bool _isWorking;
+        private FlaxEngine.Terrain _terrain;
+        private CustomEditorPresenter _editor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateTerrainDialog"/> class.
@@ -130,6 +134,7 @@ namespace FlaxEditor.Tools.Terrain
             settingsEditor.Panel.Size = new Vector2(TotalWidth, EditorHeight);
             settingsEditor.Panel.DockStyle = DockStyle.Fill;
             settingsEditor.Panel.Parent = this;
+            _editor = settingsEditor;
 
             Size = new Vector2(TotalWidth, settingsEditor.Panel.Bottom);
 
@@ -138,7 +143,8 @@ namespace FlaxEditor.Tools.Terrain
 
         private void OnCreate()
         {
-            Close(DialogResult.OK);
+            if (_isWorking)
+                return;
 
             var scene = SceneManager.GetScene(0);
             if (scene == null)
@@ -157,21 +163,79 @@ namespace FlaxEditor.Tools.Terrain
             terrain.Parent = scene;
             Editor.Instance.Scene.MarkSceneEdited(scene);
 
+            // Show loading label
+            var label = new Label
+            {
+                DockStyle = DockStyle.Fill,
+                Text = "Generating terrain...",
+                BackgroundColor = Color.Black * 0.6f,
+                Parent = this,
+            };
+
+            // Lock UI
+            _editor.Panel.Enabled = false;
+            _isWorking = true;
+            _isDone = false;
+
+            // Start async work
+            _terrain = terrain;
+            var thread = new System.Threading.Thread(Generate);
+            thread.Name = "Terrain Generator";
+            thread.Start();
+        }
+
+        private void Generate()
+        {
+            _isWorking = true;
+            _isDone = false;
+
             // Call tool to generate the terrain patches from the input data
-            if (TerrainTools.GenerateTerrain(terrain, ref _options.NumberOfPatches, _options.Format, _options.Heightmap, _options.HeightmapScale, _options.Splatmap1, _options.Splatmap2))
+            if (TerrainTools.GenerateTerrain(_terrain, ref _options.NumberOfPatches, _options.Format, _options.Heightmap, _options.HeightmapScale, _options.Splatmap1, _options.Splatmap2))
             {
                 Editor.LogError("Failed to generate terrain. See log for more info.");
             }
+
+            _isWorking = false;
+            _isDone = true;
         }
 
         private void OnCancel()
         {
+            if (_isWorking)
+                return;
+
             Close(DialogResult.Cancel);
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            if (_isDone)
+            {
+                _terrain = null;
+                _isDone = false;
+                Close(DialogResult.OK);
+                return;
+            }
+
+            base.Update(deltaTime);
+        }
+
+        /// <inheritdoc />
+        protected override bool CanCloseWindow(ClosingReason reason)
+        {
+            if (_isWorking && reason == ClosingReason.User)
+                return false;
+
+            return base.CanCloseWindow(reason);
         }
 
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
+            if (_isWorking)
+                return true;
+
             switch (key)
             {
             case Keys.Escape:
