@@ -198,6 +198,7 @@ namespace FlaxEngine.Rendering
         static RenderTarget()
         {
             Scripting.Update += Update;
+            Scripting.Exit += Exit;
         }
 
         private static void Update()
@@ -215,6 +216,25 @@ namespace FlaxEngine.Rendering
                     Pool.RemoveAt(i);
                 }
             }
+
+            Profiler.EndEvent();
+        }
+
+        private static void Exit()
+        {
+            Profiler.BeginEvent("RenderTarget.Exit");
+
+            // Cleanup render targets
+            for (int i = 0; i < Pool.Count; i++)
+            {
+                if (!Pool[i].IsFree)
+                {
+                    Debug.LogError("Render Target Pool item is still in use while engine is exiting.");
+                }
+
+                Destroy(Pool[i].Texture);
+            }
+            Pool.Clear();
 
             Profiler.EndEvent();
         }

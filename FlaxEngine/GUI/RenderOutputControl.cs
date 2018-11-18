@@ -208,10 +208,14 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            if (IsDisposing)
+                return;
+
             // Cleanup
             _task?.Dispose();
             Object.Destroy(ref _backBuffer);
             Object.Destroy(ref _backBufferOld);
+            Object.Destroy(ref _task);
 
             base.OnDestroy();
         }
