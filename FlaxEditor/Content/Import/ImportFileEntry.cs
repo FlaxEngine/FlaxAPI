@@ -113,6 +113,7 @@ namespace FlaxEditor.Content.Import
             FileTypes["jpg"] = ImportTexture;
             FileTypes["dds"] = ImportTexture;
             FileTypes["hdr"] = ImportTexture;
+            FileTypes["raw"] = ImportTexture;
 
             // Models
             FileTypes["obj"] = ImportModel;

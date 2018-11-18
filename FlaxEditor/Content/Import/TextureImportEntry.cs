@@ -370,9 +370,14 @@ namespace FlaxEditor.Content.Import
         : base(ref request)
         {
             // Try to guess format type based on file name
-            var shortName = System.IO.Path.GetFileNameWithoutExtension(SourceUrl);
-            string snl = shortName.ToLower();
-            if (_settings.Type != TextureImportSettings.CustomTextureFormatType.ColorRGB)
+            var snl = System.IO.Path.GetFileNameWithoutExtension(SourceUrl).ToLower();
+            var extension = System.IO.Path.GetExtension(SourceUrl).ToLower();
+            if (SourceUrl.EndsWith(".raw"))
+            {
+                // Raw image data
+                _settings.Type = TextureImportSettings.CustomTextureFormatType.GrayScale;
+            }
+            else if (_settings.Type != TextureImportSettings.CustomTextureFormatType.ColorRGB)
             {
                 // Skip checking
             }
