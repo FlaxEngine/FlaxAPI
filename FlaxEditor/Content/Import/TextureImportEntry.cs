@@ -342,7 +342,7 @@ namespace FlaxEditor.Content.Import
             Resize = options.Resize != 0;
             Scale = options.Scale;
             MaxSize = ConvertMaxSize(options.MaxSize);
-            Size = Size;
+            Size = options.Size;
             if (options.SpriteAreas != null)
             {
                 int spritesCount = options.SpriteAreas.Length;
@@ -390,7 +390,7 @@ namespace FlaxEditor.Content.Import
             // Try to guess format type based on file name
             var snl = System.IO.Path.GetFileNameWithoutExtension(SourceUrl).ToLower();
             var extension = System.IO.Path.GetExtension(SourceUrl).ToLower();
-            if (SourceUrl.EndsWith(".raw"))
+            if (extension == ".raw")
             {
                 // Raw image data
                 _settings.Type = TextureImportSettings.CustomTextureFormatType.GrayScale;
