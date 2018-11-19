@@ -258,6 +258,18 @@ namespace FlaxEditor.Content.Import
         public CustomMaxSizeType MaxSize { get; set; } = CustomMaxSizeType._8192;
 
         /// <summary>
+        /// True if resize texture on import. Use Size property to define texture width and height. Texture scale property will be ignored.
+        /// </summary>
+        [EditorOrder(90), DefaultValue(false), Tooltip("True if resize texture on import. Use Size property to define texture width and height. Texture scale property will be ignored.")]
+        public bool Resize { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets the size of the imported texture. If Resize property is set to true then texture will be resized during the import to this value. Otherwise it will be ignored.
+        /// </summary>
+        [EditorOrder(100), VisibleIf("Resize"), DefaultValue(typeof(Int2), "1024,1024"), Tooltip("The size of the imported texture. If Resize property is set to true then texture will be resized during the import to this value. Otherwise it will be ignored.")]
+        public Int2 Size { get; set; } = new Int2(1024, 1024);
+
+        /// <summary>
         /// The sprites. Used to keep created sprites on sprite atlas reimport.
         /// </summary>
         [HideInEditor]
@@ -274,8 +286,10 @@ namespace FlaxEditor.Content.Import
             public byte IsSRGB;
             public byte GenerateMipMaps;
             public byte FlipY;
+            public byte Resize;
             public float Scale;
             public int MaxSize;
+            public Int2 Size;
             public Rectangle[] SpriteAreas;
             public string[] SpriteNames;
         }
@@ -292,7 +306,9 @@ namespace FlaxEditor.Content.Import
                 IsSRGB = (byte)(IsSRGB ? 1 : 0),
                 GenerateMipMaps = (byte)(GenerateMipMaps ? 1 : 0),
                 FlipY = (byte)(FlipY ? 1 : 0),
+                Resize = (byte)(Resize ? 1 : 0),
                 Scale = Scale,
+                Size = Size,
                 MaxSize = (int)MaxSize
             };
             if (Sprites != null && Sprites.Count > 0)
@@ -323,8 +339,10 @@ namespace FlaxEditor.Content.Import
             IsSRGB = options.IsSRGB != 0;
             GenerateMipMaps = options.GenerateMipMaps != 0;
             FlipY = options.FlipY != 0;
+            Resize = options.Resize != 0;
             Scale = options.Scale;
             MaxSize = ConvertMaxSize(options.MaxSize);
+            Size = Size;
             if (options.SpriteAreas != null)
             {
                 int spritesCount = options.SpriteAreas.Length;
