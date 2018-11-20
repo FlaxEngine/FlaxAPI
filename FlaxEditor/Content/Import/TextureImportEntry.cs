@@ -392,8 +392,9 @@ namespace FlaxEditor.Content.Import
             var extension = System.IO.Path.GetExtension(SourceUrl).ToLower();
             if (extension == ".raw")
             {
-                // Raw image data
-                _settings.Type = TextureImportSettings.CustomTextureFormatType.GrayScale;
+                // Raw image data in 16bit gray-scale, preserve the quality
+                _settings.Type = TextureImportSettings.CustomTextureFormatType.HdrRGBA;
+                _settings.Compress = false;
             }
             else if (_settings.Type != TextureImportSettings.CustomTextureFormatType.ColorRGB)
             {
