@@ -24,7 +24,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             if (p.Options.Invert)
             {
                 var center = p.ModifiedOffset + p.ModifiedSize / 2;
-                TargetHeight = p.SourceData[center.Y * p.HeightmapSize + center.X];
+                TargetHeight = p.SourceHeightMap[center.Y * p.HeightmapSize + center.X];
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 for (int x = 0; x < p.ModifiedSize.X; x++)
                 {
                     var xx = x + p.ModifiedOffset.X;
-                    var sourceHeight = p.SourceData[zz * p.HeightmapSize + xx];
+                    var sourceHeight = p.SourceHeightMap[zz * p.HeightmapSize + xx];
 
                     var samplePositionLocal = p.PatchPositionLocal + new Vector3(xx * FlaxEngine.Terrain.UnitsPerVertex, sourceHeight, zz * FlaxEngine.Terrain.UnitsPerVertex);
                     Vector3.Transform(ref samplePositionLocal, ref p.TerrainWorld, out Vector3 samplePositionWorld);

@@ -15,7 +15,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         public override bool SupportsNegativeApply => true;
 
         /// <inheritdoc />
-        public override bool EditsVisibilityMap => true;
+        public override bool EditHoles => true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HolesMode"/> class.
@@ -28,8 +28,9 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         /// <inheritdoc />
         public override unsafe void Apply(ref ApplyParams p)
         {
-            var strength = p.Strength * -1.0f;
+            var strength = p.Strength * -10.0f;
             var brushPosition = p.Gizmo.CursorPosition;
+            var tempBuffer = (byte*)p.TempBuffer;
 
             // Apply brush modification
             Profiler.BeginEvent("Apply Brush");
@@ -39,7 +40,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 for (int x = 0; x < p.ModifiedSize.X; x++)
                 {
                     var xx = x + p.ModifiedOffset.X;
-                    var sourceVisibility = p.SourceData[zz * p.HeightmapSize + xx];
+                    var sourceMask = p.SourceHolesMask[zz * p.HeightmapSize + xx] != 0 ? 1.0f : 0.0f;
 
                     var samplePositionLocal = p.PatchPositionLocal + new Vector3(xx * FlaxEngine.Terrain.UnitsPerVertex, 0, zz * FlaxEngine.Terrain.UnitsPerVertex);
                     Vector3.Transform(ref samplePositionLocal, ref p.TerrainWorld, out Vector3 samplePositionWorld);
@@ -47,14 +48,13 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
 
                     var paintAmount = p.Brush.Sample(ref brushPosition, ref samplePositionWorld);
 
-                    // Note: C++ core performs visibility samples clamping during data update (visibility range is 0-1)
-                    p.TempBuffer[z * p.ModifiedSize.X + x] = sourceVisibility + paintAmount * strength;
+                    tempBuffer[z * p.ModifiedSize.X + x] = (byte)((sourceMask + paintAmount * strength) < 0.8f ? 0 : 255);
                 }
             }
             Profiler.EndEvent();
 
             // Update terrain patch
-            TerrainTools.ModifyVisibilityMap(p.Terrain, ref p.PatchCoord, new IntPtr(p.TempBuffer), ref p.ModifiedOffset, ref p.ModifiedSize);
+            TerrainTools.ModifyHolesMask(p.Terrain, ref p.PatchCoord, new IntPtr(p.TempBuffer), ref p.ModifiedOffset, ref p.ModifiedSize);
         }
     }
 }

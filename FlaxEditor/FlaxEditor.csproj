@@ -443,7 +443,7 @@
     <Compile Include="Tools\Terrain\Undo\EditTerrainHeightMapAction.cs" />
     <Compile Include="Tools\Terrain\Undo\EditTerrainMapAction.cs" />
     <Compile Include="Tools\Terrain\Undo\EditTerrainSplatMapAction.cs" />
-    <Compile Include="Tools\Terrain\Undo\EditTerrainVisibilityMapAction.cs" />
+    <Compile Include="Tools\Terrain\Undo\EditTerrainHolesMapAction.cs" />
     <Compile Include="Undo\Actions\AddRemoveScriptAction.cs" />
     <Compile Include="Undo\Actions\BreakPrefabLinkAction.cs" />
     <Compile Include="Undo\Actions\ChangeScriptAction.cs" />

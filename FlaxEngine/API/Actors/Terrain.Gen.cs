@@ -149,21 +149,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the terrain holes threshold value. Uses terrain vertices visibility mask to create holes where visibility is lower than the given threshold. Value equal 0 disables holes feature..
-        /// </summary>
-        [UnmanagedCall]
-        [EditorOrder(510), Limit(0, 1, 0.01f), EditorDisplay("Collision"), Tooltip("Terrain holes threshold value. Uses terrain vertices visibility mask to create holes where visibility is lower than the given threshold. Value equal 0 disables holes feature.")]
-        public float HolesThreshold
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_GetHolesThreshold(unmanagedPtr); }
-            set { Internal_SetHolesThreshold(unmanagedPtr, value); }
-#endif
-        }
-
-        /// <summary>
         /// Gets or sets the default physical material used to define the terrain collider physical properties.
         /// </summary>
         [UnmanagedCall]
@@ -386,12 +371,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetCollisionLOD(IntPtr obj, int val);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetHolesThreshold(IntPtr obj);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetHolesThreshold(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern JsonAsset Internal_GetPhysicalMaterial(IntPtr obj);

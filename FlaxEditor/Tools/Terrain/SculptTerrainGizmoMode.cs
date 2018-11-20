@@ -351,8 +351,8 @@ namespace FlaxEditor.Tools.Terrain
                 throw new InvalidOperationException("Terrain paint start/end resynchronization.");
 
             var terrain = SelectedTerrain;
-            if (CurrentMode.EditsVisibilityMap)
-                _activeAction = new EditTerrainVisibilityMapAction(terrain);
+            if (CurrentMode.EditHoles)
+                _activeAction = new EditTerrainHolesMapAction(terrain);
             else
                 _activeAction = new EditTerrainHeightMapAction(terrain);
         }

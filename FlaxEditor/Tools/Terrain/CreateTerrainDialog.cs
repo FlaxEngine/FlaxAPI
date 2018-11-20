@@ -43,17 +43,11 @@ namespace FlaxEditor.Tools.Terrain
             [EditorOrder(130), EditorDisplay("Layout"), DefaultValue(null), Tooltip("The default material used for terrain rendering (chunks can override this). It must have Domain set to terrain.")]
             public MaterialBase Material;
 
-            [EditorOrder(140), EditorDisplay("Layout"), EnumDisplay(EnumDisplayAttribute.FormatMode.None), DefaultValue(TerrainHeightmapFormat.R16G16B16A16_Raw), Tooltip("The heightmap storage format. Using lower precision may affect the quality of the terrain.")]
-            public TerrainHeightmapFormat Format = TerrainHeightmapFormat.R16G16B16A16_Raw;
-
             [EditorOrder(200), EditorDisplay("Collision"), DefaultValue(null), AssetReference(typeof(PhysicalMaterial), true), Tooltip("Terrain default physical material used to define the collider physical properties.")]
             public JsonAsset PhysicalMaterial;
 
             [EditorOrder(210), EditorDisplay("Collision", "Collision LOD"), DefaultValue(-1), Limit(-1, 100, 0.1f), Tooltip("Terrain geometry LOD index used for collision.")]
             public int CollisionLOD = -1;
-
-            [EditorOrder(220), EditorDisplay("Collision"), DefaultValue(0.3f), Limit(0, 1, 0.01f), Tooltip("Terrain holes threshold value. Uses terrain vertices visibility mask to create holes where visibility is lower than the given threshold. Value equal 0 disables holes feature.")]
-            public float HolesThreshold = 0.3f;
 
             [EditorOrder(300), EditorDisplay("Import Data"), DefaultValue(null), Tooltip("Custom heightmap texture to import. Used as a source for height field values (from channel Red).")]
             public Texture Heightmap;
@@ -157,7 +151,6 @@ namespace FlaxEditor.Tools.Terrain
             terrain.Material = _options.Material;
             terrain.PhysicalMaterial = _options.PhysicalMaterial;
             terrain.CollisionLOD = _options.CollisionLOD;
-            terrain.HolesThreshold = _options.HolesThreshold;
 
             // Add to scene (even if generation fails user gets a terrain in the scene)
             terrain.Parent = scene;
@@ -190,7 +183,7 @@ namespace FlaxEditor.Tools.Terrain
             _isDone = false;
 
             // Call tool to generate the terrain patches from the input data
-            if (TerrainTools.GenerateTerrain(_terrain, ref _options.NumberOfPatches, _options.Format, _options.Heightmap, _options.HeightmapScale, _options.Splatmap1, _options.Splatmap2))
+            if (TerrainTools.GenerateTerrain(_terrain, ref _options.NumberOfPatches, _options.Heightmap, _options.HeightmapScale, _options.Splatmap1, _options.Splatmap2))
             {
                 Editor.LogError("Failed to generate terrain. See log for more info.");
             }

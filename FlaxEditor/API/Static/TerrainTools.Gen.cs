@@ -137,24 +137,24 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        /// Modifies the terrain patch visibility map (holes mask) with the given samples.
+        /// Modifies the terrain patch holes mask with the given samples.
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="patchCoord">The patch coordinates (x and z) to modify it.</param>
-        /// <param name="samples">The samples. The array length is size.X*size.Y. It has to be type of float.</param>
-        /// <param name="offset">The offset from the first row and column of the visibility data (offset destination x and z start position).</param>
-        /// <param name="size">The size of the visibility to modify (x and z). Amount of samples in each direction.</param>
+        /// <param name="samples">The samples. The array length is size.X*size.Y. It has to be type of byte.</param>
+        /// <param name="offset">The offset from the first row and column of the mask data (offset destination x and z start position).</param>
+        /// <param name="size">The size of the mask to modify (x and z). Amount of samples in each direction.</param>
         /// <returns>True if failed, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static bool ModifyVisibilityMap(Terrain terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size)
+        public static bool ModifyHolesMask(Terrain terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ModifyVisibilityMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
+            return Internal_ModifyHolesMask(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
 #endif
         }
 
@@ -200,21 +200,21 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        /// Gets the raw pointer to the visibility mask data (cached internally by the c++ core in editor).
+        /// Gets the raw pointer to the holes mask data (cached internally by the c++ core in editor).
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="patchCoord">The patch coordinates (x and z) to gather it.</param>
-        /// <returns>The pointer to the array of floats with terrain patch visibility mask data. Null if failed to gather the data.</returns>
+        /// <returns>The pointer to the array of bytes with terrain patch holes mask data. Null if failed to gather the data.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static IntPtr GetVisibilityMapData(Terrain terrain, ref Int2 patchCoord)
+        public static IntPtr GetHolesMaskData(Terrain terrain, ref Int2 patchCoord)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GetVisibilityMapData(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+            return Internal_GetHolesMaskData(Object.GetUnmanagedPtr(terrain), ref patchCoord);
 #endif
         }
 
@@ -242,7 +242,6 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="numberOfPatches">The number of patches (X and Z axis).</param>
-        /// <param name="format">The heightmap data format. Used as a source for height field values (from channel Red). It's optional.</param>
         /// <param name="heightmap">The heightmap texture.</param>
         /// <param name="heightmapScale">The heightmap scale. Applied to adjust the normalized heightmap values into the world units.</param>
         /// <param name="splatmap1">The custom terrain splat map used as a source of the terrain layers weights. Each channel from RGBA is used as an independent layer weight for terrain layers compositing. It's optional.</param>
@@ -252,12 +251,12 @@ namespace FlaxEditor
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static bool GenerateTerrain(Terrain terrain, ref Int2 numberOfPatches, TerrainHeightmapFormat format, Texture heightmap, float heightmapScale, Texture splatmap1, Texture splatmap2)
+        public static bool GenerateTerrain(Terrain terrain, ref Int2 numberOfPatches, Texture heightmap, float heightmapScale, Texture splatmap1, Texture splatmap2)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GenerateTerrain(Object.GetUnmanagedPtr(terrain), ref numberOfPatches, format, Object.GetUnmanagedPtr(heightmap), heightmapScale, Object.GetUnmanagedPtr(splatmap1), Object.GetUnmanagedPtr(splatmap2));
+            return Internal_GenerateTerrain(Object.GetUnmanagedPtr(terrain), ref numberOfPatches, Object.GetUnmanagedPtr(heightmap), heightmapScale, Object.GetUnmanagedPtr(splatmap1), Object.GetUnmanagedPtr(splatmap2));
 #endif
         }
 
@@ -283,7 +282,7 @@ namespace FlaxEditor
         internal static extern bool Internal_ModifyHeightMap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_ModifyVisibilityMap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
+        internal static extern bool Internal_ModifyHolesMask(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ModifySplatMap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
@@ -292,13 +291,13 @@ namespace FlaxEditor
         internal static extern IntPtr Internal_GetHeightmapData(IntPtr terrain, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern IntPtr Internal_GetVisibilityMapData(IntPtr terrain, ref Int2 patchCoord);
+        internal static extern IntPtr Internal_GetHolesMaskData(IntPtr terrain, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Internal_GetSplatMapData(IntPtr terrain, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GenerateTerrain(IntPtr terrain, ref Int2 numberOfPatches, TerrainHeightmapFormat format, IntPtr heightmap, float heightmapScale, IntPtr splatmap1, IntPtr splatmap2);
+        internal static extern bool Internal_GenerateTerrain(IntPtr terrain, ref Int2 numberOfPatches, IntPtr heightmap, float heightmapScale, IntPtr splatmap1, IntPtr splatmap2);
 #endif
 
         #endregion

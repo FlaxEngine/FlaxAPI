@@ -44,9 +44,9 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
         public virtual bool SupportsNegativeApply => false;
 
         /// <summary>
-        /// Gets a value indicating whether this mode modifies the terrain visibility mask rather than heightmap.
+        /// Gets a value indicating whether this mode modifies the terrain holes mask rather than heightmap.
         /// </summary>
-        public virtual bool EditsVisibilityMap => false;
+        public virtual bool EditHoles => false;
 
         /// <summary>
         /// Applies the modification to the terrain.
@@ -125,12 +125,12 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                     continue;
 
                 // Get the patch data (cached internally by the c++ core in editor)
-                var sourceDataPtr = EditsVisibilityMap ? TerrainTools.GetVisibilityMapData(terrain, ref patch.PatchCoord) : TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord);
-                if (sourceDataPtr == IntPtr.Zero)
+                var sourceHeightsPtr = EditHoles ? IntPtr.Zero : TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord);
+                var sourceHolesPtr = EditHoles ? TerrainTools.GetHolesMaskData(terrain, ref patch.PatchCoord) : IntPtr.Zero;
+                if (sourceHeightsPtr == IntPtr.Zero && sourceHolesPtr == IntPtr.Zero)
                 {
                     throw new FlaxException("Cannot modify terrain. Loading heightmap failed. See log for more info.");
                 }
-                var sourceData = (float*)sourceDataPtr.ToPointer();
 
                 // Record patch data before editing it
                 if (!gizmo.CurrentEditUndoAction.HashPatch(ref patch.PatchCoord))
@@ -143,7 +143,8 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 p.ModifiedSize = modifiedSize;
                 p.PatchCoord = patch.PatchCoord;
                 p.PatchPositionLocal = patchPositionLocal;
-                p.SourceData = sourceData;
+                p.SourceHeightMap = (float*)sourceHeightsPtr.ToPointer();
+                p.SourceHolesMask = (byte*)sourceHolesPtr.ToPointer();
                 Apply(ref p);
             }
         }
@@ -194,14 +195,19 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             public float Strength;
 
             /// <summary>
-            /// The temporary data buffer (for modified data).
+            /// The temporary data buffer (for modified data). Has size of array of floats that has size of heightmap length.
             /// </summary>
             public float* TempBuffer;
 
             /// <summary>
-            /// The source data buffer.
+            /// The source heightmap data buffer. May be null if modified is holes mask.
             /// </summary>
-            public float* SourceData;
+            public float* SourceHeightMap;
+
+            /// <summary>
+            /// The source holes mask data buffer. May be null if modified is.
+            /// </summary>
+            public byte* SourceHolesMask;
 
             /// <summary>
             /// The heightmap size (edge).
