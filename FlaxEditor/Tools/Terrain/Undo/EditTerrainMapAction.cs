@@ -18,6 +18,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
             public Int2 PatchCoord;
             public IntPtr Before;
             public IntPtr After;
+            public object Tag;
         }
 
         /// <summary>
@@ -77,16 +78,18 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// Adds the patch to the action and records its current state.
         /// </summary>
         /// <param name="patchCoord">The patch coordinates.</param>
-        public void AddPatch(ref Int2 patchCoord)
+        /// <param name="tag">The custom argument (per patch).</param>
+        public void AddPatch(ref Int2 patchCoord, object tag = null)
         {
             var data = Marshal.AllocHGlobal(_heightmapDataSize);
-            var source = GetData(ref patchCoord);
+            var source = GetData(ref patchCoord, tag);
             Utils.MemoryCopy(source, data, _heightmapDataSize);
             _patches.Add(new PatchData
             {
                 PatchCoord = patchCoord,
                 Before = data,
-                After = IntPtr.Zero
+                After = IntPtr.Zero,
+                Tag = tag,
             });
         }
 
@@ -105,7 +108,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
                     throw new InvalidOperationException("Invalid terrain edit undo action usage.");
 
                 var data = Marshal.AllocHGlobal(_heightmapDataSize);
-                var source = GetData(ref patch.PatchCoord);
+                var source = GetData(ref patch.PatchCoord, patch.Tag);
                 Utils.MemoryCopy(source, data, _heightmapDataSize);
                 patch.After = data;
                 _patches[i] = patch;
@@ -147,7 +150,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
             {
                 var patch = _patches[i];
                 var data = dataGetter(patch);
-                SetData(ref patch.PatchCoord, data);
+                SetData(ref patch.PatchCoord, data, patch.Tag);
             }
 
             Editor.Instance.Scene.MarkSceneEdited(_terrain.Scene);
@@ -157,14 +160,16 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// Gets the patch data.
         /// </summary>
         /// <param name="patchCoord">The patch coordinates.</param>
+        /// <param name="tag">The custom argument (per patch).</param>
         /// <returns>The data buffer (pointer to unmanaged memory).</returns>
-        protected abstract IntPtr GetData(ref Int2 patchCoord);
+        protected abstract IntPtr GetData(ref Int2 patchCoord, object tag);
 
         /// <summary>
         /// Sets the patch data.
         /// </summary>
         /// <param name="patchCoord">The patch coordinates.</param>
         /// <param name="data">The patch data.</param>
-        protected abstract void SetData(ref Int2 patchCoord, IntPtr data);
+        /// <param name="tag">The custom argument (per patch).</param>
+        protected abstract void SetData(ref Int2 patchCoord, IntPtr data, object tag);
     }
 }

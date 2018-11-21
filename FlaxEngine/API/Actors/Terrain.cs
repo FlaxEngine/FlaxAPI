@@ -28,6 +28,11 @@ namespace FlaxEngine
         public const int PatchEdgeChunksCount = 4;
 
         /// <summary>
+        /// The terrain splatmaps amount limit. Each splatmap can hold up to 4 layer weights.
+        /// </summary>
+        public const int MaxSplatmapsCount = 2;
+
+        /// <summary>
         /// Adds the patch.
         /// </summary>
         /// <param name="patchX">The patch X location (coordinate).</param>

@@ -44,6 +44,11 @@ namespace FlaxEditor.Tools.Terrain.Paint
         public virtual bool SupportsNegativeApply => false;
 
         /// <summary>
+        /// Gets the index of the active splatmap texture to modify by the tool. It must be equal or higher than zero bu less than <see cref="FlaxEngine.Terrain.MaxSplatmapsCount"/>.
+        /// </summary>
+        public abstract int ActiveSplatmapIndex { get; }
+
+        /// <summary>
         /// Applies the modification to the terrain.
         /// </summary>
         /// <param name="brush">The brush.</param>
@@ -60,6 +65,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
                 strength *= -1;
 
             // Prepare
+            var splatmapIndex = ActiveSplatmapIndex;
             var chunkSize = terrain.ChunkSize;
             var heightmapSize = chunkSize * FlaxEngine.Terrain.PatchEdgeChunksCount + 1;
             var heightmapLength = heightmapSize * heightmapSize;
@@ -73,6 +79,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
                 Gizmo = gizmo,
                 Options = options,
                 Strength = strength,
+                SplatmapIndex = splatmapIndex,
                 HeightmapSize = heightmapSize,
                 TempBuffer = tempBuffer,
             };
@@ -120,7 +127,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
                     continue;
 
                 // Get the patch data (cached internally by the c++ core in editor)
-                var sourceDataPtr = TerrainTools.GetSplatMapData(terrain, ref patch.PatchCoord);
+                var sourceDataPtr = TerrainTools.GetSplatMapData(terrain, ref patch.PatchCoord, splatmapIndex);
                 if (sourceDataPtr == IntPtr.Zero)
                 {
                     throw new FlaxException("Cannot modify terrain. Loading splatmap failed. See log for more info.");
@@ -130,7 +137,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
                 // Record patch data before editing it
                 if (!gizmo.CurrentEditUndoAction.HashPatch(ref patch.PatchCoord))
                 {
-                    gizmo.CurrentEditUndoAction.AddPatch(ref patch.PatchCoord);
+                    gizmo.CurrentEditUndoAction.AddPatch(ref patch.PatchCoord, splatmapIndex);
                 }
 
                 // Apply modification
@@ -187,6 +194,11 @@ namespace FlaxEditor.Tools.Terrain.Paint
             /// The final calculated strength of the effect to apply (can be negative for inverted terrain modification if <see cref="SupportsNegativeApply"/> is set).
             /// </summary>
             public float Strength;
+
+            /// <summary>
+            /// The splatmap texture index.
+            /// </summary>
+            public int SplatmapIndex;
 
             /// <summary>
             /// The temporary data buffer (for modified data).

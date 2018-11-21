@@ -163,6 +163,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="patchCoord">The patch coordinates (x and z) to modify it.</param>
+        /// <param name="index">The zero-based splatmap texture index.</param>
         /// <param name="samples">The samples. The array length is size.X*size.Y. It has to be type of <see cref="Color32"/>.</param>
         /// <param name="offset">The offset from the first row and column of the splatmap data (offset destination x and z start position).</param>
         /// <param name="size">The size of the splatmap to modify (x and z). Amount of samples in each direction.</param>
@@ -171,12 +172,12 @@ namespace FlaxEditor
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static bool ModifySplatMap(Terrain terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size)
+        public static bool ModifySplatMap(Terrain terrain, ref Int2 patchCoord, int index, IntPtr samples, ref Int2 offset, ref Int2 size)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ModifySplatMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
+            return Internal_ModifySplatMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, index, samples, ref offset, ref size);
 #endif
         }
 
@@ -223,17 +224,18 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="terrain">The terrain.</param>
         /// <param name="patchCoord">The patch coordinates (x and z) to gather it.</param>
+        /// <param name="index">The zero-based splatmap texture index.</param>
         /// <returns>The pointer to the array of Color32 with terrain patch packed splatmap data. Null if failed to gather the data.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static IntPtr GetSplatMapData(Terrain terrain, ref Int2 patchCoord)
+        public static IntPtr GetSplatMapData(Terrain terrain, ref Int2 patchCoord, int index)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GetSplatMapData(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+            return Internal_GetSplatMapData(Object.GetUnmanagedPtr(terrain), ref patchCoord, index);
 #endif
         }
 
@@ -285,7 +287,7 @@ namespace FlaxEditor
         internal static extern bool Internal_ModifyHolesMask(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_ModifySplatMap(IntPtr terrain, ref Int2 patchCoord, IntPtr samples, ref Int2 offset, ref Int2 size);
+        internal static extern bool Internal_ModifySplatMap(IntPtr terrain, ref Int2 patchCoord, int index, IntPtr samples, ref Int2 offset, ref Int2 size);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Internal_GetHeightmapData(IntPtr terrain, ref Int2 patchCoord);
@@ -294,7 +296,7 @@ namespace FlaxEditor
         internal static extern IntPtr Internal_GetHolesMaskData(IntPtr terrain, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern IntPtr Internal_GetSplatMapData(IntPtr terrain, ref Int2 patchCoord);
+        internal static extern IntPtr Internal_GetSplatMapData(IntPtr terrain, ref Int2 patchCoord, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GenerateTerrain(IntPtr terrain, ref Int2 numberOfPatches, IntPtr heightmap, float heightmapScale, IntPtr splatmap1, IntPtr splatmap2);

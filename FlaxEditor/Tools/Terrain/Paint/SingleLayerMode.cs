@@ -64,14 +64,14 @@ namespace FlaxEditor.Tools.Terrain.Paint
         public Layers Layer = Layers.Layer0;
 
         /// <inheritdoc />
+        public override int ActiveSplatmapIndex => (int)Layer < 4 ? 0 : 1;
+
+        /// <inheritdoc />
         public override unsafe void Apply(ref ApplyParams p)
         {
             var strength = p.Strength;
             var layer = (int)Layer;
             var brushPosition = p.Gizmo.CursorPosition;
-            var layerMask = layer < 4 ? 0x0F : 0xF0;
-            var otherLayerMask = layer < 4 ? 0xF0 : 0x0F;
-            var layerShift = layer < 4 ? 0 : 4;
             var layerComponent = layer % 4;
 
             // Apply brush modification
@@ -91,24 +91,25 @@ namespace FlaxEditor.Tools.Terrain.Paint
 
                     // Extract layer weight
                     byte* srcPtr = &src.R;
-                    var srcLayer = ((*(srcPtr + layerComponent) & layerMask) >> layerShift) / 15.0f;
+                    var srcWeight = *(srcPtr + layerComponent) / 255.0f;
 
                     // Accumulate weight
-                    float layerValue = srcLayer + paintAmount;
+                    float dstWeight = srcWeight + paintAmount;
 
                     // Check for solid layer case
-                    if (layerValue >= 1.0f)
+                    if (dstWeight >= 1.0f)
                     {
                         // Erase other layers
+                        // TODO: maybe erase only the higher layers?
+                        // TODO: need to erase also weights form the other splatmaps
                         src = Color32.Transparent;
 
                         // Use limit value
-                        layerValue = 1.0f;
+                        dstWeight = 1.0f;
                     }
 
                     // Modify packed weight
-                    var otherLayer = *(srcPtr + layerComponent) & otherLayerMask;
-                    *(srcPtr + layerComponent) = (byte)(otherLayer | (int)(layerValue * 15.0f) << layerShift);
+                    *(srcPtr + layerComponent) = (byte)(dstWeight * 255.0f);
 
                     // Write back
                     p.TempBuffer[z * p.ModifiedSize.X + x] = src;
@@ -117,7 +118,7 @@ namespace FlaxEditor.Tools.Terrain.Paint
             Profiler.EndEvent();
 
             // Update terrain patch
-            TerrainTools.ModifySplatMap(p.Terrain, ref p.PatchCoord, new IntPtr(p.TempBuffer), ref p.ModifiedOffset, ref p.ModifiedSize);
+            TerrainTools.ModifySplatMap(p.Terrain, ref p.PatchCoord, p.SplatmapIndex, new IntPtr(p.TempBuffer), ref p.ModifiedOffset, ref p.ModifiedSize);
         }
     }
 }
