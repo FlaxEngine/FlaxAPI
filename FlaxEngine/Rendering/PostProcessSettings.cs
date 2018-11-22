@@ -1028,10 +1028,10 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the out-of-focus areas blur intensity. Allows to reduce blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.
+        /// Gets or sets the blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 1, 0.1f)]
-        [NoSerialize, EditorOrder(701), EditorDisplay("Depth of Field", "Blur Strength"), Tooltip("The out-of-focus areas blur intensity. Allows to reduce blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.")]
+        [NoSerialize, EditorOrder(701), EditorDisplay("Depth of Field", "Blur Strength"), Tooltip("The blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.")]
         public float DOF_BlurStrength
         {
             get => data.DOF_BlurStrength;
