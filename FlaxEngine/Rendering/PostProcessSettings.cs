@@ -1075,7 +1075,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
         /// </summary>
-        [DefaultValue(80.0f), Limit(0, 10000.0f)]
+        [DefaultValue(80.0f), Limit(0)]
         [NoSerialize, EditorOrder(704), EditorDisplay("Depth of Field", "Near Transition Range"), Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred")]
         public float DOF_NearTransitionRange
         {
@@ -1090,7 +1090,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
         /// </summary>
-        [DefaultValue(100.0f), Limit(0, 10000.0f)]
+        [DefaultValue(100.0f), Limit(0)]
         [NoSerialize, EditorOrder(705), EditorDisplay("Depth of Field", "Far Transition Range"), Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred")]
         public float DOF_FarTransitionRange
         {
@@ -1105,7 +1105,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.
         /// </summary>
-        [DefaultValue(6000.0f), Limit(0, 1000000.0f, 2)]
+        [DefaultValue(6000.0f), Limit(0, float.MaxValue, 2)]
         [NoSerialize, EditorOrder(706), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.")]
         public float DOF_DepthLimit
         {
@@ -1135,7 +1135,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Controls Bokeh shapes maximum size.
         /// </summary>
-        [DefaultValue(25.0f), Limit(0, 100.0f, 0.1f)]
+        [DefaultValue(25.0f), Limit(0, 200.0f, 0.1f)]
         [NoSerialize, EditorOrder(708), EditorDisplay("Depth of Field", "Bokeh Size"), Tooltip("Controls Bokeh shapes maximum size")]
         public float DOF_BokehSize
         {
