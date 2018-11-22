@@ -221,6 +221,19 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Gets the axis=aligned bounding box of the text vertices in the local-space of the actor.
+        /// </summary>
+        [UnmanagedCall]
+        public BoundingBox LocalBox
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { BoundingBox resultAsRef; Internal_GetLocalBox(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -292,6 +305,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_UpdateLayout(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetLocalBox(IntPtr obj, out BoundingBox resultAsRef);
 #endif
 
         #endregion
