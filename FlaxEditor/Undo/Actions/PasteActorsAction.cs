@@ -169,5 +169,13 @@ namespace FlaxEditor.Actions
             }
             _nodeParents.Clear();
         }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _nodeParents?.Clear();
+            _idsMapping?.Clear();
+            _data = null;
+        }
     }
 }

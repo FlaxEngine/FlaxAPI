@@ -417,11 +417,12 @@ namespace FlaxEditor.CustomEditors
         /// Adds new enum value element.
         /// </summary>
         /// <param name="type">The enum type.</param>
-        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add different enum values to editor.</param>
+        /// <param name="customBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add different enum values to editor.</param>
+        /// <param name="formatMode">The formatting mode.</param>
         /// <returns>The created element.</returns>
-        public EnumElement Enum(Type type, EnumElement.BuildEntriesDelegate cusstomBuildEntriesDelegate = null)
+        public EnumElement Enum(Type type, EnumElement.BuildEntriesDelegate customBuildEntriesDelegate = null, EnumDisplayAttribute.FormatMode formatMode = EnumDisplayAttribute.FormatMode.Default)
         {
-            EnumElement element = new EnumElement(type, cusstomBuildEntriesDelegate);
+            EnumElement element = new EnumElement(type, customBuildEntriesDelegate, formatMode);
             OnAddElement(element);
             return element;
         }
@@ -431,13 +432,14 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="name">The property name.</param>
         /// <param name="type">The enum type.</param>
-        /// <param name="cusstomBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add different enum values to editor.</param>
+        /// <param name="customBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add different enum values to editor.</param>
         /// <param name="tooltip">The property label tooltip text.</param>
+        /// <param name="formatMode">The formatting mode.</param>
         /// <returns>The created element.</returns>
-        public EnumElement Enum(string name, Type type, EnumElement.BuildEntriesDelegate cusstomBuildEntriesDelegate = null, string tooltip = null)
+        public EnumElement Enum(string name, Type type, EnumElement.BuildEntriesDelegate customBuildEntriesDelegate = null, string tooltip = null, EnumDisplayAttribute.FormatMode formatMode = EnumDisplayAttribute.FormatMode.Default)
         {
             var property = AddPropertyItem(name, tooltip);
-            return property.Enum(type, cusstomBuildEntriesDelegate);
+            return property.Enum(type, customBuildEntriesDelegate, formatMode);
         }
 
         /// <summary>

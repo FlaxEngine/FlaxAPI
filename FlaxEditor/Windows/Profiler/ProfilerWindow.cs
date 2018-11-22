@@ -179,6 +179,7 @@ namespace FlaxEditor.Windows.Profiler
             AddMode(new Overall());
             AddMode(new CPU());
             AddMode(new GPU());
+            AddMode(new Memory());
 
             // Init view
             _frameIndex = -1;
@@ -196,11 +197,14 @@ namespace FlaxEditor.Windows.Profiler
         {
             if (LiveRecording)
             {
+                ProfilerMode.SharedUpdateData sharedData = new ProfilerMode.SharedUpdateData();
+                sharedData.Begin();
                 for (int i = 0; i < _tabs.ChildrenCount; i++)
                 {
                     if (_tabs.Children[i] is ProfilerMode mode)
-                        mode.Update();
+                        mode.Update(ref sharedData);
                 }
+                sharedData.End();
 
                 _framesCount = Mathf.Min(_framesCount + 1, ProfilerMode.MaxSamples);
                 UpdateButtons();

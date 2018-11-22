@@ -186,7 +186,7 @@ namespace FlaxEditor.Windows.Assets
             /// </summary>
             public void Reimport()
             {
-                Editor.Instance.ContentImporting.Reimport((BinaryAssetItem)_window.Item, ImportSettings);
+                Editor.Instance.ContentImporting.Reimport((BinaryAssetItem)_window.Item, ImportSettings, true);
             }
 
             /// <summary>

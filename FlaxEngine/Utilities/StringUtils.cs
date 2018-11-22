@@ -101,7 +101,7 @@ namespace FlaxEngine
         public static string CombinePaths(string left, string right)
         {
             int cnt = left.Length;
-            if (cnt > 1 && left[cnt - 2] != '/' && left[cnt - 2] != '\\'
+            if (cnt > 1 && left[cnt - 1] != '/' && left[cnt - 1] != '\\'
                 && (right.Length == 0 || (right[0] != '/' && right[0] != '\\')))
             {
                 left += '/';

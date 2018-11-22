@@ -11,5 +11,10 @@ namespace FlaxEditor.History
         /// Name or key of performed action
         /// </summary>
         string ActionString { get; }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        void Dispose();
     }
 }

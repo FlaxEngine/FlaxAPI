@@ -374,6 +374,14 @@ namespace FlaxEditor.SceneGraph.GUI
                     }
                 }
             }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                _ids = null;
+                _prefabIds = null;
+                _prefabObjectIds = null;
+            }
         }
 
         /// <inheritdoc />

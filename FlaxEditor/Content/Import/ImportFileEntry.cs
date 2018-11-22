@@ -9,10 +9,9 @@ namespace FlaxEditor.Content.Import
     /// <summary>
     /// Creates new <see cref="ImportFileEntry"/> for the given source file.
     /// </summary>
-    /// <param name="url">The source file url.</param>
-    /// <param name="resultUrl">The result file url.</param>
+    /// <param name="request">The import request.</param>
     /// <returns>The file entry.</returns>
-    public delegate ImportFileEntry ImportFileEntryHandler(string url, string resultUrl);
+    public delegate ImportFileEntry ImportFileEntryHandler(ref Request request);
 
     /// <summary>
     /// File import entry.
@@ -48,12 +47,11 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportFileEntry"/> class.
         /// </summary>
-        /// <param name="url">The source file url.</param>
-        /// <param name="resultUrl">The result file url.</param>
-        public ImportFileEntry(string url, string resultUrl)
+        /// <param name="request">The import request.</param>
+        public ImportFileEntry(ref Request request)
         {
-            SourceUrl = url;
-            ResultUrl = resultUrl;
+            SourceUrl = request.InputPath;
+            ResultUrl = request.OutputPath;
         }
 
         /// <summary>
@@ -81,16 +79,14 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Creates the entry.
         /// </summary>
-        /// <param name="url">The source file url.</param>
-        /// <param name="resultUrl">The result file url.</param>
-        /// <param name="isBinaryAsset">True if result file is binary asset.</param>
+        /// <param name="request">The import request.</param>
         /// <returns>Created file entry.</returns>
-        public static ImportFileEntry CreateEntry(string url, string resultUrl, bool isBinaryAsset)
+        public static ImportFileEntry CreateEntry(ref Request request)
         {
             // Get extension (without a dot)
-            var extension = Path.GetExtension(url);
+            var extension = Path.GetExtension(request.InputPath);
             if (string.IsNullOrEmpty(extension))
-                return new FolderImportEntry(url, resultUrl);
+                return new FolderImportEntry(ref request);
             if (extension[0] == '.')
                 extension = extension.Remove(0, 1);
             extension = extension.ToLower();
@@ -98,10 +94,10 @@ namespace FlaxEditor.Content.Import
             // Check if use overriden type
             ImportFileEntryHandler createDelegate;
             if (FileTypes.TryGetValue(extension, out createDelegate))
-                return createDelegate(url, resultUrl);
+                return createDelegate(ref request);
 
             // Use default type
-            return isBinaryAsset ? new AssetImportEntry(url, resultUrl) : new ImportFileEntry(url, resultUrl);
+            return request.IsBinaryAsset ? new AssetImportEntry(ref request) : new ImportFileEntry(ref request);
         }
 
         internal static void RegisterDefaultTypes()
@@ -117,6 +113,7 @@ namespace FlaxEditor.Content.Import
             FileTypes["jpg"] = ImportTexture;
             FileTypes["dds"] = ImportTexture;
             FileTypes["hdr"] = ImportTexture;
+            FileTypes["raw"] = ImportTexture;
 
             // Models
             FileTypes["obj"] = ImportModel;
@@ -153,19 +150,19 @@ namespace FlaxEditor.Content.Import
             FileTypes["ogg"] = ImportAudio;
         }
 
-        private static ImportFileEntry ImportModel(string url, string resultUrl)
+        private static ImportFileEntry ImportModel(ref Request request)
         {
-            return new ModelImportEntry(url, resultUrl);
+            return new ModelImportEntry(ref request);
         }
 
-        private static ImportFileEntry ImportAudio(string url, string resultUrl)
+        private static ImportFileEntry ImportAudio(ref Request request)
         {
-            return new AudioImportEntry(url, resultUrl);
+            return new AudioImportEntry(ref request);
         }
 
-        private static ImportFileEntry ImportTexture(string url, string resultUrl)
+        private static ImportFileEntry ImportTexture(ref Request request)
         {
-            return new TextureImportEntry(url, resultUrl);
+            return new TextureImportEntry(ref request);
         }
 
         /// <inheritdoc />

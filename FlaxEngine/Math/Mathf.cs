@@ -698,6 +698,36 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Returns square of the given value.
+        /// </summary>
+        /// <param name="f">The value.</param>
+        /// <returns>The value * value.</returns>
+        public static int Square(int f)
+        {
+            return f * f;
+        }
+
+        /// <summary>
+        /// Returns square of the given value.
+        /// </summary>
+        /// <param name="f">The value.</param>
+        /// <returns>The value * value.</returns>
+        public static double Square(double f)
+        {
+            return f * f;
+        }
+
+        /// <summary>
+        /// Returns square of the given value.
+        /// </summary>
+        /// <param name="f">The value.</param>
+        /// <returns>The value * value.</returns>
+        public static float Square(float f)
+        {
+            return f * f;
+        }
+
+        /// <summary>
         /// Returns the tangent of angle f in radians.
         /// </summary>
         /// <param name="f"></param>

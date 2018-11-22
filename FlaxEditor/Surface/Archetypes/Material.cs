@@ -154,6 +154,7 @@ namespace FlaxEditor.Surface.Archetypes
                 switch (info.Domain)
                 {
                 case MaterialDomain.Surface:
+                case MaterialDomain.Terrain:
                 {
                     bool isNotUnlit = info.ShadingModel != MaterialShadingModel.Unlit;
                     bool isTransparent = info.BlendMode == MaterialBlendMode.Transparent;
@@ -544,6 +545,35 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Input(0, "Vertex Shader", true, ConnectionType.Vector4, 0),
                     NodeElementArchetype.Factory.Output(0, "Pixel Shader", ConnectionType.Vector4, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 21,
+                Title = "Terrain Holes Mask",
+                Description = "Scalar terrain visibility mask used mostly for creating holes in terrain",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 22,
+                Title = "Terrain Layer Weight",
+                Description = "Terrain layer weight mask used for blending terrain layers",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(220, 30),
+                DefaultValues = new object[]
+                {
+                    0,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, 0, 70.0f, 0, FlaxEditor.Tools.Terrain.PaintTerrainGizmoMode.TerrainLayerNames),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
                 }
             },
         };

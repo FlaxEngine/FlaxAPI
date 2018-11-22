@@ -101,7 +101,7 @@ namespace FlaxEngine
         /// Gets or sets camera's far plane distance
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), Limit(0, 1000000, 5), EditorDisplay("Camera"), Tooltip("Far clipping plane distance")]
+        [EditorOrder(40), Limit(0, 2000000, 5), EditorDisplay("Camera"), Tooltip("Far clipping plane distance")]
         public float FarPlane
         {
 #if UNIT_TEST_COMPILANT

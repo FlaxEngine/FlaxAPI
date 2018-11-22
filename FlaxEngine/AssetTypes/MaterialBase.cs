@@ -70,6 +70,14 @@ namespace FlaxEngine
         public bool IsGUI => Info.Domain == MaterialDomain.GUI;
 
         /// <summary>
+        /// Gets a value indicating whether this material is a terrain shader (cannot be used with a normal meshes).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this material is a terrain shader; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsTerrain => Info.Domain == MaterialDomain.Terrain;
+
+        /// <summary>
         /// Gets or sets the material parameters collection.
         /// </summary>
         /// <value>

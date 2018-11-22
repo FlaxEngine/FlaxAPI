@@ -76,6 +76,14 @@ namespace FlaxEditor.Actions
                 Create();
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _data = null;
+            _prefabIds = null;
+            _prefabObjectIds = null;
+        }
+
         /// <summary>
         /// Deletes the objects.
         /// </summary>

@@ -19,7 +19,7 @@ namespace FlaxEditor.Viewport
     /// Main editor gizmo viewport used by the <see cref="EditGameWindow"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Viewport.EditorGizmoViewport" />
-    public class MainEditorGizmoViewport : EditorGizmoViewport, IEditorPrimitivesOwner
+    public partial class MainEditorGizmoViewport : EditorGizmoViewport, IEditorPrimitivesOwner
     {
         private readonly Editor _editor;
 
@@ -28,7 +28,7 @@ namespace FlaxEditor.Viewport
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
 
-        private readonly ViewportWidgetButton _translateSnappng;
+        private readonly ViewportWidgetButton _translateSnapping;
         private readonly ViewportWidgetButton _rotateSnapping;
         private readonly ViewportWidgetButton _scaleSnapping;
 
@@ -90,7 +90,7 @@ namespace FlaxEditor.Viewport
         /// </summary>
         /// <param name="editor">Editor instance.</param>
         public MainEditorGizmoViewport(Editor editor)
-        : base(RenderTask.Create<SceneRenderTask>(), editor.Undo)
+        : base(FlaxEngine.Rendering.RenderTask.Create<SceneRenderTask>(), editor.Undo)
         {
             _editor = editor;
 
@@ -193,8 +193,8 @@ namespace FlaxEditor.Viewport
             };
             enableTranslateSnapping.OnToggle += OnTranslateSnappingToggle;
             var translateSnappingCM = new ContextMenu();
-            _translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
-            _translateSnappng.TooltipText = "Position snapping values";
+            _translateSnapping = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
+            _translateSnapping.TooltipText = "Position snapping values";
             for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
             {
                 var v = EditorViewportTranslateSnapValues[i];
@@ -203,7 +203,7 @@ namespace FlaxEditor.Viewport
             }
             translateSnappingCM.ButtonClicked += OnWidgetTranslateSnapClick;
             translateSnappingCM.VisibleChanged += OnWidgetTranslateSnapShowHide;
-            _translateSnappng.Parent = translateSnappingWidget;
+            _translateSnapping.Parent = translateSnappingWidget;
             translateSnappingWidget.Parent = this;
 
             // Gizmo mode widget
@@ -243,6 +243,8 @@ namespace FlaxEditor.Viewport
 
             DragHandlers.Add(_dragActorType);
             DragHandlers.Add(_dragAssets);
+
+            InitModes();
         }
 
         private void CreateCameraAtView()
@@ -421,7 +423,7 @@ namespace FlaxEditor.Viewport
         {
             var v = (float)button.Tag;
             TransformGizmo.TranslationSnapValue = v;
-            _translateSnappng.Text = v.ToString();
+            _translateSnapping.Text = v.ToString();
         }
 
         private void OnWidgetTranslateSnapShowHide(Control control)
@@ -509,74 +511,8 @@ namespace FlaxEditor.Viewport
             if (_prevInput.IsControllingMouse || !Bounds.Contains(ref _viewMousePos))
                 return;
 
-            if (TransformGizmo.IsActive)
-            {
-                // Ensure player is not moving objects
-                if (TransformGizmo.ActiveAxis != TransformGizmo.Axis.None)
-                    return;
-            }
-            else
-            {
-                // For now just pick objects in transform gizmo mode
-                return;
-            }
-
-            // Get mouse ray and try to hit any object
-            var ray = MouseRay;
-            float closest = float.MaxValue;
-            bool selectColliders = (Task.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
-            SceneGraphNode.RayCastData.FlagTypes rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.None;
-            if (!selectColliders)
-                rayCastFlags |= SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, rayCastFlags);
-
-            // Update selection
-            var sceneEditing = Editor.Instance.SceneEditing;
-            if (hit != null)
-            {
-                // For child actor nodes (mesh, link or sth) we need to select it's owning actor node first or any other child node (but not a child actor)
-                if (hit is ActorChildNode actorChildNode)
-                {
-                    var parentNode = actorChildNode.ParentNode;
-                    bool canChildBeSelected = sceneEditing.Selection.Contains(parentNode);
-                    if (!canChildBeSelected)
-                    {
-                        for (int i = 0; i < parentNode.ChildNodes.Count; i++)
-                        {
-                            if (sceneEditing.Selection.Contains(parentNode.ChildNodes[i]))
-                            {
-                                canChildBeSelected = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!canChildBeSelected)
-                    {
-                        // Select parent
-                        hit = parentNode;
-                    }
-                }
-
-                bool addRemove = Root.GetKey(Keys.Control);
-                bool isSelected = sceneEditing.Selection.Contains(hit);
-
-                if (addRemove)
-                {
-                    if (isSelected)
-                        sceneEditing.Deselect(hit);
-                    else
-                        sceneEditing.Select(hit, true);
-                }
-                else
-                {
-                    sceneEditing.Select(hit);
-                }
-            }
-            else
-            {
-                sceneEditing.Deselect();
-            }
+            // Try to pick something with the current gizmo
+            Gizmos.Active?.Pick();
 
             // Keep focus
             Focus();
@@ -884,6 +820,10 @@ namespace FlaxEditor.Viewport
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            if (IsDisposing)
+                return;
+
+            DisposeModes();
             _debugDrawData.Dispose();
             FlaxEngine.Object.Destroy(ref SelectionOutline);
             FlaxEngine.Object.Destroy(ref EditorPrimitives);

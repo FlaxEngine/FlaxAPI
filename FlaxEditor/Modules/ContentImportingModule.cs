@@ -16,22 +16,6 @@ namespace FlaxEditor.Modules
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class ContentImportingModule : EditorModule
     {
-        private struct Request
-        {
-            public string InputPath;
-            public string OutputPath;
-            public bool IsBinaryAsset;
-            public object Settings;
-
-            public Request(string input, string output, bool isBinaryAsset, object settings)
-            {
-                InputPath = input;
-                OutputPath = output;
-                IsBinaryAsset = isBinaryAsset;
-                Settings = settings;
-            }
-        }
-
         // Amount of requests done/total used to calculate importing progress
 
         private int _importBatchDone;
@@ -136,7 +120,8 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="item">The item.</param>
         /// <param name="settings">The import settings to override.</param>
-        public void Reimport(BinaryAssetItem item, object settings = null)
+        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be sued when importing files from code.</param>
+        public void Reimport(BinaryAssetItem item, object settings = null, bool skipSettingsDialog = false)
         {
             string importPath;
             if (item != null && !item.GetImportPath(out importPath))
@@ -145,6 +130,8 @@ namespace FlaxEditor.Modules
                 if (!System.IO.File.Exists(importPath))
                 {
                     Editor.LogWarning(string.Format("Cannot reimport asset \'{0}\'. File \'{1}\' does not exist.", item.Path, importPath));
+                    if (skipSettingsDialog)
+                        return;
 
                     // Ask user to select new file location
                     var title = string.Format("Please find missing \'{0}\' file for asset \'{1}\'", importPath, item.ShortName);
@@ -157,7 +144,7 @@ namespace FlaxEditor.Modules
                         return;
                 }
 
-                Import(importPath, item.Path, true, settings);
+                Import(importPath, item.Path, true, skipSettingsDialog, settings);
             }
         }
 
@@ -166,7 +153,8 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="files">The files.</param>
         /// <param name="targetLocation">The target location.</param>
-        public void Import(IEnumerable<string> files, ContentFolder targetLocation)
+        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be sued when importing files from code.</param>
+        public void Import(IEnumerable<string> files, ContentFolder targetLocation, bool skipSettingsDialog = false)
         {
             if (targetLocation == null)
                 throw new ArgumentNullException();
@@ -175,10 +163,10 @@ namespace FlaxEditor.Modules
 
             lock (_requests)
             {
-                bool skipDialog = false;
+                bool skipDialog = skipSettingsDialog;
                 foreach (var file in files)
                 {
-                    Import(file, targetLocation, ref skipDialog);
+                    Import(file, targetLocation, skipSettingsDialog, null, ref skipDialog);
                 }
             }
         }
@@ -188,13 +176,15 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="file">The file.</param>
         /// <param name="targetLocation">The target location.</param>
-        public void Import(string file, ContentFolder targetLocation)
+        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be sued when importing files from code.</param>
+        /// <param name="settings">Import settings to override. Use null to skip this value.</param>
+        public void Import(string file, ContentFolder targetLocation, bool skipSettingsDialog = false, object settings = null)
         {
-            bool skipDialog = false;
-            Import(file, targetLocation, ref skipDialog);
+            bool skipDialog = skipSettingsDialog;
+            Import(file, targetLocation, skipSettingsDialog, settings, ref skipDialog);
         }
 
-        private void Import(string inputPath, ContentFolder targetLocation, ref bool skipDialog)
+        private void Import(string inputPath, ContentFolder targetLocation, bool skipSettingsDialog, object settings, ref bool skipDialog)
         {
             if (targetLocation == null)
                 throw new ArgumentNullException();
@@ -212,6 +202,7 @@ namespace FlaxEditor.Modules
                 if (!targetLocation.CanHaveAssets)
                 {
                     // Error
+                    Editor.LogWarning(string.Format("Cannot import \'{0}\' to \'{1}\'. The target directory cannot have assets.", inputPath, targetLocation.Node.Path));
                     if (!skipDialog)
                     {
                         skipDialog = true;
@@ -229,6 +220,7 @@ namespace FlaxEditor.Modules
                 if (extension.Equals(ScriptProxy.Extension, StringComparison.OrdinalIgnoreCase) && !targetLocation.CanHaveScripts)
                 {
                     // Error
+                    Editor.LogWarning(string.Format("Cannot import \'{0}\' to \'{1}\'. The target directory cannot have scripts.", inputPath, targetLocation.Node.Path));
                     if (!skipDialog)
                     {
                         skipDialog = true;
@@ -241,7 +233,7 @@ namespace FlaxEditor.Modules
             var shortName = System.IO.Path.GetFileNameWithoutExtension(inputPath);
             var outputPath = System.IO.Path.Combine(targetLocation.Path, shortName + outputExtension);
 
-            Import(inputPath, outputPath, isBinaryAsset);
+            Import(inputPath, outputPath, isBinaryAsset, skipSettingsDialog, settings);
         }
 
         /// <summary>
@@ -251,12 +243,20 @@ namespace FlaxEditor.Modules
         /// <param name="inputPath">The input path.</param>
         /// <param name="outputPath">The output path.</param>
         /// <param name="isBinaryAsset">True if output file is a binary asset.</param>
-        /// <param name="settings">Import settings to override.</param>
-        private void Import(string inputPath, string outputPath, bool isBinaryAsset, object settings = null)
+        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be sued when importing files from code.</param>
+        /// <param name="settings">Import settings to override. Use null to skip this value.</param>
+        private void Import(string inputPath, string outputPath, bool isBinaryAsset, bool skipSettingsDialog = false, object settings = null)
         {
             lock (_requests)
             {
-                _requests.Add(new Request(inputPath, outputPath, isBinaryAsset, settings));
+                _requests.Add(new Request
+                {
+                    InputPath = inputPath,
+                    OutputPath = outputPath,
+                    IsBinaryAsset = isBinaryAsset,
+                    SkipSettingsDialog = skipSettingsDialog,
+                    Settings = settings,
+                });
             }
         }
 
@@ -403,14 +403,14 @@ namespace FlaxEditor.Modules
                     for (int i = 0; i < _requests.Count; i++)
                     {
                         var request = _requests[i];
-                        var entry = ImportFileEntry.CreateEntry(request.InputPath, request.OutputPath, request.IsBinaryAsset);
+                        var entry = ImportFileEntry.CreateEntry(ref request);
                         if (entry != null)
                         {
                             if (request.Settings != null && entry.TryOverrideSettings(request.Settings))
                             {
                                 // Use overriden settings
                             }
-                            else
+                            else if (!request.SkipSettingsDialog)
                             {
                                 needSettingsDialog |= entry.HasSettings;
                             }

@@ -543,7 +543,7 @@ namespace FlaxEngine
             get
             {
                 Matrix localToWorld;
-                Internal_WorldToLocal(unmanagedPtr, out localToWorld);
+                Internal_LocalToWorld(unmanagedPtr, out localToWorld);
                 return localToWorld;
             }
         }

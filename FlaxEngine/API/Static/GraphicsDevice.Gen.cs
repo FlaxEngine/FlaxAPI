@@ -79,6 +79,32 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Gets the GPU vendor identifier.
+        /// </summary>
+        [UnmanagedCall]
+        public static int VendorId
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetVendorId(); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets a string that contains the GPU adapter description. Used for presentation to the user.
+        /// </summary>
+        [UnmanagedCall]
+        public static string Description
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDescription(); }
+#endif
+        }
+
+        /// <summary>
         /// Dumps all resources information to the log.
         /// </summary>
 #if UNIT_TEST_COMPILANT
@@ -111,6 +137,12 @@ namespace FlaxEngine.Rendering
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Internal_GetNativePtr();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetVendorId();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetDescription();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DumpResourcesToLog();

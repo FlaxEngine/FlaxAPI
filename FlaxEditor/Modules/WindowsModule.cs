@@ -50,7 +50,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Occurs when main editor window is being closed.
         /// </summary>
-        public event Action OnMainWindowClosing;
+        public event Action MainWindowClosing;
 
         /// <summary>
         /// The content window.
@@ -727,7 +727,7 @@ namespace FlaxEditor.Modules
                 }
             }
 
-            OnMainWindowClosing?.Invoke();
+            MainWindowClosing?.Invoke();
         }
 
         private void MainWindow_OnClosed()
@@ -781,7 +781,7 @@ namespace FlaxEditor.Modules
         {
             // Auto save workspace layout every few seconds
             var now = DateTime.UtcNow;
-            if (_lastLayoutSaveTime.Ticks > 10 && now - _lastLayoutSaveTime >= TimeSpan.FromSeconds(5))
+            if (_lastLayoutSaveTime.Ticks > 10 && now - _lastLayoutSaveTime >= TimeSpan.FromSeconds(10))
             {
                 SaveCurrentLayout();
             }

@@ -12,7 +12,7 @@ namespace FlaxEditor.SceneGraph
     /// </summary>
     public static class SceneGraphFactory
     {
-        private static object[] _sharedArgsContainer = new object[1];
+        private static readonly object[] _sharedArgsContainer = new object[1];
 
         /// <summary>
         /// The custom nodes types. Key = object type, Value = custom graph node type
@@ -69,6 +69,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(CharacterController), typeof(ColliderNode));
             CustomNodesTypes.Add(typeof(UICanvas), typeof(UICanvasNode));
             CustomNodesTypes.Add(typeof(UIControl), typeof(UIControlNode));
+            CustomNodesTypes.Add(typeof(Terrain), typeof(TerrainNode));
         }
 
         /// <summary>

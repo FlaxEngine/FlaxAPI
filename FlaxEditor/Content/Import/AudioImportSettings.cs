@@ -151,13 +151,12 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioImportEntry"/> class.
         /// </summary>
-        /// <param name="url">The source file url.</param>
-        /// <param name="resultUrl">The result file url.</param>
-        public AudioImportEntry(string url, string resultUrl)
-        : base(url, resultUrl)
+        /// <param name="request">The import request.</param>
+        public AudioImportEntry(ref Request request)
+        : base(ref request)
         {
             // Try to restore target asset Audio import options (useful for fast reimport)
-            AudioImportSettings.TryRestore(ref _settings, resultUrl);
+            AudioImportSettings.TryRestore(ref _settings, ResultUrl);
         }
 
         /// <inheritdoc />

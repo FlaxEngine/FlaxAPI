@@ -74,5 +74,11 @@ namespace FlaxEditor
 
         /// <inheritdoc />
         public abstract void Undo();
+
+        /// <inheritdoc />
+        public virtual void Dispose()
+        {
+            _data = null;
+        }
     }
 }

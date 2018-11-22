@@ -8,8 +8,8 @@ namespace FlaxEditor.Content.Import
     public class AssetImportEntry : ImportFileEntry
     {
         /// <inheritdoc />
-        public AssetImportEntry(string url, string resultUrl)
-        : base(url, resultUrl)
+        public AssetImportEntry(ref Request request)
+        : base(ref request)
         {
         }
 

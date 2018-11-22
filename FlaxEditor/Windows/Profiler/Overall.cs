@@ -82,14 +82,13 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <inheritdoc />
-        public override void Update()
+        public override void Update(ref SharedUpdateData sharedData)
         {
-            var stats = ProfilingTools.Stats;
-            _fpsChart.AddSample(stats.FPS);
-            _updateTimeChart.AddSample(stats.UpdateTimeMs);
-            _drawTimeChart.AddSample(stats.DrawTimeMs);
-            _cpuMemChart.AddSample(stats.ProcessMemory_UsedPhysicalMemory / 1024 / 1024);
-            _gpuMemChart.AddSample(stats.MemoryGPU_Used / 1024 / 1024);
+            _fpsChart.AddSample(sharedData.Stats.FPS);
+            _updateTimeChart.AddSample(sharedData.Stats.UpdateTimeMs);
+            _drawTimeChart.AddSample(sharedData.Stats.DrawTimeMs);
+            _cpuMemChart.AddSample(sharedData.Stats.ProcessMemory_UsedPhysicalMemory / 1024 / 1024);
+            _gpuMemChart.AddSample(sharedData.Stats.MemoryGPU_Used / 1024 / 1024);
         }
 
         /// <inheritdoc />

@@ -218,7 +218,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
             public bool GetValue(object instance)
             {
-                if (Target is FieldInfo fieldInfo)
+                if (Source is FieldInfo fieldInfo)
                     return (bool)fieldInfo.GetValue(instance);
                 return (bool)((PropertyInfo)Source).GetValue(instance, null);
             }
@@ -327,6 +327,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     Debug.LogError("Invalid VisibleIf rule. Field has to be bool type " + visibleIf.MemberName);
                     return null;
                 }
+
+                return field;
             }
 
             Debug.LogError("Invalid VisibleIf rule. Cannot find member " + visibleIf.MemberName);
@@ -574,16 +576,19 @@ namespace FlaxEditor.CustomEditors.Editors
                             }
                         }
 
-                        // Apply the visibility
-                        var label = c.PropertiesList.Labels[c.LabelIndex];
-                        label.Visible = visible;
-                        for (int j = label.FirstChildControlIndex; j < c.PropertiesList.Properties.Children.Count; j++)
+                        // Apply the visibility (note: there may be no label)
+                        if (c.LabelIndex != -1 && c.PropertiesList.Labels.Count > c.LabelIndex)
                         {
-                            var child = c.PropertiesList.Properties.Children[j];
-                            if (child is PropertyNameLabel)
-                                break;
+                            var label = c.PropertiesList.Labels[c.LabelIndex];
+                            label.Visible = visible;
+                            for (int j = label.FirstChildControlIndex; j < c.PropertiesList.Properties.Children.Count; j++)
+                            {
+                                var child = c.PropertiesList.Properties.Children[j];
+                                if (child is PropertyNameLabel)
+                                    break;
 
-                            child.Visible = visible;
+                                child.Visible = visible;
+                            }
                         }
                     }
                 }

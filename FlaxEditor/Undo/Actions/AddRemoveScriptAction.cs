@@ -109,6 +109,13 @@ namespace FlaxEditor.Actions
                 DoAdd();
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _script = null;
+            _scriptType = null;
+        }
+
         private void DoRemove()
         {
             // Remove script (it could be removed by sth else, just check it)

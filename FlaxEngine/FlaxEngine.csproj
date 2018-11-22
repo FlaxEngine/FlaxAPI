@@ -93,6 +93,8 @@
       <DependentUpon>Skybox.cs</DependentUpon>
     </Compile>
     <Compile Include="API\Actors\StaticModel.Gen.cs" />
+    <Compile Include="API\Actors\Terrain.cs" />
+    <Compile Include="API\Actors\Terrain.Gen.cs" />
     <Compile Include="API\Actors\TextRender.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />
@@ -244,6 +246,7 @@
     <Compile Include="Attributes\Editor\CustomEditorAliasAttribute.cs" />
     <Compile Include="Attributes\Editor\DefaultEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
+    <Compile Include="Attributes\Editor\EnumDisplayAttribute.cs" />
     <Compile Include="Attributes\Editor\ExpandGroupsAttribute.cs" />
     <Compile Include="Attributes\Editor\HeaderAttribute.cs" />
     <Compile Include="Attributes\Editor\LimitAttribute.cs" />
@@ -400,6 +403,9 @@
     <Compile Include="Math\SphericalHarmonics.cs" />
     <Compile Include="Math\Transform.cs" />
     <Compile Include="Math\TypeConverters\ColorConverter.cs" />
+    <Compile Include="Math\TypeConverters\Int2Converter.cs" />
+    <Compile Include="Math\TypeConverters\Int3Converter.cs" />
+    <Compile Include="Math\TypeConverters\Int4Converter.cs" />
     <Compile Include="Math\TypeConverters\QuaternionConverter.cs" />
     <Compile Include="Math\TypeConverters\Vector2Converter.cs" />
     <Compile Include="Math\TypeConverters\Vector3Converter.cs" />

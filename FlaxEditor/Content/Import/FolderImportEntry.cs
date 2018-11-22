@@ -9,10 +9,16 @@ namespace FlaxEditor.Content.Import
     /// </summary>
     public class FolderImportEntry : ImportFileEntry
     {
+        /// <summary>
+        /// Flag used to skip showing import settings dialog to used. Can be used for importing assets from code by plugins.
+        /// </summary>
+        public bool SkipSettingsDialog;
+
         /// <inheritdoc />
-        public FolderImportEntry(string url, string resultUrl)
-        : base(url, resultUrl)
+        public FolderImportEntry(ref Request request)
+        : base(ref request)
         {
+            SkipSettingsDialog = request.SkipSettingsDialog;
         }
 
         /// <inheritdoc />
@@ -34,11 +40,11 @@ namespace FlaxEditor.Content.Import
 
             // Import all sub elements
             var files = Directory.GetFiles(SourceUrl);
-            Editor.Instance.ContentImporting.Import(files, target);
+            Editor.Instance.ContentImporting.Import(files, target, SkipSettingsDialog);
 
             // Import all sub dirs
             var folders = Directory.GetDirectories(SourceUrl);
-            Editor.Instance.ContentImporting.Import(folders, target);
+            Editor.Instance.ContentImporting.Import(folders, target, SkipSettingsDialog);
 
             return false;
         }

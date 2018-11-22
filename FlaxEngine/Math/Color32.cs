@@ -18,6 +18,21 @@ namespace FlaxEngine
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Color32));
 
         /// <summary>
+        /// The transparent color.
+        /// </summary>
+        public static readonly Color32 Transparent = new Color32(0, 0, 0, 0);
+
+        /// <summary>
+        /// The black color.
+        /// </summary>
+        public static readonly Color32 Black = new Color32(0, 0, 0, 255);
+
+        /// <summary>
+        /// The white color.
+        /// </summary>
+        public static readonly Color32 White = new Color32(255, 255, 255, 255);
+
+        /// <summary>
         /// Red component of the color.
         /// </summary>
         public byte R;

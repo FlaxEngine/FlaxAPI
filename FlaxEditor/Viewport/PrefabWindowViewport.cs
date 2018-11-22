@@ -219,6 +219,9 @@ namespace FlaxEditor.Viewport
         public GizmosCollection Gizmos { get; } = new GizmosCollection();
 
         /// <inheritdoc />
+        public SceneRenderTask RenderTask => Task;
+
+        /// <inheritdoc />
         public float ViewFarPlane => FarPlane;
 
         /// <inheritdoc />
@@ -229,6 +232,9 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public bool IsAltKeyDown => _input.IsAltDown;
+
+        /// <inheritdoc />
+        public bool IsControlDown => _input.IsControlDown;
 
         /// <inheritdoc />
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;

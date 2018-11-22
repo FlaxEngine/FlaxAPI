@@ -88,6 +88,12 @@ namespace FlaxEditor.Content.Settings
         public uint[] LayerMasks = new uint[32];
 
         /// <summary>
+        /// Enables support for cooking physical collision shapes geometry at runtime. Use it to enable generating runtime terrain collision or convex mesh colliders.
+        /// </summary>
+        [EditorOrder(1100), EditorDisplay("Other"), Tooltip("Enables support for cooking physical collision shapes geometry at runtime. Use it to enable generating runtime terrain collision or convex mesh colliders.")]
+        public bool SupportCookingAtRuntime;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PhysicsSettings"/> class.
         /// </summary>
         public PhysicsSettings()

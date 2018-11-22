@@ -62,5 +62,14 @@ namespace FlaxEditor
                 Actions[i].Undo();
             }
         }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            for (int i = 0; i < Actions.Length; i++)
+            {
+                Actions[i].Dispose();
+            }
+        }
     }
 }

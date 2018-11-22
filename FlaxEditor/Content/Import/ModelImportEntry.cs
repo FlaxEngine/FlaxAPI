@@ -355,13 +355,12 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelImportEntry"/> class.
         /// </summary>
-        /// <param name="url">The source file url.</param>
-        /// <param name="resultUrl">The result file url.</param>
-        public ModelImportEntry(string url, string resultUrl)
-        : base(url, resultUrl)
+        /// <param name="request">The import request.</param>
+        public ModelImportEntry(ref Request request)
+        : base(ref request)
         {
             // Try to restore target asset model import options (useful for fast reimport)
-            ModelImportSettings.TryRestore(ref _settings, resultUrl);
+            ModelImportSettings.TryRestore(ref _settings, ResultUrl);
         }
 
         /// <inheritdoc />

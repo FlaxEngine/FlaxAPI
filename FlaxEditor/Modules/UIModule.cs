@@ -41,6 +41,7 @@ namespace FlaxEditor.Modules
         private ContextMenuButton _menuSceneMoveActorToViewport;
         private ContextMenuButton _menuSceneAlignActorWithViewport;
         private ContextMenuButton _menuSceneAlignViewportWtihActor;
+        private ContextMenuButton _menuSceneCreateTerrain;
         private ContextMenuButton _menuGamePlay;
         private ContextMenuButton _menuGamePause;
         private ContextMenuButton _menuToolsBakeLightmaps;
@@ -244,7 +245,7 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
-            Editor.Windows.OnMainWindowClosing += OnOnMainWindowClosing;
+            Editor.Windows.MainWindowClosing += OnMainWindowClosing;
             var mainWindow = Editor.Windows.MainWindow.GUI;
 
             // Update window background
@@ -414,7 +415,9 @@ namespace FlaxEditor.Modules
             cm.VisibleChanged += OnMenuSceneShowHide;
             _menuSceneMoveActorToViewport = cm.AddButton("Move actor to viewport", MoveActorToViewport);
             _menuSceneAlignActorWithViewport = cm.AddButton("Align actor with viewport", AlignActorWithViewport);
-            _menuSceneAlignViewportWtihActor = cm.AddButton("Align viewport with actor", AlignViewportWtihActor);
+            _menuSceneAlignViewportWtihActor = cm.AddButton("Align viewport with actor", AlignViewportWtithActor);
+            cm.AddSeparator();
+            _menuSceneCreateTerrain = cm.AddButton("Create terrain", CreateTerrain);
 
             // Game
             MenuGame = MainMenu.AddButton("Game");
@@ -437,7 +440,7 @@ namespace FlaxEditor.Modules
             cm.AddSeparator();
             cm.AddButton("Profiler", Editor.Windows.ProfilerWin.FocusOrShow);
             cm.AddSeparator();
-            _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefualt);
+            _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefault);
             cm.AddButton("Take screenshot!", "F12", Editor.Windows.TakeScreenshot);
             cm.AddSeparator();
             cm.AddButton("Plugin Exporter", PluginExporterDialog.ShowIt);
@@ -601,6 +604,7 @@ namespace FlaxEditor.Modules
             _menuSceneMoveActorToViewport.Enabled = hasActorSelected;
             _menuSceneAlignActorWithViewport.Enabled = hasActorSelected;
             _menuSceneAlignViewportWtihActor.Enabled = hasActorSelected;
+            _menuSceneCreateTerrain.Enabled = SceneManager.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
 
             control.PerformLayout();
         }
@@ -638,7 +642,7 @@ namespace FlaxEditor.Modules
             c.PerformLayout();
         }
 
-        private void AlignViewportWtihActor()
+        private void AlignViewportWtithActor()
         {
             var selection = Editor.SceneEditing;
             if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
@@ -678,6 +682,53 @@ namespace FlaxEditor.Modules
             }
         }
 
+        private void InitPatch(Terrain terrain, int patchX, int patchZ)
+        {
+            var chunkSize = terrain.ChunkSize;
+            var vertexCount = chunkSize * 4 + 1;
+            float[] heightmap = new float[vertexCount * vertexCount];
+            int offset = (patchX + patchZ) * chunkSize * 4;
+            for (int z = 0; z < vertexCount; z++)
+            {
+                for (int x = 0; x < vertexCount; x++)
+                {
+                    //heightmap[z * vertexCount + x] = 0;
+                    //heightmap[z * vertexCount + x] = 100 + (z / (float)vertexCount) * 3000.0f;
+                    //heightmap[z * vertexCount + x] = Vector3.Transform(new Vector3(x + patchX * chunkVertexSize * 4, 0, z + patchZ * chunkVertexSize * 4) * 100, Quaternion.Euler(-45, 0, 0)).Y;
+                    //heightmap[z * vertexCount + x] = (offset + z + x) * 10.0f;
+                    //heightmap[z * vertexCount + x] = (offset + z + x) * 10.0f - 100.0f;
+                    heightmap[z * vertexCount + x] = Mathf.Sin((float)x / chunkSize * Mathf.PiOverFour * 3.0f) * 1000.0f;
+                }
+            }
+            var patchCoord = new Int2(patchX, patchZ);
+            //terrain.SetupPatch(ref patchCoord, TerrainHeightmapFormat.R8G8B8A8_Raw, heightmap, null, true);
+            terrain.SetupPatch(ref patchCoord, heightmap);
+        }
+
+        private void CreateTerrain()
+        {
+            new Tools.Terrain.CreateTerrainDialog().Show(Editor.Windows.MainWindow);
+            return;
+
+            var terrain = Terrain.New();
+            terrain.StaticFlags = StaticFlags.FullyStatic;
+            terrain.Setup(6, 63);
+            terrain.AddPatch(0, 0);
+            terrain.AddPatch(0, 1);
+            terrain.AddPatch(1, 0);
+            terrain.AddPatch(1, 1);
+            SceneManager.SpawnActor(terrain);
+            InitPatch(terrain, 0, 0);
+            InitPatch(terrain, 1, 0);
+            InitPatch(terrain, 0, 1);
+            InitPatch(terrain, 1, 1);
+
+            InitPatch(terrain, 1, 1); // update twice to test c++ core
+
+            var scene = (SceneNode)Editor.Scene.GetActorNode(terrain.Parent);
+            Editor.Scene.MarkSceneEdited(scene);
+        }
+
         private void BakeAllEnvProbes()
         {
             Editor.Scene.ExecuteOnGraph(node =>
@@ -699,7 +750,7 @@ namespace FlaxEditor.Modules
             Editor.Scene.MarkSceneEdited(scenes);
         }
 
-        private void SetTheCurrentSceneViewAsDefualt()
+        private void SetTheCurrentSceneViewAsDefault()
         {
             var projectInfo = Editor.ProjectInfo;
             projectInfo.DefaultSceneId = SceneManager.Scenes[0].ID;
@@ -707,7 +758,7 @@ namespace FlaxEditor.Modules
             projectInfo.Save();
         }
 
-        private void OnOnMainWindowClosing()
+        private void OnMainWindowClosing()
         {
             // Clear UI references (GUI cannot be used after window closing)
             MainMenu = null;

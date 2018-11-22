@@ -1,9 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using FlaxEngine;
-using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Docking
 {
@@ -50,30 +48,7 @@ namespace FlaxEditor.GUI.Docking
         : base(null)
         {
         }
-
-        /// <summary>
-        /// Saves whole docking layout to the file.
-        /// </summary>
-        /// <param name="path">Destination file path</param>
-        /// <param name="mainWindow">Main window</param>
-        /// <returns>True if cannot save data, otherwise false</returns>
-        public bool SaveLayout(string path, RootControl mainWindow)
-        {
-            throw new NotImplementedException("Finish saving layout to xml file");
-        }
-
-        /// <summary>
-        /// Loads whole docking layout from the file.
-        /// </summary>
-        /// <param name="path">Source file path</param>
-        /// <param name="setupWindow">Function that creates windows. String argument contains serialized window typename.</param>
-        /// <param name="mainWindow">Main window</param>
-        /// <returns>True if cannot load data, otherwise false</returns>
-        public bool LoadLayout(string path, Func<MasterDockPanel, string, DockWindow> setupWindow, RootControl mainWindow)
-        {
-            throw new NotImplementedException("Finish loading layout from xml file");
-        }
-
+        
         /// <summary>
         /// Resets windows layout.
         /// </summary>

@@ -969,17 +969,15 @@ namespace FlaxEditor
             }
         }
 
-        internal IntPtr Internal_GetGameWinPtr(bool forceGet)
+        internal void Internal_GetGameWinPtr(bool forceGet, out IntPtr result)
         {
-            IntPtr result = IntPtr.Zero;
+            result = IntPtr.Zero;
             if (Windows.GameWin != null && (forceGet || Windows.GameWin.ContainsFocus))
             {
                 var win = Windows.GameWin.Root as WindowRootControl;
                 if (win != null)
                     result = win.Window.unmanagedPtr;
             }
-
-            return result;
         }
 
         internal void Internal_GetGameWindowSize(out Vector2 resultAsRef)
