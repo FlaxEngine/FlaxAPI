@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -345,6 +346,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Enable/disable ambient occlusion effect.
         /// </summary>
+        [DefaultValue(true)]
         [NoSerialize, EditorOrder(100), EditorDisplay("Ambient Occlusion", "Enabled")]
         public bool AO_Enabled
         {
@@ -359,7 +361,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the ambient occlusion intensity.
         /// </summary>
-        [NoSerialize, EditorOrder(101), EditorDisplay("Ambient Occlusion", "Intensity"), Limit(0, 2.0f, 0.01f)]
+        [DefaultValue(0.6f), Limit(0, 2.0f, 0.01f)]
+        [NoSerialize, EditorOrder(101), EditorDisplay("Ambient Occlusion", "Intensity")]
         public float AO_Intensity
         {
             get => data.AO_Intensity;
@@ -373,7 +376,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the ambient occlusion power.
         /// </summary>
-        [NoSerialize, EditorOrder(102), EditorDisplay("Ambient Occlusion", "Power"), Limit(0, 4.0f, 0.01f)]
+        [DefaultValue(0.75f), Limit(0, 4.0f, 0.01f)]
+        [NoSerialize, EditorOrder(102), EditorDisplay("Ambient Occlusion", "Power")]
         public float AO_Power
         {
             get => data.AO_Power;
@@ -387,7 +391,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the ambient occlusion check range radius.
         /// </summary>
-        [NoSerialize, EditorOrder(103), EditorDisplay("Ambient Occlusion", "Radius"), Limit(0, 16.0f, 0.01f)]
+        [DefaultValue(0.7f), Limit(0, 16.0f, 0.01f)]
+        [NoSerialize, EditorOrder(103), EditorDisplay("Ambient Occlusion", "Radius")]
         public float AO_Radius
         {
             get => data.AO_Radius;
@@ -401,7 +406,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the ambient occlusion fade out distance.
         /// </summary>
-        [NoSerialize, EditorOrder(104), EditorDisplay("Ambient Occlusion", "Fade Out Distance"), Limit(0, 1000000.0f)]
+        [DefaultValue(3000.0f), Limit(0, 1000000.0f)]
+        [NoSerialize, EditorOrder(104), EditorDisplay("Ambient Occlusion", "Fade Out Distance")]
         public float AO_FadeOutDistance
         {
             get => data.AO_FadeOutDistance;
@@ -419,6 +425,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Enables/disables bloom effect.
         /// </summary>
+        [DefaultValue(true)]
         [NoSerialize, EditorOrder(200), EditorDisplay("Bloom", "Enabled")]
         public bool Bloom_Enabled
         {
@@ -433,7 +440,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the bloom intensity.
         /// </summary>
-        [NoSerialize, EditorOrder(201), EditorDisplay("Bloom", "Intensity"), Limit(0, 10.0f, 0.1f)]
+        [DefaultValue(1.0f), Limit(0, 10.0f, 0.1f)]
+        [NoSerialize, EditorOrder(201), EditorDisplay("Bloom", "Intensity")]
         public float Bloom_Intensity
         {
             get => data.Bloom_Intensity;
@@ -447,7 +455,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the bloom threshold. Pixels with higher luminance are glowing.
         /// </summary>
-        [NoSerialize, EditorOrder(202), EditorDisplay("Bloom", "Threshold"), Limit(0, 15.0f, 0.01f)]
+        [DefaultValue(3.0f), Limit(0, 15.0f, 0.01f)]
+        [NoSerialize, EditorOrder(202), EditorDisplay("Bloom", "Threshold")]
         public float Bloom_Threshold
         {
             get => data.Bloom_Threshold;
@@ -461,6 +470,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the bloom blur sigma parameter.
         /// </summary>
+        [DefaultValue(3.6f)]
         [NoSerialize, EditorOrder(203), EditorDisplay("Bloom", "Blur Sigma")]
         public float Bloom_BlurSigma
         {
@@ -475,6 +485,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the bloom blur scale.
         /// </summary>
+        [DefaultValue(1.8f)]
         [NoSerialize, EditorOrder(204), EditorDisplay("Bloom", "Scale")]
         public float Bloom_Scale
         {
@@ -493,7 +504,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the white color temperature. Default is 6500.
         /// </summary>
-        [NoSerialize, EditorOrder(300), Limit(1500, 15000), EditorDisplay("Tone Mapping", "White Temperature"), Tooltip("White color temperature. Default is 6500.")]
+        [DefaultValue(6500.0f), Limit(1500, 15000)]
+        [NoSerialize, EditorOrder(300), EditorDisplay("Tone Mapping", "White Temperature"), Tooltip("White color temperature. Default is 6500.")]
         public float ToneMap_WhiteTemp
         {
             get => data.ToneMap_WhiteTemp;
@@ -507,7 +519,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the white tint. Default is 0.
         /// </summary>
-        [NoSerialize, EditorOrder(301), Limit(-1, 1, 0.001f), EditorDisplay("Tone Mapping", "White Tint"), Tooltip("White color tint. Default is 0.")]
+        [DefaultValue(0), Limit(-1, 1, 0.001f)]
+        [NoSerialize, EditorOrder(301), EditorDisplay("Tone Mapping", "White Tint"), Tooltip("White color tint. Default is 0.")]
         public float ToneMap_WhiteTint
         {
             get => data.ToneMap_WhiteTint;
@@ -521,7 +534,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve slope. Default is 0.88.
         /// </summary>
-        [NoSerialize, EditorOrder(302), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Slope"), Tooltip("This will adjust the steepness of the S-curve used for the tone mapper, where larger values will make the slope steeper (darker) and lower values will make the slope less steep (lighter). Default is 0.88.")]
+        [DefaultValue(0.88f), Limit(0, 1, 0.01f)]
+        [NoSerialize, EditorOrder(302), EditorDisplay("Tone Mapping", "Film Slope"), Tooltip("This will adjust the steepness of the S-curve used for the tone mapper, where larger values will make the slope steeper (darker) and lower values will make the slope less steep (lighter). Default is 0.88.")]
         public float ToneMap_FilmSlope
         {
             get => data.ToneMap_FilmSlope;
@@ -535,7 +549,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve toe. Default is 0.55.
         /// </summary>
-        [NoSerialize, EditorOrder(303), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Toe"), Tooltip("This will adjust the dark color in the tone mapper. Default is 0.55.")]
+        [DefaultValue(0.55f), Limit(0, 1, 0.01f)]
+        [NoSerialize, EditorOrder(303), EditorDisplay("Tone Mapping", "Film Toe"), Tooltip("This will adjust the dark color in the tone mapper. Default is 0.55.")]
         public float ToneMap_FilmToe
         {
             get => data.ToneMap_FilmToe;
@@ -549,7 +564,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve shoulder. Default is 0.26.
         /// </summary>
-        [NoSerialize, EditorOrder(304), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Shoulder"), Tooltip("This will adjust the bright color in the tone mapper. Default is 0.26.")]
+        [DefaultValue(0.26f), Limit(0, 1, 0.01f)]
+        [NoSerialize, EditorOrder(304), EditorDisplay("Tone Mapping", "Film Shoulder"), Tooltip("This will adjust the bright color in the tone mapper. Default is 0.26.")]
         public float ToneMap_FilmShoulder
         {
             get => data.ToneMap_FilmShoulder;
@@ -563,7 +579,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve black clip. Default is 0.
         /// </summary>
-        [NoSerialize, EditorOrder(305), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film Black Clip"), Tooltip("This will set where the crossover happens where black's start to cut off their value. In general, this value should not be adjusted. Default is 0.")]
+        [DefaultValue(0), Limit(0, 1, 0.01f)]
+        [NoSerialize, EditorOrder(305), EditorDisplay("Tone Mapping", "Film Black Clip"), Tooltip("This will set where the crossover happens where black's start to cut off their value. In general, this value should not be adjusted. Default is 0.")]
         public float ToneMap_FilmBlackClip
         {
             get => data.ToneMap_FilmBlackClip;
@@ -577,7 +594,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve white clip. Default is 0.04.
         /// </summary>
-        [NoSerialize, EditorOrder(306), Limit(0, 1, 0.01f), EditorDisplay("Tone Mapping", "Film White Clip"), Tooltip("This will set where the crossover happens where white's start to cut off their values. This will appear as a subtle change in most cases. Default is 0.04.")]
+        [DefaultValue(0.04f), Limit(0, 1, 0.01f)]
+        [NoSerialize, EditorOrder(306), EditorDisplay("Tone Mapping", "Film White Clip"), Tooltip("This will set where the crossover happens where white's start to cut off their values. This will appear as a subtle change in most cases. Default is 0.04.")]
         public float ToneMap_FilmWhiteClip
         {
             get => data.ToneMap_FilmWhiteClip;
@@ -595,6 +613,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the eye adaptation mode.
         /// </summary>
+        [DefaultValue(EyeAdaptationTechnique.Auto)]
         [NoSerialize, EditorOrder(400), EditorDisplay("Eye Adaptation", "Technique")]
         public EyeAdaptationTechnique Eye_Technique
         {
@@ -609,7 +628,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the speed up of the eye adaptation effect.
         /// </summary>
-        [NoSerialize, EditorOrder(401), EditorDisplay("Eye Adaptation", "Speed Up"), Limit(0, 100.0f, 0.01f)]
+        [DefaultValue(3.0f), Limit(0, 100.0f, 0.01f)]
+        [NoSerialize, EditorOrder(401), EditorDisplay("Eye Adaptation", "Speed Up")]
         public float Eye_SpeedUp
         {
             get => data.Eye_SpeedUp;
@@ -623,7 +643,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the speed up of the eye adaptation effect.
         /// </summary>
-        [NoSerialize, EditorOrder(402), EditorDisplay("Eye Adaptation", "Speed Down"), Limit(0, 100.0f, 0.01f)]
+        [DefaultValue(1.0f), Limit(0, 100.0f, 0.01f)]
+        [NoSerialize, EditorOrder(402), EditorDisplay("Eye Adaptation", "Speed Down")]
         public float Eye_SpeedDown
         {
             get => data.Eye_SpeedDown;
@@ -637,7 +658,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the camera exposure.
         /// </summary>
-        [NoSerialize, EditorOrder(403), Limit(-1000, 1000, 0.001f), EditorDisplay("Eye Adaptation", "Exposure")]
+        [DefaultValue(1.5f), Limit(-1000, 1000, 0.001f)]
+        [NoSerialize, EditorOrder(403), EditorDisplay("Eye Adaptation", "Exposure")]
         public float Eye_Exposure
         {
             get => data.Eye_Exposure;
@@ -651,7 +673,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the pixels light value to achieve.
         /// </summary>
-        [NoSerialize, EditorOrder(404), Limit(-100, 100, 0.001f), EditorDisplay("Eye Adaptation", "Key Value")]
+        [DefaultValue(0.2f), Limit(-100, 100, 0.001f)]
+        [NoSerialize, EditorOrder(404), EditorDisplay("Eye Adaptation", "Key Value")]
         public float Eye_KeyValue
         {
             get => data.Eye_KeyValue;
@@ -665,7 +688,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the minimum luminance value used for tone mapping.
         /// </summary>
-        [NoSerialize, EditorOrder(405), EditorDisplay("Eye Adaptation", "Minimum luminance"), Limit(0, 50.0f, 0.01f)]
+        [DefaultValue(0.01f), Limit(0, 50.0f, 0.01f)]
+        [NoSerialize, EditorOrder(405), EditorDisplay("Eye Adaptation", "Minimum luminance")]
         public float Eye_MinLuminance
         {
             get => data.Eye_MinLuminance;
@@ -679,7 +703,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the maximum luminance value used for tone mapping.
         /// </summary>
-        [NoSerialize, EditorOrder(406), EditorDisplay("Eye Adaptation", "Maximum luminance"), Limit(0, 100.0f, 0.01f)]
+        [DefaultValue(100.0f), Limit(0, 100.0f, 0.01f)]
+        [NoSerialize, EditorOrder(406), EditorDisplay("Eye Adaptation", "Maximum luminance")]
         public float Eye_MaxLuminance
         {
             get => data.Eye_MaxLuminance;
@@ -697,7 +722,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the vignette intensity.
         /// </summary>
-        [NoSerialize, EditorOrder(500), EditorDisplay("Camera Artifacts", "Vignette Intensity"), Limit(0, 2, 0.001f)]
+        [DefaultValue(0.8f), Limit(0, 2, 0.001f)]
+        [NoSerialize, EditorOrder(500), EditorDisplay("Camera Artifacts", "Vignette Intensity")]
         public float Cam_VignetteIntensity
         {
             get => data.Cam_VignetteIntensity;
@@ -725,7 +751,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the vignette shape factor.
         /// </summary>
-        [NoSerialize, EditorOrder(502), EditorDisplay("Camera Artifacts", "Vignette Shape Factor"), Limit(0.0001f, 2.0f, 0.001f)]
+        [DefaultValue(0.125f), Limit(0.0001f, 2.0f, 0.001f)]
+        [NoSerialize, EditorOrder(502), EditorDisplay("Camera Artifacts", "Vignette Shape Factor")]
         public float Cam_VignetteShapeFactor
         {
             get => data.Cam_VignetteShapeFactor;
@@ -739,7 +766,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the grain noise amount.
         /// </summary>
-        [NoSerialize, EditorOrder(503), EditorDisplay("Camera Artifacts", "Grain Amount"), Limit(0.0f, 2.0f, 0.005f)]
+        [DefaultValue(0.006f), Limit(0.0f, 2.0f, 0.005f)]
+        [NoSerialize, EditorOrder(503), EditorDisplay("Camera Artifacts", "Grain Amount")]
         public float Cam_GrainAmount
         {
             get => data.Cam_GrainAmount;
@@ -753,7 +781,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the grain noise particles size.
         /// </summary>
-        [NoSerialize, EditorOrder(504), EditorDisplay("Camera Artifacts", "Grain Particle Size"), Limit(1.0f, 3.0f, 0.01f)]
+        [DefaultValue(1.6f), Limit(1.0f, 3.0f, 0.01f)]
+        [NoSerialize, EditorOrder(504), EditorDisplay("Camera Artifacts", "Grain Particle Size")]
         public float Cam_GrainParticleSize
         {
             get => data.Cam_GrainParticleSize;
@@ -767,7 +796,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the grain noise particles size.
         /// </summary>
-        [NoSerialize, EditorOrder(505), EditorDisplay("Camera Artifacts", "Grain Speed"), Limit(0.0f, 10.0f, 0.01f), Tooltip("Specifies grain particles animation speed")]
+        [DefaultValue(1.0f), Limit(0.0f, 10.0f, 0.01f)]
+        [NoSerialize, EditorOrder(505), EditorDisplay("Camera Artifacts", "Grain Speed"), Tooltip("Specifies grain particles animation speed")]
         public float Cam_GrainSpeed
         {
             get => data.Cam_GrainSpeed;
@@ -781,7 +811,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the chromatic aberration distortion intensity.
         /// </summary>
-        [NoSerialize, EditorOrder(506), EditorDisplay("Camera Artifacts", "Chromatic Distortion"), Limit(0.0f, 1.0f, 0.01f)]
+        [DefaultValue(0.0f), Limit(0.0f, 1.0f, 0.01f)]
+        [NoSerialize, EditorOrder(506), EditorDisplay("Camera Artifacts", "Chromatic Distortion")]
         public float Cam_ChromaticDistortion
         {
             get => data.Cam_ChromaticDistortion;
@@ -799,7 +830,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens flares intensity.
         /// </summary>
-        [NoSerialize, EditorOrder(600), EditorDisplay("Lens Flares", "Intensity"), Limit(0, 10.0f, 0.01f)]
+        [DefaultValue(1.0f), Limit(0, 10.0f, 0.01f)]
+        [NoSerialize, EditorOrder(600), EditorDisplay("Lens Flares", "Intensity")]
         public float Flare_Intensity
         {
             get => data.Flare_Intensity;
@@ -813,7 +845,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the amount of lens flares ghosts.
         /// </summary>
-        [NoSerialize, EditorOrder(601), EditorDisplay("Lens Flares", "Ghosts"), Limit(0, 16)]
+        [DefaultValue(8), Limit(0, 16)]
+        [NoSerialize, EditorOrder(601), EditorDisplay("Lens Flares", "Ghosts")]
         public int Flare_Ghosts
         {
             get => data.Flare_Ghosts;
@@ -827,6 +860,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens flares halo size.
         /// </summary>
+        [DefaultValue(0.16f)]
         [NoSerialize, EditorOrder(602), EditorDisplay("Lens Flares", "Halo Width")]
         public float Flare_HaloWidth
         {
@@ -841,7 +875,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens flares halo intensity.
         /// </summary>
-        [NoSerialize, EditorOrder(603), EditorDisplay("Lens Flares", "Halo Intensity"), Limit(0, 10.0f, 0.01f)]
+        [DefaultValue(0.666f), Limit(0, 10.0f, 0.01f)]
+        [NoSerialize, EditorOrder(603), EditorDisplay("Lens Flares", "Halo Intensity")]
         public float Flare_HaloIntensity
         {
             get => data.Flare_HaloIntensity;
@@ -855,6 +890,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens flares ghosts dispersal.
         /// </summary>
+        [DefaultValue(0.3f)]
         [NoSerialize, EditorOrder(604), EditorDisplay("Lens Flares", "Ghost Dispersal")]
         public float Flare_GhostDispersal
         {
@@ -869,6 +905,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens flares distortion.
         /// </summary>
+        [DefaultValue(1.5f)]
         [NoSerialize, EditorOrder(605), EditorDisplay("Lens Flares", "Distortion")]
         public float Flare_Distortion
         {
@@ -883,6 +920,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens flares threshold bias.
         /// </summary>
+        [DefaultValue(-0.5f)]
         [NoSerialize, EditorOrder(606), EditorDisplay("Lens Flares", "Threshold Bias")]
         public float Flare_ThresholdBias
         {
@@ -897,6 +935,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens flares threshold scale.
         /// </summary>
+        [DefaultValue(0.22f)]
         [NoSerialize, EditorOrder(607), EditorDisplay("Lens Flares", "Threshold Scale")]
         public float Flare_ThresholdScale
         {
@@ -911,6 +950,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the camera lens dirt texture.
         /// </summary>
+        [DefaultValue(null)]
         [NoSerialize, EditorOrder(608), EditorDisplay("Lens Flares", "Lens Dirt"), Tooltip("Custom texture for camera dirt")]
         public Texture Flare_LensDirt
         {
@@ -925,7 +965,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens dirt intensity.
         /// </summary>
-        [NoSerialize, EditorOrder(609), Limit(0, 100, 0.01f), EditorDisplay("Lens Flares", "Lens Dirt Intensity")]
+        [DefaultValue(1.0f), Limit(0, 100, 0.01f)]
+        [NoSerialize, EditorOrder(609), EditorDisplay("Lens Flares", "Lens Dirt Intensity")]
         public float Flare_LensDirtIntensity
         {
             get => data.Flare_LensDirtIntensity;
@@ -939,6 +980,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the camera lens color lookup texture.
         /// </summary>
+        [DefaultValue(null)]
         [NoSerialize, EditorOrder(610), EditorDisplay("Lens Flares", "Lens Color"), Tooltip("Custom texture for lens flares color")]
         public Texture Flare_LensColor
         {
@@ -953,6 +995,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the lens star lookup texture.
         /// </summary>
+        [DefaultValue(null)]
         [NoSerialize, EditorOrder(611), EditorDisplay("Lens Flares", "Lens Star"), Tooltip("Custom texture for lens flares star")]
         public Texture Flare_LensStar
         {
@@ -971,6 +1014,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets a value indicating whether Depth of Field is enabled.
         /// </summary>
+        [DefaultValue(false)]
         [NoSerialize, EditorOrder(700), EditorDisplay("Depth of Field", "Enabled"), Tooltip("Enable depth of field effect")]
         public bool DOF_Enabled
         {
@@ -985,7 +1029,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
-        [NoSerialize, EditorOrder(701), EditorDisplay("Depth of Field", "Focal Distance"), Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs"), Limit(0)]
+        [DefaultValue(550.0f), Limit(0)]
+        [NoSerialize, EditorOrder(701), EditorDisplay("Depth of Field", "Focal Distance"), Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs")]
         public float DOF_FocalDistance
         {
             get => data.DOF_FocalDistance;
@@ -999,7 +1044,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
-        [NoSerialize, EditorOrder(702), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs"), Limit(0)]
+        [DefaultValue(1000.0f), Limit(0)]
+        [NoSerialize, EditorOrder(702), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs")]
         public float DOF_FocalRegion
         {
             get => data.DOF_FocalRegion;
@@ -1013,7 +1059,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
         /// </summary>
-        [NoSerialize, EditorOrder(703), EditorDisplay("Depth of Field", "Near Transition Range"), Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred"), Limit(0, 10000.0f)]
+        [DefaultValue(80.0f), Limit(0, 10000.0f)]
+        [NoSerialize, EditorOrder(703), EditorDisplay("Depth of Field", "Near Transition Range"), Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred")]
         public float DOF_NearTransitionRange
         {
             get => data.DOF_NearTransitionRange;
@@ -1027,7 +1074,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
         /// </summary>
-        [NoSerialize, EditorOrder(704), EditorDisplay("Depth of Field", "Far Transition Range"), Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred"), Limit(0, 10000.0f)]
+        [DefaultValue(100.0f), Limit(0, 10000.0f)]
+        [NoSerialize, EditorOrder(704), EditorDisplay("Depth of Field", "Far Transition Range"), Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred")]
         public float DOF_FarTransitionRange
         {
             get => data.DOF_FarTransitionRange;
@@ -1039,9 +1087,10 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the distance in World Units which describes border after that there is no blur (useful to disable DoF on sky).
+        /// Gets or sets the distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.
         /// </summary>
-        [NoSerialize, EditorOrder(705), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (useful to disable DoF on sky)"), Limit(50, 1000000.0f, 2)]
+        [DefaultValue(6000.0f), Limit(0, 1000000.0f, 2)]
+        [NoSerialize, EditorOrder(705), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.")]
         public float DOF_DepthLimit
         {
             get => data.DOF_DepthLimit;
@@ -1055,6 +1104,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Enables/disables generating Bokeh shapes.
         /// </summary>
+        [DefaultValue(true)]
         [NoSerialize, EditorOrder(706), EditorDisplay("Depth of Field", "Bokeh Enable"), Tooltip("Enables/disables generating Bokeh shapes")]
         public bool DOF_BokehEnabled
         {
@@ -1069,7 +1119,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Controls Bokeh shapes maximum size.
         /// </summary>
-        [NoSerialize, EditorOrder(707), EditorDisplay("Depth of Field", "Bokeh Size"), Tooltip("Controls Bokeh shapes maximum size"), Limit(0, 100.0f, 0.1f)]
+        [DefaultValue(25.0f), Limit(0, 100.0f, 0.1f)]
+        [NoSerialize, EditorOrder(707), EditorDisplay("Depth of Field", "Bokeh Size"), Tooltip("Controls Bokeh shapes maximum size")]
         public float DOF_BokehSize
         {
             get => data.DOF_BokehSize;
@@ -1083,6 +1134,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the Bokeh shapes style.
         /// </summary>
+        [DefaultValue(BokehShapeType.Circle)]
         [NoSerialize, EditorOrder(708), EditorDisplay("Depth of Field", "Bokeh Shape"), Tooltip("Bokeh shapes style")]
         public BokehShapeType DOF_BokehShape
         {
@@ -1097,6 +1149,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the custom texture for bokeh shapes.
         /// </summary>
+        [DefaultValue(null)]
         [NoSerialize, EditorOrder(709), EditorDisplay("Depth of Field", "Bokeh Shape Custom Texture"), Tooltip("Custom texture for bokeh shapes")]
         public Texture DOF_BokehShapeCustom
         {
@@ -1111,7 +1164,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Controls Bokeh shapes generating minimum pixel brightness to appear.
         /// </summary>
-        [NoSerialize, EditorOrder(710), EditorDisplay("Depth of Field", "Bokeh Brightness Threshold"), Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear"), Limit(0, 10.0f, 0.01f)]
+        [DefaultValue(0.8f), Limit(0, 10.0f, 0.01f)]
+        [NoSerialize, EditorOrder(710), EditorDisplay("Depth of Field", "Bokeh Brightness Threshold"), Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear")]
         public float DOF_BokehBrightnessThreshold
         {
             get => data.DOF_BokehBrightnessThreshold;
@@ -1125,7 +1179,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Controls Bokeh shapes blur threshold.
         /// </summary>
-        [NoSerialize, EditorOrder(711), EditorDisplay("Depth of Field", "Bokeh Blur Threshold"), Tooltip("Controls Bokeh shapes blur threshold"), Limit(0, 1.0f, 0.001f)]
+        [DefaultValue(0.05f), Limit(0, 1.0f, 0.001f)]
+        [NoSerialize, EditorOrder(711), EditorDisplay("Depth of Field", "Bokeh Blur Threshold"), Tooltip("Controls Bokeh shapes blur threshold")]
         public float DOF_BokehBlurThreshold
         {
             get => data.DOF_BokehBlurThreshold;
@@ -1139,7 +1194,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Controls Bokeh shapes brightness falloff parameter.
         /// </summary>
-        [NoSerialize, EditorOrder(712), EditorDisplay("Depth of Field", "Bokeh Falloff"), Tooltip("Controls Bokeh shapes brightness falloff parameter"), Limit(0, 2.0f, 0.001f)]
+        [DefaultValue(0.5f), Limit(0, 2.0f, 0.001f)]
+        [NoSerialize, EditorOrder(712), EditorDisplay("Depth of Field", "Bokeh Falloff"), Tooltip("Controls Bokeh shapes brightness falloff parameter")]
         public float DOF_BokehFalloff
         {
             get => data.DOF_BokehFalloff;
@@ -1153,7 +1209,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Controls Bokeh shapes depth cutoff parameter.
         /// </summary>
-        [NoSerialize, EditorOrder(713), EditorDisplay("Depth of Field", "Bokeh Depth Cutoff"), Tooltip("Controls Bokeh shapes depth cutoff parameter"), Limit(0, 5.0f, 0.001f)]
+        [DefaultValue(1.5f), Limit(0, 5.0f, 0.001f)]
+        [NoSerialize, EditorOrder(713), EditorDisplay("Depth of Field", "Bokeh Depth Cutoff"), Tooltip("Controls Bokeh shapes depth cutoff parameter")]
         public float DOF_BokehDepthCutoff
         {
             get => data.DOF_BokehDepthCutoff;
@@ -1171,7 +1228,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the effect intensity (normalized to range [0;1]). Use 0 to disable it.
         /// </summary>
-        [Limit(0, 1.0f, 0.01f)]
+        [DefaultValue(1.0f), Limit(0, 1.0f, 0.01f)]
         [NoSerialize, EditorOrder(800), EditorDisplay("Screen Space Reflections", "Intensity"), Tooltip("Effect intensity (normalized to range [0;1]). Use 0 to disable it.")]
         public float SSR_Intensity
         {
@@ -1186,6 +1243,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the input depth resolution mode.
         /// </summary>
+        [DefaultValue(ResolutionMode.Half)]
         [NoSerialize, EditorOrder(801), EditorDisplay("Screen Space Reflections", "Depth Resolution"), Tooltip("The depth buffer downscale option to optimize raycast performance. Full gives better quality, but half improves performance. The default value is half.")]
         public ResolutionMode SSR_DepthResolution
         {
@@ -1200,6 +1258,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the ray trace pass resolution mode.
         /// </summary>
+        [DefaultValue(ResolutionMode.Half)]
         [NoSerialize, EditorOrder(802), EditorDisplay("Screen Space Reflections", "Ray Trace Resolution"), Tooltip("The raycast resolution. Full gives better quality, but half improves performance. The default value is half.")]
         public ResolutionMode SSR_RayTracePassResolution
         {
@@ -1216,7 +1275,7 @@ namespace FlaxEngine.Rendering
         /// Smaller values produce wider reflections spread but also introduce more noise.
         /// Higher values provide more mirror-like reflections. Default value is 0.8.
         /// </summary>
-        [Limit(0, 1.0f, 0.01f)]
+        [DefaultValue(0.82f), Limit(0, 1.0f, 0.01f)]
         [NoSerialize, EditorOrder(803), EditorDisplay("Screen Space Reflections", "BRDF Bias"), Tooltip("The reflection spread. Higher values provide finer, more mirror-like reflections. This setting has no effect on performance. The default value is 0.82")]
         public float SSR_BRDFBias
         {
@@ -1232,7 +1291,7 @@ namespace FlaxEngine.Rendering
         /// Minimum allowed surface roughness value to use local reflections.
         /// Pixels with higher values won't be affected by the effect.
         /// </summary>
-        [Limit(0, 1.0f, 0.01f)]
+        [DefaultValue(0.45f), Limit(0, 1.0f, 0.01f)]
         [NoSerialize, EditorOrder(804), EditorDisplay("Screen Space Reflections", "Roughness Threshold"), Tooltip("The maximum amount of roughness a material must have to reflect the scene. For example, if this value is set to 0.4, only materials with a roughness value of 0.4 or below reflect the scene. The default value is 0.45.")]
         public float SSR_RoughnessThreshold
         {
@@ -1247,7 +1306,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Ray tracing starting position is offset by a percent of the normal in world space to avoid self occlusions.
         /// </summary>
-        [Limit(0, 10.0f, 0.01f)]
+        [DefaultValue(0.1f), Limit(0, 10.0f, 0.01f)]
         [NoSerialize, EditorOrder(805), EditorDisplay("Screen Space Reflections", "World Anti Self Occlusion Bias"), Tooltip("The offset of the raycast origin. Lower values produce more correct reflection placement, but produce more artifacts. We recommend values of 0.3 or lower. The default value is 0.1.")]
         public float SSR_WorldAntiSelfOcclusionBias
         {
@@ -1262,6 +1321,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the resolve pass resolution mode.
         /// </summary>
+        [DefaultValue(ResolutionMode.Full)]
         [NoSerialize, EditorOrder(806), EditorDisplay("Screen Space Reflections", "Resolve Resolution"), Tooltip("The raycast resolution. Full gives better quality, but half improves performance. The default value is half.")]
         public ResolutionMode SSR_ResolvePassResolution
         {
@@ -1277,7 +1337,7 @@ namespace FlaxEngine.Rendering
         /// Gets or sets the resolve pass samples amount. Higher values provide better quality but reduce effect performance.
         /// Default value is 4. Use 1 for the highest speed.
         /// </summary>
-        [Limit(1, 8)]
+        [DefaultValue(4), Limit(1, 8)]
         [NoSerialize, EditorOrder(807), EditorDisplay("Screen Space Reflections", "Resolve Samples"), Tooltip("The number of rays used to resolve the reflection color. Higher values produce less noise, but worse performance. The default value is 4.")]
         public int SSR_ResolveSamples
         {
@@ -1292,7 +1352,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the edge fade factor. It's used to fade off effect on screen edges to provide smoother image.
         /// </summary>
-        [Limit(0, 1.0f, 0.02f)]
+        [DefaultValue(0.1f), Limit(0, 1.0f, 0.02f)]
         [NoSerialize, EditorOrder(808), EditorDisplay("Screen Space Reflections", "Edge Fade Factor"), Tooltip("The point at which the far edges of the reflection begin to fade. Has no effect on performance. The default value is 0.1.")]
         public float SSR_EdgeFadeFactor
         {
@@ -1308,6 +1368,7 @@ namespace FlaxEngine.Rendering
         /// Gets or sets a value indicating whether use color buffer mipmaps chain; otherwise will use raw input color buffer to sample reflections color.
         /// Using mipmaps improves resolve pass performance and reduces GPU cache misses.
         /// </summary>
+        [DefaultValue(true)]
         [NoSerialize, EditorOrder(809), EditorDisplay("Screen Space Reflections", "Use Color Buffer Mips"), Tooltip("The input color buffer downscale mode that uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.")]
         public bool SSR_UseColorBufferMips
         {
@@ -1322,6 +1383,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets a value indicating whether use temporal effect to smooth reflections.
         /// </summary>
+        [DefaultValue(true)]
         [NoSerialize, EditorOrder(810), EditorDisplay("Screen Space Reflections", "Enable Temporal Effect"), Tooltip("Enables the temporal pass. Reduces noise, but produces an animated \"jittering\" effect that's sometimes noticeable. If disabled, the properties below have no effect.")]
         public bool SSR_TemporalEffect
         {
@@ -1334,10 +1396,10 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the temporal effect scale. Default is 4.
+        /// Gets or sets the temporal effect scale. Default is 8.
         /// </summary>
-        [Limit(0, 20.0f, 0.5f)]
-        [NoSerialize, EditorOrder(811), EditorDisplay("Screen Space Reflections", "Temporal Scale"), Tooltip("The intensity of the temporal effect. Lower values produce reflections faster, but more noise. The default value is 4.")]
+        [DefaultValue(8.0f), Limit(0, 20.0f, 0.5f)]
+        [NoSerialize, EditorOrder(811), EditorDisplay("Screen Space Reflections", "Temporal Scale"), Tooltip("The intensity of the temporal effect. Lower values produce reflections faster, but more noise. The default value is 8.")]
         public float SSR_TemporalScale
         {
             get => data.SSR_TemporalScale;
@@ -1351,7 +1413,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the temporal response. Default is 0.8.
         /// </summary>
-        [Limit(0.05f, 1.0f, 0.01f)]
+        [DefaultValue(0.8f), Limit(0.05f, 1.0f, 0.01f)]
         [NoSerialize, EditorOrder(812), EditorDisplay("Screen Space Reflections", "Temporal Response"), Tooltip("How quickly reflections blend between the reflection in the current frame and the history buffer. Lower values produce reflections faster, but with more jittering. If the camera in your game doesn't move much, we recommend values closer to 1. The default value is 0.8.")]
         public float SSR_TemporalResponse
         {
@@ -1377,6 +1439,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color saturation (applies globally to the whole image). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(900), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Saturation"), Tooltip("Color saturation (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorGrading_ColorSaturation
@@ -1392,6 +1455,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color contrast (applies globally to the whole image). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(901), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Contrast"), Tooltip("Color contrast (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorGrading_ColorContrast
@@ -1407,6 +1471,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gamma (applies globally to the whole image). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(902), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Gamma"), Tooltip("Color gamma (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorGrading_ColorGamma
@@ -1422,6 +1487,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gain (applies globally to the whole image). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(903), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Gain"), Tooltip("Color gain (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorGrading_ColorGain
@@ -1437,6 +1503,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color offset (applies globally to the whole image). Default is 0.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "0,0,0,0")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(904), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Offset"), Tooltip("Color offset (applies globally to the whole image). Default is 0.")]
         public Vector4 ColorGrading_ColorOffset
@@ -1456,6 +1523,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color saturation (applies to shadows only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(905), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Saturation"), Tooltip("Color saturation (applies to shadows only). Default is 1.")]
         public Vector4 ColorGrading_ColorSaturationShadows
@@ -1471,6 +1539,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color contrast (applies to shadows only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(906), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Contrast"), Tooltip("Color contrast (applies to shadows only). Default is 1.")]
         public Vector4 ColorGrading_ColorContrastShadows
@@ -1486,6 +1555,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gamma (applies to shadows only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(907), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Gamma"), Tooltip("Color gamma (applies to shadows only). Default is 1.")]
         public Vector4 ColorGrading_ColorGammaShadows
@@ -1501,6 +1571,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gain (applies to shadows only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(908), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Gain"), Tooltip("Color gain (applies to shadows only). Default is 1.")]
         public Vector4 ColorGrading_ColorGainShadows
@@ -1516,6 +1587,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color offset (applies to shadows only). Default is 0.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "0,0,0,0")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(909), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Shadows Offset"), Tooltip("Color offset (applies to shadows only). Default is 0.")]
         public Vector4 ColorGrading_ColorOffsetShadows
@@ -1535,6 +1607,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color saturation (applies to midtones only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(910), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Saturation"), Tooltip("Color saturation (applies to midtones only). Default is 1.")]
         public Vector4 ColorGrading_ColorSaturationMidtones
@@ -1550,6 +1623,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color contrast (applies to midtones only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(911), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Contrast"), Tooltip("Color contrast (applies to midtones only). Default is 1.")]
         public Vector4 ColorGrading_ColorContrastMidtones
@@ -1565,6 +1639,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gamma (applies to midtones only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(912), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Gamma"), Tooltip("Color gamma (applies to midtones only). Default is 1.")]
         public Vector4 ColorGrading_ColorGammaMidtones
@@ -1580,6 +1655,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gain (applies to midtones only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(913), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Gain"), Tooltip("Color gain (applies to midtones only). Default is 1.")]
         public Vector4 ColorGrading_ColorGainMidtones
@@ -1595,6 +1671,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color offset (applies to midtones only). Default is 0.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "0,0,0,0")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(914), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Midtones Offset"), Tooltip("Color offset (applies to midtones only). Default is 0.")]
         public Vector4 ColorGrading_ColorOffsetMidtones
@@ -1614,6 +1691,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color saturation (applies to highlights only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(915), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Saturation"), Tooltip("Color saturation (applies to highlights only). Default is 1.")]
         public Vector4 ColorGrading_ColorSaturationHighlights
@@ -1629,6 +1707,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color contrast (applies to highlights only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(916), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Contrast"), Tooltip("Color contrast (applies to highlights only). Default is 1.")]
         public Vector4 ColorGrading_ColorContrastHighlights
@@ -1644,6 +1723,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gamma (applies to highlights only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(917), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Gamma"), Tooltip("Color gamma (applies to highlights only). Default is 1.")]
         public Vector4 ColorGrading_ColorGammaHighlights
@@ -1659,6 +1739,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color gain (applies to highlights only). Default is 1.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(918), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Gain"), Tooltip("Color gain (applies to highlights only). Default is 1.")]
         public Vector4 ColorGrading_ColorGainHighlights
@@ -1674,6 +1755,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the color offset (applies to highlights only). Default is 0.
         /// </summary>
+        [DefaultValue(typeof(Vector4), "0,0,0,0")]
         [CustomEditorAlias(TrackBallEditorTypename)]
         [NoSerialize, EditorOrder(919), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Highlights Offset"), Tooltip("Color offset (applies to highlights only). Default is 0.")]
         public Vector4 ColorGrading_ColorOffsetHighlights
@@ -1691,7 +1773,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the shadows maximum value. Default is 0.09.
         /// </summary>
-        [NoSerialize, EditorOrder(920), Limit(-1, 1, 0.01f), EditorDisplay("Color Grading", "Shadows Max"), Tooltip("Shadows maximum value. Default is 0.09.")]
+        [DefaultValue(0.09f), Limit(-1, 1, 0.01f)]
+        [NoSerialize, EditorOrder(920), EditorDisplay("Color Grading", "Shadows Max"), Tooltip("Shadows maximum value. Default is 0.09.")]
         public float ColorGrading_ShadowsMax
         {
             get => data.ColorGrading_ShadowsMax;
@@ -1705,7 +1788,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the highlights minimum value. Default is 0.5.
         /// </summary>
-        [NoSerialize, EditorOrder(921), Limit(-1, 1, 0.01f), EditorDisplay("Color Grading", "Highlights Min"), Tooltip("Highlights minimum value. Default is 0.5.")]
+        [DefaultValue(0.5f), Limit(-1, 1, 0.01f)]
+        [NoSerialize, EditorOrder(921), EditorDisplay("Color Grading", "Highlights Min"), Tooltip("Highlights minimum value. Default is 0.5.")]
         public float ColorGrading_HighlightsMin
         {
             get => data.ColorGrading_HighlightsMin;
@@ -1718,12 +1802,12 @@ namespace FlaxEngine.Rendering
 
         #endregion
 
-
-        #region Depth of Field
+        #region Motion Blur
 
         /// <summary>
         /// Gets or sets a value indicating whether Motion Blur is enabled.
         /// </summary>
+        [DefaultValue(true)]
         [NoSerialize, EditorOrder(1000), EditorDisplay("Motion Blur", "Enabled"), Tooltip("Enable motion blur effect")]
         public bool MB_Enabled
         {
@@ -1738,7 +1822,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the motion blur effect scale.
         /// </summary>
-        [NoSerialize, EditorOrder(1001), Limit(0, 5, 0.01f), EditorDisplay("Motion Blur", "Scale"), Tooltip("The motion blur effect scale.")]
+        [DefaultValue(1.0f), Limit(0, 5, 0.01f)]
+        [NoSerialize, EditorOrder(1001), EditorDisplay("Motion Blur", "Scale"), Tooltip("The motion blur effect scale.")]
         public float MB_Scale
         {
             get => data.MB_Scale;
@@ -1752,7 +1837,8 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the amount of sample points used during motion blur rendering. It affects quality and performances.
         /// </summary>
-        [NoSerialize, EditorOrder(1002), Limit(4, 32, 0.1f), EditorDisplay("Motion Blur", "Sample Count"), Tooltip("The amount of sample points used during motion blur rendering. It affects quality and performances.")]
+        [DefaultValue(10), Limit(4, 32, 0.1f)]
+        [NoSerialize, EditorOrder(1002), EditorDisplay("Motion Blur", "Sample Count"), Tooltip("The amount of sample points used during motion blur rendering. It affects quality and performances.")]
         public int MB_SampleCount
         {
             get => data.MB_SampleCount;
@@ -1766,6 +1852,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lowe resolution to improve performance.
         /// </summary>
+        [DefaultValue(ResolutionMode.Half)]
         [NoSerialize, EditorOrder(1003), EditorDisplay("Motion Blur", "Motion Vectors Resolution"), Tooltip("The motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lowe resolution to improve performance.")]
         public ResolutionMode MB_MotionVectorsResolution
         {
