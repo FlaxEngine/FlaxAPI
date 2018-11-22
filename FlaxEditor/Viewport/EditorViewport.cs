@@ -436,6 +436,15 @@ namespace FlaxEditor.Viewport
                     ViewWidgetButtonMenu.VisibleChanged += control => fovValue.Value = _fieldOfView;
                 }
 
+                // Near Plane
+                {
+                    var nearPlane = ViewWidgetButtonMenu.AddButton("Near Plane");
+                    var nearPlaneValue = new FloatValueBox(2.0f, 75, 2, 50.0f, 0.001f, 1000.0f);
+                    nearPlaneValue.Parent = nearPlane;
+                    nearPlaneValue.ValueChanged += () => _nearPlane = nearPlaneValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => nearPlaneValue.Value = _nearPlane;
+                }
+
                 // Far Plane
                 {
                     var farPlane = ViewWidgetButtonMenu.AddButton("Far Plane");
