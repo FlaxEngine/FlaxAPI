@@ -944,13 +944,27 @@ namespace FlaxEditor.Viewport
             4.0f,
             6.0f,
             8.0f,
+            16.0f,
+            32.0f,
         };
 
         private struct ViewModeOptions
         {
-            public ViewMode Mode;
-            public string Name;
+            /// <summary>
+            /// The mode.
+            /// </summary>
+            public readonly ViewMode Mode;
 
+            /// <summary>
+            /// The name.
+            /// </summary>
+            public readonly string Name;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ViewModeOptions"/> struct.
+            /// </summary>
+            /// <param name="mode">The mode.</param>
+            /// <param name="name">The name.</param>
             public ViewModeOptions(ViewMode mode, string name)
             {
                 Mode = mode;
