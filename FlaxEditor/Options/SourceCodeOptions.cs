@@ -1,9 +1,8 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
+using System.ComponentModel;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Elements;
-using FlaxEditor.Modules.SourceCodeEditing;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -60,7 +59,7 @@ namespace FlaxEditor.Options
         /// <summary>
         /// Gets or sets the source code editing IDE to use for project and source files accessing.
         /// </summary>
-        [CustomEditor(typeof(SourceCodeEditorEditor))]
+        [DefaultValue("Default"), CustomEditor(typeof(SourceCodeEditorEditor))]
         [EditorDisplay("Accessor"), EditorOrder(100), Tooltip("The source code editing IDE to use for project and source files accessing.")]
         public string SourceCodeEditor { get; set; } = "Default";
     }
