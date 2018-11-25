@@ -297,10 +297,11 @@ namespace FlaxEditor.Windows
             if (Editor.StateMachine.IsPlayMode)
             {
                 Screen.CursorVisible = true;
+                Focus(null);
+                Editor.Windows.MainWindow.Focus();
                 if (Editor.Windows.PropertiesWin.IsDocked)
                     Editor.Windows.PropertiesWin.Focus();
-                else
-                    Focus(null);
+                Screen.CursorVisible = true;
             }
         }
 
