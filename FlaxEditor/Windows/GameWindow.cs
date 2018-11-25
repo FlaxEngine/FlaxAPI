@@ -289,27 +289,42 @@ namespace FlaxEditor.Windows
             }
         }
 
+        /// <summary>
+        /// Unlocks the mouse if game window is focused during play mode.
+        /// </summary>
+        public void UnlockMouseInPlay()
+        {
+            if (Editor.StateMachine.IsPlayMode)
+            {
+                Screen.CursorVisible = true;
+                if (Editor.Windows.PropertiesWin.IsDocked)
+                    Editor.Windows.PropertiesWin.Focus();
+                else
+                    Focus(null);
+            }
+        }
+
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
-            if (key == Keys.F12)
+            switch (key)
             {
+            case Keys.Pause:
+                Editor.Simulation.RequestResumeOrPause();
+                UnlockMouseInPlay();
+                break;
+            case Keys.F12:
                 Screenshot.Capture();
-            }
-            else if (key == Keys.F11)
+                break;
+            case Keys.F11:
             {
                 if (Root.GetKey(Keys.Shift))
                 {
                     // Unlock mouse in game mode
-                    if (Editor.StateMachine.IsPlayMode)
-                    {
-                        Screen.CursorVisible = true;
-                        if (Editor.Windows.PropertiesWin.IsDocked)
-                            Editor.Windows.PropertiesWin.Focus();
-                        else
-                            Focus(null);
-                    }
+                    UnlockMouseInPlay();
                 }
+                break;
+            }
             }
 
             return base.OnKeyDown(key);
