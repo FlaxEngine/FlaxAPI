@@ -222,8 +222,14 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// The custom node name to be used as a root motion source. If not specified the actual root node will be used.
         /// </summary>
-        [EditorOrder(1070), DefaultValue(""), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
+        [EditorOrder(1070), DefaultValue(null), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
         public string RootNodeName { get; set; }
+
+        /// <summary>
+        /// The zero-based index for the animation clip to import. If the source file has more than one animation it can be used to pick a desire clip.
+        /// </summary>
+        [EditorOrder(1080), DefaultValue(-1), EditorDisplay("Animation"), Tooltip("The zero-based index for the animation clip to import. If the source file has more than one animation it can be used to pick a desire clip.")]
+        public int AnimationIndex { get; set; } = -1;
 
         /// <summary>
         /// If checked, the importer will try to restore the model material slots.
@@ -263,9 +269,10 @@ namespace FlaxEditor.Content.Import
             public byte OptimizeKeyframes;
             public byte EnableRootMotion;
             public string RootNodeName;
+            public int AnimationIndex;
 
             // Misc
-            public bool RestoreMaterialsOnReimport;
+            public byte RestoreMaterialsOnReimport;
         }
 
         internal void ToInternal(out InternalOptions options)
@@ -295,7 +302,8 @@ namespace FlaxEditor.Content.Import
                 OptimizeKeyframes = (byte)(OptimizeKeyframes ? 1 : 0),
                 EnableRootMotion = (byte)(EnableRootMotion ? 1 : 0),
                 RootNodeName = RootNodeName,
-                RestoreMaterialsOnReimport = RestoreMaterialsOnReimport,
+                AnimationIndex = AnimationIndex,
+                RestoreMaterialsOnReimport = (byte)(RestoreMaterialsOnReimport ? 1 : 0),
             };
         }
 
@@ -323,7 +331,8 @@ namespace FlaxEditor.Content.Import
             OptimizeKeyframes = options.OptimizeKeyframes != 0;
             EnableRootMotion = options.EnableRootMotion != 0;
             RootNodeName = options.RootNodeName;
-            RestoreMaterialsOnReimport = options.RestoreMaterialsOnReimport;
+            AnimationIndex = options.AnimationIndex;
+            RestoreMaterialsOnReimport = options.RestoreMaterialsOnReimport != 0;
         }
 
         /// <summary>
