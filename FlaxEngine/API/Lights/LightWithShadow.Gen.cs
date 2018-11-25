@@ -32,7 +32,7 @@ namespace FlaxEngine
         /// Gets or sets light shadows casting distance from view.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(80), EditorDisplay("Shadow", "Distance"), Tooltip("Light shadows rendering distance"), Limit(0, 100000)]
+        [EditorOrder(80), EditorDisplay("Shadow", "Distance"), Tooltip("Light shadows rendering distance"), Limit(0, 1000000)]
         public float ShadowsDistance
         {
 #if UNIT_TEST_COMPILANT
@@ -47,7 +47,7 @@ namespace FlaxEngine
         /// Gets light shadows fade off distance.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(90), EditorDisplay("Shadow", "Fade Distance"), Tooltip("Shadows fade off distance"), Limit(0.0f, 1000.0f, 0.1f)]
+        [EditorOrder(90), EditorDisplay("Shadow", "Fade Distance"), Tooltip("Shadows fade off distance"), Limit(0.0f, 10000.0f, 0.1f)]
         public float ShadowsFadeDistance
         {
 #if UNIT_TEST_COMPILANT

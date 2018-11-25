@@ -228,6 +228,7 @@ namespace FlaxEngine
                 typeof(T) != typeof(SpriteAtlas) &&
                 typeof(T) != typeof(IESProfile) &&
                 typeof(T) != typeof(SkinnedModel) &&
+                typeof(T) != typeof(CollisionData) &&
                 typeof(T) != typeof(Model))
                 throw new InvalidOperationException("Asset type " + typeName + " does not support virtual assets.");
 

@@ -25,7 +25,11 @@ namespace FlaxEngine.TypeConverters
             if (value is string str)
             {
                 string[] v = str.Split(',');
-                return new Color(float.Parse(v[0]), float.Parse(v[1]), float.Parse(v[2]), float.Parse(v[3]));
+                if (v.Length == 4)
+                    return new Color(float.Parse(v[0]), float.Parse(v[1]), float.Parse(v[2]), float.Parse(v[3]));
+                if (v.Length == 3)
+                    return new Color(float.Parse(v[0]), float.Parse(v[1]), float.Parse(v[2]), 1.0f);
+                throw new FormatException("Invalid Color value format.");
             }
 
             return base.ConvertFrom(context, culture, value);
