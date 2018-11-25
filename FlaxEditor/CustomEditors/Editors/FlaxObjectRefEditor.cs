@@ -317,26 +317,14 @@ namespace FlaxEditor.CustomEditors.Editors
                     _dragHandlers.Add(_dragScripts);
                 }
 
-                _hasValidDragOver = false;
-                if (_dragActors.OnDragEnter(data))
+                _hasValidDragOver = _dragHandlers.OnDragEnter(data) != DragDropEffect.None;
+
+                // Special case when dragging the actor with script to link script reference
+                if (_dragActorsWithScript.HasValidDrag)
                 {
-                    _hasValidDragOver = true;
-                }
-                else if (_dragAssets.OnDragEnter(data))
-                {
-                    _hasValidDragOver = true;
-                }
-                else if (_dragScripts.OnDragEnter(data))
-                {
-                    _hasValidDragOver = true;
-                }
-                else if (_dragActors.OnDragEnter(data))
-                {
-                    // Special case when dragging the actor with script to link script reference
-                    var script = _dragActors.Objects[0].Actor.GetScript(_type);
-                    _dragActors.Objects.Clear();
+                    var script = _dragActorsWithScript.Objects[0].Actor.GetScript(_type);
+                    _dragActorsWithScript.Objects.Clear();
                     _dragScripts.Objects.Add(script);
-                    _hasValidDragOver = true;
                 }
 
                 return DragEffect;
