@@ -48,6 +48,11 @@ namespace FlaxEditor.Windows
         /// </summary>
         public bool CenterMouseOnFocus { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether auto-focus game window on play mode start.
+        /// </summary>
+        public bool FocusOnPlay { get; set; }
+
         private class GameRoot : ContainerControl
         {
             public bool EnableEvents => SceneManager.IsGameLogicRunning;
@@ -206,6 +211,7 @@ namespace FlaxEditor.Windows
         private void OnOptionsChanged(EditorOptions options)
         {
             CenterMouseOnFocus = options.Interface.CenterMouseOnGameWinFocus;
+            FocusOnPlay = options.Interface.FocusGameWinOnPlay;
         }
 
         private void PlayingStateOnSceneDuplicating()

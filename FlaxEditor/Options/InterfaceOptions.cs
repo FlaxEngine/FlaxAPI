@@ -21,5 +21,11 @@ namespace FlaxEditor.Options
         /// </summary>
         [EditorDisplay("Interface", "Center Mouse On Game Window Focus"), EditorOrder(100), Tooltip("Determines whether center mouse position on window focus in play mode. Helps when working with games that lock mouse cursor.")]
         public bool CenterMouseOnGameWinFocus { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether auto-focus game window on play mode start.
+        /// </summary>
+        [EditorDisplay("Play In-Editor", "Focus Game Window On Play"), EditorOrder(200), Tooltip("Determines whether auto-focus game window on play mode start.")]
+        public bool FocusGameWinOnPlay { get; set; } = true;
     }
 }
