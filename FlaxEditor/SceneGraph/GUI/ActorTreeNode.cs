@@ -263,7 +263,7 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <inheritdoc />
         protected override DragDropEffect OnDragMoveHeader(DragData data)
         {
-            return _dragHandlers.Effect() ?? DragDropEffect.None;
+            return _dragHandlers.Effect;
         }
 
         /// <inheritdoc />
@@ -599,7 +599,12 @@ namespace FlaxEditor.SceneGraph.GUI
             return actorNode.Actor != null && actorNode != ActorNode && actorNode.Find(Actor) == null;
         }
 
-        private bool ValidateDragAsset(AssetItem item)
+        /// <summary>
+        /// Validates the asset for drag and drop into one of the scene tree nodes.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>True if can drag and drop it, otherwise false.</returns>
+        public static bool ValidateDragAsset(AssetItem item)
         {
             switch (item.ItemDomain)
             {
@@ -616,7 +621,12 @@ namespace FlaxEditor.SceneGraph.GUI
             }
         }
 
-        private bool ValidateDragActorType(Type actorType)
+        /// <summary>
+        /// Validates the type of the actor for drag and drop into one of the scene tree nodes.
+        /// </summary>
+        /// <param name="actorType">Type of the actor.</param>
+        /// <returns>True if can drag and drop it, otherwise false.</returns>
+        public static bool ValidateDragActorType(Type actorType)
         {
             return true;
         }
