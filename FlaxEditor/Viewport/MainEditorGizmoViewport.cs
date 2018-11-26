@@ -580,9 +580,8 @@ namespace FlaxEditor.Viewport
         {
             if (_dragAssets.HasValidDrag && _dragAssets.Objects[0].ItemDomain == ContentDomain.Material)
             {
-                Vector3 hitLocation = ViewPosition;
                 SceneGraphNode hit;
-                GetHitLocation(ref location, out hit, out hitLocation);
+                GetHitLocation(ref location, out hit, out _);
 
                 if (hit is StaticModelNode.EntryNode meshNode)
                 {
@@ -607,9 +606,7 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            var dragEffect = DragHandlers.OnDragEnter(data);
-            if (dragEffect.HasValue)
-                result = dragEffect.Value;
+            result = DragHandlers.OnDragEnter(data);
 
             SetDragEffects(ref location);
 
@@ -645,11 +642,7 @@ namespace FlaxEditor.Viewport
 
             SetDragEffects(ref location);
 
-            var dragEffect = DragHandlers.Effect();
-            if (dragEffect.HasValue)
-                return dragEffect.Value;
-
-            return DragDropEffect.None;
+            return DragHandlers.Effect;
         }
 
         /// <inheritdoc />

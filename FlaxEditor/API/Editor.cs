@@ -983,9 +983,15 @@ namespace FlaxEditor
         internal void Internal_GetGameWindowSize(out Vector2 resultAsRef)
         {
             resultAsRef = Vector2.Zero;
-            if (Windows.GameWin != null)
+            var gameWin = Windows.GameWin;
+            if (gameWin != null)
             {
-                resultAsRef = Windows.GameWin.Size;
+                // Handle case when Game window is not selected in tab view
+                var dockedTo = gameWin.ParentDockPanel;
+                if (dockedTo != null && dockedTo.SelectedTab != gameWin && dockedTo.SelectedTab != null)
+                    resultAsRef = dockedTo.SelectedTab.Size;
+                else
+                    resultAsRef = gameWin.Size;
             }
         }
 

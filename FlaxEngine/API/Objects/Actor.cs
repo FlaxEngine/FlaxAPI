@@ -179,8 +179,7 @@ namespace FlaxEngine
             if (target == null)
                 throw new ArgumentNullException();
             var pos = target.Position;
-            var up = Vector3.Up;
-            LookAt(ref pos, ref up);
+            Internal_LookAt1(unmanagedPtr, ref pos);
         }
 
         /// <summary>
@@ -193,7 +192,7 @@ namespace FlaxEngine
             if (target == null)
                 throw new ArgumentNullException();
             var pos = target.Position;
-            LookAt(ref pos, ref worldUp);
+            Internal_LookAt2(unmanagedPtr, ref pos, ref worldUp);
         }
 
         /// <summary>
@@ -202,8 +201,7 @@ namespace FlaxEngine
         /// <param name="worldPosition">The target point to look at.</param>
         public void LookAt(Vector3 worldPosition)
         {
-            var up = Vector3.Up;
-            LookAt(ref worldPosition, ref up);
+            Internal_LookAt1(unmanagedPtr, ref worldPosition);
         }
 
         /// <summary>
@@ -213,8 +211,7 @@ namespace FlaxEngine
         /// <param name="worldUp">The upward direction vector (in world space).</param>
         public void LookAt(ref Vector3 worldPosition, ref Vector3 worldUp)
         {
-            var direction = worldPosition - Position;
-            Orientation = Quaternion.LookRotation(direction, worldUp);
+            Internal_LookAt2(unmanagedPtr, ref worldPosition, ref worldUp);
         }
 
         /// <summary>
@@ -569,6 +566,12 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Script[] Internal_GetScripts(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_LookAt1(IntPtr obj, ref Vector3 worldPos);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_LookAt2(IntPtr obj, ref Vector3 worldPos, ref Vector3 worldUp);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_WorldToLocal(IntPtr obj, out Matrix matrix);

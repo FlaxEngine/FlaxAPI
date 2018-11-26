@@ -408,6 +408,27 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Applies a force (or impulse) defined in the local space of the rigidbody (relative to its coordinate system) at its center of mass.
+        /// </summary>
+        /// <remarks>
+        /// This will not induce a torque<para>ForceMode determines if the force is to be conventional or impulsive.</para><para>Each actor has an acceleration and a velocity change accumulator which are directly modified using the modes ForceMode.Acceleration and ForceMode.VelocityChange respectively. The modes ForceMode.Force and ForceMode.Impulse also modify these same accumulators and are just short hand for multiplying the vector parameter by inverse mass and then using ForceMode.Acceleration and ForceMode.VelocityChange respectively.</para>
+        /// </remarks>
+        /// <param name="force">The force/impulse to apply defined in the local space.</param>
+        /// <param name="mode">The mode to use when applying the force/impulse.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void AddRelativeForce(Vector3 force, ForceMode mode = ForceMode.Force)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_AddRelativeForce(unmanagedPtr, ref force, mode);
+#endif
+        }
+
+        /// <summary>
         /// Applies an impulsive torque defined in the world space to the rigidbody.
         /// </summary>
         /// <remarks>
@@ -425,6 +446,27 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Internal_AddTorque(unmanagedPtr, ref torque, mode);
+#endif
+        }
+
+        /// <summary>
+        /// Applies an impulsive torque defined in the local space of the rigidbody (relative to its coordinate system).
+        /// </summary>
+        /// <remarks>
+        /// ForceMode determines if the force is to be conventional or impulsive.<para>Each actor has an angular acceleration and an angular velocity change accumulator which are directly modified using the modes ForceMode.Acceleration and ForceMode.VelocityChange respectively.The modes ForceMode.Force and ForceMode.Impulse also modify these same accumulators and are just short hand for multiplying the vector parameter by inverse inertia and then using ForceMode.Acceleration and ForceMode.VelocityChange respectively.</para>
+        /// </remarks>
+        /// <param name="torque">The torque to apply defined in the local space.</param>
+        /// <param name="mode">The mode to use when applying the force/impulse.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void AddRelativeTorque(Vector3 torque, ForceMode mode = ForceMode.Force)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_AddRelativeTorque(unmanagedPtr, ref torque, mode);
 #endif
         }
 
@@ -570,7 +612,13 @@ namespace FlaxEngine
         internal static extern void Internal_AddForce(IntPtr obj, ref Vector3 force, ForceMode mode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_AddRelativeForce(IntPtr obj, ref Vector3 force, ForceMode mode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_AddTorque(IntPtr obj, ref Vector3 torque, ForceMode mode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_AddRelativeTorque(IntPtr obj, ref Vector3 torque, ForceMode mode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetSolverIterationCounts(IntPtr obj, int minPositionIters, int minVelocityIters);

@@ -569,9 +569,7 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            var dragEffect = _dragHandlers.OnDragEnter(data);
-
-            return dragEffect ?? result;
+            return _dragHandlers.OnDragEnter(data);
         }
 
         private static bool ValidateDragItem(ContentItem contentItem)
@@ -598,9 +596,7 @@ namespace FlaxEditor.Viewport
             if (result != DragDropEffect.None)
                 return result;
 
-            var dragEffect = _dragHandlers.Effect();
-
-            return dragEffect ?? DragDropEffect.None;
+            return _dragHandlers.Effect;
         }
 
         /// <inheritdoc />

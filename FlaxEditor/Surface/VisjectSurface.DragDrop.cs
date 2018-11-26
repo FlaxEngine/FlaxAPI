@@ -38,11 +38,7 @@ namespace FlaxEditor.Surface
             if (result != DragDropEffect.None)
                 return result;
 
-            var dragEffect = DragHandlers.OnDragEnter(data);
-            if (dragEffect.HasValue)
-                result = dragEffect.Value;
-
-            return result;
+            return DragHandlers.OnDragEnter(data);
         }
 
         /// <inheritdoc />
@@ -52,11 +48,7 @@ namespace FlaxEditor.Surface
             if (result != DragDropEffect.None)
                 return result;
 
-            var dragEffect = DragHandlers.Effect();
-            if (dragEffect.HasValue)
-                return dragEffect.Value;
-
-            return DragDropEffect.None;
+            return DragHandlers.Effect;
         }
 
         /// <inheritdoc />

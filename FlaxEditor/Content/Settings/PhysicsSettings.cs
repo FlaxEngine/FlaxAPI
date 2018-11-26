@@ -90,7 +90,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// Enables support for cooking physical collision shapes geometry at runtime. Use it to enable generating runtime terrain collision or convex mesh colliders.
         /// </summary>
-        [EditorOrder(1100), EditorDisplay("Other"), Tooltip("Enables support for cooking physical collision shapes geometry at runtime. Use it to enable generating runtime terrain collision or convex mesh colliders.")]
+        [EditorOrder(1100), EditorDisplay("Other", "Support Cooking At Runtime"), Tooltip("Enables support for cooking physical collision shapes geometry at runtime. Use it to enable generating runtime terrain collision or convex mesh colliders.")]
         public bool SupportCookingAtRuntime;
 
         /// <summary>

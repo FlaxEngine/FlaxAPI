@@ -48,6 +48,11 @@ namespace FlaxEditor.Windows
         /// </summary>
         public bool CenterMouseOnFocus { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether auto-focus game window on play mode start.
+        /// </summary>
+        public bool FocusOnPlay { get; set; }
+
         private class GameRoot : ContainerControl
         {
             public bool EnableEvents => SceneManager.IsGameLogicRunning;
@@ -206,6 +211,7 @@ namespace FlaxEditor.Windows
         private void OnOptionsChanged(EditorOptions options)
         {
             CenterMouseOnFocus = options.Interface.CenterMouseOnGameWinFocus;
+            FocusOnPlay = options.Interface.FocusGameWinOnPlay;
         }
 
         private void PlayingStateOnSceneDuplicating()
@@ -283,27 +289,43 @@ namespace FlaxEditor.Windows
             }
         }
 
+        /// <summary>
+        /// Unlocks the mouse if game window is focused during play mode.
+        /// </summary>
+        public void UnlockMouseInPlay()
+        {
+            if (Editor.StateMachine.IsPlayMode)
+            {
+                Screen.CursorVisible = true;
+                Focus(null);
+                Editor.Windows.MainWindow.Focus();
+                if (Editor.Windows.PropertiesWin.IsDocked)
+                    Editor.Windows.PropertiesWin.Focus();
+                Screen.CursorVisible = true;
+            }
+        }
+
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
-            if (key == Keys.F12)
+            switch (key)
             {
+            case Keys.Pause:
+                Editor.Simulation.RequestResumeOrPause();
+                UnlockMouseInPlay();
+                break;
+            case Keys.F12:
                 Screenshot.Capture();
-            }
-            else if (key == Keys.F11)
+                break;
+            case Keys.F11:
             {
                 if (Root.GetKey(Keys.Shift))
                 {
                     // Unlock mouse in game mode
-                    if (Editor.StateMachine.IsPlayMode)
-                    {
-                        Screen.CursorVisible = true;
-                        if (Editor.Windows.PropertiesWin.IsDocked)
-                            Editor.Windows.PropertiesWin.Focus();
-                        else
-                            Focus(null);
-                    }
+                    UnlockMouseInPlay();
                 }
+                break;
+            }
             }
 
             return base.OnKeyDown(key);

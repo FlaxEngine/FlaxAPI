@@ -172,7 +172,7 @@ namespace FlaxEditor.Viewport
         private float _yaw;
         private float _pitch;
         private float _fieldOfView = 60.0f;
-        private float _nearPlane = 2.0f;
+        private float _nearPlane = 10.0f;
         private float _farPlane = 10000.0f;
 
         /// <summary>
@@ -456,10 +456,19 @@ namespace FlaxEditor.Viewport
                     ViewWidgetButtonMenu.VisibleChanged += control => fovValue.Value = _fieldOfView;
                 }
 
+                // Near Plane
+                {
+                    var nearPlane = ViewWidgetButtonMenu.AddButton("Near Plane");
+                    var nearPlaneValue = new FloatValueBox(2.0f, 75, 2, 50.0f, 0.001f, 1000.0f);
+                    nearPlaneValue.Parent = nearPlane;
+                    nearPlaneValue.ValueChanged += () => _nearPlane = nearPlaneValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => nearPlaneValue.Value = _nearPlane;
+                }
+
                 // Far Plane
                 {
                     var farPlane = ViewWidgetButtonMenu.AddButton("Far Plane");
-                    var farPlaneValue = new FloatValueBox(1000, 75, 2, 50.0f, 10.0f, 200000.0f);
+                    var farPlaneValue = new FloatValueBox(1000, 75, 2, 50.0f, 10.0f);
                     farPlaneValue.Parent = farPlane;
                     farPlaneValue.ValueChanged += () => _farPlane = farPlaneValue.Value;
                     ViewWidgetButtonMenu.VisibleChanged += control => farPlaneValue.Value = _farPlane;
@@ -955,13 +964,27 @@ namespace FlaxEditor.Viewport
             4.0f,
             6.0f,
             8.0f,
+            16.0f,
+            32.0f,
         };
 
         private struct ViewModeOptions
         {
-            public ViewMode Mode;
-            public string Name;
+            /// <summary>
+            /// The mode.
+            /// </summary>
+            public readonly ViewMode Mode;
 
+            /// <summary>
+            /// The name.
+            /// </summary>
+            public readonly string Name;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ViewModeOptions"/> struct.
+            /// </summary>
+            /// <param name="mode">The mode.</param>
+            /// <param name="name">The name.</param>
             public ViewModeOptions(ViewMode mode, string name)
             {
                 Mode = mode;

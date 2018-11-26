@@ -169,7 +169,7 @@ namespace FlaxEditor.Modules
                 _enterPlayFocusedWindow = gameWin;
 
             // Show Game widow if hidden
-            if (gameWin != null)
+            if (gameWin != null && gameWin.FocusOnPlay)
             {
                 if (!gameWin.IsDocked)
                 {

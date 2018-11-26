@@ -90,9 +90,37 @@ namespace FlaxEngine
             Internal_GetCookOptions(unmanagedPtr, out modelLodIndex, out convexFlags, out convexVertexLimit);
         }
 
+        /// <summary>
+        /// Cooks the mesh collision data and updates the virtual asset. action cannot be performed on a main thread.
+        /// </summary>
+        /// <remarks>
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// </remarks>
+        /// <param name="type">The collision data type.</param>
+        /// <param name="model">The source model.</param>
+        /// <param name="modelLodIndex">The source model LOD index.</param>
+        /// <param name="convexFlags">The convex mesh generation flags.</param>
+        /// <param name="convexVertexLimit">The convex mesh vertex limit. Use values in range [8;255]</param>
+        public void CookCollision(CollisionDataType type, Model model, int modelLodIndex = 0, ConvexMeshGenerationFlags convexFlags = ConvexMeshGenerationFlags.None, int convexVertexLimit = 255)
+        {
+            // Validate state and input
+            if (!IsVirtual)
+                throw new InvalidOperationException("Only virtual assets can be updated at runtime.");
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            if (type == CollisionDataType.None)
+                throw new ArgumentException(nameof(type));
+
+            if (Internal_CookCollision(type, model.unmanagedPtr, modelLodIndex, convexFlags, convexVertexLimit))
+                throw new FlaxException("Mesh cooking failed. See log to learn more.");
+        }
+
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCookOptions(IntPtr obj, out int modelLodIndex, out ConvexMeshGenerationFlags convexFlags, out int convexVertexLimit);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CookCollision(CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
 #endif
     }
 }
