@@ -6,7 +6,7 @@ using FlaxEngine;
 namespace FlaxEditor.Tools.Terrain.Sculpt
 {
     /// <summary>
-    /// Terrain holes creating tool mode. Edits terrain visibility map by editing area affected by brush.
+    /// Terrain holes creating tool mode edits terrain holes mask by changing area affected by brush.
     /// </summary>
     /// <seealso cref="FlaxEditor.Tools.Terrain.Sculpt.Mode" />
     public sealed class HolesMode : Mode
