@@ -81,6 +81,13 @@ namespace FlaxEditor.Surface
                 Color = new Color(105, 179, 160),
                 Archetypes = Archetypes.Animation.Nodes
             },
+            new GroupArchetype
+            {
+                GroupID = 10,
+                Name = "Boolean",
+                Color = new Color(237, 28, 36),
+                Archetypes = Archetypes.Boolean.Nodes
+            },
         };
 
 #if DEBUG

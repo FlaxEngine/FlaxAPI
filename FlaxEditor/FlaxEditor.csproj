@@ -361,6 +361,7 @@
     <Compile Include="Surface\Archetypes\Animation.MultiBlend.cs" />
     <Compile Include="Surface\Archetypes\Animation.StateMachine.cs" />
     <Compile Include="Surface\Archetypes\Animation.TransitionEditor.cs" />
+    <Compile Include="Surface\Archetypes\Boolean.cs" />
     <Compile Include="Surface\Archetypes\Constants.cs" />
     <Compile Include="Surface\Archetypes\Layers.cs" />
     <Compile Include="Surface\Archetypes\Material.cs" />
