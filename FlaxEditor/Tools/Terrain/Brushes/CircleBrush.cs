@@ -32,7 +32,7 @@ namespace FlaxEditor.Tools.Terrain.Brushes
             Spherical = 2,
 
             /// <summary>
-            ///  A falloff with an abrupt start and a smooth ellipsoidal end. The opposite of the Sphere falloff.
+            /// A falloff with an abrupt start and a smooth ellipsoidal end. The opposite of the Sphere falloff.
             /// </summary>
             Tip = 3,
         }
