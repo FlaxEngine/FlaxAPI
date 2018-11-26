@@ -145,7 +145,7 @@ namespace FlaxEditor.Surface
                 color = Colors.Impulse;
                 break;
             case ConnectionType.Bool:
-                color = Colors.Box;
+                color = Colors.Bool;
                 break;
             case ConnectionType.Integer:
                 color = Colors.Integer;
