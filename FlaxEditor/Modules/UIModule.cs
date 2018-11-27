@@ -682,51 +682,9 @@ namespace FlaxEditor.Modules
             }
         }
 
-        private void InitPatch(Terrain terrain, int patchX, int patchZ)
-        {
-            var chunkSize = terrain.ChunkSize;
-            var vertexCount = chunkSize * 4 + 1;
-            float[] heightmap = new float[vertexCount * vertexCount];
-            int offset = (patchX + patchZ) * chunkSize * 4;
-            for (int z = 0; z < vertexCount; z++)
-            {
-                for (int x = 0; x < vertexCount; x++)
-                {
-                    //heightmap[z * vertexCount + x] = 0;
-                    //heightmap[z * vertexCount + x] = 100 + (z / (float)vertexCount) * 3000.0f;
-                    //heightmap[z * vertexCount + x] = Vector3.Transform(new Vector3(x + patchX * chunkVertexSize * 4, 0, z + patchZ * chunkVertexSize * 4) * 100, Quaternion.Euler(-45, 0, 0)).Y;
-                    //heightmap[z * vertexCount + x] = (offset + z + x) * 10.0f;
-                    //heightmap[z * vertexCount + x] = (offset + z + x) * 10.0f - 100.0f;
-                    heightmap[z * vertexCount + x] = Mathf.Sin((float)x / chunkSize * Mathf.PiOverFour * 3.0f) * 1000.0f;
-                }
-            }
-            var patchCoord = new Int2(patchX, patchZ);
-            //terrain.SetupPatch(ref patchCoord, TerrainHeightmapFormat.R8G8B8A8_Raw, heightmap, null, true);
-            terrain.SetupPatch(ref patchCoord, heightmap);
-        }
-
         private void CreateTerrain()
         {
             new Tools.Terrain.CreateTerrainDialog().Show(Editor.Windows.MainWindow);
-            return;
-
-            var terrain = Terrain.New();
-            terrain.StaticFlags = StaticFlags.FullyStatic;
-            terrain.Setup(6, 63);
-            terrain.AddPatch(0, 0);
-            terrain.AddPatch(0, 1);
-            terrain.AddPatch(1, 0);
-            terrain.AddPatch(1, 1);
-            SceneManager.SpawnActor(terrain);
-            InitPatch(terrain, 0, 0);
-            InitPatch(terrain, 1, 0);
-            InitPatch(terrain, 0, 1);
-            InitPatch(terrain, 1, 1);
-
-            InitPatch(terrain, 1, 1); // update twice to test c++ core
-
-            var scene = (SceneNode)Editor.Scene.GetActorNode(terrain.Parent);
-            Editor.Scene.MarkSceneEdited(scene);
         }
 
         private void BakeAllEnvProbes()

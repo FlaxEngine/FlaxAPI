@@ -16,6 +16,7 @@ This repository contains an open source public C# API as well as full source cod
 * C# Scripting (C# 7.2)
 * Physics (NVIDIA PhysX)
 * Nested Prefabs
+* Terrain
 * Top Performance
 * Xbox One, Windows and UWP support
 * Global Illumination (lightmaps baking on GPU)
@@ -46,6 +47,7 @@ This extension is available to download [here](https://marketplace.visualstudio.
 
 # Screenshots
 
+![terrain](https://flaxengine.com/wp-content/images/visuals/terrain.jpg "Terrain")
 ![rendering](https://flaxengine.com/wp-content/images/Screenshot_2017_03_11_18_12_35.png "Rendering")
 ![pbr-rendering](https://flaxengine.com/wp-content/images/visuals/pbr.jpg "PBR Rendering")
 ![gi](https://flaxengine.com/wp-content/images/visuals/gi.jpg "Global Illumination")
