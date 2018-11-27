@@ -56,12 +56,12 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         public static NodeArchetype[] Nodes =
         {
-            Op1(1, "NOT", "Negates the boolean value", new[] { "!", "~" }),
-            Op2(2, "AND", "Performs a logical conjunction on two values", new[] { "&&" }),
-            Op2(3, "OR", "Returns true if either (or both) of its operands is true", new[] { "||" }),
-            Op2(4, "XOR", ""),
-            Op2(5, "NOR", ""),
-            Op2(6, "NAND", ""),
+            Op1(1, "Boolean NOT", "Negates the boolean value", new[] { "!", "~" }),
+            Op2(2, "Boolean AND", "Performs a logical conjunction on two values", new[] { "&&" }),
+            Op2(3, "Boolean OR", "Returns true if either (or both) of its operands is true", new[] { "||" }),
+            Op2(4, "Boolean XOR", ""),
+            Op2(5, "Boolean NOR", ""),
+            Op2(6, "Boolean NAND", ""),
         };
     }
 }
