@@ -5,9 +5,9 @@ using FlaxEngine;
 namespace FlaxEditor.Surface.Archetypes
 {
     /// <summary>
-    /// Contains archetypes for nodes from the Boolean group.
+    /// Contains archetypes for nodes from the Bitwise group.
     /// </summary>
-    public static class Boolean
+    public static class Bitwise
     {
         private static NodeArchetype Op1(ushort id, string title, string desc, string[] altTitles = null)
         {
@@ -21,8 +21,8 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Vector2(140, 20),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Bool, 0),
-                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Bool, 1)
+                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Integer, 0),
+                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Integer, 1)
                 }
             };
         }
@@ -39,14 +39,14 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Vector2(140, 40),
                 DefaultValues = new object[]
                 {
-                    false,
-                    false,
+                    0,
+                    0,
                 },
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Bool, 0, 0),
-                    NodeElementArchetype.Factory.Input(1, "B", true, ConnectionType.Bool, 1, 1),
-                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Bool, 2)
+                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Integer, 0, 0),
+                    NodeElementArchetype.Factory.Input(1, "B", true, ConnectionType.Integer, 1, 1),
+                    NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Integer, 2)
                 }
             };
         }
@@ -56,12 +56,10 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         public static NodeArchetype[] Nodes =
         {
-            Op1(1, "Boolean NOT", "Negates the boolean value", new[] { "!", "~" }),
-            Op2(2, "Boolean AND", "Performs a logical conjunction on two values", new[] { "&&" }),
-            Op2(3, "Boolean OR", "Returns true if either (or both) of its operands is true", new[] { "||" }),
-            Op2(4, "Boolean XOR", ""),
-            Op2(5, "Boolean NOR", ""),
-            Op2(6, "Boolean NAND", ""),
+            Op1(1, "Bitwise NOT", "Negates the value using bitwise operation", new[] { "!", "~" }),
+            Op2(2, "Bitwise AND", "Performs a bitwise conjunction on two values", new[] { "&" }),
+            Op2(3, "Bitwise OR", "", new[] { "|" }),
+            Op2(4, "Bitwise XOR", ""),
         };
     }
 }

@@ -88,6 +88,13 @@ namespace FlaxEditor.Surface
                 Color = new Color(237, 28, 36),
                 Archetypes = Archetypes.Boolean.Nodes
             },
+            new GroupArchetype
+            {
+                GroupID = 11,
+                Name = "Bitwise",
+                Color = new Color(181, 230, 29),
+                Archetypes = Archetypes.Bitwise.Nodes
+            },
         };
 
 #if DEBUG
