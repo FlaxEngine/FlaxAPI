@@ -106,7 +106,7 @@ namespace FlaxEditor.Surface.Elements
             {
             case ConnectionType.Bool:
             {
-                bool value = (bool)ParentNode.Values[Archetype.ValueIndex];
+                bool value = BoolValue.Get(ParentNode, Archetype);
                 var control = new CheckBox(x, y, value, height)
                 {
                     Parent = Parent

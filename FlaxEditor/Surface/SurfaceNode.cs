@@ -188,15 +188,17 @@ namespace FlaxEditor.Surface
         public void UpdateBoxesTypes()
         {
             // Check there is no need to use box types dependency feature
-            if (Archetype.DependentBoxes == null || Archetype.IndependentBoxes == null)
+            if (Archetype.DependentBoxes == null && Archetype.IndependentBoxes == null)
             {
                 // Back
                 return;
             }
+            var independentBoxesLength = Archetype.IndependentBoxes?.Length;
+            var dependentBoxesLength = Archetype.DependentBoxes?.Length;
 
             // Get type to assign to all dependent boxes
             ConnectionType type = Archetype.DefaultType;
-            for (int i = 0; i < Archetype.IndependentBoxes.Length; i++)
+            for (int i = 0; i < independentBoxesLength; i++)
             {
                 var b = GetBox(Archetype.IndependentBoxes[i]);
                 if (b != null && b.HasAnyConnection)
@@ -211,7 +213,7 @@ namespace FlaxEditor.Surface
             }
 
             // Assign connection type
-            for (int i = 0; i < Archetype.DependentBoxes.Length; i++)
+            for (int i = 0; i < dependentBoxesLength; i++)
             {
                 var b = GetBox(Archetype.DependentBoxes[i]);
                 if (b != null)
@@ -222,7 +224,7 @@ namespace FlaxEditor.Surface
             }
 
             // Validate minor independent boxes to fit main one
-            for (int i = 0; i < Archetype.IndependentBoxes.Length; i++)
+            for (int i = 0; i < independentBoxesLength; i++)
             {
                 var b = GetBox(Archetype.IndependentBoxes[i]);
                 if (b != null)
