@@ -43,12 +43,12 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         public static NodeArchetype[] Nodes =
         {
-            Op(1, "==", "Determinates whenever two values are equal", ConnectionType.Variable),
-            Op(2, "!=", "Determinates whenever two values are not equal", ConnectionType.Variable),
-            Op(3, ">", "Determinates whenever the first value is greater than the other", ConnectionType.Variable),
-            Op(4, "<", "Determinates whenever the first value is less than the other", ConnectionType.Variable),
-            Op(5, "<=", "Determinates whenever the first value is less or equal to the other", ConnectionType.Variable),
-            Op(6, ">=", "Determinates whenever the first value is greater or equal to the other", ConnectionType.Variable),
+            Op(1, "==", "Determines whether two values are equal", ConnectionType.Variable),
+            Op(2, "!=", "Determines whether two values are not equal", ConnectionType.Variable),
+            Op(3, ">", "Determines whether the first value is greater than the other", ConnectionType.Variable),
+            Op(4, "<", "Determines whether the first value is less than the other", ConnectionType.Variable),
+            Op(5, "<=", "Determines whether the first value is less or equal to the other", ConnectionType.Variable),
+            Op(6, ">=", "Determines whether the first value is greater or equal to the other", ConnectionType.Variable),
         };
     }
 }
