@@ -95,6 +95,13 @@ namespace FlaxEditor.Surface
                 Color = new Color(181, 230, 29),
                 Archetypes = Archetypes.Bitwise.Nodes
             },
+            new GroupArchetype
+            {
+                GroupID = 12,
+                Name = "Comparisons",
+                Color = new Color(148, 30, 34),
+                Archetypes = Archetypes.Comparisons.Nodes
+            },
         };
 
 #if DEBUG
