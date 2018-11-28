@@ -312,6 +312,33 @@ namespace FlaxEditor.Surface.Archetypes
             Op1(39, "Frac", "Returns fractional part of the value"),
             Op2(40, "Fmod", "Returns the floating-point remainder of A/B"),
             Op2(41, "Atan2", "Returns arctangent tangent of two values (A, B)"),
+            new NodeArchetype
+            {
+                TypeID = 42,
+                Flags = NodeFlags.AnimGraphOnly,
+                Title = "Near Equal",
+                Description = "Determines if two values are nearly equal within a given epsilon",
+                Size = new Vector2(200, 80),
+                IndependentBoxes = new[]
+                {
+                    0,
+                    1,
+                },
+                DefaultType = ConnectionType.Variable,
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    0.0f,
+                    0.0001f
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "A", true, ConnectionType.Variable, 0, 0),
+                    NodeElementArchetype.Factory.Input(1, "B", true, ConnectionType.Variable, 1, 1),
+                    NodeElementArchetype.Factory.Input(2, "Epsilon", true, ConnectionType.Float, 2, 2),
+                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Bool, 3),
+                }
+            },
         };
     }
 }
