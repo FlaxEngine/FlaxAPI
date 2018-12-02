@@ -122,6 +122,39 @@ namespace FlaxEditor.Surface.ContextMenu
             }
         }
 
+        /// <summary>
+        /// Adds the group archetype to add to the menu.
+        /// </summary>
+        /// <param name="groupArchetype">The group.</param>
+        public void AddGroup(GroupArchetype groupArchetype)
+        {
+            // Get valid nodes
+            var nodes = new List<NodeArchetype>();
+            foreach (var nodeArchetype in groupArchetype.Archetypes)
+            {
+                if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0)
+                    continue;
+
+                nodes.Add(nodeArchetype);
+            }
+
+            // Check if can create group for them
+            if (nodes.Count > 0)
+            {
+                var group = new VisjectCMGroup(this, groupArchetype);
+                group.Close(false);
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    var item = new VisjectCMItem(group, nodes[i]);
+                    item.Parent = group;
+                }
+                group.SortChildren();
+                group.Parent = _groupsPanel;
+                group.DefaultIndex = _groups.Count;
+                _groups.Add(group);
+            }
+        }
+
         private void OnSearchFilterChanged()
         {
             // Skip events during setup or init stuff

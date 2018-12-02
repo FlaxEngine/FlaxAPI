@@ -45,10 +45,41 @@ namespace FlaxEditor.Surface
             }
         });
 
+        private static readonly GroupArchetype StateMachineTransitionGroupArchetype = new GroupArchetype
+        {
+            GroupID = 9,
+            Name = "Transition",
+            Color = new Color(105, 179, 160),
+            Archetypes = new[]
+            {
+                new NodeArchetype
+                {
+                    TypeID = 23,
+                    Title = "Transition Source State Anim",
+                    Description = "The animation state machine transition source state animation data information",
+                    Flags = NodeFlags.AnimGraphOnly,
+                    Size = new Vector2(270, 110),
+                    Elements = new[]
+                    {
+                        NodeElementArchetype.Factory.Output(0, "Length", ConnectionType.Float, 0),
+                        NodeElementArchetype.Factory.Output(1, "Time", ConnectionType.Float, 1),
+                        NodeElementArchetype.Factory.Output(2, "Normalized Time", ConnectionType.Float, 2),
+                        NodeElementArchetype.Factory.Output(3, "Reaming Time", ConnectionType.Float, 3),
+                        NodeElementArchetype.Factory.Output(4, "Reaming Normalized Time", ConnectionType.Float, 4),
+                    }
+                },
+            }
+        };
+
         /// <summary>
         /// The state machine editing context menu.
         /// </summary>
         protected VisjectCM _cmStateMachineMenu;
+
+        /// <summary>
+        /// The state machine transition editing context menu.
+        /// </summary>
+        protected VisjectCM _cmStateMachineTransitionMenu;
 
         /// <inheritdoc />
         public AnimGraphSurface(IVisjectSurfaceOwner owner, Action onSave)
@@ -61,14 +92,30 @@ namespace FlaxEditor.Surface
         {
             base.OnContextChanged();
 
+            VisjectCM menu = null;
+
             // Override surface primary context menu for state machine editing
-            bool isStateMachineOpen = Context?.Context is Archetypes.Animation.StateMachine;
-            if (isStateMachineOpen && _cmStateMachineMenu == null)
+            if (Context?.Context is Animation.StateMachine)
             {
-                _cmStateMachineMenu = new VisjectCM(StateMachineGroupArchetypes, (arch) => true);
-                _cmStateMachineMenu.ShowExpanded = true;
+                if (_cmStateMachineMenu == null)
+                {
+                    _cmStateMachineMenu = new VisjectCM(StateMachineGroupArchetypes, (arch) => true);
+                    _cmStateMachineMenu.ShowExpanded = true;
+                }
+                menu = _cmStateMachineMenu;
             }
-            var menu = isStateMachineOpen ? _cmStateMachineMenu : null;
+
+            // Override surface primary context menu for state machine transition editing
+            if (Context?.Context is Animation.StateMachineTransition)
+            {
+                if (_cmStateMachineTransitionMenu == null)
+                {
+                    _cmStateMachineTransitionMenu = new VisjectCM(NodeFactory.DefaultGroups, CanSpawnNodeType);
+                    _cmStateMachineTransitionMenu.AddGroup(StateMachineTransitionGroupArchetype);
+                }
+                menu = _cmStateMachineTransitionMenu;
+            }
+
             SetPrimaryMenu(menu);
         }
 
@@ -137,6 +184,12 @@ namespace FlaxEditor.Surface
                 _cmStateMachineMenu.Dispose();
                 _cmStateMachineMenu = null;
             }
+            if (_cmStateMachineTransitionMenu != null)
+            {
+                _cmStateMachineTransitionMenu.Dispose();
+                _cmStateMachineTransitionMenu = null;
+            }
+
             base.Dispose();
         }
     }

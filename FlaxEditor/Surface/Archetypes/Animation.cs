@@ -724,6 +724,22 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(0, "Can Start Transition", true, ConnectionType.Bool, 0)
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 23,
+                Title = "Transition Source State Anim",
+                Description = "The animation state machine transition source state animation data information",
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoSpawnViaGUI,
+                Size = new Vector2(270, 110),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Length", ConnectionType.Float, 0),
+                    NodeElementArchetype.Factory.Output(1, "Time", ConnectionType.Float, 1),
+                    NodeElementArchetype.Factory.Output(2, "Normalized Time", ConnectionType.Float, 2),
+                    NodeElementArchetype.Factory.Output(3, "Reaming Time", ConnectionType.Float, 3),
+                    NodeElementArchetype.Factory.Output(4, "Reaming Normalized Time", ConnectionType.Float, 4),
+                }
+            },
         };
     }
 }
