@@ -120,6 +120,7 @@ namespace FlaxEditor.Windows
                 "minimp3 - www.github.com/lieff/minimp3",
                 "Ogg and Vorbis - Xiph.org Foundation",
                 "OpenAL Soft - www.github.com/kcat/openal-soft",
+                "OpenFBX - www.github.com/nem0/OpenFBX",
                 "pugixml - www.pugixml.org",
                 "rapidjson - www.rapidjson.org",
 #if USE_AUTODESK_FBX_SDK
