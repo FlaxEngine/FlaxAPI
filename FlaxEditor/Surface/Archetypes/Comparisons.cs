@@ -26,8 +26,8 @@ namespace FlaxEditor.Surface.Archetypes
                 },
                 DefaultValues = new object[]
                 {
-                    0,
-                    0,
+                    0.0f,
+                    0.0f,
                 },
                 Elements = new[]
                 {
