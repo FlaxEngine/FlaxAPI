@@ -129,7 +129,7 @@ namespace FlaxEditor.Windows
             Viewport = new MainEditorGizmoViewport(editor);
             Viewport.Parent = this;
             Viewport.Task.Flags = ViewFlags.DefaultEditor;
-            Viewport.NearPlane = 100.0f;
+            Viewport.NearPlane = 8.0f;
             Viewport.FarPlane = 20000.0f;
 
             Editor.Scene.ActorRemoved += SceneOnActorRemoved;
@@ -350,7 +350,7 @@ namespace FlaxEditor.Windows
         public override void OnLayoutDeserialize()
         {
             Viewport.Grid.Enabled = true;
-            Viewport.NearPlane = 100.0f;
+            Viewport.NearPlane = 8.0f;
             Viewport.FarPlane = 20000.0f;
             Viewport.FieldOfView = 60.0f;
             Viewport.MovementSpeed = 1.0f;
