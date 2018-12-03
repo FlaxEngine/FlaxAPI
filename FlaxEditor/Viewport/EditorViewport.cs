@@ -172,7 +172,7 @@ namespace FlaxEditor.Viewport
         private float _yaw;
         private float _pitch;
         private float _fieldOfView = 60.0f;
-        private float _nearPlane = 10.0f;
+        private float _nearPlane = 8.0f;
         private float _farPlane = 10000.0f;
 
         /// <summary>
