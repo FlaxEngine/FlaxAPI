@@ -22,9 +22,21 @@ namespace FlaxEditor.History
         /// <param name="historyActionsLimit">The history actions limit.</param>
         public HistoryStack(int historyActionsLimit = 1000)
         {
+            if (historyActionsLimit < 1)
+                throw new ArgumentOutOfRangeException();
+
             _historyActionsLimit = historyActionsLimit;
             _historyActions = new CircularBuffer<IHistoryAction>(_historyActionsLimit);
             _reverseActions = new CircularBuffer<IHistoryAction>(_historyActionsLimit);
+
+            _historyActions.OnItemOverflown += OnItemOverflown;
+            _reverseActions.OnItemOverflown += OnItemOverflown;
+        }
+
+        private void OnItemOverflown(object sender, CircularBuffer<IHistoryAction>.ItemOverflownEventArgs e)
+        {
+            // Dispose item to prevent leaks
+            e.Item.Dispose();
         }
 
         /// <summary>
@@ -58,7 +70,7 @@ namespace FlaxEditor.History
         public void Push(IHistoryAction item)
         {
             _historyActions.PushFront(item);
-            _reverseActions.Clear();
+            ClearReverse();
         }
 
         /// <summary>
@@ -127,11 +139,11 @@ namespace FlaxEditor.History
                     _reverseActions.PushFront(historyAction);
                 }
                 var result = _historyActions.Back();
-                _historyActions.Clear();
+                ClearHistory();
                 return result;
             }
 
-            // iterate all but one elements to skip. Last element is handled exclusively
+            // Iterate all but one elements to skip. Last element is handled exclusively
             for (int i = 0; i < skipElements - 1; i++)
             {
                 PopHistory();
@@ -159,7 +171,7 @@ namespace FlaxEditor.History
                 {
                     _historyActions.PushFront(reverseAction);
                 }
-                _reverseActions.Clear();
+                ClearReverse();
                 return PeekHistory();
             }
 
@@ -177,6 +189,12 @@ namespace FlaxEditor.History
         /// </summary>
         public void Clear()
         {
+            ClearHistory();
+            ClearReverse();
+        }
+
+        private void ClearHistory()
+        {
             if (_historyActions.Count > 0)
             {
                 var actions = _historyActions.ToArray();
@@ -184,7 +202,10 @@ namespace FlaxEditor.History
                     actions[i].Dispose();
                 _historyActions.Clear();
             }
+        }
 
+        private void ClearReverse()
+        {
             if (_reverseActions.Count > 0)
             {
                 var actions = _reverseActions.ToArray();
