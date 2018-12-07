@@ -12,6 +12,13 @@ namespace FlaxEditor.Options
     public sealed class GeneralOptions
     {
         /// <summary>
+        /// Gets or sets a limit for the editor undo actions. Higher values may increase memory usage but also improve changes rollback history length.
+        /// </summary>
+        [DefaultValue(500)]
+        [EditorDisplay("General"), EditorOrder(100), Tooltip("Limit for the editor undo actions. Higher values may increase memory usage but also improve changes rollback history length.")]
+        public int UndoActionsCapacity { get; set; } = 500;
+
+        /// <summary>
         /// Gets or sets a value indicating whether perform automatic scripts reload on main window focus.
         /// </summary>
         [DefaultValue(true)]

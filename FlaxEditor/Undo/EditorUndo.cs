@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.History;
+using FlaxEditor.Options;
 using FlaxEngine;
 
 namespace FlaxEditor
@@ -15,8 +16,16 @@ namespace FlaxEditor
         private readonly Editor _editor;
 
         internal EditorUndo(Editor editor)
+        : base(500)
         {
             _editor = editor;
+
+            editor.Options.OptionsChanged += OnOptionsChanged;
+        }
+
+        private void OnOptionsChanged(EditorOptions options)
+        {
+            Capacity = options.General.UndoActionsCapacity;
         }
 
         /// <inheritdoc />

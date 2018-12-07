@@ -45,7 +45,46 @@ namespace FlaxEditor.History
         /// <value>
         /// The history actions limit.
         /// </value>
-        public int HistoryActionsLimit => _historyActionsLimit;
+        public int HistoryActionsLimit
+        {
+            get => _historyActionsLimit;
+            set
+            {
+                if (value < 1)
+                    throw new ArgumentOutOfRangeException();
+                if (_historyActionsLimit == value)
+                    return;
+
+                // Cache actions
+                var history = _historyActions.ToArray();
+                var reverse = _reverseActions.ToArray();
+
+                // Resize buffers
+                _historyActionsLimit = value;
+                _historyActions.Clear(_historyActionsLimit);
+                _reverseActions.Clear(_historyActionsLimit);
+
+                // Add actions back
+                for (int i = 0; i < _historyActionsLimit && i < history.Length; i++)
+                {
+                    _historyActions.PushBack(history[i]);
+                }
+                for (int i = 0; i < _historyActionsLimit && i < reverse.Length; i++)
+                {
+                    _reverseActions.PushBack(reverse[i]);
+                }
+
+                // Cleanup reaming actions
+                for (int i = _historyActionsLimit; i < history.Length; i++)
+                {
+                    history[i].Dispose();
+                }
+                for (int i = _historyActionsLimit; i < reverse.Length; i++)
+                {
+                    reverse[i].Dispose();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the history count.

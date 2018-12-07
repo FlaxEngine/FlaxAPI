@@ -41,7 +41,7 @@ namespace FlaxEditor
         /// <value>
         /// The undo operations stack.
         /// </value>
-        public HistoryStack UndoOperationsStack { get; } = new HistoryStack();
+        public HistoryStack UndoOperationsStack { get; }
 
         /// <summary>
         /// Occurs when undo operation is done.
@@ -99,6 +99,15 @@ namespace FlaxEditor
         public string FirstRedoName => UndoOperationsStack.PeekReverse().ActionString;
 
         /// <summary>
+        /// Gets or sets the capacity of the undo history buffers.
+        /// </summary>
+        public int Capacity
+        {
+            get => UndoOperationsStack.HistoryActionsLimit;
+            set => UndoOperationsStack.HistoryActionsLimit = value;
+        }
+
+        /// <summary>
         ///     Internal class for keeping reference of undo action.
         /// </summary>
         internal class UndoInternal : IUndoInternal
@@ -122,6 +131,15 @@ namespace FlaxEditor
                     return null;
                 return new UndoActionObject(diff, ActionString, SnapshotInstance);
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Undo"/> class.
+        /// </summary>
+        /// <param name="historyActionsLimit">The history actions limit.</param>
+        public Undo(int historyActionsLimit = 1000)
+        {
+            UndoOperationsStack = new HistoryStack(historyActionsLimit);
         }
 
         /// <summary>
