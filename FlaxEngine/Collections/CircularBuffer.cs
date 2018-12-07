@@ -12,6 +12,7 @@ namespace FlaxEngine.Collections
     ///     Creates new structure array like, with fast front and back insertion.
     ///     <para>Every overflow of this buffer removes last item form other side of insertion</para>
     /// </summary>
+    /// <remarks>This collection is NOT thread-safe.</remarks>
     /// <typeparam name="T">Type of items inserted into buffer</typeparam>
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
@@ -139,7 +140,21 @@ namespace FlaxEngine.Collections
         /// <summary>
         ///     Current capacity of internal buffer
         /// </summary>
-        public int Capacity => _buffer.Length;
+        public int Capacity
+        {
+            get => _buffer.Length;
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException();
+                if (value == _buffer.Length)
+                    return;
+                if (Count > 0)
+                    throw new InvalidOperationException("Cannot change capacity for non-empty buffer.");
+
+                _buffer = new T[value];
+            }
+        }
 
         /// <summary>
         ///     Returns true if there are no items in structure, or false if there are
@@ -341,7 +356,6 @@ namespace FlaxEngine.Collections
             return result;
         }
 
-
         /// <summary>
         ///     Copies the buffer contents to an array, according to the logical
         ///     contents of the buffer (i.e. independent of the internal
@@ -350,21 +364,21 @@ namespace FlaxEngine.Collections
         /// <returns>A new array with a copy of the buffer contents.</returns>
         public T[] ToArray()
         {
-            lock (_buffer)
-            {
-                var result = new T[Count];
-                if (_backItem > _frontItem)
-                {
-                    Array.Copy(_buffer, _backItem, result, 0, Capacity - _backItem);
-                    Array.Copy(_buffer, 0, result, Capacity - _backItem, _frontItem + 1);
-                }
-                else
-                {
-                    Array.Copy(_buffer, _backItem, result, 0, _frontItem - _backItem + 1);
-                }
+            if (Count == 0)
+                return Enumerable.Empty<T>() as T[];
 
-                return result;
+            var result = new T[Count];
+            if (_backItem > _frontItem)
+            {
+                Array.Copy(_buffer, _backItem, result, 0, Capacity - _backItem);
+                Array.Copy(_buffer, 0, result, Capacity - _backItem, _frontItem + 1);
             }
+            else
+            {
+                Array.Copy(_buffer, _backItem, result, 0, _frontItem - _backItem + 1);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -388,6 +402,21 @@ namespace FlaxEngine.Collections
                 _backItem = 0;
                 Count = 0;
             }
+        }
+
+        /// <summary>
+        /// Clears buffer and changes its capacity.
+        /// </summary>
+        /// <param name="newCapacity">The new capacity of the buffer.</param>
+        public void Clear(int newCapacity)
+        {
+            if (newCapacity <= 0)
+                throw new ArgumentOutOfRangeException();
+
+            _buffer = new T[newCapacity];
+            _frontItem = 0;
+            _backItem = 0;
+            Count = 0;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
