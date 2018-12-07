@@ -184,8 +184,13 @@ namespace FlaxEngine.Collections
         /// </summary>
         /// <param name="capacity">Capacity of internal structure</param>
         public CircularBuffer(int capacity)
-        : this(capacity, new T[] { })
         {
+            if (capacity <= 0)
+                throw new ArgumentOutOfRangeException(nameof(capacity), "argument cannot be lower or equal zero");
+            _buffer = new T[capacity];
+            _backItem = 0;
+            _frontItem = 0;
+            Count = 0;
         }
 
         /// <summary>
