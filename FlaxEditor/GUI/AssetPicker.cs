@@ -19,7 +19,8 @@ namespace FlaxEditor.GUI
         private const float ButtonsOffset = 2;
         private const float ButtonsSize = 12;
 
-        private AssetItem _selected;
+        private Asset _selected;
+        private AssetItem _selectedItem;
         private Type _type;
 
         private bool _isMouseDown;
@@ -32,25 +33,8 @@ namespace FlaxEditor.GUI
         /// </summary>
         public AssetItem SelectedItem
         {
-            get => _selected;
-            set
-            {
-                // Check if value won't change
-                if (value == _selected)
-                    return;
-                if (value != null && !IsValid(value))
-                    throw new ArgumentException("Invalid asset type.");
-
-                // Change value
-                _selected?.RemoveReference(this);
-                _selected = value;
-                _selected?.AddReference(this);
-
-                // Update tooltip
-                TooltipText = _selected?.NamePath;
-
-                OnSelectedItemChanged();
-            }
+            get => _selectedItem;
+            set => SelectedAsset = value != null ? FlaxEngine.Content.LoadAsync(value.ID) : null;
         }
 
         /// <summary>
@@ -59,13 +43,7 @@ namespace FlaxEditor.GUI
         public Guid SelectedID
         {
             get => _selected?.ID ?? Guid.Empty;
-            set
-            {
-                if (value != SelectedID)
-                {
-                    SelectedItem = Editor.Instance.ContentDatabase.FindAsset(value);
-                }
-            }
+            set => SelectedAsset = FlaxEngine.Content.LoadAsync(value);
         }
 
         /// <summary>
@@ -73,17 +51,28 @@ namespace FlaxEditor.GUI
         /// </summary>
         public Asset SelectedAsset
         {
-            get => _selected != null ? FlaxEngine.Content.Load(_selected.ID) : null;
+            get => _selected;
             set
             {
-                if (value == null)
-                {
-                    SelectedItem = null;
-                }
-                else if (value.ID != SelectedID)
-                {
-                    SelectedItem = Editor.Instance.ContentDatabase.FindAsset(value.ID);
-                }
+                // Check if value won't change
+                if (value == _selected)
+                    return;
+
+                // Find item from content database and check it
+                var item = value ? Editor.Instance.ContentDatabase.FindAsset(value.ID) : null;
+                if (item != null && !IsValid(item))
+                    throw new ArgumentException("Invalid asset type.");
+
+                // Change value
+                _selectedItem?.RemoveReference(this);
+                _selectedItem = item;
+                _selected = value;
+                _selectedItem?.AddReference(this);
+
+                // Update tooltip
+                TooltipText = _selectedItem?.NamePath;
+
+                OnSelectedItemChanged();
             }
         }
 
@@ -100,7 +89,7 @@ namespace FlaxEditor.GUI
                     _type = value;
 
                     // Auto deselect if the current value is invalid
-                    if (_selected != null && !IsValid(_selected))
+                    if (_selectedItem != null && !IsValid(_selectedItem))
                         SelectedItem = null;
                 }
             }
@@ -213,10 +202,10 @@ namespace FlaxEditor.GUI
             Render2D.DrawSprite(style.ArrowDown, button1Rect, new Color(button1Rect.Contains(_mousePos) ? 1.0f : 0.7f));
 
             // Check if has item selected
-            if (_selected != null)
+            if (_selectedItem != null)
             {
                 // Draw item preview
-                _selected.DrawThumbnail(ref iconRect);
+                _selectedItem.DrawThumbnail(ref iconRect);
 
                 // Draw find button
                 Render2D.DrawSprite(style.Search, button2Rect, new Color(button2Rect.Contains(_mousePos) ? 1.0f : 0.7f));
@@ -230,7 +219,29 @@ namespace FlaxEditor.GUI
                 {
                     Render2D.DrawText(
                         style.FontSmall,
-                        _selected.ShortName,
+                        _selectedItem.ShortName,
+                        new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
+                        Color.White,
+                        TextAlignment.Near,
+                        TextAlignment.Center);
+                }
+            }
+            // Check if has no item but has an asset (eg. virtual asset)
+            else if (_selected)
+            {
+                // Draw remove button
+                Render2D.DrawSprite(style.Cross, button3Rect, new Color(button3Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+
+                // Draw name
+                float sizeForTextLeft = Width - button1Rect.Right;
+                if (sizeForTextLeft > 30)
+                {
+                    var name = _selected.GetType().Name;
+                    if (_selected.IsVirtual)
+                        name += " (virtual)";
+                    Render2D.DrawText(
+                        style.FontSmall,
+                        name,
                         new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
                         Color.White,
                         TextAlignment.Near,
@@ -252,7 +263,8 @@ namespace FlaxEditor.GUI
         /// <inheritdoc />
         public override void OnDestroy()
         {
-            _selected?.RemoveReference(this);
+            _selectedItem?.RemoveReference(this);
+            _selectedItem = null;
             _selected = null;
 
             base.OnDestroy();
@@ -320,16 +332,16 @@ namespace FlaxEditor.GUI
             }
             else if (_selected != null)
             {
-                if (Button2Rect.Contains(location))
+                if (Button2Rect.Contains(location) && _selectedItem != null)
                 {
                     // Select asset
-                    Editor.Instance.Windows.ContentWin.Select(_selected);
+                    Editor.Instance.Windows.ContentWin.Select(_selectedItem);
                 }
                 else if (Button3Rect.Contains(location))
                 {
                     // Deselect asset
                     Focus();
-                    SelectedItem = null;
+                    SelectedAsset = null;
                 }
             }
 
@@ -358,10 +370,10 @@ namespace FlaxEditor.GUI
             Focus();
 
             // Check if has element selected
-            if (_selected != null && IconRect.Contains(location))
+            if (_selectedItem != null && IconRect.Contains(location))
             {
                 // Open it
-                Editor.Instance.ContentEditing.Open(_selected);
+                Editor.Instance.ContentEditing.Open(_selectedItem);
             }
 
             // Handled
