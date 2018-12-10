@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
@@ -89,6 +90,41 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
             _elementsCount = size;
+
+            // Add/Remove buttons
+            if (!_readOnly)
+            {
+                var area = layout.Space(20);
+                var addButton = new Button(area.ContainerControl.Width - (16 + 16 + 2 + 2), 2, 16, 16)
+                {
+                    Text = "+",
+                    TooltipText = "Add new item",
+                    AnchorStyle = AnchorStyle.UpperRight,
+                    Parent = area.ContainerControl
+                };
+                addButton.Clicked += () =>
+                {
+                    if (IsSetBlocked)
+                        return;
+
+                    Resize(Count + 1);
+                };
+                var removeButton = new Button(addButton.Right + 2, addButton.Y, 16, 16)
+                {
+                    Text = "-",
+                    TooltipText = "Remove last item",
+                    AnchorStyle = AnchorStyle.UpperRight,
+                    Parent = area.ContainerControl
+                };
+                removeButton.Enabled = Count > 0;
+                removeButton.Clicked += () =>
+                {
+                    if (IsSetBlocked)
+                        return;
+
+                    Resize(Count - 1);
+                };
+            }
         }
 
         private void OnSizeChanged()
