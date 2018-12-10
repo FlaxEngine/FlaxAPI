@@ -238,6 +238,16 @@ namespace FlaxEditor.Windows.Assets
             UpdateToolstrip();
         }
 
+        /// <inheritdoc />
+        public override void OnShowContextMenu(ContextMenu menu)
+        {
+            base.OnShowContextMenu(menu);
+
+            var saveButton = menu.AddButton("Save", Save);
+            saveButton.Enabled = IsEdited;
+            menu.AddSeparator();
+        }
+
         #endregion
 
         #region IContentItemOwner Implementation
