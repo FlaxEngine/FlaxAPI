@@ -1,8 +1,10 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections;
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -13,6 +15,58 @@ namespace FlaxEditor.CustomEditors.Editors
     /// </summary>
     public abstract class CollectionEditor : CustomEditor
     {
+        /// <summary>
+        /// The custom implementation of the collection items labels that can be used to reorder items.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.CustomEditors.GUI.PropertyNameLabel" />
+        private class CollectionItemLabel : PropertyNameLabel
+        {
+            /// <summary>
+            /// The editor.
+            /// </summary>
+            public CollectionEditor Editor;
+
+            /// <summary>
+            /// The index of the item (zero-based).
+            /// </summary>
+            public readonly int Index;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CollectionItemLabel"/> class.
+            /// </summary>
+            /// <param name="editor">The editor.</param>
+            /// <param name="index">The index.</param>
+            public CollectionItemLabel(CollectionEditor editor, int index)
+            : base("Element " + index)
+            {
+                Editor = editor;
+                Index = index;
+
+                SetupContextMenu += OnSetupContextMenu;
+            }
+
+            private void OnSetupContextMenu(PropertyNameLabel label, ContextMenu menu, CustomEditor linkedEditor)
+            {
+                menu.AddSeparator();
+
+                var moveUpButton = menu.AddButton("Move up", OnMoveUpClicked);
+                moveUpButton.Enabled = Index > 0;
+
+                var moveDownButton = menu.AddButton("Move down", OnMoveDownClicked);
+                moveDownButton.Enabled = Index + 1 < Editor.Count;
+            }
+
+            private void OnMoveUpClicked(ContextMenuButton button)
+            {
+                Editor.Move(Index, Index - 1);
+            }
+
+            private void OnMoveDownClicked(ContextMenuButton button)
+            {
+                Editor.Move(Index, Index + 1);
+            }
+        }
+
         private IntegerValueElement _size;
         private int _elementsCount;
         private bool _readOnly;
@@ -57,7 +111,6 @@ namespace FlaxEditor.CustomEditors.Editors
                 if (memberCollection != null)
                 {
                     // TODO: handle NotNullItems by filtering child editors SetValue
-                    // TODO: handle CanReorderItems
 
                     _readOnly = memberCollection.ReadOnly;
                     _canReorderItems = memberCollection.CanReorderItems;
@@ -83,9 +136,19 @@ namespace FlaxEditor.CustomEditors.Editors
             if (size > 0)
             {
                 var elementType = ElementType;
-                for (int i = 0; i < size; i++)
+                if (_canReorderItems)
                 {
-                    layout.Object("Element " + i, new ListValueContainer(elementType, i, Values));
+                    for (int i = 0; i < size; i++)
+                    {
+                        layout.Object(new CollectionItemLabel(this, i), new ListValueContainer(elementType, i, Values));
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < size; i++)
+                    {
+                        layout.Object("Element " + i, new ListValueContainer(elementType, i, Values));
+                    }
                 }
             }
             _elementsCount = size;
@@ -134,11 +197,30 @@ namespace FlaxEditor.CustomEditors.Editors
             Resize(_size.IntValue.Value);
         }
 
+        private void Move(int srcIndex, int dstIndex)
+        {
+            if (IsSetBlocked)
+                return;
+
+            var cloned = CloneValues();
+
+            var tmp = cloned[dstIndex];
+            cloned[dstIndex] = cloned[srcIndex];
+            cloned[srcIndex] = tmp;
+
+            SetValue(cloned);
+        }
+
         /// <summary>
         /// Resizes collection to the specified new size.
         /// </summary>
         /// <param name="newSize">The new size.</param>
         protected abstract void Resize(int newSize);
+
+        /// <summary>
+        /// Clones the collection values.
+        /// </summary>
+        protected abstract IList CloneValues();
 
         /// <inheritdoc />
         public override void Refresh()

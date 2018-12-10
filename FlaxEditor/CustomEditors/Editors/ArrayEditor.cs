@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections;
 using FlaxEngine;
 
 namespace FlaxEditor.CustomEditors.Editors
@@ -42,6 +43,23 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 SetValue(newValues);
             }
+        }
+
+        /// <inheritdoc />
+        protected override IList CloneValues()
+        {
+            var array = Values[0] as Array;
+            if (array == null)
+                return null;
+
+            var size = array.Length;
+            var arrayType = Values.Type;
+            var elementType = arrayType.GetElementType();
+            var cloned = Array.CreateInstance(elementType, size);
+
+            Array.Copy(array, 0, cloned, 0, size);
+
+            return cloned;
         }
     }
 }

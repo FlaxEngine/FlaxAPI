@@ -56,5 +56,24 @@ namespace FlaxEditor.CustomEditors.Editors
                 SetValue(newValues);
             }
         }
+
+        /// <inheritdoc />
+        protected override IList CloneValues()
+        {
+            var list = Values[0] as IList;
+            if (list == null)
+                return null;
+
+            var size = list.Count;
+            var listType = Values.Type;
+            var cloned = (IList)Activator.CreateInstance(listType);
+
+            for (int i = 0; i < size; i++)
+            {
+                cloned.Add(list[i]);
+            }
+
+            return cloned;
+        }
     }
 }

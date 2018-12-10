@@ -476,6 +476,20 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Adds object(s) editor with name label. Selects proper <see cref="CustomEditor"/> based on overrides.
+        /// </summary>
+        /// <param name="label">The property label.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="overrideEditor">The custom editor to use. If null will detect it by auto.</param>
+        /// <param name="tooltip">The property label tooltip text.</param>
+        /// <returns>The created element.</returns>
+        public CustomEditor Object(PropertyNameLabel label, ValueContainer values, CustomEditor overrideEditor = null, string tooltip = null)
+        {
+            var property = AddPropertyItem(label, tooltip);
+            return property.Object(values, overrideEditor);
+        }
+
+        /// <summary>
         /// Adds object property editor. Selects proper <see cref="CustomEditor"/> based on overrides.
         /// </summary>
         /// <param name="name">The property name.</param>

@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
-using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -13,6 +12,14 @@ namespace FlaxEditor.CustomEditors.GUI
     public class PropertyNameLabel : Label
     {
         // TODO: if name is too long to show -> use tooltip to show it
+
+        /// <summary>
+        /// Custom event delegate that can be sued to extend the property name label with an additional functionality.
+        /// </summary>
+        /// <param name="label">The label.</param>
+        /// <param name="menu">The menu.</param>
+        /// <param name="linkedEditor">The linked editor. Can be null.</param>
+        public delegate void SetupContextMenuDelegate(PropertyNameLabel label, ContextMenu menu, CustomEditor linkedEditor);
 
         private bool _mouseDown;
 
@@ -34,7 +41,7 @@ namespace FlaxEditor.CustomEditors.GUI
         /// <summary>
         /// Occurs when label creates the context menu popup for th property. Can be used to add some custom logic per property editor.
         /// </summary>
-        public event Action<PropertyNameLabel, ContextMenu> SetupContextMenu;
+        public event SetupContextMenuDelegate SetupContextMenu;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyNameLabel"/> class.
@@ -100,22 +107,27 @@ namespace FlaxEditor.CustomEditors.GUI
             {
                 _mouseDown = false;
 
-                if (LinkedEditor == null && SetupContextMenu == null)
+                // Skip if is not extended
+                var linkedEditor = LinkedEditor;
+                if (linkedEditor == null && SetupContextMenu == null)
                     return false;
 
                 var menu = new ContextMenu();
-                if (LinkedEditor != null)
+
+                if (linkedEditor != null)
                 {
-                    var revertToPrefab = menu.AddButton("Revert to Prefab", LinkedEditor.RevertToReferenceValue);
-                    revertToPrefab.Enabled = LinkedEditor.CanRevertReferenceValue;
-                    var resetToDefault = menu.AddButton("Reset to default", LinkedEditor.RevertToDefaultValue);
-                    resetToDefault.Enabled = LinkedEditor.CanRevertDefaultValue;
+                    var revertToPrefab = menu.AddButton("Revert to Prefab", linkedEditor.RevertToReferenceValue);
+                    revertToPrefab.Enabled = linkedEditor.CanRevertReferenceValue;
+                    var resetToDefault = menu.AddButton("Reset to default", linkedEditor.RevertToDefaultValue);
+                    resetToDefault.Enabled = linkedEditor.CanRevertDefaultValue;
                     menu.AddSeparator();
-                    menu.AddButton("Copy", LinkedEditor.Copy);
-                    var paste = menu.AddButton("Paste", LinkedEditor.Paste);
-                    paste.Enabled = LinkedEditor.CanPaste;
+                    menu.AddButton("Copy", linkedEditor.Copy);
+                    var paste = menu.AddButton("Paste", linkedEditor.Paste);
+                    paste.Enabled = linkedEditor.CanPaste;
                 }
-                SetupContextMenu?.Invoke(this, menu);
+
+                SetupContextMenu?.Invoke(this, menu, linkedEditor);
+
                 menu.Show(this, location);
 
                 return true;
