@@ -12,6 +12,7 @@ using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -25,6 +26,64 @@ namespace FlaxEditor.Windows.Assets
         // TODO: debug model UVs channels
         // TODO: refresh material slots comboboxes on material slot rename
         // TODO: add button to draw model bounds
+
+        private sealed class Preview : ModelPreview
+        {
+            private readonly ModelWindow _window;
+            private ContextMenuButton _showFloorButton;
+            private StaticModel _floorModel;
+
+            public Preview(ModelWindow window)
+            : base(true)
+            {
+                _window = window;
+
+                // Show floor widget
+                _showFloorButton = ViewWidgetButtonMenu.AddButton("Show floor", OnShowFloorModelClicked);
+                _showFloorButton.IndexInParent = 1;
+
+                // Floor model
+                _floorModel = StaticModel.New();
+                _floorModel.Position = new Vector3(0, -25, 0);
+                _floorModel.Scale = new Vector3(5, 0.5f, 5);
+                _floorModel.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
+                _floorModel.IsActive = false;
+                Task.CustomActors.Add(_floorModel);
+
+                // Enable shadows
+                PreviewLight.ShadowsMode = ShadowsCastingMode.All;
+                PreviewLight.CascadeCount = 2;
+                PreviewLight.ShadowsDistance = 1000.0f;
+                Task.Flags |= ViewFlags.Shadows;
+            }
+
+            private void OnShowFloorModelClicked(ContextMenuButton obj)
+            {
+                _floorModel.IsActive = !_floorModel.IsActive;
+                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : Sprite.Invalid;
+            }
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                base.Draw();
+
+                var style = Style.Current;
+                if (_window.Asset == null || !_window.Asset.IsLoaded)
+                {
+                    Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+                }
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                FlaxEngine.Object.Destroy(ref _floorModel);
+                _showFloorButton = null;
+
+                base.Dispose();
+            }
+        }
 
         /// <summary>
         /// The model properties proxy object.
@@ -363,7 +422,7 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Model preview
-            _preview = new ModelPreview(true)
+            _preview = new Preview(this)
             {
                 ViewportCamera = new FPSCamera(),
                 Parent = _split.Panel1
