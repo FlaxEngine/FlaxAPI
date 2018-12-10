@@ -24,6 +24,11 @@ namespace FlaxEditor.GUI.Docking
         public bool IsMouseRightButtonDown;
 
         /// <summary>
+        /// The is mouse down flag (middle button).
+        /// </summary>
+        public bool IsMouseMiddleButtonDown;
+
+        /// <summary>
         /// The is mouse down over cross button flag.
         /// </summary>
         public bool IsMouseDownOverCross;
@@ -268,6 +273,7 @@ namespace FlaxEditor.GUI.Docking
             // Clear
             IsMouseLeftButtonDown = false;
             IsMouseRightButtonDown = false;
+            IsMouseMiddleButtonDown = false;
             MouseDownWindow = null;
 
             base.OnLostFocus();
@@ -285,12 +291,13 @@ namespace FlaxEditor.GUI.Docking
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
+            MouseDownWindow = GetTabAtPos(location, out IsMouseDownOverCross);
+
             // Check buttons
             if (buttons == MouseButton.Left)
             {
                 // Cache data
                 IsMouseLeftButtonDown = true;
-                MouseDownWindow = GetTabAtPos(location, out IsMouseDownOverCross);
                 if (!IsMouseDownOverCross && MouseDownWindow != null)
                     _panel.SelectTab(MouseDownWindow);
             }
@@ -298,9 +305,13 @@ namespace FlaxEditor.GUI.Docking
             {
                 // Cache data
                 IsMouseRightButtonDown = true;
-                MouseDownWindow = GetTabAtPos(location, out IsMouseDownOverCross);
                 if (MouseDownWindow != null)
                     _panel.SelectTab(MouseDownWindow);
+            }
+            else if (buttons == MouseButton.Middle)
+            {
+                // Cache data
+                IsMouseMiddleButtonDown = true;
             }
 
             return base.OnMouseDown(location, buttons);
@@ -309,14 +320,14 @@ namespace FlaxEditor.GUI.Docking
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
+            // Check tabs under mouse position at the beginning and at the end
+            var tab = GetTabAtPos(location, out var overCross);
+
             // Check buttons
             if (buttons == MouseButton.Left && IsMouseLeftButtonDown)
             {
                 // Clear flag
                 IsMouseLeftButtonDown = false;
-
-                // Check tabs under mouse position at the beginning and at the end
-                var tab = GetTabAtPos(location, out var overCross);
 
                 // Check if tabs are the same and cross was pressed
                 if (tab != null && tab == MouseDownWindow && IsMouseDownOverCross && overCross)
@@ -328,12 +339,19 @@ namespace FlaxEditor.GUI.Docking
                 // Clear flag
                 IsMouseRightButtonDown = false;
 
-                // Check tabs under mouse position at the beginning and at the end
-                var tab = GetTabAtPos(location, out var overCross);
-
                 if (tab != null)
                 {
                     ShowContextMenu(tab, ref location);
+                }
+            }
+            else if (buttons == MouseButton.Middle && IsMouseMiddleButtonDown)
+            {
+                // Clear flag
+                IsMouseMiddleButtonDown = false;
+
+                if (tab != null)
+                {
+                    tab.Close(ClosingReason.User);
                 }
             }
 
@@ -406,6 +424,7 @@ namespace FlaxEditor.GUI.Docking
                 MouseDownWindow = null;
             }
             IsMouseRightButtonDown = false;
+            IsMouseMiddleButtonDown = false;
 
             base.OnMouseLeave();
         }
