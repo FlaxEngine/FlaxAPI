@@ -21,6 +21,23 @@ namespace FlaxEditor.Content.Import
         private CustomEditorPresenter _settingsEditor;
 
         /// <summary>
+        /// Gets the entries count.
+        /// </summary>
+        public int EntriesCount
+        {
+            get
+            {
+                var result = 0;
+                for (int i = 0; i < _rootNode.ChildrenCount; i++)
+                {
+                    if (_rootNode.Children[i].Tag is ImportFileEntry fileEntry)
+                        result++;
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ImportFilesDialog"/> class.
         /// </summary>
         /// <param name="entries">The entries to edit settings.</param>
@@ -85,6 +102,7 @@ namespace FlaxEditor.Content.Import
             // Setup tree
             var tree = new Tree(true);
             tree.Parent = splitPanel.Panel1;
+            tree.RightClick += OnTreeRightClick;
             _rootNode = new TreeNode(false);
             for (int i = 0; i < entries.Count; i++)
             {
@@ -108,8 +126,46 @@ namespace FlaxEditor.Content.Import
             Size = new Vector2(TotalWidth, splitPanel.Bottom);
         }
 
+        private void OnTreeRightClick(TreeNode node, Vector2 location)
+        {
+            var menu = new ContextMenu();
+            menu.AddButton("Rename", OnRenameClicked);
+            menu.AddButton("Don't import", OnDontImportClicked);
+            menu.AddButton("Show in Explorer", OnShowInExplorerClicked);
+            menu.Tag = node;
+            menu.Show(node, location);
+        }
+
+        private void OnRenameClicked(ContextMenuButton button)
+        {
+            var node = (ItemNode)button.ParentContextMenu.Tag;
+            node.StartRenaming();
+        }
+
+        private void OnDontImportClicked(ContextMenuButton button)
+        {
+            if (EntriesCount == 1)
+            {
+                OnCancel();
+                return;
+            }
+
+            var node = (ItemNode)button.ParentContextMenu.Tag;
+            if (_settingsEditor.Selection.Count == 1 && _settingsEditor.Selection[0] == node.Entry.Settings)
+                _settingsEditor.Deselect();
+            node.Dispose();
+        }
+
+        private void OnShowInExplorerClicked(ContextMenuButton button)
+        {
+            var node = (ItemNode)button.ParentContextMenu.Tag;
+            Application.StartProcess(Path.GetDirectoryName(node.Entry.SourceUrl));
+        }
+
         private class ItemNode : TreeNode
         {
+            public ImportFileEntry Entry => (ImportFileEntry)Tag;
+
             public ItemNode(ImportFileEntry entry)
             : base(false)
             {

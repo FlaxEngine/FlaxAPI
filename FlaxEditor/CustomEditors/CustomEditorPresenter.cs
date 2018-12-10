@@ -147,9 +147,9 @@ namespace FlaxEditor.CustomEditors
         protected readonly RootEditor Editor;
 
         /// <summary>
-        /// The selected objects list.
+        /// The selected objects list (read-only).
         /// </summary>
-        protected readonly ValueContainer Selection = new ValueContainer(null);
+        public readonly ValueContainer Selection = new ValueContainer(null);
 
         /// <summary>
         /// The undo object used by this editor.
