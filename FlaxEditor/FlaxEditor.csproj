@@ -469,6 +469,7 @@
     <Compile Include="Utilities\QueryFilterHelper.cs" />
     <Compile Include="Modules\SourceCodeEditing\CodeEditingModule.cs" />
     <Compile Include="Modules\SourceCodeEditing\ISourceCodeEditor.cs" />
+    <Compile Include="Utilities\SelectionCache.cs" />
     <Compile Include="Viewport\Cameras\ArcBallCamera.cs" />
     <Compile Include="Viewport\Cameras\FPSCamera.cs" />
     <Compile Include="Viewport\Cameras\IViewportCamera.cs" />
