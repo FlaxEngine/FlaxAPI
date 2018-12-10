@@ -14,9 +14,14 @@ namespace FlaxEditor.GUI.Docking
         private DockPanel _panel;
 
         /// <summary>
-        /// The is mouse down flag.
+        /// The is mouse down flag (left button).
         /// </summary>
-        public bool IsMouseDown;
+        public bool IsMouseLeftButtonDown;
+
+        /// <summary>
+        /// The is mouse down flag (right button).
+        /// </summary>
+        public bool IsMouseRightButtonDown;
 
         /// <summary>
         /// The is mouse down over cross button flag.
@@ -261,7 +266,8 @@ namespace FlaxEditor.GUI.Docking
         public override void OnLostFocus()
         {
             // Clear
-            IsMouseDown = false;
+            IsMouseLeftButtonDown = false;
+            IsMouseRightButtonDown = false;
             MouseDownWindow = null;
 
             base.OnLostFocus();
@@ -283,9 +289,17 @@ namespace FlaxEditor.GUI.Docking
             if (buttons == MouseButton.Left)
             {
                 // Cache data
-                IsMouseDown = true;
+                IsMouseLeftButtonDown = true;
                 MouseDownWindow = GetTabAtPos(location, out IsMouseDownOverCross);
                 if (!IsMouseDownOverCross && MouseDownWindow != null)
+                    _panel.SelectTab(MouseDownWindow);
+            }
+            else if (buttons == MouseButton.Right)
+            {
+                // Cache data
+                IsMouseRightButtonDown = true;
+                MouseDownWindow = GetTabAtPos(location, out IsMouseDownOverCross);
+                if (MouseDownWindow != null)
                     _panel.SelectTab(MouseDownWindow);
             }
 
@@ -296,10 +310,10 @@ namespace FlaxEditor.GUI.Docking
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Check buttons
-            if (buttons == MouseButton.Left && IsMouseDown)
+            if (buttons == MouseButton.Left && IsMouseLeftButtonDown)
             {
                 // Clear flag
-                IsMouseDown = false;
+                IsMouseLeftButtonDown = false;
 
                 // Check tabs under mouse position at the beginning and at the end
                 var tab = GetTabAtPos(location, out var overCross);
@@ -308,6 +322,19 @@ namespace FlaxEditor.GUI.Docking
                 if (tab != null && tab == MouseDownWindow && IsMouseDownOverCross && overCross)
                     tab.Close(ClosingReason.User);
                 MouseDownWindow = null;
+            }
+            else if (buttons == MouseButton.Right && IsMouseRightButtonDown)
+            {
+                // Clear flag
+                IsMouseRightButtonDown = false;
+
+                // Check tabs under mouse position at the beginning and at the end
+                var tab = GetTabAtPos(location, out var overCross);
+
+                if (tab != null)
+                {
+                    ShowContextMenu(tab, ref location);
+                }
             }
 
             return base.OnMouseUp(location, buttons);
@@ -320,13 +347,13 @@ namespace FlaxEditor.GUI.Docking
             MousePosition = location;
 
             // Check if mouse is down
-            if (IsMouseDown)
+            if (IsMouseLeftButtonDown)
             {
                 // Check if mouse is outside the header
                 if (!HeaderRectangle.Contains(location))
                 {
                     // Clear flag
-                    IsMouseDown = false;
+                    IsMouseLeftButtonDown = false;
 
                     // Check tab under the mouse
                     if (!IsMouseDownOverCross && MouseDownWindow != null)
@@ -368,16 +395,17 @@ namespace FlaxEditor.GUI.Docking
         public override void OnMouseLeave()
         {
             // Check if mouse is down
-            if (IsMouseDown)
+            if (IsMouseLeftButtonDown)
             {
                 // Clear flag
-                IsMouseDown = false;
+                IsMouseLeftButtonDown = false;
 
                 // Check tabs under mouse position
                 if (!IsMouseDownOverCross && MouseDownWindow != null)
                     StartDrag(MouseDownWindow);
                 MouseDownWindow = null;
             }
+            IsMouseRightButtonDown = false;
 
             base.OnMouseLeave();
         }
@@ -425,6 +453,66 @@ namespace FlaxEditor.GUI.Docking
             }
 
             return false;
+        }
+
+        private void ShowContextMenu(DockWindow tab, ref Vector2 location)
+        {
+            var menu = new ContextMenu();
+            menu.Tag = tab;
+            tab.OnShowContextMenu(menu);
+            menu.AddButton("Close", OnTabMenuCloseClicked);
+            menu.AddButton("Close All", OnTabMenuCloseAllClicked);
+            menu.AddButton("Close All But This", OnTabMenuCloseAllButThisClicked);
+            if (_panel.Tabs.IndexOf(tab) + 1 < _panel.TabsCount)
+            {
+                menu.AddButton("Close All To the Right", OnTabMenuCloseAllToTheRightClicked);
+            }
+            if (!_panel.IsFloating)
+            {
+                menu.AddSeparator();
+                menu.AddButton("Float", OnTabMenuFloatClicked);
+            }
+            menu.Show(this, location);
+        }
+
+        private void OnTabMenuCloseClicked(ContextMenuButton button)
+        {
+            var tab = (DockWindow)button.ParentContextMenu.Tag;
+            tab.Close(ClosingReason.User);
+            if (tab == MouseDownWindow)
+                MouseDownWindow = null;
+        }
+
+        private void OnTabMenuCloseAllClicked(ContextMenuButton button)
+        {
+            _panel.CloseAll();
+        }
+
+        private void OnTabMenuCloseAllButThisClicked(ContextMenuButton button)
+        {
+            var tab = (DockWindow)button.ParentContextMenu.Tag;
+            var windows = _panel.Tabs.ToArray();
+            for (int i = 0; i < windows.Length; i++)
+            {
+                if (windows[i] != tab)
+                    windows[i].Close();
+            }
+        }
+
+        private void OnTabMenuCloseAllToTheRightClicked(ContextMenuButton button)
+        {
+            var tab = (DockWindow)button.ParentContextMenu.Tag;
+            var windows = _panel.Tabs.ToArray();
+            for (int i = _panel.Tabs.IndexOf(tab) + 1; i < windows.Length; i++)
+            {
+                windows[i].Close();
+            }
+        }
+
+        private void OnTabMenuFloatClicked(ContextMenuButton button)
+        {
+            var tab = (DockWindow)button.ParentContextMenu.Tag;
+            tab.ShowFloating();
         }
     }
 }

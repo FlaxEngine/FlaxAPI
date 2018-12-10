@@ -192,6 +192,22 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <summary>
+        /// Closes all the windows.
+        /// </summary>
+        /// <param name="reason">Window closing reason.</param>
+        /// <returns>True if action has been cancelled (due to window internal logic).</returns>
+        public bool CloseAll(ClosingReason reason = ClosingReason.CloseEvent)
+        {
+            while (_tabs.Count > 0)
+            {
+                if (_tabs[0].Close(reason))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Gets tab at the given index.
         /// </summary>
         /// <param name="tabIndex">The index of the tab page.</param>
