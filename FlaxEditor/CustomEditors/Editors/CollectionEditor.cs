@@ -47,7 +47,6 @@ namespace FlaxEditor.CustomEditors.Editors
             if (HasDifferentValues || HasDifferentTypes)
                 return;
 
-            var type = Values.Type;
             var size = Count;
 
             // Try get MemberCollectionAttribute for collection editor meta
@@ -57,7 +56,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 var memberCollection = (MemberCollectionAttribute)attributes.FirstOrDefault(x => x is MemberCollectionAttribute);
                 if (memberCollection != null)
                 {
-                    // TODO: handle ReadOnly and NotNullItems by filtering child editors SetValue
+                    // TODO: handle NotNullItems by filtering child editors SetValue
                     // TODO: handle CanReorderItems
 
                     _readOnly = memberCollection.ReadOnly;
@@ -114,9 +113,9 @@ namespace FlaxEditor.CustomEditors.Editors
                     Text = "-",
                     TooltipText = "Remove last item",
                     AnchorStyle = AnchorStyle.UpperRight,
-                    Parent = area.ContainerControl
+                    Parent = area.ContainerControl,
+                    Enabled = size > 0
                 };
-                removeButton.Enabled = Count > 0;
                 removeButton.Clicked += () =>
                 {
                     if (IsSetBlocked)
