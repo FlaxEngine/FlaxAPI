@@ -443,6 +443,24 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
+        /// Called when mouse double clicks header.
+        /// </summary>
+        /// <param name="location">The mouse location.</param>
+        /// <param name="button">The button.</param>
+        /// <returns>True if event has been handled.</returns>
+        protected virtual bool OnMouseDoubleClickHeader(ref Vector2 location, MouseButton button)
+        {
+            // Toggle open state
+            if (_opened)
+                Collapse();
+            else
+                Expand();
+
+            // Handled
+            return true;
+        }
+
+        /// <summary>
         /// Called when mouse is pressing node header for a long time.
         /// </summary>
         protected virtual void OnLongPress()
@@ -723,14 +741,7 @@ namespace FlaxEditor.GUI
             // Check if mouse hits bar
             if (TestHeaderHit(ref location))
             {
-                // Toggle open state
-                if (_opened)
-                    Collapse();
-                else
-                    Expand();
-
-                // Handled
-                return true;
+                return OnMouseDoubleClickHeader(ref location, buttons);
             }
 
             // Check if animation has been finished

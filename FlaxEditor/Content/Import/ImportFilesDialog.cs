@@ -91,13 +91,10 @@ namespace FlaxEditor.Content.Import
                 var entry = entries[i];
 
                 // TODO: add icons for textures/models/etc from FileEntry to tree node??
-                var node = new TreeNode(false)
+                var node = new ItemNode(entry)
                 {
-                    Text = Path.GetFileName(entry.SourceUrl),
-                    Tag = entry,
                     Parent = _rootNode
                 };
-                node.LinkTooltip(entry.SourceUrl);
             }
             _rootNode.Expand();
             _rootNode.ChildrenIndent = 0;
@@ -109,6 +106,43 @@ namespace FlaxEditor.Content.Import
             tree.Select(_rootNode.Children[0] as TreeNode);
 
             Size = new Vector2(TotalWidth, splitPanel.Bottom);
+        }
+
+        private class ItemNode : TreeNode
+        {
+            public ItemNode(ImportFileEntry entry)
+            : base(false)
+            {
+                Text = Path.GetFileName(entry.SourceUrl);
+                Tag = entry;
+                LinkTooltip(entry.SourceUrl);
+            }
+
+            /// <inheritdoc />
+            protected override bool OnMouseDoubleClickHeader(ref Vector2 location, MouseButton button)
+            {
+                StartRenaming();
+                return true;
+            }
+
+            /// <summary>
+            /// Shows the rename popup for the item.
+            /// </summary>
+            public void StartRenaming()
+            {
+                // Start renaming the folder
+                var entry = (ImportFileEntry)Tag;
+                var shortName = Path.GetFileNameWithoutExtension(entry.ResultUrl);
+                var dialog = RenamePopup.Show(this, HeaderRect, shortName, false);
+                dialog.Tag = Tag;
+                dialog.Renamed += OnRenamed;
+            }
+
+            private void OnRenamed(RenamePopup popup)
+            {
+                var entry = (ImportFileEntry)Tag;
+                entry.ModifyResultFilename(popup.Text);
+            }
         }
 
         private void OnImport()

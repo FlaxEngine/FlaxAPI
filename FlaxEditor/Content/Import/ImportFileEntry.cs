@@ -22,7 +22,7 @@ namespace FlaxEditor.Content.Import
         public string SourceUrl { get; }
 
         /// <inheritdoc />
-        public string ResultUrl { get; }
+        public string ResultUrl { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether this entry has settings to modify.
@@ -52,6 +52,17 @@ namespace FlaxEditor.Content.Import
         {
             SourceUrl = request.InputPath;
             ResultUrl = request.OutputPath;
+        }
+
+        /// <summary>
+        /// Modifies the result URL filename (keeps destination folder and extension).
+        /// </summary>
+        /// <param name="filename">The new filename.</param>
+        public void ModifyResultFilename(string filename)
+        {
+            var directory = Path.GetDirectoryName(ResultUrl) ?? string.Empty;
+            var extension = Path.GetExtension(ResultUrl);
+            ResultUrl = Path.Combine(directory, filename + extension);
         }
 
         /// <summary>
