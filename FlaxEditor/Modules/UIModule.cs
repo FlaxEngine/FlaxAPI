@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.IO;
 using System.Linq;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
@@ -50,6 +51,7 @@ namespace FlaxEditor.Modules
         private ContextMenuButton _menuToolsBuildCSGMesh;
         private ContextMenuButton _menuToolsCancelBuilding;
         private ContextMenuButton _menuToolsSetTheCurrentSceneViewAsDefault;
+        private ContextMenuChildMenu _menuWindowApplyWindowLayout;
 
         private ToolStripButton _toolStripUndo;
         private ToolStripButton _toolStripRedo;
@@ -415,7 +417,7 @@ namespace FlaxEditor.Modules
             cm.VisibleChanged += OnMenuSceneShowHide;
             _menuSceneMoveActorToViewport = cm.AddButton("Move actor to viewport", MoveActorToViewport);
             _menuSceneAlignActorWithViewport = cm.AddButton("Align actor with viewport", AlignActorWithViewport);
-            _menuSceneAlignViewportWtihActor = cm.AddButton("Align viewport with actor", AlignViewportWtithActor);
+            _menuSceneAlignViewportWtihActor = cm.AddButton("Align viewport with actor", AlignViewportWithActor);
             cm.AddSeparator();
             _menuSceneCreateTerrain = cm.AddButton("Create terrain", CreateTerrain);
 
@@ -450,6 +452,7 @@ namespace FlaxEditor.Modules
             // Window
             MenuWindow = MainMenu.AddButton("Window");
             cm = MenuWindow.ContextMenu;
+            cm.VisibleChanged += OnMenuWindowVisibleChanged;
             cm.AddButton("Content", Editor.Windows.ContentWin.FocusOrShow);
             cm.AddButton("Scene Tree", Editor.Windows.SceneWin.FocusOrShow);
             cm.AddButton("Toolbox", Editor.Windows.ToolboxWin.FocusOrShow);
@@ -461,6 +464,8 @@ namespace FlaxEditor.Modules
             cm.AddButton("Game Cooker", Editor.Windows.GameCookerWin.FocusOrShow);
             cm.AddButton("Profiler", Editor.Windows.ProfilerWin.FocusOrShow);
             cm.AddSeparator();
+            cm.AddButton("Save window layout", Editor.Windows.SaveLayout);
+            _menuWindowApplyWindowLayout = cm.AddChildMenu("Apply window layout");
             cm.AddButton("Restore default layout", Editor.Windows.LoadDefaultLayout);
 
             // Help
@@ -642,7 +647,31 @@ namespace FlaxEditor.Modules
             c.PerformLayout();
         }
 
-        private void AlignViewportWtithActor()
+        private void OnMenuWindowVisibleChanged(Control menu)
+        {
+            if (!menu.Visible)
+                return;
+            
+            // Find layout to use
+            var searchFolder = Globals.ProjectCacheFolder;
+            var files = Directory.GetFiles(searchFolder, "Layout_*.xml", SearchOption.TopDirectoryOnly);
+            var layouts = _menuWindowApplyWindowLayout.ContextMenu;
+            layouts.DisposeAllItems();
+            for (int i = 0; i < files.Length; i++)
+            {
+                var file = files[i];
+                var name = file.Substring(searchFolder.Length + 8, file.Length - searchFolder.Length - 12);
+                var button = layouts.AddButton(name, OnApplyLayoutButtonClicked);
+                button.Tag = file;
+            }
+        }
+
+        private void OnApplyLayoutButtonClicked(ContextMenuButton button)
+        {
+            Editor.Windows.LoadLayout((string)button.Tag);
+        }
+
+        private void AlignViewportWithActor()
         {
             var selection = Editor.SceneEditing;
             if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)

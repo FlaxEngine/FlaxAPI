@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using FlaxEditor.Content;
+using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.GUI.Docking;
 using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
@@ -15,6 +16,7 @@ using FlaxEditor.Windows.Assets;
 using FlaxEditor.Windows.Profiler;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 using FlaxEngine.Utilities;
 using DockPanel = FlaxEditor.GUI.Docking.DockPanel;
@@ -231,6 +233,8 @@ namespace FlaxEditor.Modules
         {
             if (Editor.IsHeadlessMode)
                 return false;
+
+            Editor.Log(string.Format("Loading editor windows layout from \'{0}\'", path));
 
             if (!File.Exists(path))
             {
@@ -481,6 +485,90 @@ namespace FlaxEditor.Modules
             return new Rectangle(x, y, width, height);
         }
 
+        private class LayoutNameDialog : Dialog
+        {
+            private TextBox _textbox;
+
+            public LayoutNameDialog()
+            : base("Enter Layout Name")
+            {
+                var name = new TextBox(false, 8, 8, 200)
+                {
+                    WatermarkText = "Enter layout slot name",
+                    Parent = this,
+                };
+                _textbox = name;
+
+                var okButton = new Button(name.Right - 50, name.Bottom + 4, 50)
+                {
+                    Text = "OK",
+                    Parent = this,
+                };
+                okButton.Clicked += OnOk;
+
+                var cancelButton = new Button(okButton.Left - 54, okButton.Y, 50)
+                {
+                    Text = "Cancel",
+                    Parent = this,
+                };
+                cancelButton.Clicked += OnCancel;
+
+                Size = okButton.BottomRight + new Vector2(8);
+            }
+
+            private void OnOk()
+            {
+                var name = _textbox.Text;
+                if (name.Length == 0)
+                {
+                    MessageBox.Show("Cannot use the empty name.");
+                    return;
+                }
+                if (Utilities.Utils.HasInvalidPathChar(name))
+                {
+                    MessageBox.Show("Cannot use this name. It contains one or more invalid characters.");
+                    return;
+                }
+
+                Close(DialogResult.OK);
+
+                var path = StringUtils.CombinePaths(Globals.ProjectCacheFolder, "Layout_" + name + ".xml");
+                Editor.Instance.Windows.SaveLayout(path);
+            }
+
+            private void OnCancel()
+            {
+                Close(DialogResult.Cancel);
+            }
+
+            /// <inheritdoc />
+            public override bool OnKeyDown(Keys key)
+            {
+                switch (key)
+                {
+                case Keys.Escape:
+                    OnCancel();
+                    return true;
+                case Keys.Return:
+                    OnOk();
+                    return true;
+                }
+
+                return base.OnKeyDown(key);
+            }
+        }
+
+        /// <summary>
+        /// Asks user for the layout name and saves the current windows layout in the current project cache folder.
+        /// </summary>
+        public void SaveLayout()
+        {
+            if (Editor.IsHeadlessMode)
+                return;
+
+            new LayoutNameDialog().Show();
+        }
+
         /// <summary>
         /// Saves the layout to the file.
         /// </summary>
@@ -489,6 +577,8 @@ namespace FlaxEditor.Modules
         {
             if (Editor.IsHeadlessMode)
                 return;
+
+            Editor.Log(string.Format("Saving editor windows layout to \'{0}\'", path));
 
             var settings = new XmlWriterSettings
             {
