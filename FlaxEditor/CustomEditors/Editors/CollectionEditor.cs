@@ -54,6 +54,8 @@ namespace FlaxEditor.CustomEditors.Editors
 
                 var moveDownButton = menu.AddButton("Move down", OnMoveDownClicked);
                 moveDownButton.Enabled = Index + 1 < Editor.Count;
+
+                menu.AddButton("Remove", OnRemoveClicked);
             }
 
             private void OnMoveUpClicked(ContextMenuButton button)
@@ -64,6 +66,11 @@ namespace FlaxEditor.CustomEditors.Editors
             private void OnMoveDownClicked(ContextMenuButton button)
             {
                 Editor.Move(Index, Index + 1);
+            }
+
+            private void OnRemoveClicked(ContextMenuButton button)
+            {
+                Editor.Remove(Index);
             }
         }
 
@@ -197,6 +204,11 @@ namespace FlaxEditor.CustomEditors.Editors
             Resize(_size.IntValue.Value);
         }
 
+        /// <summary>
+        /// Moves the specified item at the given index and swaps it with the other item. It supports undo.
+        /// </summary>
+        /// <param name="srcIndex">Index of the source item.</param>
+        /// <param name="dstIndex">Index of the destination item to swap with.</param>
         private void Move(int srcIndex, int dstIndex)
         {
             if (IsSetBlocked)
@@ -210,6 +222,38 @@ namespace FlaxEditor.CustomEditors.Editors
 
             SetValue(cloned);
         }
+
+        /// <summary>
+        /// Removes the item at the specified index. It supports undo.
+        /// </summary>
+        /// <param name="index">The index of the item to remove.</param>
+        private void Remove(int index)
+        {
+            if (IsSetBlocked)
+                return;
+
+            var newValues = Allocate(Count - 1);
+            var oldValues = (IList)Values[0];
+
+            for (int i = 0; i < index; i++)
+            {
+                newValues[i] = oldValues[i];
+            }
+
+            for (int i = index; i < newValues.Count; i++)
+            {
+                newValues[i] = oldValues[i + 1];
+            }
+
+            SetValue(newValues);
+        }
+
+        /// <summary>
+        /// Allocates the collection of the specified size.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <returns>The collection.</returns>
+        protected abstract IList Allocate(int size);
 
         /// <summary>
         /// Resizes collection to the specified new size.

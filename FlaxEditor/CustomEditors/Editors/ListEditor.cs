@@ -17,6 +17,19 @@ namespace FlaxEditor.CustomEditors.Editors
         public override int Count => (Values[0] as IList)?.Count ?? 0;
 
         /// <inheritdoc />
+        protected override IList Allocate(int size)
+        {
+            var listType = Values.Type;
+            var list = (IList)Activator.CreateInstance(listType);
+            var defaultValue = Utilities.Utils.GetDefaultValue(ElementType);
+            for (int i = 0; i < size; i++)
+            {
+                list.Add(defaultValue);
+            }
+            return list;
+        }
+
+        /// <inheritdoc />
         protected override void Resize(int newSize)
         {
             var list = Values[0] as IList;

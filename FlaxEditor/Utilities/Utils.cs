@@ -68,12 +68,10 @@ namespace FlaxEditor.Utilities
         public static object GetDefaultValue(Type type)
         {
             if (type == typeof(string))
-                return String.Empty;
+                return string.Empty;
             if (type.IsValueType)
             {
-                if (type == typeof(int))
-                    return 0;
-                return null;
+                return Activator.CreateInstance(type);
             }
 
             if (typeof(Object).IsAssignableFrom(type))

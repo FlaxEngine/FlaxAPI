@@ -16,6 +16,14 @@ namespace FlaxEditor.CustomEditors.Editors
         public override int Count => (Values[0] as Array)?.Length ?? 0;
 
         /// <inheritdoc />
+        protected override IList Allocate(int size)
+        {
+            var arrayType = Values.Type;
+            var elementType = arrayType.GetElementType();
+            return Array.CreateInstance(elementType, size);
+        }
+
+        /// <inheritdoc />
         protected override void Resize(int newSize)
         {
             var array = Values[0] as Array;
