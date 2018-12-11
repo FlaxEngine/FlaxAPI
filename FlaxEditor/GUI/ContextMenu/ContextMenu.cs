@@ -46,9 +46,9 @@ namespace FlaxEngine.GUI
                 {
                     if (_children[i] is ContextMenuItem item && item.Visible)
                     {
-                        var hight = item.Height;
-                        item.Bounds = new Rectangle(x, y, width, hight);
-                        y += hight + margin.Height;
+                        var height = item.Height;
+                        item.Bounds = new Rectangle(x, y, width, height);
+                        y += height + margin.Height;
                     }
                 }
             }
@@ -133,6 +133,18 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Removes all the added items (buttons, separators, etc.).
+        /// </summary>
+        public void DisposeAllItems()
+        {
+            for (int i = _panel.ChildrenCount - 1; _panel.ChildrenCount > 0 && i >= 0; i--)
+            {
+                if (_panel.Children[i] is ContextMenuItem)
+                    _panel.Children[i].Dispose();
+            }
+        }
+
+        /// <summary>
         /// Adds the button.
         /// </summary>
         /// <param name="text">The text.</param>
@@ -205,7 +217,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns>Created context menu item control or null if missing.</returns>
-        public ContextMenuChildMenu GettChildMenu(string text)
+        public ContextMenuChildMenu GetChildMenu(string text)
         {
             for (int i = 0; i < _panel.ChildrenCount; i++)
             {
@@ -223,7 +235,7 @@ namespace FlaxEngine.GUI
         /// <returns>Created context menu item control.</returns>
         public ContextMenuChildMenu GetOrAddChildMenu(string text)
         {
-            var item = GettChildMenu(text);
+            var item = GetChildMenu(text);
             if (item == null)
             {
                 item = new ContextMenuChildMenu(this, text);
