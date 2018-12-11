@@ -61,6 +61,59 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
+        /// Determines whether the specified path string contains any invalid character.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns><c>true</c> if the given string cannot be used as a path because it contains one or more illegal characters; otherwise, <c>false</c>.</returns>
+        public static bool HasInvalidPathChar(string path)
+        {
+            char[] illegalChars =
+            {
+                '?',
+                '\\',
+                '/',
+                '\"',
+                '<',
+                '>',
+                '|',
+                ':',
+                '*',
+                '\u0001',
+                '\u0002',
+                '\u0003',
+                '\u0004',
+                '\u0005',
+                '\u0006',
+                '\a',
+                '\b',
+                '\t',
+                '\n',
+                '\v',
+                '\f',
+                '\r',
+                '\u000E',
+                '\u000F',
+                '\u0010',
+                '\u0011',
+                '\u0012',
+                '\u0013',
+                '\u0014',
+                '\u0015',
+                '\u0016',
+                '\u0017',
+                '\u0018',
+                '\u0019',
+                '\u001A',
+                '\u001B',
+                '\u001C',
+                '\u001D',
+                '\u001E',
+                '\u001F'
+            };
+            return path.IndexOfAny(illegalChars) != -1;
+        }
+
+        /// <summary>
         /// Gets the default value for the given type (can be value type or reference type).
         /// </summary>
         /// <param name="type">The type.</param>
