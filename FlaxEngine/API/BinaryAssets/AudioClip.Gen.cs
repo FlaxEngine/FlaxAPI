@@ -91,6 +91,27 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Extracts the raw audio data (PCM format) from the asset storage and converts it to the normalized float format (in range [-1;1])). Loads the whole asset.
+        /// </summary>
+        /// <remarks>
+        /// Throws an exception in case of error.
+        /// </remarks>
+        /// <param name="resultData">The result data.</param>
+        /// <param name="resultDataInfo">The result data format header info. Keep in mind that output data has 32 bits float data not the signed PCM data.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void ExtractDataFloat(out float[] resultData, out AudioDataInfo resultDataInfo)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_ExtractDataFloat(unmanagedPtr, out resultData, out resultDataInfo);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -105,6 +126,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ExtractDataRaw(IntPtr obj, out byte[] resultData, out AudioDataInfo resultDataInfo);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ExtractDataFloat(IntPtr obj, out float[] resultData, out AudioDataInfo resultDataInfo);
 #endif
 
         #endregion
