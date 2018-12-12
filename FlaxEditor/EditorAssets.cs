@@ -46,5 +46,10 @@ namespace FlaxEditor
         /// The default sky cube texture.
         /// </summary>
         public static string DefaultSkyCubeTexture = "Editor/SimplySky";
+
+        /// <summary>
+        /// The IES Profile assets preview material.
+        /// </summary>
+        public static string IesProfilePreviewMaterial = "Editor/IesProfilePreviewMaterial";
     }
 }

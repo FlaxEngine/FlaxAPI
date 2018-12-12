@@ -35,14 +35,14 @@ namespace FlaxEditor.Viewport.Previews
         /// </summary>
         public IESProfilePreview()
         {
-            // Create preview material (virtual)
-            var baseMaterial = FlaxEngine.Content.LoadAsyncInternal<Material>("Editor/IesProfilePreviewMaterial");
-            if (baseMaterial == null)
-                throw new FlaxException("Cannot load IES Profile preview material.");
-            _previewMaterial = baseMaterial.CreateVirtualInstance();
+            var baseMaterial = FlaxEngine.Content.LoadAsyncInternal<Material>(EditorAssets.IesProfilePreviewMaterial);
 
             // Wait for base (don't want to async material parameters set due to async loading)
-            baseMaterial.WaitForLoaded();
+            if (baseMaterial == null || baseMaterial.WaitForLoaded())
+                throw new FlaxException("Cannot load IES Profile preview material.");
+
+            // Create preview material (virtual)
+            _previewMaterial = baseMaterial.CreateVirtualInstance();
         }
 
         /// <inheritdoc />
