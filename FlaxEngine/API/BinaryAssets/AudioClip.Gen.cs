@@ -49,6 +49,48 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Extracts the source audio data from the asset storage. Loads the whole asset. The result data is in an asset format.
+        /// </summary>
+        /// <remarks>
+        /// Throws an exception in case of error.
+        /// </remarks>
+        /// <param name="resultData">The result data.</param>
+        /// <param name="resultDataInfo">The result data format header info.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void ExtractData(out byte[] resultData, out AudioDataInfo resultDataInfo)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_ExtractData(unmanagedPtr, out resultData, out resultDataInfo);
+#endif
+        }
+
+        /// <summary>
+        /// Extracts the raw audio data (PCM format) from the asset storage. Loads the whole asset.
+        /// </summary>
+        /// <remarks>
+        /// Throws an exception in case of error.
+        /// </remarks>
+        /// <param name="resultData">The result data.</param>
+        /// <param name="resultDataInfo">The result data format header info.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void ExtractDataRaw(out byte[] resultData, out AudioDataInfo resultDataInfo)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_ExtractDataRaw(unmanagedPtr, out resultData, out resultDataInfo);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -57,6 +99,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetInfo(IntPtr obj, out AudioDataInfo info);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ExtractData(IntPtr obj, out byte[] resultData, out AudioDataInfo resultDataInfo);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ExtractDataRaw(IntPtr obj, out byte[] resultData, out AudioDataInfo resultDataInfo);
 #endif
 
         #endregion
