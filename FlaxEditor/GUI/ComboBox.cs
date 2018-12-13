@@ -28,8 +28,15 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected ContextMenu _popupMenu;
 
-        private bool _mouseDown;
-        private bool _blockPopup;
+        /// <summary>
+        /// The mouse down flag.
+        /// </summary>
+        protected bool _mouseDown;
+
+        /// <summary>
+        /// The block popup flag.
+        /// </summary>
+        protected bool _blockPopup;
 
         /// <summary>
         /// The selected indices.

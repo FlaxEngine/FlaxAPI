@@ -518,6 +518,7 @@
     <Compile Include="Windows\ContentWindow.ContextMenu.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
+    <Compile Include="Windows\ContentWindow.Search.cs" />
     <Compile Include="Windows\DebugLogWindow.cs" />
     <Compile Include="Windows\EditGameWindow.cs" />
     <Compile Include="Windows\EditorOptionsWindow.cs" />

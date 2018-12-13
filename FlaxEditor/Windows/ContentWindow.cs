@@ -32,7 +32,9 @@ namespace FlaxEditor.Windows
 
         private NavigationBar _navigationBar;
         private Tree _tree;
-        private TextBox _searchBox;
+        private TextBox _foldersSearchBox;
+        private TextBox _itemsSearchBox;
+        private SearchFilterComboBox _itemsFilterBox;
 
         private RootContentTreeNode _root;
 
@@ -93,18 +95,39 @@ namespace FlaxEditor.Windows
             headerPanel.DockStyle = DockStyle.Top;
             headerPanel.IsScrollable = true;
             headerPanel.Parent = _split.Panel1;
-            _searchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
-            _searchBox.AnchorStyle = AnchorStyle.Upper;
-            _searchBox.WatermarkText = "Search...";
-            _searchBox.Parent = headerPanel;
-            _searchBox.TextChanged += OnSearchBoxTextChanged;
-            headerPanel.Height = _searchBox.Bottom + 8;
+            //
+            _foldersSearchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
+            _foldersSearchBox.AnchorStyle = AnchorStyle.Upper;
+            _foldersSearchBox.WatermarkText = "Search...";
+            _foldersSearchBox.Parent = headerPanel;
+            _foldersSearchBox.TextChanged += OnFoldersSearchBoxTextChanged;
+            //
+            headerPanel.Height = _foldersSearchBox.Bottom + 6;
 
             // Content structure tree
             _tree = new Tree(false);
             _tree.Y = headerPanel.Bottom;
             _tree.SelectedChanged += OnTreeSelectionChanged;
             _tree.Parent = _split.Panel1;
+
+            // Content items searching query input box and filters selector
+            var contentItemsSearchPanel = new ContainerControl();
+            contentItemsSearchPanel.DockStyle = DockStyle.Top;
+            contentItemsSearchPanel.IsScrollable = true;
+            contentItemsSearchPanel.Parent = _split.Panel2;
+            //
+            const float filterBoxWidth = 56.0f;
+            _itemsSearchBox = new TextBox(false, filterBoxWidth + 8, 4, contentItemsSearchPanel.Width - 8 - filterBoxWidth);
+            _itemsSearchBox.AnchorStyle = AnchorStyle.Upper;
+            _itemsSearchBox.WatermarkText = "Search...";
+            _itemsSearchBox.Parent = contentItemsSearchPanel;
+            _itemsSearchBox.TextChanged += UpdateItemsSearch;
+            //
+            contentItemsSearchPanel.Height = _itemsSearchBox.Bottom + 4;
+            //
+            _itemsFilterBox = new SearchFilterComboBox(4, (contentItemsSearchPanel.Height - ComboBox.DefaultHeight) * 0.5f, filterBoxWidth);
+            _itemsFilterBox.Parent = contentItemsSearchPanel;
+            _itemsFilterBox.SelectedIndexChanged += e => UpdateItemsSearch();
 
             // Content View
             _view = new ContentView();
@@ -350,7 +373,7 @@ namespace FlaxEditor.Windows
             if (item == null)
                 return;
 
-            // TODO: don't allow to duplicate items without ParentFolder - like root items (Content, Source, Engien and Editor dirs)
+            // TODO: don't allow to duplicate items without ParentFolder - like root items (Content, Source, Engine and Editor dirs)
 
             // Clone item
             var targetPath = GetClonedAssetPath(item);
@@ -378,7 +401,7 @@ namespace FlaxEditor.Windows
             if (items == null || items.Count == 0)
                 return;
 
-            // TODO: don't allow to duplicate items without ParentFolder - like root items (Content, Source, Engien and Editor dirs)
+            // TODO: don't allow to duplicate items without ParentFolder - like root items (Content, Source, Engine and Editor dirs)
 
             // Check if it's just a single item
             if (items.Count == 1)
@@ -610,31 +633,13 @@ namespace FlaxEditor.Windows
             _nnavigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
         }
 
-        private void OnSearchBoxTextChanged()
-        {
-            // Skip events during setup or init stuff
-            if (IsLayoutLocked)
-                return;
-
-            var root = _root;
-            root.LockChildrenRecursive();
-
-            // Update tree
-            var query = _searchBox.Text;
-            root.UpdateFilter(query);
-
-            root.UnlockChildrenRecursive();
-            PerformLayout();
-            PerformLayout();
-        }
-
-        private void addFolder2Root(MainContentTreeNode node)
+        private void AddFolder2Root(MainContentTreeNode node)
         {
             // Add to the root
             _root.AddChild(node);
         }
 
-        private void removeFolder2Root(MainContentTreeNode node)
+        private void RemoveFolder2Root(MainContentTreeNode node)
         {
             // Remove from the root
             _root.RemoveChild(node);
@@ -647,13 +652,13 @@ namespace FlaxEditor.Windows
             _root = new RootContentTreeNode();
             _root.ChildrenIndent = 0;
             _root.Expand();
-            addFolder2Root(Editor.ContentDatabase.ProjectContent);
-            addFolder2Root(Editor.ContentDatabase.ProjectSource);
+            AddFolder2Root(Editor.ContentDatabase.ProjectContent);
+            AddFolder2Root(Editor.ContentDatabase.ProjectSource);
             if (Editor.IsDevInstance())
             {
                 // Flax internal assets locations
-                addFolder2Root(Editor.ContentDatabase.EnginePrivate);
-                addFolder2Root(Editor.ContentDatabase.EditorPrivate);
+                AddFolder2Root(Editor.ContentDatabase.EnginePrivate);
+                AddFolder2Root(Editor.ContentDatabase.EditorPrivate);
             }
             _tree.Margin = new Margin(0.0f, 0.0f, -16.0f, 2.0f); // Hide root node
             _tree.AddChild(_root);
@@ -697,7 +702,7 @@ namespace FlaxEditor.Windows
             {
                 while (_root.HasChildren)
                 {
-                    removeFolder2Root((MainContentTreeNode)_root.GetChild(0));
+                    RemoveFolder2Root((MainContentTreeNode)_root.GetChild(0));
                 }
             }
         }
@@ -767,6 +772,16 @@ namespace FlaxEditor.Windows
         {
             _split.SplitterValue = 0.2f;
             _view.ViewScale = 1.0f;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            _foldersSearchBox = null;
+            _itemsSearchBox = null;
+            _itemsFilterBox = null;
+
+            base.Dispose();
         }
     }
 }
