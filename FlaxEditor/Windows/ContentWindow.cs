@@ -32,6 +32,7 @@ namespace FlaxEditor.Windows
 
         private NavigationBar _navigationBar;
         private Tree _tree;
+        private TextBox _searchBox;
 
         private RootContentTreeNode _root;
 
@@ -87,8 +88,21 @@ namespace FlaxEditor.Windows
                 Parent = this
             };
 
+            // Content structure tree searching query input box
+            var headerPanel = new ContainerControl();
+            headerPanel.DockStyle = DockStyle.Top;
+            headerPanel.IsScrollable = true;
+            headerPanel.Parent = _split.Panel1;
+            _searchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
+            _searchBox.AnchorStyle = AnchorStyle.Upper;
+            _searchBox.WatermarkText = "Search...";
+            _searchBox.Parent = headerPanel;
+            _searchBox.TextChanged += OnSearchBoxTextChanged;
+            headerPanel.Height = _searchBox.Bottom + 8;
+
             // Content structure tree
             _tree = new Tree(false);
+            _tree.Y = headerPanel.Bottom;
             _tree.SelectedChanged += OnTreeSelectionChanged;
             _tree.Parent = _split.Panel1;
 
@@ -596,6 +610,24 @@ namespace FlaxEditor.Windows
             _nnavigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
         }
 
+        private void OnSearchBoxTextChanged()
+        {
+            // Skip events during setup or init stuff
+            if (IsLayoutLocked)
+                return;
+
+            var root = _root;
+            root.LockChildrenRecursive();
+
+            // Update tree
+            var query = _searchBox.Text;
+            root.UpdateFilter(query);
+
+            root.UnlockChildrenRecursive();
+            PerformLayout();
+            PerformLayout();
+        }
+
         private void addFolder2Root(MainContentTreeNode node)
         {
             // Add to the root
@@ -623,7 +655,7 @@ namespace FlaxEditor.Windows
                 addFolder2Root(Editor.ContentDatabase.EnginePrivate);
                 addFolder2Root(Editor.ContentDatabase.EditorPrivate);
             }
-            _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 2.0f); // Hide root node
+            _tree.Margin = new Margin(0.0f, 0.0f, -16.0f, 2.0f); // Hide root node
             _tree.AddChild(_root);
             _root.SortChildrenRecursive();
 
