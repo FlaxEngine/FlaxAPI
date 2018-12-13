@@ -41,7 +41,7 @@ namespace FlaxEditor.Windows
             _searchBox.WatermarkText = "Search...";
             _searchBox.Parent = headerPanel;
             _searchBox.TextChanged += OnSearchBoxTextChanged;
-            headerPanel.Height = _searchBox.Bottom + 8;
+            headerPanel.Height = _searchBox.Bottom + 6;
 
             // Create scene structure tree
             var root = editor.Scene.Root;

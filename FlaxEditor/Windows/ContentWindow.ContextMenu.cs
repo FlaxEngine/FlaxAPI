@@ -17,8 +17,6 @@ namespace FlaxEditor.Windows
 
         private void ShowContextMenuForItem(ContentItem item, ref Vector2 location)
         {
-            // TODO: verify this logic during elements searching
-
             Assert.IsNull(_newElement);
 
             // Cache data
@@ -82,10 +80,6 @@ namespace FlaxEditor.Windows
                 cm.AddButton("Delete", () => Delete(item));
 
                 cm.AddSeparator();
-
-                // TODO: exportig assets
-                //b = cm.AddButton(4, "Export");
-                //b.Enabled = proxy != null && proxy.CanExport;
 
                 b = cm.AddButton("Clone", _view.Duplicate);
                 b.Enabled = !isFolder;

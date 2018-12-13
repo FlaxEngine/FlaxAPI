@@ -120,7 +120,7 @@ namespace FlaxEditor.Windows.Assets
             _searchBox.WatermarkText = "Search...";
             _searchBox.Parent = headerPanel;
             _searchBox.TextChanged += OnSearchBoxTextChanged;
-            headerPanel.Height = _searchBox.Bottom + 8;
+            headerPanel.Height = _searchBox.Bottom + 6;
 
             // Prefab structure tree
             Graph = new LocalSceneGraph(new CustomRootNode(this));
