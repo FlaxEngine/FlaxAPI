@@ -594,6 +594,7 @@ namespace FlaxEditor.Windows
         /// <param name="target">The target location.</param>
         public void RefreshView(ContentTreeNode target)
         {
+            _view.IsSearching = false;
             if (target == _root)
             {
                 // Special case for root folder

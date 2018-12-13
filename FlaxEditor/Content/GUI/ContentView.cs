@@ -98,6 +98,11 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <summary>
+        /// Flag is used to indicate if user is searching for items. Used to show a proper message to the user.
+        /// </summary>
+        public bool IsSearching;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ContentView"/> class.
         /// </summary>
         public ContentView()
@@ -473,9 +478,19 @@ namespace FlaxEditor.Content.GUI
         {
             base.Draw();
 
+            var style = Style.Current;
+
             // Check if drag is over
             if (IsDragOver && _validDragOver)
-                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), Style.Current.BackgroundSelected * 0.4f);
+            {
+                Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundSelected * 0.4f);
+            }
+
+            // Check if it's an empty thing
+            if (_items.Count == 0)
+            {
+                Render2D.DrawText(style.FontSmall, IsSearching ? "No results" : "Empty", new Rectangle(Vector2.Zero, Size), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+            }
         }
 
         /// <inheritdoc />
