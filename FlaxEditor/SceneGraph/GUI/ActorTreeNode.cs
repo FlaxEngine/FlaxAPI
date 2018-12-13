@@ -6,6 +6,7 @@ using System.Linq;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
@@ -23,6 +24,8 @@ namespace FlaxEditor.SceneGraph.GUI
         private DragAssets _dragAssets;
         private DragActorType _dragActorType;
         private DragHandlers _dragHandlers;
+        private List<Rectangle> _highlights;
+        private bool _hasSearchFilter;
 
         /// <summary>
         /// The actor node that owns this node.
@@ -94,12 +97,96 @@ namespace FlaxEditor.SceneGraph.GUI
             Text = _actorNode.Name;
         }
 
+        /// <summary>
+        /// Updates the query search filter.
+        /// </summary>
+        /// <param name="filterText">The filter text.</param>
+        public void UpdateFilter(string filterText)
+        {
+            // SKip hidden actors
+            var actor = Actor;
+            if (actor != null && (actor.HideFlags & HideFlags.HideInHierarchy) != 0)
+                return;
+
+            bool noFilter = string.IsNullOrWhiteSpace(filterText);
+            _hasSearchFilter = !noFilter;
+
+            // Update itself
+            bool isThisVisible;
+            if (noFilter)
+            {
+                // Clear filter
+                _highlights?.Clear();
+                isThisVisible = true;
+            }
+            else
+            {
+                QueryFilterHelper.Range[] ranges;
+                var text = Text;
+                if (QueryFilterHelper.Match(filterText, text, out ranges))
+                {
+                    // Update highlights
+                    if (_highlights == null)
+                        _highlights = new List<Rectangle>(ranges.Length);
+                    else
+                        _highlights.Clear();
+                    var style = Style.Current;
+                    var font = style.FontSmall;
+                    var textRect = TextRect;
+                    for (int i = 0; i < ranges.Length; i++)
+                    {
+                        var start = font.GetCharPosition(text, ranges[i].StartIndex);
+                        var end = font.GetCharPosition(text, ranges[i].EndIndex);
+                        _highlights.Add(new Rectangle(start.X + textRect.X, textRect.Y, end.X - start.X, textRect.Height));
+                    }
+                    isThisVisible = true;
+                }
+                else
+                {
+                    // Hide
+                    _highlights?.Clear();
+                    isThisVisible = false;
+                }
+            }
+
+            // Update children
+            bool isAnyChildVisible = false;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                if (_children[i] is ActorTreeNode child)
+                {
+                    child.UpdateFilter(filterText);
+                    isAnyChildVisible |= child.Visible;
+                }
+            }
+
+            bool isExpanded = isAnyChildVisible;
+
+            // Restore cached state on query filter clear
+            if (noFilter && actor != null)
+            {
+                var id = actor.ID;
+                isExpanded = Editor.Instance.ProjectCache.IsExpandedActor(ref id);
+            }
+
+            if (isExpanded)
+            {
+                Expand(true);
+            }
+            else
+            {
+                Collapse(true);
+            }
+
+            Visible = isThisVisible | isAnyChildVisible;
+        }
+
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
             // Update hidden state
             var actor = Actor;
-            if (actor != null)
+            if (actor != null && !_hasSearchFilter)
             {
                 Visible = (actor.HideFlags & HideFlags.HideInHierarchy) == 0;
             }
@@ -194,6 +281,21 @@ namespace FlaxEditor.SceneGraph.GUI
             {
                 var id = Actor.ID;
                 Editor.Instance.ProjectCache.SetExpandedActor(ref id, IsExpanded);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            base.Draw();
+
+            // Draw all highlights
+            if (_highlights != null)
+            {
+                var style = Style.Current;
+                var color = style.ProgressNormal * 0.6f;
+                for (int i = 0; i < _highlights.Count; i++)
+                    Render2D.FillRectangle(_highlights[i], color);
             }
         }
 

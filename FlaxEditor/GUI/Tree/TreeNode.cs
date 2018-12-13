@@ -221,6 +221,30 @@ namespace FlaxEditor.GUI
         protected Rectangle HeaderRect => _headerRect;
 
         /// <summary>
+        /// Gets the header text rectangle.
+        /// </summary>
+        protected Rectangle TextRect
+        {
+            get
+            {
+                var left = _xOffset + 16; // offset + arrow
+                var textRect = new Rectangle(left, 0, Width - left, _headerHeight);
+
+                // Margin
+                _margin.ShrinkRectangle(ref textRect);
+
+                // Icon
+                if (_iconCollaped.IsValid)
+                {
+                    textRect.X += 18.0f;
+                    textRect.Width -= 18.0f;
+                }
+
+                return textRect;
+            }
+        }
+
+        /// <summary>
         /// Gets the drag over action type.
         /// </summary>
         protected DragItemPositioning DragOverMode => _dragOverMode;

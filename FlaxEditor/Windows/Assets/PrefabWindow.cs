@@ -23,6 +23,7 @@ namespace FlaxEditor.Windows.Assets
     {
         private readonly SplitPanel _split1;
         private readonly SplitPanel _split2;
+        private TextBox _searchBox;
         private readonly PrefabTree _tree;
         private readonly PrefabWindowViewport _viewport;
         private readonly CustomEditorPresenter _propertiesEditor;
@@ -109,10 +110,23 @@ namespace FlaxEditor.Windows.Assets
                 Parent = _split1.Panel2
             };
 
+            // Prefab structure tree searching query input box
+            var headerPanel = new ContainerControl();
+            headerPanel.DockStyle = DockStyle.Top;
+            headerPanel.IsScrollable = true;
+            headerPanel.Parent = _split1.Panel1;
+            _searchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
+            _searchBox.AnchorStyle = AnchorStyle.Upper;
+            _searchBox.WatermarkText = "Search...";
+            _searchBox.Parent = headerPanel;
+            _searchBox.TextChanged += OnSearchBoxTextChanged;
+            headerPanel.Height = _searchBox.Bottom + 8;
+
             // Prefab structure tree
             Graph = new LocalSceneGraph(new CustomRootNode(this));
             _tree = new PrefabTree();
-            _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 0.0f); // Hide root node
+            _tree.Y = headerPanel.Bottom;
+            _tree.Margin = new Margin(0.0f, 0.0f, -16.0f, 0.0f); // Hide root node
             _tree.AddChild(Graph.Root.TreeNode);
             _tree.SelectedChanged += OnTreeSelectedChanged;
             _tree.RightClick += OnTreeRightClick;
@@ -147,6 +161,24 @@ namespace FlaxEditor.Windows.Assets
             Editor.Prefabs.PrefabApplied += OnPrefabApplied;
             ScriptsBuilder.ScriptsReloadBegin += OnScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd += OnScriptsReloadEnd;
+        }
+
+        private void OnSearchBoxTextChanged()
+        {
+            // Skip events during setup or init stuff
+            if (IsLayoutLocked)
+                return;
+
+            var root = Graph.Root;
+            root.TreeNode.LockChildrenRecursive();
+
+            // Update tree
+            var query = _searchBox.Text;
+            root.TreeNode.UpdateFilter(query);
+
+            root.TreeNode.UnlockChildrenRecursive();
+            PerformLayout();
+            PerformLayout();
         }
 
         private void OnScriptsReloadBegin()

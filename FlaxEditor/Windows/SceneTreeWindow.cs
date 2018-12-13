@@ -17,6 +17,7 @@ namespace FlaxEditor.Windows
     /// <seealso cref="FlaxEditor.Windows.SceneEditorWindow" />
     public partial class SceneTreeWindow : SceneEditorWindow
     {
+        private TextBox _searchBox;
         private Tree _tree;
         private bool _isUpdatingSelection;
         private bool _isMouseDown;
@@ -30,16 +31,47 @@ namespace FlaxEditor.Windows
         {
             Title = "Scene";
 
+            // Scene searching query input box
+            var headerPanel = new ContainerControl();
+            headerPanel.DockStyle = DockStyle.Top;
+            headerPanel.IsScrollable = true;
+            headerPanel.Parent = this;
+            _searchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
+            _searchBox.AnchorStyle = AnchorStyle.Upper;
+            _searchBox.WatermarkText = "Search...";
+            _searchBox.Parent = headerPanel;
+            _searchBox.TextChanged += OnSearchBoxTextChanged;
+            headerPanel.Height = _searchBox.Bottom + 8;
+
             // Create scene structure tree
             var root = editor.Scene.Root;
             root.TreeNode.ChildrenIndent = 0;
             root.TreeNode.Expand();
             _tree = new Tree(true);
-            _tree.Margin = new Margin(0.0f, 0.0f, -14.0f, 0.0f); // Hide root node
+            _tree.Y = headerPanel.Bottom;
+            _tree.Margin = new Margin(0.0f, 0.0f, -16.0f, 0.0f); // Hide root node
             _tree.AddChild(root.TreeNode);
             _tree.SelectedChanged += Tree_OnSelectedChanged;
             _tree.RightClick += Tree_OnRightClick;
             _tree.Parent = this;
+        }
+
+        private void OnSearchBoxTextChanged()
+        {
+            // Skip events during setup or init stuff
+            if (IsLayoutLocked)
+                return;
+
+            var root = Editor.Scene.Root;
+            root.TreeNode.LockChildrenRecursive();
+
+            // Update tree
+            var query = _searchBox.Text;
+            root.TreeNode.UpdateFilter(query);
+
+            root.TreeNode.UnlockChildrenRecursive();
+            PerformLayout();
+            PerformLayout();
         }
 
         private void Rename()
@@ -234,6 +266,7 @@ namespace FlaxEditor.Windows
         public override void OnDestroy()
         {
             _tree = null;
+            _searchBox = null;
 
             base.OnDestroy();
         }
