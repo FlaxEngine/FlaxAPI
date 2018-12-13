@@ -204,6 +204,22 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Resets the animation state (clears the instance state data but preserves the instance parameters values).
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void ResetAnimation()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_ResetAnimation(unmanagedPtr);
+#endif
+        }
+
+        /// <summary>
         /// Gets material used to render mesh at given index (overriden by model instance buffer or model default).
         /// </summary>
         /// <param name="meshIndex">Mesh index</param>
@@ -286,6 +302,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_UpdateAnimation(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ResetAnimation(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern MaterialBase Internal_GetMaterial(IntPtr obj, int meshIndex);
