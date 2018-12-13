@@ -42,6 +42,67 @@ namespace FlaxEditor.Content
     }
 
     /// <summary>
+    /// Content item filter types used for searching.
+    /// </summary>
+    public enum ContentItemSearchFilter
+    {
+        /// <summary>
+        /// The model.
+        /// </summary>
+        Model,
+
+        /// <summary>
+        /// The skinned model.
+        /// </summary>
+        SkinnedModel,
+
+        /// <summary>
+        /// The material.
+        /// </summary>
+        Material,
+
+        /// <summary>
+        /// The texture.
+        /// </summary>
+        Texture,
+
+        /// <summary>
+        /// The scene.
+        /// </summary>
+        Scene,
+
+        /// <summary>
+        /// The prefab.
+        /// </summary>
+        Prefab,
+
+        /// <summary>
+        /// The script.
+        /// </summary>
+        Script,
+
+        /// <summary>
+        /// The audio.
+        /// </summary>
+        Audio,
+
+        /// <summary>
+        /// The animation.
+        /// </summary>
+        Animation,
+
+        /// <summary>
+        /// The json.
+        /// </summary>
+        Json,
+
+        /// <summary>
+        /// The other.
+        /// </summary>
+        Other,
+    }
+
+    /// <summary>
     /// Interface for objects that can reference the content items in order to receive events from them.
     /// </summary>
     public interface IContentItemOwner
@@ -123,6 +184,11 @@ namespace FlaxEditor.Content
         /// Gets the type of the item.
         /// </summary>
         public abstract ContentItemType ItemType { get; }
+
+        /// <summary>
+        /// Gets the type of the item searching filter to use.
+        /// </summary>
+        public abstract ContentItemSearchFilter SearchFilter { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is asset.

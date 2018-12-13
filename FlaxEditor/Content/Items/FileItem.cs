@@ -23,6 +23,9 @@ namespace FlaxEditor.Content
         public override ContentItemType ItemType => ContentItemType.Other;
 
         /// <inheritdoc />
+        public override ContentItemSearchFilter SearchFilter => ContentItemSearchFilter.Other;
+
+        /// <inheritdoc />
         public override Sprite DefaultThumbnail => Editor.Instance.Icons.Document64;
     }
 }

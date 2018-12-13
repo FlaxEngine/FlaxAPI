@@ -22,6 +22,35 @@ namespace FlaxEditor.Content
         : base(path, typeName, ref id)
         {
             ItemDomain = domain;
+
+            switch (domain)
+            {
+            case ContentDomain.Texture:
+            case ContentDomain.CubeTexture:
+                SearchFilter = ContentItemSearchFilter.Texture;
+                break;
+            case ContentDomain.Material:
+                SearchFilter = ContentItemSearchFilter.Material;
+                break;
+            case ContentDomain.Model:
+                SearchFilter = ContentItemSearchFilter.Model;
+                break;
+            case ContentDomain.Prefab:
+                SearchFilter = ContentItemSearchFilter.Prefab;
+                break;
+            case ContentDomain.Scene:
+                SearchFilter = ContentItemSearchFilter.Scene;
+                break;
+            case ContentDomain.Audio:
+                SearchFilter = ContentItemSearchFilter.Audio;
+                break;
+            case ContentDomain.Animation:
+                SearchFilter = ContentItemSearchFilter.Animation;
+                break;
+            default:
+                SearchFilter = ContentItemSearchFilter.Other;
+                break;
+            }
         }
 
         /// <summary>
@@ -55,5 +84,8 @@ namespace FlaxEditor.Content
 
         /// <inheritdoc />
         public override ContentDomain ItemDomain { get; }
+
+        /// <inheritdoc />
+        public override ContentItemSearchFilter SearchFilter { get; }
     }
 }

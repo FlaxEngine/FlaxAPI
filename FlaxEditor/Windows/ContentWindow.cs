@@ -128,6 +128,9 @@ namespace FlaxEditor.Windows
             _itemsFilterBox = new SearchFilterComboBox(4, (contentItemsSearchPanel.Height - ComboBox.DefaultHeight) * 0.5f, filterBoxWidth);
             _itemsFilterBox.Parent = contentItemsSearchPanel;
             _itemsFilterBox.SelectedIndexChanged += e => UpdateItemsSearch();
+            _itemsFilterBox.SupportMultiSelect = true;
+            for (int i = 0; i <= (int)ContentItemSearchFilter.Other; i++)
+                _itemsFilterBox.Items.Add(((ContentItemSearchFilter)i).ToString());
 
             // Content View
             _view = new ContentView();

@@ -82,6 +82,11 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets a value indicating whether this combobox has any item selected.
+        /// </summary>
+        public bool HasSelection => _selectedIndices.Count != 0;
+
+        /// <summary>
         /// Gets or sets the index of the selected. If combobox has more than 1 item selected then it returns invalid index (value -1).
         /// </summary>
         [EditorOrder(2), Tooltip("The index of the selected item from the list.")]

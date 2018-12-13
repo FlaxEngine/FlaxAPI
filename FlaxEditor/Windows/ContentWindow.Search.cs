@@ -1,5 +1,8 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System.Collections.Generic;
+using FlaxEditor.Content;
+using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -84,7 +87,8 @@ namespace FlaxEditor.Windows
         /// </summary>
         public void ClearItemsSearch()
         {
-            if (_itemsSearchBox.TextLength == 0)
+            // Skip if already cleared
+            if (_itemsSearchBox.TextLength == 0 && !_itemsFilterBox.HasSelection)
                 return;
 
             IsLayoutLocked = true;
@@ -93,6 +97,8 @@ namespace FlaxEditor.Windows
             _itemsFilterBox.SelectedIndex = -1;
 
             IsLayoutLocked = false;
+
+            UpdateItemsSearch();
         }
 
         private void UpdateItemsSearch()
@@ -101,7 +107,107 @@ namespace FlaxEditor.Windows
             if (IsLayoutLocked)
                 return;
 
-            // TODO: implement it
+            // Check if clear filters
+            if (_itemsSearchBox.TextLength == 0 && !_itemsFilterBox.HasSelection)
+            {
+                RefreshView();
+                return;
+            }
+
+            // Apply filter
+            var items = new List<ContentItem>(8);
+            var query = _itemsSearchBox.Text;
+            var filters = new bool[_itemsFilterBox.Items.Count];
+            if (_itemsFilterBox.HasSelection)
+            {
+                // Update filters flags
+                for (int i = 0; i < filters.Length; i++)
+                {
+                    filters[i] = _itemsFilterBox.Selection.Contains(i);
+                }
+            }
+            else
+            {
+                // No filters
+                for (int i = 0; i < filters.Length; i++)
+                {
+                    filters[i] = true;
+                }
+            }
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                if (SelectedNode == _root)
+                {
+                    // Special case for root folder
+                    for (int i = 0; i < _root.ChildrenCount; i++)
+                    {
+                        if (_root.GetChild(i) is ContentTreeNode node)
+                            UpdateItemsSearchFilter(node.Folder, items, filters);
+                    }
+                }
+                else
+                {
+                    UpdateItemsSearchFilter(CurrentViewFolder, items, filters);
+                }
+            }
+            else
+            {
+                if (SelectedNode == _root)
+                {
+                    // Special case for root folder
+                    for (int i = 0; i < _root.ChildrenCount; i++)
+                    {
+                        if (_root.GetChild(i) is ContentTreeNode node)
+                            UpdateItemsSearchFilter(node.Folder, items, filters, query);
+                    }
+                }
+                else
+                {
+                    UpdateItemsSearchFilter(CurrentViewFolder, items, filters, query);
+                }
+            }
+            _view.IsSearching = true;
+            _view.ShowItems(items);
+        }
+
+        private void UpdateItemsSearchFilter(ContentFolder folder, List<ContentItem> items, bool[] filters)
+        {
+            for (int i = 0; i < folder.Children.Count; i++)
+            {
+                var child = folder.Children[i];
+
+                if (child is ContentFolder childFolder)
+                {
+                    UpdateItemsSearchFilter(childFolder, items, filters);
+                }
+                else
+                {
+                    if (filters[(int)child.SearchFilter])
+                    {
+                        items.Add(child);
+                    }
+                }
+            }
+        }
+
+        private void UpdateItemsSearchFilter(ContentFolder folder, List<ContentItem> items, bool[] filters, string filterText)
+        {
+            for (int i = 0; i < folder.Children.Count; i++)
+            {
+                var child = folder.Children[i];
+
+                if (child is ContentFolder childFolder)
+                {
+                    UpdateItemsSearchFilter(childFolder, items, filters, filterText);
+                }
+                else
+                {
+                    if (filters[(int)child.SearchFilter] && QueryFilterHelper.Match(filterText, child.ShortName))
+                    {
+                        items.Add(child);
+                    }
+                }
+            }
         }
     }
 }
