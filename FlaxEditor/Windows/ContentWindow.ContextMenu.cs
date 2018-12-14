@@ -15,7 +15,7 @@ namespace FlaxEditor.Windows
         /// </summary>
         public event Action<ContextMenu, ContentItem> ContextMenuShow;
 
-        private void ShowContextMenuForItem(ContentItem item, ref Vector2 location)
+        private void ShowContextMenuForItem(ContentItem item, ref Vector2 location, bool isTreeNode)
         {
             Assert.IsNull(_newElement);
 
@@ -41,6 +41,16 @@ namespace FlaxEditor.Windows
             ContextMenuChildMenu c;
             ContextMenu cm = new ContextMenu();
             cm.Tag = item;
+            if (isTreeNode)
+            {
+                b = cm.AddButton("Expand All", OnExpandAllClicked);
+                b.Enabled = CurrentViewFolder.Node.ChildrenCount != 0;
+
+                b = cm.AddButton("Collapse All", OnCollapseAllClicked);
+                b.Enabled = CurrentViewFolder.Node.ChildrenCount != 0;
+
+                cm.AddSeparator();
+            }
             if (isValidElement)
             {
                 b = cm.AddButton("Open", () => Open(item));
@@ -143,6 +153,16 @@ namespace FlaxEditor.Windows
 
             // Show it
             cm.Show(this, location);
+        }
+
+        private void OnExpandAllClicked(ContextMenuButton button)
+        {
+            CurrentViewFolder.Node.ExpandAll();
+        }
+
+        private void OnCollapseAllClicked(ContextMenuButton button)
+        {
+            CurrentViewFolder.Node.CollapseAll();
         }
 
         /// <summary>

@@ -724,16 +724,16 @@ namespace FlaxEditor.Windows
                 {
                     if (_view.IsSelected(item) == false)
                         _view.Select(item);
-                    ShowContextMenuForItem(item, ref location);
+                    ShowContextMenuForItem(item, ref location, false);
                 }
                 else if (c is ContentView)
                 {
-                    ShowContextMenuForItem(null, ref location);
+                    ShowContextMenuForItem(null, ref location, false);
                 }
                 else if (c is ContentTreeNode node)
                 {
                     _tree.Select(node);
-                    ShowContextMenuForItem(node.Folder, ref location);
+                    ShowContextMenuForItem(node.Folder, ref location, true);
                 }
 
                 return true;

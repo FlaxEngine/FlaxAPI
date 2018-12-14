@@ -31,9 +31,19 @@ namespace FlaxEditor.Windows
             var contextMenu = new ContextMenu();
             contextMenu.MinimumWidth = 120;
 
+            // Expand/collapse
+
+            var b = contextMenu.AddButton("Expand All", OnExpandAllClicked);
+            b.Enabled = hasSthSelected;
+
+            b = contextMenu.AddButton("Collapse All", OnCollapseAllClicked);
+            b.Enabled = hasSthSelected;
+
+            contextMenu.AddSeparator();
+
             // Basic editing options
 
-            var b = contextMenu.AddButton("Rename", Rename);
+            b = contextMenu.AddButton("Rename", Rename);
             b.Enabled = isSingleActorSelected;
 
             b = contextMenu.AddButton("Duplicate", Editor.SceneEditing.Duplicate);
@@ -110,6 +120,24 @@ namespace FlaxEditor.Windows
             var contextMenu = CreateContextMenu();
 
             contextMenu.Show(parent, location);
+        }
+
+        private void OnExpandAllClicked(ContextMenuButton button)
+        {
+            for (int i = 0; i < Editor.SceneEditing.SelectionCount; i++)
+            {
+                if (Editor.SceneEditing.Selection[i] is ActorNode node)
+                    node.TreeNode.ExpandAll();
+            }
+        }
+
+        private void OnCollapseAllClicked(ContextMenuButton button)
+        {
+            for (int i = 0; i < Editor.SceneEditing.SelectionCount; i++)
+            {
+                if (Editor.SceneEditing.Selection[i] is ActorNode node)
+                    node.TreeNode.CollapseAll();
+            }
         }
     }
 }
