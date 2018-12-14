@@ -260,9 +260,9 @@ namespace FlaxEditor.Modules
 
                 // Get metadata
                 int version = int.Parse(root.Attributes["Version"].Value, CultureInfo.InvariantCulture);
-                var virtualDesktopSize = Application.VirtualDesktopSize;
-                var virtualDesktopSafeLefttCorner = new Vector2(0, 23); // 23 is a window strip size
-                var virtualDesktopSafeRightCorner = virtualDesktopSize - new Vector2(50, 50); // apply some safe area
+                var virtualDesktopBounds = Application.VirtualDesktopBounds;
+                var virtualDesktopSafeLeftCorner = virtualDesktopBounds.Location + new Vector2(0, 23); // 23 is a window strip size
+                var virtualDesktopSafeRightCorner = virtualDesktopBounds.BottomRight - new Vector2(50, 50); // apply some safe area
 
                 switch (version)
                 {
@@ -276,8 +276,8 @@ namespace FlaxEditor.Modules
                         bool isMaximized = bool.Parse(mainWindowNode.GetAttribute("IsMaximized"));
 
                         // Clamp position to match current desktop dimensions (if window was on desktop that is now inactive)
-                        if (bounds.X < 0 || bounds.Y < 0 || bounds.X > virtualDesktopSafeRightCorner.X || bounds.Y > virtualDesktopSafeRightCorner.Y)
-                            bounds.Location = virtualDesktopSafeLefttCorner;
+                        if (bounds.X < virtualDesktopSafeLeftCorner.X || bounds.Y < virtualDesktopSafeLeftCorner.Y || bounds.X > virtualDesktopSafeRightCorner.X || bounds.Y > virtualDesktopSafeRightCorner.Y)
+                            bounds.Location = virtualDesktopSafeLeftCorner;
 
                         if (isMaximized)
                         {
