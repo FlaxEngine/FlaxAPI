@@ -77,6 +77,7 @@ namespace FlaxEditor.Windows
             groupBasicModels.AddChild(CreateEditorAssetItem("Plane", "Primitives/Plane.flax"));
             groupBasicModels.AddChild(CreateEditorAssetItem("Cylinder", "Primitives/Cylinder.flax"));
             groupBasicModels.AddChild(CreateEditorAssetItem("Cone", "Primitives/Cone.flax"));
+            groupBasicModels.AddChild(CreateEditorAssetItem("Capsule", "Primitives/Capsule.flax"));
 
             var groupLights = CreateGroupWithList(actorGroups, "Lights");
             groupLights.AddChild(CreateActorItem("Directional Light", typeof(DirectionalLight)));
