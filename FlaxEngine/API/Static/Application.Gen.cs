@@ -85,7 +85,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets size of the virtual desktop made of all the monitors attached.
+        /// Gets the size of the virtual desktop made of all the monitors attached.
         /// </summary>
         [UnmanagedCall]
         public static Vector2 VirtualDesktopSize
@@ -94,6 +94,19 @@ namespace FlaxEngine
             get; set;
 #else
             get { Vector2 resultAsRef; Internal_GetVirtualDesktopSize(out resultAsRef); return resultAsRef; }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the bounds rectangle of the virtual desktop made of all the monitors attached.
+        /// </summary>
+        [UnmanagedCall]
+        public static Rectangle VirtualDesktopBounds
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { Rectangle resultAsRef; Internal_GetVirtualDesktopBounds(out resultAsRef); return resultAsRef; }
 #endif
         }
 
@@ -258,6 +271,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetVirtualDesktopSize(out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetVirtualDesktopBounds(out Rectangle resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetMousePosition(out Vector2 resultAsRef);
