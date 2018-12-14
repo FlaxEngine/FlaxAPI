@@ -102,7 +102,7 @@ namespace FlaxEngine.Rendering
             public int ChartsPadding;
             public int AtlasSize;
             public int BounceCount;
-            public bool UseGeometryWithNoMaterials;
+            public byte UseGeometryWithNoMaterials;
             public int Quality;
         }
 
@@ -115,7 +115,7 @@ namespace FlaxEngine.Rendering
                 ChartsPadding = data.ChartsPadding,
                 AtlasSize = (AtlasSizes)data.AtlasSize,
                 BounceCount = data.BounceCount,
-                UseGeometryWithNoMaterials = data.UseGeometryWithNoMaterials,
+                UseGeometryWithNoMaterials = data.UseGeometryWithNoMaterials != 0,
                 Quality = data.Quality,
             };
         }
@@ -129,7 +129,7 @@ namespace FlaxEngine.Rendering
                 ChartsPadding = data.ChartsPadding,
                 AtlasSize = (int)data.AtlasSize,
                 BounceCount = data.BounceCount,
-                UseGeometryWithNoMaterials = data.UseGeometryWithNoMaterials,
+                UseGeometryWithNoMaterials = (byte)(data.UseGeometryWithNoMaterials ? 1 : 0),
                 Quality = data.Quality,
             };
         }
