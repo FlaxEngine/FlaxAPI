@@ -73,6 +73,8 @@
     </Compile>
     <Compile Include="API\Actors\ExponentialHeightFog.cs" />
     <Compile Include="API\Actors\ExponentialHeightFog.Gen.cs" />
+    <Compile Include="API\Actors\Foliage.cs" />
+    <Compile Include="API\Actors\Foliage.Gen.cs" />
     <Compile Include="API\Actors\Joint.cs" />
     <Compile Include="API\Actors\Joint.Gen.cs" />
     <Compile Include="API\Actors\Light.cs" />
