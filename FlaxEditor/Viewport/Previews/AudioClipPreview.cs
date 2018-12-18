@@ -78,9 +78,11 @@ namespace FlaxEditor.Viewport.Previews
                 float sampleYScale = Height / info.NumChannels;
 
                 // Sample count
-                uint totalSampleCount = info.NumSamples;
                 uint numSamplesPerChannel = info.NumSamples / info.NumChannels;
-                uint samplesPerIndex = (uint)(totalSampleCount / Width);
+                uint samplesPerIndex = (uint)(numSamplesPerChannel / Width);
+                const uint maxSamplesPerIndex = 64;
+                uint actualSamplesPerIndex = Math.Min(samplesPerIndex, maxSamplesPerIndex);
+                uint samplesPerIndexDiff = Math.Max(1, samplesPerIndex / actualSamplesPerIndex);
 
                 // Render each channel separately so outer loop is the sound wave channel index
                 for (uint channelIndex = 0; channelIndex < info.NumChannels; channelIndex++)
@@ -96,10 +98,11 @@ namespace FlaxEditor.Viewport.Previews
                         int numSamplesInPixel = 0;
 
                         // Loop through all pixels in this x-frame, sum all audio data. Track total frames rendered to avoid writing past buffer boundary
-                        for (uint sampleIndex = 0; sampleIndex < samplesPerIndex && currentSample < numSamplesPerChannel; sampleIndex++)
+                        uint samplesEnd = Math.Min(currentSample + samplesPerIndex, numSamplesPerChannel);
+                        for (uint sampleIndex = currentSample; sampleIndex < samplesEnd; sampleIndex += samplesPerIndexDiff)
                         {
                             // Get the sample value
-                            uint index = currentSample + channelIndex;
+                            uint index = sampleIndex + channelIndex;
                             float value = _pcmData[index];
 
                             // Sum the sample value with the running sum
@@ -107,10 +110,8 @@ namespace FlaxEditor.Viewport.Previews
 
                             // Track the number of samples we're actually summing to get an accurate average
                             numSamplesInPixel++;
-
-                            // Move to the next sample
-                            currentSample++;
                         }
+                        currentSample = samplesEnd;
 
                         // If we actually added any audio data in this pixel
                         if (numSamplesInPixel > Mathf.Epsilon)
