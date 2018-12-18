@@ -78,9 +78,8 @@ namespace FlaxEditor.Viewport.Previews
                 float sampleYScale = Height / info.NumChannels;
 
                 // Sample count
-                uint totalSampleCount = info.NumSamples;
                 uint numSamplesPerChannel = info.NumSamples / info.NumChannels;
-                uint samplesPerIndex = (uint)(totalSampleCount / Width);
+                uint samplesPerIndex = (uint)(numSamplesPerChannel / Width);
 
                 // Render each channel separately so outer loop is the sound wave channel index
                 for (uint channelIndex = 0; channelIndex < info.NumChannels; channelIndex++)
