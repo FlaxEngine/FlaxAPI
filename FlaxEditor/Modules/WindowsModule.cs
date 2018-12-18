@@ -279,18 +279,22 @@ namespace FlaxEditor.Modules
                         if (bounds.X < virtualDesktopSafeLeftCorner.X || bounds.Y < virtualDesktopSafeLeftCorner.Y || bounds.X > virtualDesktopSafeRightCorner.X || bounds.Y > virtualDesktopSafeRightCorner.Y)
                             bounds.Location = virtualDesktopSafeLeftCorner;
 
-                        if (Mathf.Min(bounds.Size.X, bounds.Size.Y) >= 1)
+                        if (isMaximized)
                         {
-                            MainWindow.ClientBounds = bounds;
+                            MainWindow.ClientPosition = bounds.Location;
+
+                            MainWindow.Maximize();
                         }
                         else
                         {
-                            MainWindow.ClientPosition = bounds.Location;
-                        }
-
-                        if (isMaximized)
-                        {
-                            MainWindow.Maximize();
+                            if (Mathf.Min(bounds.Size.X, bounds.Size.Y) >= 1)
+                            {
+                                MainWindow.ClientBounds = bounds;
+                            }
+                            else
+                            {
+                                MainWindow.ClientPosition = bounds.Location;
+                            }
                         }
                     }
 
