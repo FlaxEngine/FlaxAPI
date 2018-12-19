@@ -21,13 +21,26 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="selectedBox">The currently user-selected box. Can be null.</param>
         public delegate void ItemClickedDelegate(VisjectCMItem clickedItem, Elements.Box selectedBox);
 
+        /// <summary>
+        /// Visject Surface node archetype spawn ability checking delegate.
+        /// </summary>
+        /// <param name="arch">The node archetype to check.</param>
+        /// <returns>True if can use this node to spawn it on a surface, otherwise false..</returns>
+        public delegate bool NodeSpawnCheckDelegate(NodeArchetype arch);
+
+        /// <summary>
+        /// Visject Surface parameters getter delegate.
+        /// </summary>
+        /// <returns>The list of surface parameters or null if failed.</returns>
+        public delegate List<SurfaceParameter> ParameterGetterDelegate();
+
         private readonly List<VisjectCMGroup> _groups = new List<VisjectCMGroup>(16);
         private readonly TextBox _searchBox;
         private bool _waitingForInput;
         private VisjectCMGroup _surfaceParametersGroup;
         private Panel _panel1;
         private VerticalPanel _groupsPanel;
-        private readonly Func<List<SurfaceParameter>> _parametersGetter;
+        private readonly ParameterGetterDelegate _parametersGetter;
         private Elements.Box _selectedBox;
 
         /// <summary>
@@ -51,7 +64,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="groups">The group archetypes. Cannot be null.</param>
         /// <param name="canSpawnNodeType">The surface node type validation helper. Cannot be null.</param>
         /// <param name="parametersGetter">The surface parameters getter callback. Can be null.</param>
-        public VisjectCM(List<GroupArchetype> groups, Func<NodeArchetype, bool> canSpawnNodeType, Func<List<SurfaceParameter>> parametersGetter = null)
+        public VisjectCM(List<GroupArchetype> groups, NodeSpawnCheckDelegate canSpawnNodeType, ParameterGetterDelegate parametersGetter = null)
         {
             if (groups == null)
                 throw new ArgumentNullException(nameof(groups));
