@@ -1,0 +1,18 @@
+// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+
+using FlaxEngine;
+
+namespace FlaxEditor.SceneGraph.Actors
+{
+    /// <summary>
+    /// Scene tree node for <see cref="Foliage"/> actor type.
+    /// </summary>
+    public sealed class FoliageNode : ActorNode
+    {
+        /// <inheritdoc />
+        public FoliageNode(Actor actor)
+        : base(actor)
+        {
+        }
+    }
+}
