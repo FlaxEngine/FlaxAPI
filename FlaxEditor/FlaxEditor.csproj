@@ -326,6 +326,7 @@
     <Compile Include="SceneGraph\Actors\DirectionalLightNode.cs" />
     <Compile Include="SceneGraph\Actors\EnvironmentProbeNode.cs" />
     <Compile Include="SceneGraph\Actors\ExponentialHeightFogNode.cs" />
+    <Compile Include="SceneGraph\Actors\FoliageNode.cs" />
     <Compile Include="SceneGraph\Actors\StaticModelNode.cs" />
     <Compile Include="SceneGraph\Actors\PointLightNode.cs" />
     <Compile Include="SceneGraph\Actors\PostFxVolumeNode.cs" />
@@ -422,6 +423,10 @@
     <Compile Include="Surface\ISurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
+    <Compile Include="Tools\Foliage\EditTab.cs" />
+    <Compile Include="Tools\Foliage\FoliageTab.cs" />
+    <Compile Include="Tools\Foliage\FoliageTypesTab.cs" />
+    <Compile Include="Tools\Foliage\PaintTab.cs" />
     <Compile Include="Tools\PerlinNoise.cs" />
     <Compile Include="Tools\Terrain\Brushes\Brush.cs" />
     <Compile Include="Tools\Terrain\Brushes\CircleBrush.cs" />
@@ -479,6 +484,7 @@
     <Compile Include="Viewport\MainEditorGizmoViewport.cs" />
     <Compile Include="Viewport\MainEditorGizmoViewport.Modes.cs" />
     <Compile Include="Viewport\Modes\EditorGizmoMode.cs" />
+    <Compile Include="Viewport\Modes\NoGizmoMode.cs" />
     <Compile Include="Viewport\Modes\TransformGizmoMode.cs" />
     <Compile Include="Viewport\PrefabWindowViewport.cs" />
     <Compile Include="Viewport\Previews\AnimatedModelPreview.cs" />

@@ -256,7 +256,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            actor?.SetParent(this);
+            actor?.SetParent(this, worldPositionStays);
 #endif
         }
 

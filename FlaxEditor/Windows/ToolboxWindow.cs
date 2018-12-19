@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.GUI;
+using FlaxEditor.Tools.Foliage;
 using FlaxEditor.Tools.Terrain;
 using FlaxEditor.Viewport.Modes;
 using FlaxEngine;
@@ -24,6 +25,11 @@ namespace FlaxEditor.Windows
         /// The items spawning tab.
         /// </summary>
         public Tab Spawn;
+
+        /// <summary>
+        /// The foliage spawning tab.
+        /// </summary>
+        public FoliageTab Foliage;
 
         /// <summary>
         /// The terrain carving tab.
@@ -135,11 +141,7 @@ namespace FlaxEditor.Windows
 
         private void InitFoliageTab(Tabs tabs)
         {
-            var foliageTab = tabs.AddTab(new Tab(string.Empty, Editor.Icons.Foliage48));
-
-            var info = foliageTab.AddChild<Label>();
-            info.Text = "Foliage spawning coming soon...";
-            info.DockStyle = DockStyle.Fill;
+            tabs.AddTab(Foliage = new FoliageTab(Editor.Icons.Foliage48, Editor));
         }
 
         private void InitCarveTab(Tabs tabs)
