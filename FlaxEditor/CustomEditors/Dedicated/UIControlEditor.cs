@@ -50,7 +50,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private void OnSetTypeButtonClicked(Button button)
         {
-            var controlTypes = Editor.Instance.CodeEditing.GetControlTypes();
+            var controlTypes = Editor.Instance.CodeEditing.Controls.Get();
             if (controlTypes.Count == 0)
                 return;
 

@@ -18,11 +18,68 @@ namespace FlaxEditor.Modules.SourceCodeEditing
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class CodeEditingModule : EditorModule
     {
+        /// <summary>
+        /// Cached types collection container.
+        /// </summary>
+        public class CachedTypesCollection
+        {
+            private bool _hasValidData;
+            private List<Type> _list;
+            private readonly int _capacity;
+            private readonly Type _type;
+            private readonly Func<Type, bool> _checkFunc;
+            private readonly Func<Assembly, bool> _checkAssembly;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CachedTypesCollection"/> class.
+            /// </summary>
+            /// <param name="capacity">The initial collection capacity.</param>
+            /// <param name="type">The type of things to find.</param>
+            /// <param name="checkFunc">Additional callback used to check if the given type is valid. Returns true if add type, otherwise false.</param>
+            /// <param name="checkAssembly">Additional callback used to check if the given assembly is valid. Returns true if search for types in the given assembly, otherwise false.</param>
+            public CachedTypesCollection(int capacity, Type type, Func<Type, bool> checkFunc, Func<Assembly, bool> checkAssembly)
+            {
+                _capacity = capacity;
+                _type = type;
+                _checkFunc = checkFunc;
+                _checkAssembly = checkAssembly;
+            }
+
+            /// <summary>
+            /// Gets all the types from the all loaded assemblies (including project scripts and scripts from the plugins).
+            /// </summary>
+            /// <returns>The types collection (readonly).</returns>
+            public List<Type> Get()
+            {
+                if (!_hasValidData)
+                {
+                    if (_list == null)
+                        _list = new List<Type>(_capacity);
+                    _list.Clear();
+                    _hasValidData = true;
+
+                    Editor.Log("Searching for valid " + _type);
+                    var start = DateTime.Now;
+                    Utils.GetDerivedTypes(_type, _list, _checkFunc, _checkAssembly);
+                    var end = DateTime.Now;
+                    Editor.Log(string.Format("Found {0} types (in {1} ms)", _list.Count, (int)(end - start).TotalMilliseconds));
+                }
+
+                return _list;
+            }
+
+            /// <summary>
+            /// Clears the types.
+            /// </summary>
+            public void ClearTypes()
+            {
+                _list?.Clear();
+                _hasValidData = false;
+            }
+        }
+
         private readonly List<ISourceCodeEditor> _editors = new List<ISourceCodeEditor>(8);
         private ISourceCodeEditor _selectedEditor;
-        private readonly List<Type> _scripts = new List<Type>();
-        private readonly List<Type> _controlTypes = new List<Type>();
-        private bool _hasValidScripts, _hasValidControlTypes;
 
         /// <summary>
         /// Gets the source code editors registered for usage in editor.
@@ -68,6 +125,16 @@ namespace FlaxEditor.Modules.SourceCodeEditing
                 }
             }
         }
+
+        /// <summary>
+        /// The scripts collection.
+        /// </summary>
+        public readonly CachedTypesCollection Scripts = new CachedTypesCollection(1024, typeof(Script), IsTypeValidScriptType, HasAssemblyValidScriptTypes);
+
+        /// <summary>
+        /// The control types collection.
+        /// </summary>
+        public readonly CachedTypesCollection Controls = new CachedTypesCollection(64, typeof(Control), IsTypeValidControlType, HasAssemblyValidControlTypes);
 
         internal CodeEditingModule(Editor editor)
         : base(editor)
@@ -206,35 +273,12 @@ namespace FlaxEditor.Modules.SourceCodeEditing
 
         private void OnScriptsReload()
         {
-            // Invalidate cached script items
-            _hasValidScripts = false;
-            _scripts.Clear();
-            _hasValidControlTypes = false;
-            _controlTypes.Clear();
+            // Invalidate cached types
+            Scripts.ClearTypes();
+            Controls.ClearTypes();
         }
 
-        /// <summary>
-        /// Gets all the script types from the all loaded assemblies (including project scripts and scripts from the plugins).
-        /// </summary>
-        /// <returns>The script types collection (readonly).</returns>
-        public List<Type> GetScripts()
-        {
-            if (!_hasValidScripts)
-            {
-                _scripts.Clear();
-                _hasValidScripts = true;
-
-                Editor.Log("Searching valid script types");
-                var start = DateTime.Now;
-                Utils.GetDerivedTypes(typeof(Script), _scripts, IsTypeValidScriptType, HasAssemblyValidScriptTypes);
-                var end = DateTime.Now;
-                Editor.Log(string.Format("Found {0} script types (in {1} ms)", _scripts.Count, (int)(end - start).TotalMilliseconds));
-            }
-
-            return _scripts;
-        }
-
-        private bool HasAssemblyValidScriptTypes(Assembly a)
+        private static bool HasAssemblyValidScriptTypes(Assembly a)
         {
             // Skip editor
             if (a.GetName().Name == "FlaxEditor")
@@ -245,33 +289,12 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             return references.Any(x => x.Name == "FlaxEngine");
         }
 
-        private bool IsTypeValidScriptType(Type t)
+        private static bool IsTypeValidScriptType(Type t)
         {
             return !t.IsGenericType && !t.IsAbstract;
         }
 
-        /// <summary>
-        /// Gets the collection of the Control types that can be spawned in the game (valid ones).
-        /// </summary>
-        /// <returns>The Control types collection (readonly).</returns>
-        public List<Type> GetControlTypes()
-        {
-            if (!_hasValidControlTypes)
-            {
-                _controlTypes.Clear();
-                _hasValidControlTypes = true;
-
-                Editor.Log("Searching valid control types");
-                var start = DateTime.Now;
-                Utils.GetDerivedTypes(typeof(Control), _controlTypes, IsTypeValidControlType, HasAssemblyValidControlTypes);
-                var end = DateTime.Now;
-                Editor.Log(string.Format("Found {0} control types (in {1} ms)", _controlTypes.Count, (int)(end - start).TotalMilliseconds));
-            }
-
-            return _controlTypes;
-        }
-
-        private bool HasAssemblyValidControlTypes(Assembly a)
+        private static bool HasAssemblyValidControlTypes(Assembly a)
         {
             var name = a.GetName();
 
@@ -288,7 +311,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             return references.Any(x => x.Name == "FlaxEngine");
         }
 
-        private bool IsTypeValidControlType(Type t)
+        private static bool IsTypeValidControlType(Type t)
         {
             return !t.IsGenericType && !t.IsAbstract && !Attribute.IsDefined(t, typeof(HideInEditorAttribute), false);
         }
