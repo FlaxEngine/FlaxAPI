@@ -50,6 +50,8 @@
     <Compile Include="API\Profiling.cs" />
     <Compile Include="API\ProfilingTools.cs" />
     <Compile Include="API\ProfilingTools.Gen.cs" />
+    <Compile Include="API\Static\FoliageTools.cs" />
+    <Compile Include="API\Static\FoliageTools.Gen.cs" />
     <Compile Include="API\Static\GameCooker.cs" />
     <Compile Include="API\Static\GameCooker.Gen.cs" />
     <Compile Include="API\Static\ScriptsBuilder.cs" />
