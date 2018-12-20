@@ -133,6 +133,16 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
+        /// Determines whether the given type comes from the game scripts assembly or the editor scripts assembly.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>True if type is from gae or editor assembly, otherwise false.</returns>
+        public static bool IsTypeFromGameScripts(Type type)
+        {
+            return type.Assembly.GetName().Name.StartsWith("Assembly");
+        }
+
+        /// <summary>
         /// Gets all the derived types from the given base type (excluding that type) within the given assembly.
         /// </summary>
         /// <param name="assembly">The target assembly to check its types.</param>
