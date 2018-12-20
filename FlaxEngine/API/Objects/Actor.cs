@@ -243,6 +243,42 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Tries to find the actor of the given type in this actor tree (checks this actor and all children trees).
+        /// </summary>
+        /// <typeparam name="T">The type of the actor to find.</typeparam>
+        /// <returns>Actor instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public T FindActor<T>() where T : Actor
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindActorByType(unmanagedPtr, typeof(T)) as T;
+#endif
+        }
+
+        /// <summary>
+        /// Tries to find the actor of the given type in all the loaded scenes.
+        /// </summary>
+        /// <typeparam name="T">The type of the actor to find.</typeparam>
+        /// <returns>Actor instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static T Find<T>() where T : Actor
+        {
+#if UNIT_TEST_COMPILANT
+            return null;
+#else
+            return Internal_FindByType(typeof(T)) as T;
+#endif
+        }
+
+        /// <summary>
         /// Sets actor parent to this object
         /// </summary>
         /// <param name="actor">Actor to link</param>

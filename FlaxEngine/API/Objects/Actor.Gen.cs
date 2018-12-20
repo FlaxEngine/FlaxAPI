@@ -358,10 +358,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Tries to find actor with given name in this actor tree
+        /// Tries to find the actor with the given name in this actor tree (checks this actor and all children trees).
         /// </summary>
-        /// <param name="name">Actor's name to find</param>
-        /// <returns>Actor instance if found, null otherwise</returns>
+        /// <param name="name">The name of the actor to find.</param>
+        /// <returns>Actor instance if found, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -371,15 +371,33 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_FindActorWithName(unmanagedPtr, name);
+            return Internal_FindActorByName(unmanagedPtr, name);
 #endif
         }
 
         /// <summary>
-        /// Tries to find actor with given name on the scene
+        /// Tries to find the actor of the given type in this actor tree (checks this actor and all children trees).
         /// </summary>
-        /// <param name="name">Actor's name to find</param>
-        /// <returns>Actor instance if found, null otherwise</returns>
+        /// <param name="type">The type of the actor to find.</param>
+        /// <returns>Actor instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Actor FindActor(Type type)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindActorByType(unmanagedPtr, type);
+#endif
+        }
+
+        /// <summary>
+        /// Tries to find the actor with the given name in all the loaded scenes.
+        /// </summary>
+        /// <param name="name">The name of the actor to find.</param>
+        /// <returns>Actor instance if found, null otherwise.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -389,7 +407,25 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_FindActor(name);
+            return Internal_FindByName(name);
+#endif
+        }
+
+        /// <summary>
+        /// Tries to find the actor of the given type in all the loaded scenes.
+        /// </summary>
+        /// <param name="type">The type of the actor to find.</param>
+        /// <returns>Actor instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static Actor Find(Type type)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindByType(type);
 #endif
         }
 
@@ -881,10 +917,16 @@ namespace FlaxEngine
         internal static extern Actor Internal_GetChildWithName(IntPtr obj, string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Actor Internal_FindActorWithName(IntPtr obj, string name);
+        internal static extern Actor Internal_FindActorByName(IntPtr obj, string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Actor Internal_FindActor(string name);
+        internal static extern Actor Internal_FindActorByType(IntPtr obj, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor Internal_FindByName(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor Internal_FindByType(Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor Internal_GetChild(IntPtr obj, Type actorType);
