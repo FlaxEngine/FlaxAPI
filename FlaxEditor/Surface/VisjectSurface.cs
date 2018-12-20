@@ -31,6 +31,8 @@ namespace FlaxEditor.Surface
         private bool _wasMouseDownSinceCommentCreatingStart;
         private bool _isReleasing;
         private VisjectCM _activeVisjectCM;
+        private GroupArchetype _customNodesGroup;
+        private List<NodeArchetype> _customNodes;
 
         /// <summary>
         /// The left mouse down flag.
@@ -317,6 +319,33 @@ namespace FlaxEditor.Surface
             {
                 Owner.OnSurfaceGraphEdited();
             }
+        }
+
+        /// <summary>
+        /// Adds the custom nodes archetypes to the surface (user can spawn them and surface can deserialize).
+        /// </summary>
+        /// <param name="archetypes">The archetypes.</param>
+        public void AddCustomNodes(IEnumerable<NodeArchetype> archetypes)
+        {
+            if (_customNodes == null)
+            {
+                // First time setup
+                _customNodes = new List<NodeArchetype>(archetypes);
+                _customNodesGroup = new GroupArchetype
+                {
+                    GroupID = Constants.CustomNodesGroupID,
+                    Name = "Custom",
+                    Color = Color.Wheat
+                };
+            }
+            else
+            {
+                // Add more nodes
+                _customNodes.AddRange(archetypes);
+            }
+
+            // Update collection
+            _customNodesGroup.Archetypes = _customNodes.ToArray();
         }
 
         /// <summary>

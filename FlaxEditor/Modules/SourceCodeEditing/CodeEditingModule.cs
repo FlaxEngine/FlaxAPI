@@ -8,7 +8,6 @@ using FlaxEditor.Options;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.Modules.SourceCodeEditing
 {
@@ -18,66 +17,6 @@ namespace FlaxEditor.Modules.SourceCodeEditing
     /// <seealso cref="FlaxEditor.Modules.EditorModule" />
     public sealed class CodeEditingModule : EditorModule
     {
-        /// <summary>
-        /// Cached types collection container.
-        /// </summary>
-        public class CachedTypesCollection
-        {
-            private bool _hasValidData;
-            private List<Type> _list;
-            private readonly int _capacity;
-            private readonly Type _type;
-            private readonly Func<Type, bool> _checkFunc;
-            private readonly Func<Assembly, bool> _checkAssembly;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CachedTypesCollection"/> class.
-            /// </summary>
-            /// <param name="capacity">The initial collection capacity.</param>
-            /// <param name="type">The type of things to find.</param>
-            /// <param name="checkFunc">Additional callback used to check if the given type is valid. Returns true if add type, otherwise false.</param>
-            /// <param name="checkAssembly">Additional callback used to check if the given assembly is valid. Returns true if search for types in the given assembly, otherwise false.</param>
-            public CachedTypesCollection(int capacity, Type type, Func<Type, bool> checkFunc, Func<Assembly, bool> checkAssembly)
-            {
-                _capacity = capacity;
-                _type = type;
-                _checkFunc = checkFunc;
-                _checkAssembly = checkAssembly;
-            }
-
-            /// <summary>
-            /// Gets all the types from the all loaded assemblies (including project scripts and scripts from the plugins).
-            /// </summary>
-            /// <returns>The types collection (readonly).</returns>
-            public List<Type> Get()
-            {
-                if (!_hasValidData)
-                {
-                    if (_list == null)
-                        _list = new List<Type>(_capacity);
-                    _list.Clear();
-                    _hasValidData = true;
-
-                    Editor.Log("Searching for valid " + _type);
-                    var start = DateTime.Now;
-                    Utils.GetDerivedTypes(_type, _list, _checkFunc, _checkAssembly);
-                    var end = DateTime.Now;
-                    Editor.Log(string.Format("Found {0} types (in {1} ms)", _list.Count, (int)(end - start).TotalMilliseconds));
-                }
-
-                return _list;
-            }
-
-            /// <summary>
-            /// Clears the types.
-            /// </summary>
-            public void ClearTypes()
-            {
-                _list?.Clear();
-                _hasValidData = false;
-            }
-        }
-
         private readonly List<ISourceCodeEditor> _editors = new List<ISourceCodeEditor>(8);
         private ISourceCodeEditor _selectedEditor;
 
@@ -135,6 +74,11 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         /// The control types collection.
         /// </summary>
         public readonly CachedTypesCollection Controls = new CachedTypesCollection(64, typeof(Control), IsTypeValidControlType, HasAssemblyValidControlTypes);
+
+        /// <summary>
+        /// The Animation Graph custom nodes collection.
+        /// </summary>
+        public readonly CachedCustomAnimGraphNodesCollection AnimGraphNodes = new CachedCustomAnimGraphNodesCollection(32, typeof(AnimationGraph.CustomNode), IsTypeValidAnimGraphNodeType, HasAssemblyValidAnimGraphNodeTypes);
 
         internal CodeEditingModule(Editor editor)
         : base(editor)
@@ -276,6 +220,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             // Invalidate cached types
             Scripts.ClearTypes();
             Controls.ClearTypes();
+            AnimGraphNodes.ClearTypes();
         }
 
         private static bool HasAssemblyValidScriptTypes(Assembly a)
@@ -312,6 +257,28 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         }
 
         private static bool IsTypeValidControlType(Type t)
+        {
+            return !t.IsGenericType && !t.IsAbstract && !Attribute.IsDefined(t, typeof(HideInEditorAttribute), false);
+        }
+
+        private static bool HasAssemblyValidAnimGraphNodeTypes(Assembly a)
+        {
+            var name = a.GetName();
+
+            // Skip editor
+            if (name.Name == "FlaxEditor")
+                return false;
+
+            // Use engine
+            if (name.Name == "FlaxEngine")
+                return true;
+
+            // Skip assemblies not referencing engine
+            var references = a.GetReferencedAssemblies();
+            return references.Any(x => x.Name == "FlaxEngine");
+        }
+
+        private static bool IsTypeValidAnimGraphNodeType(Type t)
         {
             return !t.IsGenericType && !t.IsAbstract && !Attribute.IsDefined(t, typeof(HideInEditorAttribute), false);
         }

@@ -290,6 +290,8 @@
     <Compile Include="Modules\SceneModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
     <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
+    <Compile Include="Modules\SourceCodeEditing\CachedCustomAnimGraphNodesCollection.cs" />
+    <Compile Include="Modules\SourceCodeEditing\CachedTypesCollection.cs" />
     <Compile Include="Modules\SourceCodeEditing\DefaultSourceCodeEditor.cs" />
     <Compile Include="Modules\SourceCodeEditing\InBuildSourceCodeEditor.cs" />
     <Compile Include="Modules\UIModule.cs" />

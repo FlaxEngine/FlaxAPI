@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.Content;
+using FlaxEditor.Scripting;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
 using Animation = FlaxEditor.Surface.Archetypes.Animation;
@@ -81,10 +82,30 @@ namespace FlaxEditor.Surface
         /// </summary>
         protected VisjectCM _cmStateMachineTransitionMenu;
 
+        private bool _isRegisteredForScriptsReload;
+
         /// <inheritdoc />
         public AnimGraphSurface(IVisjectSurfaceOwner owner, Action onSave)
         : base(owner, onSave)
         {
+            // Find custom nodes for Anim Graph
+            var customNodes = Editor.Instance.CodeEditing.AnimGraphNodes.GetArchetypes();
+            if (customNodes != null && customNodes.Count > 0)
+            {
+                AddCustomNodes(customNodes);
+
+                // Check if any of the nodes comes from the game scripts - those can be reloaded at runtime so prevent crashes
+                if (Editor.Instance.CodeEditing.AnimGraphNodes.HasTypeFromGameScripts)
+                {
+                    _isRegisteredForScriptsReload = true;
+                    ScriptsBuilder.ScriptsReloadBegin += OnScriptsReloadBegin;
+                }
+            }
+        }
+
+        private void OnScriptsReloadBegin()
+        {
+            Owner.OnSurfaceClose();
         }
 
         /// <inheritdoc />
@@ -188,6 +209,11 @@ namespace FlaxEditor.Surface
             {
                 _cmStateMachineTransitionMenu.Dispose();
                 _cmStateMachineTransitionMenu = null;
+            }
+            if (_isRegisteredForScriptsReload)
+            {
+                _isRegisteredForScriptsReload = false;
+                ScriptsBuilder.ScriptsReloadBegin -= OnScriptsReloadBegin;
             }
 
             base.Dispose();
