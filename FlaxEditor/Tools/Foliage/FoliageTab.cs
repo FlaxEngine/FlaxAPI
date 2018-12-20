@@ -60,6 +60,8 @@ namespace FlaxEditor.Tools.Foliage
             Editor = editor;
             Editor.SceneEditing.SelectionChanged += OnSelectionChanged;
 
+            Selected += OnSelected;
+
             _modes = new Tabs
             {
                 Orientation = Orientation.Vertical,
@@ -95,6 +97,16 @@ namespace FlaxEditor.Tools.Foliage
                 Parent = _noFoliagePanel
             };
             noFoliageButton.Clicked += OnCreateNewFoliageClicked;
+        }
+
+        private void OnSelected(Tab tab)
+        {
+            // Auto select first foliage actor to make usage easier
+            var actor = Actor.Find<FlaxEngine.Foliage>();
+            if (actor)
+            {
+                Editor.SceneEditing.Select(actor);
+            }
         }
 
         private void OnCreateNewFoliageClicked()
