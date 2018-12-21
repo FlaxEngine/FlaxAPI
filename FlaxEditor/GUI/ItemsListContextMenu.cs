@@ -117,6 +117,8 @@ namespace FlaxEditor.GUI
                 var style = Style.Current;
                 GetTextRect(out var textRect);
 
+                base.Draw();
+
                 // Overlay
                 if (IsMouseOver)
                     Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundHighlighted);

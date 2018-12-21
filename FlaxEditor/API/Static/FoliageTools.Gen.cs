@@ -67,7 +67,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_SetFoliageTypeModel(Object.GetUnmanagedPtr(foliage), index, model);
+            Internal_SetFoliageTypeModel(Object.GetUnmanagedPtr(foliage), index, Object.GetUnmanagedPtr(model));
 #endif
         }
 
@@ -100,7 +100,7 @@ namespace FlaxEditor
         internal static extern Model Internal_GetFoliageTypeModel(IntPtr foliage, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetFoliageTypeModel(IntPtr foliage, int index, Model model);
+        internal static extern void Internal_SetFoliageTypeModel(IntPtr foliage, int index, IntPtr model);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_AddFoliageType(IntPtr foliage, IntPtr model);

@@ -19,7 +19,43 @@ namespace FlaxEditor.Tools.Foliage
         /// </summary>
         private sealed class ProxyObject
         {
-            // TODO: expose selected foliage type properties
+            /// <summary>
+            /// The tab.
+            /// </summary>
+            [HideInEditor]
+            public readonly FoliageTypesTab Tab;
+
+            /// <summary>
+            /// The foliage actor.
+            /// </summary>
+            [HideInEditor]
+            public FlaxEngine.Foliage Foliage;
+
+            /// <summary>
+            /// The selected foliage instance type index.
+            /// </summary>
+            [HideInEditor]
+            public int SelectedFoliageTypeIndex;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ProxyObject"/> class.
+            /// </summary>
+            /// <param name="tab">The tab.</param>
+            public ProxyObject(FoliageTypesTab tab)
+            {
+                Tab = tab;
+                SelectedFoliageTypeIndex = -1;
+            }
+
+            public Model Model
+            {
+                get => FoliageTools.GetFoliageTypeModel(Foliage, SelectedFoliageTypeIndex);
+                set
+                {
+                    FoliageTools.SetFoliageTypeModel(Foliage, SelectedFoliageTypeIndex, value);
+                    Tab.UpdateFoliageTypesList();
+                }
+            }
         }
 
         private readonly ProxyObject _proxy;
@@ -33,6 +69,39 @@ namespace FlaxEditor.Tools.Foliage
         public readonly FoliageTab FoliageTypes;
 
         /// <summary>
+        /// Gets or sets the index of the selected foliage type.
+        /// </summary>
+        public int SelectedFoliageTypeIndex
+        {
+            get => _proxy.SelectedFoliageTypeIndex;
+            set
+            {
+                var prev = _proxy.SelectedFoliageTypeIndex;
+                if (value == prev)
+                    return;
+
+                if (prev != -1)
+                {
+                    _items.Children[prev].BackgroundColor = Color.Transparent;
+                }
+
+                _proxy.SelectedFoliageTypeIndex = value;
+
+                if (value != -1)
+                {
+                    _items.Children[value].BackgroundColor = Style.Current.BackgroundSelected;
+
+                    _presenter.Select(_proxy);
+                    _presenter.BuildLayoutOnUpdate();
+                }
+                else
+                {
+                    _presenter.Deselect();
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FoliageTypesTab"/> class.
         /// </summary>
         /// <param name="tab">The parent tab.</param>
@@ -41,7 +110,7 @@ namespace FlaxEditor.Tools.Foliage
         {
             FoliageTypes = tab;
             FoliageTypes.SelectedFoliageChanged += OnSelectedFoliageChanged;
-            _proxy = new ProxyObject();
+            _proxy = new ProxyObject(this);
 
             // Main panel
             var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
@@ -72,21 +141,17 @@ namespace FlaxEditor.Tools.Foliage
 
             // Options editor
             // TODO: use editor undo for changing foliage type options
-            var editor = new CustomEditorPresenter(null);
+            var editor = new CustomEditorPresenter(null, "No foliage type selected");
             editor.Panel.Parent = splitPanel.Panel2;
             _presenter = editor;
         }
 
         private void OnSelectedFoliageChanged()
         {
-            if (FoliageTypes.SelectedFoliage != null)
-            {
-                _presenter.Select(_proxy);
-            }
-            else
-            {
-                _presenter.Deselect();
-            }
+            _proxy.SelectedFoliageTypeIndex = -1;
+            _proxy.Foliage = FoliageTypes.SelectedFoliage;
+
+            _presenter.Deselect();
 
             UpdateFoliageTypesList();
         }
@@ -105,6 +170,8 @@ namespace FlaxEditor.Tools.Foliage
             FoliageTools.AddFoliageType(foliage, model);
 
             UpdateFoliageTypesList();
+
+            SelectedFoliageTypeIndex = FoliageTools.GetFoliageTypesCount(foliage) - 1;
         }
 
         private bool IsItemValidForFoliageModel(AssetItem item)
@@ -128,20 +195,33 @@ namespace FlaxEditor.Tools.Foliage
                 {
                     var model = FoliageTools.GetFoliageTypeModel(foliage, i);
                     var asset = FoliageTypes.Editor.ContentDatabase.FindAsset(model.ID);
-                    var type = new AssetSearchPopup.AssetItemView(asset)
+                    var itemView = new AssetSearchPopup.AssetItemView(asset)
                     {
                         TooltipText = asset.NamePath,
+                        Tag = i,
                         Parent = _items,
                     };
+                    itemView.Clicked += OnFoliageTypeListItemClicked;
 
-                    y += type.Height + _items.Spacing;
+                    y += itemView.Height + _items.Spacing;
                 }
                 y += _items.Margin.Height;
             }
             _items.Height = y;
 
+            var selectedFoliageTypeIndex = SelectedFoliageTypeIndex;
+            if (selectedFoliageTypeIndex != -1)
+            {
+                _items.Children[selectedFoliageTypeIndex].BackgroundColor = Style.Current.BackgroundSelected;
+            }
+
             // Button
             _addFoliageTypeButton.Location = new Vector2((_addFoliageTypeButton.Parent.Width - _addFoliageTypeButton.Width) * 0.5f, _items.Bottom + 4);
+        }
+
+        private void OnFoliageTypeListItemClicked(ItemsListContextMenu.Item item)
+        {
+            SelectedFoliageTypeIndex = (int)item.Tag;
         }
     }
 }
