@@ -71,6 +71,25 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Adds the new foliage instance type.
+        /// </summary>
+        /// <param name="foliage">The foliage actor.</param>
+        /// <param name="model">The model to assign. It cannot be null nor already used by the other instance type (it must be unique within the given foliage actor).</param>
+        /// <returns>True if ray hits an object, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void AddFoliageType(Foliage foliage, Model model)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_AddFoliageType(Object.GetUnmanagedPtr(foliage), Object.GetUnmanagedPtr(model));
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -82,6 +101,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetFoliageTypeModel(IntPtr foliage, int index, Model model);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_AddFoliageType(IntPtr foliage, IntPtr model);
 #endif
 
         #endregion
