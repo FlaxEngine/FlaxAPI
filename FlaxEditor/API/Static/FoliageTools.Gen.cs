@@ -144,6 +144,44 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Gets the foliage instance type options.
+        /// </summary>
+        /// <param name="foliage">The foliage actor.</param>
+        /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
+        /// <param name="value">The result options container.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void GetFoliageTypeOptions(Foliage foliage, int index, out InstanceTypeOptions value)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_GetFoliageTypeOptions(Object.GetUnmanagedPtr(foliage), index, out value);
+#endif
+        }
+
+        /// <summary>
+        /// Sets the foliage instance type options.
+        /// </summary>
+        /// <param name="foliage">The foliage actor.</param>
+        /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
+        /// <param name="value">The options to set.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void SetFoliageTypeOptions(Foliage foliage, int index, ref InstanceTypeOptions value)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_SetFoliageTypeOptions(Object.GetUnmanagedPtr(foliage), index, ref value);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -167,6 +205,12 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetFoliageTypeMaterials(IntPtr foliage, int index, IntPtr[] value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetFoliageTypeOptions(IntPtr foliage, int index, out InstanceTypeOptions value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetFoliageTypeOptions(IntPtr foliage, int index, ref InstanceTypeOptions value);
 #endif
 
         #endregion

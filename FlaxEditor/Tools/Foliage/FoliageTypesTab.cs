@@ -52,6 +52,19 @@ namespace FlaxEditor.Tools.Foliage
 
             private MaterialBase[] _materials;
             private IntPtr[] _materialsPtr;
+            private FoliageTools.InstanceTypeOptions _options;
+
+            public void SyncOptions()
+            {
+                FoliageTools.GetFoliageTypeOptions(Foliage, SelectedFoliageTypeIndex, out _options);
+            }
+
+            public void SetOptions()
+            {
+                FoliageTools.SetFoliageTypeOptions(Foliage, SelectedFoliageTypeIndex, ref _options);
+            }
+
+            //
 
             [EditorOrder(10), EditorDisplay("Model"), Tooltip("Model to draw by all the foliage instances of this type. It must be unique within the foliage actor and cannot be null.")]
             public Model Model
@@ -104,6 +117,188 @@ namespace FlaxEditor.Tools.Foliage
                     FoliageTools.SetFoliageTypeMaterials(Foliage, SelectedFoliageTypeIndex, _materialsPtr);
                 }
             }
+
+            //
+
+            [EditorOrder(100), EditorDisplay("Instance Options"), Limit(0.0f), Tooltip("The per-instance cull distance.")]
+            public float CullDistance
+            {
+                get => _options.CullDistance;
+                set
+                {
+                    _options.CullDistance = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(110), EditorDisplay("Instance Options"), Limit(0.0f), Tooltip("The per-instance cull distance randomization range (randomized per instance and added to master CullDistance value).")]
+            public float CullDistanceRandomRange
+            {
+                get => _options.CullDistanceRandomRange;
+                set
+                {
+                    _options.CullDistanceRandomRange = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(120), EditorDisplay("Instance Options"), Limit(0.0f, 10000.0f, 0.01f), Tooltip("Per foliage type scale factor in lightmap charts. Higher value increases the quality but reduces baking performance.")]
+            public float ScaleInLightmap
+            {
+                get => _options.ScaleInLightmap;
+                set
+                {
+                    _options.ScaleInLightmap = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(130), EditorDisplay("Instance Options"), Tooltip("The shadows casting mode.")]
+            public ShadowsCastingMode ShadowsMode
+            {
+                get => _options.ShadowsMode;
+                set
+                {
+                    _options.ShadowsMode = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(140), EditorDisplay("Instance Options"), Tooltip("Determines whenever this meshes can receive decals.")]
+            public bool ReceiveDecals
+            {
+                get => _options.ReceiveDecals != 0;
+                set
+                {
+                    _options.ReceiveDecals = (byte)(value ? 1 : 0);
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(150), EditorDisplay("Instance Options"), Tooltip("Flag used to determinate whenever use global foliage density scaling for instances of this foliage type.")]
+            public bool UseDensityScaling
+            {
+                get => _options.UseDensityScaling != 0;
+                set
+                {
+                    _options.UseDensityScaling = (byte)(value ? 1 : 0);
+                    SetOptions();
+                }
+            }
+
+            //
+
+            [EditorOrder(200), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The foliage instances density defined in instances count per 1000x1000 units area.")]
+            public float Density
+            {
+                get => _options.PaintDensity;
+                set
+                {
+                    _options.PaintDensity = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(210), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The minimum radius between foliage instances.")]
+            public float Radius
+            {
+                get => _options.PaintRadius;
+                set
+                {
+                    _options.PaintRadius = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(220), EditorDisplay("Painting"), Tooltip("The scaling mode.")]
+            public FoliageTools.ScalingModes Scaling
+            {
+                get => _options.PaintScaling;
+                set
+                {
+                    _options.PaintScaling = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(230), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The scale minimum values per axis.")]
+            public Vector3 ScaleMin
+            {
+                get => _options.PaintScaleMin;
+                set
+                {
+                    _options.PaintScaleMin = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(240), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The scale maximum values per axis.")]
+            public Vector3 ScaleMax
+            {
+                get => _options.PaintScaleMax;
+                set
+                {
+                    _options.PaintScaleMax = value;
+                    SetOptions();
+                }
+            }
+
+            //
+
+            [EditorOrder(300), EditorDisplay("Placement"), Tooltip("The per-instance random offset range on axis Y (min-max).")]
+            public Vector2 OffsetY
+            {
+                get => _options.PlacementOffsetY;
+                set
+                {
+                    _options.PlacementOffsetY = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(310), EditorDisplay("Placement"), Limit(0.0f), Tooltip("The random pitch angle range (uniform in both ways around normal vector).")]
+            public float RandomPitchAngle
+            {
+                get => _options.PlacementRandomPitchAngle;
+                set
+                {
+                    _options.PlacementRandomPitchAngle = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(320), EditorDisplay("Placement"), Limit(0.0f), Tooltip("The random roll angle range (uniform in both ways around normal vector).")]
+            public float RandomRollAngle
+            {
+                get => _options.PlacementRandomRollAngle;
+                set
+                {
+                    _options.PlacementRandomRollAngle = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(330), EditorDisplay("Placement"), Tooltip("If checked, instances will be aligned to normal of the placed surface.")]
+            public bool AlignToNormal
+            {
+                get => _options.PlacementAlignToNormal != 0;
+                set
+                {
+                    _options.PlacementAlignToNormal = (byte)(value ? 1 : 0);
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(340), EditorDisplay("Placement"), Tooltip("If checked, instances will use randomized yaw when placed. Random yaw uses will rotation range over the Y axis.")]
+            public bool RandomYaw
+            {
+                get => _options.PlacementRandomYaw != 0;
+                set
+                {
+                    _options.PlacementRandomYaw = (byte)(value ? 1 : 0);
+                    SetOptions();
+                }
+            }
         }
 
         /// <summary>
@@ -125,6 +320,16 @@ namespace FlaxEditor.Tools.Foliage
                     Parent = space.Spacer
                 };
                 removeButton.Clicked += OnRemoveButtonClicked;
+            }
+
+            /// <inheritdoc />
+            public override void Refresh()
+            {
+                // Sync selected foliage options once before update to prevent too many data copies when fetching data from UI properties accessors
+                var proxyObject = (ProxyObject)Values[0];
+                proxyObject.SyncOptions();
+
+                base.Refresh();
             }
 
             private void OnRemoveButtonClicked()
