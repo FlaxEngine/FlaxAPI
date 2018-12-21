@@ -102,6 +102,10 @@ namespace FlaxEditor.GUI
 
         private bool IsValid(AssetItem item)
         {
+            // Faster path for binary items (in-build)
+            if (item is BinaryAssetItem binaryItem)
+                return _type.IsAssignableFrom(binaryItem.Type);
+
             // Type filter
             var type = Utilities.Utils.GetType(item.TypeName);
             if (_type.IsAssignableFrom(type))
