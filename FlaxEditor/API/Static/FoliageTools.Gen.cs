@@ -18,7 +18,7 @@ namespace FlaxEditor
         /// Gets the amount of foliage instance types defined for the given foliage actor.
         /// </summary>
         /// <param name="foliage">The foliage actor.</param>
-        /// <returns>True if ray hits an object, otherwise false.</returns>
+        /// <returns>The foliage types count.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -37,7 +37,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="foliage">The foliage actor.</param>
         /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
-        /// <returns>True if ray hits an object, otherwise false.</returns>
+        /// <returns>The model.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -57,7 +57,6 @@ namespace FlaxEditor
         /// <param name="foliage">The foliage actor.</param>
         /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
         /// <param name="model">The model to assign. It cannot be null nor already used by the other instance type (it must be unique within the given foliage actor).</param>
-        /// <returns>True if ray hits an object, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -76,7 +75,6 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="foliage">The foliage actor.</param>
         /// <param name="model">The model to assign. It cannot be null nor already used by the other instance type (it must be unique within the given foliage actor).</param>
-        /// <returns>True if ray hits an object, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -87,6 +85,24 @@ namespace FlaxEditor
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Internal_AddFoliageType(Object.GetUnmanagedPtr(foliage), Object.GetUnmanagedPtr(model));
+#endif
+        }
+
+        /// <summary>
+        /// Removes the foliage instance type and all foliage instances using this type.
+        /// </summary>
+        /// <param name="foliage">The foliage actor.</param>
+        /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void RemoveFoliageType(Foliage foliage, int index)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_RemoveFoliageType(Object.GetUnmanagedPtr(foliage), index);
 #endif
         }
 
@@ -104,6 +120,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_AddFoliageType(IntPtr foliage, IntPtr model);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_RemoveFoliageType(IntPtr foliage, int index);
 #endif
 
         #endregion

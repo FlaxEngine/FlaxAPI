@@ -2,6 +2,7 @@
 
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -17,6 +18,7 @@ namespace FlaxEditor.Tools.Foliage
         /// <summary>
         /// The object for foliage type settings adjusting via Custom Editor.
         /// </summary>
+        [CustomEditor(typeof(ProxyObjectEditor))]
         private sealed class ProxyObject
         {
             /// <summary>
@@ -53,8 +55,39 @@ namespace FlaxEditor.Tools.Foliage
                 set
                 {
                     FoliageTools.SetFoliageTypeModel(Foliage, SelectedFoliageTypeIndex, value);
+                    Editor.Instance.Scene.MarkSceneEdited(Foliage.Scene);
                     Tab.UpdateFoliageTypesList();
+
+                    // TODO: support undo for editing foliage type properties
                 }
+            }
+        }
+
+        /// <summary>
+        /// The custom editor for <see cref="ProxyObject"/>.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.CustomEditors.Editors.GenericEditor" />
+        private sealed class ProxyObjectEditor : GenericEditor
+        {
+            /// <inheritdoc />
+            public override void Initialize(LayoutElementsContainer layout)
+            {
+                base.Initialize(layout);
+
+                var space = layout.Space(30);
+                var removeButton = new Button(2, 2.0f, 80.0f, 18.0f)
+                {
+                    Text = "Remove",
+                    TooltipText = "Removes the selected foliage type and all foliage instances using this type",
+                    Parent = space.Spacer
+                };
+                removeButton.Clicked += OnRemoveButtonClicked;
+            }
+
+            private void OnRemoveButtonClicked()
+            {
+                var proxyObject = (ProxyObject)Values[0];
+                proxyObject.Tab.RemoveFoliageType(proxyObject.SelectedFoliageTypeIndex);
             }
         }
 
@@ -156,6 +189,22 @@ namespace FlaxEditor.Tools.Foliage
             UpdateFoliageTypesList();
         }
 
+        private void RemoveFoliageType(int index)
+        {
+            // Deselect if selected
+            if (SelectedFoliageTypeIndex == index)
+                SelectedFoliageTypeIndex = -1;
+
+            var foliage = FoliageTypes.SelectedFoliage;
+            FoliageTools.RemoveFoliageType(foliage, index);
+
+            Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
+
+            // TODO: support undo for removing foliage types
+
+            UpdateFoliageTypesList();
+        }
+
         private void OnAddFoliageTypeButtonClicked()
         {
             // Show model picker
@@ -168,6 +217,9 @@ namespace FlaxEditor.Tools.Foliage
             var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
 
             FoliageTools.AddFoliageType(foliage, model);
+            Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
+
+            // TODO: support undo for adding foliage types
 
             UpdateFoliageTypesList();
 
