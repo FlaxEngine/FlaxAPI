@@ -106,6 +106,44 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Gets the foliage instance type materials buffer (overrides).
+        /// </summary>
+        /// <param name="foliage">The foliage actor.</param>
+        /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
+        /// <param name="value">The array of materials to fill. It must be valid and have size of foliage type model material slots size. When this method returns it contains a set of materials used by the foliage type.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void GetFoliageTypeMaterials(Foliage foliage, int index, MaterialBase[] value)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_GetFoliageTypeMaterials(Object.GetUnmanagedPtr(foliage), index, value);
+#endif
+        }
+
+        /// <summary>
+        /// Sets the foliage instance type materials buffer (overrides).
+        /// </summary>
+        /// <param name="foliage">The foliage actor.</param>
+        /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
+        /// <param name="value">The array of materials to set (raw pointers to unmanaged instances). It must be valid and have size of foliage type model material slots size.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void SetFoliageTypeMaterials(Foliage foliage, int index, IntPtr[] value)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_SetFoliageTypeMaterials(Object.GetUnmanagedPtr(foliage), index, value);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -123,6 +161,12 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_RemoveFoliageType(IntPtr foliage, int index);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetFoliageTypeMaterials(IntPtr foliage, int index, MaterialBase[] value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetFoliageTypeMaterials(IntPtr foliage, int index, IntPtr[] value);
 #endif
 
         #endregion

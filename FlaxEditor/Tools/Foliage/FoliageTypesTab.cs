@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
@@ -49,16 +50,58 @@ namespace FlaxEditor.Tools.Foliage
                 SelectedFoliageTypeIndex = -1;
             }
 
+            private MaterialBase[] _materials;
+            private IntPtr[] _materialsPtr;
+
+            [EditorOrder(10), EditorDisplay("Model"), Tooltip("Model to draw by all the foliage instances of this type. It must be unique within the foliage actor and cannot be null.")]
             public Model Model
             {
                 get => FoliageTools.GetFoliageTypeModel(Foliage, SelectedFoliageTypeIndex);
                 set
                 {
                     FoliageTools.SetFoliageTypeModel(Foliage, SelectedFoliageTypeIndex, value);
-                    Editor.Instance.Scene.MarkSceneEdited(Foliage.Scene);
                     Tab.UpdateFoliageTypesList();
 
                     // TODO: support undo for editing foliage type properties
+                }
+            }
+
+            [EditorOrder(20), EditorDisplay("Model"), MemberCollection(ReadOnly = true), Tooltip("Model materials override collection. Can be used to change a specific material of the mesh to the custom one without editing the asset.")]
+            public MaterialBase[] Materials
+            {
+                get
+                {
+                    var size = Model.MaterialSlotsCount;
+                    if (_materials == null || _materials.Length != size)
+                    {
+                        _materials = new MaterialBase[size];
+                        _materialsPtr = new IntPtr[size];
+                    }
+
+                    FoliageTools.GetFoliageTypeMaterials(Foliage, SelectedFoliageTypeIndex, _materials);
+
+                    return _materials;
+                }
+                set
+                {
+                    var size = Model.MaterialSlotsCount;
+                    if (value == null || value.Length != size)
+                        throw new ArgumentException("value", "Inalid materials buffer size for foliage type overrides.");
+
+                    _materials = value;
+
+                    if (_materialsPtr == null || _materialsPtr.Length != size)
+                    {
+                        _materialsPtr = new IntPtr[size];
+                    }
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        var v = value[i];
+                        _materialsPtr[i] = v ? v.unmanagedPtr : IntPtr.Zero;
+                    }
+
+                    FoliageTools.SetFoliageTypeMaterials(Foliage, SelectedFoliageTypeIndex, _materialsPtr);
                 }
             }
         }
@@ -74,7 +117,7 @@ namespace FlaxEditor.Tools.Foliage
             {
                 base.Initialize(layout);
 
-                var space = layout.Space(30);
+                var space = layout.Space(22);
                 var removeButton = new Button(2, 2.0f, 80.0f, 18.0f)
                 {
                     Text = "Remove",
@@ -176,7 +219,13 @@ namespace FlaxEditor.Tools.Foliage
             // TODO: use editor undo for changing foliage type options
             var editor = new CustomEditorPresenter(null, "No foliage type selected");
             editor.Panel.Parent = splitPanel.Panel2;
+            editor.Modified += OnModified;
             _presenter = editor;
+        }
+
+        private void OnModified()
+        {
+            Editor.Instance.Scene.MarkSceneEdited(_proxy.Foliage?.Scene);
         }
 
         private void OnSelectedFoliageChanged()
