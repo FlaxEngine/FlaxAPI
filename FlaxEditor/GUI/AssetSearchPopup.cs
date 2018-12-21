@@ -132,8 +132,7 @@ namespace FlaxEditor.GUI
             {
                 if (folder.Children[i] is AssetItem asset && _isValid(asset))
                 {
-                    var item = new AssetItemView(asset);
-                    ItemsPanel.AddChild(item);
+                    AddItem(new AssetItemView(asset));
                 }
             }
 

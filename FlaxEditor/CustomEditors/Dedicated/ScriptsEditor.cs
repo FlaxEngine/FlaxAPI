@@ -64,7 +64,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             for (int i = 0; i < scripts.Count; i++)
             {
                 var scriptType = scripts[i];
-                cm.ItemsPanel.AddChild(new ItemsListContextMenu.Item(scriptType.Name, scriptType)
+                cm.AddItem(new ItemsListContextMenu.Item(scriptType.Name, scriptType)
                 {
                     TooltipText = scriptType.FullName,
                 });
