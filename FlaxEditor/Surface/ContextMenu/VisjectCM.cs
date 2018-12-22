@@ -64,7 +64,8 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <param name="groups">The group archetypes. Cannot be null.</param>
         /// <param name="canSpawnNodeType">The surface node type validation helper. Cannot be null.</param>
         /// <param name="parametersGetter">The surface parameters getter callback. Can be null.</param>
-        public VisjectCM(List<GroupArchetype> groups, NodeSpawnCheckDelegate canSpawnNodeType, ParameterGetterDelegate parametersGetter = null)
+        /// <param name="customNodesGroup">The group with custom nodes.</param>
+        public VisjectCM(List<GroupArchetype> groups, NodeSpawnCheckDelegate canSpawnNodeType, ParameterGetterDelegate parametersGetter = null, GroupArchetype customNodesGroup = null)
         {
             if (groups == null)
                 throw new ArgumentNullException(nameof(groups));
@@ -121,6 +122,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 if (nodes.Count > 0)
                 {
                     var group = new VisjectCMGroup(this, groupArchetype);
+                    group.HeaderText = groupArchetype.Name;
                     group.Close(false);
                     for (int i = 0; i < nodes.Count; i++)
                     {
@@ -131,6 +133,49 @@ namespace FlaxEditor.Surface.ContextMenu
                     group.Parent = panel2;
                     group.DefaultIndex = index++;
                     _groups.Add(group);
+                }
+            }
+
+            // Add custom nodes (special handling)
+            if (customNodesGroup?.Archetypes != null)
+            {
+                for (int i = 0; i < customNodesGroup.Archetypes.Length; i++)
+                {
+                    var nodeArchetype = customNodesGroup.Archetypes[i];
+
+                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0)
+                        continue;
+                    
+                    var groupName = Archetypes.Custom.GetNodeGroup(nodeArchetype);
+
+                    // Find group to reuse
+                    VisjectCMGroup group = null;
+                    for (int j = 0; j < _groups.Count; j++)
+                    {
+                        if (string.Equals(_groups[j].Archetype.Name, groupName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            group = _groups[j];
+                            break;
+                        }
+                    }
+
+                    // Create new group if name is unique
+                    if (group == null)
+                    {
+                        group = new VisjectCMGroup(this, customNodesGroup);
+                        group.HeaderText = groupName;
+                        group.Close(false);
+                        group.Parent = _groupsPanel;
+                        group.DefaultIndex = _groups.Count;
+                        _groups.Add(group);
+                    }
+
+                    // Add new item
+                    var item = new VisjectCMItem(group, nodeArchetype);
+                    item.Parent = group;
+                    
+                    // Order items
+                    group.SortChildren();
                 }
             }
         }
@@ -155,6 +200,7 @@ namespace FlaxEditor.Surface.ContextMenu
             if (nodes.Count > 0)
             {
                 var group = new VisjectCMGroup(this, groupArchetype);
+                group.HeaderText = groupArchetype.Name;
                 group.Close(false);
                 for (int i = 0; i < nodes.Count; i++)
                 {
@@ -305,6 +351,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 };
 
                 var group = new VisjectCMGroup(this, groupArchetype);
+                group.HeaderText = groupArchetype.Name;
                 group.Close(false);
                 archetypeIndex = 0;
                 for (int i = 0; i < parameters.Count; i++)

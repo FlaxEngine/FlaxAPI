@@ -69,7 +69,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
                     // Invalid type
                     _list.RemoveAt(i);
                     i--;
-                    Editor.LogWarning(string.Format("Anim Graph custom node type {0} has missing or invalid CustomNodeArchetype attribute.", nodeType.FullName));
+                    Editor.LogWarning(string.Format("Anim Graph custom node type {0} has missing or invalid CustomNodeArchetype attribute or invalid node archetype descriptor.", nodeType.FullName));
                 }
             }
         }
@@ -100,6 +100,13 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             {
                 var arch = (NodeArchetype)getterMethod.Invoke(null, null);
 
+                // Validate archetype
+                if (arch.Tag != null || string.IsNullOrEmpty(arch.Title))
+                    return null;
+                if (arch.DefaultValues == null || arch.DefaultValues.Length < 2 || string.IsNullOrEmpty(arch.DefaultValues[0] as string) || string.IsNullOrEmpty(arch.DefaultValues[1] as string))
+                    return null;
+
+                // Check if type comes from scripts that can be reloaded at runtime
                 HasTypeFromGameScripts |= Utils.IsTypeFromGameScripts(getterType) || Utils.IsTypeFromGameScripts(nodeType);
 
                 return arch;

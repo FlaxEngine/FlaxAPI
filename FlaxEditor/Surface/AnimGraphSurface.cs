@@ -131,7 +131,7 @@ namespace FlaxEditor.Surface
             {
                 if (_cmStateMachineTransitionMenu == null)
                 {
-                    _cmStateMachineTransitionMenu = new VisjectCM(NodeFactory.DefaultGroups, CanSpawnNodeType);
+                    _cmStateMachineTransitionMenu = new VisjectCM(NodeFactory.DefaultGroups, CanSpawnNodeType, null, GetCustomNodes());
                     _cmStateMachineTransitionMenu.AddGroup(StateMachineTransitionGroupArchetype);
                 }
                 menu = _cmStateMachineTransitionMenu;

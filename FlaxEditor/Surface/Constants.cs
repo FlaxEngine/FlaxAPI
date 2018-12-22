@@ -8,11 +8,6 @@ namespace FlaxEditor.Surface
     public static class Constants
     {
         /// <summary>
-        /// The custom nodes group identifier. Reserved for nodes that are provided by external source eg: game scripts or editor plugin. Handling of those nodes is surface-type dependant.
-        /// </summary>
-        public const int CustomNodesGroupID = 13;
-
-        /// <summary>
         /// The node close button size.
         /// </summary>
         public const float NodeCloseButtonSize = 12.0f;
