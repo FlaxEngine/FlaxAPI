@@ -204,6 +204,65 @@ namespace FlaxEngine
                 throw new FlaxException("Failed to update skinned model material slots collection.");
         }
 
+        /// <summary>
+        /// Gets the skeleton node index by node name.
+        /// </summary>
+        /// <param name="name">The node name.</param>
+        /// <param name="index">The found node index or -1 if not found.</param>
+        /// <returns>True if found that node, otherwise false.</returns>
+        public bool GetNodeByName(string name, out int index)
+        {
+            index = -1;
+
+            if (WaitForLoaded())
+                return false;
+
+            var nodes = Nodes;
+            if (nodes == null)
+                return false;
+
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                if (string.Equals(nodes[i].Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the skeleton bone index by node name.
+        /// </summary>
+        /// <param name="name">The node name.</param>
+        /// <param name="index">The found bone index or -1 if not found.</param>
+        /// <returns>True if found that bone, otherwise false.</returns>
+        public bool GetBoneByName(string name, out int index)
+        {
+            index = -1;
+
+            if (WaitForLoaded())
+                return false;
+
+            var nodes = Nodes;
+            var bones = Bones;
+            if (nodes == null || bones == null)
+                return false;
+
+            for (int i = 0; i < bones.Length; i++)
+            {
+                if (string.Equals(nodes[bones[i].NodeIndex].Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         internal void Internal_OnUnload()
         {
             // Clear cached data
