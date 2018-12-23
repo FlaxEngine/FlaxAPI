@@ -34,7 +34,36 @@ namespace FlaxEditor.GUI
         public AssetItem SelectedItem
         {
             get => _selectedItem;
-            set => SelectedAsset = value != null ? FlaxEngine.Content.LoadAsync(value.ID) : null;
+            set
+            {
+                if (value == null)
+                {
+                    // Deselect
+                    SelectedAsset = null;
+                }
+                else if (value is SceneItem item)
+                {
+                    if (_selectedItem == item)
+                        return;
+                    if (!IsValid(item))
+                        throw new ArgumentException("Invalid asset type.");
+
+                    // Change value to scene reference (cannot load asset because scene can be already loaded - duplicated ID issue)
+                    _selectedItem?.RemoveReference(this);
+                    _selectedItem = item;
+                    _selected = null;
+                    _selectedItem?.AddReference(this);
+
+                    // Update tooltip
+                    TooltipText = _selectedItem?.NamePath;
+
+                    OnSelectedItemChanged();
+                }
+                else
+                {
+                    SelectedAsset = FlaxEngine.Content.LoadAsync(value.ID);
+                }
+            }
         }
 
         /// <summary>
