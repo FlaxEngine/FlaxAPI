@@ -103,8 +103,17 @@ namespace FlaxEditor.Modules.SourceCodeEditing
                     return null;
                 }
 
+                // Validate node type
+                var typeName = Surface.Archetypes.Custom.GetNodeTypeName(arch);
+                var type = Utils.GetType(typeName);
+                if (type == null)
+                {
+                    Editor.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Failed to find node logic defined in type {2}.", method, method.DeclaringType, typeName));
+                    return null;
+                }
+
                 // Check if type comes from scripts that can be reloaded at runtime
-                HasTypeFromGameScripts |= Utils.IsTypeFromGameScripts(method.DeclaringType);
+                HasTypeFromGameScripts |= Utils.IsTypeFromGameScripts(method.DeclaringType) || Utils.IsTypeFromGameScripts(type);
 
                 return arch;
             }
