@@ -17,9 +17,9 @@ namespace FlaxEditor.Surface
 
         private struct ConnectionHint
         {
-            public SurfaceNode NodeA;
+            public uint NodeA;
             public byte BoxA;
-            public SurfaceNode NodeB;
+            public uint NodeB;
             public byte BoxB;
         }
 
@@ -524,26 +524,18 @@ namespace FlaxEditor.Surface
                         ushort connectionsCnt = stream.ReadUInt16();
 
                         ConnectionHint hint;
-                        hint.NodeB = node;
+                        hint.NodeB = node.ID;
                         hint.BoxB = id;
 
                         for (int k = 0; k < connectionsCnt; k++)
                         {
                             uint targetNodeID = stream.ReadUInt32();
                             byte targetBoxID = stream.ReadByte();
+                            
+                            hint.NodeA = targetNodeID;
+                            hint.BoxA = targetBoxID;
 
-                            hint.NodeA = FindNode(targetNodeID);
-                            if (hint.NodeA == null)
-                            {
-                                // Error
-                                Editor.LogWarning("Invalid connected node id.");
-                            }
-                            else
-                            {
-                                hint.BoxA = targetBoxID;
-
-                                tmpHints.Add(hint);
-                            }
+                            tmpHints.Add(hint);
                         }
                     }
 
@@ -560,8 +552,18 @@ namespace FlaxEditor.Surface
                 for (int i = 0; i < tmpHints.Count; i++)
                 {
                     var c = tmpHints[i];
-                    var boxA = c.NodeA.GetBox(c.BoxA);
-                    var boxB = c.NodeB.GetBox(c.BoxB);
+
+                    var nodeA = FindNode(c.NodeA);
+                    var nodeB = FindNode(c.NodeB);
+                    if (nodeA == null || nodeB == null)
+                    {
+                        // Error
+                        Editor.LogWarning("Invalid connected node id.");
+                        continue;
+                    }
+
+                    var boxA = nodeA.GetBox(c.BoxA);
+                    var boxB = nodeB.GetBox(c.BoxB);
                     if (boxA != null && boxB != null)
                     {
                         boxA.Connections.Add(boxB);
