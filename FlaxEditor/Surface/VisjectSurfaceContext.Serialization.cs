@@ -475,11 +475,11 @@ namespace FlaxEditor.Surface
                         if (customNodes?.Archetypes == null)
                             throw new Exception("Cannot find any custom nodes archetype.");
                         NodeArchetype arch = null;
-                        for (int j = 0; j < customNodes.Archetypes.Length; i++)
+                        for (int j = 0; j < customNodes.Archetypes.Length; j++)
                         {
-                            if (string.Equals(Archetypes.Custom.GetNodeTypeName(customNodes.Archetypes[i]), (string)typeName, StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(Archetypes.Custom.GetNodeTypeName(customNodes.Archetypes[j]), (string)typeName, StringComparison.OrdinalIgnoreCase))
                             {
-                                arch = customNodes.Archetypes[i];
+                                arch = customNodes.Archetypes[j];
                                 break;
                             }
                         }
