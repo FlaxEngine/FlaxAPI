@@ -106,6 +106,8 @@ namespace FlaxEditor.Surface
         private void OnScriptsReloadBegin()
         {
             Owner.OnSurfaceClose();
+
+            // TODO: make reload soft: dispose default primary context menu, update existing custom nodes to new ones or remove if invalid
         }
 
         /// <inheritdoc />
