@@ -30,10 +30,15 @@ namespace FlaxEngine
             public struct Context
             {
                 /// <summary>
-                /// The reserved data field.
+                /// The graph pointer (unmanaged).
                 /// </summary>
-                public IntPtr Reserved;
+                public IntPtr Graph;
 
+                /// <summary>
+                /// The node pointer (unmanaged).
+                /// </summary>
+                public IntPtr Node;
+                
                 /// <summary>
                 /// The graph node identifier (unique per graph).
                 /// </summary>
@@ -63,9 +68,11 @@ namespace FlaxEngine
             /// </summary>
             /// <param name="context">The context.</param>
             /// <param name="boxId">The input box identifier.</param>
-            /// <returns>True if has connection, otherwise false..</returns>
-            [MethodImpl(MethodImplOptions.InternalCall)]
-            public static extern bool HasConnection(ref Context context, int boxId);
+            /// <returns>True if has connection, otherwise false.</returns>
+            public static bool HasConnection(ref Context context, int boxId)
+            {
+                return Internal_HasConnection(ref context, boxId);
+            }
 
             /// <summary>
             /// Gets the value of the input box of the given ID. Throws the exception if box has no valid connection.
@@ -73,8 +80,22 @@ namespace FlaxEngine
             /// <param name="context">The context.</param>
             /// <param name="boxId">The input box identifier.</param>
             /// <returns>The value.</returns>
-            [MethodImpl(MethodImplOptions.InternalCall)]
-            public static extern object GetInputValue(ref Context context, int boxId);
+            public static object GetInputValue(ref Context context, int boxId)
+            {
+                return Internal_GetInputValue(ref context, boxId);
+            }
         }
+
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasConnection(ref CustomNode.Context context, int boxId);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern object Internal_GetInputValue(ref CustomNode.Context context, int boxId);
+#endif
+
+        #endregion
     }
 }
