@@ -111,8 +111,8 @@ namespace FlaxEditor.Viewport.Previews
             if (_previewBonesCounter++ % updateBonesCount == 0 && ShowBones)
             {
                 _previewModel.GetCurrentPose(ref _previewModelPose);
-                var skeleton = _previewModel.SkinnedModel?.Skeleton;
-                if (_previewModelPose.Bones == null || _previewModelPose.Bones.Length == 0 || skeleton == null)
+                var bones = _previewModel.SkinnedModel?.Bones;
+                if (_previewModelPose.Bones == null || _previewModelPose.Bones.Length == 0 || bones == null)
                 {
                     _previewBonesActor.IsActive = false;
                 }
@@ -128,7 +128,7 @@ namespace FlaxEditor.Viewport.Previews
                         _previewBonesIndex.Clear();
 
                     // Draw bounding box at the bone locations
-                    var bonesMask = BonesMask != null && BonesMask.Length == skeleton.Length ? BonesMask : null;
+                    var bonesMask = BonesMask != null && BonesMask.Length == bones.Length ? BonesMask : null;
                     var boneBox = new OrientedBoundingBox(new Vector3(-1.0f), new Vector3(1.0f));
                     for (int i = 0; i < _previewModelPose.Bones.Length; i++)
                     {
@@ -139,7 +139,7 @@ namespace FlaxEditor.Viewport.Previews
                         boneTransform.Decompose(out var scale, out var _, out var _);
                         boneTransform = Matrix.Invert(Matrix.Scaling(scale)) * boneTransform;
 
-                        // Some inlined code to improve peformance
+                        // Some inlined code to improve performance
                         var box = boneBox * boneTransform;
                         //
                         var iStart = _previewBonesVertex.Count;
@@ -192,9 +192,9 @@ namespace FlaxEditor.Viewport.Previews
                     }
 
                     // Bone bone connections
-                    for (int i = 0; i < skeleton.Length; i++)
+                    for (int i = 0; i < bones.Length; i++)
                     {
-                        int parentIndex = skeleton[i].ParentIndex;
+                        int parentIndex = bones[i].ParentIndex;
 
                         if (parentIndex != -1)
                         {

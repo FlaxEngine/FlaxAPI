@@ -99,8 +99,9 @@ namespace FlaxEditor.Windows.Assets
                     }
 
                     // Init mask if missing or validate it
-                    var bones = skeleton.Skeleton;
-                    if (bones == null || bones.Length == 0)
+                    var nodes = skeleton.Nodes;
+                    var bones = skeleton.Bones;
+                    if (nodes == null || bones == null || bones.Length == 0)
                         return;
                     var mask = proxy.Mask;
                     if (mask == null || mask.Length != bones.Length)
@@ -118,7 +119,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         if (bones[i].ParentIndex == -1)
                         {
-                            BuildSkeletonNodeTree(mask, bones, tree, i);
+                            BuildSkeletonNodeTree(mask, nodes, bones, tree, i);
                         }
                     }
                 }
@@ -136,9 +137,9 @@ namespace FlaxEditor.Windows.Assets
                     base.Refresh();
                 }
 
-                private void BuildSkeletonNodeTree(bool[] mask, SkeletonBone[] skeleton, ITreeElement layout, int boneIndex)
+                private void BuildSkeletonNodeTree(bool[] mask, SkeletonNode[] nodes, SkeletonBone[] bones, ITreeElement layout, int boneIndex)
                 {
-                    var node = layout.Node(skeleton[boneIndex].Name);
+                    var node = layout.Node(nodes[bones[boneIndex].NodeIndex].Name);
                     node.TreeNode.ClipChildren = false;
                     node.TreeNode.TextMargin = new Margin(20.0f, 2.0f, 2.0f, 2.0f);
                     node.TreeNode.Expand(true);
@@ -151,11 +152,11 @@ namespace FlaxEditor.Windows.Assets
                     };
                     checkbox.StateChanged += OnCheckChanged;
 
-                    for (int i = 0; i < skeleton.Length; i++)
+                    for (int i = 0; i < bones.Length; i++)
                     {
-                        if (skeleton[i].ParentIndex == boneIndex)
+                        if (bones[i].ParentIndex == boneIndex)
                         {
-                            BuildSkeletonNodeTree(mask, skeleton, node, i);
+                            BuildSkeletonNodeTree(mask, nodes, bones, node, i);
                         }
                     }
                 }
