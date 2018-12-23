@@ -186,6 +186,23 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             OnOptionsChanged(Editor.Options.Options);
         }
 
+        /// <inheritdoc />
+        public override void OnEndInit()
+        {
+            // Special case when failed to load scripts on editor start - clear types later so all types will be cached if needed
+            if (!FlaxEngine.Scripting.IsGameAssemblyLoaded())
+            {
+                ScriptsBuilder.CompilationSuccess += OnFirstCompilationSuccess;
+            }
+        }
+
+        private void OnFirstCompilationSuccess()
+        {
+            ScriptsBuilder.CompilationSuccess -= OnFirstCompilationSuccess;
+
+            ClearTypes();
+        }
+
         private void OnOptionsChanged(EditorOptions options)
         {
             // Sync code editor
@@ -215,12 +232,20 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             ScriptsBuilder.ScriptsReload -= OnScriptsReload;
         }
 
-        private void OnScriptsReload()
+        /// <summary>
+        /// Clears all the cached types.
+        /// </summary>
+        public void ClearTypes()
         {
             // Invalidate cached types
             Scripts.ClearTypes();
             Controls.ClearTypes();
             AnimGraphNodes.ClearTypes();
+        }
+
+        private void OnScriptsReload()
+        {
+            ClearTypes();
         }
 
         private static bool HasAssemblyValidScriptTypes(Assembly a)
