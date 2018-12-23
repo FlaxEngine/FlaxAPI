@@ -391,7 +391,11 @@ namespace FlaxEditor.Surface
                     ushort groupId = stream.ReadUInt16();
 
                     // Create node
-                    var node = NodeFactory.CreateNode(_surface.NodeArchetypes, id, this, groupId, typeId);
+                    SurfaceNode node;
+                    if (groupId == Archetypes.Custom.GroupID)
+                        node = new Archetypes.Custom.DummyCustomNode(id, this);
+                    else
+                        node = NodeFactory.CreateNode(_surface.NodeArchetypes, id, this, groupId, typeId);
                     if (node == null)
                     {
                         // Error
@@ -446,13 +450,57 @@ namespace FlaxEditor.Surface
                 for (int i = 0; i < nodesCount; i++)
                 {
                     var node = Nodes[i];
+                    
+                    int valuesCnt = stream.ReadInt32();
+                    int firstValueReadIdx = 0;
+
+                    // Special case for custom nodes
+                    if (node is Archetypes.Custom.DummyCustomNode dummyCustom)
+                    {
+                        // TODO: maybe reuse the same dummy node (static) because is only a placeholder
+
+                        // Values check
+                        if (valuesCnt < 2)
+                            throw new Exception("Missing custom nodes data.");
+
+                        // Node typename check
+                        object typeName = null;
+                        Utils.ReadCommonValue(stream, ref typeName);
+                        firstValueReadIdx = 1;
+                        if (string.IsNullOrEmpty(typeName as string))
+                            throw new Exception("Missing custom node typename.");
+                        
+                        // Find custom node archetype that matches this node type (it must be unique)
+                        var customNodes = _surface.GetCustomNodes();
+                        if (customNodes?.Archetypes == null)
+                            throw new Exception("Cannot find any custom nodes archetype.");
+                        NodeArchetype arch = null;
+                        for (int j = 0; j < customNodes.Archetypes.Length; i++)
+                        {
+                            if (string.Equals(Archetypes.Custom.GetNodeTypeName(customNodes.Archetypes[i]), (string)typeName, StringComparison.OrdinalIgnoreCase))
+                            {
+                                arch = customNodes.Archetypes[i];
+                                break;
+                            }
+                        }
+                        if (arch == null)
+                            throw new Exception("Missing custom node " + typeName);
+
+                        // Create custom node and replace dummy placeholder
+                        node = NodeFactory.CreateNode(dummyCustom.ID, this, customNodes, arch);
+                        if (node == null)
+                            throw new Exception("Failed to create custom node " + typeName);
+                        Nodes[i] = node;
+
+                        // Store node typename in values container
+                        node.Values[0] = typeName;
+                    }
 
                     // Values
-                    int valuesCnt = stream.ReadInt32();
                     int nodeValuesCnt = node.Values?.Length ?? 0;
                     if (valuesCnt == nodeValuesCnt)
                     {
-                        for (int j = 0; j < valuesCnt; j++)
+                        for (int j = firstValueReadIdx; j < valuesCnt; j++)
                         {
                             // ReSharper disable once PossibleNullReferenceException
                             Utils.ReadCommonValue(stream, ref node.Values[j]);
@@ -463,7 +511,7 @@ namespace FlaxEditor.Surface
                         Editor.LogWarning(String.Format("Invalid node values. Loaded: {0}, expected: {1}. Type: {2}, {3}", valuesCnt, nodeValuesCnt, node.Archetype.Title, node.Archetype.TypeID));
 
                         object dummy = null;
-                        for (int j = 0; j < valuesCnt; j++)
+                        for (int j = firstValueReadIdx; j < valuesCnt; j++)
                             Utils.ReadCommonValue(stream, ref dummy);
                     }
 
