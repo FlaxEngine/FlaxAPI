@@ -126,7 +126,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     group.Close(false);
                     for (int i = 0; i < nodes.Count; i++)
                     {
-                        var item = new VisjectCMItem(group, nodes[i]);
+                        var item = new VisjectCMItem(group, groupArchetype, nodes[i]);
                         item.Parent = group;
                     }
                     group.SortChildren();
@@ -171,7 +171,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     }
 
                     // Add new item
-                    var item = new VisjectCMItem(group, nodeArchetype);
+                    var item = new VisjectCMItem(group, customNodesGroup, nodeArchetype);
                     item.Parent = group;
                     
                     // Order items
@@ -204,7 +204,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 group.Close(false);
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    var item = new VisjectCMItem(group, nodes[i]);
+                    var item = new VisjectCMItem(group, groupArchetype, nodes[i]);
                     item.Parent = group;
                 }
                 group.SortChildren();
@@ -359,7 +359,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     if (!parameters[i].IsPublic)
                         continue;
 
-                    var item = new VisjectCMItem(group, archetypes[archetypeIndex++]);
+                    var item = new VisjectCMItem(group, groupArchetype, archetypes[archetypeIndex++]);
                     item.Parent = group;
                 }
                 group.SortChildren();
