@@ -76,6 +76,50 @@ namespace FlaxEngine
             }
 
             /// <summary>
+            /// The animation graph 'impulse' connections data container (the actual transfer is done via pointer as it gives better performance). 
+            /// Container for skeleton nodes transformation hierarchy and any other required data. 
+            /// Unified layout for both local and world transformation spaces.
+            /// </summary>
+            [StructLayout(LayoutKind.Sequential)]
+            public unsafe struct Impulse
+            {
+                /// <summary>
+                /// The nodes array size (elements count).
+                /// </summary>
+                public int NodesCount;
+
+                /// <summary>
+                /// The unused field.
+                /// </summary>
+                public int Unused;
+
+                /// <summary>
+                /// The skeleton nodes transformation hierarchy nodes. Size always matches the Anim Graph skeleton description (access size from <see cref="NodesCount"/>). It's pointer to the unmanaged allocation (read-only).
+                /// </summary>
+                public Transform* Nodes;
+
+                /// <summary>
+                /// The root motion data.
+                /// </summary>
+                public Vector3 RootMotionTranslation;
+
+                /// <summary>
+                /// The root motion data.
+                /// </summary>
+                public Quaternion RootMotionRotation;
+
+                /// <summary>
+                /// The animation time position (in seconds).
+                /// </summary>
+                public float Position;
+
+                /// <summary>
+                /// The animation length (in seconds).
+                /// </summary>
+                public float Length;
+            }
+
+            /// <summary>
             /// Loads the node data from the serialized values and prepares the node to run. In most cases this method is called from the content loading thread (not the main game thread).
             /// </summary>
             /// <param name="values">The node values array. The first item is always the typename of the custom node type, second one is node group name, others are customizable by editor node archetype.</param>
@@ -109,6 +153,16 @@ namespace FlaxEngine
             {
                 return Internal_GetInputValue(ref context, boxId);
             }
+
+            /// <summary>
+            /// Gets the data for the output skeleton nodes hierarchy. Each node can have only one cached nodes output. Use this method if your node performs skeleton nodes modifications.
+            /// </summary>
+            /// <param name="context">The context.</param>
+            /// <returns>The impulse data. It contains empty nodes hierarchy allocated per-node. Modify it to adjust output custom skeleton nodes transformations.</returns>
+            public static unsafe Impulse* GetOutputImpulseData(ref Context context)
+            {
+                return (Impulse*)Internal_GetOutputImpulseData(ref context);
+            }
         }
 
         #region Internal Calls
@@ -119,6 +173,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern object Internal_GetInputValue(ref CustomNode.Context context, int boxId);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern IntPtr Internal_GetOutputImpulseData(ref CustomNode.Context context);
 #endif
 
         #endregion
