@@ -24,6 +24,23 @@ namespace FlaxEngine
         public abstract class CustomNode
         {
             /// <summary>
+            /// The initial node data container structure.
+            /// </summary>
+            [StructLayout(LayoutKind.Sequential)]
+            public struct InitData
+            {
+                /// <summary>
+                /// The node values array. The first item is always the typename of the custom node type, second one is node group name, others are customizable by editor node archetype.
+                /// </summary>
+                public object[] Values;
+
+                /// <summary>
+                /// The skinned model asset that is a base model for the graph (source of the skeleton).
+                /// </summary>
+                public SkinnedModel BaseModel;
+            }
+
+            /// <summary>
             /// The node evaluation context structure.
             /// </summary>
             [StructLayout(LayoutKind.Sequential)]
@@ -48,11 +65,6 @@ namespace FlaxEngine
                 /// The requested box identifier to evaluate its value.
                 /// </summary>
                 public int BoxId;
-
-                /// <summary>
-                /// The total amount of animated model skeleton nodes (not bones!). Can be used to allocate skeleton nodes graph for some cases.
-                /// </summary>
-                public int SkeletonNodesCount;
 
                 /// <summary>
                 /// The absolute time delta since last anim graph update for the current instance (in seconds). Can be used to animate or blend node logic over time.
@@ -122,8 +134,7 @@ namespace FlaxEngine
             /// <summary>
             /// Loads the node data from the serialized values and prepares the node to run. In most cases this method is called from the content loading thread (not the main game thread).
             /// </summary>
-            /// <param name="values">The node values array. The first item is always the typename of the custom node type, second one is node group name, others are customizable by editor node archetype.</param>
-            public abstract void Load(object[] values);
+            public abstract void Load(ref InitData initData);
 
             /// <summary>
             /// Evaluates the node based on inputs and node data.
