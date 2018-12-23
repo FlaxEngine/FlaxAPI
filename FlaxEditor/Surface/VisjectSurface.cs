@@ -672,7 +672,7 @@ namespace FlaxEditor.Surface
 
             // Cleanup
             _activeVisjectCM = null;
-            _cmPrimaryMenu.Dispose();
+            _cmPrimaryMenu?.Dispose();
             _cmSecondaryMenu.Dispose();
 
             base.OnDestroy();
