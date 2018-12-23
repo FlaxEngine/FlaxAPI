@@ -183,7 +183,7 @@ namespace FlaxEditor.Modules
             var bytes = SceneManager.SaveSceneToBytes(scene);
 
             // Cleanup
-            Object.Destroy(scene);
+            Object.Destroy(ref scene);
 
             if (bytes == null || bytes.Length == 0)
                 throw new Exception("Failed to serialize scene.");
