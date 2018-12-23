@@ -31,7 +31,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         /// Initializes a new instance of the <see cref="CachedTypesCollection"/> class.
         /// </summary>
         /// <param name="capacity">The initial collection capacity.</param>
-        /// <param name="type">The type of things to find.</param>
+        /// <param name="type">The type of things to find. It can be attribute to find all classes with the given attribute defined.</param>
         /// <param name="checkFunc">Additional callback used to check if the given type is valid. Returns true if add type, otherwise false.</param>
         /// <param name="checkAssembly">Additional callback used to check if the given assembly is valid. Returns true if search for types in the given assembly, otherwise false.</param>
         public CachedTypesCollection(int capacity, Type type, Func<Type, bool> checkFunc, Func<Assembly, bool> checkAssembly)
@@ -72,7 +72,15 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         /// </summary>
         protected virtual void Search()
         {
-            Utils.GetDerivedTypes(_type, _list, _checkFunc, _checkAssembly);
+            // Special case for attributes
+            if (_type.BaseType == typeof(Attribute))
+            {
+                Utils.GetTypesWithAttributeDefined(_type, _list, _checkFunc, _checkAssembly);
+            }
+            else
+            {
+                Utils.GetDerivedTypes(_type, _list, _checkFunc, _checkAssembly);
+            }
         }
 
         /// <summary>

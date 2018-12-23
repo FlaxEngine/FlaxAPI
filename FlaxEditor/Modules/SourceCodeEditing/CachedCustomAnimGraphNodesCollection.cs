@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using FlaxEditor.Surface;
 using FlaxEngine;
+using MethodInfo = System.Reflection.MethodInfo;
 using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.Modules.SourceCodeEditing
@@ -58,56 +59,52 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             for (int i = _list.Count - 1; i >= 0 && _list.Count > 0; i--)
             {
                 var nodeType = _list[i];
-                var arch = GetArchetype(nodeType);
-                if (arch != null)
+
+                var methods = nodeType.GetMethods(BindingFlags.Static | BindingFlags.Public);
+
+                for (int j = 0; j < methods.Length; j++)
                 {
-                    // Cache type
-                    _archetypes.Add(arch);
-                }
-                else
-                {
-                    // Invalid type
-                    _list.RemoveAt(i);
-                    i--;
-                    Editor.LogWarning(string.Format("Anim Graph custom node type {0} has missing or invalid CustomNodeArchetype attribute or invalid node archetype descriptor.", nodeType.FullName));
+                    var arch = GetArchetype(methods[j]);
+
+                    if (arch != null)
+                    {
+                        // Cache type
+                        _archetypes.Add(arch);
+                    }
                 }
             }
         }
 
-        private NodeArchetype GetArchetype(Type nodeType)
+        private NodeArchetype GetArchetype(MethodBase method)
         {
-            // Peek attribute
-            var attr = nodeType.GetCustomAttribute<AnimationGraph.CustomNodeArchetypeAttribute>();
-            if (attr?.TypeName == null || attr.Method == null)
-                return null;
-
-            // Find type
-            var getterType = Utils.GetType(attr.TypeName);
-            if (getterType == null)
-                return null;
-
-            // Find method
-            var getterMethod = getterType.GetMethod(attr.Method, BindingFlags.Static | BindingFlags.Public);
-            if (getterMethod == null)
-                return null;
-
             // Validate method signature
-            if (!getterMethod.IsStatic || getterMethod.ReturnType != typeof(NodeArchetype) || getterMethod.GetParameters().Length != 0)
+            if (!method.IsStatic ||
+                !method.IsPublic ||
+                method as MethodInfo == null ||
+                ((MethodInfo)method).ReturnType != typeof(NodeArchetype) ||
+                method.GetParameters().Length != 0 ||
+                method.IsGenericMethod)
                 return null;
 
             // Invoke method
             try
             {
-                var arch = (NodeArchetype)getterMethod.Invoke(null, null);
+                var arch = (NodeArchetype)method.Invoke(null, null);
 
                 // Validate archetype
                 if (arch.Tag != null || string.IsNullOrEmpty(arch.Title))
+                {
+                    Editor.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Tag must be null and title must be specified.", method, method.DeclaringType));
                     return null;
+                }
                 if (arch.DefaultValues == null || arch.DefaultValues.Length < 2 || string.IsNullOrEmpty(arch.DefaultValues[0] as string) || string.IsNullOrEmpty(arch.DefaultValues[1] as string))
+                {
+                    Editor.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Default values are invalid.", method, method.DeclaringType));
                     return null;
+                }
 
                 // Check if type comes from scripts that can be reloaded at runtime
-                HasTypeFromGameScripts |= Utils.IsTypeFromGameScripts(getterType) || Utils.IsTypeFromGameScripts(nodeType);
+                HasTypeFromGameScripts |= Utils.IsTypeFromGameScripts(method.DeclaringType);
 
                 return arch;
             }

@@ -78,7 +78,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         /// <summary>
         /// The Animation Graph custom nodes collection.
         /// </summary>
-        public readonly CachedCustomAnimGraphNodesCollection AnimGraphNodes = new CachedCustomAnimGraphNodesCollection(32, typeof(AnimationGraph.CustomNode), IsTypeValidAnimGraphNodeType, HasAssemblyValidAnimGraphNodeTypes);
+        public readonly CachedCustomAnimGraphNodesCollection AnimGraphNodes = new CachedCustomAnimGraphNodesCollection(32, typeof(AnimationGraph.CustomNodeArchetypeFactoryAttribute), IsTypeValidAnimGraphNodeType, HasAssemblyValidAnimGraphNodeTypes);
 
         internal CodeEditingModule(Editor editor)
         : base(editor)
@@ -247,7 +247,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             if (name.Name == "FlaxEditor")
                 return false;
 
-            // Use engine
+            // Skip engine
             if (name.Name == "FlaxEngine")
                 return true;
 
@@ -268,19 +268,15 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             // Skip editor
             if (name.Name == "FlaxEditor")
                 return false;
-
-            // Use engine
-            if (name.Name == "FlaxEngine")
-                return true;
-
-            // Skip assemblies not referencing engine
+            
+            // Skip assemblies not referencing editor
             var references = a.GetReferencedAssemblies();
-            return references.Any(x => x.Name == "FlaxEngine");
+            return references.Any(x => x.Name == "FlaxEditor");
         }
 
         private static bool IsTypeValidAnimGraphNodeType(Type t)
         {
-            return !t.IsGenericType && !t.IsAbstract && !Attribute.IsDefined(t, typeof(HideInEditorAttribute), false);
+            return !t.IsGenericType;
         }
     }
 }
