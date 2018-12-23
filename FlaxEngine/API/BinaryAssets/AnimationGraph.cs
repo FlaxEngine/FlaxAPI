@@ -38,7 +38,7 @@ namespace FlaxEngine
                 /// The node pointer (unmanaged).
                 /// </summary>
                 public IntPtr Node;
-                
+
                 /// <summary>
                 /// The graph node identifier (unique per graph).
                 /// </summary>
@@ -48,6 +48,31 @@ namespace FlaxEngine
                 /// The requested box identifier to evaluate its value.
                 /// </summary>
                 public int BoxId;
+
+                /// <summary>
+                /// The total amount of animated model skeleton nodes (not bones!). Can be used to allocate skeleton nodes graph for some cases.
+                /// </summary>
+                public int SkeletonNodesCount;
+
+                /// <summary>
+                /// The absolute time delta since last anim graph update for the current instance (in seconds). Can be used to animate or blend node logic over time.
+                /// </summary>
+                public float DeltaTime;
+
+                /// <summary>
+                /// The index of the current update frame. Can be used to detect if custom node hasn't been updated for more than one frame to reinitialize it in some cases.
+                /// </summary>
+                public ulong CurrentFrameIndex;
+
+                /// <summary>
+                /// The skinned model asset that is a base model for the graph (source of the skeleton).
+                /// </summary>
+                public SkinnedModel BaseModel;
+
+                /// <summary>
+                /// The instance of the animated model that during update.
+                /// </summary>
+                public AnimatedModel Instance;
             }
 
             /// <summary>
@@ -64,7 +89,7 @@ namespace FlaxEngine
             public abstract object Evaluate(ref Context context);
 
             /// <summary>
-            /// Check if th box of the given ID has valid connection to get its value.
+            /// Checks if th box of the given ID has valid connection to get its value.
             /// </summary>
             /// <param name="context">The context.</param>
             /// <param name="boxId">The input box identifier.</param>
