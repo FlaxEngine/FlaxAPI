@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.Scripting;
 using FlaxEngine.Utilities;
 
@@ -11,7 +12,8 @@ namespace FlaxEditor.States
     /// <seealso cref="FlaxEditor.States.EditorState" />
     public sealed class LoadingState : EditorState
     {
-        private bool _loadScritpsFlag;
+        private bool _loadScriptsFlag;
+        private DateTime _loadScriptsDelayTime;
         private bool _compilationFailed;
 
         /// <inheritdoc />
@@ -66,7 +68,8 @@ namespace FlaxEditor.States
             if (success)
             {
                 // Request loading scripts (we need to do this on main thread)
-                _loadScritpsFlag = true;
+                _loadScriptsFlag = true;
+                _loadScriptsDelayTime = DateTime.Now + TimeSpan.FromMilliseconds(30);
             }
             else
             {
@@ -79,12 +82,15 @@ namespace FlaxEditor.States
         public override void Update()
         {
             // Check flag
-            if (_loadScritpsFlag)
+            if (_loadScriptsFlag)
             {
-                _loadScritpsFlag = false;
+                if (DateTime.Now > _loadScriptsDelayTime)
+                {
+                    _loadScriptsFlag = false;
 
-                // End init
-                Editor.EndInit();
+                    // End init
+                    Editor.EndInit();
+                }
             }
             else if (_compilationFailed)
             {

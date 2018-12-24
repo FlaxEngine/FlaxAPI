@@ -305,7 +305,8 @@ namespace FlaxEditor.Windows.Assets
                     proxy._isolateCheckBoxes.Clear();
                     proxy._highlightCheckBoxes.Clear();
                     var meshes = proxy.Asset.Meshes;
-                    var skeleton = proxy.Asset.Skeleton;
+                    var nodes = proxy.Asset.Nodes;
+                    var bones = proxy.Asset.Bones;
 
                     // General properties
                     {
@@ -330,7 +331,8 @@ namespace FlaxEditor.Windows.Assets
                         }
 
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
-                        group.Label("Bones: " + skeleton.Length);
+                        group.Label("Nodes: " + nodes.Length);
+                        group.Label("Bones: " + bones.Length);
                     }
 
                     // Group per mesh
@@ -362,18 +364,35 @@ namespace FlaxEditor.Windows.Assets
                         proxy._highlightCheckBoxes.Add(highlight.CheckBox);
                     }
 
-                    // Skeleton
+                    // Skeleton Bones
                     {
-                        var group = layout.Group("Skeleton");
+                        var group = layout.Group("Skeleton Bones");
                         group.Panel.Close(false);
 
                         var tree = group.Tree();
-                        for (int i = 0; i < skeleton.Length; i++)
+                        for (int i = 0; i < bones.Length; i++)
                         {
-                            if (skeleton[i].ParentIndex == -1)
+                            if (bones[i].ParentIndex == -1)
                             {
-                                var node = tree.Node(skeleton[i].Name);
-                                BuildSkeletonNodeTree(skeleton, node, i);
+                                var node = tree.Node(nodes[bones[i].NodeIndex].Name);
+                                BuildSkeletonBonesTree(nodes, bones, node, i);
+                                node.TreeNode.ExpandAll(true);
+                            }
+                        }
+                    }
+
+                    // Skeleton Nodes
+                    {
+                        var group = layout.Group("Skeleton Nodes");
+                        group.Panel.Close(false);
+
+                        var tree = group.Tree();
+                        for (int i = 0; i < nodes.Length; i++)
+                        {
+                            if (nodes[i].ParentIndex == -1)
+                            {
+                                var node = tree.Node(nodes[i].Name);
+                                BuildSkeletonNodesTree(nodes, node, i);
                                 node.TreeNode.ExpandAll(true);
                             }
                         }
@@ -396,14 +415,26 @@ namespace FlaxEditor.Windows.Assets
                     proxy.UpdateMaterialSlotsUI();
                 }
 
-                private void BuildSkeletonNodeTree(SkeletonBone[] skeleton, TreeNodeElement layout, int boneIndex)
+                private void BuildSkeletonBonesTree(SkeletonNode[] nodes, SkeletonBone[] bones, TreeNodeElement layout, int boneIndex)
                 {
-                    for (int i = 0; i < skeleton.Length; i++)
+                    for (int i = 0; i < bones.Length; i++)
                     {
-                        if (skeleton[i].ParentIndex == boneIndex)
+                        if (bones[i].ParentIndex == boneIndex)
                         {
-                            var node = layout.Node(skeleton[i].Name);
-                            BuildSkeletonNodeTree(skeleton, node, i);
+                            var node = layout.Node(nodes[bones[i].NodeIndex].Name);
+                            BuildSkeletonBonesTree(nodes, bones, node, i);
+                        }
+                    }
+                }
+                
+                private void BuildSkeletonNodesTree(SkeletonNode[] nodes, TreeNodeElement layout, int nodeIndex)
+                {
+                    for (int i = 0; i < nodes.Length; i++)
+                    {
+                        if (nodes[i].ParentIndex == nodeIndex)
+                        {
+                            var node = layout.Node(nodes[i].Name);
+                            BuildSkeletonNodesTree(nodes, node, i);
                         }
                     }
                 }

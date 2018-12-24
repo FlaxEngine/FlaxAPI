@@ -5,6 +5,9 @@ namespace FlaxEngine
     /// <summary>
     /// Defines the single skeleton hierarchy bone including its default bind pose, name and parent node index.
     /// </summary>
+    /// <remarks>
+    /// Skeleton bones are subset of the skeleton nodes collection that are actually used by the skinned model meshes.
+    /// </remarks>
     public struct SkeletonBone
     {
         /// <summary>
@@ -13,13 +16,18 @@ namespace FlaxEngine
         public int ParentIndex;
 
         /// <summary>
+        /// The index of the skeleton node where bone is 'attached'. Used as a animation transformation source.
+        /// </summary>
+        public int NodeIndex;
+
+        /// <summary>
         /// The local transformation of the bone, relative to the parent bone (in bind pose).
         /// </summary>
         public Transform LocalTransform;
 
         /// <summary>
-        /// The name of this bone.
+        /// The matrix that transforms from mesh space to bone space in bind pose (inverse bind pose).
         /// </summary>
-        public string Name;
+        public Matrix OffsetMatrix;
     }
 }

@@ -288,6 +288,7 @@
     <Compile Include="Engine\RayCastHit.cs" />
     <Compile Include="Engine\SceneReference.cs" />
     <Compile Include="Engine\SkeletonBone.cs" />
+    <Compile Include="Engine\SkeletonNode.cs" />
     <Compile Include="Engine\SkinnedMesh.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
     <Compile Include="Enums\ForceMode.cs" />

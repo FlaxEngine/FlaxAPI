@@ -83,7 +83,7 @@ namespace FlaxEditor
         {
             // Skip if window type is not from game script assembly (eg. plugin code)
             var type = GetType();
-            if (!type.Assembly.GetName().Name.StartsWith("Assembly"))
+            if (!Utilities.Utils.IsTypeFromGameScripts(type))
                 return;
 
             Editor.Instance.Windows.AddToRestore(this);

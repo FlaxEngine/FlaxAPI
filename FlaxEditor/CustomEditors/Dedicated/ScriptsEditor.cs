@@ -49,7 +49,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private void AddScriptButtonOnClicked(Button button)
         {
-            var scripts = Editor.Instance.CodeEditing.GetScripts();
+            var scripts = Editor.Instance.CodeEditing.Scripts.Get();
             if (scripts.Count == 0)
             {
                 // No scripts

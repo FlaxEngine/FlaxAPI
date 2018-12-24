@@ -9,6 +9,7 @@ namespace FlaxEngine
     {
         private MaterialSlot[] _slots;
         private SkinnedMesh[] _meshes;
+        private SkeletonNode[] _nodes;
         private SkeletonBone[] _bones;
 
         /// <summary>
@@ -96,12 +97,31 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the skeleton nodes hierarchy.
+        /// </summary>
+        /// <remarks>
+        /// Editing skeleton via <see cref="SetupSkeleton"/> is only supported for the virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// </remarks>
+        public SkeletonNode[] Nodes
+        {
+            get
+            {
+                if (_nodes == null)
+                {
+                    _nodes = Internal_GetNodes(unmanagedPtr, typeof(SkeletonNode));
+                }
+
+                return _nodes;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the skeleton bones hierarchy.
         /// </summary>
         /// <remarks>
-        /// Editing skeleton is only supported for the virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Editing skeleton via <see cref="SetupSkeleton"/> is only supported for the virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
         /// </remarks>
-        public SkeletonBone[] Skeleton
+        public SkeletonBone[] Bones
         {
             get
             {
@@ -111,27 +131,6 @@ namespace FlaxEngine
                 }
 
                 return _bones;
-            }
-            set
-            {
-                // Skip if no change
-                if (value == _bones)
-                    return;
-
-                // Validate state and input
-                if (!IsVirtual)
-                    throw new InvalidOperationException("Only virtual models can be modified at runtime.");
-                if (value == null)
-                    throw new ArgumentNullException();
-                if (value == null || value.Length <= 0 || value.Length > MaxBones)
-                    throw new ArgumentOutOfRangeException();
-
-                // Cleanup data
-                _bones = null;
-
-                // Call backend
-                if (Internal_SetupBones(unmanagedPtr, value))
-                    throw new FlaxException("Failed to update skinned model skeleton.");
             }
         }
 
@@ -159,6 +158,33 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Setups the skinned model skeleton.
+        /// </summary>
+        /// <param name="nodes">The nodes hierarchy. The first node must be a root one (with parent index equal -1).</param>
+        /// <param name="bones">The bones hierarchy.</param>
+        /// <param name="autoCalculateOffsetMatrix">If true then the OffsetMatrix for each bone will be auto-calculated by the engine, otherwise the provided values will be used.</param>
+        public void SetupSkeleton(SkeletonNode[] nodes, SkeletonBone[] bones, bool autoCalculateOffsetMatrix)
+        {
+            // Validate state and input
+            if (!IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be modified at runtime.");
+            if (nodes == null)
+                throw new ArgumentNullException(nameof(nodes));
+            if (bones == null)
+                throw new ArgumentNullException(nameof(bones));
+            if (bones.Length > MaxBones)
+                throw new ArgumentOutOfRangeException(nameof(bones));
+
+            // Cleanup data
+            _nodes = null;
+            _bones = null;
+
+            // Call backend
+            if (Internal_SetupSkeleton(unmanagedPtr, nodes, bones, autoCalculateOffsetMatrix))
+                throw new FlaxException("Failed to update skinned model skeleton.");
+        }
+
+        /// <summary>
         /// Setups the material slots collection.
         /// </summary>
         /// <param name="slotsCount">The slots count.</param>
@@ -178,11 +204,71 @@ namespace FlaxEngine
                 throw new FlaxException("Failed to update skinned model material slots collection.");
         }
 
+        /// <summary>
+        /// Gets the skeleton node index by node name.
+        /// </summary>
+        /// <param name="name">The node name.</param>
+        /// <param name="index">The found node index or -1 if not found.</param>
+        /// <returns>True if found that node, otherwise false.</returns>
+        public bool GetNodeByName(string name, out int index)
+        {
+            index = -1;
+
+            if (WaitForLoaded())
+                return false;
+
+            var nodes = Nodes;
+            if (nodes == null)
+                return false;
+
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                if (string.Equals(nodes[i].Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the skeleton bone index by node name.
+        /// </summary>
+        /// <param name="name">The node name.</param>
+        /// <param name="index">The found bone index or -1 if not found.</param>
+        /// <returns>True if found that bone, otherwise false.</returns>
+        public bool GetBoneByName(string name, out int index)
+        {
+            index = -1;
+
+            if (WaitForLoaded())
+                return false;
+
+            var nodes = Nodes;
+            var bones = Bones;
+            if (nodes == null || bones == null)
+                return false;
+
+            for (int i = 0; i < bones.Length; i++)
+            {
+                if (string.Equals(nodes[bones[i].NodeIndex].Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         internal void Internal_OnUnload()
         {
             // Clear cached data
             _slots = null;
             _meshes = null;
+            _nodes = null;
             _bones = null;
         }
 
@@ -190,13 +276,16 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern SkeletonNode[] Internal_GetNodes(IntPtr obj, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern SkeletonBone[] Internal_GetBones(IntPtr obj, Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SetupMeshes(IntPtr obj, int meshesCount);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_SetupBones(IntPtr obj, SkeletonBone[] bones);
+        internal static extern bool Internal_SetupSkeleton(IntPtr obj, SkeletonNode[] nodes, SkeletonBone[] bones, bool autoCalculateOffsetMatrix);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SetupSlots(IntPtr obj, int slotsCount);

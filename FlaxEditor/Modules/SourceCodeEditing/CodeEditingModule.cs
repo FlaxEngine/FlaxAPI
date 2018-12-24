@@ -8,7 +8,6 @@ using FlaxEditor.Options;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.Modules.SourceCodeEditing
 {
@@ -20,9 +19,6 @@ namespace FlaxEditor.Modules.SourceCodeEditing
     {
         private readonly List<ISourceCodeEditor> _editors = new List<ISourceCodeEditor>(8);
         private ISourceCodeEditor _selectedEditor;
-        private readonly List<Type> _scripts = new List<Type>();
-        private readonly List<Type> _controlTypes = new List<Type>();
-        private bool _hasValidScripts, _hasValidControlTypes;
 
         /// <summary>
         /// Gets the source code editors registered for usage in editor.
@@ -68,6 +64,21 @@ namespace FlaxEditor.Modules.SourceCodeEditing
                 }
             }
         }
+
+        /// <summary>
+        /// The scripts collection.
+        /// </summary>
+        public readonly CachedTypesCollection Scripts = new CachedTypesCollection(1024, typeof(Script), IsTypeValidScriptType, HasAssemblyValidScriptTypes);
+
+        /// <summary>
+        /// The control types collection.
+        /// </summary>
+        public readonly CachedTypesCollection Controls = new CachedTypesCollection(64, typeof(Control), IsTypeValidControlType, HasAssemblyValidControlTypes);
+
+        /// <summary>
+        /// The Animation Graph custom nodes collection.
+        /// </summary>
+        public readonly CachedCustomAnimGraphNodesCollection AnimGraphNodes = new CachedCustomAnimGraphNodesCollection(32, typeof(AnimationGraph.CustomNodeArchetypeFactoryAttribute), IsTypeValidAnimGraphNodeType, HasAssemblyValidAnimGraphNodeTypes);
 
         internal CodeEditingModule(Editor editor)
         : base(editor)
@@ -175,6 +186,23 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             OnOptionsChanged(Editor.Options.Options);
         }
 
+        /// <inheritdoc />
+        public override void OnEndInit()
+        {
+            // Special case when failed to load scripts on editor start - clear types later so all types will be cached if needed
+            if (!FlaxEngine.Scripting.IsGameAssemblyLoaded())
+            {
+                ScriptsBuilder.CompilationSuccess += OnFirstCompilationSuccess;
+            }
+        }
+
+        private void OnFirstCompilationSuccess()
+        {
+            ScriptsBuilder.CompilationSuccess -= OnFirstCompilationSuccess;
+
+            ClearTypes();
+        }
+
         private void OnOptionsChanged(EditorOptions options)
         {
             // Sync code editor
@@ -204,37 +232,23 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             ScriptsBuilder.ScriptsReload -= OnScriptsReload;
         }
 
+        /// <summary>
+        /// Clears all the cached types.
+        /// </summary>
+        public void ClearTypes()
+        {
+            // Invalidate cached types
+            Scripts.ClearTypes();
+            Controls.ClearTypes();
+            AnimGraphNodes.ClearTypes();
+        }
+
         private void OnScriptsReload()
         {
-            // Invalidate cached script items
-            _hasValidScripts = false;
-            _scripts.Clear();
-            _hasValidControlTypes = false;
-            _controlTypes.Clear();
+            ClearTypes();
         }
 
-        /// <summary>
-        /// Gets all the script types from the all loaded assemblies (including project scripts and scripts from the plugins).
-        /// </summary>
-        /// <returns>The script types collection (readonly).</returns>
-        public List<Type> GetScripts()
-        {
-            if (!_hasValidScripts)
-            {
-                _scripts.Clear();
-                _hasValidScripts = true;
-
-                Editor.Log("Searching valid script types");
-                var start = DateTime.Now;
-                Utils.GetDerivedTypes(typeof(Script), _scripts, IsTypeValidScriptType, HasAssemblyValidScriptTypes);
-                var end = DateTime.Now;
-                Editor.Log(string.Format("Found {0} script types (in {1} ms)", _scripts.Count, (int)(end - start).TotalMilliseconds));
-            }
-
-            return _scripts;
-        }
-
-        private bool HasAssemblyValidScriptTypes(Assembly a)
+        private static bool HasAssemblyValidScriptTypes(Assembly a)
         {
             // Skip editor
             if (a.GetName().Name == "FlaxEditor")
@@ -245,33 +259,12 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             return references.Any(x => x.Name == "FlaxEngine");
         }
 
-        private bool IsTypeValidScriptType(Type t)
+        private static bool IsTypeValidScriptType(Type t)
         {
             return !t.IsGenericType && !t.IsAbstract;
         }
 
-        /// <summary>
-        /// Gets the collection of the Control types that can be spawned in the game (valid ones).
-        /// </summary>
-        /// <returns>The Control types collection (readonly).</returns>
-        public List<Type> GetControlTypes()
-        {
-            if (!_hasValidControlTypes)
-            {
-                _controlTypes.Clear();
-                _hasValidControlTypes = true;
-
-                Editor.Log("Searching valid control types");
-                var start = DateTime.Now;
-                Utils.GetDerivedTypes(typeof(Control), _controlTypes, IsTypeValidControlType, HasAssemblyValidControlTypes);
-                var end = DateTime.Now;
-                Editor.Log(string.Format("Found {0} control types (in {1} ms)", _controlTypes.Count, (int)(end - start).TotalMilliseconds));
-            }
-
-            return _controlTypes;
-        }
-
-        private bool HasAssemblyValidControlTypes(Assembly a)
+        private static bool HasAssemblyValidControlTypes(Assembly a)
         {
             var name = a.GetName();
 
@@ -279,7 +272,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             if (name.Name == "FlaxEditor")
                 return false;
 
-            // Use engine
+            // Skip engine
             if (name.Name == "FlaxEngine")
                 return true;
 
@@ -288,9 +281,27 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             return references.Any(x => x.Name == "FlaxEngine");
         }
 
-        private bool IsTypeValidControlType(Type t)
+        private static bool IsTypeValidControlType(Type t)
         {
             return !t.IsGenericType && !t.IsAbstract && !Attribute.IsDefined(t, typeof(HideInEditorAttribute), false);
+        }
+
+        private static bool HasAssemblyValidAnimGraphNodeTypes(Assembly a)
+        {
+            var name = a.GetName();
+
+            // Skip editor
+            if (name.Name == "FlaxEditor")
+                return false;
+            
+            // Skip assemblies not referencing editor
+            var references = a.GetReferencedAssemblies();
+            return references.Any(x => x.Name == "FlaxEditor");
+        }
+
+        private static bool IsTypeValidAnimGraphNodeType(Type t)
+        {
+            return !t.IsGenericType;
         }
     }
 }
