@@ -18,6 +18,7 @@ namespace FlaxEditor.Tools.Foliage
     {
         private readonly Tabs _modes;
         private readonly ContainerControl _noFoliagePanel;
+        private int _selectedFoliageTypeIndex = -1;
 
         /// <summary>
         /// The editor instance.
@@ -33,6 +34,36 @@ namespace FlaxEditor.Tools.Foliage
         /// Occurs when selected foliage gets changed (to a different value).
         /// </summary>
         public event Action SelectedFoliageChanged;
+
+        /// <summary>
+        /// Delegate signature for selected foliage index change.
+        /// </summary>
+        /// <param name="previousIndex">The index of the previous foliage type.</param>
+        /// <param name="currentIndex">The index of the current foliage type.</param>
+        public delegate void SelectedFoliageTypeIndexChangedDelegate(int previousIndex, int currentIndex);
+
+        /// <summary>
+        /// Occurs when selected foliage type index gets changed.
+        /// </summary>
+        public event SelectedFoliageTypeIndexChangedDelegate SelectedFoliageTypeIndexChanged;
+
+        /// <summary>
+        /// Gets or sets the index of the selected foliage type.
+        /// </summary>
+        public int SelectedFoliageTypeIndex
+        {
+            get => _selectedFoliageTypeIndex;
+            set
+            {
+                var prev = _selectedFoliageTypeIndex;
+                if (value == prev)
+                    return;
+
+                _selectedFoliageTypeIndex = value;
+
+                SelectedFoliageTypeIndexChanged?.Invoke(prev, value);
+            }
+        }
 
         /// <summary>
         /// The foliage types tab;
@@ -129,6 +160,7 @@ namespace FlaxEditor.Tools.Foliage
             var foliage = terrainNode?.Actor as FlaxEngine.Foliage;
             if (foliage != SelectedFoliage)
             {
+                SelectedFoliageTypeIndex = -1;
                 SelectedFoliage = foliage;
                 SelectedFoliageChanged?.Invoke();
             }
