@@ -221,7 +221,7 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
-            [EditorOrder(230), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The scale minimum values per axis.")]
+            [EditorOrder(230), EditorDisplay("Painting"), Limit(0.0f), CustomEditor(typeof(ActorTransformEditor.PositionScaleEditor)), Tooltip("The scale minimum values per axis.")]
             public Vector3 ScaleMin
             {
                 get => _options.PaintScaleMin;
@@ -232,7 +232,7 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
-            [EditorOrder(240), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The scale maximum values per axis.")]
+            [EditorOrder(240), EditorDisplay("Painting"), Limit(0.0f), CustomEditor(typeof(ActorTransformEditor.PositionScaleEditor)), Tooltip("The scale maximum values per axis.")]
             public Vector3 ScaleMax
             {
                 get => _options.PaintScaleMax;
@@ -245,7 +245,7 @@ namespace FlaxEditor.Tools.Foliage
 
             //
 
-            [EditorOrder(300), EditorDisplay("Placement"), Tooltip("The per-instance random offset range on axis Y (min-max).")]
+            [EditorOrder(300), EditorDisplay("Placement", "Offset Y"), Tooltip("The per-instance random offset range on axis Y (min-max).")]
             public Vector2 OffsetY
             {
                 get => _options.PlacementOffsetY;
