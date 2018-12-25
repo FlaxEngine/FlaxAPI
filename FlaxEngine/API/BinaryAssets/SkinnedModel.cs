@@ -180,7 +180,30 @@ namespace FlaxEngine
             _bones = null;
 
             // Call backend
-            if (Internal_SetupSkeleton(unmanagedPtr, nodes, bones, autoCalculateOffsetMatrix))
+            if (Internal_SetupSkeleton1(unmanagedPtr, nodes, bones, autoCalculateOffsetMatrix))
+                throw new FlaxException("Failed to update skinned model skeleton.");
+        }
+
+        /// <summary>
+        /// Setups the skinned model skeleton. Uses the same nodes layout for skeleton bones and calculates the offset matrix by auto.
+        /// </summary>
+        /// <param name="nodes">The nodes hierarchy. The first node must be a root one (with parent index equal -1).</param>
+        public void SetupSkeleton(SkeletonNode[] nodes)
+        {
+            // Validate state and input
+            if (!IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be modified at runtime.");
+            if (nodes == null)
+                throw new ArgumentNullException(nameof(nodes));
+            if (nodes.Length > MaxBones)
+                throw new ArgumentOutOfRangeException(nameof(nodes));
+
+            // Cleanup data
+            _nodes = null;
+            _bones = null;
+
+            // Call backend
+            if (Internal_SetupSkeleton2(unmanagedPtr, nodes))
                 throw new FlaxException("Failed to update skinned model skeleton.");
         }
 
@@ -285,7 +308,10 @@ namespace FlaxEngine
         internal static extern bool Internal_SetupMeshes(IntPtr obj, int meshesCount);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_SetupSkeleton(IntPtr obj, SkeletonNode[] nodes, SkeletonBone[] bones, bool autoCalculateOffsetMatrix);
+        internal static extern bool Internal_SetupSkeleton1(IntPtr obj, SkeletonNode[] nodes, SkeletonBone[] bones, bool autoCalculateOffsetMatrix);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SetupSkeleton2(IntPtr obj, SkeletonNode[] nodes);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SetupSlots(IntPtr obj, int slotsCount);
