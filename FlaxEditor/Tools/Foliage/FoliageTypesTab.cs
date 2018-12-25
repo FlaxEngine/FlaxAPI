@@ -521,13 +521,25 @@ namespace FlaxEditor.Tools.Foliage
                 _items.Children[selectedFoliageTypeIndex].BackgroundColor = Style.Current.BackgroundSelected;
             }
 
-            // Button
-            _addFoliageTypeButton.Location = new Vector2((_addFoliageTypeButton.Parent.Width - _addFoliageTypeButton.Width) * 0.5f, _items.Bottom + 4);
+            ArrangeAddFoliageButton();
         }
 
         private void OnFoliageTypeListItemClicked(ItemsListContextMenu.Item item)
         {
             SelectedFoliageTypeIndex = (int)item.Tag;
+        }
+
+        private void ArrangeAddFoliageButton()
+        {
+            _addFoliageTypeButton.Location = new Vector2((_addFoliageTypeButton.Parent.Width - _addFoliageTypeButton.Width) * 0.5f, _items.Bottom + 4);
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            base.PerformLayoutSelf();
+
+            ArrangeAddFoliageButton();
         }
     }
 }
