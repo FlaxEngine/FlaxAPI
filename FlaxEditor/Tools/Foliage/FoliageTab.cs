@@ -176,7 +176,7 @@ namespace FlaxEditor.Tools.Foliage
 
         private void InitPaintMode()
         {
-            var tab = _modes.AddTab(Paint = new PaintTab(this));
+            var tab = _modes.AddTab(Paint = new PaintTab(this, Editor.Windows.EditWin.Viewport.PaintFoliageGizmo));
             tab.Selected += OnTabSelected;
         }
 
@@ -210,7 +210,7 @@ namespace FlaxEditor.Tools.Foliage
                 Editor.Windows.EditWin.Viewport.SetActiveMode<NoGizmoMode>();
                 break;
             case 1:
-                Editor.Windows.EditWin.Viewport.SetActiveMode<NoGizmoMode>();
+                Editor.Windows.EditWin.Viewport.SetActiveMode<PaintFoliageGizmoMode>();
                 break;
             case 2:
                 Editor.Windows.EditWin.Viewport.SetActiveMode<NoGizmoMode>();

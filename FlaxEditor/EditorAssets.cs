@@ -51,5 +51,10 @@ namespace FlaxEditor
         /// The IES Profile assets preview material.
         /// </summary>
         public static string IesProfilePreviewMaterial = "Editor/IesProfilePreviewMaterial";
+
+        /// <summary>
+        /// The foliage painting brush material.
+        /// </summary>
+        public static string FoliageBrushMaterial = "Editor/Gizmo/FoliageBrushMaterial";
     }
 }

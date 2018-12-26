@@ -21,11 +21,8 @@ namespace FlaxEditor.Tools.Foliage
         [CustomEditor(typeof(ProxyObjectEditor))]
         private sealed class ProxyObject
         {
-            /// <summary>
-            /// The tab.
-            /// </summary>
-            [HideInEditor]
-            public readonly PaintTab Tab;
+            private readonly PaintFoliageGizmoMode _mode;
+            private readonly PaintTab _tab;
 
             /// <summary>
             /// The foliage actor.
@@ -43,14 +40,14 @@ namespace FlaxEditor.Tools.Foliage
             /// Initializes a new instance of the <see cref="ProxyObject"/> class.
             /// </summary>
             /// <param name="tab">The tab.</param>
-            public ProxyObject(PaintTab tab)
+            /// <param name="mode">The mode.</param>
+            public ProxyObject(PaintTab tab, PaintFoliageGizmoMode mode)
             {
-                Tab = tab;
+                _mode = mode;
+                _tab = tab;
                 SelectedFoliageTypeIndex = -1;
             }
-
-            private MaterialBase[] _materials;
-            private IntPtr[] _materialsPtr;
+            
             private FoliageTools.InstanceTypeOptions _options;
 
             public void SyncOptions()
@@ -61,6 +58,17 @@ namespace FlaxEditor.Tools.Foliage
             public void SetOptions()
             {
                 FoliageTools.SetFoliageTypeOptions(Foliage, SelectedFoliageTypeIndex, ref _options);
+            }
+
+            //
+            
+            [EditorOrder(100), EditorDisplay("Brush", EditorDisplayAttribute.InlineStyle)]
+            public Brush Brush
+            {
+                get => _mode.CurrentBrush;
+                set
+                {
+                }
             }
 
             //
@@ -200,53 +208,22 @@ namespace FlaxEditor.Tools.Foliage
         private readonly CustomEditorPresenter _presenter;
 
         /// <summary>
-        /// The parent foliage types tab.
+        /// The parent foliage tab.
         /// </summary>
-        public readonly FoliageTab FoliageTypes;
-
-        /// <summary>
-        /// Gets or sets the index of the selected foliage type.
-        /// </summary>
-        public int SelectedFoliageTypeIndex
-        {
-            get => _proxy.SelectedFoliageTypeIndex;
-            set
-            {
-                var prev = _proxy.SelectedFoliageTypeIndex;
-                if (value == prev)
-                    return;
-
-                if (prev != -1)
-                {
-                    _items.Children[prev].BackgroundColor = Color.Transparent;
-                }
-
-                _proxy.SelectedFoliageTypeIndex = value;
-
-                if (value != -1)
-                {
-                    _items.Children[value].BackgroundColor = Style.Current.BackgroundSelected;
-
-                    _presenter.Select(_proxy);
-                    _presenter.BuildLayoutOnUpdate();
-                }
-                else
-                {
-                    _presenter.Deselect();
-                }
-            }
-        }
+        public readonly FoliageTab Tab;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PaintTab"/> class.
         /// </summary>
         /// <param name="tab">The parent tab.</param>
-        public PaintTab(FoliageTab tab)
+        /// <param name="mode">The gizmo mode.</param>
+        public PaintTab(FoliageTab tab, PaintFoliageGizmoMode mode)
         : base("Paint")
         {
-            FoliageTypes = tab;
-            FoliageTypes.SelectedFoliageChanged += OnSelectedFoliageChanged;
-            _proxy = new ProxyObject(this);
+            Tab = tab;
+            Tab.SelectedFoliageChanged += OnSelectedFoliageChanged;
+            Tab.SelectedFoliageTypeIndexChanged += OnSelectedFoliageTypeIndexChanged;
+            _proxy = new ProxyObject(this, mode);
 
             // Main panel
             var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
@@ -282,16 +259,38 @@ namespace FlaxEditor.Tools.Foliage
         private void OnSelectedFoliageChanged()
         {
             _proxy.SelectedFoliageTypeIndex = -1;
-            _proxy.Foliage = FoliageTypes.SelectedFoliage;
+            _proxy.Foliage = Tab.SelectedFoliage;
 
             _presenter.Deselect();
 
             UpdateFoliageTypesList();
         }
 
+        private void OnSelectedFoliageTypeIndexChanged(int previousIndex, int currentIndex)
+        {
+            if (previousIndex != -1)
+            {
+                _items.Children[previousIndex].BackgroundColor = Color.Transparent;
+            }
+
+            _proxy.SelectedFoliageTypeIndex = currentIndex;
+
+            if (currentIndex != -1)
+            {
+                _items.Children[currentIndex].BackgroundColor = Style.Current.BackgroundSelected;
+
+                _presenter.Select(_proxy);
+                _presenter.BuildLayoutOnUpdate();
+            }
+            else
+            {
+                _presenter.Deselect();
+            }
+        }
+
         private void UpdateFoliageTypesList()
         {
-            var foliage = FoliageTypes.SelectedFoliage;
+            var foliage = Tab.SelectedFoliage;
 
             // Cleanup previous items
             _items.DisposeChildren();
@@ -304,7 +303,7 @@ namespace FlaxEditor.Tools.Foliage
                 for (int i = 0; i < typesCount; i++)
                 {
                     var model = FoliageTools.GetFoliageTypeModel(foliage, i);
-                    var asset = FoliageTypes.Editor.ContentDatabase.FindAsset(model.ID);
+                    var asset = Tab.Editor.ContentDatabase.FindAsset(model.ID);
                     var itemView = new AssetSearchPopup.AssetItemView(asset)
                     {
                         TooltipText = asset.NamePath,
@@ -319,7 +318,7 @@ namespace FlaxEditor.Tools.Foliage
             }
             _items.Height = y;
 
-            var selectedFoliageTypeIndex = SelectedFoliageTypeIndex;
+            var selectedFoliageTypeIndex = Tab.SelectedFoliageTypeIndex;
             if (selectedFoliageTypeIndex != -1)
             {
                 _items.Children[selectedFoliageTypeIndex].BackgroundColor = Style.Current.BackgroundSelected;
@@ -328,7 +327,7 @@ namespace FlaxEditor.Tools.Foliage
 
         private void OnFoliageTypeListItemClicked(ItemsListContextMenu.Item item)
         {
-            SelectedFoliageTypeIndex = (int)item.Tag;
+            Tab.SelectedFoliageTypeIndex = (int)item.Tag;
         }
     }
 }
