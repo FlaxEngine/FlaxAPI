@@ -19,6 +19,13 @@ namespace FlaxEditor.SceneGraph
         /// <inheritdoc />
         public override bool RayCastSelf(ref RayCastData ray, out float distance)
         {
+            // Check if skip raycasts
+            if ((ray.Flags & RayCastData.FlagTypes.SkipEditorPrimitives) == RayCastData.FlagTypes.SkipEditorPrimitives)
+            {
+                distance = 0;
+                return false;
+            }
+
             BoundingSphere sphere = new BoundingSphere(Transform.Translation, 7.0f);
             return CollisionsHelper.RayIntersectsSphere(ref ray.Ray, ref sphere, out distance);
         }

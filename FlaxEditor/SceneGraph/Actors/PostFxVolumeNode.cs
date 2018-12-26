@@ -105,6 +105,13 @@ namespace FlaxEditor.SceneGraph.Actors
         /// <inheritdoc />
         public override bool RayCastSelf(ref RayCastData ray, out float distance)
         {
+            // Check if skip raycasts
+            if ((ray.Flags & RayCastData.FlagTypes.SkipEditorPrimitives) == RayCastData.FlagTypes.SkipEditorPrimitives)
+            {
+                distance = 0;
+                return false;
+            }
+
             var volume = (PostFxVolume)_actor;
             var box = volume.OrientedBox;
             if (!box.Intersects(ref ray.Ray, out distance))

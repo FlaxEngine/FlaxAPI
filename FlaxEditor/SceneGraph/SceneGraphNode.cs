@@ -180,9 +180,14 @@ namespace FlaxEditor.SceneGraph
                 None = 0,
 
                 /// <summary>
-                /// The skip colliders flag.
+                /// The skip colliders flag. Use it to ignore physics colliders intersections detection.
                 /// </summary>
                 SkipColliders = 1,
+
+                /// <summary>
+                /// The skip editor primitives. Use it to ignore editor icons and primitives intersections detection.
+                /// </summary>
+                SkipEditorPrimitives = 2,
             }
 
             /// <summary>

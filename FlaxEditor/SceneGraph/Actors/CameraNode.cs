@@ -19,6 +19,13 @@ namespace FlaxEditor.SceneGraph.Actors
         /// <inheritdoc />
         public override bool RayCastSelf(ref RayCastData ray, out float distance)
         {
+            // Check if skip raycasts
+            if ((ray.Flags & RayCastData.FlagTypes.SkipEditorPrimitives) == RayCastData.FlagTypes.SkipEditorPrimitives)
+            {
+                distance = 0;
+                return false;
+            }
+
             return Camera.Internal_IntersectsItselfEditor(Object.GetUnmanagedPtr(_actor), ref ray.Ray, out distance);
         }
     }
