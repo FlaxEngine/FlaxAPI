@@ -12,7 +12,7 @@ namespace FlaxEngine.Rendering
     public class SceneRenderTask : RenderTask
     {
         /// <summary>
-        /// The global custom post processing effects applied to all <see cref="SceneRenderTask"/> (is <see cref="AllowGlobalCustomPostFx"/> is turned on).
+        /// The global custom post processing effects applied to all <see cref="SceneRenderTask"/> (applied to tasks that have <see cref="AllowGlobalCustomPostFx"/> turned on).
         /// </summary>
         public static readonly HashSet<PostProcessEffect> GlobalCustomPostFx = new HashSet<PostProcessEffect>();
 
