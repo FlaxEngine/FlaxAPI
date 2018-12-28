@@ -196,8 +196,12 @@ namespace FlaxEditor.Windows
             // Validate data
             if (string.IsNullOrEmpty(options.ShortName))
                 return "Missing short name.";
-            if (options.ShortName == "Assembly" || options.ShortName.Contains(' '))
-                return "Invalid short name.";
+            if (options.ShortName == "Assembly")
+                return "Invalid short name. Don't use restricted names.";
+            if (options.ShortName.Contains(' ') || options.ShortName.Contains('\n') || options.ShortName.Contains('\r') || options.ShortName.Contains('\t'))
+                return "Invalid short name. It cannot contain whitespace characters.";
+            if (Utilities.Utils.HasInvalidPathChar(options.ShortName))
+                return "Invalid short name. It must be a valid path name.";
 
             // Compile project scripts as a plugin
             var assemblyName = options.ShortName;
