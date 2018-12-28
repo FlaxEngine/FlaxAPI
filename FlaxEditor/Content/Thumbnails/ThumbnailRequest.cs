@@ -33,7 +33,7 @@ namespace FlaxEditor.Content.Thumbnails
             /// <summary>
             /// The finalized state.
             /// </summary>
-            Disosed,
+            Disposed,
         };
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace FlaxEditor.Content.Thumbnails
         /// </summary>
         public void Dispose()
         {
-            if (State == States.Disosed)
+            if (State == States.Disposed)
                 throw new InvalidOperationException();
 
             if (State != States.Created)
@@ -122,7 +122,7 @@ namespace FlaxEditor.Content.Thumbnails
             }
 
             Tag = null;
-            State = States.Disosed;
+            State = States.Disposed;
         }
     }
 }
