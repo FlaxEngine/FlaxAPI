@@ -67,19 +67,37 @@ namespace FlaxEditor.SceneGraph
         /// <param name="distance">The result distance.</param>
         /// <param name="flags">The raycasting flags.</param>
         /// <returns>Hit object or null if there is no intersection at all.</returns>
-        public SceneGraphNode RayCast(ref Ray ray, ref float distance, RayCastData.FlagTypes flags = RayCastData.FlagTypes.None)
+        public SceneGraphNode RayCast(ref Ray ray, out float distance, RayCastData.FlagTypes flags = RayCastData.FlagTypes.None)
         {
             RayCastData data;
             data.Ray = ray;
             data.Flags = flags;
 
-            return RayCast(ref data, ref distance);
+            return RayCast(ref data, out distance, out _);
         }
 
+        /// <summary>
+        /// Performs raycasting over nodes hierarchy trying to get the closest object hit by the given ray.
+        /// </summary>
+        /// <param name="ray">The ray.</param>
+        /// <param name="distance">The result distance.</param>
+        /// <param name="normal">The result intersection surface normal vector.</param>
+        /// <param name="flags">The raycasting flags.</param>
+        /// <returns>Hit object or null if there is no intersection at all.</returns>
+        public SceneGraphNode RayCast(ref Ray ray, out float distance, out Vector3 normal, RayCastData.FlagTypes flags = RayCastData.FlagTypes.None)
+        {
+            RayCastData data;
+            data.Ray = ray;
+            data.Flags = flags;
+
+            return RayCast(ref data, out distance, out normal);
+        }
+        
         /// <inheritdoc />
-        public override bool RayCastSelf(ref RayCastData ray, out float distance)
+        public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
         {
             distance = 0;
+            normal = Vector3.Up;
             return false;
         }
 

@@ -364,7 +364,7 @@ namespace FlaxEngine
         /// Determines if there is an intersection between the actor and a ray.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
-        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection.</param>
+        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection (if any valid).</param>
         /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
@@ -374,7 +374,26 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_IntersectsItself(unmanagedPtr, ref ray, out distance);
+            return Internal_IntersectsItself(unmanagedPtr, ref ray, out distance, out _);
+#endif
+        }
+
+        /// <summary>
+        /// Determines if there is an intersection between the actor and a ray.
+        /// </summary>
+        /// <param name="ray">The ray to test.</param>
+        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection (if any valid).</param>
+        /// <param name="normal">When the method completes, contains the intersection surface normal vector (if any valid).</param>
+        /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        public bool IntersectsItself(ref Ray ray, out float distance, out Vector3 normal)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_IntersectsItself(unmanagedPtr, ref ray, out distance, out normal);
 #endif
         }
 
@@ -616,7 +635,7 @@ namespace FlaxEngine
         internal static extern void Internal_LocalToWorld(IntPtr obj, out Matrix matrix);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, out float distance);
+        internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, out float distance, out Vector3 normal);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern byte[] Internal_ToBytes(IntPtr[] actors);

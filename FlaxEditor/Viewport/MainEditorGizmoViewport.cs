@@ -556,9 +556,8 @@ namespace FlaxEditor.Viewport
         {
             // Get mouse ray and try to hit any object
             var ray = ConvertMouseToRay(ref location);
-            float closest = float.MaxValue;
             var gridPlane = new Plane(Vector3.Zero, Vector3.Up);
-            hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+            hit = Editor.Instance.Scene.Root.RayCast(ref ray, out var closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
             if (hit != null)
             {
                 // Use hit location

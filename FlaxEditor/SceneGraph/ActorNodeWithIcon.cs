@@ -17,8 +17,10 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
-        public override bool RayCastSelf(ref RayCastData ray, out float distance)
+        public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
         {
+            normal = Vector3.Up;
+
             // Check if skip raycasts
             if ((ray.Flags & RayCastData.FlagTypes.SkipEditorPrimitives) == RayCastData.FlagTypes.SkipEditorPrimitives)
             {

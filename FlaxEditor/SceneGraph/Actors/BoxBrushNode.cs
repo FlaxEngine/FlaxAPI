@@ -88,9 +88,9 @@ namespace FlaxEditor.SceneGraph.Actors
             public override object EditableObject => Brush.Surfaces[Index];
 
             /// <inheritdoc />
-            public override bool RayCastSelf(ref RayCastData ray, out float distance)
+            public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
             {
-                return Brush.Surfaces[Index].Intersects(ref ray.Ray, out distance);
+                return Brush.Surfaces[Index].Intersects(ref ray.Ray, out distance, out normal);
             }
 
             /// <inheritdoc />
@@ -115,18 +115,19 @@ namespace FlaxEditor.SceneGraph.Actors
         }
 
         /// <inheritdoc />
-        public override bool RayCastSelf(ref RayCastData ray, out float distance)
+        public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
         {
             if (((BoxBrush)_actor).OrientedBox.Intersects(ref ray.Ray))
             {
                 for (int i = 0; i < ChildNodes.Count; i++)
                 {
-                    if (ChildNodes[i] is SideLinkNode node && node.RayCastSelf(ref ray, out distance))
+                    if (ChildNodes[i] is SideLinkNode node && node.RayCastSelf(ref ray, out distance, out normal))
                         return true;
                 }
             }
 
             distance = 0;
+            normal = Vector3.Up;
             return false;
         }
     }

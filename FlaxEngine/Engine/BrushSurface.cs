@@ -106,11 +106,26 @@ namespace FlaxEngine
         /// For more efficient collisions detection and ray casting use physics.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
-        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection.</param>
+        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection (if any valid).</param>
         /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
         public bool Intersects(ref Ray ray, out float distance)
         {
-            return Internal_Intersects(_brushActor.unmanagedPtr, _index, ref ray, out distance);
+            return Internal_Intersects(_brushActor.unmanagedPtr, _index, ref ray, out distance, out _);
+        }
+
+        /// <summary>
+        /// Determines if there is an intersection between the brush surface and a ray.
+        /// If collision data is available on the CPU performs exact intersection check with the geometry.
+        /// Otherwise performs simple <see cref="BoundingBox"/> vs <see cref="Ray"/> test.
+        /// For more efficient collisions detection and ray casting use physics.
+        /// </summary>
+        /// <param name="ray">The ray to test.</param>
+        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection (if any valid).</param>
+        /// <param name="normal">When the method completes, contains the intersection surface normal vector (if any valid).</param>
+        /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
+        public bool Intersects(ref Ray ray, out float distance, out Vector3 normal)
+        {
+            return Internal_Intersects(_brushActor.unmanagedPtr, _index, ref ray, out distance, out normal);
         }
 
         /// <summary>
@@ -154,7 +169,7 @@ namespace FlaxEngine
         internal static extern void Internal_SetUvRotation(IntPtr obj, int index, float value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_Intersects(IntPtr obj, int index, ref Ray ray, out float distance);
+        internal static extern bool Internal_Intersects(IntPtr obj, int index, ref Ray ray, out float distance, out Vector3 normal);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Vector3[] Internal_GetVertices(IntPtr obj, int index);
