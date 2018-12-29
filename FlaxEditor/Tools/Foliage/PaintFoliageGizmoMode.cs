@@ -29,6 +29,11 @@ namespace FlaxEditor.Tools.Foliage
         public Vector3 CursorPosition { get; private set; }
 
         /// <summary>
+        /// The last valid cursor hit point normal vector of the brush (in world space).
+        /// </summary>
+        public Vector3 CursorNormal { get; private set; }
+
+        /// <summary>
         /// Flag used to indicate whenever last cursor position of the brush is valid.
         /// </summary>
         public bool HasValidHit { get; private set; }
@@ -92,10 +97,12 @@ namespace FlaxEditor.Tools.Foliage
         /// Sets the cursor location in the world space. Updates the brush location and cached affected chunks.
         /// </summary>
         /// <param name="hitPosition">The cursor hit location on the selected foliage.</param>
-        public void SetCursor(ref Vector3 hitPosition)
+        /// <param name="hitNormal">The cursor hit location normal vector fot he surface.</param>
+        public void SetCursor(ref Vector3 hitPosition, ref Vector3 hitNormal)
         {
             HasValidHit = true;
             CursorPosition = hitPosition;
+            CursorNormal = hitNormal;
         }
     }
 }

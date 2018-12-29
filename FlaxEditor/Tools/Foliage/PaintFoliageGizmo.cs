@@ -74,6 +74,7 @@ namespace FlaxEditor.Tools.Foliage
             if (Mode.HasValidHit)
             {
                 var brushPosition = Mode.CursorPosition;
+                var brushNormal = Mode.CursorNormal;
                 var brushColor = new Color(1.0f, 0.85f, 0.0f); // TODO: expose to editor options
                 var brushMaterial = Mode.CurrentBrush.GetBrushMaterial(ref brushPosition, ref brushColor);
                 if (!_brushModel)
@@ -84,9 +85,13 @@ namespace FlaxEditor.Tools.Foliage
                 // Draw paint brush
                 if (_brushModel && brushMaterial)
                 {
-                    Matrix transform = Matrix.Scaling(Mode.CurrentBrush.Size * 0.01f) * Matrix.Translation(brushPosition);
+                    var forward = Vector3.Cross(Vector3.Cross(brushNormal, Vector3.Forward), brushNormal);
+                    var rotation = Quaternion.LookRotation(forward, brushNormal);
+                    Matrix transform = Matrix.Scaling(Mode.CurrentBrush.Size * 0.01f) * Matrix.RotationQuaternion(rotation) * Matrix.Translation(brushPosition);
                     collector.AddDrawCall(_brushModel, 0, brushMaterial, 0, ref transform, StaticFlags.None, false);
                 }
+
+                DebugDraw.DrawLine(brushPosition, brushPosition + brushNormal * 1000.0f, Color.Red);
             }
         }
 
@@ -162,13 +167,12 @@ namespace FlaxEditor.Tools.Foliage
             // Perform detailed tracing to find cursor location for the foliage placement
             var mouseRay = Owner.MouseRay;
             var ray = Owner.MouseRay;
-            var closest = float.MaxValue;
             var rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.SkipEditorPrimitives;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, rayCastFlags);
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, out var closest, out var hitNormal, rayCastFlags);
             if (hit != null)
             {
                 var hitLocation = mouseRay.GetPoint(closest);
-                Mode.SetCursor(ref hitLocation);
+                Mode.SetCursor(ref hitLocation, ref hitNormal);
             }
             // No hit
             else
