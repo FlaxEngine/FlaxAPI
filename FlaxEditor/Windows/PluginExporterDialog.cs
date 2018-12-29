@@ -196,12 +196,45 @@ namespace FlaxEditor.Windows
             // Validate data
             if (string.IsNullOrEmpty(options.ShortName))
                 return "Missing short name.";
-            if (options.ShortName == "Assembly" || options.ShortName.Contains(' '))
-                return "Invalid short name.";
+            if (options.ShortName == "Assembly")
+                return "Invalid short name. Don't use restricted names.";
+            if (options.ShortName.Contains(' ') || options.ShortName.Contains('\n') || options.ShortName.Contains('\r') || options.ShortName.Contains('\t'))
+                return "Invalid short name. It cannot contain whitespace characters.";
+            if (Utilities.Utils.HasInvalidPathChar(options.ShortName))
+                return "Invalid short name. It must be a valid path name.";
 
-            // Compile project scripts as a plugin
+            // Prepare
             var assemblyName = options.ShortName;
             var solutionPath = ScriptsBuilder.SolutionPath;
+            var assembliesOutputPath = Path.Combine(Globals.ProjectCacheFolder, "bin");
+
+            // Remove previous compilation artifacts (if user changes plugin name it may leave some old name assemblies)
+            try
+            {
+                Editor.Log("Cleanup assemblies output directory");
+
+                var files = Directory.GetFiles(assembliesOutputPath, "*.dll").ToList();
+                RemoveStartsWith(files, "FlaxEngine");
+                RemoveStartsWith(files, "FlaxEditor");
+                RemoveStartsWith(files, "Newtonsoft.Json");
+                Remove(files, "Assembly");
+                Remove(files, "Assembly.Editor");
+                Remove(files, assemblyName);
+                Remove(files, assemblyName + ".Editor");
+                
+                for (int i = 0; i < files.Count; i++)
+                {
+                    Editor.Log("Removing " + files[i]);
+                    File.Delete(files[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Editor.LogWarning(ex);
+                return "Failed to cleanup assemblies output directory.";
+            }
+
+            // Compile project scripts as a plugin
             if (ScriptsBuilder.GeneratePluginProject(assemblyName))
                 return "Failed to generate plugin solution and project files.";
             if (ScriptsBuilder.Compile(solutionPath, options.Configuration))
@@ -229,7 +262,7 @@ namespace FlaxEditor.Windows
             {
                 Editor.Log("Exporting plugin binaries");
 
-                var files = Directory.GetFiles(Path.Combine(Globals.ProjectCacheFolder, "bin")).ToList();
+                var files = Directory.GetFiles(assembliesOutputPath).ToList();
 
                 // Don't copy Flax files
                 RemoveStartsWith(files, "FlaxEngine");

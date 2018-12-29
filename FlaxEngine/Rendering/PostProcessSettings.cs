@@ -520,7 +520,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the white tint. Default is 0.
         /// </summary>
-        [DefaultValue(0), Limit(-1, 1, 0.001f)]
+        [DefaultValue(0.0f), Limit(-1, 1, 0.001f)]
         [NoSerialize, EditorOrder(301), EditorDisplay("Tone Mapping", "White Tint"), Tooltip("White color tint. Default is 0.")]
         public float ToneMap_WhiteTint
         {
@@ -580,7 +580,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the film curve black clip. Default is 0.
         /// </summary>
-        [DefaultValue(0), Limit(0, 1, 0.01f)]
+        [DefaultValue(0.0f), Limit(0, 1, 0.01f)]
         [NoSerialize, EditorOrder(305), EditorDisplay("Tone Mapping", "Film Black Clip"), Tooltip("This will set where the crossover happens where black's start to cut off their value. In general, this value should not be adjusted. Default is 0.")]
         public float ToneMap_FilmBlackClip
         {

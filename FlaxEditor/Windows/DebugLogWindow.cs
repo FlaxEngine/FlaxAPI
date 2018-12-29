@@ -133,7 +133,10 @@ namespace FlaxEditor.Windows
                 Render2D.DrawSprite(Icon, new Rectangle(5, 8, 32, 32), Color.White);
 
                 // Title
-                Render2D.DrawText(style.FontMedium, Desc.Title, new Rectangle(38, 8, clientRect.Width - 40, clientRect.Height - 10), style.Foreground);
+                var textRect = new Rectangle(38, 6, clientRect.Width - 40, clientRect.Height - 10);
+                Render2D.PushClip(ref clientRect);
+                Render2D.DrawText(style.FontMedium, Desc.Title, textRect, style.Foreground);
+                Render2D.PopClip();
             }
 
             /// <inheritdoc />

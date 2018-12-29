@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using FlaxEngine.Json.JsonCustomSerializers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace FlaxEngine.Json
@@ -143,6 +144,7 @@ namespace FlaxEngine.Json
             };
             settings.Converters.Add(ObjectConverter = new FlaxObjectConverter());
             settings.Converters.Add(new SceneReferenceConverter());
+            settings.Converters.Add(new VersionConverter());
             //settings.Converters.Add(new GuidConverter());
             return settings;
         }

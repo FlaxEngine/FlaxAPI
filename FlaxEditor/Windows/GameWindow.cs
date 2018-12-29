@@ -352,5 +352,17 @@ namespace FlaxEditor.Windows
             // Restore cursor visibility (could be hidden by the game)
             Screen.CursorVisible = true;
         }
+
+        /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            var result = base.OnMouseDown(location, buttons);
+
+            // Catch user focus
+            if (!ContainsFocus)
+                Focus();
+
+            return result;
+        }
     }
 }
