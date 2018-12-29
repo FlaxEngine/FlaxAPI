@@ -85,13 +85,14 @@ namespace FlaxEditor.Tools.Foliage
                 // Draw paint brush
                 if (_brushModel && brushMaterial)
                 {
-                    var forward = Vector3.Cross(Vector3.Cross(brushNormal, Vector3.Forward), brushNormal);
-                    var rotation = Quaternion.LookRotation(forward, brushNormal);
+                    Quaternion rotation;
+                    if (brushNormal == Vector3.Down)
+                        rotation = Quaternion.RotationZ(Mathf.Pi);
+                    else
+                        rotation = Quaternion.LookRotation(Vector3.Cross(Vector3.Cross(brushNormal, Vector3.Forward), brushNormal), brushNormal);
                     Matrix transform = Matrix.Scaling(Mode.CurrentBrush.Size * 0.01f) * Matrix.RotationQuaternion(rotation) * Matrix.Translation(brushPosition);
                     collector.AddDrawCall(_brushModel, 0, brushMaterial, 0, ref transform, StaticFlags.None, false);
                 }
-
-                DebugDraw.DrawLine(brushPosition, brushPosition + brushNormal * 1000.0f, Color.Red);
             }
         }
 
