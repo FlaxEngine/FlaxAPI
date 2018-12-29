@@ -223,6 +223,7 @@ namespace FlaxEditor.Tools.Foliage
             Tab = tab;
             Tab.SelectedFoliageChanged += OnSelectedFoliageChanged;
             Tab.SelectedFoliageTypeIndexChanged += OnSelectedFoliageTypeIndexChanged;
+            Tab.SelectedFoliageTypesChanged += UpdateFoliageTypesList;
             _proxy = new ProxyObject(this, mode);
 
             // Main panel

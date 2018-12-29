@@ -84,6 +84,9 @@ namespace FlaxEditor.Tools.Foliage
             {
                 get
                 {
+                    if (Model.WaitForLoaded())
+                        throw new Exception("Failed to load foliage model.");
+
                     var size = Model.MaterialSlotsCount;
                     if (_materials == null || _materials.Length != size)
                     {
@@ -97,6 +100,9 @@ namespace FlaxEditor.Tools.Foliage
                 }
                 set
                 {
+                    if (Model.WaitForLoaded())
+                        throw new Exception("Failed to load foliage model.");
+
                     var size = Model.MaterialSlotsCount;
                     if (value == null || value.Length != size)
                         throw new ArgumentException("value", "Inalid materials buffer size for foliage type overrides.");
@@ -359,6 +365,7 @@ namespace FlaxEditor.Tools.Foliage
             Tab = tab;
             Tab.SelectedFoliageChanged += OnSelectedFoliageChanged;
             Tab.SelectedFoliageTypeIndexChanged += OnSelectedFoliageTypeIndexChanged;
+            Tab.SelectedFoliageTypesChanged += UpdateFoliageTypesList;
             _proxy = new ProxyObject(this);
 
             // Main panel
@@ -446,7 +453,7 @@ namespace FlaxEditor.Tools.Foliage
 
             // TODO: support undo for removing foliage types
 
-            UpdateFoliageTypesList();
+            Tab.OnSelectedFoliageTypesChanged();
         }
 
         private void OnAddFoliageTypeButtonClicked()
@@ -465,7 +472,7 @@ namespace FlaxEditor.Tools.Foliage
 
             // TODO: support undo for adding foliage types
 
-            UpdateFoliageTypesList();
+            Tab.OnSelectedFoliageTypesChanged();
 
             Tab.SelectedFoliageTypeIndex = FoliageTools.GetFoliageTypesCount(foliage) - 1;
         }

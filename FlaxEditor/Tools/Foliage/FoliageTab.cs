@@ -48,6 +48,11 @@ namespace FlaxEditor.Tools.Foliage
         public event SelectedFoliageTypeIndexChangedDelegate SelectedFoliageTypeIndexChanged;
 
         /// <summary>
+        /// Occurs when selected foliage actors gets modification for foliage types collection (item added or removed). UI uses it to update the layout without manually tracking the collection.
+        /// </summary>
+        public event Action SelectedFoliageTypesChanged;
+
+        /// <summary>
         /// Gets or sets the index of the selected foliage type.
         /// </summary>
         public int SelectedFoliageTypeIndex
@@ -217,6 +222,11 @@ namespace FlaxEditor.Tools.Foliage
                 break;
             default: throw new IndexOutOfRangeException("Invalid foliage tab mode.");
             }
+        }
+
+        internal void OnSelectedFoliageTypesChanged()
+        {
+            SelectedFoliageTypesChanged?.Invoke();
         }
     }
 }
