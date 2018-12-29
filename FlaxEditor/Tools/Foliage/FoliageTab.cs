@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.GUI;
 using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph.Actors;
@@ -84,6 +85,11 @@ namespace FlaxEditor.Tools.Foliage
         /// The edit tab;
         /// </summary>
         public EditTab Edit;
+
+        /// <summary>
+        /// The foliage type model asset IDs checked to paint with them by default.
+        /// </summary>
+        public readonly Dictionary<Guid, bool> FoliageTypeModelIdsToPaint = new Dictionary<Guid, bool>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FoliageTab"/> class.

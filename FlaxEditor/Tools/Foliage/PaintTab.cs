@@ -47,7 +47,7 @@ namespace FlaxEditor.Tools.Foliage
                 _tab = tab;
                 SelectedFoliageTypeIndex = -1;
             }
-            
+
             private FoliageTools.InstanceTypeOptions _options;
 
             public void SyncOptions()
@@ -61,14 +61,12 @@ namespace FlaxEditor.Tools.Foliage
             }
 
             //
-            
+
             [EditorOrder(100), EditorDisplay("Brush", EditorDisplayAttribute.InlineStyle)]
             public Brush Brush
             {
                 get => _mode.CurrentBrush;
-                set
-                {
-                }
+                set { }
             }
 
             //
@@ -271,14 +269,14 @@ namespace FlaxEditor.Tools.Foliage
         {
             if (previousIndex != -1)
             {
-                _items.Children[previousIndex].BackgroundColor = Color.Transparent;
+                ((ContainerControl)_items.Children[previousIndex]).Children[1].BackgroundColor = Color.Transparent;
             }
 
             _proxy.SelectedFoliageTypeIndex = currentIndex;
 
             if (currentIndex != -1)
             {
-                _items.Children[currentIndex].BackgroundColor = Style.Current.BackgroundSelected;
+                ((ContainerControl)_items.Children[currentIndex]).Children[1].BackgroundColor = Style.Current.BackgroundSelected;
 
                 _presenter.Select(_proxy);
                 _presenter.BuildLayoutOnUpdate();
@@ -305,15 +303,45 @@ namespace FlaxEditor.Tools.Foliage
                 {
                     var model = FoliageTools.GetFoliageTypeModel(foliage, i);
                     var asset = Tab.Editor.ContentDatabase.FindAsset(model.ID);
+
+                    var itemPanel = new ContainerControl();
+
+                    var itemCheck = new CheckBox
+                    {
+                        DockStyle = DockStyle.Left,
+                        Width = 18,
+                        TooltipText = "If checked, enables painting with this foliage type.",
+                        Tag = i,
+                        Parent = itemPanel,
+                    };
+
+                    // Try restore painting with the given model ID
+                    bool itemChecked;
+                    if (!Tab.FoliageTypeModelIdsToPaint.TryGetValue(model.ID, out itemChecked))
+                    {
+                        // Enable by default
+                        itemChecked = true;
+                        Tab.FoliageTypeModelIdsToPaint[model.ID] = itemChecked;
+                    }
+                    itemCheck.Checked = itemChecked;
+                    itemCheck.StateChanged += OnItemCheckStateChanged;
+
                     var itemView = new AssetSearchPopup.AssetItemView(asset)
                     {
+                        DockStyle = DockStyle.Fill,
                         TooltipText = asset.NamePath,
                         Tag = i,
-                        Parent = _items,
+                        Parent = itemPanel,
                     };
                     itemView.Clicked += OnFoliageTypeListItemClicked;
 
-                    y += itemView.Height + _items.Spacing;
+                    itemPanel.Height = itemView.Height;
+                    itemPanel.Parent = _items;
+
+                    itemPanel.UnlockChildrenRecursive();
+                    itemPanel.PerformLayout();
+
+                    y += itemPanel.Height + _items.Spacing;
                 }
                 y += _items.Margin.Height;
             }
@@ -322,8 +350,15 @@ namespace FlaxEditor.Tools.Foliage
             var selectedFoliageTypeIndex = Tab.SelectedFoliageTypeIndex;
             if (selectedFoliageTypeIndex != -1)
             {
-                _items.Children[selectedFoliageTypeIndex].BackgroundColor = Style.Current.BackgroundSelected;
+                ((ContainerControl)_items.Children[selectedFoliageTypeIndex]).Children[1].BackgroundColor = Style.Current.BackgroundSelected;
             }
+        }
+
+        private void OnItemCheckStateChanged(CheckBox item)
+        {
+            var index = (int)item.Tag;
+            var foliageType = FoliageTools.GetFoliageTypeModel(Tab.SelectedFoliage, index);
+            Tab.FoliageTypeModelIdsToPaint[foliageType.ID] = item.Checked;
         }
 
         private void OnFoliageTypeListItemClicked(ItemsListContextMenu.Item item)
