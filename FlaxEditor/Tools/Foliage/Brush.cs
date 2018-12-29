@@ -37,8 +37,9 @@ namespace FlaxEditor.Tools.Foliage
 
             if (_material)
             {
-                // TODO: cache parameter
+                // TODO: cache parameters
                 _material.GetParam("Color").Value = color;
+                _material.GetParam("Radius").Value = Size * 0.5f;
             }
 
             return _material;
