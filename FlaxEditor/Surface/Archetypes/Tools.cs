@@ -118,6 +118,19 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Vector2, 3)
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 7,
+                Title = "Linearize Depth",
+                Description = "Scene depth buffer texture lookup node",
+                Flags = NodeFlags.MaterialOnly,
+                Size = new Vector2(240, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Hardware Depth", true, ConnectionType.Float, 0),
+                    NodeElementArchetype.Factory.Output(0, "Linear Depth", ConnectionType.Float, 1),
+                }
+            },
         };
     }
 }
