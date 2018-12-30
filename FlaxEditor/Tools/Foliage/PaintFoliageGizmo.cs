@@ -76,7 +76,8 @@ namespace FlaxEditor.Tools.Foliage
                 var brushPosition = Mode.CursorPosition;
                 var brushNormal = Mode.CursorNormal;
                 var brushColor = new Color(1.0f, 0.85f, 0.0f); // TODO: expose to editor options
-                var brushMaterial = Mode.CurrentBrush.GetBrushMaterial(ref brushPosition, ref brushColor);
+                var sceneDepth = Owner.RenderTask.Buffers.DepthBuffer;
+                var brushMaterial = Mode.CurrentBrush.GetBrushMaterial(ref brushPosition, ref brushColor, sceneDepth);
                 if (!_brushModel)
                 {
                     _brushModel = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/Sphere");

@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Foliage
 {
@@ -25,8 +26,9 @@ namespace FlaxEditor.Tools.Foliage
         /// </summary>
         /// <param name="position">The world-space brush position.</param>
         /// <param name="color">The brush position.</param>
+        /// <param name="sceneDepth">The scene depth buffer (used for manual brush pixels clipping with rendered scene).</param>
         /// <returns>The ready to render material for terrain chunks overlay on top of the terrain.</returns>
-        public MaterialInstance GetBrushMaterial(ref Vector3 position, ref Color color)
+        public MaterialInstance GetBrushMaterial(ref Vector3 position, ref Color color, RenderTarget sceneDepth)
         {
             if (!_material)
             {
@@ -40,6 +42,8 @@ namespace FlaxEditor.Tools.Foliage
                 // TODO: cache parameters
                 _material.GetParam("Color").Value = color;
                 _material.GetParam("Radius").Value = Size * 0.5f;
+                _material.GetParam("HasDepthBuffer").Value = sceneDepth ? 1.0f : 0.0f;
+                _material.GetParam("DepthBuffer").Value = sceneDepth;
             }
 
             return _material;
