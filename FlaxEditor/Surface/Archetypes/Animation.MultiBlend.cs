@@ -66,7 +66,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Draw rotated rectangle
                 Render2D.PushTransform(ref _transform);
-                Render2D.FillRectangle(new Rectangle(0, 0, 5, 5), isSelected ? Color.Orange : Color.DarkGreen);
+                Render2D.FillRectangle(new Rectangle(0, 0, 5, 5), isSelected ? Color.Orange : Color.BlueViolet);
                 Render2D.PopTransform();
             }
 
