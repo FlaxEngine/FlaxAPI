@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
@@ -17,6 +18,7 @@ namespace FlaxEditor.Tools.Foliage
     {
         private FlaxEngine.Foliage _paintFoliage;
         private Model _brushModel;
+        private List<int> _foliageTypesIndices;
 
         /// <summary>
         /// The parent mode.
@@ -122,9 +124,23 @@ namespace FlaxEditor.Tools.Foliage
                 return;
 
             // Edit the foliage
-            Profiler.BeginEvent("Paint Foliage");
-            // TODO: paint foliage
-            Profiler.EndEvent();
+            var foliage = SelectedFoliage;
+            int foliageTypesCount = FoliageTools.GetFoliageTypesCount(foliage);
+            var foliageTypeModelIdsToPaint = Editor.Instance.Windows.ToolboxWin.Foliage.FoliageTypeModelIdsToPaint;
+            if (_foliageTypesIndices == null)
+                _foliageTypesIndices = new List<int>(foliageTypesCount);
+            else
+                _foliageTypesIndices.Clear();
+            for (int index = 0; index < foliageTypesCount; index++)
+            {
+                var model = FoliageTools.GetFoliageTypeModel(foliage, index);
+                if (model && (!foliageTypeModelIdsToPaint.TryGetValue(model.ID, out var selected) || selected))
+                {
+                    _foliageTypesIndices.Add(index);
+                }
+            }
+            // TODO: don't call _foliageTypesIndices.ToArray() but reuse allocation
+            FoliageTools.Paint(foliage, _foliageTypesIndices.ToArray(), Mode.CursorPosition, Mode.CurrentBrush.Size * 0.5f);
         }
 
         /// <summary>
