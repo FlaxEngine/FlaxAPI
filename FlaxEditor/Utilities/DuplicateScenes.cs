@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2018 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -56,7 +56,7 @@ namespace FlaxEditor.Utilities
                 var data = new SceneData
                 {
                     IsDirty = Editor.Instance.Scene.IsEdited(scene),
-                    Bytes = SceneManager.SaveSceneToBytes(scene),
+                    Bytes = SceneManager.SaveSceneToBytes(scene, false),
                 };
                 _scenesData.Add(data);
             }
