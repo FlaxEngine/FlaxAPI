@@ -51,6 +51,8 @@ namespace FlaxEngine
         internal static void Internal_Exit()
         {
             Exit?.Invoke();
+
+            Json.JsonSerializer.Dispose();
         }
 
         /// <summary>

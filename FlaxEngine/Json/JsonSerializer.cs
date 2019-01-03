@@ -1,12 +1,15 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using FlaxEngine.Json.JsonCustomSerializers;
+using FlaxEngine.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -20,13 +23,13 @@ namespace FlaxEngine.Json
     internal class FlaxObjectConverter : JsonConverter
     {
         /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        public override unsafe void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             Guid id = Guid.Empty;
             if (value is Object obj)
                 id = obj.ID;
 
-            writer.WriteValue(JsonSerializer.GetStringID(id));
+            writer.WriteValue(JsonSerializer.GetStringID(&id));
         }
 
         /// <inheritdoc />
@@ -46,8 +49,8 @@ namespace FlaxEngine.Json
         public override bool CanConvert(Type objectType)
         {
             // Skip serialization as reference id for the root object serialization (eg. Script)
-            var writer = JsonSerializer.CurrentWriter.Value;
-            if (writer != null && writer.SerializeStackSize == 0)
+            var cache = JsonSerializer.Cache.Value;
+            if (cache != null && cache.SerializerWriter.SerializeStackSize == 0)
             {
                 return false;
             }
@@ -63,10 +66,10 @@ namespace FlaxEngine.Json
     internal class SceneReferenceConverter : JsonConverter
     {
         /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        public override unsafe void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             Guid id = ((SceneReference)value).ID;
-            writer.WriteValue(JsonSerializer.GetStringID(id));
+            writer.WriteValue(JsonSerializer.GetStringID(&id));
         }
 
         /// <inheritdoc />
@@ -127,9 +130,48 @@ namespace FlaxEngine.Json
     /// </summary>
     public static class JsonSerializer
     {
+        internal class SerializerCache
+        {
+            public Newtonsoft.Json.JsonSerializer JsonSerializer;
+            public StringBuilder StringBuilder;
+            public StringWriter StringWriter;
+            public JsonTextWriter JsonWriter;
+            public JsonSerializerInternalWriter SerializerWriter;
+
+            public SerializerCache()
+            {
+                JsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault(Settings);
+                JsonSerializer.Formatting = Formatting.Indented;
+
+                StringBuilder = new StringBuilder(256);
+                StringWriter = new StringWriter(StringBuilder, CultureInfo.InvariantCulture);
+                JsonWriter = new JsonTextWriter(StringWriter);
+                SerializerWriter = new JsonSerializerInternalWriter(JsonSerializer);
+
+                // Prepare writer settings
+                JsonWriter.IndentChar = '\t';
+                JsonWriter.Indentation = 1;
+                JsonWriter.Formatting = JsonSerializer.Formatting;
+                JsonWriter.DateFormatHandling = JsonSerializer.DateFormatHandling;
+                JsonWriter.DateTimeZoneHandling = JsonSerializer.DateTimeZoneHandling;
+                JsonWriter.FloatFormatHandling = JsonSerializer.FloatFormatHandling;
+                JsonWriter.StringEscapeHandling = JsonSerializer.StringEscapeHandling;
+                JsonWriter.Culture = JsonSerializer.Culture;
+                JsonWriter.DateFormatString = JsonSerializer.DateFormatString;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Clear()
+            {
+                StringBuilder.Clear();
+            }
+        }
+
         internal static JsonSerializerSettings Settings = CreateDefaultSettings();
         internal static FlaxObjectConverter ObjectConverter;
-        internal static ThreadLocal<JsonSerializerInternalWriter> CurrentWriter = new ThreadLocal<JsonSerializerInternalWriter>();
+        internal static ThreadLocal<SerializerCache> Cache = new ThreadLocal<SerializerCache>(() => new SerializerCache());
+        internal static ThreadLocal<IntPtr> CachedGuidBuffer = new ThreadLocal<IntPtr>(() => Marshal.AllocHGlobal(32 * sizeof(char)), true);
+        internal static string CachedGuidDigits = "0123456789abcdef";
 
         internal static JsonSerializerSettings CreateDefaultSettings()
         {
@@ -147,6 +189,11 @@ namespace FlaxEngine.Json
             settings.Converters.Add(new VersionConverter());
             //settings.Converters.Add(new GuidConverter());
             return settings;
+        }
+
+        internal static void Dispose()
+        {
+            CachedGuidBuffer.Values.ForEach(Marshal.FreeHGlobal);
         }
 
         /// <summary>
@@ -174,34 +221,12 @@ namespace FlaxEngine.Json
         public static string Serialize(object obj)
         {
             Type type = obj.GetType();
+            var cache = Cache.Value;
 
-            Newtonsoft.Json.JsonSerializer jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault(Settings);
-            jsonSerializer.Formatting = Formatting.Indented;
+            cache.Clear();
+            cache.SerializerWriter.Serialize(cache.JsonWriter, obj, type);
 
-            StringBuilder sb = new StringBuilder(256);
-            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
-            using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
-            {
-                // Prepare writer settings
-                jsonWriter.IndentChar = '\t';
-                jsonWriter.Indentation = 1;
-                jsonWriter.Formatting = jsonSerializer.Formatting;
-                jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
-                jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
-                jsonWriter.FloatFormatHandling = jsonSerializer.FloatFormatHandling;
-                jsonWriter.StringEscapeHandling = jsonSerializer.StringEscapeHandling;
-                jsonWriter.Culture = jsonSerializer.Culture;
-                jsonWriter.DateFormatString = jsonSerializer.DateFormatString;
-
-                JsonSerializerInternalWriter serializerWriter = new JsonSerializerInternalWriter(jsonSerializer);
-                CurrentWriter.Value = serializerWriter;
-
-                serializerWriter.Serialize(jsonWriter, obj, type);
-
-                CurrentWriter.Value = null;
-            }
-
-            return sw.ToString();
+            return cache.StringBuilder.ToString();
         }
 
         /// <summary>
@@ -213,34 +238,12 @@ namespace FlaxEngine.Json
         public static string SerializeDiff(object obj, object other)
         {
             Type type = obj.GetType();
+            var cache = Cache.Value;
 
-            Newtonsoft.Json.JsonSerializer jsonSerializer = Newtonsoft.Json.JsonSerializer.CreateDefault(Settings);
-            jsonSerializer.Formatting = Formatting.Indented;
+            cache.Clear();
+            cache.SerializerWriter.SerializeDiff(cache.JsonWriter, obj, type, other);
 
-            StringBuilder sb = new StringBuilder(256);
-            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
-            using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
-            {
-                // Prepare writer settings
-                jsonWriter.IndentChar = '\t';
-                jsonWriter.Indentation = 1;
-                jsonWriter.Formatting = jsonSerializer.Formatting;
-                jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
-                jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
-                jsonWriter.FloatFormatHandling = jsonSerializer.FloatFormatHandling;
-                jsonWriter.StringEscapeHandling = jsonSerializer.StringEscapeHandling;
-                jsonWriter.Culture = jsonSerializer.Culture;
-                jsonWriter.DateFormatString = jsonSerializer.DateFormatString;
-
-                JsonSerializerInternalWriter serializerWriter = new JsonSerializerInternalWriter(jsonSerializer);
-                CurrentWriter.Value = serializerWriter;
-
-                serializerWriter.SerializeDiff(jsonWriter, obj, type, other);
-
-                CurrentWriter.Value = null;
-            }
-
-            return sw.ToString();
+            return cache.StringBuilder.ToString();
         }
 
         /// <summary>
@@ -271,10 +274,51 @@ namespace FlaxEngine.Json
         /// <returns>The serialized ID.</returns>
         public static unsafe string GetStringID(Guid id)
         {
-            // TODO: make to more efficient, don't use string format, use cached string buffer, dont allocate any byte during this conversion
+            return GetStringID(&id);
+        }
 
-            GuidInterop* g = (GuidInterop*)&id;
-            return string.Format("{0:x8}{1:x8}{2:x8}{3:x8}", g->A, g->B, g->C, g->D);
+        /// <summary>
+        /// Gets the string representation of the given object ID. It matches the internal serialization formatting rules.
+        /// </summary>
+        /// <param name="id">The object identifier.</param>
+        /// <returns>The serialized ID.</returns>
+        public static unsafe string GetStringID(Guid* id)
+        {
+            GuidInterop* g = (GuidInterop*)id;
+
+            // Unoptimized version:
+            //return string.Format("{0:x8}{1:x8}{2:x8}{3:x8}", g->A, g->B, g->C, g->D);
+
+            // Optimized version:
+            var buffer = (char*)CachedGuidBuffer.Value.ToPointer();
+            for (int i = 0; i < 32; i++)
+                buffer[i] = '0';
+            var digits = CachedGuidDigits;
+            uint n = g->A;
+            char* p = buffer + 7;
+            do
+            {
+                *p-- = digits[(int)(n & 0xf)];
+            } while ((n >>= 4) != 0);
+            n = g->B;
+            p = buffer + 15;
+            do
+            {
+                *p-- = digits[(int)(n & 0xf)];
+            } while ((n >>= 4) != 0);
+            n = g->C;
+            p = buffer + 23;
+            do
+            {
+                *p-- = digits[(int)(n & 0xf)];
+            } while ((n >>= 4) != 0);
+            n = g->D;
+            p = buffer + 31;
+            do
+            {
+                *p-- = digits[(int)(n & 0xf)];
+            } while ((n >>= 4) != 0);
+            return new string(buffer, 0, 32);
         }
 
         /// <summary>
@@ -282,12 +326,12 @@ namespace FlaxEngine.Json
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns>The serialized ID.</returns>
-        public static string GetStringID(Object obj)
+        public static unsafe string GetStringID(Object obj)
         {
             Guid id = Guid.Empty;
             if (obj != null)
-                id = obj.ID;
-            return GetStringID(id);
+                id = obj.id;
+            return GetStringID(&id);
         }
 
         /// <summary>
