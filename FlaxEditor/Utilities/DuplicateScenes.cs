@@ -56,7 +56,7 @@ namespace FlaxEditor.Utilities
                 var data = new SceneData
                 {
                     IsDirty = Editor.Instance.Scene.IsEdited(scene),
-                    Bytes = SceneManager.SaveSceneToBytes(scene, false),
+                    Bytes = SceneManager.SaveSceneToBytes(scene),
                 };
                 _scenesData.Add(data);
             }
