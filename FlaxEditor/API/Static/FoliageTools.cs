@@ -73,6 +73,16 @@ namespace FlaxEditor
             public float PaintRadius;
 
             /// <summary>
+            /// The minimum ground slope angle to paint foliage on it (in degrees).
+            /// </summary>
+            public float PaintGroundSlopeAngleMin;
+
+            /// <summary>
+            /// The maximum ground slope angle to paint foliage on it (in degrees).
+            /// </summary>
+            public float PaintGroundSlopeAngleMax;
+
+            /// <summary>
             /// The scaling mode.
             /// </summary>
             public ScalingModes PaintScaling;

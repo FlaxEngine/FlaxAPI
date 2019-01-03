@@ -216,6 +216,18 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
+            [EditorOrder(215), EditorDisplay("Painting"), Limit(0.0f, 360.0f), Tooltip("The minimum and maximum ground slope angle to paint foliage on it (in degrees).")]
+            public Vector2 PaintGroundSlopeAngleRange
+            {
+                get => new Vector2(_options.PaintGroundSlopeAngleMin, _options.PaintGroundSlopeAngleMax);
+                set
+                {
+                    _options.PaintGroundSlopeAngleMin = value.X;
+                    _options.PaintGroundSlopeAngleMax = value.Y;
+                    SetOptions();
+                }
+            }
+
             [EditorOrder(220), EditorDisplay("Painting"), Tooltip("The scaling mode.")]
             public FoliageTools.ScalingModes Scaling
             {
