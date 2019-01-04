@@ -92,12 +92,11 @@ namespace FlaxEditor.Utilities
 
             // Deserialize new scenes
             int scenesCount = _scenesData.Count;
-            var duplicatedScenes = new Scene[scenesCount];
             for (int i = 0; i < scenesCount; i++)
             {
                 var data = _scenesData[i];
-                duplicatedScenes[i] = SceneManager.LoadSceneFromBytes(data.Bytes);
-                if (duplicatedScenes[i] == null)
+                var scene = SceneManager.LoadSceneFromBytes(data.Bytes);
+                if (scene == null)
                     throw new FlaxException("Failed to deserialize scene");
             }
         }
