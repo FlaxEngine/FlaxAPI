@@ -117,6 +117,7 @@ namespace FlaxEngine.Rendering
             public float AO_Power;
             public float AO_Radius;
             public float AO_FadeOutDistance;
+            public float AO_FadeDistance;
 
             // Screen Space Reflections
 
@@ -392,7 +393,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the ambient occlusion check range radius.
         /// </summary>
-        [DefaultValue(0.7f), Limit(0, 16.0f, 0.01f)]
+        [DefaultValue(0.7f), Limit(0, 100.0f, 0.01f)]
         [NoSerialize, EditorOrder(103), EditorDisplay("Ambient Occlusion", "Radius")]
         public float AO_Radius
         {
@@ -405,9 +406,9 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the ambient occlusion fade out distance.
+        /// Gets or sets the ambient occlusion fade out end distance from camera (in world units).
         /// </summary>
-        [DefaultValue(3000.0f), Limit(0, 1000000.0f)]
+        [DefaultValue(5000.0f), Limit(0.0f)]
         [NoSerialize, EditorOrder(104), EditorDisplay("Ambient Occlusion", "Fade Out Distance")]
         public float AO_FadeOutDistance
         {
@@ -415,6 +416,21 @@ namespace FlaxEngine.Rendering
             set
             {
                 data.AO_FadeOutDistance = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the ambient occlusion fade distance (in world units). Defines the size of the effect fade from fully visible to fully invisible at FadeOutDistance.
+        /// </summary>
+        [DefaultValue(500.0f), Limit(0.0f)]
+        [NoSerialize, EditorOrder(105), EditorDisplay("Ambient Occlusion", "Fade Distance")]
+        public float AO_FadeDistance
+        {
+            get => data.AO_FadeDistance;
+            set
+            {
+                data.AO_FadeDistance = value;
                 isDataDirty = true;
             }
         }
