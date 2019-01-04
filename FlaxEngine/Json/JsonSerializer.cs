@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -137,6 +136,7 @@ namespace FlaxEngine.Json
             public StringWriter StringWriter;
             public JsonTextWriter JsonWriter;
             public JsonSerializerInternalWriter SerializerWriter;
+            public UnmanagedStringReader StringReader;
 
             public SerializerCache()
             {
@@ -147,6 +147,7 @@ namespace FlaxEngine.Json
                 StringWriter = new StringWriter(StringBuilder, CultureInfo.InvariantCulture);
                 JsonWriter = new JsonTextWriter(StringWriter);
                 SerializerWriter = new JsonSerializerInternalWriter(JsonSerializer);
+                StringReader = new UnmanagedStringReader();
 
                 // Prepare writer settings
                 JsonWriter.IndentChar = '\t';
@@ -158,12 +159,6 @@ namespace FlaxEngine.Json
                 JsonWriter.StringEscapeHandling = JsonSerializer.StringEscapeHandling;
                 JsonWriter.Culture = JsonSerializer.Culture;
                 JsonWriter.DateFormatString = JsonSerializer.DateFormatString;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Clear()
-            {
-                StringBuilder.Clear();
             }
         }
 
@@ -223,7 +218,7 @@ namespace FlaxEngine.Json
             Type type = obj.GetType();
             var cache = Cache.Value;
 
-            cache.Clear();
+            cache.StringBuilder.Clear();
             cache.SerializerWriter.Serialize(cache.JsonWriter, obj, type);
 
             return cache.StringBuilder.ToString();
@@ -240,7 +235,7 @@ namespace FlaxEngine.Json
             Type type = obj.GetType();
             var cache = Cache.Value;
 
-            cache.Clear();
+            cache.StringBuilder.Clear();
             cache.SerializerWriter.SerializeDiff(cache.JsonWriter, obj, type, other);
 
             return cache.StringBuilder.ToString();
@@ -253,7 +248,43 @@ namespace FlaxEngine.Json
         /// <param name="json">The input json data.</param>
         public static void Deserialize(object input, string json)
         {
-            JsonConvert.PopulateObject(json, input, Settings);
+            var cache = Cache.Value;
+
+            using (JsonReader reader = new JsonTextReader(new StringReader(json)))
+            {
+                cache.JsonSerializer.Populate(reader, input);
+
+                if (!cache.JsonSerializer.CheckAdditionalContent)
+                    return;
+                while (reader.Read())
+                {
+                    if (reader.TokenType != JsonToken.Comment)
+                        throw new FlaxException("Additional text found in JSON string after finishing deserializing object.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deserializes the specified object (from the input json data).
+        /// </summary>
+        /// <param name="input">The object.</param>
+        /// <param name="jsonBuffer">The input json data buffer (raw, fixed memory buffer).</param>
+        /// <param name="jsonLength">The input json data buffer length (characters count).</param>
+        public static unsafe void Deserialize(object input, void* jsonBuffer, int jsonLength)
+        {
+            var cache = Cache.Value;
+
+            cache.StringReader.Initialize(jsonBuffer, jsonLength);
+            var jsonReader = new JsonTextReader(cache.StringReader);
+            cache.JsonSerializer.Populate(jsonReader, input);
+
+            if (!cache.JsonSerializer.CheckAdditionalContent)
+                return;
+            while (jsonReader.Read())
+            {
+                if (jsonReader.TokenType != JsonToken.Comment)
+                    throw new FlaxException("Additional text found in JSON string after finishing deserializing object.");
+            }
         }
 
         /// <summary>
