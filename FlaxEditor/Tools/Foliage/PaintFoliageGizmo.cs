@@ -140,7 +140,7 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
             // TODO: don't call _foliageTypesIndices.ToArray() but reuse allocation
-            FoliageTools.Paint(foliage, _foliageTypesIndices.ToArray(), Mode.CursorPosition, Mode.CurrentBrush.Size * 0.5f);
+            FoliageTools.Paint(foliage, _foliageTypesIndices.ToArray(), Mode.CursorPosition, Mode.CurrentBrush.Size * 0.5f, !Owner.IsControlDown);
         }
 
         /// <summary>
