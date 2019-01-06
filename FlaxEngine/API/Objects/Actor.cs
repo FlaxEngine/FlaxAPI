@@ -398,6 +398,60 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Serializes the actor object to the raw bytes. Serialized are actor properties and scripts but no child actors.
+        /// Serializes references to the other objects in a proper way using IDs.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <returns>The bytes array with serialized actor data. Returns null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        public static byte[] ToBytes(Actor actor)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ToBytes1(GetUnmanagedPtr(actor));
+#endif
+        }
+
+        /// <summary>
+        /// Serializes the actor object to the Json string. Serialized are only actor properties but no child actors nor scripts. 
+        /// Serializes references to the other objects in a proper way using IDs.
+        /// </summary>
+        /// <param name="actor">The actor to serialize.</param>
+        /// <returns>The Json container with serialized actor data. Returns null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        public static string Serialize(Actor actor)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Serialize(GetUnmanagedPtr(actor));
+#endif
+        }
+
+        /// <summary>
+        /// Deserializes the actor object to the Json string. Deserializes are only actor properties but no child actors nor scripts. 
+        /// </summary>
+        /// <param name="actor">The actor to deserialize.</param>
+        /// <param name="data">The serialized actor data (state).</param>
+        /// <returns>The Json container with serialized actor data. Returns null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        public static void Deserialize(Actor actor, string data)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Deserialize(GetUnmanagedPtr(actor), data);
+#endif
+        }
+
+        /// <summary>
         /// Serializes the actor objects to the raw bytes. Serialized are actor properties and scripts but no child actors.
         /// Serializes references to the other objects in a proper way using IDs.
         /// </summary>
@@ -411,7 +465,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ToBytes(Array.ConvertAll(actors, GetUnmanagedPtr));
+            return Internal_ToBytes2(Array.ConvertAll(actors, GetUnmanagedPtr));
 #endif
         }
 
@@ -638,7 +692,16 @@ namespace FlaxEngine
         internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, out float distance, out Vector3 normal);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern byte[] Internal_ToBytes(IntPtr[] actors);
+        internal static extern string Internal_Serialize(IntPtr actor);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Deserialize(IntPtr actor, string data);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_ToBytes1(IntPtr actor);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_ToBytes2(IntPtr[] actors);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor[] Internal_FromBytes(byte[] data, Guid[] idsMappingKeys, Guid[] idsMappingValues);
