@@ -22,9 +22,9 @@ namespace FlaxEditor.Tools.Terrain.Undo
         }
 
         /// <summary>
-        /// The terrain.
+        /// The terrain (actor Id).
         /// </summary>
-        protected readonly FlaxEngine.Terrain _terrain;
+        protected readonly Guid _terrain;
 
         /// <summary>
         /// The heightmap length (vertex count).
@@ -44,6 +44,18 @@ namespace FlaxEditor.Tools.Terrain.Undo
         public bool HasAnyModification => _patches.Count > 0;
 
         /// <summary>
+        /// Gets the terrain.
+        /// </summary>
+        public FlaxEngine.Terrain Terrain
+        {
+            get
+            {
+                var terrainId = _terrain;
+                return FlaxEngine.Object.Find<FlaxEngine.Terrain>(ref terrainId);
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditTerrainMapAction"/> class.
         /// </summary>
         /// <remarks>Use <see cref="AddPatch"/> to mark new patches to record and <see cref="OnEditingEnd"/> to finalize patches data after editing action.</remarks>
@@ -51,7 +63,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// <param name="stride">The data stride (eg. sizeof(float)).</param>
         protected EditTerrainMapAction(FlaxEngine.Terrain terrain, int stride)
         {
-            _terrain = terrain;
+            _terrain = terrain.id;
             _patches = new List<PatchData>(4);
             var chunkSize = terrain.ChunkSize;
             var heightmapSize = chunkSize * FlaxEngine.Terrain.PatchEdgeChunksCount + 1;
@@ -114,7 +126,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
                 _patches[i] = patch;
             }
 
-            Editor.Instance.Scene.MarkSceneEdited(_terrain.Scene);
+            Editor.Instance.Scene.MarkSceneEdited(Terrain.Scene);
         }
 
         /// <inheritdoc />
@@ -153,7 +165,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
                 SetData(ref patch.PatchCoord, data, patch.Tag);
             }
 
-            Editor.Instance.Scene.MarkSceneEdited(_terrain.Scene);
+            Editor.Instance.Scene.MarkSceneEdited(Terrain.Scene);
         }
 
         /// <summary>
