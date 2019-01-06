@@ -459,11 +459,12 @@ namespace FlaxEditor.Tools.Foliage
                 Tab.SelectedFoliageTypeIndex = -1;
 
             var foliage = Tab.SelectedFoliage;
+            var action = new Undo.EditFoliageAction(foliage);
+
             FoliageTools.RemoveFoliageType(foliage, index);
 
-            Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
-
-            // TODO: support undo for removing foliage types
+            action.RecordEnd();
+            Tab.Editor.Undo.AddAction(action);
 
             Tab.OnSelectedFoliageTypesChanged();
         }
