@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
+using FlaxEditor.Tools.Foliage.Undo;
 using FlaxEngine;
 using FlaxEngine.Rendering;
 
@@ -19,6 +20,7 @@ namespace FlaxEditor.Tools.Foliage
         private FlaxEngine.Foliage _paintFoliage;
         private Model _brushModel;
         private List<int> _foliageTypesIndices;
+        private EditFoliageAction _undoAction;
 
         /// <summary>
         /// The parent mode.
@@ -109,6 +111,7 @@ namespace FlaxEditor.Tools.Foliage
             if (IsPainting)
                 return;
 
+            _undoAction = new EditFoliageAction(foliage);
             _paintFoliage = foliage;
             PaintStarted?.Invoke();
         }
@@ -141,7 +144,6 @@ namespace FlaxEditor.Tools.Foliage
             }
             // TODO: don't call _foliageTypesIndices.ToArray() but reuse allocation
             FoliageTools.Paint(foliage, _foliageTypesIndices.ToArray(), Mode.CursorPosition, Mode.CurrentBrush.Size * 0.5f, !Owner.IsControlDown);
-            Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
         }
 
         /// <summary>
@@ -153,6 +155,9 @@ namespace FlaxEditor.Tools.Foliage
             if (!IsPainting)
                 return;
 
+            _undoAction.RecordEnd();
+            Editor.Instance.Undo.AddAction(_undoAction);
+            _undoAction = null;
             _paintFoliage = null;
             PaintEnded?.Invoke();
         }
