@@ -361,6 +361,7 @@ namespace FlaxEditor.Tools.Foliage
         private readonly VerticalPanel _items;
         private readonly Button _addFoliageTypeButton;
         private readonly CustomEditorPresenter _presenter;
+        private int _foliageTypesCount;
 
         /// <summary>
         /// The parent foliage tab.
@@ -507,6 +508,7 @@ namespace FlaxEditor.Tools.Foliage
             if (foliage != null)
             {
                 int typesCount = FoliageTools.GetFoliageTypesCount(foliage);
+                _foliageTypesCount = typesCount;
                 for (int i = 0; i < typesCount; i++)
                 {
                     var model = FoliageTools.GetFoliageTypeModel(foliage, i);
@@ -522,6 +524,10 @@ namespace FlaxEditor.Tools.Foliage
                     y += itemView.Height + _items.Spacing;
                 }
                 y += _items.Margin.Height;
+            }
+            else
+            {
+                _foliageTypesCount = 0;
             }
             _items.Height = y;
 
@@ -542,6 +548,18 @@ namespace FlaxEditor.Tools.Foliage
         private void ArrangeAddFoliageButton()
         {
             _addFoliageTypeButton.Location = new Vector2((_addFoliageTypeButton.Parent.Width - _addFoliageTypeButton.Width) * 0.5f, _items.Bottom + 4);
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            var foliage = Tab.SelectedFoliage;
+            if (foliage != null && FoliageTools.GetFoliageTypesCount(foliage) != _foliageTypesCount)
+            {
+                Tab.OnSelectedFoliageTypesChanged();
+            }
         }
 
         /// <inheritdoc />
