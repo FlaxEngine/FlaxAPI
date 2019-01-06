@@ -232,6 +232,14 @@ namespace FlaxEditor.Tools.Foliage
             }
         }
 
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            FoliageTypes.CheckFoliageTypesCount();
+
+            base.Update(deltaTime);
+        }
+
         internal void OnSelectedFoliageTypesChanged()
         {
             SelectedFoliageTypesChanged?.Invoke();

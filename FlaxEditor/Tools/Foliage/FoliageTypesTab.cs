@@ -480,11 +480,13 @@ namespace FlaxEditor.Tools.Foliage
         {
             var foliage = Tab.SelectedFoliage;
             var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
+            var action = new Undo.EditFoliageAction(foliage);
 
             FoliageTools.AddFoliageType(foliage, model);
             Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
 
-            // TODO: support undo for adding foliage types
+            action.RecordEnd();
+            Tab.Editor.Undo.AddAction(action);
 
             Tab.OnSelectedFoliageTypesChanged();
 
@@ -550,14 +552,14 @@ namespace FlaxEditor.Tools.Foliage
             _addFoliageTypeButton.Location = new Vector2((_addFoliageTypeButton.Parent.Width - _addFoliageTypeButton.Width) * 0.5f, _items.Bottom + 4);
         }
 
-        /// <inheritdoc />
-        public override void Update(float deltaTime)
+        internal void CheckFoliageTypesCount()
         {
-            base.Update(deltaTime);
-
             var foliage = Tab.SelectedFoliage;
-            if (foliage != null && FoliageTools.GetFoliageTypesCount(foliage) != _foliageTypesCount)
+            var count = foliage ? FoliageTools.GetFoliageTypesCount(foliage) : 0;
+            if (foliage != null && count != _foliageTypesCount)
             {
+                if (Tab.SelectedFoliageTypeIndex >= count)
+                    Tab.SelectedFoliageTypeIndex = -1;
                 Tab.OnSelectedFoliageTypesChanged();
             }
         }
