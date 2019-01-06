@@ -148,17 +148,6 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
-            [EditorOrder(120), EditorDisplay("Instance Options"), Limit(0.0f, 10000.0f, 0.01f), Tooltip("Per foliage type scale factor in lightmap charts. Higher value increases the quality but reduces baking performance.")]
-            public float ScaleInLightmap
-            {
-                get => _options.ScaleInLightmap;
-                set
-                {
-                    _options.ScaleInLightmap = value;
-                    SetOptions();
-                }
-            }
-
             [EditorOrder(130), EditorDisplay("Instance Options"), Tooltip("The shadows casting mode.")]
             public ShadowsCastingMode ShadowsMode
             {

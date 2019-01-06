@@ -53,11 +53,6 @@ namespace FlaxEditor
             public float CullDistanceRandomRange;
 
             /// <summary>
-            /// Per foliage type scale factor in lightmap charts. Higher value increases the quality but reduces baking performance.
-            /// </summary>
-            public float ScaleInLightmap;
-
-            /// <summary>
             /// The shadows casting mode.
             /// </summary>
             public ShadowsCastingMode ShadowsMode;
