@@ -37,6 +37,19 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Gets texture dimensions.
+        /// </summary>
+        [UnmanagedCall]
+        public TextureDimensions Dimensions
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDimensions(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Gets texture surface format.
         /// </summary>
         [UnmanagedCall]
@@ -267,6 +280,9 @@ namespace FlaxEngine.Rendering
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern TextureDimensions Internal_GetDimensions(IntPtr obj);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern PixelFormat Internal_GetFormat(IntPtr obj);
 
