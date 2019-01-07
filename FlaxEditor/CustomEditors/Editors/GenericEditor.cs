@@ -353,19 +353,31 @@ namespace FlaxEditor.CustomEditors.Editors
 
             itemLayout.Property(item.DisplayName, itemValues, item.OverrideEditor, item.TooltipText);
 
-            if (item.IsReadOnly)
+            if (item.IsReadOnly && itemLayout.Children.Count > 0)
             {
-                PropertiesListElement list;
-                if (itemLayout.Children.Count > 0 && itemLayout.Children[itemLayout.Children.Count - 1] is PropertiesListElement list1)
+                PropertiesListElement list = null;
+                int firstChildControlIndex = 0;
+                bool disableSingle = true;
+                var control = itemLayout.Children[itemLayout.Children.Count - 1];
+                if (control is GroupElement group && group.Children.Count > 0)
+                {
+                    list = group.Children[0] as PropertiesListElement;
+                    disableSingle = false; // Disable all nested editors
+                }
+                else if (control is PropertiesListElement list1)
                 {
                     list = list1;
+                    firstChildControlIndex = list.Labels[labelIndex].FirstChildControlIndex;
+                }
 
+                if (list != null)
+                {
                     // Disable controls added to the editor
-                    var label = list.Labels[labelIndex];
-                    for (int j = label.FirstChildControlIndex; j < list.Properties.Children.Count; j++)
+                    var count = list.Properties.Children.Count;
+                    for (int j = firstChildControlIndex; j < count; j++)
                     {
                         var child = list.Properties.Children[j];
-                        if (child is PropertyNameLabel)
+                        if (disableSingle && child is PropertyNameLabel)
                             break;
 
                         child.Enabled = false;
