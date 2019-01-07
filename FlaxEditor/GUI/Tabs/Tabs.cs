@@ -349,6 +349,20 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            // Update all controls except not selected tabs
+            var selectedTab = SelectedTab;
+            for (int i = 0; i < _children.Count; i++)
+            {
+                if (_children[i].Enabled && (!(_children[i] is Tab) || _children[i] == selectedTab))
+                {
+                    _children[i].Update(deltaTime);
+                }
+            }
+        }
+
+        /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
             // Fit the tabs panel
