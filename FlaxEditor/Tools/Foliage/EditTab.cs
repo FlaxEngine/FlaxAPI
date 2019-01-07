@@ -1,8 +1,10 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
-using FlaxEngine.GUI;
+using FlaxEngine;
 
 namespace FlaxEditor.Tools.Foliage
 {
@@ -13,44 +15,166 @@ namespace FlaxEditor.Tools.Foliage
     public class EditTab : Tab
     {
         /// <summary>
-        /// The object for foliage type settings adjusting via Custom Editor.
+        /// The object for foliage settings adjusting via Custom Editor.
         /// </summary>
+        [CustomEditor(typeof(ProxyObjectEditor))]
         private sealed class ProxyObject
         {
-            // TODO: expose selected foliage type properties
+            /// <summary>
+            /// The selected foliage actor.
+            /// </summary>
+            [HideInEditor]
+            public FlaxEngine.Foliage Foliage;
+
+            /// <summary>
+            /// The selected foliage instance index.
+            /// </summary>
+            [HideInEditor]
+            public int InstanceIndex;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ProxyObject"/> class.
+            /// </summary>
+            public ProxyObject()
+            {
+                InstanceIndex = -1;
+            }
+
+            private FlaxEngine.Foliage.Instance _options;
+
+            public void SyncOptions()
+            {
+                if (Foliage != null && InstanceIndex > -1 && InstanceIndex < Foliage.InstancesCount)
+                {
+                    Foliage.GetInstance(InstanceIndex, out _options);
+                }
+            }
+
+            public void SetOptions()
+            {
+                if (Foliage != null && InstanceIndex > -1 && InstanceIndex < Foliage.InstancesCount)
+                {
+                    Foliage.SetInstance(InstanceIndex, ref _options);
+                }
+            }
+
+            //
+
+            [EditorOrder(0), EditorDisplay("Instance"), ReadOnly, Tooltip("The foliage instance model (read-only).")]
+            public Model Model
+            {
+                get => FoliageTools.GetFoliageTypeModel(Foliage, _options.Type);
+                set => throw new NotImplementedException();
+            }
+
+            [EditorOrder(10), EditorDisplay("Instance"), Tooltip("The local-space position of the mesh relative to the foliage actor.")]
+            public Vector3 Position
+            {
+                get => _options.Transform.Translation;
+                set
+                {
+                    _options.Transform.Translation = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(20), EditorDisplay("Instance"), Tooltip("The local-space rotation of the mesh relative to the foliage actor.")]
+            public Quaternion Rotation
+            {
+                get => _options.Transform.Orientation;
+                set
+                {
+                    _options.Transform.Orientation = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(30), EditorDisplay("Instance"), Tooltip("The local-space scale of the mesh relative to the foliage actor.")]
+            public Vector3 Scale
+            {
+                get => _options.Transform.Scale;
+                set
+                {
+                    _options.Transform.Scale = value;
+                    SetOptions();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The custom editor for <see cref="ProxyObject"/>.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.CustomEditors.Editors.GenericEditor" />
+        private sealed class ProxyObjectEditor : GenericEditor
+        {
+            /// <inheritdoc />
+            public override void Refresh()
+            {
+                // Sync selected foliage options once before update to prevent too many data copies when fetching data from UI properties accessors
+                var proxyObject = (ProxyObject)Values[0];
+                proxyObject.SyncOptions();
+
+                base.Refresh();
+            }
         }
 
         private readonly ProxyObject _proxy;
         private readonly CustomEditorPresenter _presenter;
 
         /// <summary>
-        /// The parent foliage types tab.
+        /// The parent foliage tab.
         /// </summary>
-        public readonly FoliageTab FoliageTypes;
+        public readonly FoliageTab Tab;
+
+        /// <summary>
+        /// The related gizmo mode.
+        /// </summary>
+        public readonly EditFoliageGizmoMode Mode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditTab"/> class.
         /// </summary>
         /// <param name="tab">The parent tab.</param>
-        public EditTab(FoliageTab tab)
+        /// <param name="mode">The related gizmo mode.</param>
+        public EditTab(FoliageTab tab, EditFoliageGizmoMode mode)
         : base("Edit")
         {
-            FoliageTypes = tab;
+            Mode = mode;
+            Tab = tab;
+            Tab.SelectedFoliageChanged += OnSelectedFoliageChanged;
+            mode.SelectedInstanceIndexChanged += OnSelectedInstanceIndexChanged;
             _proxy = new ProxyObject();
 
-            // Main panel
-            var panel = new Panel(ScrollBars.Both)
-            {
-                DockStyle = DockStyle.Fill,
-                Parent = this
-            };
-
             // Options editor
-            // TODO: use editor undo for changing brush options
-            var editor = new CustomEditorPresenter(null);
-            editor.Panel.Parent = panel;
-            editor.Select(_proxy);
+            // TODO: use editor undo for changing foliage instance options
+            var editor = new CustomEditorPresenter(null, "No foliage instance selected");
+            editor.Panel.Parent = this;
+            editor.Modified += OnModified;
             _presenter = editor;
+        }
+
+        private void OnSelectedInstanceIndexChanged()
+        {
+            _proxy.InstanceIndex = Mode.SelectedInstanceIndex;
+            if (_proxy.InstanceIndex == -1)
+            {
+                _presenter.Deselect();
+            }
+            else
+            {
+                _presenter.Select(_proxy);
+            }
+        }
+
+        private void OnModified()
+        {
+            Editor.Instance.Scene.MarkSceneEdited(_proxy.Foliage?.Scene);
+        }
+
+        private void OnSelectedFoliageChanged()
+        {
+            Mode.SelectedInstanceIndex = -1;
+            _proxy.Foliage = Tab.SelectedFoliage;
         }
     }
 }

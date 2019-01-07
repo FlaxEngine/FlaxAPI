@@ -71,8 +71,8 @@ namespace FlaxEditor.Tools.Foliage
             if (!IsActive)
                 return;
 
-            var terrain = SelectedFoliage;
-            if (!terrain)
+            var foliage = SelectedFoliage;
+            if (!foliage)
                 return;
 
             if (Mode.HasValidHit)

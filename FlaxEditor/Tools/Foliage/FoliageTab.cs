@@ -195,7 +195,7 @@ namespace FlaxEditor.Tools.Foliage
 
         private void InitEditMode()
         {
-            var tab = _modes.AddTab(Edit = new EditTab(this));
+            var tab = _modes.AddTab(Edit = new EditTab(this, Editor.Windows.EditWin.Viewport.EditFoliageGizmo));
             tab.Selected += OnTabSelected;
         }
 
@@ -226,7 +226,7 @@ namespace FlaxEditor.Tools.Foliage
                 Editor.Windows.EditWin.Viewport.SetActiveMode<PaintFoliageGizmoMode>();
                 break;
             case 2:
-                Editor.Windows.EditWin.Viewport.SetActiveMode<NoGizmoMode>();
+                Editor.Windows.EditWin.Viewport.SetActiveMode<EditFoliageGizmoMode>();
                 break;
             default: throw new IndexOutOfRangeException("Invalid foliage tab mode.");
             }

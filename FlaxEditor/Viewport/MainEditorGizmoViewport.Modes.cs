@@ -41,6 +41,11 @@ namespace FlaxEditor.Viewport
         /// </summary>
         public Tools.Foliage.PaintFoliageGizmoMode PaintFoliageGizmo;
 
+        /// <summary>
+        /// The edit foliage gizmo.
+        /// </summary>
+        public Tools.Foliage.EditFoliageGizmoMode EditFoliageGizmo;
+
         private void InitModes()
         {
             // Add default modes used by the editor
@@ -50,6 +55,7 @@ namespace FlaxEditor.Viewport
             _modes.Add(PaintTerrainGizmo = new Tools.Terrain.PaintTerrainGizmoMode());
             _modes.Add(EditTerrainGizmo = new Tools.Terrain.EditTerrainGizmoMode());
             _modes.Add(PaintFoliageGizmo = new Tools.Foliage.PaintFoliageGizmoMode());
+            _modes.Add(EditFoliageGizmo = new Tools.Foliage.EditFoliageGizmoMode());
             for (int i = 0; i < _modes.Count; i++)
             {
                 _modes[i].Init(this);
