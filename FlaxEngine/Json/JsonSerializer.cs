@@ -49,7 +49,7 @@ namespace FlaxEngine.Json
         {
             // Skip serialization as reference id for the root object serialization (eg. Script)
             var cache = JsonSerializer.Cache.Value;
-            if (cache != null && cache.SerializerWriter.SerializeStackSize == 0)
+            if (cache != null && cache.IsDuringSerialization && cache.SerializerWriter.SerializeStackSize == 0)
             {
                 return false;
             }
@@ -137,6 +137,7 @@ namespace FlaxEngine.Json
             public JsonTextWriter JsonWriter;
             public JsonSerializerInternalWriter SerializerWriter;
             public UnmanagedStringReader StringReader;
+            public bool IsDuringSerialization;
 
             public SerializerCache()
             {
@@ -219,6 +220,7 @@ namespace FlaxEngine.Json
             var cache = Cache.Value;
 
             cache.StringBuilder.Clear();
+            cache.IsDuringSerialization = true;
             cache.SerializerWriter.Serialize(cache.JsonWriter, obj, type);
 
             return cache.StringBuilder.ToString();
@@ -236,6 +238,7 @@ namespace FlaxEngine.Json
             var cache = Cache.Value;
 
             cache.StringBuilder.Clear();
+            cache.IsDuringSerialization = true;
             cache.SerializerWriter.SerializeDiff(cache.JsonWriter, obj, type, other);
 
             return cache.StringBuilder.ToString();
@@ -249,6 +252,7 @@ namespace FlaxEngine.Json
         public static void Deserialize(object input, string json)
         {
             var cache = Cache.Value;
+            cache.IsDuringSerialization = false;
 
             using (JsonReader reader = new JsonTextReader(new StringReader(json)))
             {
@@ -273,6 +277,7 @@ namespace FlaxEngine.Json
         public static unsafe void Deserialize(object input, void* jsonBuffer, int jsonLength)
         {
             var cache = Cache.Value;
+            cache.IsDuringSerialization = false;
 
             cache.StringReader.Initialize(jsonBuffer, jsonLength);
             var jsonReader = new JsonTextReader(cache.StringReader);
