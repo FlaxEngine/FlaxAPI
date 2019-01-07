@@ -366,6 +366,7 @@
     <Compile Include="GUI\WindowRootControl.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\JsonCustomSerializers\ExtendedDefaultContractResolver.cs" />
+    <Compile Include="Json\UnmanagedStringReader.cs" />
     <Compile Include="Math\BoundingBox.cs" />
     <Compile Include="Math\BoundingFrustum.cs" />
     <Compile Include="Math\BoundingSphere.cs" />
@@ -447,6 +448,7 @@
     <Compile Include="Rendering\RenderView.cs" />
     <Compile Include="Rendering\SceneRenderTask.cs" />
     <Compile Include="Rendering\TessellationMethod.cs" />
+    <Compile Include="Rendering\TextureDimensions.cs" />
     <Compile Include="Rendering\TextureFlags.cs" />
     <Compile Include="Rendering\ViewFlags.cs" />
     <Compile Include="Rendering\ViewMode.cs" />

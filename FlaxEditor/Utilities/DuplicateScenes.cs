@@ -46,7 +46,11 @@ namespace FlaxEditor.Utilities
             int scenesCount = scenes.Length;
             if (scenesCount == 0)
                 throw new InvalidOperationException("Cannot gather scene data. No scene loaded.");
-            var sceneIds = scenes.ToList().ConvertAll(x => x.ID);
+            var sceneIds = new Guid[scenesCount];
+            for (int i = 0; i < scenesCount; i++)
+            {
+                sceneIds[i] = scenes[i].ID;
+            }
 
             // Serialize scenes
             _scenesData.Capacity = scenesCount;
@@ -56,7 +60,7 @@ namespace FlaxEditor.Utilities
                 var data = new SceneData
                 {
                     IsDirty = Editor.Instance.Scene.IsEdited(scene),
-                    Bytes = SceneManager.SaveSceneToBytes(scene),
+                    Bytes = SceneManager.SaveSceneToBytes(scene, false),
                 };
                 _scenesData.Add(data);
             }
@@ -69,8 +73,8 @@ namespace FlaxEditor.Utilities
             // Ensure that old scenes has been unregistered
             {
                 var noScenes = SceneManager.Scenes;
-                if (noScenes != null && noScenes.Length != 0 && sceneIds.TrueForAll(x => Object.Find<Object>(ref x) == null))
-                    throw new FlaxException("Failed to unregister scene objects.");
+                if (noScenes != null && noScenes.Length != 0)
+                    throw new FlaxException("Failed to unload scenes.");
             }
 
             Editor.Log(string.Format("Gathered {0} scene(s)!", scenesCount));
@@ -88,12 +92,11 @@ namespace FlaxEditor.Utilities
 
             // Deserialize new scenes
             int scenesCount = _scenesData.Count;
-            var duplicatedScenes = new Scene[scenesCount];
             for (int i = 0; i < scenesCount; i++)
             {
                 var data = _scenesData[i];
-                duplicatedScenes[i] = SceneManager.LoadSceneFromBytes(data.Bytes);
-                if (duplicatedScenes[i] == null)
+                var scene = SceneManager.LoadSceneFromBytes(data.Bytes);
+                if (scene == null)
                     throw new FlaxException("Failed to deserialize scene");
             }
         }

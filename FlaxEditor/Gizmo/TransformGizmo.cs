@@ -176,7 +176,7 @@ namespace FlaxEditor.Gizmo
 
             // Create both world matrices
             _objectOrientedWorld = _screenScaleMatrix * Matrix.CreateWorld(Position, _localForward, _localUp);
-            _axisAlignedWorld = _screenScaleMatrix * Matrix.CreateWorld(Position, Vector3.Forward, Vector3.Up);
+            _axisAlignedWorld = _screenScaleMatrix * Matrix.CreateWorld(Position, Vector3.Backward, Vector3.Up);
 
             // Assign world
             if (_activeTransformSpace == TransformSpace.World)

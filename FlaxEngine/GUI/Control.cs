@@ -21,6 +21,7 @@ namespace FlaxEngine.GUI
         private bool _isVisible = true;
         private bool _isEnabled = true;
         private bool _canFocus = true;
+        private RootControl.UpdateDelegate _tooltipUpdate;
 
         // Dimensions
 
@@ -381,6 +382,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Performs control logic update.
+        /// </summary>
+        /// <param name="deltaTime">The delta time in seconds (since last update).</param>
+        public delegate void UpdateDelegate(float deltaTime);
+
+        /// <summary>
         ///     Delete control (will unlink from the parent and start to dispose)
         /// </summary>
         public virtual void Dispose()
@@ -401,11 +408,12 @@ namespace FlaxEngine.GUI
         /// <param name="deltaTime">Delta time in seconds</param>
         public virtual void Update(float deltaTime)
         {
-            // Update tooltip
-            if (IsMouseOver && ShowTooltip)
-            {
-                Tooltip.OnMouseOverControl(this, deltaTime);
-            }
+            // TODO: move all controls to use UpdateDelegate and remove this generic Update
+        }
+
+        private void OnUpdateTooltip(float deltaTime)
+        {
+            Tooltip.OnMouseOverControl(this, deltaTime);
         }
 
         /// <summary>
@@ -562,7 +570,10 @@ namespace FlaxEngine.GUI
 
             // Update tooltip
             if (ShowTooltip)
+            {
                 Tooltip.OnMouseEnterControl(this);
+                SetUpdate(ref _tooltipUpdate, OnUpdateTooltip);
+            }
         }
 
         /// <summary>
@@ -583,7 +594,10 @@ namespace FlaxEngine.GUI
 
             // Update tooltip
             if (ShowTooltip)
+            {
+                SetUpdate(ref _tooltipUpdate, null);
                 Tooltip.OnMouseLeaveControl(this);
+            }
         }
 
         /// <summary>
@@ -1055,7 +1069,52 @@ namespace FlaxEngine.GUI
         /// </summary>
         internal virtual void CacheRootHandle()
         {
+            if (_root != null)
+                RemoveUpdateCallbacks(_root);
+
             _root = _parent?.Root;
+
+            if (_root != null)
+                AddUpdateCallbacks(_root);
+        }
+
+        /// <summary>
+        /// Adds the custom control logic update callbacks to the root.
+        /// </summary>
+        /// <param name="root">The root.</param>
+        protected virtual void AddUpdateCallbacks(RootControl root)
+        {
+            if (_tooltipUpdate != null)
+                root.UpdateCallbacksToAdd.Add(_tooltipUpdate);
+        }
+
+        /// <summary>
+        /// Removes the custom control logic update callbacks from the root.
+        /// </summary>
+        /// <param name="root">The root.</param>
+        protected virtual void RemoveUpdateCallbacks(RootControl root)
+        {
+            if (_tooltipUpdate != null)
+                root.UpdateCallbacksToRemove.Add(_tooltipUpdate);
+        }
+
+        /// <summary>
+        /// Helper utility function to sets the update callback to the root. Does nothing if value has not been modified. Handles if control ahs no root or parent.
+        /// </summary>
+        /// <param name="onUpdate">The cached update callback delegate (field in teh custom control implementation).</param>
+        /// <param name="value">The value to assign.</param>
+        protected void SetUpdate(ref RootControl.UpdateDelegate onUpdate, RootControl.UpdateDelegate value)
+        {
+            if (onUpdate == value)
+                return;
+
+            if (_root != null && onUpdate != null)
+                _root.UpdateCallbacksToRemove.Add(onUpdate);
+
+            onUpdate = value;
+
+            if (_root != null && onUpdate != null)
+                _root.UpdateCallbacksToAdd.Add(onUpdate);
         }
 
         private void UpdateCenterAnchor()

@@ -315,6 +315,8 @@ namespace FlaxEditor
         {
             try
             {
+                Profiler.BeginEvent("Editor.Update");
+
                 // Update state machine
                 StateMachine.Update();
 
@@ -337,6 +339,8 @@ namespace FlaxEditor
                 {
                     Simulation.RequestResumeOrPause();
                 }
+
+                Profiler.EndEvent();
             }
             catch (Exception ex)
             {

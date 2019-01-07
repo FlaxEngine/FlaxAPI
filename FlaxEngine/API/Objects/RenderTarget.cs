@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace FlaxEngine.Rendering
 {
     /// <summary>
-    /// Defines a view for the <see cref="RenderTarget"/> surface or 
+    /// Defines a view for the <see cref="RenderTarget"/> surface or full resource or any of the sub-parts. Can be used to define a single subresource of the texture, volume texture or texture array.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct RenderTargetView

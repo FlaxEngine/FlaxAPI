@@ -137,8 +137,8 @@ namespace FlaxEditor.Windows.Profiler
             _mainChart.AddSample(sharedData.Stats.UpdateTimeMs);
 
             // Gather CPU events
-            var data = sharedData.GetEventsCPU();
-            _events.Add(data);
+            var events = sharedData.GetEventsCPU();
+            _events.Add(events);
 
             // Update timeline if using the last frame
             if (_mainChart.SelectedSampleIndex == -1)
@@ -372,13 +372,20 @@ namespace FlaxEditor.Windows.Profiler
 
                     // Count sub-events time
                     double subEventsTimeTotal = 0;
+                    int subEventsMemoryTotal = e.MemoryAllocation;
                     for (int k = i + 1; k < events.Length; k++)
                     {
                         var sub = events[k];
                         if (sub.Depth == e.Depth + 1)
+                        {
                             subEventsTimeTotal += Math.Max(sub.End - sub.Start, MinEventTimeMs);
+                        }
                         else if (sub.Depth <= e.Depth)
+                        {
                             break;
+                        }
+
+                        subEventsMemoryTotal += sub.MemoryAllocation;
                     }
 
                     var row = new Row
@@ -401,7 +408,7 @@ namespace FlaxEditor.Windows.Profiler
                             (float)(((time - subEventsTimeTotal) * 10000.0f) / 10000.0f),
 
                             // Memory Alloc
-                            e.MemoryAllocation,
+                            subEventsMemoryTotal,
                         },
                         Depth = e.Depth,
                         Width = _table.Width,

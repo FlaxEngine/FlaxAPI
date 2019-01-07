@@ -874,11 +874,15 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnUpdate()
         {
+            Profiler.BeginEvent("WindowsModule.Update");
+
             // Auto save workspace layout every few seconds
             var now = DateTime.UtcNow;
             if (_lastLayoutSaveTime.Ticks > 10 && now - _lastLayoutSaveTime >= TimeSpan.FromSeconds(10))
             {
+                Profiler.BeginEvent("Save Layout");
                 SaveCurrentLayout();
+                Profiler.EndEvent();
             }
 
             // Auto close on project icon saving end
@@ -894,6 +898,8 @@ namespace FlaxEditor.Modules
             {
                 Windows[i].OnUpdate();
             }
+
+            Profiler.EndEvent();
         }
 
         /// <inheritdoc />

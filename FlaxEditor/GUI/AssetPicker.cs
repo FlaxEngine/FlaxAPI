@@ -38,6 +38,17 @@ namespace FlaxEditor.GUI
             {
                 if (value == null)
                 {
+                    if (_selected == null && _selectedItem is SceneItem)
+                    {
+                        // Deselect scene reference
+                        _selectedItem.RemoveReference(this);
+                        _selectedItem = null;
+                        _selected = null;
+                        TooltipText = string.Empty;
+                        OnSelectedItemChanged();
+                        return;
+                    }
+
                     // Deselect
                     SelectedAsset = null;
                 }
@@ -71,7 +82,14 @@ namespace FlaxEditor.GUI
         /// </summary>
         public Guid SelectedID
         {
-            get => _selected?.ID ?? Guid.Empty;
+            get
+            {
+                if (_selected != null)
+                    return _selected.ID;
+                if (_selectedItem != null)
+                    return _selectedItem.ID;
+                return Guid.Empty;
+            }
             set => SelectedAsset = FlaxEngine.Content.LoadAsync(value);
         }
 
@@ -363,7 +381,7 @@ namespace FlaxEditor.GUI
                 Focus();
                 AssetSearchPopup.Show(this, Button1Rect.BottomLeft, IsValid, (assetItem) => SelectedItem = assetItem);
             }
-            else if (_selected != null)
+            else if (_selected != null || _selectedItem != null)
             {
                 if (Button2Rect.Contains(location) && _selectedItem != null)
                 {
@@ -374,7 +392,7 @@ namespace FlaxEditor.GUI
                 {
                     // Deselect asset
                     Focus();
-                    SelectedAsset = null;
+                    SelectedItem = null;
                 }
             }
 
