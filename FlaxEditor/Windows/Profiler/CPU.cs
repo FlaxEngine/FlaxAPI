@@ -137,8 +137,8 @@ namespace FlaxEditor.Windows.Profiler
             _mainChart.AddSample(sharedData.Stats.UpdateTimeMs);
 
             // Gather CPU events
-            var data = sharedData.GetEventsCPU();
-            _events.Add(data);
+            var events = sharedData.GetEventsCPU();
+            _events.Add(events);
 
             // Update timeline if using the last frame
             if (_mainChart.SelectedSampleIndex == -1)
