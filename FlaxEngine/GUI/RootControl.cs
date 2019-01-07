@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System.Collections.Generic;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -44,12 +46,61 @@ namespace FlaxEngine.GUI
         public abstract Vector2 MousePosition { get; set; }
 
         /// <summary>
+        /// The update callbacks collection. Controls can register for this to get the update event for logic handling.
+        /// </summary>
+        public readonly List<UpdateDelegate> UpdateCallbacks = new List<UpdateDelegate>(1024);
+
+        /// <summary>
+        /// The update callbacks to add before invoking the update.
+        /// </summary>
+        public List<UpdateDelegate> UpdateCallbacksToAdd = new List<UpdateDelegate>();
+
+        /// <summary>
+        /// The update callbacks to remove before invoking the update.
+        /// </summary>
+        public List<UpdateDelegate> UpdateCallbacksToRemove = new List<UpdateDelegate>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RootControl"/> class.
         /// </summary>
         protected RootControl()
         : base(0, 0, 100, 60)
         {
             CanFocus = false;
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            // Flush requests
+            Profiler.BeginEvent("RootControl.SyncCallbacks");
+            for (int i = 0; i < UpdateCallbacksToAdd.Count; i++)
+            {
+                UpdateCallbacks.Add(UpdateCallbacksToAdd[i]);
+            }
+            UpdateCallbacksToAdd.Clear();
+            for (int i = 0; i < UpdateCallbacksToRemove.Count; i++)
+            {
+                UpdateCallbacks.Remove(UpdateCallbacksToRemove[i]);
+            }
+            UpdateCallbacksToRemove.Clear();
+            Profiler.EndEvent();
+
+            // Perform the UI update
+            try
+            {
+                Profiler.BeginEvent("RootControl.Update");
+                for (int i = 0; i < UpdateCallbacks.Count; i++)
+                {
+                    UpdateCallbacks[i](deltaTime);
+                }
+            }
+            finally
+            {
+                Profiler.EndEvent();
+            }
         }
 
         /// <summary>

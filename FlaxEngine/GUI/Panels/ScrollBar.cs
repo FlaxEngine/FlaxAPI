@@ -32,22 +32,25 @@ namespace FlaxEngine.GUI
         public const int DefaultMinimumSize = 12;
 
         // Scrolling
-        private float _clickChange = 20, _scrollChange = 30;
 
+        private float _clickChange = 20, _scrollChange = 30;
         private float _minimum, _maximum = 100;
         private float _value, _targetValue;
         private readonly Orientation _orientation;
+        private RootControl.UpdateDelegate _update;
 
         // Input
+
         private float _mouseOffset;
 
         // Thumb data
-        private Rectangle _thumbRect;
 
+        private Rectangle _thumbRect;
         private bool _thumbClicked;
         private float _thumbCenter, _thumbSize;
 
         // Smoothing
+
         private float _thumbOpacity = DefaultMinimumOpacity;
 
         /// <summary>
@@ -114,6 +117,10 @@ namespace FlaxEngine.GUI
                     if (!UseSmoothing)
                     {
                         SetValue(value);
+                    }
+                    else
+                    {
+                        SetUpdate(ref _update, OnUpdate);
                     }
                 }
             }
@@ -218,14 +225,14 @@ namespace FlaxEngine.GUI
                 panel.SetViewOffset(_orientation, _value);
         }
 
-        /// <inheritdoc />
-        public override void Update(float deltaTime)
+        private void OnUpdate(float deltaTime)
         {
             bool isDeltaSlow = deltaTime > (1 / 20.0f);
 
             // Opacity smoothing
             float targetOpacity = Parent.IsMouseOver ? 1.0f : DefaultMinimumOpacity;
             _thumbOpacity = isDeltaSlow ? targetOpacity : Mathf.Lerp(_thumbOpacity, targetOpacity, deltaTime * 10.0f);
+            bool needUpdate = Mathf.Abs(_thumbOpacity - targetOpacity) > 0.001f;
 
             // Ensure scroll bar is visible
             if (Visible)
@@ -240,10 +247,15 @@ namespace FlaxEngine.GUI
                     else
                         value = _targetValue;
                     SetValue(value);
+                    needUpdate = true;
                 }
             }
 
-            base.Update(deltaTime);
+            // End updating if all animations are done
+            if (!needUpdate)
+            {
+                SetUpdate(ref _update, null);
+            }
         }
 
         /// <inheritdoc />
@@ -342,6 +354,40 @@ namespace FlaxEngine.GUI
             base.SetSizeInternal(ref size);
 
             UpdateThumb();
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseEnter(Vector2 location)
+        {
+            base.OnMouseEnter(location);
+
+            SetUpdate(ref _update, OnUpdate);
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseLeave()
+        {
+            base.OnMouseLeave();
+
+            SetUpdate(ref _update, OnUpdate);
+        }
+
+        /// <inheritdoc />
+        protected override void AddUpdateCallbacks(RootControl root)
+        {
+            base.AddUpdateCallbacks(root);
+
+            if (_update != null)
+                root.UpdateCallbacksToRemove.Add(_update);
+        }
+
+        /// <inheritdoc />
+        protected override void RemoveUpdateCallbacks(RootControl root)
+        {
+            base.RemoveUpdateCallbacks(root);
+
+            if (_update != null)
+                root.UpdateCallbacksToRemove.Add(_update);
         }
     }
 }
