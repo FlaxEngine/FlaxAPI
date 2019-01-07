@@ -203,6 +203,28 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Paints the foliage instances using the given foliage types selection and the brush location.
+        /// </summary>
+        /// <param name="foliage">The foliage actor.</param>
+        /// <param name="ray">The ray to test.</param>
+        /// <param name="distance">When the method completes, contains the distance of the intersection (if any valid).</param>
+        /// <param name="normal">When the method completes, contains the intersection surface normal vector (if any valid).</param>
+        /// <param name="instanceIndex">When the method completes, contains zero-based index of the foliage instance that is the closest to the ray.</param>
+        /// <returns>True whether the two objects intersected, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool Intersects(Foliage foliage, Ray ray, out float distance, out Vector3 normal, out int instanceIndex)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Intersects(Object.GetUnmanagedPtr(foliage), ref ray, out distance, out normal, out instanceIndex);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -235,6 +257,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Paint(IntPtr foliage, int[] foliageTypesIndices, ref Vector3 brushPosition, float brushRadius, bool additive);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Intersects(IntPtr foliage, ref Ray ray, out float distance, out Vector3 normal, out int instanceIndex);
 #endif
 
         #endregion
