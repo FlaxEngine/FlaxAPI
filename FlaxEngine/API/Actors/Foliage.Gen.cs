@@ -37,9 +37,66 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Gets the total amount of foliage instances added to the actor.
+        /// </summary>
+        [UnmanagedCall]
+        public int InstancesCount
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetInstancesCount(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the foliage instance data.
+        /// </summary>
+        /// <param name="index">The zero-based index of the foliage instance.</param>
+        /// <param name="value">The result instance data.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void GetInstance(int index, out Instance value)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_GetInstance(unmanagedPtr, index, out value);
+#endif
+        }
+
+        /// <summary>
+        /// Sets the foliage instance data (the transform only).
+        /// </summary>
+        /// <param name="index">The zero-based index of the foliage instance.</param>
+        /// <param name="value">The instance data.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void SetInstance(int index, ref Instance value)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_SetInstance(unmanagedPtr, index, ref value);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetInstancesCount(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetInstance(IntPtr obj, int index, out Instance value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetInstance(IntPtr obj, int index, ref Instance value);
 #endif
 
         #endregion
