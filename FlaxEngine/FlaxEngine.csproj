@@ -293,6 +293,7 @@
     <Compile Include="Enums\PhysicsCombineMode.cs" />
     <Compile Include="Enums\PlatformType.cs" />
     <Compile Include="Enums\Quality.cs" />
+    <Compile Include="Enums\RigidbodyConstraints.cs" />
     <Compile Include="Enums\UI.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorOrderAttribute.cs" />

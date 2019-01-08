@@ -254,6 +254,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the object movement constraint flags that define degrees of freedom are allowed for the simulation of object.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(150), EditorDisplay("Rigid Body"), Tooltip("The object movement constraint flags that define degrees of freedom are allowed for the simulation of object.")]
+        public RigidbodyConstraints Constraints
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetConstraints(unmanagedPtr); }
+            set { Internal_SetConstraints(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the linear velocity of the rigidbody.
         /// </summary>
         /// <remarks>
@@ -571,6 +586,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetCenterOfMassOffset(IntPtr obj, ref Vector3 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern RigidbodyConstraints Internal_GetConstraints(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetConstraints(IntPtr obj, RigidbodyConstraints val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetLinearVelocity(IntPtr obj, out Vector3 resultAsRef);
