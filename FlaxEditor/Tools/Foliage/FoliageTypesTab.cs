@@ -314,6 +314,8 @@ namespace FlaxEditor.Tools.Foliage
         /// <seealso cref="FlaxEditor.CustomEditors.Editors.GenericEditor" />
         private sealed class ProxyObjectEditor : GenericEditor
         {
+            private Label _info;
+
             /// <inheritdoc />
             public override void Initialize(LayoutElementsContainer layout)
             {
@@ -327,6 +329,11 @@ namespace FlaxEditor.Tools.Foliage
                     Parent = space.Spacer
                 };
                 removeButton.Clicked += OnRemoveButtonClicked;
+                _info = new Label(removeButton.Right + 6, 2, 200, 18.0f)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Parent = space.Spacer
+                };
             }
 
             /// <inheritdoc />
@@ -335,6 +342,8 @@ namespace FlaxEditor.Tools.Foliage
                 // Sync selected foliage options once before update to prevent too many data copies when fetching data from UI properties accessors
                 var proxyObject = (ProxyObject)Values[0];
                 proxyObject.SyncOptions();
+
+                _info.Text = "Total instances: " + proxyObject.Foliage.InstancesCount;
 
                 base.Refresh();
             }
