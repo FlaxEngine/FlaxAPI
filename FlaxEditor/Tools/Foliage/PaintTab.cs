@@ -173,7 +173,7 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
-            [EditorOrder(330), EditorDisplay("Placement"), Tooltip("If checked, instances will be aligned to normal of the placed surface.")]
+            [EditorOrder(330), EditorDisplay("Placement", "Align To Normal"), Tooltip("If checked, instances will be aligned to normal of the placed surface.")]
             public bool AlignToNormal
             {
                 get => _options.PlacementAlignToNormal != 0;

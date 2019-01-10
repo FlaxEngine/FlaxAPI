@@ -181,6 +181,17 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
+            [EditorOrder(160), VisibleIf("UseDensityScaling"), Limit(0, 10, 0.001f), EditorDisplay("Instance Options"), Tooltip("The density scaling scale applied to the global scale for the foliage instances of this type. Can be used to boost or reduce density scaling effect on this foliage type.")]
+            public float DensityScalingScale
+            {
+                get => _options.DensityScalingScale;
+                set
+                {
+                    _options.DensityScalingScale = value;
+                    SetOptions();
+                }
+            }
+
             //
 
             [EditorOrder(200), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The foliage instances density defined in instances count per 1000x1000 units area.")]
@@ -285,7 +296,7 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
-            [EditorOrder(330), EditorDisplay("Placement"), Tooltip("If checked, instances will be aligned to normal of the placed surface.")]
+            [EditorOrder(330), EditorDisplay("Placement", "Align To Normal"), Tooltip("If checked, instances will be aligned to normal of the placed surface.")]
             public bool AlignToNormal
             {
                 get => _options.PlacementAlignToNormal != 0;

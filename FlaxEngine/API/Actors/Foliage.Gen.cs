@@ -38,6 +38,20 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the global density scale for all foliage instances. The default value is 1. Use values from range 0-1. Lower values decrease amount of foliage instances in-game. Use it to tweak game performance for slower devices.
+        /// </summary>
+        [UnmanagedCall]
+        public static float GlobalDensityScale
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GlobalDensityScale(); }
+            set { Internal_SetGlobalDensityScale(value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets the total amount of foliage instances added to the actor.
         /// </summary>
         [UnmanagedCall]
@@ -244,6 +258,12 @@ namespace FlaxEngine
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GlobalDensityScale();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetGlobalDensityScale(float val);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetInstancesCount(IntPtr obj);
 

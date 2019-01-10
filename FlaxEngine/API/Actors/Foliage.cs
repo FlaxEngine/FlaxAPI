@@ -131,6 +131,11 @@ namespace FlaxEngine
             public float PlacementRandomRollAngle;
 
             /// <summary>
+            /// The density scaling scale applied to the global scale for the foliage instances of this type. Can be used to boost or reduce density scaling effect on this foliage type. Default is 1.
+            /// </summary>
+            public float DensityScalingScale;
+
+            /// <summary>
             /// Determines whenever this meshes can receive decals.
             /// </summary>
             public byte ReceiveDecals;
