@@ -63,7 +63,7 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(0), EditorDisplay("Instance"), ReadOnly, Tooltip("The foliage instance model (read-only).")]
             public Model Model
             {
-                get => FoliageTools.GetFoliageTypeModel(Foliage, _options.Type);
+                get => Foliage.GetFoliageTypeModel(_options.Type);
                 set => throw new NotImplementedException();
             }
 

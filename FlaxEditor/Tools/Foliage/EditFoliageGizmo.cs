@@ -46,7 +46,7 @@ namespace FlaxEditor.Tools.Foliage
                 return;
 
             foliage.GetInstance(instanceIndex, out var instance);
-            var model = FoliageTools.GetFoliageTypeModel(foliage, instance.Type);
+            var model = foliage.GetFoliageTypeModel(instance.Type);
             if (model)
             {
                 Matrix world;

@@ -52,16 +52,16 @@ namespace FlaxEditor.Tools.Foliage
 
             private MaterialBase[] _materials;
             private IntPtr[] _materialsPtr;
-            private FoliageTools.InstanceTypeOptions _options;
+            private FlaxEngine.Foliage.TypeOptions _options;
 
             public void SyncOptions()
             {
-                FoliageTools.GetFoliageTypeOptions(Foliage, SelectedFoliageTypeIndex, out _options);
+                Foliage.GetFoliageTypeOptions(SelectedFoliageTypeIndex, out _options);
             }
 
             public void SetOptions()
             {
-                FoliageTools.SetFoliageTypeOptions(Foliage, SelectedFoliageTypeIndex, ref _options);
+                Foliage.SetFoliageTypeOptions(SelectedFoliageTypeIndex, ref _options);
             }
 
             //
@@ -69,10 +69,10 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(10), EditorDisplay("Model"), Tooltip("Model to draw by all the foliage instances of this type. It must be unique within the foliage actor and cannot be null.")]
             public Model Model
             {
-                get => FoliageTools.GetFoliageTypeModel(Foliage, SelectedFoliageTypeIndex);
+                get => Foliage.GetFoliageTypeModel(SelectedFoliageTypeIndex);
                 set
                 {
-                    FoliageTools.SetFoliageTypeModel(Foliage, SelectedFoliageTypeIndex, value);
+                    Foliage.SetFoliageTypeModel(SelectedFoliageTypeIndex, value);
                     Tab.UpdateFoliageTypesList();
 
                     // TODO: support undo for editing foliage type properties
@@ -94,7 +94,7 @@ namespace FlaxEditor.Tools.Foliage
                         _materialsPtr = new IntPtr[size];
                     }
 
-                    FoliageTools.GetFoliageTypeMaterials(Foliage, SelectedFoliageTypeIndex, _materials);
+                    Foliage.GetFoliageTypeMaterials(SelectedFoliageTypeIndex, _materials);
 
                     return _materials;
                 }
@@ -120,7 +120,7 @@ namespace FlaxEditor.Tools.Foliage
                         _materialsPtr[i] = v ? v.unmanagedPtr : IntPtr.Zero;
                     }
 
-                    FoliageTools.SetFoliageTypeMaterials(Foliage, SelectedFoliageTypeIndex, _materialsPtr);
+                    Foliage.SetFoliageTypeMaterials(SelectedFoliageTypeIndex, _materialsPtr);
                 }
             }
 
@@ -218,7 +218,7 @@ namespace FlaxEditor.Tools.Foliage
             }
 
             [EditorOrder(220), EditorDisplay("Painting"), Tooltip("The scaling mode.")]
-            public FoliageTools.ScalingModes Scaling
+            public FlaxEngine.Foliage.ScalingModes Scaling
             {
                 get => _options.PaintScaling;
                 set
@@ -451,7 +451,7 @@ namespace FlaxEditor.Tools.Foliage
             var foliage = Tab.SelectedFoliage;
             var action = new Undo.EditFoliageAction(foliage);
 
-            FoliageTools.RemoveFoliageType(foliage, index);
+            foliage.RemoveFoliageType(index);
 
             action.RecordEnd();
             Tab.Editor.Undo.AddAction(action);
@@ -471,7 +471,7 @@ namespace FlaxEditor.Tools.Foliage
             var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
             var action = new Undo.EditFoliageAction(foliage);
 
-            FoliageTools.AddFoliageType(foliage, model);
+            foliage.AddFoliageType(model);
             Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
 
             action.RecordEnd();
@@ -479,7 +479,7 @@ namespace FlaxEditor.Tools.Foliage
 
             Tab.OnSelectedFoliageTypesChanged();
 
-            Tab.SelectedFoliageTypeIndex = FoliageTools.GetFoliageTypesCount(foliage) - 1;
+            Tab.SelectedFoliageTypeIndex = foliage.FoliageTypesCount - 1;
         }
 
         private bool IsItemValidForFoliageModel(AssetItem item)
@@ -498,11 +498,11 @@ namespace FlaxEditor.Tools.Foliage
             float y = 0;
             if (foliage != null)
             {
-                int typesCount = FoliageTools.GetFoliageTypesCount(foliage);
+                int typesCount = foliage.FoliageTypesCount;
                 _foliageTypesCount = typesCount;
                 for (int i = 0; i < typesCount; i++)
                 {
-                    var model = FoliageTools.GetFoliageTypeModel(foliage, i);
+                    var model = foliage.GetFoliageTypeModel(i);
                     var asset = Tab.Editor.ContentDatabase.FindAsset(model.ID);
                     var itemView = new AssetSearchPopup.AssetItemView(asset)
                     {
@@ -544,7 +544,7 @@ namespace FlaxEditor.Tools.Foliage
         internal void CheckFoliageTypesCount()
         {
             var foliage = Tab.SelectedFoliage;
-            var count = foliage ? FoliageTools.GetFoliageTypesCount(foliage) : 0;
+            var count = foliage ? foliage.FoliageTypesCount : 0;
             if (foliage != null && count != _foliageTypesCount)
             {
                 if (Tab.SelectedFoliageTypeIndex >= count)
