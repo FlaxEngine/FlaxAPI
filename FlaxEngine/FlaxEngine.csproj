@@ -73,6 +73,8 @@
     </Compile>
     <Compile Include="API\Actors\ExponentialHeightFog.cs" />
     <Compile Include="API\Actors\ExponentialHeightFog.Gen.cs" />
+    <Compile Include="API\Actors\Foliage.cs" />
+    <Compile Include="API\Actors\Foliage.Gen.cs" />
     <Compile Include="API\Actors\Joint.cs" />
     <Compile Include="API\Actors\Joint.Gen.cs" />
     <Compile Include="API\Actors\Light.cs" />
@@ -286,6 +288,7 @@
     <Compile Include="Engine\RayCastHit.cs" />
     <Compile Include="Engine\SceneReference.cs" />
     <Compile Include="Engine\SkeletonBone.cs" />
+    <Compile Include="Engine\SkeletonNode.cs" />
     <Compile Include="Engine\SkinnedMesh.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
     <Compile Include="Enums\ForceMode.cs" />

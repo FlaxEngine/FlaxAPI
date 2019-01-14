@@ -16,5 +16,10 @@ namespace FlaxEditor.Surface
         /// On surface graph edited
         /// </summary>
         void OnSurfaceGraphEdited();
+
+        /// <summary>
+        /// Called when surface wants to close the tool window (due to user interaction or sth else).
+        /// </summary>
+        void OnSurfaceClose();
     }
 }

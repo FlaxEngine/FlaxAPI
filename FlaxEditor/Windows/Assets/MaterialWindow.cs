@@ -703,6 +703,12 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
+        public void OnSurfaceClose()
+        {
+            Close();
+        }
+
+        /// <inheritdoc />
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);

@@ -36,6 +36,11 @@ namespace FlaxEditor.GUI
             public string Name { get; set; }
 
             /// <summary>
+            /// Occurs when items gets clicked by the user.
+            /// </summary>
+            public event Action<Item> Clicked;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="Item"/> class.
             /// </summary>
             public Item()
@@ -112,6 +117,8 @@ namespace FlaxEditor.GUI
                 var style = Style.Current;
                 GetTextRect(out var textRect);
 
+                base.Draw();
+
                 // Overlay
                 if (IsMouseOver)
                     Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundHighlighted);
@@ -150,8 +157,8 @@ namespace FlaxEditor.GUI
                 if (buttons == MouseButton.Left && _isMouseDown)
                 {
                     _isMouseDown = false;
-                    // More parents...
-                    ((ItemsListContextMenu)Parent.Parent.Parent).OnClickItem(this);
+
+                    Clicked?.Invoke(this);
                 }
 
                 return base.OnMouseUp(location, buttons);
@@ -238,6 +245,16 @@ namespace FlaxEditor.GUI
 
             PerformLayout();
             _searchBox.Focus();
+        }
+
+        /// <summary>
+        /// Adds the item to the view and registers for the click event.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        public void AddItem(Item item)
+        {
+            item.Parent = ItemsPanel;
+            item.Clicked += OnClickItem;
         }
 
         /// <summary>

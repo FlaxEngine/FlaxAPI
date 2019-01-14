@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.Surface.Archetypes;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Surface.GUI;
@@ -31,6 +32,8 @@ namespace FlaxEditor.Surface
         private bool _wasMouseDownSinceCommentCreatingStart;
         private bool _isReleasing;
         private VisjectCM _activeVisjectCM;
+        private GroupArchetype _customNodesGroup;
+        private List<NodeArchetype> _customNodes;
 
         /// <summary>
         /// The left mouse down flag.
@@ -259,8 +262,7 @@ namespace FlaxEditor.Surface
         /// <param name="onSave">The save action called when user wants to save the surface.</param>
         /// <param name="style">The custom surface style. Use null to create the default style.</param>
         /// <param name="groups">The custom surface node types. Pass null to use the default nodes set.</param>
-        /// <param name="primaryContextMenu">The custom surface context menu. Pass null to use the default one.</param>
-        public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, SurfaceStyle style = null, List<GroupArchetype> groups = null, VisjectCM primaryContextMenu = null)
+        public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, SurfaceStyle style = null, List<GroupArchetype> groups = null)
         {
             DockStyle = DockStyle.Fill;
 
@@ -273,10 +275,6 @@ namespace FlaxEditor.Surface
             // Initialize with the root context
             OpenContext(owner);
             RootContext.Modified += OnRootContextModified;
-
-            // Create primary menu (for nodes spawning)
-            _cmPrimaryMenu = primaryContextMenu ?? new VisjectCM(NodeArchetypes, CanSpawnNodeType, () => Parameters);
-            SetPrimaryMenu(_cmPrimaryMenu);
 
             // Create secondary menu (for other actions)
             _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();
@@ -317,6 +315,43 @@ namespace FlaxEditor.Surface
             {
                 Owner.OnSurfaceGraphEdited();
             }
+        }
+
+        /// <summary>
+        /// Gets the custom nodes group archetype with custom nodes archetypes. May be null if no custom nodes in use.
+        /// </summary>
+        /// <returns>The custom nodes or null if no used.</returns>
+        public GroupArchetype GetCustomNodes()
+        {
+            return _customNodesGroup;
+        }
+
+        /// <summary>
+        /// Adds the custom nodes archetypes to the surface (user can spawn them and surface can deserialize).
+        /// </summary>
+        /// <remarks>Custom nodes has to have a node logic typename in DefaultValues[0] and group name in DefaultValues[1].</remarks>
+        /// <param name="archetypes">The archetypes.</param>
+        public void AddCustomNodes(IEnumerable<NodeArchetype> archetypes)
+        {
+            if (_customNodes == null)
+            {
+                // First time setup
+                _customNodes = new List<NodeArchetype>(archetypes);
+                _customNodesGroup = new GroupArchetype
+                {
+                    GroupID = Custom.GroupID,
+                    Name = "Custom",
+                    Color = Color.Wheat
+                };
+            }
+            else
+            {
+                // Add more nodes
+                _customNodes.AddRange(archetypes);
+            }
+
+            // Update collection
+            _customNodesGroup.Archetypes = _customNodes.ToArray();
         }
 
         /// <summary>
@@ -637,7 +672,7 @@ namespace FlaxEditor.Surface
 
             // Cleanup
             _activeVisjectCM = null;
-            _cmPrimaryMenu.Dispose();
+            _cmPrimaryMenu?.Dispose();
             _cmSecondaryMenu.Dispose();
 
             base.OnDestroy();

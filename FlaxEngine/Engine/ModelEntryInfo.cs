@@ -111,7 +111,22 @@ namespace FlaxEngine
         /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
         public bool Intersects(Ray ray, out float distance)
         {
-            return Internal_IntersectsEntry(_actor.unmanagedPtr, _index, ref ray, out distance);
+            return Internal_IntersectsEntry(_actor.unmanagedPtr, _index, ref ray, out distance, out _);
+        }
+
+        /// <summary>
+        /// Determines if there is an intersection between the model actor mesh entry and a ray.
+        /// If mesh data is available on the CPU performs exact intersection check with the geometry.
+        /// Otherwise performs simple <see cref="BoundingBox"/> vs <see cref="Ray"/> test.
+        /// For more efficient collisions detection and ray casting use physics.
+        /// </summary>
+        /// <param name="ray">The ray to test.</param>
+        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection (if any valid).</param>
+        /// <param name="normal">When the method completes, contains the intersection surface normal vector (if any valid).</param>
+        /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
+        public bool Intersects(Ray ray, out float distance, out Vector3 normal)
+        {
+            return Internal_IntersectsEntry(_actor.unmanagedPtr, _index, ref ray, out distance, out normal);
         }
 
 #if !UNIT_TEST_COMPILANT
@@ -152,7 +167,7 @@ namespace FlaxEngine
         internal static extern void Internal_SetMeshShadowsMode(IntPtr obj, int index, ShadowsCastingMode value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IntersectsEntry(IntPtr obj, int index, ref Ray ray, out float distance);
+        internal static extern bool Internal_IntersectsEntry(IntPtr obj, int index, ref Ray ray, out float distance, out Vector3 normal);
 #endif
     }
 }

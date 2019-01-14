@@ -70,6 +70,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(UICanvas), typeof(UICanvasNode));
             CustomNodesTypes.Add(typeof(UIControl), typeof(UIControlNode));
             CustomNodesTypes.Add(typeof(Terrain), typeof(TerrainNode));
+            CustomNodesTypes.Add(typeof(Foliage), typeof(FoliageNode));
         }
 
         /// <summary>

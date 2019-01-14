@@ -18,6 +18,7 @@ namespace FlaxEditor.Surface.ContextMenu
     {
         private bool _isMouseDown;
         private List<Rectangle> _highlights;
+        private GroupArchetype _groupArchetype;
         private NodeArchetype _archetype;
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <value>
         /// The group archetype.
         /// </value>
-        public GroupArchetype GroupArchetype => Group.Archetype;
+        public GroupArchetype GroupArchetype => _groupArchetype;
 
         /// <summary>
         /// Gets the node archetype.
@@ -61,11 +62,13 @@ namespace FlaxEditor.Surface.ContextMenu
         /// Initializes a new instance of the <see cref="VisjectCMItem"/> class.
         /// </summary>
         /// <param name="group">The group.</param>
+        /// <param name="groupArchetype">The group archetype.</param>
         /// <param name="archetype">The archetype.</param>
-        public VisjectCMItem(VisjectCMGroup group, NodeArchetype archetype)
+        public VisjectCMItem(VisjectCMGroup group, GroupArchetype groupArchetype, NodeArchetype archetype)
         : base(0, 0, 120, 12)
         {
             Group = group;
+            _groupArchetype = groupArchetype;
             _archetype = archetype;
         }
 

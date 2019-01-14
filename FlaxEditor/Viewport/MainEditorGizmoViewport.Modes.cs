@@ -32,17 +32,30 @@ namespace FlaxEditor.Viewport
         public Tools.Terrain.PaintTerrainGizmoMode PaintTerrainGizmo;
 
         /// <summary>
-        /// The edit terrain gizmo
+        /// The edit terrain gizmo.
         /// </summary>
         public Tools.Terrain.EditTerrainGizmoMode EditTerrainGizmo;
+
+        /// <summary>
+        /// The paint foliage gizmo.
+        /// </summary>
+        public Tools.Foliage.PaintFoliageGizmoMode PaintFoliageGizmo;
+
+        /// <summary>
+        /// The edit foliage gizmo.
+        /// </summary>
+        public Tools.Foliage.EditFoliageGizmoMode EditFoliageGizmo;
 
         private void InitModes()
         {
             // Add default modes used by the editor
             _modes.Add(new TransformGizmoMode());
+            _modes.Add(new NoGizmoMode());
             _modes.Add(SculptTerrainGizmo = new Tools.Terrain.SculptTerrainGizmoMode());
             _modes.Add(PaintTerrainGizmo = new Tools.Terrain.PaintTerrainGizmoMode());
             _modes.Add(EditTerrainGizmo = new Tools.Terrain.EditTerrainGizmoMode());
+            _modes.Add(PaintFoliageGizmo = new Tools.Foliage.PaintFoliageGizmoMode());
+            _modes.Add(EditFoliageGizmo = new Tools.Foliage.EditFoliageGizmoMode());
             for (int i = 0; i < _modes.Count; i++)
             {
                 _modes[i].Init(this);

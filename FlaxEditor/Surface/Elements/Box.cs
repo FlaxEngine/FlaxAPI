@@ -76,14 +76,42 @@ namespace FlaxEditor.Surface.Elements
             {
                 if (_currentType != value)
                 {
-                    // Check if need to remove connections
-                    if ((value & _currentType) == 0)
-                    {
-                        RemoveConnections();
-                    }
-
                     // Set new value
+                    var prev = _currentType;
                     _currentType = value;
+
+                    // Check if will need to update box connections due to type change
+                    if (HasAnyConnection && (value & prev) == 0)
+                    {
+                        // Remove all invalid connections and update those which still can be valid
+                        var connections = Connections.ToArray();
+                        for (int i = 0; i < connections.Length; i++)
+                        {
+                            var targetBox = Connections[i];
+
+                            // Break connection
+                            Connections.Remove(targetBox);
+                            targetBox.Connections.Remove(this);
+
+                            // Check if can connect them
+                            if (CanConnectWith(targetBox))
+                            {
+                                // Connect again
+                                Connections.Add(targetBox);
+                                targetBox.Connections.Add(this);
+                            }
+
+                            targetBox.OnConnectionsChanged();
+                        }
+                        OnConnectionsChanged();
+
+                        // Update
+                        for (int i = 0; i < connections.Length; i++)
+                        {
+                            connections[i].ConnectionTick();
+                        }
+                        ConnectionTick();
+                    }
 
                     // Fire event
                     OnCurrentTypeChanged();
@@ -172,8 +200,9 @@ namespace FlaxEditor.Surface.Elements
 
                 // Update
                 for (int i = 0; i < toUpdate.Count; i++)
+                {
                     toUpdate[i].ConnectionTick();
-                toUpdate.Clear();
+                }
             }
         }
 

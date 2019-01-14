@@ -7,6 +7,9 @@ namespace FlaxEditor.Viewport.Modes
     /// <summary>
     /// Editor viewport gizmo mode descriptor. Defines which gizmo tools to show and how to handle scene editing.
     /// </summary>
+    /// <remarks>
+    /// Only one gizmo mode can be active at the time. It defines the viewport toolset usage.
+    /// </remarks>
     public abstract class EditorGizmoMode
     {
         private MainEditorGizmoViewport _viewport;
