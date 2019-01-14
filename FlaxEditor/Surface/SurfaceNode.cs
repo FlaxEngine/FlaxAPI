@@ -182,6 +182,8 @@ namespace FlaxEditor.Surface
             }
         }
 
+        private static readonly List<SurfaceNode> UpdateStack = new List<SurfaceNode>();
+
         /// <summary>
         /// Updates dependant/independent boxes types.
         /// </summary>
@@ -193,6 +195,14 @@ namespace FlaxEditor.Surface
                 // Back
                 return;
             }
+
+            // Prevent recursive loop call that might happen
+            if (UpdateStack.Contains(this))
+            {
+                return;
+            }
+            UpdateStack.Add(this);
+
             var independentBoxesLength = Archetype.IndependentBoxes?.Length;
             var dependentBoxesLength = Archetype.DependentBoxes?.Length;
 
@@ -233,6 +243,8 @@ namespace FlaxEditor.Surface
                     b.CurrentType = type;
                 }
             }
+
+            UpdateStack.Remove(this);
         }
 
         /// <summary>
