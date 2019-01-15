@@ -242,17 +242,25 @@ namespace FlaxEditor.Surface.Archetypes
             private Rectangle _dragAreaRect;
 
             /// <summary>
+            /// Gets or sets the first state node identifier for the state machine pointed by the entry node.
+            /// </summary>
+            public int FirstStateId
+            {
+                get => (int)Values[0];
+                set => SetValue(0, value);
+            }
+
+            /// <summary>
             /// Gets or sets the first state for the state machine pointed by the entry node.
             /// </summary>
             public StateMachineState FirstState
             {
-                get => Surface.FindNode((int)Values[0]) as StateMachineState;
+                get => Surface.FindNode(FirstStateId) as StateMachineState;
                 set
                 {
                     if (FirstState != value)
                     {
-                        var id = value != null ? (int)value.ID : -1;
-                        SetValue(0, id);
+                        FirstStateId = value != null ? (int)value.ID : -1;
                     }
                 }
             }
@@ -1065,7 +1073,35 @@ namespace FlaxEditor.Surface.Archetypes
                 base.RemoveConnections();
 
                 Transitions.Clear();
+                UpdateTransitions();
                 SaveData();
+
+                for (int i = 0; i < Surface.Nodes.Count; i++)
+                {
+                    if (Surface.Nodes[i] is StateMachineEntry entry && entry.FirstStateId == ID)
+                    {
+                        // Break link
+                        entry.FirstState = null;
+                    }
+                    else if (Surface.Nodes[i] is StateMachineState state)
+                    {
+                        bool modified = false;
+                        for (int j = 0; j < state.Transitions.Count && state.Transitions.Count > 0; j++)
+                        {
+                            if (state.Transitions[j].DestinationState == this)
+                            {
+                                // Break link
+                                state.Transitions.RemoveAt(j--);
+                                modified = true;
+                            }
+                        }
+                        if (modified)
+                        {
+                            state.UpdateTransitions();
+                            state.SaveData();
+                        }
+                    }
+                }
             }
 
             /// <inheritdoc />
