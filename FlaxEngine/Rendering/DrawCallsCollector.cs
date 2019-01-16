@@ -218,7 +218,27 @@ namespace FlaxEngine.Rendering
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
 
-            GPUContext.Internal_ExecuteDrawCalls(context.unmanagedPtr, task.unmanagedPtr, output.unmanagedPtr, DrawCalls, pass);
+            GPUContext.Internal_ExecuteDrawCalls(context.unmanagedPtr, task.unmanagedPtr, output.unmanagedPtr, IntPtr.Zero, DrawCalls, pass);
+        }
+
+        /// <summary>
+        /// Executes the draw calls.
+        /// </summary>
+        /// <param name="context">The GPU command context.</param>
+        /// <param name="task">The render task.</param>
+        /// <param name="output">The output texture.</param>
+        /// <param name="outputDepth">The output depth texture.</param>
+        /// <param name="pass">The rendering pass mode.</param>
+        public void ExecuteDrawCalls(GPUContext context, RenderTask task, RenderTarget output, RenderTarget outputDepth, RenderPass pass)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+
+            GPUContext.Internal_ExecuteDrawCalls(context.unmanagedPtr, task.unmanagedPtr, output.unmanagedPtr, Object.GetUnmanagedPtr(outputDepth), DrawCalls, pass);
         }
     }
 }
