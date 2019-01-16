@@ -47,13 +47,15 @@ namespace FlaxEditor.Gizmo
             Profiler.BeginEventGPU("Editor Primitives");
 
             // Check if use MSAA
-            bool enableMsaa = Editor.Instance.Options.Options.Visual.EnableMSAAForDebugDraw;
+            var format = output.Format;
+            GraphicsDevice.GetFeatures(format, out var formatSupport);
+            bool enableMsaa = formatSupport.MSAALevelMax >= MSAALevel.X4 && Editor.Instance.Options.Options.Visual.EnableMSAAForDebugDraw;
 
             // Prepare
             var msaaLevel = enableMsaa ? MSAALevel.X4 : MSAALevel.None;
             var width = output.Width;
             var height = output.Height;
-            var target = RenderTarget.GetTemporary(output.Format, width, height, TextureFlags.RenderTarget | TextureFlags.ShaderResource, msaaLevel);
+            var target = RenderTarget.GetTemporary(format, width, height, TextureFlags.RenderTarget | TextureFlags.ShaderResource, msaaLevel);
             var targetDepth = RenderTarget.GetTemporary(PixelFormat.D24_UNorm_S8_UInt, width, height, TextureFlags.DepthStencil, msaaLevel);
 
             // Copy frame and clear depth
