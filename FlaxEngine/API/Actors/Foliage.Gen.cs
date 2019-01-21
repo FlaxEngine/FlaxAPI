@@ -101,6 +101,43 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Adds the foliage instance.
+        /// </summary>
+        /// <remarks>
+        /// Input instance bounds are ignored (recalculated).
+        /// </remarks>
+        /// <param name="value">The instance data.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void AddInstance(ref Instance value)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_AddInstance(unmanagedPtr, ref value);
+#endif
+        }
+
+        /// <summary>
+        /// Removes the foliage instance.
+        /// </summary>
+        /// <param name="index">The zero-based index of the foliage instance.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void RemoveInstance(int index)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_RemoveInstance(unmanagedPtr, index);
+#endif
+        }
+
+        /// <summary>
         /// Gets the amount of foliage instance types defined for the given foliage actor.
         /// </summary>
         [UnmanagedCall]
@@ -255,6 +292,22 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Rebuilds the clusters (quad tree structure).
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void RebuildClusters()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_RebuildClusters(unmanagedPtr);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -272,6 +325,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetInstance(IntPtr obj, int index, ref Instance value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_AddInstance(IntPtr obj, ref Instance value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_RemoveInstance(IntPtr obj, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetFoliageTypesCount(IntPtr obj);
@@ -299,6 +358,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetFoliageTypeOptions(IntPtr obj, int index, ref TypeOptions value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_RebuildClusters(IntPtr obj);
 #endif
 
         #endregion
