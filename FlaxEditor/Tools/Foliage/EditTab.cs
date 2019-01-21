@@ -60,6 +60,13 @@ namespace FlaxEditor.Tools.Foliage
 
             //
 
+            [EditorOrder(-10), EditorDisplay("Instance"), ReadOnly, Tooltip("The foliage instance zero-based index (read-only).")]
+            public int Index
+            {
+                get => InstanceIndex;
+                set => throw new NotImplementedException();
+            }
+
             [EditorOrder(0), EditorDisplay("Instance"), ReadOnly, Tooltip("The foliage instance model (read-only).")]
             public Model Model
             {
