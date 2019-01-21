@@ -221,6 +221,23 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the total amount of the instanced that use the given foliage type.
+        /// </summary>
+        /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public int GetFoliageTypeInstancesCount(int index)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetFoliageTypeInstancesCount(unmanagedPtr, index);
+#endif
+        }
+
+        /// <summary>
         /// Gets the foliage instance type materials buffer (overrides).
         /// </summary>
         /// <param name="index">The zero-based index of the foliage instance type descriptor.</param>
@@ -346,6 +363,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_RemoveFoliageType(IntPtr obj, int index);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetFoliageTypeInstancesCount(IntPtr obj, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetFoliageTypeMaterials(IntPtr obj, int index, MaterialBase[] value);
