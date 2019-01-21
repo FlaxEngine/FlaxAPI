@@ -816,7 +816,7 @@ namespace FlaxEngine.GUI
             text = _tooltipText;
             location = Size * new Vector2(0.5f, 1.0f);
             area = new Rectangle(Vector2.Zero, Size);
-            return true;
+            return !string.IsNullOrEmpty(text);
         }
 
         /// <summary>
