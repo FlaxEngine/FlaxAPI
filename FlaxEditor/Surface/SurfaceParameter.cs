@@ -107,6 +107,26 @@ namespace FlaxEditor.Surface
             case ParameterType.Matrix:
                 param.Value = Matrix.Identity;
                 break;
+            case ParameterType.String:
+                param.Value = string.Empty;
+                break;
+            case ParameterType.Box:
+                param.Value = BoundingBox.Zero;
+                break;
+            case ParameterType.Rectangle:
+                param.Value = Rectangle.Empty;
+                break;
+            case ParameterType.Rotation:
+                param.Value = Quaternion.Identity;
+                break;
+            case ParameterType.Transform:
+                param.Value = Transform.Identity;
+                break;
+            case ParameterType.SceneTexture:
+                param.Value = 0;
+                break;
+            case ParameterType.Asset:
+            case ParameterType.Actor:
             case ParameterType.CubeTexture:
             case ParameterType.Texture:
             case ParameterType.NormalMap:
