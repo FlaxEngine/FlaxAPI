@@ -212,7 +212,7 @@ namespace FlaxEditor.Surface
             }
 
             // Change scale (disable scaling during selecting nodes)
-            if (IsMouseOver && !_leftMouseDown)
+            if (IsMouseOver && !_leftMouseDown && !IsPrimaryMenuOpened)
             {
                 var viewCenter = ViewCenterPosition;
                 ViewScale += delta * 0.1f;
