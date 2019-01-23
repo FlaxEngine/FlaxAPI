@@ -8,7 +8,6 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using Newtonsoft.Json;
 using JsonSerializer = FlaxEngine.Json.JsonSerializer;
-using Object = System.Object;
 
 namespace FlaxEditor.CustomEditors
 {
@@ -254,9 +253,9 @@ namespace FlaxEditor.CustomEditors
 
                 // Propagate values up (eg. when member of structure gets modified, also structure should be updated as a part of the other object)
                 var obj = _parent;
-                while (obj._parent != null)
+                while (obj._parent != null && obj.Values.HasValueType)
                 {
-                    obj._parent.SyncChildValues(obj.Values);
+                    obj.Values.Set(obj._parent.Values, obj.Values);
                     obj = obj._parent;
                 }
             }
@@ -696,15 +695,6 @@ namespace FlaxEditor.CustomEditors
                 _hasValueDirty = true;
                 _valueToSet = value;
             }
-        }
-
-        /// <summary>
-        /// Synchronizes the child values container with this editor values.
-        /// </summary>
-        /// <param name="values">The values to synchronize.</param>
-        protected virtual void SyncChildValues(ValueContainer values)
-        {
-            values.Set(Values);
         }
 
         /// <summary>
