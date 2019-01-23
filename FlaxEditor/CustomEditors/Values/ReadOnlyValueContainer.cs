@@ -31,6 +31,12 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <inheritdoc />
+        public override void Set(ValueContainer instanceValues, ValueContainer values)
+        {
+            // Not supported
+        }
+
+        /// <inheritdoc />
         public override void Set(ValueContainer instanceValues)
         {
             // Not supported
