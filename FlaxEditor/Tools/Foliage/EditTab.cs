@@ -114,6 +114,8 @@ namespace FlaxEditor.Tools.Foliage
         /// <seealso cref="FlaxEditor.CustomEditors.Editors.GenericEditor" />
         private sealed class ProxyObjectEditor : GenericEditor
         {
+            // TODO: add remove button to delete selected instance - with undo
+
             /// <inheritdoc />
             public override void Refresh()
             {

@@ -17,6 +17,7 @@ namespace FlaxEditor.Gizmo
         private Material _outlineMaterial;
         private MaterialInstance _material;
         private Color _color0, _color1;
+        private bool _enabled;
         private List<Actor> _actors;
 
         /// <summary>
@@ -46,12 +47,13 @@ namespace FlaxEditor.Gizmo
 
         private void OnOptionsChanged(EditorOptions options)
         {
+            _enabled = options.Visual.ShowSelectionOutline;
             _color0 = options.Visual.SelectionOutlineColor0;
             _color1 = options.Visual.SelectionOutlineColor1;
         }
 
         /// <inheritdoc />
-        public override bool CanRender => _material && _outlineMaterial.IsLoaded && SelectionGetter().Count > 0;
+        public override bool CanRender => _enabled && _material && _outlineMaterial.IsLoaded && SelectionGetter().Count > 0;
 
         /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
