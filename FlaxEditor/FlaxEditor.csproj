@@ -71,6 +71,7 @@
     <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
@@ -254,10 +255,10 @@
     <Compile Include="Gizmo\GizmosCollection.cs" />
     <Compile Include="Gizmo\IGizmoOwner.cs" />
     <Compile Include="Gizmo\TransformGizmo.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Draw.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Types.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Draw.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Selection.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Settings.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Types.cs" />
     <Compile Include="GUI\Dialogs\ColorPickerDialog.cs" />
     <Compile Include="GUI\Dialogs\ColorSelector.cs" />
     <Compile Include="GUI\Dialogs\Dialog.cs" />

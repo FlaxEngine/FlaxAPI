@@ -115,7 +115,7 @@ namespace FlaxEditor.Viewport
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
-            TransformGizmo.OnApplyTransformation += ApplyTransform;
+            TransformGizmo.ApplyTransformation += ApplyTransform;
             TransformGizmo.ModeChanged += OnGizmoModeChanged;
             TransformGizmo.Duplicate += Editor.Instance.SceneEditing.Duplicate;
             Gizmos.Active = TransformGizmo;
