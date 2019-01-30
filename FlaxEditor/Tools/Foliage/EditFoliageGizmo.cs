@@ -113,6 +113,17 @@ namespace FlaxEditor.Tools.Foliage
         }
 
         /// <inheritdoc />
+        protected override void OnEndTransforming()
+        {
+            base.OnEndTransforming();
+
+            var foliage = GizmoMode.SelectedFoliage;
+            if (!foliage)
+                throw new InvalidOperationException("No foliage selected.");
+            Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
+        }
+
+        /// <inheritdoc />
         public override void Draw(DrawCallsCollector collector)
         {
             base.Draw(collector);
