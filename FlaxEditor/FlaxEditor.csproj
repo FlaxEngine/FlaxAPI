@@ -362,7 +362,6 @@
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Surface\AnimGraphSurface.cs" />
-    <Compile Include="Surface\Archetypes\AlphaBlendMode.cs" />
     <Compile Include="Surface\Archetypes\Animation.cs" />
     <Compile Include="Surface\Archetypes\Animation.MultiBlend.cs" />
     <Compile Include="Surface\Archetypes\Animation.StateMachine.cs" />

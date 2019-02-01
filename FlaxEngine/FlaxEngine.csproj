@@ -291,6 +291,7 @@
     <Compile Include="Engine\SkeletonNode.cs" />
     <Compile Include="Engine\SkinnedMesh.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
+    <Compile Include="Enums\AlphaBlendMode.cs" />
     <Compile Include="Enums\ForceMode.cs" />
     <Compile Include="Enums\Keys.cs" />
     <Compile Include="Enums\PhysicsCombineMode.cs" />
