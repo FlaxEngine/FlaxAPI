@@ -35,6 +35,8 @@ namespace FlaxEditor.Viewport
         private readonly DragAssets<DragDropEventArgs> _dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem);
         private readonly DragActorType<DragDropEventArgs> _dragActorType = new DragActorType<DragDropEventArgs>(ValidateDragActorType);
 
+        private SelectionOutline _customSelectionOutline;
+
         /// <summary>
         /// The custom drag drop event arguments.
         /// </summary>
@@ -245,6 +247,28 @@ namespace FlaxEditor.Viewport
             DragHandlers.Add(_dragAssets);
 
             InitModes();
+        }
+
+        /// <summary>
+        /// Overrides the selection outline effect or restored the default one.
+        /// </summary>
+        /// <param name="customSelectionOutline">The custom selection outline or null if use default one.</param>
+        public void OverrideSelectionOutline(SelectionOutline customSelectionOutline)
+        {
+            if (_customSelectionOutline != null)
+            {
+                Task.CustomPostFx.Remove(_customSelectionOutline);
+
+                Task.CustomPostFx.Add(customSelectionOutline ? customSelectionOutline : SelectionOutline);
+            }
+            else if (customSelectionOutline != null)
+            {
+                Task.CustomPostFx.Remove(SelectionOutline);
+
+                Task.CustomPostFx.Add(customSelectionOutline);
+            }
+
+            _customSelectionOutline = customSelectionOutline;
         }
 
         private void CreateCameraAtView()
