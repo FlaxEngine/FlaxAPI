@@ -237,6 +237,9 @@ namespace FlaxEditor.Viewport
         public bool IsControlDown => _input.IsControlDown;
 
         /// <inheritdoc />
+        public bool SnapToGround => false;
+
+        /// <inheritdoc />
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;
 
         /// <inheritdoc />

@@ -382,8 +382,21 @@ namespace FlaxEditor.Gizmo
 
             bool isLeftBtnDown = Owner.IsLeftMouseButtonDown;
 
+            // Snap to ground
+            if (_activeAxis == Axis.None && Owner.SnapToGround && SelectionCount != 0)
+            {
+                if (Physics.RayCast(Position, Vector3.Down, out var hit, float.MaxValue, int.MaxValue, false))
+                {
+                    StartTransforming();
+                    var translationDelta = hit.Point - Position;
+                    var rotationDelta = Quaternion.Identity;
+                    var scaleDelta = Vector3.Zero;
+                    OnApplyTransformation(ref translationDelta, ref rotationDelta, ref scaleDelta);
+                    EndTransforming();
+                }
+            }
             // Only when is active
-            if (_isActive)
+            else if (_isActive)
             {
                 // Backup position
                 _lastIntersectionPosition = _intersectPosition;
