@@ -432,6 +432,7 @@
     <Compile Include="Tools\Foliage\Brush.cs" />
     <Compile Include="Tools\Foliage\EditFoliageGizmo.cs" />
     <Compile Include="Tools\Foliage\EditFoliageGizmoMode.cs" />
+    <Compile Include="Tools\Foliage\EditFoliageSelectionOutline.cs" />
     <Compile Include="Tools\Foliage\Undo\EditFoliageAction.cs" />
     <Compile Include="Tools\Foliage\EditTab.cs" />
     <Compile Include="Tools\Foliage\FoliageTab.cs" />

@@ -21,6 +21,11 @@ namespace FlaxEditor.Tools.Foliage
         public EditFoliageGizmo Gizmo;
 
         /// <summary>
+        /// The foliage editing selection outline.
+        /// </summary>
+        public EditFoliageSelectionOutline SelectionOutline;
+
+        /// <summary>
         /// Gets the selected foliage actor (see <see cref="Modules.SceneEditingModule"/>).
         /// </summary>
         public FlaxEngine.Foliage SelectedFoliage
@@ -60,6 +65,16 @@ namespace FlaxEditor.Tools.Foliage
             base.Init(viewport);
 
             Gizmo = new EditFoliageGizmo(viewport, this);
+            SelectionOutline = FlaxEngine.Object.New<EditFoliageSelectionOutline>();
+            SelectionOutline.GizmoMode = this;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            FlaxEngine.Object.Destroy(ref SelectionOutline);
+
+            base.Dispose();
         }
 
         /// <inheritdoc />
@@ -68,7 +83,16 @@ namespace FlaxEditor.Tools.Foliage
             base.OnActivated();
 
             Viewport.Gizmos.Active = Gizmo;
+            Viewport.OverrideSelectionOutline(SelectionOutline);
             SelectedInstanceIndex = -1;
+        }
+
+        /// <inheritdoc />
+        public override void OnDeactivated()
+        {
+            Viewport.OverrideSelectionOutline(null);
+
+            base.OnDeactivated();
         }
     }
 }
