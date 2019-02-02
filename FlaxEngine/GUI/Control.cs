@@ -781,7 +781,7 @@ namespace FlaxEngine.GUI
         /// <remarks>
         /// Tooltip can be only visible if mouse is over the control area (see <see cref="IsMouseOver"/>).
         /// </remarks>
-        protected virtual bool ShowTooltip => _tooltipText != null;
+        protected virtual bool ShowTooltip => !string.IsNullOrEmpty(_tooltipText);
 
         /// <summary>
         /// Links the tooltip.
@@ -817,7 +817,7 @@ namespace FlaxEngine.GUI
             text = _tooltipText;
             location = Size * new Vector2(0.5f, 1.0f);
             area = new Rectangle(Vector2.Zero, Size);
-            return true;
+            return !string.IsNullOrEmpty(text);
         }
 
         /// <summary>
@@ -1104,7 +1104,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="onUpdate">The cached update callback delegate (field in teh custom control implementation).</param>
         /// <param name="value">The value to assign.</param>
-        protected void SetUpdate(ref RootControl.UpdateDelegate onUpdate, RootControl.UpdateDelegate value)
+        protected void SetUpdate(ref UpdateDelegate onUpdate, UpdateDelegate value)
         {
             if (onUpdate == value)
                 return;

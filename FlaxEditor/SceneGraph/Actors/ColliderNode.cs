@@ -18,16 +18,17 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <inheritdoc />
-        public override bool RayCastSelf(ref RayCastData ray, out float distance)
+        public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
         {
             // Check if skip raycasts
             if ((ray.Flags & RayCastData.FlagTypes.SkipColliders) == RayCastData.FlagTypes.SkipColliders)
             {
                 distance = 0;
+                normal = Vector3.Up;
                 return false;
             }
 
-            return base.RayCastSelf(ref ray, out distance);
+            return base.RayCastSelf(ref ray, out distance, out normal);
         }
     }
 }

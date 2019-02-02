@@ -11,6 +11,8 @@ namespace FlaxEditor.Utilities
     /// </summary>
     public static class QueryFilterHelper
     {
+        private const int MinLength = 2;
+
         /// <summary>
         /// Matches the specified text with the filter.
         /// </summary>
@@ -19,8 +21,67 @@ namespace FlaxEditor.Utilities
         /// <returns>True if text has one or more matches, otherwise false.</returns>
         public static bool Match(string filter, string text)
         {
-            Range[] matches;
-            return Match(filter, text, out matches);
+            // Empty inputs
+            if (string.IsNullOrEmpty(filter) || string.IsNullOrEmpty(text))
+                return false;
+
+            // Full match
+            if (string.Equals(filter, text, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            bool hasMatch = false;
+
+            // Find matching sequences
+            // We do simple iteration over the characters
+            int textLength = text.Length;
+            int filterLength = filter.Length;
+            for (int textPos = 0; textPos < textLength; textPos++)
+            {
+                int matchStartPos = -1;
+                int endPos = Mathf.Min(textLength, textPos + filterLength);
+                int filterPos = 0;
+
+                for (int i = textPos; i < endPos; i++, filterPos++)
+                {
+                    var filterChar = char.ToLower(filter[filterPos]);
+                    var textChar = char.ToLower(text[i]);
+
+                    if (filterChar == textChar)
+                    {
+                        // Check if start the matching sequence
+                        if (matchStartPos == -1)
+                        {
+                            matchStartPos = textPos;
+                        }
+                    }
+                    else
+                    {
+                        // Check if stop matching sequence
+                        if (matchStartPos != -1)
+                        {
+                            var length = textPos - matchStartPos;
+                            if (length >= MinLength)
+                                hasMatch = true;
+                            textPos = matchStartPos + length;
+                            matchStartPos = -1;
+                        }
+                        break;
+                    }
+                }
+
+                // Check sequence on the end
+                if (matchStartPos != -1 && filterPos == filterLength)
+                {
+                    var length = endPos - matchStartPos;
+                    if (length >= MinLength)
+                        hasMatch = true;
+                    textPos = matchStartPos + length;
+                }
+            }
+
+            return hasMatch;
         }
 
         /// <summary>
@@ -44,7 +105,6 @@ namespace FlaxEditor.Utilities
                 return true;
             }
 
-            const int MinLength = 2;
             List<Range> ranges = null;
 
             // Find matching sequences
@@ -160,7 +220,11 @@ namespace FlaxEditor.Utilities
                 return !left.Equals(right);
             }
 
-            /// <inheritdoc />
+            /// <summary>
+            /// Compares this object with the other instanbce.
+            /// </summary>
+            /// <param name="other">The other object.</param>
+            /// <returns>True if objects are equal.</returns>
             public bool Equals(Range other)
             {
                 return StartIndex == other.StartIndex && Length == other.Length;
@@ -169,7 +233,8 @@ namespace FlaxEditor.Utilities
             /// <inheritdoc />
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(null, obj))
+                    return false;
                 return obj is Range && Equals((Range)obj);
             }
 

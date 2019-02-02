@@ -5,7 +5,7 @@ using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
-    public partial class TransformGizmo
+    public partial class TransformGizmoBase
     {
         private Model _modelTranslateAxis;
         private Model _modelScaleAxis;

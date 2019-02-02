@@ -136,6 +136,11 @@ namespace FlaxEditor.CustomEditors.Editors
                 IsReadOnly = attributes.FirstOrDefault(x => x is ReadOnlyAttribute) != null;
                 ExpandGroups = attributes.FirstOrDefault(x => x is ExpandGroupsAttribute) != null;
 
+                if (!IsReadOnly && info is FieldInfo fieldInfo && fieldInfo.IsInitOnly)
+                {
+                    // Field declared with `readonly` keyword
+                    IsReadOnly = true;
+                }
                 if (Display?.Name != null)
                 {
                     // Use name provided by the attribute

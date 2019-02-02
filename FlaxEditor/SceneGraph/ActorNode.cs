@@ -205,19 +205,23 @@ namespace FlaxEditor.SceneGraph
         public override object EditableObject => _actor;
 
         /// <inheritdoc />
-        public override SceneGraphNode RayCast(ref RayCastData ray, ref float distance)
+        public override SceneGraphNode RayCast(ref RayCastData ray, out float distance, out Vector3 normal)
         {
             // Skip actors that should not be selected
             if (_actor != null && (_actor.HideFlags & HideFlags.DontSelect) == HideFlags.DontSelect)
+            {
+                distance = 0;
+                normal = Vector3.Up;
                 return null;
+            }
 
-            return base.RayCast(ref ray, ref distance);
+            return base.RayCast(ref ray, out distance, out normal);
         }
 
         /// <inheritdoc />
-        public override bool RayCastSelf(ref RayCastData ray, out float distance)
+        public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
         {
-            return _actor.IntersectsItself(ref ray.Ray, out distance);
+            return _actor.IntersectsItself(ref ray.Ray, out distance, out normal);
         }
 
         /// <inheritdoc />

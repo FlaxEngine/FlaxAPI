@@ -82,7 +82,7 @@ namespace FlaxEditor.Viewport
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
-            TransformGizmo.OnApplyTransformation += ApplyTransform;
+            TransformGizmo.ApplyTransformation += ApplyTransform;
             TransformGizmo.ModeChanged += OnGizmoModeChanged;
             TransformGizmo.Duplicate += _window.Duplicate;
             Gizmos.Active = TransformGizmo;
@@ -235,6 +235,9 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public bool IsControlDown => _input.IsControlDown;
+
+        /// <inheritdoc />
+        public bool SnapToGround => false;
 
         /// <inheritdoc />
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;
@@ -479,8 +482,7 @@ namespace FlaxEditor.Viewport
 
             // Get mouse ray and try to hit any object
             var ray = MouseRay;
-            float closest = float.MaxValue;
-            var hit = _window.Graph.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+            var hit = _window.Graph.Root.RayCast(ref ray, out _, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
 
             // Update selection
             if (hit != null)
@@ -729,8 +731,7 @@ namespace FlaxEditor.Viewport
             {
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);
-                float closest = float.MaxValue;
-                hit = _window.Graph.Root.RayCast(ref ray, ref closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+                hit = _window.Graph.Root.RayCast(ref ray, out var closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
                 if (hit != null)
                 {
                     // Use hit location

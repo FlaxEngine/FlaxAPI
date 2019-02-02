@@ -49,7 +49,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private void AddScriptButtonOnClicked(Button button)
         {
-            var scripts = Editor.Instance.CodeEditing.GetScripts();
+            var scripts = Editor.Instance.CodeEditing.Scripts.Get();
             if (scripts.Count == 0)
             {
                 // No scripts
@@ -64,7 +64,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             for (int i = 0; i < scripts.Count; i++)
             {
                 var scriptType = scripts[i];
-                cm.ItemsPanel.AddChild(new ItemsListContextMenu.Item(scriptType.Name, scriptType)
+                cm.AddItem(new ItemsListContextMenu.Item(scriptType.Name, scriptType)
                 {
                     TooltipText = scriptType.FullName,
                 });

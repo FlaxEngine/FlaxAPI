@@ -48,7 +48,8 @@ namespace FlaxEditor.Surface.Elements
             }
 
             // Update the items
-            var bones = skeleton.Skeleton;
+            var nodes = skeleton.Nodes;
+            var bones = skeleton.Bones;
             _items.Capacity = Mathf.Max(_items.Capacity, bones.Length);
             StringBuilder sb = new StringBuilder(64);
             for (int i = 0; i < bones.Length; i++)
@@ -62,7 +63,7 @@ namespace FlaxEditor.Surface.Elements
                 }
 
                 sb.Append("> ");
-                sb.Append(bones[i].Name);
+                sb.Append(nodes[bones[i].NodeIndex].Name);
 
                 _items.Add(sb.ToString());
             }

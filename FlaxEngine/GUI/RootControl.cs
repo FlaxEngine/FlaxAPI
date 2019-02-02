@@ -126,14 +126,14 @@ namespace FlaxEngine.GUI
         /// Gets keyboard key down state.
         /// </summary>
         /// <param name="key">Key to check.</param>
-        /// <returns>True during the frame the user releases the key.</returns>
+        /// <returns>True during the frame the user starts pressing down the key.</returns>
         public abstract bool GetKeyDown(Keys key);
 
         /// <summary>
         /// Gets keyboard key up state.
         /// </summary>
         /// <param name="key">Key to check.</param>
-        /// <returns>True during the frame the user starts pressing down the key.</returns>
+        /// <returns>True during the frame the user releases the button.</returns>
         public abstract bool GetKeyUp(Keys key);
 
         /// <summary>

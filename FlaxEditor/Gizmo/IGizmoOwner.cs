@@ -41,6 +41,11 @@ namespace FlaxEditor.Gizmo
         bool IsControlDown { get; }
 
         /// <summary>
+        /// Gets a value indicating whether snap selected objects to ground (check if user pressed the given input key to call action).
+        /// </summary>
+        bool SnapToGround { get; }
+
+        /// <summary>
         /// Gets the view position.
         /// </summary>
         Vector3 ViewPosition { get; }

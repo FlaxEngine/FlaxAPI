@@ -1,0 +1,480 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{BE633490-FBA4-41EB-80D4-EFA312592B8E};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{7A23ADF2-CAB0-4ED9-9EDC-D9A2B9E51B21}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FlaxEngine</RootNamespace>
+    <AssemblyName>FlaxEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;FLAX_ASSERTIONS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\FlaxEngine.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>portable</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\FlaxEngine.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Tools\Bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\Actors\AnimatedModel.cs" />
+    <Compile Include="API\Actors\AnimatedModel.Gen.cs" />
+    <Compile Include="API\Actors\AudioListener.cs" />
+    <Compile Include="API\Actors\AudioListener.Gen.cs" />
+    <Compile Include="API\Actors\AudioSource.cs" />
+    <Compile Include="API\Actors\AudioSource.Gen.cs" />
+    <Compile Include="API\Actors\BoneSocket.cs" />
+    <Compile Include="API\Actors\BoneSocket.Gen.cs" />
+    <Compile Include="API\Actors\BoxBrush.cs" />
+    <Compile Include="API\Actors\BoxBrush.Gen.cs">
+      <DependentUpon>BoxBrush.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\Camera.cs" />
+    <Compile Include="API\Actors\Camera.Gen.cs">
+      <DependentUpon>Camera.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\Collider.cs" />
+    <Compile Include="API\Actors\Collider.Gen.cs" />
+    <Compile Include="API\Actors\Decal.cs" />
+    <Compile Include="API\Actors\Decal.Gen.cs" />
+    <Compile Include="API\Actors\EmptyActor.Gen.cs" />
+    <Compile Include="API\Actors\EnvironmentProbe.cs" />
+    <Compile Include="API\Actors\EnvironmentProbe.Gen.cs">
+      <DependentUpon>EnvironmentProbe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\ExponentialHeightFog.cs" />
+    <Compile Include="API\Actors\ExponentialHeightFog.Gen.cs" />
+    <Compile Include="API\Actors\Foliage.cs" />
+    <Compile Include="API\Actors\Foliage.Gen.cs" />
+    <Compile Include="API\Actors\Joint.cs" />
+    <Compile Include="API\Actors\Joint.Gen.cs" />
+    <Compile Include="API\Actors\Light.cs" />
+    <Compile Include="API\Actors\Light.Gen.cs" />
+    <Compile Include="API\Actors\StaticModel.cs" />
+    <Compile Include="API\Actors\PostFxVolume.cs" />
+    <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
+    <Compile Include="API\Actors\RigidBody.cs" />
+    <Compile Include="API\Actors\RigidBody.Gen.cs" />
+    <Compile Include="API\Actors\Scene.cs" />
+    <Compile Include="API\Actors\Scene.Gen.cs" />
+    <Compile Include="API\Actors\Sky.cs" />
+    <Compile Include="API\Actors\Sky.Gen.cs">
+      <DependentUpon>Sky.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\Skybox.cs" />
+    <Compile Include="API\Actors\Skybox.Gen.cs">
+      <DependentUpon>Skybox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Actors\StaticModel.Gen.cs" />
+    <Compile Include="API\Actors\Terrain.cs" />
+    <Compile Include="API\Actors\Terrain.Gen.cs" />
+    <Compile Include="API\Actors\TextRender.cs" />
+    <Compile Include="API\Actors\TextRender.Gen.cs" />
+    <Compile Include="API\Actors\UICanvas.cs" />
+    <Compile Include="API\Actors\UICanvas.Gen.cs" />
+    <Compile Include="API\Actors\UIControl.cs" />
+    <Compile Include="API\Actors\UIControl.Gen.cs" />
+    <Compile Include="API\Assets\BinaryAsset.cs" />
+    <Compile Include="API\Assets\BinaryAsset.Gen.cs" />
+    <Compile Include="API\Assets\JsonAsset.cs" />
+    <Compile Include="API\Assets\JsonAsset.Gen.cs" />
+    <Compile Include="API\Assets\Prefab.cs" />
+    <Compile Include="API\Assets\Prefab.Gen.cs" />
+    <Compile Include="API\BinaryAssets\Animation.cs" />
+    <Compile Include="API\BinaryAssets\Animation.Gen.cs" />
+    <Compile Include="API\BinaryAssets\AnimationGraph.cs" />
+    <Compile Include="API\BinaryAssets\AnimationGraph.Gen.cs" />
+    <Compile Include="API\BinaryAssets\AudioClip.cs" />
+    <Compile Include="API\BinaryAssets\AudioClip.Gen.cs" />
+    <Compile Include="API\BinaryAssets\CollisionData.cs" />
+    <Compile Include="API\BinaryAssets\CollisionData.Gen.cs" />
+    <Compile Include="API\BinaryAssets\FontAsset.cs" />
+    <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\Model.cs" />
+    <Compile Include="API\BinaryAssets\Model.Gen.cs" />
+    <Compile Include="API\BinaryAssets\RawDataAsset.cs" />
+    <Compile Include="API\BinaryAssets\RawDataAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\SkeletonMask.cs" />
+    <Compile Include="API\BinaryAssets\SkeletonMask.Gen.cs" />
+    <Compile Include="API\BinaryAssets\SkinnedModel.cs" />
+    <Compile Include="API\BinaryAssets\SkinnedModel.Gen.cs" />
+    <Compile Include="API\Colliders\BoxCollider.cs" />
+    <Compile Include="API\Colliders\BoxCollider.Gen.cs" />
+    <Compile Include="API\Colliders\CapsuleCollider.cs" />
+    <Compile Include="API\Colliders\CapsuleCollider.Gen.cs" />
+    <Compile Include="API\Colliders\CharacterController.cs" />
+    <Compile Include="API\Colliders\CharacterController.Gen.cs" />
+    <Compile Include="API\Colliders\MeshCollider.cs" />
+    <Compile Include="API\Colliders\MeshCollider.Gen.cs" />
+    <Compile Include="API\Colliders\SphereCollider.cs" />
+    <Compile Include="API\Colliders\SphereCollider.Gen.cs" />
+    <Compile Include="API\CreateWindowSettings.cs" />
+    <Compile Include="API\Joints\D6Joint.cs" />
+    <Compile Include="API\Joints\D6Joint.Gen.cs" />
+    <Compile Include="API\Joints\DistanceJoint.cs" />
+    <Compile Include="API\Joints\DistanceJoint.Gen.cs" />
+    <Compile Include="API\Joints\FixedJoint.cs" />
+    <Compile Include="API\Joints\FixedJoint.Gen.cs" />
+    <Compile Include="API\Joints\HingeJoint.cs" />
+    <Compile Include="API\Joints\HingeJoint.Gen.cs" />
+    <Compile Include="API\Joints\SliderJoint.cs" />
+    <Compile Include="API\Joints\SliderJoint.Gen.cs" />
+    <Compile Include="API\Joints\SphericalJoint.cs" />
+    <Compile Include="API\Joints\SphericalJoint.Gen.cs" />
+    <Compile Include="API\Lights\LightWithShadow.cs" />
+    <Compile Include="API\Lights\LightWithShadow.Gen.cs" />
+    <Compile Include="API\Lights\SkyLight.cs" />
+    <Compile Include="API\Lights\SkyLight.Gen.cs" />
+    <Compile Include="API\LightWithShadows\DirectionalLight.cs" />
+    <Compile Include="API\LightWithShadows\DirectionalLight.Gen.cs" />
+    <Compile Include="API\LightWithShadows\PointLight.cs" />
+    <Compile Include="API\LightWithShadows\PointLight.Gen.cs" />
+    <Compile Include="API\LightWithShadows\SpotLight.cs" />
+    <Compile Include="API\LightWithShadows\SpotLight.Gen.cs" />
+    <Compile Include="API\MaterialBases\Material.cs" />
+    <Compile Include="API\MaterialBases\Material.Gen.cs" />
+    <Compile Include="API\MaterialBases\MaterialInstance.cs" />
+    <Compile Include="API\MaterialBases\MaterialInstance.Gen.cs" />
+    <Compile Include="API\Objects\Actor.cs" />
+    <Compile Include="API\Objects\Actor.Gen.cs">
+      <DependentUpon>Actor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Objects\Asset.cs" />
+    <Compile Include="API\Objects\Asset.Gen.cs">
+      <DependentUpon>Asset.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Objects\BasePersistentData.cs" />
+    <Compile Include="API\Objects\BasePersistentData.Gen.cs" />
+    <Compile Include="API\Objects\Font.cs" />
+    <Compile Include="API\Objects\Font.Gen.cs">
+      <DependentUpon>Font.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Objects\GPUContext.cs" />
+    <Compile Include="API\Objects\GPUContext.Gen.cs" />
+    <Compile Include="API\Objects\RenderBuffers.cs" />
+    <Compile Include="API\Objects\RenderBuffers.Gen.cs" />
+    <Compile Include="API\Objects\RenderTarget.cs" />
+    <Compile Include="API\Objects\RenderTarget.Gen.cs" />
+    <Compile Include="API\Objects\RenderTask.cs" />
+    <Compile Include="API\Objects\RenderTask.Gen.cs" />
+    <Compile Include="API\Objects\Script.cs" />
+    <Compile Include="API\Objects\Script.Gen.cs">
+      <DependentUpon>Script.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Objects\Window.cs" />
+    <Compile Include="API\Objects\Window.Gen.cs" />
+    <Compile Include="API\Static\Application.cs" />
+    <Compile Include="API\Static\Application.Gen.cs" />
+    <Compile Include="API\Static\Audio.cs" />
+    <Compile Include="API\Static\Audio.Gen.cs" />
+    <Compile Include="API\Static\Content.cs" />
+    <Compile Include="API\Static\Content.Gen.cs">
+      <DependentUpon>Content.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Static\DebugDraw.cs" />
+    <Compile Include="API\Static\DebugDraw.Gen.cs" />
+    <Compile Include="API\Static\Globals.cs" />
+    <Compile Include="API\Static\Globals.Gen.cs" />
+    <Compile Include="API\Static\GraphicsDevice.cs" />
+    <Compile Include="API\Static\GraphicsDevice.Gen.cs" />
+    <Compile Include="API\Static\GraphicsQuality.cs" />
+    <Compile Include="API\Static\GraphicsQuality.Gen.cs" />
+    <Compile Include="API\Static\Input.cs" />
+    <Compile Include="API\Static\Input.Gen.cs">
+      <DependentUpon>Input.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Static\MessageBox.cs" />
+    <Compile Include="API\Static\MessageBox.Gen.cs" />
+    <Compile Include="API\Static\Physics.cs" />
+    <Compile Include="API\Static\Physics.Gen.cs" />
+    <Compile Include="API\Static\PluginManager.cs" />
+    <Compile Include="API\Static\PluginManager.Gen.cs" />
+    <Compile Include="API\Static\PrefabManager.cs" />
+    <Compile Include="API\Static\PrefabManager.Gen.cs" />
+    <Compile Include="API\Static\Profiler.cs" />
+    <Compile Include="API\Static\Profiler.Gen.cs" />
+    <Compile Include="API\Static\Render2D.cs" />
+    <Compile Include="API\Static\Render2D.Gen.cs">
+      <DependentUpon>Render2D.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\Static\SceneManager.cs" />
+    <Compile Include="API\Static\SceneManager.Gen.cs" />
+    <Compile Include="API\Static\Screen.cs" />
+    <Compile Include="API\Static\Screen.Gen.cs" />
+    <Compile Include="API\Static\Scripting.cs" />
+    <Compile Include="API\Static\Time.cs" />
+    <Compile Include="API\Static\Time.Gen.cs">
+      <DependentUpon>Time.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\TextureBases\CubeTexture.cs" />
+    <Compile Include="API\TextureBases\CubeTexture.Gen.cs" />
+    <Compile Include="API\TextureBases\IESProfile.cs" />
+    <Compile Include="API\TextureBases\IESProfile.Gen.cs" />
+    <Compile Include="API\TextureBases\SpriteAtlas.cs" />
+    <Compile Include="API\TextureBases\SpriteAtlas.Gen.cs" />
+    <Compile Include="API\TextureBases\Texture.cs" />
+    <Compile Include="API\TextureBases\Texture.Gen.cs" />
+    <Compile Include="AssetTypes\TextureBase.cs" />
+    <Compile Include="Attributes\Editor\AssetReferenceAttribute.cs" />
+    <Compile Include="Attributes\Editor\CustomEditorAliasAttribute.cs" />
+    <Compile Include="Attributes\Editor\DefaultEditorAttribute.cs" />
+    <Compile Include="Attributes\Editor\EditorDisplayAttribute.cs" />
+    <Compile Include="Attributes\Editor\EnumDisplayAttribute.cs" />
+    <Compile Include="Attributes\Editor\ExpandGroupsAttribute.cs" />
+    <Compile Include="Attributes\Editor\HeaderAttribute.cs" />
+    <Compile Include="Attributes\Editor\LimitAttribute.cs" />
+    <Compile Include="Attributes\Editor\MultilineTextAttribute.cs" />
+    <Compile Include="Attributes\Editor\RangeAttribute.cs" />
+    <Compile Include="Attributes\Editor\ReadOnlyAttribute.cs" />
+    <Compile Include="Attributes\Editor\ShowInEditorAttribute.cs" />
+    <Compile Include="Attributes\Editor\SpaceAttribute.cs" />
+    <Compile Include="Attributes\Editor\VisibleIfAttribute.cs" />
+    <Compile Include="Attributes\MemberCollectionAttribute.cs" />
+    <Compile Include="Attributes\NoSerializeAttribute.cs" />
+    <Compile Include="Attributes\PersisitentDataAttribute.cs" />
+    <Compile Include="Attributes\SerializeAttribute.cs" />
+    <Compile Include="Attributes\Editor\TooltipAttribute.cs" />
+    <Compile Include="Attributes\UnmanagedCallAttribute.cs" />
+    <Compile Include="Configurations\PersistentDataConfig.cs" />
+    <Compile Include="Engine\AnimationGraphParameter.cs" />
+    <Compile Include="Engine\AudioDevice.cs" />
+    <Compile Include="Engine\BrushSurface.cs" />
+    <Compile Include="Engine\Collision.cs" />
+    <Compile Include="Engine\ContactPoint.cs" />
+    <Compile Include="Engine\FontReference.cs" />
+    <Compile Include="Engine\Gamepad.cs" />
+    <Compile Include="Engine\GamepadLayout.cs" />
+    <Compile Include="Engine\GamepadVibrationState.cs" />
+    <Compile Include="Engine\HideFlags.cs" />
+    <Compile Include="Engine\InputAxis.cs" />
+    <Compile Include="Engine\InputEvent.cs" />
+    <Compile Include="Engine\ISceneObject.cs" />
+    <Compile Include="Engine\ITransformable.cs" />
+    <Compile Include="Engine\Limits.cs" />
+    <Compile Include="Engine\MaterialSlot.cs" />
+    <Compile Include="Engine\Mesh.cs" />
+    <Compile Include="Engine\ModelEntryInfo.cs" />
+    <Compile Include="Engine\ModelLOD.cs" />
+    <Compile Include="Engine\PhysicalMaterial.cs" />
+    <Compile Include="Engine\RayCastHit.cs" />
+    <Compile Include="Engine\SceneReference.cs" />
+    <Compile Include="Engine\SkeletonBone.cs" />
+    <Compile Include="Engine\SkeletonNode.cs" />
+    <Compile Include="Engine\SkinnedMesh.cs" />
+    <Compile Include="Engine\SpringParameters.cs" />
+    <Compile Include="Enums\AlphaBlendMode.cs" />
+    <Compile Include="Enums\ForceMode.cs" />
+    <Compile Include="Enums\Keys.cs" />
+    <Compile Include="Enums\PhysicsCombineMode.cs" />
+    <Compile Include="Enums\PlatformType.cs" />
+    <Compile Include="Enums\Quality.cs" />
+    <Compile Include="Enums\RigidbodyConstraints.cs" />
+    <Compile Include="Enums\UI.cs" />
+    <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
+    <Compile Include="Attributes\Editor\EditorOrderAttribute.cs" />
+    <Compile Include="Collections\CircularBuffer.cs" />
+    <Compile Include="Collections\IOrderedDictionary.cs" />
+    <Compile Include="Collections\OrderedDictionary.cs">
+      <DependentUpon>IOrderedDictionary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enums\WindowEnums.cs" />
+    <Compile Include="GUI\Brushes\LinearGradientBrush.cs" />
+    <Compile Include="GUI\Brushes\MaterialBrush.cs" />
+    <Compile Include="GUI\Brushes\RenderTargetBrush.cs" />
+    <Compile Include="GUI\Brushes\SolidColorBrush.cs" />
+    <Compile Include="GUI\Brushes\SpriteBrush.cs" />
+    <Compile Include="GUI\Brushes\TextureBrush.cs" />
+    <Compile Include="GUI\CanvasContainer.cs" />
+    <Compile Include="GUI\CanvasRootControl.cs" />
+    <Compile Include="GUI\Common\Border.cs" />
+    <Compile Include="GUI\Common\Button.cs" />
+    <Compile Include="GUI\Common\CheckBox.cs" />
+    <Compile Include="GUI\Brushes\IBrush.cs" />
+    <Compile Include="GUI\Common\Dropdown.cs" />
+    <Compile Include="GUI\Common\Image.cs" />
+    <Compile Include="GUI\Common\Label.cs" />
+    <Compile Include="GUI\Common\ProgressBar.cs" />
+    <Compile Include="GUI\Common\Spacer.cs" />
+    <Compile Include="GUI\ContainerControl.cs" />
+    <Compile Include="GUI\Control.Bounds.cs">
+      <DependentUpon>Control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control.cs" />
+    <Compile Include="GUI\DragData.cs" />
+    <Compile Include="GUI\DragDataFiles.cs" />
+    <Compile Include="GUI\DragDataText.cs" />
+    <Compile Include="GUI\Enums.cs" />
+    <Compile Include="GUI\Common\TextBox.cs" />
+    <Compile Include="GUI\Common\TextBox.Keys.cs">
+      <DependentUpon>TextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Margin.cs" />
+    <Compile Include="GUI\Panels\BlurPanel.cs" />
+    <Compile Include="GUI\Panels\DropPanel.cs" />
+    <Compile Include="GUI\Panels\GridPanel.cs" />
+    <Compile Include="GUI\Panels\HorizontalPanel.cs" />
+    <Compile Include="GUI\Panels\HScrollBar.cs" />
+    <Compile Include="GUI\Panels\PanelWithMargins.cs" />
+    <Compile Include="GUI\Panels\ScrollBar.cs" />
+    <Compile Include="GUI\Panels\Panel.cs" />
+    <Compile Include="GUI\Panels\SplitPanel.cs" />
+    <Compile Include="GUI\Panels\TilesPanel.cs" />
+    <Compile Include="GUI\Panels\UniformGridPanel.cs" />
+    <Compile Include="GUI\Panels\VerticalPanel.cs" />
+    <Compile Include="GUI\Panels\VScrollBar.cs" />
+    <Compile Include="GUI\RenderOutputControl.cs" />
+    <Compile Include="GUI\ScrollableControl.cs" />
+    <Compile Include="GUI\Style.cs" />
+    <Compile Include="GUI\Tooltip.cs" />
+    <Compile Include="GUI\RootControl.cs" />
+    <Compile Include="API\Actors\EmptyActor.cs" />
+    <Compile Include="Assertions\Assert.cs" />
+    <Compile Include="Assertions\AssertionException.cs" />
+    <Compile Include="Assertions\AssertionMessageUtil.cs" />
+    <Compile Include="Assertions\FloatComparer.cs" />
+    <Compile Include="AssetTypes\MaterialBase.cs" />
+    <Compile Include="AssetTypes\Shader.cs" />
+    <Compile Include="Enums\BrushMode.cs" />
+    <Compile Include="Enums\Input.Enums.cs" />
+    <Compile Include="GUI\WindowRootControl.cs" />
+    <Compile Include="Json\JsonSerializer.cs" />
+    <Compile Include="Json\JsonCustomSerializers\ExtendedDefaultContractResolver.cs" />
+    <Compile Include="Json\UnmanagedStringReader.cs" />
+    <Compile Include="Math\BoundingBox.cs" />
+    <Compile Include="Math\BoundingFrustum.cs" />
+    <Compile Include="Math\BoundingSphere.cs" />
+    <Compile Include="Internals\ClassLibraryInitializer.cs" />
+    <Compile Include="Math\CollisionsHelper.cs" />
+    <Compile Include="Math\Color.cs" />
+    <Compile Include="Math\Color.Palette.cs">
+      <DependentUpon>Color.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Math\Color32.cs" />
+    <Compile Include="Engine\Debug.cs" />
+    <Compile Include="Internals\DebugLogHandler.cs" />
+    <Compile Include="Attributes\ExecuteInEditModeAttribute.cs" />
+    <Compile Include="Attributes\Editor\HideInEditorAttribute.cs" />
+    <Compile Include="Engine\ILogger.cs" />
+    <Compile Include="Engine\ILogHandler.cs" />
+    <Compile Include="Engine\Logger.cs">
+      <DependentUpon>ILogger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enums\LogType.cs" />
+    <Compile Include="Math\ColorHSV.cs" />
+    <Compile Include="Math\FloatR10G10B10A2.cs" />
+    <Compile Include="Math\FloatR11G11B10.cs" />
+    <Compile Include="Math\Half.cs" />
+    <Compile Include="Math\Half2.cs" />
+    <Compile Include="Math\Half3.cs" />
+    <Compile Include="Math\Half4.cs" />
+    <Compile Include="Math\HalfUtils.cs" />
+    <Compile Include="Math\Int2.cs" />
+    <Compile Include="Math\Int3.cs" />
+    <Compile Include="Math\Int4.cs" />
+    <Compile Include="Math\Mathf.cs" />
+    <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\Matrix2x2.cs" />
+    <Compile Include="Math\Matrix3x3.cs" />
+    <Compile Include="Math\OrientedBoundingBox.cs" />
+    <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\SphericalHarmonics.cs" />
+    <Compile Include="Math\Transform.cs" />
+    <Compile Include="Math\TypeConverters\ColorConverter.cs" />
+    <Compile Include="Math\TypeConverters\Int2Converter.cs" />
+    <Compile Include="Math\TypeConverters\Int3Converter.cs" />
+    <Compile Include="Math\TypeConverters\Int4Converter.cs" />
+    <Compile Include="Math\TypeConverters\QuaternionConverter.cs" />
+    <Compile Include="Math\TypeConverters\Vector2Converter.cs" />
+    <Compile Include="Math\TypeConverters\Vector3Converter.cs" />
+    <Compile Include="Math\TypeConverters\Vector4Converter.cs" />
+    <Compile Include="Math\Viewport.cs" />
+    <Compile Include="Engine\Object.cs" />
+    <Compile Include="Math\Plane.cs" />
+    <Compile Include="Plugins\GamePlugin.cs" />
+    <Compile Include="Plugins\Plugin.cs" />
+    <Compile Include="Plugins\PluginDescription.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="Math\Ray.cs" />
+    <Compile Include="Attributes\RequireChildActorAttribute.cs" />
+    <Compile Include="Enums\ShadowsCastingMode.cs" />
+    <Compile Include="Enums\StaticFlags.cs" />
+    <Compile Include="Internals\UnhandledExceptionHandler.cs" />
+    <Compile Include="Engine\Exceptions\FlaxException.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Rendering\CullMode.cs" />
+    <Compile Include="Rendering\CustomRenderTask.cs" />
+    <Compile Include="Rendering\DrawCallsCollector.cs" />
+    <Compile Include="Rendering\Enums.cs" />
+<<<<<<< HEAD
+    <Compile Include="Rendering\IDrawable.cs" />
+=======
+    <Compile Include="Rendering\FormatFeatures.cs" />
+    <Compile Include="Rendering\FormatSupport.cs" />
+>>>>>>> master
+    <Compile Include="Rendering\LightmapSettings.cs" />
+    <Compile Include="Rendering\MainRenderTask.cs" />
+    <Compile Include="Rendering\MaterialInfo.cs" />
+    <Compile Include="Rendering\MaterialParameter.cs" />
+    <Compile Include="Rendering\MSAALevel.cs" />
+    <Compile Include="Rendering\PixelFormat.cs" />
+    <Compile Include="Rendering\PixelFormatExtensions.cs" />
+    <Compile Include="Rendering\PostProcessEffect.cs" />
+    <Compile Include="Rendering\PostProcessSettings.cs" />
+    <Compile Include="Rendering\RenderPass.cs" />
+    <Compile Include="Rendering\RenderView.cs" />
+    <Compile Include="Rendering\SceneRenderTask.cs" />
+    <Compile Include="Rendering\TessellationMethod.cs" />
+    <Compile Include="Rendering\TextureDimensions.cs" />
+    <Compile Include="Rendering\TextureFlags.cs" />
+    <Compile Include="Rendering\ViewFlags.cs" />
+    <Compile Include="Rendering\ViewMode.cs" />
+    <Compile Include="Utilities\Screenshot.cs" />
+    <Compile Include="Utilities\Extenstions.cs" />
+    <Compile Include="Utilities\State.cs" />
+    <Compile Include="Utilities\StateMachine.cs" />
+    <Compile Include="Utilities\StringUtils.cs" />
+    <Compile Include="Utilities\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Exec Command="call &quot;$(SolutionDir)onbuild.bat&quot; -Engine" Condition=" '$(OS)' == 'Windows_NT' " />
+  </Target>
+</Project>

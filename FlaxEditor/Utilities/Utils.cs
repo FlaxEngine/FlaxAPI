@@ -133,6 +133,16 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
+        /// Determines whether the given type comes from the game scripts assembly or the editor scripts assembly.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>True if type is from gae or editor assembly, otherwise false.</returns>
+        public static bool IsTypeFromGameScripts(Type type)
+        {
+            return type.Assembly.GetName().Name.StartsWith("Assembly");
+        }
+
+        /// <summary>
         /// Gets all the derived types from the given base type (excluding that type) within the given assembly.
         /// </summary>
         /// <param name="assembly">The target assembly to check its types.</param>
@@ -210,6 +220,41 @@ namespace FlaxEditor.Utilities
             {
                 if (checkAssembly(assemblies[i]))
                     GetDerivedTypes(assemblies[i], baseType, result, checkFunc);
+            }
+        }
+
+        /// <summary>
+        /// Gets all the types that have the given attribute defined within the given assembly.
+        /// </summary>
+        /// <param name="assembly">The target assembly to check its types.</param>
+        /// <param name="attributeType">The attribute type.</param>
+        /// <param name="result">The result collection. Elements will be added to it. Clear it before usage.</param>
+        /// <param name="checkFunc">Additional callback used to check if the given type is valid. Returns true if add type, otherwise false.</param>
+        public static void GetTypesWithAttributeDefined(Assembly assembly, Type attributeType, List<Type> result, Func<Type, bool> checkFunc)
+        {
+            var types = assembly.GetTypes();
+            for (int i = 0; i < types.Length; i++)
+            {
+                var t = types[i];
+                if (Attribute.IsDefined(t, attributeType, false) && checkFunc(t))
+                    result.Add(t);
+            }
+        }
+
+        /// <summary>
+        /// Gets all the types that have the given attribute defined within all the loaded assemblies.
+        /// </summary>
+        /// <param name="attributeType">The attribute type.</param>
+        /// <param name="result">The result collection. Elements will be added to it. Clear it before usage.</param>
+        /// <param name="checkFunc">Additional callback used to check if the given type is valid. Returns true if add type, otherwise false.</param>
+        /// <param name="checkAssembly">Additional callback used to check if the given assembly is valid. Returns true if search for types in the given assembly, otherwise false.</param>
+        public static void GetTypesWithAttributeDefined(Type attributeType, List<Type> result, Func<Type, bool> checkFunc, Func<Assembly, bool> checkAssembly)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                if (checkAssembly(assemblies[i]))
+                    GetTypesWithAttributeDefined(assemblies[i], attributeType, result, checkFunc);
             }
         }
 
@@ -483,41 +528,36 @@ namespace FlaxEditor.Utilities
                 }
                 break;
             }
-            /*case 9:// CommonType::Box:
+            case 9: // CommonType::Box:
             {
-                BoundingBox v;
-                ReadBox(&v);
-                data.Set(v);
+                value = new BoundingBox(new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle()),
+                                        new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle()));
             }
                 break;
-            case 10:// CommonType::Rotation:
+            case 10: // CommonType::Rotation:
             {
-                Quaternion v;
-                ReadQuaternion(&v);
-                data.Set(v);
+                value = new Quaternion(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
             }
                 break;
-            case 11:// CommonType::Transform:
+            case 11: // CommonType::Transform:
             {
-                Transform v;
-                ReadTransform(&v);
-                data.Set(v);
+                value = new Transform(new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle()),
+                                      new Quaternion(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle()),
+                                      new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle()));
             }
                 break;
-            case 12:// CommonType::Sphere:
+            case 12: // CommonType::Sphere:
             {
-                BoundingSphere v;
-                ReadSphere(&v);
-                data.Set(v);
+                value = new BoundingSphere(new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle()),
+                                           stream.ReadSingle());
             }
                 break;
-            case 13:// CommonType::Rect:
+            case 13: // CommonType::Rect:
             {
-                Rect v;
-                ReadRect(&v);
-                data.Set(v);
+                value = new Rectangle(new Vector2(stream.ReadSingle(), stream.ReadSingle()),
+                                      new Vector2(stream.ReadSingle(), stream.ReadSingle()));
             }
-                break;*/
+                break;
             case 15: // CommonType::Matrix
             {
                 value = new Matrix(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(),
@@ -598,6 +638,54 @@ namespace FlaxEditor.Utilities
                 stream.Write(asString.Length);
                 for (int i = 0; i < asString.Length; i++)
                     stream.Write((ushort)(asString[i] ^ 953));
+            }
+            else if (value is BoundingBox asBox)
+            {
+                stream.Write((byte)9);
+                stream.Write(asBox.Minimum.X);
+                stream.Write(asBox.Minimum.Y);
+                stream.Write(asBox.Minimum.Z);
+                stream.Write(asBox.Maximum.X);
+                stream.Write(asBox.Maximum.Y);
+                stream.Write(asBox.Maximum.Z);
+            }
+            else if (value is Quaternion asRotation)
+            {
+                stream.Write((byte)10);
+                stream.Write(asRotation.X);
+                stream.Write(asRotation.Y);
+                stream.Write(asRotation.Z);
+                stream.Write(asRotation.X);
+            }
+            else if (value is Transform asTransform)
+            {
+                stream.Write((byte)11);
+                stream.Write(asTransform.Translation.X);
+                stream.Write(asTransform.Translation.Y);
+                stream.Write(asTransform.Translation.Z);
+                stream.Write(asTransform.Orientation.X);
+                stream.Write(asTransform.Orientation.Y);
+                stream.Write(asTransform.Orientation.Z);
+                stream.Write(asTransform.Orientation.X);
+                stream.Write(asTransform.Scale.X);
+                stream.Write(asTransform.Scale.Y);
+                stream.Write(asTransform.Scale.Z);
+            }
+            else if (value is BoundingSphere asSphere)
+            {
+                stream.Write((byte)12);
+                stream.Write(asSphere.Center.X);
+                stream.Write(asSphere.Center.Y);
+                stream.Write(asSphere.Center.Z);
+                stream.Write(asSphere.Radius);
+            }
+            else if (value is Rectangle asRect)
+            {
+                stream.Write((byte)13);
+                stream.Write(asRect.Location.X);
+                stream.Write(asRect.Location.Y);
+                stream.Write(asRect.Size.X);
+                stream.Write(asRect.Size.Y);
             }
             else if (value is Matrix asMatrix)
             {

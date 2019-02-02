@@ -620,6 +620,127 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Performs a cubic interpolation.
+        /// </summary>
+        /// <param name="p0">The first point.</param>
+        /// <param name="t0">The tangent direction at first point.</param>
+        /// <param name="p1">The second point.</param>
+        /// <param name="t1">The tangent direction at second point.</param>
+        /// <param name="alpha">The distance along the spline.</param>
+        /// <returns>The interpolated value.</returns>
+        public static float CubicInterp(float p0, float t0, float p1, float t1, float alpha)
+        {
+            float alpha2 = alpha * alpha;
+            float alpha3 = alpha2 * alpha;
+            return (((2 * alpha3) - (3 * alpha2) + 1) * p0) + ((alpha3 - (2 * alpha2) + alpha) * t0) + ((alpha3 - alpha2) * t1) + (((-2 * alpha3) + (3 * alpha2)) * p1);
+        }
+
+        /// <summary>
+        /// Interpolate between A and B, applying an ease in function. Exponent controls the degree of the curve.
+        /// </summary>
+        public static float InterpEaseIn(float a, float b, float alpha, float exponent)
+        {
+            float modifiedAlpha = Pow(alpha, exponent);
+            return Lerp(a, b, modifiedAlpha);
+        }
+
+        /// <summary>
+        /// Interpolate between A and B, applying an ease out function. Exponent controls the degree of the curve.
+        /// </summary>
+        public static float InterpEaseOut(float a, float b, float alpha, float exponent)
+        {
+            float modifiedAlpha = 1.0f - Pow(1.0f - alpha, exponent);
+            return Lerp(a, b, modifiedAlpha);
+        }
+
+        /// <summary>
+        /// Interpolate between A and B, applying an ease in/out function. Exponent controls the degree of the curve.
+        /// </summary>
+        public static float InterpEaseInOut(float a, float b, float alpha, float exponent)
+        {
+            return Lerp(a, b, (alpha < 0.5f) ? InterpEaseIn(0.0f, 1.0f, alpha * 2.0f, exponent) * 0.5f : InterpEaseOut(0.0f, 1.0f, alpha * 2.0f - 1.0f, exponent) * 0.5f + 0.5f);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying a sinusoidal in function.
+        /// </summary>
+        public static float InterpSinIn(float a, float b, float alpha)
+        {
+            float modifiedAlpha = -1.0f * Cos(alpha * PiOverTwo) + 1.0f;
+            return Lerp(a, b, modifiedAlpha);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying a sinusoidal out function.
+        /// </summary>
+        public static float InterpSinOut(float a, float b, float alpha)
+        {
+            float modifiedAlpha = Sin(alpha * PiOverTwo);
+            return Lerp(a, b, modifiedAlpha);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying a sinusoidal in/out function.
+        /// </summary>
+        public static float InterpSinInOut(float a, float b, float alpha)
+        {
+            return Lerp(a, b, (alpha < 0.5f) ? InterpSinIn(0.0f, 1.0f, alpha * 2.0f) * 0.5f : InterpSinOut(0.0f, 1.0f, alpha * 2.0f - 1.0f) * 0.5f + 0.5f);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying an exponential in function.
+        /// </summary>
+        public static float InterpExpoIn(float a, float b, float alpha)
+        {
+            float modifiedAlpha = (alpha == 0.0f) ? 0.0f : Pow(2.0f, 10.0f * (alpha - 1.0f));
+            return Lerp(a, b, modifiedAlpha);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying an exponential out function.
+        /// </summary>
+        public static float InterpExpoOut(float a, float b, float alpha)
+        {
+            float modifiedAlpha = (alpha == 1.0f) ? 1.0f : -Pow(2.0f, -10.0f * alpha) + 1.0f;
+            return Lerp(a, b, modifiedAlpha);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying an exponential in/out function.
+        /// </summary>
+        public static float InterpExpoInOut(float a, float b, float alpha)
+        {
+            return Lerp(a, b, (alpha < 0.5f) ? InterpExpoIn(0.0f, 1.0f, alpha * 2.0f) * 0.5f : InterpExpoOut(0.0f, 1.0f, alpha * 2.0f - 1.0f) * 0.5f + 0.5f);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying a circular in function.
+        /// </summary>
+        public static float InterpCircularIn(float a, float b, float alpha)
+        {
+            float modifiedAlpha = -1.0f * (Sqrt(1.0f - alpha * alpha) - 1.0f);
+            return Lerp(a, b, modifiedAlpha);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying a circular out function.
+        /// </summary>
+        public static float InterpCircularOut(float a, float b, float alpha)
+        {
+            alpha -= 1.0f;
+            float modifiedAlpha = Sqrt(1.0f - alpha * alpha);
+            return Lerp(a, b, modifiedAlpha);
+        }
+
+        /// <summary>
+        /// Interpolation between A and B, applying a circular in/out function.
+        /// </summary>
+        public static float InterpCircularInOut(float a, float b, float alpha)
+        {
+            return Lerp(a, b, (alpha < 0.5f) ? InterpCircularIn(0.0f, 1.0f, alpha * 2.0f) * 0.5f : InterpCircularOut(0.0f, 1.0f, alpha * 2.0f - 1.0f) * 0.5f + 0.5f);
+        }
+
+        /// <summary>
         /// Maps the specified value from the given range into another.
         /// </summary>
         /// <param name="value">The value to map from range [fromMin; fromMax].</param>
@@ -1224,6 +1345,60 @@ namespace FlaxEngine
             double componentY = cy * cy / (2 * sigmaY * sigmaY);
 
             return amplitude * Math.Exp(-(componentX + componentY));
+        }
+
+        /// <summary>
+        /// Converts the input alpha value from a linear 0-1 value into the output alpha described by blend mode.
+        /// </summary>
+        /// <param name="alpha">The alpha (normalized to 0-1).</param>
+        /// <param name="mode">The mode.</param>
+        /// <returns>The output alpha (normalized to 0-1).</returns>
+        public static float InterpolateAlphaBlend(float alpha, AlphaBlendMode mode)
+        {
+            switch (mode)
+            {
+            case AlphaBlendMode.Sinusoidal:
+                alpha = (Sin(alpha * Pi - PiOverTwo) + 1.0f) / 2.0f;
+                break;
+            case AlphaBlendMode.Cubic:
+                alpha = CubicInterp(0.0f, 0.0f, 1.0f, 0.0f, alpha);
+                break;
+            case AlphaBlendMode.QuadraticInOut:
+                alpha = InterpEaseInOut(0.0f, 1.0f, alpha, 2);
+                break;
+            case AlphaBlendMode.CubicInOut:
+                alpha = InterpEaseInOut(0.0f, 1.0f, alpha, 3);
+                break;
+            case AlphaBlendMode.HermiteCubic:
+                alpha = SmoothStep(0.0f, 1.0f, alpha);
+                break;
+            case AlphaBlendMode.QuarticInOut:
+                alpha = InterpEaseInOut(0.0f, 1.0f, alpha, 4);
+                break;
+            case AlphaBlendMode.QuinticInOut:
+                alpha = InterpEaseInOut(0.0f, 1.0f, alpha, 5);
+                break;
+            case AlphaBlendMode.CircularIn:
+                alpha = InterpCircularIn(0.0f, 1.0f, alpha);
+                break;
+            case AlphaBlendMode.CircularOut:
+                alpha = InterpCircularOut(0.0f, 1.0f, alpha);
+                break;
+            case AlphaBlendMode.CircularInOut:
+                alpha = InterpCircularInOut(0.0f, 1.0f, alpha);
+                break;
+            case AlphaBlendMode.ExpIn:
+                alpha = InterpExpoIn(0.0f, 1.0f, alpha);
+                break;
+            case AlphaBlendMode.ExpOut:
+                alpha = InterpExpoOut(0.0f, 1.0f, alpha);
+                break;
+            case AlphaBlendMode.ExpInOut:
+                alpha = InterpExpoInOut(0.0f, 1.0f, alpha);
+                break;
+            }
+
+            return Saturate(alpha);
         }
     }
 }

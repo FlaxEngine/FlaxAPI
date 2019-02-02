@@ -195,9 +195,8 @@ namespace FlaxEditor.Tools.Terrain
         {
             // Get mouse ray and try to hit terrain
             var ray = Owner.MouseRay;
-            var closest = float.MaxValue;
             var rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref closest, rayCastFlags) as TerrainNode;
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, out _, rayCastFlags) as TerrainNode;
 
             // Update selection
             var sceneEditing = Editor.Instance.SceneEditing;

@@ -230,7 +230,7 @@ namespace FlaxEngine.GUI
             bool isDeltaSlow = deltaTime > (1 / 20.0f);
 
             // Opacity smoothing
-            float targetOpacity = Parent.IsMouseOver ? 1.0f : DefaultMinimumOpacity;
+            float targetOpacity = IsMouseOver ? 1.0f : DefaultMinimumOpacity;
             _thumbOpacity = isDeltaSlow ? targetOpacity : Mathf.Lerp(_thumbOpacity, targetOpacity, deltaTime * 10.0f);
             bool needUpdate = Mathf.Abs(_thumbOpacity - targetOpacity) > 0.001f;
 

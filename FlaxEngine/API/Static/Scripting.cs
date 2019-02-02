@@ -56,6 +56,13 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Returns true if game scripts assembly has been loaded.
+        /// </summary>
+        /// <returns>True if game scripts assembly is loaded, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool IsGameAssemblyLoaded();
+
+        /// <summary>
         /// Flushes the removed objects (disposed objects using Object.Destroy).
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]

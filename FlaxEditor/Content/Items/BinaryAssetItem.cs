@@ -12,6 +12,11 @@ namespace FlaxEditor.Content
     public class BinaryAssetItem : AssetItem
     {
         /// <summary>
+        /// The type of the asset (the same as <see cref="AssetItem.TypeName"/> but cached as type reference).
+        /// </summary>
+        public readonly Type Type;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BinaryAssetItem"/> class.
         /// </summary>
         /// <param name="path">The asset path.</param>
@@ -22,6 +27,7 @@ namespace FlaxEditor.Content
         : base(path, typeName, ref id)
         {
             ItemDomain = domain;
+            Type = Utilities.Utils.GetType(typeName);
 
             switch (domain)
             {

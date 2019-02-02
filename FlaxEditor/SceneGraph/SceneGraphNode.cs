@@ -180,9 +180,14 @@ namespace FlaxEditor.SceneGraph
                 None = 0,
 
                 /// <summary>
-                /// The skip colliders flag.
+                /// The skip colliders flag. Use it to ignore physics colliders intersections detection.
                 /// </summary>
                 SkipColliders = 1,
+
+                /// <summary>
+                /// The skip editor primitives. Use it to ignore editor icons and primitives intersections detection.
+                /// </summary>
+                SkipEditorPrimitives = 2,
             }
 
             /// <summary>
@@ -201,39 +206,43 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="ray">The ray casting data.</param>
         /// <param name="distance">The result distance.</param>
+        /// <param name="normal">The result intersection surface normal vector.</param>
         /// <returns>Hit object or null if there is no intersection at all.</returns>
-        public virtual SceneGraphNode RayCast(ref RayCastData ray, ref float distance)
+        public virtual SceneGraphNode RayCast(ref RayCastData ray, out float distance, out Vector3 normal)
         {
             if (!IsActive)
+            {
+                distance = 0;
+                normal = Vector3.Up;
                 return null;
-
-            // TODO: early out with boxWithChildren test
+            }
 
             // Check itself
             SceneGraphNode minTarget = null;
             float minDistance = float.MaxValue;
-            if (RayCastSelf(ref ray, out distance))
+            Vector3 minDistanceNormal = Vector3.Up;
+            if (RayCastSelf(ref ray, out distance, out normal))
             {
                 minTarget = this;
                 minDistance = distance;
+                minDistanceNormal = normal;
             }
 
             // Check all children
             for (int i = 0; i < ChildNodes.Count; i++)
             {
-                var hit = ChildNodes[i].RayCast(ref ray, ref distance);
-                if (hit != null)
+                var hit = ChildNodes[i].RayCast(ref ray, out distance, out normal);
+                if (hit != null && distance <= minDistance)
                 {
-                    if (distance <= minDistance)
-                    {
-                        minDistance = distance;
-                        minTarget = hit;
-                    }
+                    minTarget = hit;
+                    minDistance = distance;
+                    minDistanceNormal = normal;
                 }
             }
 
             // Return result
             distance = minDistance;
+            normal = minDistanceNormal;
             return minTarget;
         }
 
@@ -242,10 +251,12 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         /// <param name="ray">The ray casting data.</param>
         /// <param name="distance">The distance.</param>
+        /// <param name="normal">The result intersection surface normal vector.</param>
         /// <returns>True ray hits this node, otherwise false.</returns>
-        public virtual bool RayCastSelf(ref RayCastData ray, out float distance)
+        public virtual bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
         {
             distance = 0;
+            normal = Vector3.Up;
             return false;
         }
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-namespace FlaxEditor.Surface.Archetypes
+namespace FlaxEngine
 {
     /// <summary>
     /// Alpha blending modes.

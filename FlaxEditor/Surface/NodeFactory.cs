@@ -102,6 +102,7 @@ namespace FlaxEditor.Surface
                 Color = new Color(148, 30, 34),
                 Archetypes = Archetypes.Comparisons.Nodes
             },
+            // GroupID = 13 -> Custom Nodes provided externally
         };
 
 #if DEBUG
@@ -199,12 +200,14 @@ namespace FlaxEditor.Surface
         public static SurfaceNode CreateNode(List<GroupArchetype> groups, uint id, VisjectSurfaceContext context, ushort groupID, ushort typeID)
         {
             // Find archetype for that node
-            foreach (var groupArchetype in groups)
+            for (var i = 0; i < groups.Count; i++)
             {
+                var groupArchetype = groups[i];
                 if (groupArchetype.GroupID == groupID && groupArchetype.Archetypes != null)
                 {
-                    foreach (var nodeArchetype in groupArchetype.Archetypes)
+                    for (var j = 0; j < groupArchetype.Archetypes.Length; j++)
                     {
+                        var nodeArchetype = groupArchetype.Archetypes[j];
                         if (nodeArchetype.TypeID == typeID)
                         {
                             // Create

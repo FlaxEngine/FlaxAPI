@@ -243,6 +243,42 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Tries to find the actor of the given type in this actor tree (checks this actor and all children trees).
+        /// </summary>
+        /// <typeparam name="T">The type of the actor to find.</typeparam>
+        /// <returns>Actor instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public T FindActor<T>() where T : Actor
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindActorByType(unmanagedPtr, typeof(T)) as T;
+#endif
+        }
+
+        /// <summary>
+        /// Tries to find the actor of the given type in all the loaded scenes.
+        /// </summary>
+        /// <typeparam name="T">The type of the actor to find.</typeparam>
+        /// <returns>Actor instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static T Find<T>() where T : Actor
+        {
+#if UNIT_TEST_COMPILANT
+            return null;
+#else
+            return Internal_FindByType(typeof(T)) as T;
+#endif
+        }
+
+        /// <summary>
         /// Sets actor parent to this object
         /// </summary>
         /// <param name="actor">Actor to link</param>
@@ -256,7 +292,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            actor?.SetParent(this);
+            actor?.SetParent(this, worldPositionStays);
 #endif
         }
 
@@ -328,7 +364,7 @@ namespace FlaxEngine
         /// Determines if there is an intersection between the actor and a ray.
         /// </summary>
         /// <param name="ray">The ray to test.</param>
-        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection.</param>
+        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection (if any valid).</param>
         /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
@@ -338,7 +374,80 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_IntersectsItself(unmanagedPtr, ref ray, out distance);
+            return Internal_IntersectsItself(unmanagedPtr, ref ray, out distance, out _);
+#endif
+        }
+
+        /// <summary>
+        /// Determines if there is an intersection between the actor and a ray.
+        /// </summary>
+        /// <param name="ray">The ray to test.</param>
+        /// <param name="distance">When the method completes and returns true, contains the distance of the intersection (if any valid).</param>
+        /// <param name="normal">When the method completes, contains the intersection surface normal vector (if any valid).</param>
+        /// <returns>True if the actor is intersected by the ray, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        public bool IntersectsItself(ref Ray ray, out float distance, out Vector3 normal)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_IntersectsItself(unmanagedPtr, ref ray, out distance, out normal);
+#endif
+        }
+
+        /// <summary>
+        /// Serializes the actor object to the raw bytes. Serialized are actor properties and scripts but no child actors.
+        /// Serializes references to the other objects in a proper way using IDs.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <returns>The bytes array with serialized actor data. Returns null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        public static byte[] ToBytes(Actor actor)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ToBytes1(GetUnmanagedPtr(actor));
+#endif
+        }
+
+        /// <summary>
+        /// Serializes the actor object to the Json string. Serialized are only actor properties but no child actors nor scripts. 
+        /// Serializes references to the other objects in a proper way using IDs.
+        /// </summary>
+        /// <param name="actor">The actor to serialize.</param>
+        /// <returns>The Json container with serialized actor data. Returns null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        public static string Serialize(Actor actor)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Serialize(GetUnmanagedPtr(actor));
+#endif
+        }
+
+        /// <summary>
+        /// Deserializes the actor object to the Json string. Deserializes are only actor properties but no child actors nor scripts. 
+        /// </summary>
+        /// <param name="actor">The actor to deserialize.</param>
+        /// <param name="data">The serialized actor data (state).</param>
+        /// <returns>The Json container with serialized actor data. Returns null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+		[Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        public static void Deserialize(Actor actor, string data)
+        {
+#if UNIT_TEST_COMPILANT
+			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Deserialize(GetUnmanagedPtr(actor), data);
 #endif
         }
 
@@ -356,7 +465,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ToBytes(Array.ConvertAll(actors, GetUnmanagedPtr));
+            return Internal_ToBytes2(Array.ConvertAll(actors, GetUnmanagedPtr));
 #endif
         }
 
@@ -580,10 +689,19 @@ namespace FlaxEngine
         internal static extern void Internal_LocalToWorld(IntPtr obj, out Matrix matrix);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, out float distance);
+        internal static extern bool Internal_IntersectsItself(IntPtr obj, ref Ray ray, out float distance, out Vector3 normal);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern byte[] Internal_ToBytes(IntPtr[] actors);
+        internal static extern string Internal_Serialize(IntPtr actor);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Deserialize(IntPtr actor, string data);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_ToBytes1(IntPtr actor);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_ToBytes2(IntPtr[] actors);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor[] Internal_FromBytes(byte[] data, Guid[] idsMappingKeys, Guid[] idsMappingValues);

@@ -50,6 +50,8 @@
     <Compile Include="API\Profiling.cs" />
     <Compile Include="API\ProfilingTools.cs" />
     <Compile Include="API\ProfilingTools.Gen.cs" />
+    <Compile Include="API\Static\FoliageTools.cs" />
+    <Compile Include="API\Static\FoliageTools.Gen.cs" />
     <Compile Include="API\Static\GameCooker.cs" />
     <Compile Include="API\Static\GameCooker.Gen.cs" />
     <Compile Include="API\Static\ScriptsBuilder.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
@@ -252,10 +255,10 @@
     <Compile Include="Gizmo\GizmosCollection.cs" />
     <Compile Include="Gizmo\IGizmoOwner.cs" />
     <Compile Include="Gizmo\TransformGizmo.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Draw.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Types.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Draw.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Selection.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Settings.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Types.cs" />
     <Compile Include="GUI\Dialogs\ColorPickerDialog.cs" />
     <Compile Include="GUI\Dialogs\ColorSelector.cs" />
     <Compile Include="GUI\Dialogs\Dialog.cs" />
@@ -290,6 +293,8 @@
     <Compile Include="Modules\SceneModule.cs" />
     <Compile Include="Modules\SimulationModule.cs" />
     <Compile Include="Content\Thumbnails\ThumbnailsModule.cs" />
+    <Compile Include="Modules\SourceCodeEditing\CachedCustomAnimGraphNodesCollection.cs" />
+    <Compile Include="Modules\SourceCodeEditing\CachedTypesCollection.cs" />
     <Compile Include="Modules\SourceCodeEditing\DefaultSourceCodeEditor.cs" />
     <Compile Include="Modules\SourceCodeEditing\InBuildSourceCodeEditor.cs" />
     <Compile Include="Modules\UIModule.cs" />
@@ -326,6 +331,7 @@
     <Compile Include="SceneGraph\Actors\DirectionalLightNode.cs" />
     <Compile Include="SceneGraph\Actors\EnvironmentProbeNode.cs" />
     <Compile Include="SceneGraph\Actors\ExponentialHeightFogNode.cs" />
+    <Compile Include="SceneGraph\Actors\FoliageNode.cs" />
     <Compile Include="SceneGraph\Actors\StaticModelNode.cs" />
     <Compile Include="SceneGraph\Actors\PointLightNode.cs" />
     <Compile Include="SceneGraph\Actors\PostFxVolumeNode.cs" />
@@ -356,7 +362,6 @@
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Surface\AnimGraphSurface.cs" />
-    <Compile Include="Surface\Archetypes\AlphaBlendMode.cs" />
     <Compile Include="Surface\Archetypes\Animation.cs" />
     <Compile Include="Surface\Archetypes\Animation.MultiBlend.cs" />
     <Compile Include="Surface\Archetypes\Animation.StateMachine.cs" />
@@ -365,6 +370,7 @@
     <Compile Include="Surface\Archetypes\Boolean.cs" />
     <Compile Include="Surface\Archetypes\Comparisons.cs" />
     <Compile Include="Surface\Archetypes\Constants.cs" />
+    <Compile Include="Surface\Archetypes\Custom.cs" />
     <Compile Include="Surface\Archetypes\Layers.cs" />
     <Compile Include="Surface\Archetypes\Material.cs" />
     <Compile Include="Surface\Archetypes\Math.cs" />
@@ -422,6 +428,17 @@
     <Compile Include="Surface\ISurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
+    <Compile Include="Tools\Foliage\Brush.cs" />
+    <Compile Include="Tools\Foliage\EditFoliageGizmo.cs" />
+    <Compile Include="Tools\Foliage\EditFoliageGizmoMode.cs" />
+    <Compile Include="Tools\Foliage\EditFoliageSelectionOutline.cs" />
+    <Compile Include="Tools\Foliage\Undo\EditFoliageAction.cs" />
+    <Compile Include="Tools\Foliage\EditTab.cs" />
+    <Compile Include="Tools\Foliage\FoliageTab.cs" />
+    <Compile Include="Tools\Foliage\FoliageTypesTab.cs" />
+    <Compile Include="Tools\Foliage\PaintFoliageGizmo.cs" />
+    <Compile Include="Tools\Foliage\PaintFoliageGizmoMode.cs" />
+    <Compile Include="Tools\Foliage\PaintTab.cs" />
     <Compile Include="Tools\PerlinNoise.cs" />
     <Compile Include="Tools\Terrain\Brushes\Brush.cs" />
     <Compile Include="Tools\Terrain\Brushes\CircleBrush.cs" />
@@ -479,6 +496,7 @@
     <Compile Include="Viewport\MainEditorGizmoViewport.cs" />
     <Compile Include="Viewport\MainEditorGizmoViewport.Modes.cs" />
     <Compile Include="Viewport\Modes\EditorGizmoMode.cs" />
+    <Compile Include="Viewport\Modes\NoGizmoMode.cs" />
     <Compile Include="Viewport\Modes\TransformGizmoMode.cs" />
     <Compile Include="Viewport\PrefabWindowViewport.cs" />
     <Compile Include="Viewport\Previews\AnimatedModelPreview.cs" />

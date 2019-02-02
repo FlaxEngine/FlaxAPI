@@ -2,7 +2,7 @@
 
 namespace FlaxEditor.Gizmo
 {
-    public partial class TransformGizmo
+    public partial class TransformGizmoBase
     {
         /// <summary>
         /// Gizmo axis modes.

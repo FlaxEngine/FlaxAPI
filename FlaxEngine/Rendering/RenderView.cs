@@ -61,6 +61,16 @@ namespace FlaxEngine.Rendering
         public float ModelLODDistanceFactor;
 
         /// <summary>
+        /// The model LOD bias. Default is 0. Applied to all the objects in the shadow maps render views. Can be used to improve shadows rendering performance or increase quality.
+        /// </summary>
+        public int ShadowModelLODBias;
+
+        /// <summary>
+        /// The model LOD distance scale factor. Default is 1. Applied to all the objects in the shadow maps render views. Higher values increase LODs quality. Can be used to improve shadows rendering performance or increase quality.
+        /// </summary>
+        public float ShadowModelLODDistanceFactor;
+
+        /// <summary>
         /// The view flags.
         /// </summary>
         public ViewFlags Flags;

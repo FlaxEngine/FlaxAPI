@@ -113,7 +113,7 @@ namespace FlaxEditor.Windows
         /// </summary>
         public void Search()
         {
-            //throw new NotImplementedException("TODO: scene tree window searching");
+            _searchBox.Focus();
         }
 
         private void Tree_OnSelectedChanged(List<TreeNode> before, List<TreeNode> after)

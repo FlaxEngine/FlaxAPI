@@ -23,6 +23,34 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Adds the draw calls. Calculates target mesh level of detail and picks a proper meshes to draw.
+        /// </summary>
+        /// <param name="model">The model mesh to render. Cannot be null.</param>
+        /// <param name="material">The material to apply during rendering. Cannot be null.</param>
+        /// <param name="bounds">The bounds of the model instance that is being drawn (model instance bounds).</param>
+        /// <param name="world">The world matrix used to transform mesh geometry during rendering. Use <see cref="Matrix.Identity"/> to render mesh 'as is'.</param>
+        /// <param name="flags">The static flags. Used to describe type of the geometry.</param>
+        /// <param name="receiveDecals">True if rendered geometry can receive decals, otherwise false.</param>
+        public void AddDrawCall(Model model, MaterialBase material, ref BoundingSphere bounds, ref Matrix world, StaticFlags flags = StaticFlags.None, bool receiveDecals = true)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            // Pick a proper LOD
+            int lodIndex = RenderTask.Internal_ComputeModelLOD(model.unmanagedPtr, ref bounds, IntPtr.Zero);
+            var lods = model.LODs;
+            if (lods == null || lods.Length < lodIndex || lodIndex < 0)
+                return;
+            var lod = lods[lodIndex];
+
+            // Draw meshes
+            for (int i = 0; i < lod.Meshes.Length; i++)
+            {
+                AddDrawCall(lod.Meshes[i], material, ref world, flags);
+            }
+        }
+
+        /// <summary>
         /// Adds the draw call (single model drawing). Calculates target mesh level of detail and picks a proper meshes to draw (based on a material slot index).
         /// </summary>
         /// <param name="model">The model mesh to render. Cannot be null.</param>
@@ -190,7 +218,27 @@ namespace FlaxEngine.Rendering
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
 
-            GPUContext.Internal_ExecuteDrawCalls(context.unmanagedPtr, task.unmanagedPtr, output.unmanagedPtr, DrawCalls, pass);
+            GPUContext.Internal_ExecuteDrawCalls(context.unmanagedPtr, task.unmanagedPtr, output.unmanagedPtr, IntPtr.Zero, DrawCalls, pass);
+        }
+
+        /// <summary>
+        /// Executes the draw calls.
+        /// </summary>
+        /// <param name="context">The GPU command context.</param>
+        /// <param name="task">The render task.</param>
+        /// <param name="output">The output texture.</param>
+        /// <param name="outputDepth">The output depth texture.</param>
+        /// <param name="pass">The rendering pass mode.</param>
+        public void ExecuteDrawCalls(GPUContext context, RenderTask task, RenderTarget output, RenderTarget outputDepth, RenderPass pass)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+
+            GPUContext.Internal_ExecuteDrawCalls(context.unmanagedPtr, task.unmanagedPtr, output.unmanagedPtr, Object.GetUnmanagedPtr(outputDepth), DrawCalls, pass);
         }
     }
 }

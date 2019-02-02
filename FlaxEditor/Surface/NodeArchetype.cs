@@ -68,7 +68,7 @@ namespace FlaxEditor.Surface
         public object Tag;
 
         /// <summary>
-        /// Default node values.
+        /// Default node values. This array supports types: bool, int, float, Vector2, Vector3, Vector4, Color, Rectangle, Guid, string, Matrix and byte[].
         /// </summary>
         /// <remarks>
         /// The limit for the node values array is 32 (must match GRAPH_NODE_MAX_VALUES in C++ engine core).

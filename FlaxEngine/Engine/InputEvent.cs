@@ -56,5 +56,14 @@ namespace FlaxEngine
             if (string.Equals(name, Name, StringComparison.OrdinalIgnoreCase))
                 Triggered?.Invoke();
         }
+
+        /// <summary>
+        /// Releases this object.
+        /// </summary>
+        public void Dispose()
+        {
+            Input.ActionTriggered -= Handler;
+            GC.SuppressFinalize(this);
+        }
     }
 }

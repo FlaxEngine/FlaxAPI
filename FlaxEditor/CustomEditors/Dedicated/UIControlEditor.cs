@@ -50,7 +50,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
         private void OnSetTypeButtonClicked(Button button)
         {
-            var controlTypes = Editor.Instance.CodeEditing.GetControlTypes();
+            var controlTypes = Editor.Instance.CodeEditing.Controls.Get();
             if (controlTypes.Count == 0)
                 return;
 
@@ -59,7 +59,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             for (int i = 0; i < controlTypes.Count; i++)
             {
                 var controlType = controlTypes[i];
-                cm.ItemsPanel.AddChild(new ItemsListContextMenu.Item(controlType.Name, controlType)
+                cm.AddItem(new ItemsListContextMenu.Item(controlType.Name, controlType)
                 {
                     TooltipText = controlType.FullName,
                 });

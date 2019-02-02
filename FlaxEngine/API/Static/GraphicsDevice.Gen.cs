@@ -27,6 +27,24 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Gets the supported features for the specified format.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="result">The format features description.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void GetFeatures(PixelFormat format, out FormatFeatures result)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_GetFeatures(format, out result);
+#endif
+        }
+
+        /// <summary>
         /// Gets the graphics device rendering backend type.
         /// </summary>
         [UnmanagedCall]
@@ -125,6 +143,9 @@ namespace FlaxEngine.Rendering
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetLimits(out DeviceLimits resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetFeatures(PixelFormat format, out FormatFeatures result);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern RendererType Internal_GetRendererType();

@@ -85,7 +85,7 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
-        /// Gets a value indicating whether any value in the collection is null.
+        /// Gets a value indicating whether any value in the collection is null. Returns false if collection is empty.
         /// </summary>
         public bool HasNull
         {
@@ -94,6 +94,22 @@ namespace FlaxEditor.CustomEditors
                 for (int i = 0; i < Count; i++)
                 {
                     if (this[i] == null)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this any value in the collection is of value type (eg. a structure, not a class type). Returns false if collection is empty.
+        /// </summary>
+        public bool HasValueType
+        {
+            get
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    if (this[i] != null && this[i].GetType().IsValueType)
                         return true;
                 }
                 return false;
@@ -361,6 +377,37 @@ namespace FlaxEditor.CustomEditors
                 for (int i = 0; i < Count; i++)
                 {
                     fieldInfo.SetValue(instanceValues[i], value);
+                    this[i] = fieldInfo.GetValue(instanceValues[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the specified instance values. Refreshes this values container.
+        /// </summary>
+        /// <param name="instanceValues">The parent values.</param>
+        /// <param name="values">The other values to set this container to.</param>
+        public virtual void Set(ValueContainer instanceValues, ValueContainer values)
+        {
+            if (instanceValues == null || values == null)
+                throw new ArgumentNullException();
+            if (instanceValues.Count != Count || values.Count != Count)
+                throw new ArgumentException();
+
+            if (Info is PropertyInfo propertyInfo)
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    propertyInfo.SetValue(instanceValues[i], values[i]);
+                    this[i] = propertyInfo.GetValue(instanceValues[i]);
+                }
+            }
+            else
+            {
+                var fieldInfo = (FieldInfo)Info;
+                for (int i = 0; i < Count; i++)
+                {
+                    fieldInfo.SetValue(instanceValues[i], values[i]);
                     this[i] = fieldInfo.GetValue(instanceValues[i]);
                 }
             }

@@ -19,6 +19,11 @@ namespace FlaxEditor.Surface
         private ContextMenuButton _cmRemoveBoxConnectionsButton;
 
         /// <summary>
+        /// Gets a value indicating whether the primary surface context menu is being opened (eg. user is adding nodes).
+        /// </summary>
+        public bool IsPrimaryMenuOpened => _activeVisjectCM != null && _activeVisjectCM.Visible;
+
+        /// <summary>
         /// Sets the primary menu for the Visject nodes spawning. Can be overriden per surface or surface context. Set to null to restore the default menu.
         /// </summary>
         /// <param name="menu">The menu to override with (use null if restore the default value).</param>
@@ -45,11 +50,30 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Creates the default primary context menu for the surface. Override this to provide the custom implementation.
+        /// </summary>
+        /// <remarks>This method is being called in <see cref="ShowPrimaryMenu"/> on first time when need to show the default menu (no overrides specified for the surface context).</remarks>
+        /// <returns>The created menu.</returns>
+        protected VisjectCM CreateDefaultPrimaryMenu()
+        {
+            return new VisjectCM(NodeArchetypes, CanSpawnNodeType, () => Parameters, GetCustomNodes());
+        }
+
+        /// <summary>
         /// Shows the primary menu.
         /// </summary>
         /// <param name="location">The location in the Surface Space.</param>
         public void ShowPrimaryMenu(Vector2 location)
         {
+            // Check if need to create default context menu (no override specified)
+            if (_activeVisjectCM == null && _cmPrimaryMenu == null)
+            {
+                _activeVisjectCM = _cmPrimaryMenu = CreateDefaultPrimaryMenu();
+
+                _activeVisjectCM.OnItemClicked += OnPrimaryMenuButtonClick;
+                _activeVisjectCM.VisibleChanged += OnPrimaryMenuVisibleChanged;
+            }
+
             // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
             location += new Vector2(5);
             _activeVisjectCM.Show(this, location, _connectionInstigator as Box);

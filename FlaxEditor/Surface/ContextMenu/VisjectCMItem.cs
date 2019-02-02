@@ -18,6 +18,7 @@ namespace FlaxEditor.Surface.ContextMenu
     {
         private bool _isMouseDown;
         private List<Rectangle> _highlights;
+        private GroupArchetype _groupArchetype;
         private NodeArchetype _archetype;
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <value>
         /// The group archetype.
         /// </value>
-        public GroupArchetype GroupArchetype => Group.Archetype;
+        public GroupArchetype GroupArchetype => _groupArchetype;
 
         /// <summary>
         /// Gets the node archetype.
@@ -61,11 +62,13 @@ namespace FlaxEditor.Surface.ContextMenu
         /// Initializes a new instance of the <see cref="VisjectCMItem"/> class.
         /// </summary>
         /// <param name="group">The group.</param>
+        /// <param name="groupArchetype">The group archetype.</param>
         /// <param name="archetype">The archetype.</param>
-        public VisjectCMItem(VisjectCMGroup group, NodeArchetype archetype)
+        public VisjectCMItem(VisjectCMGroup group, GroupArchetype groupArchetype, NodeArchetype archetype)
         : base(0, 0, 120, 12)
         {
             Group = group;
+            _groupArchetype = groupArchetype;
             _archetype = archetype;
         }
 
@@ -78,9 +81,12 @@ namespace FlaxEditor.Surface.ContextMenu
             // Start off by resetting the score!
             SortScore = 0;
 
-            if (selectedBox == null) return;
-            if (!(_highlights?.Count > 0)) return;
-            if (!Visible) return;
+            if (selectedBox == null)
+                return;
+            if (!(_highlights?.Count > 0))
+                return;
+            if (!Visible)
+                return;
 
             if (CanConnectTo(selectedBox, NodeArchetype))
             {
@@ -95,8 +101,10 @@ namespace FlaxEditor.Surface.ContextMenu
 
         private bool CanConnectTo(Box startBox, NodeArchetype nodeArchetype)
         {
-            if (startBox == null) return false;
-            if (!startBox.IsOutput) return false; // For now, I'm only handing the output box case
+            if (startBox == null)
+                return false;
+            if (!startBox.IsOutput)
+                return false; // For now, I'm only handing the output box case
 
             for (int i = 0; i < nodeArchetype.Elements.Length; i++)
             {
@@ -187,6 +195,8 @@ namespace FlaxEditor.Surface.ContextMenu
         {
             var style = Style.Current;
             var rect = new Rectangle(Vector2.Zero, Size);
+            var textRect = new Rectangle(2, 0, rect.Width - 4, rect.Height);
+            var showScoreHit = SortScore > 0.1f;
 
             // Overlay
             if (IsMouseOver)
@@ -194,6 +204,12 @@ namespace FlaxEditor.Surface.ContextMenu
 
             if (Group.ContextMenu.SelectedItem == this)
                 Render2D.FillRectangle(rect, style.BackgroundSelected);
+
+            // Shift text with highlights if using score mark
+            if (showScoreHit)
+            {
+                Render2D.PushTransform(Matrix3x3.Translation2D(12, 0));
+            }
 
             // Draw all highlights
             if (_highlights != null)
@@ -204,7 +220,14 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             // Draw name
-            Render2D.DrawText(style.FontSmall, (SortScore > 0.1f ? "> " : "") + _archetype.Title, new Rectangle(2, 0, rect.Width - 4, rect.Height), Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(style.FontSmall, _archetype.Title, textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+
+            // Reset transform and draw score mark
+            if (showScoreHit)
+            {
+                Render2D.PopTransform();
+                Render2D.DrawText(style.FontSmall, "> ", textRect, Enabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center);
+            }
         }
 
         /// <inheritdoc />

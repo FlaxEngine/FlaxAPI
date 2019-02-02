@@ -304,7 +304,7 @@ namespace FlaxEngine.Rendering
         internal static extern void Internal_DrawSceneDepth(IntPtr obj, IntPtr task, IntPtr output, bool drawTransparency, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_ExecuteDrawCalls(IntPtr obj, IntPtr task, IntPtr output, RenderTask.DrawCall[] drawCalls, RenderPass pass);
+        internal static extern void Internal_ExecuteDrawCalls(IntPtr obj, IntPtr task, IntPtr output, IntPtr outputDepth, RenderTask.DrawCall[] drawCalls, RenderPass pass);
 #endif
 
         #endregion

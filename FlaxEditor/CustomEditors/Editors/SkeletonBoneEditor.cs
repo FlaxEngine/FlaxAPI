@@ -28,9 +28,10 @@ namespace FlaxEditor.CustomEditors.Editors
                 && boneSocket.Parent is AnimatedModel animatedModel && animatedModel.SkinnedModel
                 && !animatedModel.SkinnedModel.WaitForLoaded())
             {
-                var skeleton = animatedModel.SkinnedModel.Skeleton;
-                for (int i = 0; i < skeleton.Length; i++)
-                    element.ComboBox.AddItem(skeleton[i].Name);
+                var nodes = animatedModel.SkinnedModel.Nodes;
+                var bones = animatedModel.SkinnedModel.Bones;
+                for (int i = 0; i < bones.Length; i++)
+                    element.ComboBox.AddItem(nodes[bones[i].NodeIndex].Name);
             }
         }
 

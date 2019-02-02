@@ -27,7 +27,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// <inheritdoc />
         protected override IntPtr GetData(ref Int2 patchCoord, object tag)
         {
-            return TerrainTools.GetHeightmapData(_terrain, ref patchCoord);
+            return TerrainTools.GetHeightmapData(Terrain, ref patchCoord);
         }
 
         /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         {
             var offset = Int2.Zero;
             var size = new Int2((int)Mathf.Sqrt(_heightmapLength));
-            if (TerrainTools.ModifyHeightMap(_terrain, ref patchCoord, data, ref offset, ref size))
+            if (TerrainTools.ModifyHeightMap(Terrain, ref patchCoord, data, ref offset, ref size))
                 throw new FlaxException("Failed to modify the heightmap.");
         }
     }
