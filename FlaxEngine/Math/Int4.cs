@@ -763,6 +763,26 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Performs an explicit conversion from <see cref="Int4" /> to <see cref="Int2" />.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Int2(Int4 value)
+        {
+            return new Int2(value.X, value.Y);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="Int4" /> to <see cref="Int3" />.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Int3(Int4 value)
+        {
+            return new Int3(value.X, value.Y, value.Z);
+        }
+
+        /// <summary>
         /// Performs an explicit conversion from <see cref="Int4" /> to <see cref="Vector2" />.
         /// </summary>
         /// <param name="value">The value.</param>
@@ -780,6 +800,16 @@ namespace FlaxEngine
         public static explicit operator Vector3(Int4 value)
         {
             return new Vector3(value.X, value.Y, value.Z);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="Int4" /> to <see cref="Vector4" />.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Vector4(Int4 value)
+        {
+            return new Vector4(value.X, value.Y, value.Z, value.W);
         }
 
         /// <summary>
