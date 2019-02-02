@@ -46,16 +46,16 @@ namespace FlaxEngine
         /// <summary>
         /// Calls drawing GUI to the texture.
         /// </summary>
-        /// <param name="guiRoot">The root control of the GUI to draw.</param>
+        /// <param name="drawableElement">The root container for Draw methods.</param>
         /// <param name="context">The GPU context to handle graphics commands.</param>
         /// <param name="output">The output render target.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void CallDrawing(Control guiRoot, GPUContext context, RenderTarget output)
+        public static void CallDrawing(IDrawable drawableElement, GPUContext context, RenderTarget output)
         {
-            if (context == null || output == null || guiRoot == null)
+            if (context == null || output == null || drawableElement == null)
                 throw new ArgumentNullException();
 
 #if UNIT_TEST_COMPILANT
@@ -63,7 +63,7 @@ namespace FlaxEngine
 #else
             if (Internal_DrawBegin1(context.unmanagedPtr, output.unmanagedPtr))
                 throw new InvalidOperationException("Cannot perform GUI rendering.");
-            guiRoot.Draw();
+            drawableElement.Draw();
             Internal_DrawEnd();
 #endif
         }
@@ -72,7 +72,7 @@ namespace FlaxEngine
         /// Calls drawing GUI to the texture using custom View*Projection matrix.
         /// If depth buffer texture is provided there will be depth test performed during rendering.
         /// </summary>
-        /// <param name="guiRoot">The root control of the GUI to draw.</param>
+        /// <param name="drawableElement">The root container for Draw methods.</param>
         /// <param name="context">The GPU context to handle graphics commands.</param>
         /// <param name="output">The output render target.</param>
         /// <param name="depthBuffer">The depth buffer render target. It's optional parameter but if provided must match output texture.</param>
@@ -81,9 +81,9 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void CallDrawing(Control guiRoot, GPUContext context, RenderTarget output, RenderTarget depthBuffer, ref Matrix viewProjection)
+        public static void CallDrawing(IDrawable drawableElement, GPUContext context, RenderTarget output, RenderTarget depthBuffer, ref Matrix viewProjection)
         {
-            if (context == null || output == null || guiRoot == null)
+            if (context == null || output == null || drawableElement == null)
                 throw new ArgumentNullException();
             if (depthBuffer != null)
             {
@@ -98,7 +98,7 @@ namespace FlaxEngine
 #else
             if (Internal_DrawBegin2(context.unmanagedPtr, output.unmanagedPtr, Object.GetUnmanagedPtr(depthBuffer), ref viewProjection))
                 throw new InvalidOperationException("Cannot perform GUI rendering.");
-            guiRoot.Draw();
+            drawableElement.Draw();
             Internal_DrawEnd();
 #endif
         }

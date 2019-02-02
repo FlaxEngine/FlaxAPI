@@ -1,13 +1,14 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine.GUI
 {
     /// <summary>
     ///     Base class for all GUI controls
     /// </summary>
-    public partial class Control : IComparable
+    public partial class Control : IComparable, IDrawable
     {
         private ContainerControl _parent;
         private RootControl _root;

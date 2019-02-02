@@ -432,6 +432,7 @@
     <Compile Include="Rendering\CustomRenderTask.cs" />
     <Compile Include="Rendering\DrawCallsCollector.cs" />
     <Compile Include="Rendering\Enums.cs" />
+    <Compile Include="Rendering\IDrawable.cs" />
     <Compile Include="Rendering\LightmapSettings.cs" />
     <Compile Include="Rendering\MainRenderTask.cs" />
     <Compile Include="Rendering\MaterialInfo.cs" />
