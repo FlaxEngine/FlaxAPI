@@ -101,7 +101,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Adds the foliage instance.
+        /// Adds the foliage instance. After adding/removing foliage instances always call <see cref="RebuildClusters"/> to prepare internal acceleration structures.
         /// </summary>
         /// <remarks>
         /// Input instance bounds are ignored (recalculated).
@@ -121,7 +121,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Removes the foliage instance.
+        /// Removes the foliage instance. After adding/removing foliage instances always call <see cref="RebuildClusters"/> to prepare internal acceleration structures.
         /// </summary>
         /// <param name="index">The zero-based index of the foliage instance.</param>
 #if UNIT_TEST_COMPILANT
