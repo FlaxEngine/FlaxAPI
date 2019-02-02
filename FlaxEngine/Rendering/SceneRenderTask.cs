@@ -125,6 +125,7 @@ namespace FlaxEngine.Rendering
             // Init view defaults
             View.MaxShadowsQuality = Quality.Ultra;
             View.ModelLODDistanceFactor = 1.0f;
+            View.ShadowModelLODDistanceFactor = 1.0f;
         }
 
         /// <inheritdoc />
