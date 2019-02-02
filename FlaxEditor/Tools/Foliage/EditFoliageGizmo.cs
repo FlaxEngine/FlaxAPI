@@ -33,9 +33,6 @@ namespace FlaxEditor.Tools.Foliage
         }
 
         /// <inheritdoc />
-        protected override bool CanDuplicate => false;
-
-        /// <inheritdoc />
         protected override int SelectionCount
         {
             get
@@ -117,9 +114,34 @@ namespace FlaxEditor.Tools.Foliage
         {
             base.OnEndTransforming();
 
+            // TODO: support undo for foliage instance transform
+
             var foliage = GizmoMode.SelectedFoliage;
             if (!foliage)
                 throw new InvalidOperationException("No foliage selected.");
+            Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
+        }
+
+        /// <inheritdoc />
+        protected override void OnDuplicate()
+        {
+            base.OnDuplicate();
+
+            // TODO: support undo for foliage instance duplicate
+
+            // Get selected instance
+            var foliage = GizmoMode.SelectedFoliage;
+            if (!foliage)
+                throw new InvalidOperationException("No foliage selected.");
+            var instanceIndex = GizmoMode.SelectedInstanceIndex;
+            if (instanceIndex < 0 || instanceIndex >= foliage.InstancesCount)
+                throw new InvalidOperationException("No foliage instance selected.");
+            foliage.GetInstance(instanceIndex, out var instance);
+
+            // Duplicate instance and select it
+            var newIndex = foliage.InstancesCount;
+            foliage.AddInstance(ref instance);
+            GizmoMode.SelectedInstanceIndex = newIndex;
             Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
         }
 
