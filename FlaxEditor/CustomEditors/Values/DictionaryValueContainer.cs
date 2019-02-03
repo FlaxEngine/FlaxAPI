@@ -92,7 +92,7 @@ namespace FlaxEditor.CustomEditors
             for (int i = 0; i < Count; i++)
             {
                 var v = (IDictionary)instanceValues[i];
-                var value = (IDictionary)values[i];
+                var value = ((DictionaryValueContainer)values)[i];
                 v[Key] = value;
                 this[i] = value;
             }

@@ -107,7 +107,7 @@ namespace FlaxEditor.CustomEditors
             for (int i = 0; i < Count; i++)
             {
                 var v = instanceValues[i];
-                var value = values[i];
+                var value = ((CustomValueContainer)values)[i];
                 _setter(v, i, value);
                 this[i] = value;
             }
