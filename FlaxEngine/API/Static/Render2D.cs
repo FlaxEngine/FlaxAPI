@@ -46,6 +46,7 @@ namespace FlaxEngine
         /// <summary>
         /// Calls drawing GUI to the texture.
         /// </summary>
+        /// <remarks>This method should be called only during <see cref="PostProcessEffect.Render"/></remarks>
         /// <param name="drawableElement">The root container for Draw methods.</param>
         /// <param name="context">The GPU context to handle graphics commands.</param>
         /// <param name="output">The output render target.</param>
@@ -72,6 +73,7 @@ namespace FlaxEngine
         /// Calls drawing GUI to the texture using custom View*Projection matrix.
         /// If depth buffer texture is provided there will be depth test performed during rendering.
         /// </summary>
+        /// <remarks>This method should be called only during <see cref="PostProcessEffect.Render"/></remarks>
         /// <param name="drawableElement">The root container for Draw methods.</param>
         /// <param name="context">The GPU context to handle graphics commands.</param>
         /// <param name="output">The output render target.</param>
