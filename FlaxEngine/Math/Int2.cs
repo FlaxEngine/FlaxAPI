@@ -847,6 +847,36 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Performs an explicit conversion from <see cref="Int2" /> to <see cref="Vector2" />.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Vector2(Int2 value)
+        {
+            return new Vector2(value.X, value.Y);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="Int2" /> to <see cref="Vector3" />.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Vector3(Int2 value)
+        {
+            return new Vector3(value.X, value.Y, 0);
+        }
+
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="Int2" /> to <see cref="Vector4" />.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator Vector4(Int2 value)
+        {
+            return new Vector4(value.X, value.Y, 0, 0);
+        }
+
+        /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
