@@ -94,7 +94,7 @@ namespace FlaxEditor.CustomEditors
             for (int i = 0; i < Count; i++)
             {
                 var v = (IList)instanceValues[i];
-                var value = (IList)values[i];
+                var value = ((ListValueContainer)values)[i];
                 v[Index] = value;
                 this[i] = value;
             }
