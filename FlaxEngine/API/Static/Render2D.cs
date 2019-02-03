@@ -64,8 +64,14 @@ namespace FlaxEngine
 #else
             if (Internal_DrawBegin1(context.unmanagedPtr, output.unmanagedPtr))
                 throw new InvalidOperationException("Cannot perform GUI rendering.");
-            drawableElement.Draw();
-            Internal_DrawEnd();
+            try
+            {
+                drawableElement.Draw();
+            }
+            finally
+            {
+                Internal_DrawEnd();
+            }
 #endif
         }
 
@@ -100,8 +106,14 @@ namespace FlaxEngine
 #else
             if (Internal_DrawBegin2(context.unmanagedPtr, output.unmanagedPtr, Object.GetUnmanagedPtr(depthBuffer), ref viewProjection))
                 throw new InvalidOperationException("Cannot perform GUI rendering.");
-            drawableElement.Draw();
-            Internal_DrawEnd();
+            try
+            {
+                drawableElement.Draw();
+            }
+            finally
+            {
+                Internal_DrawEnd();
+            }
 #endif
         }
 
