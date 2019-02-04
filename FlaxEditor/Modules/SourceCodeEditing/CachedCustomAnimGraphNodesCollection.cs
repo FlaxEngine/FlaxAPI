@@ -94,12 +94,12 @@ namespace FlaxEditor.Modules.SourceCodeEditing
                 // Validate archetype
                 if (arch.Tag != null || string.IsNullOrEmpty(arch.Title))
                 {
-                    Editor.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Tag must be null and title must be specified.", method, method.DeclaringType));
+                    Debug.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Tag must be null and title must be specified.", method, method.DeclaringType));
                     return null;
                 }
                 if (arch.DefaultValues == null || arch.DefaultValues.Length < 2 || string.IsNullOrEmpty(arch.DefaultValues[0] as string) || string.IsNullOrEmpty(arch.DefaultValues[1] as string))
                 {
-                    Editor.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Default values are invalid.", method, method.DeclaringType));
+                    Debug.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Default values are invalid. DefaultValues[0] must specify the C# runtime controller typename. DefaultValues[1] must specify the node group name.", method, method.DeclaringType));
                     return null;
                 }
 
@@ -108,7 +108,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
                 var type = Utils.GetType(typeName);
                 if (type == null)
                 {
-                    Editor.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Failed to find node logic defined in type {2}.", method, method.DeclaringType, typeName));
+                    Debug.LogWarning(string.Format("Method {0} from {1} returned invalid node archetype. Failed to find node logic defined in type {2}.", method, method.DeclaringType, typeName));
                     return null;
                 }
 
@@ -119,8 +119,8 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             }
             catch (Exception ex)
             {
-                Editor.LogWarning("Failed to get the custom node archetype.");
-                Editor.LogWarning(ex);
+                Debug.LogWarning("Failed to get the custom node archetype.");
+                Debug.LogWarning(ex);
             }
 
             return null;
