@@ -79,6 +79,24 @@ namespace FlaxEngine
             Orientation = rotation;
             Scale = scale;
         }
+        
+        /// <summary>
+		/// Creates a new Transfrom from a matrix
+		/// </summary>
+		/// <param name="matrix">World matrix</param>
+		public Transform(Matrix transform)
+		{
+			transform.Decompose(out Scale, out Orientation, out Translation);
+		}
+
+		/// <summary>
+		/// Creates a new Transfrom from a matrix
+		/// </summary>
+		/// <param name="matrix">World matrix</param>
+		public Transform(ref Matrix transform)
+		{
+			transform.Decompose(out Scale, out Orientation, out Translation);
+		}
 
         /// <summary>
         /// Gets a value indicting whether this transform is identity
