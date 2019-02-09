@@ -187,7 +187,7 @@ namespace FlaxEngine.Rendering
             }
 
             // Call scene rendering
-            context.DrawScene(this, Output, Buffers, View, Flags, Mode, CustomActors, ActorsSource, _postFx);
+            context.DrawScene(this, Output, Buffers, ref View, Flags, Mode, CustomActors, ActorsSource, _postFx);
             FrameCount++;
 
             // Finish
