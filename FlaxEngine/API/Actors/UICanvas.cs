@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -317,8 +316,6 @@ namespace FlaxEngine
             if (_isLoading)
                 return;
 
-            _guiRoot.Parent = RootControl.CanvasRoot;
-
             switch (_renderMode)
             {
             case CanvasRenderMode.ScreenSpace:
@@ -328,6 +325,7 @@ namespace FlaxEngine
                 if (_renderer)
                 {
                     SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
+                    _renderer.Canvas = null;
                     Destroy(_renderer);
                     _renderer = null;
                 }
@@ -342,22 +340,9 @@ namespace FlaxEngine
                 {
                     _renderer = New<CanvasRenderer>();
                     _renderer.Canvas = this;
-                    SceneRenderTask.GlobalCustomPostFx.Add(_renderer);
                 }
                 break;
             }
-            }
-        }
-
-        private void Cleanup()
-        {
-            _guiRoot.Parent = null;
-
-            if (_renderer)
-            {
-                SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
-                Destroy(_renderer);
-                _renderer = null;
             }
         }
 
@@ -491,18 +476,34 @@ namespace FlaxEngine
             Setup();
         }
 
-        internal void ActiveInTreeChanged()
+        internal void OnEnable()
         {
-            bool isActiveInHierarchy = IsActiveInHierarchy;
-            _guiRoot.Enabled = isActiveInHierarchy;
-            _guiRoot.Visible = isActiveInHierarchy;
+            _guiRoot.Parent = RootControl.CanvasRoot;
+
             if (_renderer)
-                _renderer.Enabled = isActiveInHierarchy;
+            {
+                SceneRenderTask.GlobalCustomPostFx.Add(_renderer);
+            }
+        }
+
+        internal void OnDisable()
+        {
+            _guiRoot.Parent = null;
+
+            if (_renderer)
+            {
+                SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
+            }
         }
 
         internal void EndPlay()
         {
-            Cleanup();
+            if (_renderer)
+            {
+                _renderer.Canvas = null;
+                Destroy(_renderer);
+                _renderer = null;
+            }
         }
     }
 }
