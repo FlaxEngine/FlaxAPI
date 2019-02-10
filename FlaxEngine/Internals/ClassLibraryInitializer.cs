@@ -22,7 +22,6 @@ namespace FlaxEngine
 
             UnhandledExceptionHandler.RegisterCatcher();
             Globals.Init();
-            Input.Init();
 
             if (!Application.IsEditor)
             {

@@ -74,8 +74,6 @@ namespace FlaxEditor.States
         /// <inheritdoc />
         public override void OnEnter()
         {
-            Input.ScanGamepads();
-
             // Remove references to the scene objects
             Editor.Scene.ClearRefsToSceneObjects(true);
 
