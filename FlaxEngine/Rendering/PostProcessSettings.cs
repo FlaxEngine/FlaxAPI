@@ -83,6 +83,11 @@ namespace FlaxEngine.Rendering
         /// Temporal Anti-Aliasing effect.
         /// </summary>
         TemporalAntialiasing = 2,
+
+        /// <summary>
+        /// Subpixel Morphological Anti-Aliasing effect.
+        /// </summary>
+        SubpixelMorphologicalAntialiasing = 3,
     }
 
     /// <summary>
@@ -1944,7 +1949,7 @@ namespace FlaxEngine.Rendering
                 isDataDirty = true;
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the diameter (in texels) inside which jitter samples are spread. Smaller values result
         /// in crisper but more aliased output, while larger values result in more stable but
