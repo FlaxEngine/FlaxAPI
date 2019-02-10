@@ -563,10 +563,12 @@ namespace FlaxEditor.Windows
 
                     // Add pending entries
                     LogEntry newEntry = null;
+                    bool anyVisible = false;
                     for (int i = 0; i < _pendingEntries.Count; i++)
                     {
                         newEntry = _pendingEntries[i];
                         newEntry.Visible = _groupButtons[(int)newEntry.Group].Checked;
+                        anyVisible |= newEntry.Visible;
                         newEntry.Parent = _entriesPanel;
                         _logCountPerGroup[(int)newEntry.Group]++;
                     }
@@ -574,8 +576,8 @@ namespace FlaxEditor.Windows
                     UpdateCount();
                     Assert.IsNotNull(newEntry);
 
-                    // Scroll to the new entry
-                    if (scrollView)
+                    // Scroll to the new entry (if any added to view)
+                    if (scrollView && anyVisible)
                         _entriesPanel.ScrollViewTo(newEntry);
                 }
             }
