@@ -554,17 +554,17 @@ namespace FlaxEditor.Viewport
             }
             if (key == Keys.Alpha1)
             {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate;
+                TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate;
                 return true;
             }
             if (key == Keys.Alpha2)
             {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate;
+                TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate;
                 return true;
             }
             if (key == Keys.Alpha3)
             {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale;
+                TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale;
                 return true;
             }
             if (key == Keys.F)
