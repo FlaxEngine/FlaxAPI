@@ -332,6 +332,7 @@
     <Compile Include="SceneGraph\Actors\EnvironmentProbeNode.cs" />
     <Compile Include="SceneGraph\Actors\ExponentialHeightFogNode.cs" />
     <Compile Include="SceneGraph\Actors\FoliageNode.cs" />
+    <Compile Include="SceneGraph\Actors\NavMeshBoundsVolumeNode.cs" />
     <Compile Include="SceneGraph\Actors\StaticModelNode.cs" />
     <Compile Include="SceneGraph\Actors\PointLightNode.cs" />
     <Compile Include="SceneGraph\Actors\PostFxVolumeNode.cs" />

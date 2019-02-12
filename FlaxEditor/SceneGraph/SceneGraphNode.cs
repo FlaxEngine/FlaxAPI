@@ -202,6 +202,44 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
+        /// Performs raycasting over child nodes hierarchy trying to get the closest object hit by the given ray.
+        /// </summary>
+        /// <param name="ray">The ray casting data.</param>
+        /// <param name="distance">The result distance.</param>
+        /// <param name="normal">The result intersection surface normal vector.</param>
+        /// <returns>Hit object or null if there is no intersection at all.</returns>
+        public virtual SceneGraphNode RayCastChildren(ref RayCastData ray, out float distance, out Vector3 normal)
+        {
+            if (!IsActive)
+            {
+                distance = 0;
+                normal = Vector3.Up;
+                return null;
+            }
+
+            SceneGraphNode minTarget = null;
+            float minDistance = float.MaxValue;
+            Vector3 minDistanceNormal = Vector3.Up;
+
+            // Check all children
+            for (int i = 0; i < ChildNodes.Count; i++)
+            {
+                var hit = ChildNodes[i].RayCast(ref ray, out distance, out normal);
+                if (hit != null && distance <= minDistance)
+                {
+                    minTarget = hit;
+                    minDistance = distance;
+                    minDistanceNormal = normal;
+                }
+            }
+
+            // Return result
+            distance = minDistance;
+            normal = minDistanceNormal;
+            return minTarget;
+        }
+
+        /// <summary>
         /// Performs raycasting over nodes hierarchy trying to get the closest object hit by the given ray.
         /// </summary>
         /// <param name="ray">The ray casting data.</param>

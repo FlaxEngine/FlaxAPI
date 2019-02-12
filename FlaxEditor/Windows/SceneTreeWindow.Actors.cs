@@ -94,6 +94,7 @@ namespace FlaxEditor.Windows
                     new KeyValuePair<string, Type>("CSG Box Brush", typeof(BoxBrush)),
                     new KeyValuePair<string, Type>("Audio Source", typeof(AudioSource)),
                     new KeyValuePair<string, Type>("Audio Listener", typeof(AudioListener)),
+                    new KeyValuePair<string, Type>("Nav Mesh Bounds Volume", typeof(NavMeshBoundsVolume)),
                 }
             },
             new ActorsGroup

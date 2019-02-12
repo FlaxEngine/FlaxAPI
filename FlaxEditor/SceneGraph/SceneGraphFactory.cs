@@ -71,6 +71,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(UIControl), typeof(UIControlNode));
             CustomNodesTypes.Add(typeof(Terrain), typeof(TerrainNode));
             CustomNodesTypes.Add(typeof(Foliage), typeof(FoliageNode));
+            CustomNodesTypes.Add(typeof(NavMeshBoundsVolume), typeof(NavMeshBoundsVolumeNode));
         }
 
         /// <summary>
