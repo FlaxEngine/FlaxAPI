@@ -79,6 +79,8 @@
     <Compile Include="API\Actors\Joint.Gen.cs" />
     <Compile Include="API\Actors\Light.cs" />
     <Compile Include="API\Actors\Light.Gen.cs" />
+    <Compile Include="API\Actors\NavMeshBoundsVolume.cs" />
+    <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
     <Compile Include="API\Actors\StaticModel.cs" />
     <Compile Include="API\Actors\PostFxVolume.cs" />
     <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
