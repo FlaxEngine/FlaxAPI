@@ -65,7 +65,7 @@ namespace FlaxEditor.SceneGraph.Actors
                 {
                     var actor = (PostFxVolume)((PostFxVolumeNode)ParentNode).Actor;
                     Transform localTrans = actor.Transform.WorldToLocal(value);
-                    var prevLocalOffset = _offset * actor.Size + actor.Center;
+                    var prevLocalOffset = _offset * actor.Size;
                     var localOffset = Vector3.Abs(_offset) * 2.0f * localTrans.Translation;
                     var localOffsetDelta = localOffset - prevLocalOffset;
                     float centerScale = Index % 2 == 0 ? 1.0f : -1.0f;
