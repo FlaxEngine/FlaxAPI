@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using FlaxEngine;
 
 namespace FlaxEditor.SceneGraph.Actors
@@ -58,7 +57,7 @@ namespace FlaxEditor.SceneGraph.Actors
                 get
                 {
                     var actor = (PostFxVolume)((PostFxVolumeNode)ParentNode).Actor;
-                    var localOffset = _offset * actor.Size + actor.Center;
+                    var localOffset = _offset * actor.Size;
                     Transform localTrans = new Transform(localOffset);
                     return actor.Transform.LocalToWorld(localTrans);
                 }
@@ -69,9 +68,9 @@ namespace FlaxEditor.SceneGraph.Actors
                     var prevLocalOffset = _offset * actor.Size + actor.Center;
                     var localOffset = Vector3.Abs(_offset) * 2.0f * localTrans.Translation;
                     var localOffsetDelta = localOffset - prevLocalOffset;
-                    float centerScale = Index % 2 == 0 ? 0.5f : -0.5f;
-                    actor.Size += localOffsetDelta;
-                    actor.Center += localOffsetDelta * centerScale;
+                    float centerScale = Index % 2 == 0 ? 1.0f : -1.0f;
+                    actor.Size += localOffsetDelta * centerScale;
+                    actor.Position += localOffsetDelta * 0.5f;
                 }
             }
 
@@ -79,7 +78,7 @@ namespace FlaxEditor.SceneGraph.Actors
             public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
             {
                 normal = Vector3.Up;
-                var sphere = new BoundingSphere(Transform.Translation, 1.0f);
+                var sphere = new BoundingSphere(Transform.Translation, 5.0f);
                 return sphere.Intersects(ref ray.Ray, out distance);
             }
 
@@ -115,14 +114,14 @@ namespace FlaxEditor.SceneGraph.Actors
                 return false;
             }
 
-            var volume = (PostFxVolume)_actor;
-            var box = volume.OrientedBox;
-            if (!box.Intersects(ref ray.Ray, out distance))
+            // Skip itself if any link gets hit
+            if (RayCastChildren(ref ray, out distance, out normal) != null)
                 return false;
 
-            return true;
-            //box.Scale(0.8f);
-            //return !box.Intersects(ref ray, out distance);
+            // Check itself
+            var volume = (PostFxVolume)_actor;
+            var box = volume.OrientedBox;
+            return box.Intersects(ref ray.Ray, out distance);
         }
     }
 }
