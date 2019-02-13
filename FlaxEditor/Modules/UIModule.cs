@@ -49,6 +49,7 @@ namespace FlaxEditor.Modules
         private ContextMenuButton _menuToolsClearLightmaps;
         private ContextMenuButton _menuToolsBakeAllEnvProbes;
         private ContextMenuButton _menuToolsBuildCSGMesh;
+        private ContextMenuButton _menuToolsBuildNavMesh;
         private ContextMenuButton _menuToolsCancelBuilding;
         private ContextMenuButton _menuToolsSetTheCurrentSceneViewAsDefault;
         private ContextMenuChildMenu _menuWindowApplyWindowLayout;
@@ -436,6 +437,7 @@ namespace FlaxEditor.Modules
             _menuToolsClearLightmaps = cm.AddButton("Clear lightmaps data", Editor.ClearLightmaps);
             _menuToolsBakeAllEnvProbes = cm.AddButton("Bake all env probes", BakeAllEnvProbes);
             _menuToolsBuildCSGMesh = cm.AddButton("Build CSG mesh", BuildCSG);
+            _menuToolsBuildNavMesh = cm.AddButton("Build Nav Mesh", BuildNavMesh);
             cm.AddSeparator();
             cm.AddButton("Game Cooker", Editor.Windows.GameCookerWin.FocusOrShow);
             _menuToolsCancelBuilding = cm.AddButton("Cancel building game", () => GameCooker.Cancel());
@@ -641,6 +643,7 @@ namespace FlaxEditor.Modules
             _menuToolsClearLightmaps.Enabled = canEdit;
             _menuToolsBakeAllEnvProbes.Enabled = canEdit;
             _menuToolsBuildCSGMesh.Enabled = canEdit;
+            _menuToolsBuildNavMesh.Enabled = canEdit;
             _menuToolsCancelBuilding.Enabled = GameCooker.IsRunning;
             _menuToolsSetTheCurrentSceneViewAsDefault.Enabled = SceneManager.ScenesCount > 0;
 
@@ -651,7 +654,7 @@ namespace FlaxEditor.Modules
         {
             if (!menu.Visible)
                 return;
-            
+
             // Find layout to use
             var searchFolder = Globals.ProjectCacheFolder;
             var files = Directory.GetFiles(searchFolder, "Layout_*.xml", SearchOption.TopDirectoryOnly);
@@ -735,6 +738,13 @@ namespace FlaxEditor.Modules
         {
             var scenes = SceneManager.Scenes;
             scenes.ToList().ForEach(x => x.BuildCSG(0));
+            Editor.Scene.MarkSceneEdited(scenes);
+        }
+
+        private void BuildNavMesh()
+        {
+            var scenes = SceneManager.Scenes;
+            scenes.ToList().ForEach(x => x.BuildNavMesh(0));
             Editor.Scene.MarkSceneEdited(scenes);
         }
 

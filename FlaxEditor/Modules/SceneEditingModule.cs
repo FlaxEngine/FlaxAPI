@@ -236,11 +236,20 @@ namespace FlaxEditor.Modules
 
             SpawnEnd?.Invoke();
 
+            var options = Editor.Options.Options;
+
             // Auto CSG mesh rebuild
-            if (isPlayMode && !Editor.Options.Options.General.AutoRebuildCSG)
+            if (!isPlayMode && options.General.AutoRebuildCSG)
             {
                 if (actor is BoxBrush && actor.Scene)
-                    actor.Scene.BuildCSG(Editor.Options.Options.General.AutoRebuildCSGTimeoutMs);
+                    actor.Scene.BuildCSG(options.General.AutoRebuildCSGTimeoutMs);
+            }
+
+            // Auto NavMesh rebuild
+            if (!isPlayMode && options.General.AutoRebuildNavMesh)
+            {
+                if (actor is NavMeshBoundsVolume && actor.Scene)
+                    actor.Scene.BuildNavMesh(options.General.AutoRebuildNavMeshTimeoutMs);
             }
         }
 
@@ -273,14 +282,25 @@ namespace FlaxEditor.Modules
 
             SelectionDeleteEnd?.Invoke();
 
-            // Auto CSG mesh rebuild
             var options = Editor.Options.Options;
+
+            // Auto CSG mesh rebuild
             if (options.General.AutoRebuildCSG)
             {
                 foreach (var obj in objects)
                 {
                     if (obj is ActorNode node && node.Actor is BoxBrush)
                         node.Actor.Scene.BuildCSG(options.General.AutoRebuildCSGTimeoutMs);
+                }
+            }
+
+            // Auto NavMesh rebuild
+            if (options.General.AutoRebuildNavMesh)
+            {
+                foreach (var obj in objects)
+                {
+                    if (obj is ActorNode node && node.Actor is NavMeshBoundsVolume)
+                        node.Actor.Scene.BuildNavMesh(options.General.AutoRebuildNavMeshTimeoutMs);
                 }
             }
         }

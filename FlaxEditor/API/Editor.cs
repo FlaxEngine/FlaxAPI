@@ -881,6 +881,8 @@ namespace FlaxEditor
             public byte AutoReloadScriptsOnMainWindowFocus;
             public byte AutoRebuildCSG;
             public float AutoRebuildCSGTimeoutMs;
+            public byte AutoRebuildNavMesh;
+            public float AutoRebuildNavMeshTimeoutMs;
         }
 
         internal void BuildCommand(string arg)
@@ -950,6 +952,11 @@ namespace FlaxEditor
         }
 
         internal bool Internal_CanAutoBuildCSG()
+        {
+            return StateMachine.CurrentState.CanEditScene;
+        }
+
+        internal bool Internal_CanAutoBuildNavMesh()
         {
             return StateMachine.CurrentState.CanEditScene;
         }

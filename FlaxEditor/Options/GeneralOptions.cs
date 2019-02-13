@@ -40,6 +40,20 @@ namespace FlaxEditor.Options
         public float AutoRebuildCSGTimeoutMs { get; set; } = 50.0f;
 
         /// <summary>
+        /// Gets or sets a value indicating whether perform automatic NavMesh rebuild on scene change.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Navigation Mesh", "Auto Rebuild Nav Mesh"), EditorOrder(700), Tooltip("Determines whether perform automatic NavMesh rebuild on scene change.")]
+        public bool AutoRebuildNavMesh { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the auto CSG rebuilding timeout (in milliseconds). Use lower value for more frequent and responsive updates but higher complexity.
+        /// </summary>
+        [DefaultValue(100.0f), Range(0, 1000)]
+        [EditorDisplay("Navigation Mesh", "Auto Rebuild Nav Mesh Timeout"), EditorOrder(701), Tooltip("Auto NavMesh rebuilding timeout (in milliseconds). Use lower value for more frequent and responsive updates but higher complexity.")]
+        public float AutoRebuildNavMeshTimeoutMs { get; set; } = 100.0f;
+
+        /// <summary>
         /// Gets or sets a value indicating whether enable editor analytics service.
         /// </summary>
         [DefaultValue(true)]
