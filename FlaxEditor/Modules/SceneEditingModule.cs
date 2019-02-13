@@ -38,6 +38,26 @@ namespace FlaxEditor.Modules
         /// </summary>
         public event Action SelectionChanged;
 
+        /// <summary>
+        /// Occurs before spawning actor to game action.
+        /// </summary>
+        public event Action SpawnBegin;
+
+        /// <summary>
+        /// Occurs after spawning actor to game action.
+        /// </summary>
+        public event Action SpawnEnd;
+
+        /// <summary>
+        /// Occurs before selection delete action.
+        /// </summary>
+        public event Action SelectionDeleteBegin;
+
+        /// <summary>
+        /// Occurs after selection delete action.
+        /// </summary>
+        public event Action SelectionDeleteEnd;
+
         internal SceneEditingModule(Editor editor)
         : base(editor)
         {
@@ -190,6 +210,8 @@ namespace FlaxEditor.Modules
             if (SceneManager.IsAnySceneLoaded == false)
                 throw new InvalidOperationException("Cannot spawn actor when no scene is loaded.");
 
+            SpawnBegin?.Invoke();
+
             // Add it
             SceneManager.SpawnActor(actor, parent);
 
@@ -212,6 +234,8 @@ namespace FlaxEditor.Modules
             // Mark scene as dirty
             Editor.Scene.MarkSceneEdited(actor.Scene);
 
+            SpawnEnd?.Invoke();
+
             // Auto CSG mesh rebuild
             if (isPlayMode && !Editor.Options.Options.General.AutoRebuildCSG)
             {
@@ -230,6 +254,8 @@ namespace FlaxEditor.Modules
             if (objects.Count == 0)
                 return;
 
+            SelectionDeleteBegin?.Invoke();
+
             // Change selection
             var action1 = new SelectionChangeAction(Selection.ToArray(), new SceneGraphNode[0], OnSelectionUndo);
 
@@ -244,6 +270,8 @@ namespace FlaxEditor.Modules
             }, action2.ActionString);
             action.Do();
             Undo.AddAction(action);
+
+            SelectionDeleteEnd?.Invoke();
 
             // Auto CSG mesh rebuild
             var options = Editor.Options.Options;
@@ -308,7 +336,7 @@ namespace FlaxEditor.Modules
             var pasteAction = PasteActorsAction.Paste(data, pasteTargetActor?.ID ?? Guid.Empty);
             if (pasteAction != null)
             {
-                OnPasteAcction(pasteAction);
+                OnPasteAction(pasteAction);
             }
         }
 
@@ -344,11 +372,11 @@ namespace FlaxEditor.Modules
             var pasteAction = PasteActorsAction.Duplicate(data, Guid.Empty);
             if (pasteAction != null)
             {
-                OnPasteAcction(pasteAction);
+                OnPasteAction(pasteAction);
             }
         }
 
-        private void OnPasteAcction(PasteActorsAction pasteAction)
+        private void OnPasteAction(PasteActorsAction pasteAction)
         {
             pasteAction.Do(out _, out var nodeParents);
 
