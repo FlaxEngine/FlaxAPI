@@ -35,6 +35,26 @@ namespace FlaxEngine.Rendering
         DirectX12 = 4,
 
         /// <summary>
+        /// OpenGL 4.1
+        /// </summary>
+        OpenGL4_1 = 5,
+
+        /// <summary>
+        /// OpenGL 4.4
+        /// </summary>
+        OpenGL4_4 = 6,
+
+        /// <summary>
+        /// OpenGL ES 3
+        /// </summary>
+        OpenGLES3 = 7,
+
+        /// <summary>
+        /// OpenGL ES 3.1
+        /// </summary>
+        OpenGLES3_1 = 8,
+
+        /// <summary>
         /// Null backend
         /// </summary>
         Null = 9,
