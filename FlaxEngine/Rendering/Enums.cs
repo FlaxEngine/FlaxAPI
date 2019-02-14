@@ -84,5 +84,20 @@ namespace FlaxEngine.Rendering
         /// Shader Model 5.0
         /// </summary>
         ShaderModel5 = 2,
+
+        /// <summary>
+        /// GLSL 410
+        /// </summary>
+        GLSL_410 = 3,
+
+        /// <summary>
+        /// GLSL 440
+        /// </summary>
+        GLSL_440 = 4,
+
+        /// <summary>
+        /// Vulkan (Shader Model 5 compatible)
+        /// </summary>
+        Vulkan_SM5 = 5,
     }
 }
