@@ -38,6 +38,11 @@ namespace FlaxEngine.Rendering
         /// Null backend
         /// </summary>
         Null = 9,
+
+        /// <summary>
+        /// Vulkan
+        /// </summary>
+        Vulkan = 10,
     }
 
     /// <summary>
