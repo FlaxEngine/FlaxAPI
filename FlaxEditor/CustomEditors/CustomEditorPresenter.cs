@@ -128,12 +128,6 @@ namespace FlaxEditor.CustomEditors
 
                 base.OnModified();
             }
-
-            /// <inheritdoc />
-            protected override void SyncChildValues(ValueContainer values)
-            {
-                // Skip
-            }
         }
 
         /// <summary>

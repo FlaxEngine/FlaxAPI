@@ -291,6 +291,7 @@
     <Compile Include="Engine\SkeletonNode.cs" />
     <Compile Include="Engine\SkinnedMesh.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
+    <Compile Include="Enums\AlphaBlendMode.cs" />
     <Compile Include="Enums\ForceMode.cs" />
     <Compile Include="Enums\Keys.cs" />
     <Compile Include="Enums\PhysicsCombineMode.cs" />
@@ -436,6 +437,7 @@
     <Compile Include="Rendering\CustomRenderTask.cs" />
     <Compile Include="Rendering\DrawCallsCollector.cs" />
     <Compile Include="Rendering\Enums.cs" />
+    <Compile Include="Rendering\IDrawable.cs" />
     <Compile Include="Rendering\FormatFeatures.cs" />
     <Compile Include="Rendering\FormatSupport.cs" />
     <Compile Include="Rendering\LightmapSettings.cs" />

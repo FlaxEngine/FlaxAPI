@@ -174,6 +174,22 @@ namespace FlaxEngine
             {
                 return (Impulse*)Internal_GetOutputImpulseData(ref context);
             }
+
+            /// <summary>
+            /// Copies the impulse data from the source to the destination container.
+            /// </summary>
+            /// <param name="destination">The destination data.</param>
+            /// <param name="source">The source data.</param>
+            public static unsafe void CopyImpulseData(Impulse* source, Impulse* destination)
+            {
+                destination->NodesCount = source->NodesCount;
+                destination->Unused = source->Unused;
+                Utils.MemoryCopy(new IntPtr(source->Nodes), new IntPtr(destination->Nodes), source->NodesCount * sizeof(Transform));
+                destination->RootMotionTranslation = source->RootMotionTranslation;
+                destination->RootMotionRotation = source->RootMotionRotation;
+                destination->Position = source->Position;
+                destination->Length = source->Length;
+            }
         }
 
         #region Internal Calls

@@ -28,15 +28,20 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the actor owning that script.
+        /// Gets or sets the actor owning that script.
         /// </summary>
+        /// <remarks>
+        /// Changing script parent breaks any existing prefab links.
+        /// </remarks>
         [UnmanagedCall]
+        [HideInEditor]
         public Actor Actor
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetActor(unmanagedPtr); }
+            set { Internal_SetActor(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -121,6 +126,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor Internal_GetActor(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetActor(IntPtr obj, IntPtr val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetOrderInParent(IntPtr obj);

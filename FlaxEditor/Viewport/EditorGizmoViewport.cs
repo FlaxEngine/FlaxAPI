@@ -45,6 +45,9 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public bool IsControlDown => _input.IsControlDown;
+        
+        /// <inheritdoc />
+        public bool SnapToGround => Root.GetKeyDown(Keys.End);
 
         /// <inheritdoc />
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;

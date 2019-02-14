@@ -84,6 +84,23 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <inheritdoc />
+        public override void Set(ValueContainer instanceValues, ValueContainer values)
+        {
+            if (instanceValues == null || instanceValues.Count != Count)
+                throw new ArgumentException();
+            if (values == null || values.Count != Count)
+                throw new ArgumentException();
+
+            for (int i = 0; i < Count; i++)
+            {
+                var v = (IList)instanceValues[i];
+                var value = ((ListValueContainer)values)[i];
+                v[Index] = value;
+                this[i] = value;
+            }
+        }
+
+        /// <inheritdoc />
         public override void Set(ValueContainer instanceValues)
         {
             if (instanceValues == null || instanceValues.Count != Count)

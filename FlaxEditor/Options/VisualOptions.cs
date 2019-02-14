@@ -12,6 +12,13 @@ namespace FlaxEditor.Options
     public sealed class VisualOptions
     {
         /// <summary>
+        /// Gets or sets the selection outline enable flag.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Gizmo"), EditorOrder(99), Tooltip("If checked, the selection outline will be visible.")]
+        public bool ShowSelectionOutline { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the first outline color.
         /// </summary>
         [DefaultValue(typeof(Color), "0.039,0.827,0.156")]

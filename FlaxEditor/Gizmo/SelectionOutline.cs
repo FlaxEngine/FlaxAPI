@@ -12,12 +12,17 @@ namespace FlaxEditor.Gizmo
     /// <summary>
     /// In-build postFx used to render outline for selected objects in editor.
     /// </summary>
-    public sealed class SelectionOutline : PostProcessEffect
+    public class SelectionOutline : PostProcessEffect
     {
         private Material _outlineMaterial;
         private MaterialInstance _material;
         private Color _color0, _color1;
-        private List<Actor> _actors;
+        private bool _enabled;
+
+        /// <summary>
+        /// The cached actors list used for drawing (reusable to reduce memory allocations). Always cleared before and after objects rendering.
+        /// </summary>
+        protected List<Actor> _actors;
 
         /// <summary>
         /// The selection getter.
@@ -46,12 +51,18 @@ namespace FlaxEditor.Gizmo
 
         private void OnOptionsChanged(EditorOptions options)
         {
+            _enabled = options.Visual.ShowSelectionOutline;
             _color0 = options.Visual.SelectionOutlineColor0;
             _color1 = options.Visual.SelectionOutlineColor1;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has data ready.
+        /// </summary>
+        protected bool HasDataReady => _enabled && _material && _outlineMaterial.IsLoaded;
+
         /// <inheritdoc />
-        public override bool CanRender => _material && _outlineMaterial.IsLoaded && SelectionGetter().Count > 0;
+        public override bool CanRender => _enabled && _material && _outlineMaterial.IsLoaded && SelectionGetter().Count > 0;
 
         /// <inheritdoc />
         public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
@@ -62,22 +73,12 @@ namespace FlaxEditor.Gizmo
             var customDepth = RenderTarget.GetTemporary(PixelFormat.R32_Typeless, input.Width, input.Height, TextureFlags.DepthStencil | TextureFlags.ShaderResource);
             context.ClearDepth(customDepth);
 
-            // Get selected actors
-            var selection = SelectionGetter();
+            // Draw objects to depth buffer
             if (_actors == null)
                 _actors = new List<Actor>();
             else
                 _actors.Clear();
-            _actors.Capacity = Mathf.NextPowerOfTwo(Mathf.Max(_actors.Capacity, selection.Count));
-            for (int i = 0; i < selection.Count; i++)
-            {
-                if (selection[i] is ActorNode actorNode)
-                    _actors.Add(actorNode.Actor);
-            }
-
-            // Render selected objects depth
-            context.DrawSceneDepth(task, customDepth, true, _actors, ActorsSources.CustomActors);
-
+            DrawSelectionDepth(context, task, customDepth);
             _actors.Clear();
 
             var near = task.View.Near;
@@ -95,6 +96,27 @@ namespace FlaxEditor.Gizmo
             RenderTarget.ReleaseTemporary(customDepth);
 
             Profiler.EndEventGPU();
+        }
+
+        /// <summary>
+        /// Draws the selected object to depth buffer.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="task">The task.</param>
+        /// <param name="customDepth">The custom depth (output).</param>
+        protected virtual void DrawSelectionDepth(GPUContext context, SceneRenderTask task, RenderTarget customDepth)
+        {
+            // Get selected actors
+            var selection = SelectionGetter();
+            _actors.Capacity = Mathf.NextPowerOfTwo(Mathf.Max(_actors.Capacity, selection.Count));
+            for (int i = 0; i < selection.Count; i++)
+            {
+                if (selection[i] is ActorNode actorNode)
+                    _actors.Add(actorNode.Actor);
+            }
+
+            // Render selected objects depth
+            context.DrawSceneDepth(task, customDepth, true, _actors, ActorsSources.CustomActors);
         }
     }
 }

@@ -5,6 +5,7 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Tools.Foliage
 {
@@ -21,6 +22,12 @@ namespace FlaxEditor.Tools.Foliage
         private sealed class ProxyObject
         {
             /// <summary>
+            /// The gizmo mode.
+            /// </summary>
+            [HideInEditor]
+            public readonly EditFoliageGizmoMode Mode;
+
+            /// <summary>
             /// The selected foliage actor.
             /// </summary>
             [HideInEditor]
@@ -35,8 +42,10 @@ namespace FlaxEditor.Tools.Foliage
             /// <summary>
             /// Initializes a new instance of the <see cref="ProxyObject"/> class.
             /// </summary>
-            public ProxyObject()
+            /// <param name="mode">The foliage editing gizmo mode.</param>
+            public ProxyObject(EditFoliageGizmoMode mode)
             {
+                Mode = mode;
                 InstanceIndex = -1;
             }
 
@@ -59,6 +68,13 @@ namespace FlaxEditor.Tools.Foliage
             }
 
             //
+
+            [EditorOrder(-10), EditorDisplay("Instance"), ReadOnly, Tooltip("The foliage instance zero-based index (read-only).")]
+            public int Index
+            {
+                get => InstanceIndex;
+                set => throw new NotImplementedException();
+            }
 
             [EditorOrder(0), EditorDisplay("Instance"), ReadOnly, Tooltip("The foliage instance model (read-only).")]
             public Model Model
@@ -108,6 +124,39 @@ namespace FlaxEditor.Tools.Foliage
         private sealed class ProxyObjectEditor : GenericEditor
         {
             /// <inheritdoc />
+            public override void Initialize(LayoutElementsContainer layout)
+            {
+                base.Initialize(layout);
+
+                var proxyObject = (ProxyObject)Values[0];
+                if (proxyObject.InstanceIndex != -1)
+                {
+                    var area = layout.Space(32);
+                    var button = new Button(4, 6, 100)
+                    {
+                        Text = "Delete",
+                        TooltipText = "Removes the selected foliage instance",
+                        Parent = area.ContainerControl
+                    };
+                    button.Clicked += OnDeleteButtonClicked;
+                }
+            }
+
+            private void OnDeleteButtonClicked()
+            {
+                // TODO: support undo for removing selected foliage instance
+
+                var proxyObject = (ProxyObject)Values[0];
+                var mode = proxyObject.Mode;
+                var index = mode.SelectedInstanceIndex;
+                mode.SelectedInstanceIndex = -1;
+                var foliage = mode.SelectedFoliage;
+                foliage.RemoveInstance(index);
+                foliage.RebuildClusters();
+                Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
+            }
+
+            /// <inheritdoc />
             public override void Refresh()
             {
                 // Sync selected foliage options once before update to prevent too many data copies when fetching data from UI properties accessors
@@ -143,7 +192,7 @@ namespace FlaxEditor.Tools.Foliage
             Tab = tab;
             Tab.SelectedFoliageChanged += OnSelectedFoliageChanged;
             mode.SelectedInstanceIndexChanged += OnSelectedInstanceIndexChanged;
-            _proxy = new ProxyObject();
+            _proxy = new ProxyObject(mode);
 
             // Options editor
             // TODO: use editor undo for changing foliage instance options

@@ -71,6 +71,8 @@ namespace FlaxEditor.Windows
 
         private class LogEntry : Control
         {
+            private bool _isRightMouseDown;
+
             /// <summary>
             /// The default height of the entries.
             /// </summary>
@@ -187,11 +189,19 @@ namespace FlaxEditor.Windows
                 // Ctrl+C
                 else if (key == Keys.C && Root.GetKey(Keys.Control))
                 {
-                    Application.ClipboardText = Info;
+                    Copy();
                     return true;
                 }
 
                 return base.OnKeyDown(key);
+            }
+
+            /// <summary>
+            /// Copies the entry information to the system clipboard (as text).
+            /// </summary>
+            public void Copy()
+            {
+                Application.ClipboardText = Info.Replace("\n", Environment.NewLine);
             }
 
             public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
@@ -200,6 +210,49 @@ namespace FlaxEditor.Windows
                 Editor.Instance.CodeEditing.OpenFile(Desc.LocationFile, Desc.LocationLine);
 
                 return true;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDown(location, buttons))
+                    return true;
+
+                if (buttons == MouseButton.Right)
+                {
+                    Focus();
+
+                    _isRightMouseDown = true;
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseUp(location, buttons))
+                    return true;
+
+                if (_isRightMouseDown && buttons == MouseButton.Right)
+                {
+                    Focus();
+
+                    var menu = new ContextMenu();
+                    menu.AddButton("Copy", Copy);
+                    menu.Show(this, location);
+                }
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseLeave()
+            {
+                _isRightMouseDown = false;
+
+                base.OnMouseLeave();
             }
         }
 
@@ -510,10 +563,12 @@ namespace FlaxEditor.Windows
 
                     // Add pending entries
                     LogEntry newEntry = null;
+                    bool anyVisible = false;
                     for (int i = 0; i < _pendingEntries.Count; i++)
                     {
                         newEntry = _pendingEntries[i];
                         newEntry.Visible = _groupButtons[(int)newEntry.Group].Checked;
+                        anyVisible |= newEntry.Visible;
                         newEntry.Parent = _entriesPanel;
                         _logCountPerGroup[(int)newEntry.Group]++;
                     }
@@ -521,8 +576,8 @@ namespace FlaxEditor.Windows
                     UpdateCount();
                     Assert.IsNotNull(newEntry);
 
-                    // Scroll to the new entry
-                    if (scrollView)
+                    // Scroll to the new entry (if any added to view)
+                    if (scrollView && anyVisible)
                         _entriesPanel.ScrollViewTo(newEntry);
                 }
             }

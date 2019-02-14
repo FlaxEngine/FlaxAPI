@@ -354,7 +354,7 @@ namespace FlaxEditor.Tools.Foliage
                 var proxyObject = (ProxyObject)Values[0];
                 proxyObject.SyncOptions();
 
-                _info.Text = "Total instances: " + proxyObject.Foliage.InstancesCount;
+                _info.Text = string.Format("Instances: {0}, Total: {1}", proxyObject.Foliage.GetFoliageTypeInstancesCount(proxyObject.SelectedFoliageTypeIndex), proxyObject.Foliage.InstancesCount);
 
                 base.Refresh();
             }

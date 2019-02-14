@@ -80,7 +80,6 @@ namespace FlaxEditor.Windows
                     case Keys.Delete:
                         Editor.SceneEditing.Delete();
                         break;
-
                     case Keys.F5:
                         Editor.Simulation.RequestStartPlay();
                         break;

@@ -1,13 +1,14 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine.GUI
 {
     /// <summary>
     ///     Base class for all GUI controls
     /// </summary>
-    public partial class Control : IComparable
+    public partial class Control : IComparable, IDrawable
     {
         private ContainerControl _parent;
         private RootControl _root;
@@ -816,7 +817,7 @@ namespace FlaxEngine.GUI
             text = _tooltipText;
             location = Size * new Vector2(0.5f, 1.0f);
             area = new Rectangle(Vector2.Zero, Size);
-            return true;
+            return !string.IsNullOrEmpty(text);
         }
 
         /// <summary>

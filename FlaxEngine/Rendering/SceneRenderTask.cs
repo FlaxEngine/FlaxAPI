@@ -125,6 +125,7 @@ namespace FlaxEngine.Rendering
             // Init view defaults
             View.MaxShadowsQuality = Quality.Ultra;
             View.ModelLODDistanceFactor = 1.0f;
+            View.ShadowModelLODDistanceFactor = 1.0f;
         }
 
         /// <inheritdoc />
@@ -186,7 +187,7 @@ namespace FlaxEngine.Rendering
             }
 
             // Call scene rendering
-            context.DrawScene(this, Output, Buffers, View, Flags, Mode, CustomActors, ActorsSource, _postFx);
+            context.DrawScene(this, Output, Buffers, ref View, Flags, Mode, CustomActors, ActorsSource, _postFx);
             FrameCount++;
 
             // Finish

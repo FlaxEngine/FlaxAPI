@@ -71,6 +71,7 @@
     <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
@@ -254,10 +255,10 @@
     <Compile Include="Gizmo\GizmosCollection.cs" />
     <Compile Include="Gizmo\IGizmoOwner.cs" />
     <Compile Include="Gizmo\TransformGizmo.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Draw.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Selection.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Settings.cs" />
-    <Compile Include="Gizmo\TransformGizmo.Types.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Draw.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Selection.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Settings.cs" />
+    <Compile Include="Gizmo\TransformGizmoBase.Types.cs" />
     <Compile Include="GUI\Dialogs\ColorPickerDialog.cs" />
     <Compile Include="GUI\Dialogs\ColorSelector.cs" />
     <Compile Include="GUI\Dialogs\Dialog.cs" />
@@ -361,7 +362,6 @@
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
     <Compile Include="Surface\AnimGraphSurface.cs" />
-    <Compile Include="Surface\Archetypes\AlphaBlendMode.cs" />
     <Compile Include="Surface\Archetypes\Animation.cs" />
     <Compile Include="Surface\Archetypes\Animation.MultiBlend.cs" />
     <Compile Include="Surface\Archetypes\Animation.StateMachine.cs" />
@@ -431,6 +431,7 @@
     <Compile Include="Tools\Foliage\Brush.cs" />
     <Compile Include="Tools\Foliage\EditFoliageGizmo.cs" />
     <Compile Include="Tools\Foliage\EditFoliageGizmoMode.cs" />
+    <Compile Include="Tools\Foliage\EditFoliageSelectionOutline.cs" />
     <Compile Include="Tools\Foliage\Undo\EditFoliageAction.cs" />
     <Compile Include="Tools\Foliage\EditTab.cs" />
     <Compile Include="Tools\Foliage\FoliageTab.cs" />

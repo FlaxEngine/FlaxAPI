@@ -664,6 +664,7 @@ namespace FlaxEditor.Modules
                 var button = layouts.AddButton(name, OnApplyLayoutButtonClicked);
                 button.Tag = file;
             }
+            _menuWindowApplyWindowLayout.Enabled = files.Length > 0;
         }
 
         private void OnApplyLayoutButtonClicked(ContextMenuButton button)

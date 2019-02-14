@@ -82,7 +82,7 @@ namespace FlaxEditor.Viewport
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
-            TransformGizmo.OnApplyTransformation += ApplyTransform;
+            TransformGizmo.ApplyTransformation += ApplyTransform;
             TransformGizmo.ModeChanged += OnGizmoModeChanged;
             TransformGizmo.Duplicate += _window.Duplicate;
             Gizmos.Active = TransformGizmo;
@@ -235,6 +235,9 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public bool IsControlDown => _input.IsControlDown;
+
+        /// <inheritdoc />
+        public bool SnapToGround => false;
 
         /// <inheritdoc />
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;

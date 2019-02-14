@@ -19,6 +19,11 @@ namespace FlaxEditor.Surface
         private ContextMenuButton _cmRemoveBoxConnectionsButton;
 
         /// <summary>
+        /// Gets a value indicating whether the primary surface context menu is being opened (eg. user is adding nodes).
+        /// </summary>
+        public bool IsPrimaryMenuOpened => _activeVisjectCM != null && _activeVisjectCM.Visible;
+
+        /// <summary>
         /// Sets the primary menu for the Visject nodes spawning. Can be overriden per surface or surface context. Set to null to restore the default menu.
         /// </summary>
         /// <param name="menu">The menu to override with (use null if restore the default value).</param>

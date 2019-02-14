@@ -65,6 +65,32 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
+    /// Anti-aliasing modes.
+    /// </summary>
+    public enum AntialiasingMode
+    {
+        /// <summary>
+        /// The none.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Fast-Approximate Anti-Aliasing effect.
+        /// </summary>
+        FastApproximateAntialiasing = 1,
+
+        /// <summary>
+        /// Temporal Anti-Aliasing effect.
+        /// </summary>
+        TemporalAntialiasing = 2,
+
+        /// <summary>
+        /// Subpixel Morphological Anti-Aliasing effect.
+        /// </summary>
+        SubpixelMorphologicalAntialiasing = 3,
+    }
+
+    /// <summary>
     /// The effect pass resolution.
     /// </summary>
     public enum ResolutionMode
@@ -109,6 +135,7 @@ namespace FlaxEngine.Rendering
             public int Flags8; // SSR
             public int Flags9; // ColorGrading
             public int Flags10; // MB
+            public int Flags11; // AA
 
             // Ambient Occlusion
 
@@ -237,6 +264,14 @@ namespace FlaxEngine.Rendering
             public float MB_Scale;
             public int MB_SampleCount;
             public ResolutionMode MB_MotionVectorsResolution;
+
+            // Anti Aliasing
+
+            public AntialiasingMode AA_Mode;
+            public float AA_TAA_JitterSpread;
+            public float AA_TAA_Sharpness;
+            public float AA_TAA_StationaryBlending;
+            public float AA_TAA_MotionBlending;
 
             // Post Fx Materials
 
@@ -1892,6 +1927,87 @@ namespace FlaxEngine.Rendering
             set
             {
                 data.MB_MotionVectorsResolution = value;
+                isDataDirty = true;
+            }
+        }
+
+        #endregion
+
+        #region Anti Aliasing
+
+        /// <summary>
+        /// Gets or sets the anti-aliasing effect mode.
+        /// </summary>
+        [DefaultValue(AntialiasingMode.FastApproximateAntialiasing)]
+        [NoSerialize, EditorOrder(1100), EditorDisplay("Anti Aliasing", "Mode"), Tooltip("The anti-aliasing effect mode.")]
+        public AntialiasingMode AA_Mode
+        {
+            get => data.AA_Mode;
+            set
+            {
+                data.AA_Mode = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the diameter (in texels) inside which jitter samples are spread. Smaller values result
+        /// in crisper but more aliased output, while larger values result in more stable but
+        /// blurrier output.
+        /// </summary>
+        [DefaultValue(0.75f), Limit(0.1f, 1f, 0.001f)]
+        [NoSerialize, EditorOrder(1101), EditorDisplay("Anti Aliasing", "TAA Jitter Spread"), Tooltip("The diameter (in texels) inside which jitter samples are spread. Smaller values result in crisper but more aliased output, while larger values result in more stable but blurrier output.")]
+        public float AA_TAA_JitterSpread
+        {
+            get => data.AA_TAA_JitterSpread;
+            set
+            {
+                data.AA_TAA_JitterSpread = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the amount of sharpening applied to the color buffer. High values may introduce dark-border artifacts.
+        /// </summary>
+        [DefaultValue(0f), Limit(0, 3f, 0.001f)]
+        [NoSerialize, EditorOrder(1102), EditorDisplay("Anti Aliasing", "TAA Sharpness"), Tooltip("Controls the amount of sharpening applied to the color buffer. High values may introduce dark-border artifacts.")]
+        public float AA_TAA_Sharpness
+        {
+            get => data.AA_TAA_Sharpness;
+            set
+            {
+                data.AA_TAA_Sharpness = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the blend coefficient for a stationary fragment. Controls the percentage of history sample blended into the final color.
+        /// </summary>
+        [DefaultValue(0.95f), Limit(0, 0.99f, 0.001f)]
+        [NoSerialize, EditorOrder(1103), EditorDisplay("Anti Aliasing", "TAA Stationary Blending"), Tooltip("The anti-aliasing effect mode.")]
+        public float AA_TAA_StationaryBlending
+        {
+            get => data.AA_TAA_StationaryBlending;
+            set
+            {
+                data.AA_TAA_StationaryBlending = value;
+                isDataDirty = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the blend coefficient for a fragment with significant motion. Controls the percentage of history sample blended into the final color.
+        /// </summary>
+        [DefaultValue(0.4f), Limit(0, 0.99f, 0.001f)]
+        [NoSerialize, EditorOrder(1104), EditorDisplay("Anti Aliasing", "TAA Motion Blending"), Tooltip("The anti-aliasing effect mode.")]
+        public float AA_TAA_MotionBlending
+        {
+            get => data.AA_TAA_MotionBlending;
+            set
+            {
+                data.AA_TAA_MotionBlending = value;
                 isDataDirty = true;
             }
         }

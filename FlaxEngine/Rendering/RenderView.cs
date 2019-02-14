@@ -41,6 +41,18 @@ namespace FlaxEngine.Rendering
         public Matrix Projection;
 
         /// <summary>
+        /// The projection matrix with no camera offset (no jittering). 
+        /// For many temporal image effects, the camera that is currently rendering needs to be slightly offset from the default projection (that is, the camera is ‘jittered’). 
+        /// If you use motion vectors and camera jittering together, use this property to keep the motion vectors stable between frames.
+        /// </summary>
+        public Matrix NonJitteredProjection;
+
+        /// <summary>
+        /// The temporal AA jitter packed (xy - this frame jitter, zw - previous frame jitter). Cached before rendering. Zero if TAA is disabled. The value added to projection matrix (in clip space).
+        /// </summary>
+        public Vector4 TemporalAAJitter;
+
+        /// <summary>
         /// Flag used by static, offline rendering passes (eg. reflections rendering, lightmap rendering etc.)
         /// </summary>
         public bool IsOfflinePass;
@@ -61,6 +73,16 @@ namespace FlaxEngine.Rendering
         public float ModelLODDistanceFactor;
 
         /// <summary>
+        /// The model LOD bias. Default is 0. Applied to all the objects in the shadow maps render views. Can be used to improve shadows rendering performance or increase quality.
+        /// </summary>
+        public int ShadowModelLODBias;
+
+        /// <summary>
+        /// The model LOD distance scale factor. Default is 1. Applied to all the objects in the shadow maps render views. Higher values increase LODs quality. Can be used to improve shadows rendering performance or increase quality.
+        /// </summary>
+        public float ShadowModelLODDistanceFactor;
+
+        /// <summary>
         /// The view flags.
         /// </summary>
         public ViewFlags Flags;
@@ -75,11 +97,13 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="projection">The projection.</param>
-        public void SetUp(Matrix view, Matrix projection)
+        public void SetUp(ref Matrix view, ref Matrix projection)
         {
             // Copy data
             Position = view.TranslationVector;
             Projection = projection;
+            NonJitteredProjection = projection;
+            TemporalAAJitter = Vector4.Zero;
             View = view;
         }
 
@@ -101,6 +125,8 @@ namespace FlaxEngine.Rendering
 
             // Create projection matrix
             Matrix.PerspectiveFov(angle * Mathf.DegreesToRadians, 1.0f, nearPlane, farPlane, out Projection);
+            NonJitteredProjection = Projection;
+            TemporalAAJitter = Vector4.Zero;
 
             // Create view matrix
             Direction = direction;
@@ -121,6 +147,8 @@ namespace FlaxEngine.Rendering
             Far = camera.FarPlane;
             View = camera.View;
             Projection = camera.Projection;
+            NonJitteredProjection = Projection;
+            TemporalAAJitter = Vector4.Zero;
         }
 
         /// <summary>
@@ -136,6 +164,8 @@ namespace FlaxEngine.Rendering
             Near = camera.NearPlane;
             Far = camera.FarPlane;
             camera.GetMatrices(out View, out Projection, ref customViewport);
+            NonJitteredProjection = Projection;
+            TemporalAAJitter = Vector4.Zero;
         }
     }
 }

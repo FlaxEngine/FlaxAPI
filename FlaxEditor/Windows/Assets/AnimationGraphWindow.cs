@@ -572,7 +572,8 @@ namespace FlaxEditor.Windows.Assets
         protected override void UnlinkItem()
         {
             _properties.OnClean();
-            PreviewActor.AnimationGraph = null;
+            if (PreviewActor != null)
+                PreviewActor.AnimationGraph = null;
             _isWaitingForSurfaceLoad = false;
 
             base.UnlinkItem();

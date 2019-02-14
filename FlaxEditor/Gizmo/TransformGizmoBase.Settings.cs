@@ -5,7 +5,7 @@ using FlaxEngine;
 
 namespace FlaxEditor.Gizmo
 {
-    public partial class TransformGizmo
+    public partial class TransformGizmoBase
     {
         private const float GizmoScaleFactor = 18;
         private const float LineLength = 3.0f;
