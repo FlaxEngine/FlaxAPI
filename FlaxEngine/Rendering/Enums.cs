@@ -100,4 +100,37 @@ namespace FlaxEngine.Rendering
         /// </summary>
         Vulkan_SM5 = 5,
     }
+
+    /// <summary>
+    /// Graphics feature levels indicates what level of support can be relied upon. 
+    /// They are named after the graphics API to indicate the minimum level of the features set to support. 
+    /// Feature levels are ordered from the lowest to the most high-end so feature level enum can be used to switch between feature levels (e.g. don't use geometry shader if not supported).
+    /// </summary>
+    public enum FeatureLevel
+    {
+        /// <summary>
+        /// The features set defined by the core capabilities of OpenGL ES2.
+        /// </summary>
+        ES2 = 0,
+
+        /// <summary>
+        /// The features set defined by the core capabilities of OpenGL ES3.
+        /// </summary>
+        ES3 = 1,
+
+        /// <summary>
+        /// The features set defined by the core capabilities of OpenGL ES3.1.
+        /// </summary>
+        ES3_1 = 2,
+
+        /// <summary>
+        /// The features set defined by the core capabilities of DirectX 10 Shader Model 4.
+        /// </summary>
+        SM4 = 3,
+
+        /// <summary>
+        /// The features set defined by the core capabilities of DirectX 11 Shader Model 5.
+        /// </summary>
+        SM5 = 4,
+    }
 }
