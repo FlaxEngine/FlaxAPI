@@ -55,6 +55,19 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Gets the volume bounding box (oriented).
+        /// </summary>
+        [UnmanagedCall]
+        public OrientedBoundingBox OrientedBox
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { OrientedBoundingBox resultAsRef; Internal_GetOrientedBox(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -63,6 +76,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetOrientedBox(IntPtr obj, out OrientedBoundingBox resultAsRef);
 #endif
 
         #endregion
