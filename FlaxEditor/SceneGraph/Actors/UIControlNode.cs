@@ -22,7 +22,7 @@ namespace FlaxEditor.SceneGraph.Actors
             base.OnDebugDraw(data);
 
             if (Actor is UIControl uiControl)
-                DebugDraw.DrawBox(uiControl.Bounds, Color.BlueViolet);
+                DebugDraw.DrawWireBox(uiControl.Bounds, Color.BlueViolet);
         }
     }
 }

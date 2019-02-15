@@ -7,7 +7,7 @@ namespace FlaxEngine
     public static partial class DebugDraw
     {
         /// <summary>
-        /// Draws the sphere.
+        /// Draws the wireframe sphere.
         /// </summary>
         /// <param name="sphere">The sphere.</param>
         /// <param name="color">The color.</param>
@@ -17,12 +17,12 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawSphere(BoundingSphere sphere, Color color, float duration = 0.0f, bool depthTest = true)
+        public static void DrawWireSphere(BoundingSphere sphere, Color color, float duration = 0.0f, bool depthTest = true)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawSphere(ref sphere.Center, sphere.Radius, ref color, duration, depthTest);
+            Internal_DrawWireSphere(ref sphere.Center, sphere.Radius, ref color, duration, depthTest);
 #endif
         }
 

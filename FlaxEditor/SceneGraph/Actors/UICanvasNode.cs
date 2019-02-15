@@ -43,7 +43,7 @@ namespace FlaxEditor.SceneGraph.Actors
             base.OnDebugDraw(data);
 
             if (Actor is UICanvas uiCanvas && uiCanvas.Is3D)
-                DebugDraw.DrawBox(uiCanvas.Bounds, Color.BlueViolet);
+                DebugDraw.DrawWireBox(uiCanvas.Bounds, Color.BlueViolet);
         }
     }
 }
