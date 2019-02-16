@@ -24,6 +24,7 @@ namespace FlaxEditor.Viewport
         private readonly Editor _editor;
 
         private readonly ContextMenuButton _showGridButton;
+        private readonly ContextMenuButton _showNavigationButton;
         private readonly ViewportWidgetButton _gizmoModeTranslate;
         private readonly ViewportWidgetButton _gizmoModeRotate;
         private readonly ViewportWidgetButton _gizmoModeScale;
@@ -86,6 +87,15 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public ViewportDebugDrawData DebugDrawData => _debugDrawData;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show navigation mesh.
+        /// </summary>
+        public bool ShowNavigation
+        {
+            get => _showNavigationButton.Checked;
+            set => _showNavigationButton.Checked = value;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainEditorGizmoViewport"/> class.
@@ -238,6 +248,9 @@ namespace FlaxEditor.Viewport
             _showGridButton = ViewWidgetShowMenu.AddButton("Grid", () => Grid.Enabled = !Grid.Enabled);
             _showGridButton.Icon = Style.Current.CheckBoxTick;
 
+            // Show navigation widget
+            _showNavigationButton = ViewWidgetShowMenu.AddButton("Navigation", () => ShowNavigation = !ShowNavigation);
+
             // Create camera widget
             ViewWidgetButtonMenu.AddSeparator();
             ViewWidgetButtonMenu.AddButton("Create camera here", CreateCameraAtView);
@@ -307,6 +320,13 @@ namespace FlaxEditor.Viewport
             if (_previewStaticModel)
             {
                 _debugDrawData.HighlightModel(_previewStaticModel, _previewModelEntryIndex);
+            }
+
+            if (ShowNavigation)
+            {
+#if !UNIT_TEST_COMPILANT
+                Editor.Internal_DrawNavMesh();
+#endif
             }
 
             _debugDrawData.OnDraw(collector);

@@ -1069,6 +1069,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetOptions(ref InternalOptions options);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawNavMesh();
 #endif
 
         #endregion
