@@ -235,9 +235,8 @@ namespace FlaxEditor.Viewport
             gizmoMode.Parent = this;
 
             // Show grid widget
-            _showGridButton = ViewWidgetButtonMenu.AddButton("Show grid", () => Grid.Enabled = !Grid.Enabled);
+            _showGridButton = ViewWidgetShowMenu.AddButton("Grid", () => Grid.Enabled = !Grid.Enabled);
             _showGridButton.Icon = Style.Current.CheckBoxTick;
-            _showGridButton.IndexInParent = 1;
 
             // Create camera widget
             ViewWidgetButtonMenu.AddSeparator();

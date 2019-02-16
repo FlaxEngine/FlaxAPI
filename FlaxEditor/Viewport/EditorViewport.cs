@@ -126,7 +126,6 @@ namespace FlaxEditor.Viewport
         /// </summary>
         protected ViewportWidgetButton _speedWidget;
 
-
         private float _movementSpeed;
         private float _mouseAccelerationScale;
         private bool _useMouseFiltering;
@@ -322,6 +321,11 @@ namespace FlaxEditor.Viewport
         public ContextMenu ViewWidgetButtonMenu;
 
         /// <summary>
+        /// The 'View' widget 'Show' category context menu.
+        /// </summary>
+        public ContextMenu ViewWidgetShowMenu;
+
+        /// <summary>
         /// Gets or sets the viewport camera controller.
         /// </summary>
         public ViewportCamera ViewportCamera
@@ -413,10 +417,15 @@ namespace FlaxEditor.Viewport
                 viewModeButton.Parent = viewMode;
                 viewMode.Parent = this;
 
-                // Show FPS
+                // Show
                 {
-                    InitFpsCounter();
-                    _showFpsButon = ViewWidgetButtonMenu.AddButton("Show FPS", () => ShowFpsCounter = !ShowFpsCounter);
+                    ViewWidgetShowMenu = ViewWidgetButtonMenu.AddChildMenu("Show").ContextMenu;
+
+                    // Show FPS
+                    {
+                        InitFpsCounter();
+                        _showFpsButon = ViewWidgetShowMenu.AddButton("FPS Counter", () => ShowFpsCounter = !ShowFpsCounter);
+                    }
                 }
 
                 // View Flags
