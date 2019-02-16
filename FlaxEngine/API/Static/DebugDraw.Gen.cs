@@ -54,6 +54,26 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Draws the box.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawBox(BoundingBox box, Color color, float duration = 0.0f, bool depthTest = true)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawBoundingBox(ref box, ref color, duration, depthTest);
+#endif
+        }
+
+        /// <summary>
         /// Draws the wireframe frustum.
         /// </summary>
         /// <param name="frustum">The frustum.</param>
@@ -94,6 +114,26 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Draws the box.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawBox(OrientedBoundingBox box, Color color, float duration = 0.0f, bool depthTest = true)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawOrientedBoundingBox(ref box, ref color, duration, depthTest);
+#endif
+        }
+
+        /// <summary>
         /// Draws the wireframe sphere.
         /// </summary>
         /// <param name="position">The center position.</param>
@@ -111,6 +151,73 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Internal_DrawWireSphere(ref position, radius, ref color, duration, depthTest);
+#endif
+        }
+
+        /// <summary>
+        /// Draws the sphere.
+        /// </summary>
+        /// <param name="position">The center position.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawSphere(Vector3 position, float radius, Color color, float duration = 0.0f, bool depthTest = true)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawSphere(ref position, radius, ref color, duration, depthTest);
+#endif
+        }
+
+        /// <summary>
+        /// Draws the wireframe triangle.
+        /// </summary>
+        /// <param name="v0">The first triangle vertex.</param>
+        /// <param name="v1">The second triangle vertex.</param>
+        /// <param name="v2">The third triangle vertex.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawWireTriangle(Vector3 v0, Vector3 v1, Vector3 v2, float radius, Color color, float duration = 0.0f, bool depthTest = true)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawWireTriangle(ref v0, ref v1, ref v2, radius, ref color, duration, depthTest);
+#endif
+        }
+
+        /// <summary>
+        /// Draws the triangle.
+        /// </summary>
+        /// <param name="v0">The first triangle vertex.</param>
+        /// <param name="v1">The second triangle vertex.</param>
+        /// <param name="v2">The third triangle vertex.</param>
+        /// <param name="radius">The radius.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawTriangle(Vector3 v0, Vector3 v1, Vector3 v2, float radius, Color color, float duration = 0.0f, bool depthTest = true)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawTriangle(ref v0, ref v1, ref v2, radius, ref color, duration, depthTest);
 #endif
         }
 
@@ -213,13 +320,28 @@ namespace FlaxEngine
         internal static extern void Internal_DrawWireBoundingBox(ref BoundingBox box, ref Color color, float duration, bool depthTest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawBoundingBox(ref BoundingBox box, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawWireFrustum(ref BoundingFrustum frustum, ref Color color, float duration, bool depthTest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawWireOrientedBoundingBox(ref OrientedBoundingBox box, ref Color color, float duration, bool depthTest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawOrientedBoundingBox(ref OrientedBoundingBox box, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawWireSphere(ref Vector3 position, float radius, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawSphere(ref Vector3 position, float radius, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawWireTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, float radius, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, float radius, ref Color color, float duration, bool depthTest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawCircle(ref Vector3 position, ref Vector3 normal, float radius, ref Color color, float duration, bool depthTest);
