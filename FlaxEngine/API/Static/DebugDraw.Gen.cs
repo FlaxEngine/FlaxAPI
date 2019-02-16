@@ -204,7 +204,6 @@ namespace FlaxEngine
         /// <param name="v0">The first triangle vertex.</param>
         /// <param name="v1">The second triangle vertex.</param>
         /// <param name="v2">The third triangle vertex.</param>
-        /// <param name="radius">The radius.</param>
         /// <param name="color">The color.</param>
         /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
         /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
@@ -212,12 +211,53 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawTriangle(Vector3 v0, Vector3 v1, Vector3 v2, float radius, Color color, float duration = 0.0f, bool depthTest = true)
+        public static void DrawTriangle(Vector3 v0, Vector3 v1, Vector3 v2, Color color, float duration = 0.0f, bool depthTest = true)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawTriangle(ref v0, ref v1, ref v2, radius, ref color, duration, depthTest);
+            Internal_DrawTriangle(ref v0, ref v1, ref v2, ref color, duration, depthTest);
+#endif
+        }
+
+        /// <summary>
+        /// Draws the triangles.
+        /// </summary>
+        /// <param name="vertices">The triangle vertices buffer (3 vertices per triangle).</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawTriangles(Vector3[] vertices, Color color, float duration = 0.0f, bool depthTest = true)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawTriangles1(vertices, ref color, duration, depthTest);
+#endif
+        }
+
+        /// <summary>
+        /// Draws the triangles.
+        /// </summary>
+        /// <param name="vertices">The triangle vertices buffer.</param>
+        /// <param name="indices">The triangle indices buffer (3 indices per triangle).</param>
+        /// <param name="color">The color.</param>
+        /// <param name="duration">The duration (in seconds). Use 0 to draw it only once.</param>
+        /// <param name="depthTest">If set to <c>true</c> depth test will be performed, otherwise depth will be ignored.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawTriangles(Vector3[] vertices, int[] indices, Color color, float duration = 0.0f, bool depthTest = true)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawTriangles2(vertices, indices, ref color, duration, depthTest);
 #endif
         }
 
@@ -341,7 +381,13 @@ namespace FlaxEngine
         internal static extern void Internal_DrawWireTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, float radius, ref Color color, float duration, bool depthTest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, float radius, ref Color color, float duration, bool depthTest);
+        internal static extern void Internal_DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawTriangles1(Vector3[] vertices, ref Color color, float duration, bool depthTest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawTriangles2(Vector3[] vertices, int[] indices, ref Color color, float duration, bool depthTest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawCircle(ref Vector3 position, ref Vector3 normal, float radius, ref Color color, float duration, bool depthTest);
