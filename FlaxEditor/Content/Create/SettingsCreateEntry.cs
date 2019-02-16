@@ -48,6 +48,11 @@ namespace FlaxEditor.Content.Create
             GraphicsSettings,
 
             /// <summary>
+            /// The navigation settings.
+            /// </summary>
+            NavigationSettings,
+
+            /// <summary>
             /// The build settings.
             /// </summary>
             BuildSettings,
@@ -68,7 +73,7 @@ namespace FlaxEditor.Content.Create
             UWPPlatformSettings,
         }
 
-        private static Type[] _types =
+        private static readonly Type[] _types =
         {
             typeof(GameSettings),
             typeof(AudioSettings),
@@ -76,6 +81,7 @@ namespace FlaxEditor.Content.Create
             typeof(LayersAndTagsSettings),
             typeof(PhysicsSettings),
             typeof(GraphicsSettings),
+            typeof(NavigationSettings),
             typeof(BuildSettings),
             typeof(InputSettings),
             typeof(WindowsPlatformSettings),

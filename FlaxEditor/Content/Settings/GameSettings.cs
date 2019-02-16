@@ -86,6 +86,12 @@ namespace FlaxEditor.Content.Settings
         public JsonAsset Graphics;
 
         /// <summary>
+        /// Reference to <see cref="NavigationSettings"/> asset.
+        /// </summary>
+        [EditorOrder(1045), EditorDisplay("Other Settings"), AssetReference(typeof(NavigationSettings), true), Tooltip("Reference to Navigation Settings asset")]
+        public JsonAsset Navigation;
+
+        /// <summary>
         /// Reference to <see cref="BuildSettings"/> asset.
         /// </summary>
         [EditorOrder(1050), EditorDisplay("Other Settings"), AssetReference(typeof(BuildSettings), true), Tooltip("Reference to Build Settings asset")]
@@ -169,6 +175,8 @@ namespace FlaxEditor.Content.Settings
                 return LoadAsset<PhysicsSettings>(gameSettings.Physics) as T;
             if (type == typeof(GraphicsSettings))
                 return LoadAsset<GraphicsSettings>(gameSettings.Graphics) as T;
+            if (type == typeof(NavigationSettings))
+                return LoadAsset<NavigationSettings>(gameSettings.Navigation) as T;
             if (type == typeof(BuildSettings))
                 return LoadAsset<BuildSettings>(gameSettings.GameCooking) as T;
             if (type == typeof(InputSettings))
@@ -244,6 +252,8 @@ namespace FlaxEditor.Content.Settings
                 return SaveAsset(gameSettings, ref gameSettings.Physics, obj);
             if (type == typeof(GraphicsSettings))
                 return SaveAsset(gameSettings, ref gameSettings.Graphics, obj);
+            if (type == typeof(NavigationSettings))
+                return SaveAsset(gameSettings, ref gameSettings.Navigation, obj);
             if (type == typeof(BuildSettings))
                 return SaveAsset(gameSettings, ref gameSettings.GameCooking, obj);
             if (type == typeof(InputSettings))
