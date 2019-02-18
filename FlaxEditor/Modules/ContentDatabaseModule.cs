@@ -814,8 +814,9 @@ namespace FlaxEditor.Modules
                     // Flax isn't John Snow. Flax knows something :)
                     // Also Flax Content Layer is using smart caching so this query gonna be fast.
 
-                    ContentItem item;
+                    ContentItem item = null;
 
+                    // Try using in-build asset
                     string typeName;
                     Guid id;
                     if (FlaxEngine.Content.GetAssetInfo(path, out typeName, out id))
@@ -823,24 +824,21 @@ namespace FlaxEditor.Modules
                         var proxy = GetAssetProxy(typeName, path);
                         item = proxy?.ConstructItem(path, typeName, ref id);
                     }
-                    else
-                    {
+
+                    // Generic file
+                    if (item == null)
                         item = new FileItem(path);
-                    }
 
-                    if (item != null)
+                    // Link
+                    item.ParentFolder = parent.Folder;
+
+                    // Fire event
+                    if (_enableEvents)
                     {
-                        // Link
-                        item.ParentFolder = parent.Folder;
-
-                        // Fire event
-                        if (_enableEvents)
-                        {
-                            ItemAdded?.Invoke(item);
-                            OnWorkspaceModified?.Invoke();
-                        }
-                        _itemsCreated++;
+                        ItemAdded?.Invoke(item);
+                        OnWorkspaceModified?.Invoke();
                     }
+                    _itemsCreated++;
                 }
             }
         }
