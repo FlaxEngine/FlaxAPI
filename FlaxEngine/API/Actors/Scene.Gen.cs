@@ -116,10 +116,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Builds the navigation mesh for the given scene.
+        /// Builds the navigation mesh for the given scene (discards all its tiles).
         /// </summary>
         /// <remarks>
-        /// Requests are enqueued till the next game scripts update.
+        /// Requests are enqueued till the next game scripts update. Actual navmesh building in done via Thread Pool tasks in a background to prevent game thread stalls.
         /// </remarks>
         /// <param name="timeoutMs">The timeout to wait before building nav mesh (in milliseconds).</param>
 #if UNIT_TEST_COMPILANT
@@ -131,7 +131,28 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_BuildNavMesh(unmanagedPtr, timeoutMs);
+            Internal_BuildNavMesh1(unmanagedPtr, timeoutMs);
+#endif
+        }
+
+        /// <summary>
+        /// Builds the navigation mesh for the given scene (builds only the tiles overlapping the given bounding box).
+        /// </summary>
+        /// <remarks>
+        /// Requests are enqueued till the next game scripts update. Actual navmesh building in done via Thread Pool tasks in a background to prevent game thread stalls.
+        /// </remarks>
+        /// <param name="dirtyBounds">The bounds in world-space to build overlapping tiles.</param>
+        /// <param name="timeoutMs">The timeout to wait before building nav mesh (in milliseconds).</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void BuildNavMesh(BoundingBox dirtyBounds, float timeoutMs = 100)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_BuildNavMesh2(unmanagedPtr, ref dirtyBounds, timeoutMs);
 #endif
         }
 
@@ -154,7 +175,10 @@ namespace FlaxEngine
         internal static extern void Internal_BuildCSG(IntPtr obj, float timeoutMs);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_BuildNavMesh(IntPtr obj, float timeoutMs);
+        internal static extern void Internal_BuildNavMesh1(IntPtr obj, float timeoutMs);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_BuildNavMesh2(IntPtr obj, ref BoundingBox dirtyBounds, float timeoutMs);
 #endif
 
         #endregion
