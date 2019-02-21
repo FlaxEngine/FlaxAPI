@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// The audio service used for music and sound effects playback..
+    /// The audio service used for music and sound effects playback.
     /// </summary>
     public static partial class Audio
     {

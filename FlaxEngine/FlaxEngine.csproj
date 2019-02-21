@@ -216,6 +216,8 @@
     </Compile>
     <Compile Include="API\Static\MessageBox.cs" />
     <Compile Include="API\Static\MessageBox.Gen.cs" />
+    <Compile Include="API\Static\Navigation.cs" />
+    <Compile Include="API\Static\Navigation.Gen.cs" />
     <Compile Include="API\Static\Physics.cs" />
     <Compile Include="API\Static\Physics.Gen.cs" />
     <Compile Include="API\Static\PluginManager.cs" />

@@ -47,6 +47,11 @@ namespace FlaxEditor.Modules
         public readonly CodeEditorOpenProgress CodeEditorOpen = new CodeEditorOpenProgress();
 
         /// <summary>
+        /// The navigation mesh building progress handler.
+        /// </summary>
+        public readonly NavMeshBuildingProgress NavMeshBuilding = new NavMeshBuildingProgress();
+
+        /// <summary>
         /// Gets the first active handler.
         /// </summary>
         public ProgressHandler FirstActiveHandler => _handlers.FirstOrDefault(x => x.IsActive);
@@ -68,6 +73,7 @@ namespace FlaxEditor.Modules
             RegisterHandler(BakeLightmaps);
             RegisterHandler(BakeEnvProbes);
             RegisterHandler(CodeEditorOpen);
+            RegisterHandler(NavMeshBuilding);
         }
 
         /// <summary>
