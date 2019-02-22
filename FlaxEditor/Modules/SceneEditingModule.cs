@@ -246,10 +246,10 @@ namespace FlaxEditor.Modules
             }
 
             // Auto NavMesh rebuild
-            if (!isPlayMode && options.General.AutoRebuildNavMesh)
+            if (!isPlayMode && options.General.AutoRebuildNavMesh && actor.Scene && (actor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
             {
-                if (actor is NavMeshBoundsVolume && actor.Scene)
-                    actor.Scene.BuildNavMesh(options.General.AutoRebuildNavMeshTimeoutMs);
+                var bounds = actor.BoxWithChildren;
+                actor.Scene.BuildNavMesh(bounds, options.General.AutoRebuildNavMeshTimeoutMs);
             }
         }
 
@@ -262,6 +262,8 @@ namespace FlaxEditor.Modules
             var objects = Selection.Where(x => x.CanDelete).ToList().BuildAllNodes().Where(x => x.CanDelete).ToList();
             if (objects.Count == 0)
                 return;
+
+            bool isPlayMode = Editor.StateMachine.IsPlayMode;
 
             SelectionDeleteBegin?.Invoke();
 
@@ -285,7 +287,7 @@ namespace FlaxEditor.Modules
             var options = Editor.Options.Options;
 
             // Auto CSG mesh rebuild
-            if (options.General.AutoRebuildCSG)
+            if (!isPlayMode && options.General.AutoRebuildCSG)
             {
                 foreach (var obj in objects)
                 {
@@ -295,12 +297,15 @@ namespace FlaxEditor.Modules
             }
 
             // Auto NavMesh rebuild
-            if (options.General.AutoRebuildNavMesh)
+            if (!isPlayMode && options.General.AutoRebuildNavMesh)
             {
                 foreach (var obj in objects)
                 {
-                    if (obj is ActorNode node && node.Actor is NavMeshBoundsVolume)
-                        node.Actor.Scene.BuildNavMesh(options.General.AutoRebuildNavMeshTimeoutMs);
+                    if (obj is ActorNode node && node.Actor.Scene && (node.Actor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
+                    {
+                        var bounds = node.Actor.BoxWithChildren;
+                        node.Actor.Scene.BuildNavMesh(bounds, options.General.AutoRebuildNavMeshTimeoutMs);
+                    }
                 }
             }
         }
