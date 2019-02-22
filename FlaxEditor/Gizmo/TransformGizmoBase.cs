@@ -17,6 +17,8 @@ namespace FlaxEditor.Gizmo
         /// </summary>
         protected readonly List<Transform> _startTransforms = new List<Transform>();
 
+        protected BoundingBox _startBounds = BoundingBox.Empty;
+
         private Vector3 _accMoveDelta;
         private Matrix _axisAlignedWorld = Matrix.Identity;
 
@@ -88,7 +90,10 @@ namespace FlaxEditor.Gizmo
             if (_startTransforms.Capacity < count)
                 _startTransforms.Capacity = Mathf.NextPowerOfTwo(count);
             for (var i = 0; i < count; i++)
+            {
                 _startTransforms.Add(GetSelectedObject(i));
+            }
+            GetSelectedObjectsBounds(out _startBounds);
 
             // Start
             _isTransforming = true;
@@ -525,6 +530,11 @@ namespace FlaxEditor.Gizmo
         /// </summary>
         /// <param name="index">The selected object index.</param>
         protected abstract Transform GetSelectedObject(int index);
+
+        /// <summary>
+        /// Gets the selected objects bounding box (contains the whole selection).
+        /// </summary>
+        protected abstract void GetSelectedObjectsBounds(out BoundingBox bounds);
 
         /// <summary>
         /// Called when user starts transforming selected objects.

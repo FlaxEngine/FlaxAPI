@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using Newtonsoft.Json;
 using Object = System.Object;
@@ -111,6 +112,21 @@ namespace FlaxEditor.Utilities
                 '\u001F'
             };
             return path.IndexOfAny(illegalChars) != -1;
+        }
+
+        internal static Transform[] GetTransformsAndBounds(List<SceneGraphNode> nodes, out BoundingBox bounds)
+        {
+            var transforms = new Transform[nodes.Count];
+            bounds = BoundingBox.Empty;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                transforms[i] = nodes[i].Transform;
+                if (nodes[i] is ActorNode actorNode)
+                {
+                    bounds = BoundingBox.Merge(bounds, actorNode.Actor.BoxWithChildren);
+                }
+            }
+            return transforms;
         }
 
         /// <summary>

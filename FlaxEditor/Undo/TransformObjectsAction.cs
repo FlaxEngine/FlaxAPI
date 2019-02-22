@@ -23,6 +23,11 @@ namespace FlaxEditor
         public struct DataStorage
         {
             /// <summary>
+            /// The scene of the selected objects.
+            /// </summary>
+            public Scene Scene;
+
+            /// <summary>
             /// The selection pool.
             /// </summary>
             public SceneGraphNode[] Selection;
@@ -36,16 +41,37 @@ namespace FlaxEditor
             /// The 'after' state.
             /// </summary>
             public Transform[] After;
+
+            /// <summary>
+            /// The cached bounding box that contains all selected items in 'before' state.
+            /// </summary>
+            public BoundingBox BeforeBounds;
+
+            /// <summary>
+            /// The cached bounding box that contains all selected items in 'after' state.
+            /// </summary>
+            public BoundingBox AfterBounds;
         }
 
-        internal TransformObjectsAction(List<SceneGraphNode> selection, List<Transform> before)
+        internal TransformObjectsAction(List<SceneGraphNode> selection, List<Transform> before, ref BoundingBox boundsBefore)
         {
-            Data = new DataStorage
+            var after = Utilities.Utils.GetTransformsAndBounds(selection, out var afterBounds);
+
+            // TODO: support moving objects from more than one scene
+            var scene = selection[0].ParentScene?.Scene;
+
+            var data = new DataStorage
             {
+                Scene = scene,
                 Selection = selection.ToArray(),
+                After = after,
                 Before = before.ToArray(),
-                After = selection.ConvertAll(x => x.Transform).ToArray(),
+                BeforeBounds = boundsBefore,
+                AfterBounds = afterBounds,
             };
+            Data = data;
+
+            InvalidateBounds(ref data);
         }
 
         /// <inheritdoc />
@@ -59,6 +85,7 @@ namespace FlaxEditor
             {
                 data.Selection[i].Transform = data.After[i];
             }
+            InvalidateBounds(ref data);
         }
 
         /// <inheritdoc />
@@ -68,6 +95,29 @@ namespace FlaxEditor
             for (int i = 0; i < data.Selection.Length; i++)
             {
                 data.Selection[i].Transform = data.Before[i];
+            }
+            InvalidateBounds(ref data);
+        }
+
+        private void InvalidateBounds(ref DataStorage data)
+        {
+            var editor = Editor.Instance;
+            bool isPlayMode = editor.StateMachine.IsPlayMode;
+            var options = editor.Options.Options;
+
+            // Auto NavMesh rebuild
+            if (!isPlayMode && options.General.AutoRebuildNavMesh)
+            {
+                // Handle simple case where objects were moved just a little and use one navmesh build request to improve performance
+                if (data.BeforeBounds.Intersects(ref data.AfterBounds))
+                {
+                    data.Scene.BuildNavMesh(BoundingBox.Merge(data.BeforeBounds, data.AfterBounds), options.General.AutoRebuildNavMeshTimeoutMs);
+                }
+                else
+                {
+                    data.Scene.BuildNavMesh(data.BeforeBounds, options.General.AutoRebuildNavMeshTimeoutMs);
+                    data.Scene.BuildNavMesh(data.AfterBounds, options.General.AutoRebuildNavMeshTimeoutMs);
+                }
             }
         }
 

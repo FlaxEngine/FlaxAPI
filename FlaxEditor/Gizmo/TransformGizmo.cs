@@ -149,6 +149,19 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <inheritdoc />
+        protected override void GetSelectedObjectsBounds(out BoundingBox bounds)
+        {
+            bounds = BoundingBox.Empty;
+            for (int i = 0; i < _selectionParents.Count; i++)
+            {
+                if (_selectionParents[i] is ActorNode actorNode)
+                {
+                    bounds = BoundingBox.Merge(bounds, actorNode.Actor.BoxWithChildren);
+                }
+            }
+        }
+
+        /// <inheritdoc />
         protected override void OnApplyTransformation(ref Vector3 translationDelta, ref Quaternion rotationDelta, ref Vector3 scaleDelta)
         {
             base.OnApplyTransformation(ref translationDelta, ref rotationDelta, ref scaleDelta);
@@ -162,7 +175,7 @@ namespace FlaxEditor.Gizmo
             base.OnEndTransforming();
 
             // Record undo action
-            Owner.Undo.AddAction(new TransformObjectsAction(SelectedParents, _startTransforms));
+            Owner.Undo.AddAction(new TransformObjectsAction(SelectedParents, _startTransforms, ref _startBounds));
         }
 
         /// <inheritdoc />

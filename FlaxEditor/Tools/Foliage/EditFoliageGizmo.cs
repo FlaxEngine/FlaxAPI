@@ -61,6 +61,12 @@ namespace FlaxEditor.Tools.Foliage
         }
 
         /// <inheritdoc />
+        protected override void GetSelectedObjectsBounds(out BoundingBox bounds)
+        {
+            bounds = BoundingBox.Empty;
+        }
+
+        /// <inheritdoc />
         protected override void OnApplyTransformation(ref Vector3 translationDelta, ref Quaternion rotationDelta, ref Vector3 scaleDelta)
         {
             base.OnApplyTransformation(ref translationDelta, ref rotationDelta, ref scaleDelta);
