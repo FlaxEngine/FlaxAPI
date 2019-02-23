@@ -58,6 +58,26 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Casts a 'walkability' ray along the surface of the navigation mesh from the start position toward the end position.
+        /// </summary>
+        /// <param name="startPosition">The start position.</param>
+        /// <param name="endPosition">The end position.</param>
+        /// <param name="hitInfo">The result hit information. Valid only when query succeed.</param>
+        /// <returns>True if ray hits an matching object, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool RayCast(Vector3 startPosition, Vector3 endPosition, out NavMeshHit hitInfo)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_RayCast(ref startPosition, ref endPosition, out hitInfo);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -69,6 +89,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_FindDistanceToWall(ref Vector3 startPosition, out NavMeshHit hitInfo, float maxDistance);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_RayCast(ref Vector3 startPosition, ref Vector3 endPosition, out NavMeshHit hitInfo);
 #endif
 
         #endregion

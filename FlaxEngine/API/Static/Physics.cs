@@ -21,7 +21,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Performs a raycast against objects in the scene, returns results in a RaycastHit structure.
+        /// Performs a raycast against objects in the scene, returns results in a RayCastHit structure.
         /// </summary>
         /// <param name="origin">The origin of the ray.</param>
         /// <param name="direction">The normalized direction of the ray.</param>
@@ -36,7 +36,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Performs a raycast against objects in the scene, returns results in a RaycastHit structure.
+        /// Performs a raycast against objects in the scene, returns results in a RayCastHit structure.
         /// </summary>
         /// <param name="origin">The origin of the ray.</param>
         /// <param name="direction">The normalized direction of the ray.</param>
