@@ -38,6 +38,26 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Finds the distance from the specified start position to the nearest polygon wall.
+        /// </summary>
+        /// <param name="startPosition">The start position.</param>
+        /// <param name="hitInfo">The result hit information. Valid only when query succeed.</param>
+        /// <param name="maxDistance">The maximum distance to search for wall (search radius).</param>
+        /// <returns>True if ray hits an matching object, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool FindDistanceToWall(Vector3 startPosition, out NavMeshHit hitInfo, float maxDistance = float.MaxValue)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindDistanceToWall(ref startPosition, out hitInfo, maxDistance);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -46,6 +66,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetNavMeshBuildingProgress();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_FindDistanceToWall(ref Vector3 startPosition, out NavMeshHit hitInfo, float maxDistance);
 #endif
 
         #endregion
