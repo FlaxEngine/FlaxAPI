@@ -122,6 +122,7 @@ namespace FlaxEditor.Windows
             groupOther.AddChild(CreateActorItem("Audio Listener", typeof(AudioListener)));
             groupOther.AddChild(CreateActorItem("Empty Actor", typeof(EmptyActor)));
             groupOther.AddChild(CreateActorItem("Nav Mesh Bounds Volume", typeof(NavMeshBoundsVolume)));
+            groupOther.AddChild(CreateActorItem("Nav Mesh Link", typeof(NavLink)));
 
             var groupGui = CreateGroupWithList(actorGroups, "GUI");
             groupGui.AddChild(CreateActorItem("UI Control", typeof(UIControl)));
