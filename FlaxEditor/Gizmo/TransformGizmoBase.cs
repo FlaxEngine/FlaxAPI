@@ -17,6 +17,7 @@ namespace FlaxEditor.Gizmo
         /// </summary>
         protected readonly List<Transform> _startTransforms = new List<Transform>();
 
+        protected bool _navigationDirty;
         protected BoundingBox _startBounds = BoundingBox.Empty;
 
         private Vector3 _accMoveDelta;
@@ -93,7 +94,7 @@ namespace FlaxEditor.Gizmo
             {
                 _startTransforms.Add(GetSelectedObject(i));
             }
-            GetSelectedObjectsBounds(out _startBounds);
+            GetSelectedObjectsBounds(out _startBounds, out _navigationDirty);
 
             // Start
             _isTransforming = true;
@@ -534,7 +535,9 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Gets the selected objects bounding box (contains the whole selection).
         /// </summary>
-        protected abstract void GetSelectedObjectsBounds(out BoundingBox bounds);
+        /// <param name="bounds">The bounds of the selected objects (merged bounds).</param>
+        /// <param name="navigationDirty">True if editing the selected objects transformations marks the navigation system area dirty (for auto-rebuild), otherwise skip update.</param>
+        protected abstract void GetSelectedObjectsBounds(out BoundingBox bounds, out bool navigationDirty);
 
         /// <summary>
         /// Called when user starts transforming selected objects.

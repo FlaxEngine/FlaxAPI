@@ -51,9 +51,14 @@ namespace FlaxEditor
             /// The cached bounding box that contains all selected items in 'after' state.
             /// </summary>
             public BoundingBox AfterBounds;
+
+            /// <summary>
+            /// True if navigation system has been modified during editing the selected objects (navmesh auto-rebuild is required).
+            /// </summary>
+            public bool NavigationDirty;
         }
 
-        internal TransformObjectsAction(List<SceneGraphNode> selection, List<Transform> before, ref BoundingBox boundsBefore)
+        internal TransformObjectsAction(List<SceneGraphNode> selection, List<Transform> before, ref BoundingBox boundsBefore, bool navigationDirty)
         {
             var after = Utilities.Utils.GetTransformsAndBounds(selection, out var afterBounds);
 
@@ -68,6 +73,7 @@ namespace FlaxEditor
                 Before = before.ToArray(),
                 BeforeBounds = boundsBefore,
                 AfterBounds = afterBounds,
+                NavigationDirty = navigationDirty,
             };
             Data = data;
 
@@ -101,6 +107,9 @@ namespace FlaxEditor
 
         private void InvalidateBounds(ref DataStorage data)
         {
+            if (!data.NavigationDirty)
+                return;
+
             var editor = Editor.Instance;
             bool isPlayMode = editor.StateMachine.IsPlayMode;
             var options = editor.Options.Options;

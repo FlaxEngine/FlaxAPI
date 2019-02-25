@@ -61,9 +61,10 @@ namespace FlaxEditor.Tools.Foliage
         }
 
         /// <inheritdoc />
-        protected override void GetSelectedObjectsBounds(out BoundingBox bounds)
+        protected override void GetSelectedObjectsBounds(out BoundingBox bounds, out bool navigationDirty)
         {
             bounds = BoundingBox.Empty;
+            navigationDirty = false;
         }
 
         /// <inheritdoc />

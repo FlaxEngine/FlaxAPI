@@ -149,14 +149,16 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <inheritdoc />
-        protected override void GetSelectedObjectsBounds(out BoundingBox bounds)
+        protected override void GetSelectedObjectsBounds(out BoundingBox bounds, out bool navigationDirty)
         {
             bounds = BoundingBox.Empty;
+            navigationDirty = false;
             for (int i = 0; i < _selectionParents.Count; i++)
             {
                 if (_selectionParents[i] is ActorNode actorNode)
                 {
                     bounds = BoundingBox.Merge(bounds, actorNode.Actor.BoxWithChildren);
+                    navigationDirty |= (actorNode.Actor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation;
                 }
             }
         }
@@ -175,7 +177,7 @@ namespace FlaxEditor.Gizmo
             base.OnEndTransforming();
 
             // Record undo action
-            Owner.Undo.AddAction(new TransformObjectsAction(SelectedParents, _startTransforms, ref _startBounds));
+            Owner.Undo.AddAction(new TransformObjectsAction(SelectedParents, _startTransforms, ref _startBounds, _navigationDirty));
         }
 
         /// <inheritdoc />
