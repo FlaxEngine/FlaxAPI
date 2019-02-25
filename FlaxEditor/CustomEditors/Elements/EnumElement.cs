@@ -101,15 +101,16 @@ namespace FlaxEditor.CustomEditors.Elements
 
                     // Calculate value that will be set after change
                     int valueAfter = 0;
+                    bool isSelected = _selectedIndices.Contains(index);
+                    int selectedValue = entries[index].Value;
                     for (int i = 0; i < _selectedIndices.Count; i++)
                     {
                         int selectedIndex = _selectedIndices[i];
-                        if (selectedIndex != index)
+                        if (selectedIndex != index && (isSelected || (entries[selectedIndex].Value & selectedValue) == 0))
                             valueAfter |= entries[selectedIndex].Value;
                     }
-                    bool contains = _selectedIndices.Contains(index);
-                    if (!contains)
-                        valueAfter |= entries[index].Value;
+                    if (!isSelected)
+                        valueAfter |= selectedValue;
 
                     // Skip if value won't change
                     if (_element.Value == valueAfter)
