@@ -62,17 +62,17 @@ namespace FlaxEditor.Content.Settings
         public float MaxEdgeError = 1.3f;
 
         /// <summary>
-        /// Sets the sampling distance to use when generating the detail mesh. For height detail only.
+        /// The sampling distance to use when generating the detail mesh. For height detail only.
         /// </summary>
         [DefaultValue(600.0f), Limit(1)]
-        [EditorOrder(80), EditorDisplay("Nav Mesh Options", "Detail Sampling Distance"), Tooltip("Sets the sampling distance to use when generating the detail mesh. For height detail only.")]
+        [EditorOrder(80), EditorDisplay("Nav Mesh Options", "Detail Sampling Distance"), Tooltip("The sampling distance to use when generating the detail mesh.")]
         public float DetailSamplingDist = 600.0f;
 
         /// <summary>
         /// The maximum distance the detail mesh surface should deviate from heightfield data. For height detail only.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 3)]
-        [EditorOrder(90), EditorDisplay("Nav Mesh Options"), Tooltip("The maximum distance the detail mesh surface should deviate from heightfield data. For height detail only.")]
+        [EditorOrder(90), EditorDisplay("Nav Mesh Options"), Tooltip("The maximum distance the detail mesh surface should deviate from heightfield data.")]
         public float MaxDetailSamplingError = 1.0f;
 
         /// <summary>
@@ -97,10 +97,10 @@ namespace FlaxEditor.Content.Settings
         public float WalkableMaxClimb = 35.0f;
 
         /// <summary>
-        /// The maximum slope that is considered walkable (in degrees). Objects can't go up or down slopes higher than this value. 
+        /// The maximum slope that is considered walkable (in degrees). Objects can't go up or down slopes higher than this value.
         /// </summary>
         [DefaultValue(60.0f), Limit(0, 89.0f)]
-        [EditorOrder(1030), EditorDisplay("Agent Options"), Tooltip("The maximum slope that is considered walkable (in degrees). Objects can't go up or down slopes higher than this value. ")]
+        [EditorOrder(1030), EditorDisplay("Agent Options"), Tooltip("The maximum slope that is considered walkable (in degrees). Objects can't go up or down slopes higher than this value.")]
         public float WalkableMaxSlopeAngle = 60.0f;
     }
 }
