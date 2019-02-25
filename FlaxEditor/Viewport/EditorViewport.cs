@@ -173,6 +173,8 @@ namespace FlaxEditor.Viewport
         private float _fieldOfView = 60.0f;
         private float _nearPlane = 8.0f;
         private float _farPlane = 10000.0f;
+        private float _orthoSize = 1.0f;
+        private bool _isOrtho = false;
 
         /// <summary>
         /// Speed of the mouse.
@@ -371,6 +373,24 @@ namespace FlaxEditor.Viewport
         }
 
         /// <summary>
+        /// Gets or sets the camera orthographic size scale (if camera uses orthographic mode).
+        /// </summary>
+        public float OrthographicScale
+        {
+            get => _orthoSize;
+            set => _orthoSize = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the camera orthographic mode (otherwise uses perspective projection).
+        /// </summary>
+        public bool UseOrthographicProjection
+        {
+            get => _isOrtho;
+            set => _isOrtho = value;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorViewport"/> class.
         /// </summary>
         /// <param name="task">The task.</param>
@@ -456,13 +476,46 @@ namespace FlaxEditor.Viewport
 
                 ViewWidgetButtonMenu.AddSeparator();
 
+                // Orthographic
+                {
+                    var ortho = ViewWidgetButtonMenu.AddButton("Orthographic");
+                    var orthoValue = new CheckBox(75, 2, _isOrtho);
+                    orthoValue.Parent = ortho;
+                    orthoValue.StateChanged += (checkBox) =>
+                    {
+                        if (checkBox.Checked != _isOrtho)
+                        {
+                            _isOrtho = checkBox.Checked;
+                            ViewWidgetButtonMenu.Hide();
+                        }
+                    };
+                    ViewWidgetButtonMenu.VisibleChanged += control => orthoValue.Checked = _isOrtho;
+                }
+
                 // Field of View
                 {
                     var fov = ViewWidgetButtonMenu.AddButton("Field Of View");
-                    var fovValue = new FloatValueBox(1, 75, 2, 50.0f, 35.0f, 160.0f);
+                    var fovValue = new FloatValueBox(1, 75, 2, 50.0f, 35.0f, 160.0f, 0.1f);
                     fovValue.Parent = fov;
                     fovValue.ValueChanged += () => _fieldOfView = fovValue.Value;
-                    ViewWidgetButtonMenu.VisibleChanged += control => fovValue.Value = _fieldOfView;
+                    ViewWidgetButtonMenu.VisibleChanged += (control) =>
+                    {
+                        fov.Visible = !_isOrtho;
+                        fovValue.Value = _fieldOfView;
+                    };
+                }
+
+                // Ortho Scale
+                {
+                    var orthoSize = ViewWidgetButtonMenu.AddButton("Ortho Scale");
+                    var orthoSizeValue = new FloatValueBox(_orthoSize, 75, 2, 50.0f, 0.001f, 100000.0f, 0.01f);
+                    orthoSizeValue.Parent = orthoSize;
+                    orthoSizeValue.ValueChanged += () => _orthoSize = orthoSizeValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += (control) =>
+                    {
+                        orthoSize.Visible = _isOrtho;
+                        orthoSizeValue.Value = _orthoSize;
+                    };
                 }
 
                 // Near Plane
@@ -594,9 +647,15 @@ namespace FlaxEditor.Viewport
         /// <param name="result">The result.</param>
         protected virtual void CreateProjectionMatrix(out Matrix result)
         {
-            // Create projection matrix
-            float aspect = Width / Height;
-            Matrix.PerspectiveFov(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out result);
+            if (_isOrtho)
+            {
+                Matrix.Ortho(Width * _orthoSize, Height * _orthoSize, _nearPlane, _farPlane, out result);
+            }
+            else
+            {
+                float aspect = Width / Height;
+                Matrix.PerspectiveFov(_fieldOfView * Mathf.DegreesToRadians, aspect, _nearPlane, _farPlane, out result);
+            }
         }
 
         /// <summary>
@@ -605,7 +664,6 @@ namespace FlaxEditor.Viewport
         /// <param name="result">The result.</param>
         protected virtual void CreateViewMatrix(out Matrix result)
         {
-            // Create view matrix
             Vector3 position = ViewPosition;
             Vector3 direction = ViewDirection;
             Vector3 target = position + direction;

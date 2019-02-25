@@ -293,6 +293,10 @@ namespace FlaxEditor.Viewport
             actor.StaticFlags = StaticFlags.None;
             actor.Name = "Camera";
             actor.Transform = ViewTransform;
+            actor.NearPlane = NearPlane;
+            actor.FarPlane = FarPlane;
+            actor.OrthographicScale = OrthographicScale;
+            actor.UsePerspective = !UseOrthographicProjection;
             actor.FieldOfView = FieldOfView;
 
             // Spawn

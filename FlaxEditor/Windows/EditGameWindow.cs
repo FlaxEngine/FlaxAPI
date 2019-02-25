@@ -326,6 +326,8 @@ namespace FlaxEditor.Windows
             writer.WriteAttributeString("FarPlane", Viewport.FarPlane.ToString());
             writer.WriteAttributeString("FieldOfView", Viewport.FieldOfView.ToString());
             writer.WriteAttributeString("MovementSpeed", Viewport.MovementSpeed.ToString());
+            writer.WriteAttributeString("OrthographicScale", Viewport.OrthographicScale.ToString());
+            writer.WriteAttributeString("UseOrthographicProjection", Viewport.UseOrthographicProjection.ToString());
         }
 
         /// <inheritdoc />
@@ -344,6 +346,10 @@ namespace FlaxEditor.Windows
                 Viewport.FieldOfView = value2;
             if (float.TryParse(node.GetAttribute("MovementSpeed"), out value2))
                 Viewport.MovementSpeed = value2;
+            if (float.TryParse(node.GetAttribute("OrthographicScale"), out value2))
+                Viewport.OrthographicScale = value2;
+            if (bool.TryParse(node.GetAttribute("UseOrthographicProjection"), out value1))
+                Viewport.UseOrthographicProjection = value1;
         }
 
         /// <inheritdoc />
@@ -354,6 +360,8 @@ namespace FlaxEditor.Windows
             Viewport.FarPlane = 20000.0f;
             Viewport.FieldOfView = 60.0f;
             Viewport.MovementSpeed = 1.0f;
+            Viewport.OrthographicScale = 1.0f;
+            Viewport.UseOrthographicProjection = false;
         }
     }
 }
