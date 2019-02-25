@@ -1,7 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.Content.Settings;
+using FlaxEditor.SceneGraph;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.Utilities;
@@ -15,6 +17,7 @@ namespace FlaxEditor.States
     public sealed class PlayingState : EditorState
     {
         private readonly DuplicateScenes _duplicateScenes = new DuplicateScenes();
+        private readonly List<Guid> _selectedObjects = new List<Guid>();
 
         /// <summary>
         /// Gets a value indicating whether any scene was dirty before entering the play mode.
@@ -68,12 +71,37 @@ namespace FlaxEditor.States
             SetupEditorEnvOptions();
         }
 
+        private void CacheSelection()
+        {
+            _selectedObjects.Clear();
+            for (int i = 0; i < Editor.SceneEditing.Selection.Count; i++)
+            {
+                _selectedObjects.Add(Editor.SceneEditing.Selection[i].ID);
+            }
+        }
+
+        private void RestoreSelection()
+        {
+            var count = Editor.SceneEditing.Selection.Count;
+            Editor.SceneEditing.Selection.Clear();
+            for (int i = 0; i < _selectedObjects.Count; i++)
+            {
+                var node = SceneGraphFactory.FindNode(_selectedObjects[i]);
+                if (node != null)
+                    Editor.SceneEditing.Selection.Add(node);
+            }
+            if (Editor.SceneEditing.Selection.Count != count)
+                Editor.SceneEditing.OnSelectionChanged();
+        }
+
         /// <inheritdoc />
         public override string Status => "Play Mode!";
 
         /// <inheritdoc />
         public override void OnEnter()
         {
+            CacheSelection();
+
             // Remove references to the scene objects
             Editor.Scene.ClearRefsToSceneObjects(true);
 
@@ -87,6 +115,7 @@ namespace FlaxEditor.States
             IsPaused = false;
             _duplicateScenes.CreateScenes();
             SceneDuplicated?.Invoke();
+            RestoreSelection();
 
             // Fire event
             Editor.OnPlayBegin();
@@ -124,6 +153,7 @@ namespace FlaxEditor.States
             if (win != null)
                 win.Cursor = CursorType.Default;
             IsPaused = true;
+            RestoreSelection();
 
             // Fire event
             Editor.OnPlayEnd();

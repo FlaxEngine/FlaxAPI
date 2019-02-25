@@ -178,7 +178,7 @@ namespace FlaxEditor.Modules
         {
             Undo.AddAction(new SelectionChangeAction(before, Selection.ToArray(), OnSelectionUndo));
 
-            SelectionChanged?.Invoke();
+            OnSelectionChanged();
         }
 
         private void OnSelectionUndo(SceneGraphNode[] toSelect)
@@ -195,7 +195,7 @@ namespace FlaxEditor.Modules
                 }
             }
 
-            SelectionChanged?.Invoke();
+            OnSelectionChanged();
         }
 
         /// <summary>
@@ -410,6 +410,14 @@ namespace FlaxEditor.Modules
             selectAction.Do();
 
             Undo.AddAction(new MultiUndoAction(pasteAction, selectAction));
+            OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// Called when selection gets changed. Invokes the other events and updates editor. Call it when you manually modify selected objects collection.
+        /// </summary>
+        public void OnSelectionChanged()
+        {
             SelectionChanged?.Invoke();
         }
 
