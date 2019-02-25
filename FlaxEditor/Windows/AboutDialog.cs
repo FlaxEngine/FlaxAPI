@@ -121,6 +121,7 @@ namespace FlaxEditor.Windows
                 "Ogg and Vorbis - Xiph.org Foundation",
                 "OpenAL Soft - www.github.com/kcat/openal-soft",
                 "OpenFBX - www.github.com/nem0/OpenFBX",
+                "Recast & Detour - www.github.com/recastnavigation/recastnavigation",
                 "pugixml - www.pugixml.org",
                 "rapidjson - www.rapidjson.org",
 #if USE_AUTODESK_FBX_SDK
