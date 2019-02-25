@@ -7,6 +7,28 @@ namespace FlaxEngine
 {
     public sealed partial class Camera
     {
+        private static Camera _overrideMainCamera;
+
+        /// <summary>
+        /// Gets the current main camera used for scene rendering by <see cref="FlaxEngine.Rendering.MainRenderTask"/>. May be null if no camera is available.
+        /// </summary>
+        /// <remarks>If you override the main camera remember to remove the reference on object destroy or scene unload to prevent leaks and crashes.</remarks>
+        [UnmanagedCall]
+        public static Camera MainCamera
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get
+            {
+                if (_overrideMainCamera != null)
+                    return _overrideMainCamera;
+                return Internal_GetMainCamera();
+            }
+            set { _overrideMainCamera = value; }
+#endif
+        }
+
         /// <summary>
         /// Projects the point from 3D world-space to the camera screen-space (in screen pixels for default viewport calculated from <see cref="Viewport"/>).
         /// </summary>
@@ -133,11 +155,21 @@ namespace FlaxEngine
             return $"{Name} ({GetType().Name})";
         }
 
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+
         // Hacky internal call to get proper camera preview model intersection (works only in editor)
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_IntersectsItselfEditor(IntPtr obj, ref Ray ray, out float distance);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetMatrices(IntPtr obj, out Matrix view, out Matrix projection, ref Viewport customViewport);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Camera Internal_GetMainCamera();
+#endif
+
+        #endregion
     }
 }

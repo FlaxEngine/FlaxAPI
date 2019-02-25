@@ -166,19 +166,6 @@ namespace FlaxEngine
 #endif
         }
 
-        /// <summary>
-        /// Gets the current main camera. This object is used for scene rendering. May be null if no camera is available.
-        /// </summary>
-        [UnmanagedCall]
-        public static Camera MainCamera
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_GetMainCamera(); }
-#endif
-        }
-
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -226,9 +213,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetProjection(IntPtr obj, out Matrix resultAsRef);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Camera Internal_GetMainCamera();
 #endif
 
         #endregion
