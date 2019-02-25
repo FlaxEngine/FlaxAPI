@@ -84,7 +84,7 @@ namespace FlaxEditor.Viewport
             /// <summary>
             /// Gets a value indicating whether use is controlling mouse.
             /// </summary>
-            public bool IsControllingMouse => IsMouseMiddleDown || IsMouseRightDown || (IsAltDown && IsMouseLeftDown);
+            public bool IsControllingMouse => IsMouseMiddleDown || IsMouseRightDown || (IsAltDown && IsMouseLeftDown) || Mathf.Abs(MouseWheelDelta) > 0.1f;
 
             /// <summary>
             /// Gathers input from the specified window.
@@ -927,7 +927,7 @@ namespace FlaxEditor.Viewport
                 UpdateView(dt, ref moveDelta, ref mouseDelta, out centerMouse);
 
                 // Move mouse back to the root position
-                if (centerMouse)
+                if (centerMouse && (_input.IsMouseRightDown || _input.IsMouseLeftDown))
                 {
                     Vector2 center = PointToWindow(_startPosRight);
                     win.MousePosition = center;
