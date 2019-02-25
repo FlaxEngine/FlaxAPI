@@ -122,6 +122,25 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Projects the point to nav mesh surface (finds the nearest polygon).
+        /// </summary>
+        /// <param name="point">The source position.</param>
+        /// <param name="result">The result position on the navmesh (valid only if method returns true).</param>
+        /// <returns>True if found valid location on the navmesh, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool ProjectPoint(Vector3 point, out Vector3 result)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ProjectPoint(ref point, out result);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -142,6 +161,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_FindPath2(ref Vector3 startPosition, ref Vector3 endPosition, Vector3[] path, out int pathSize);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ProjectPoint(ref Vector3 point, out Vector3 result);
 #endif
 
         #endregion
