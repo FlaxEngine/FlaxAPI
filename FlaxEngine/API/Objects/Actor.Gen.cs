@@ -394,6 +394,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Tries to find the script of the given type in this actor tree (checks this actor and all children trees).
+        /// </summary>
+        /// <param name="type">The type of the script to find.</param>
+        /// <returns>Script instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Script FindScript(Type type)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindScriptByType(unmanagedPtr, type);
+#endif
+        }
+
+        /// <summary>
         /// Tries to find the actor with the given name in all the loaded scenes.
         /// </summary>
         /// <param name="name">The name of the actor to find.</param>
@@ -921,6 +939,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor Internal_FindActorByType(IntPtr obj, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script Internal_FindScriptByType(IntPtr obj, Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Actor Internal_FindByName(string name);

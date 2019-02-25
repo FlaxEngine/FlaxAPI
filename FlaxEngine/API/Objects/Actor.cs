@@ -261,6 +261,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Tries to find the script of the given type in this script tree (checks this actor and all children trees).
+        /// </summary>
+        /// <typeparam name="T">The type of the script to find.</typeparam>
+        /// <returns>Script instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public T FindScript<T>() where T : Script
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindScriptByType(unmanagedPtr, typeof(T)) as T;
+#endif
+        }
+
+        /// <summary>
         /// Tries to find the actor of the given type in all the loaded scenes.
         /// </summary>
         /// <typeparam name="T">The type of the actor to find.</typeparam>

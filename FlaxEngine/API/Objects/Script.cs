@@ -44,6 +44,24 @@ namespace FlaxEngine
             set => Actor.LocalTransform = value;
         }
 
+        /// <summary>
+        /// Tries to find the script of the given type in all the loaded scenes.
+        /// </summary>
+        /// <typeparam name="T">The type of the script to find.</typeparam>
+        /// <returns>Script instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static T Find<T>() where T : Script
+        {
+#if UNIT_TEST_COMPILANT
+            return null;
+#else
+            return Internal_FindByType(typeof(T)) as T;
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT

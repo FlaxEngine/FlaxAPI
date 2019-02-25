@@ -115,6 +115,24 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Tries to find the script of the given type in all the loaded scenes.
+        /// </summary>
+        /// <param name="type">The type of the script to find.</param>
+        /// <returns>Script instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static Script Find(Type type)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindByType(type);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -147,6 +165,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BreakPrefabLink(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script Internal_FindByType(Type type);
 #endif
 
         #endregion
