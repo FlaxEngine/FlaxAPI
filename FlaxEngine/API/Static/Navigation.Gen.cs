@@ -78,6 +78,50 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Finds the path between the two positions presented as a list of waypoints stored in the corners array.
+        /// </summary>
+        /// <param name="startPosition">The start position.</param>
+        /// <param name="endPosition">The end position.</param>
+        /// <param name="path">The result path.</param>
+        /// <returns>True if found valid path between given two points (it may be partial), otherwise false if failed.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool FindPath(Vector3 startPosition, Vector3 endPosition, out Vector3[] path)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindPath1(ref startPosition, ref endPosition, out path);
+#endif
+        }
+
+        /// <summary>
+        /// Finds the path between the two positions presented as a list of waypoints stored in the corners array.
+        /// </summary>
+        /// <remarks>
+        /// This method does no allocate dynamic memory.
+        /// </remarks>
+        /// <param name="startPosition">The start position.</param>
+        /// <param name="endPosition">The end position.</param>
+        /// <param name="path">The result path buffer (allocated by user to contain path waypoints).</param>
+        /// <param name="pathSize">The result path buffer size (the amount of valid waypoints written to the buffer).</param>
+        /// <returns>True if found valid path between given two points (it may be partial), otherwise false if failed.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool FindPath(Vector3 startPosition, Vector3 endPosition, Vector3[] path, out int pathSize)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindPath2(ref startPosition, ref endPosition, path, out pathSize);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -92,6 +136,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_RayCast(ref Vector3 startPosition, ref Vector3 endPosition, out NavMeshHit hitInfo);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_FindPath1(ref Vector3 startPosition, ref Vector3 endPosition, out Vector3[] path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_FindPath2(ref Vector3 startPosition, ref Vector3 endPosition, Vector3[] path, out int pathSize);
 #endif
 
         #endregion
