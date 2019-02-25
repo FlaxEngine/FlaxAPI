@@ -173,6 +173,8 @@ namespace FlaxEngine.GUI
 
             // Show
             Visible = true;
+            if (_window == null)
+                return;
             _window.Show();
             PerformLayout();
             Focus();
