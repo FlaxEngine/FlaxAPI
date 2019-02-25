@@ -475,7 +475,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public virtual void Defocus()
         {
-            if (IsFocused)
+            if (ContainsFocus)
             {
                 Focus(null);
             }
