@@ -49,5 +49,10 @@ namespace FlaxEditor.Surface
         /// Node only for the animation graphs.
         /// </summary>
         AnimGraphOnly = 64,
+
+        /// <summary>
+        /// Node only for the particle emitter graphs.
+        /// </summary>
+        ParticleEmitterGraphOnly = 128,
     }
 }

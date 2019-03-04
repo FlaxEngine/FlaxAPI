@@ -16,7 +16,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = id,
                 Title = title,
                 Description = desc,
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.ParticleEmitterGraphOnly,
                 Size = new Vector2(100, 40),
                 DefaultType = inputTypes,
                 IndependentBoxes = new[]

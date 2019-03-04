@@ -315,7 +315,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 42,
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraphOnly | NodeFlags.ParticleEmitterGraphOnly,
                 Title = "Near Equal",
                 Description = "Determines if two values are nearly equal within a given epsilon",
                 Size = new Vector2(200, 80),
