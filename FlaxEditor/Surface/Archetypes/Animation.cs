@@ -276,7 +276,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 0),
                     NodeElementArchetype.Factory.Output(1, "Normalized Time", ConnectionType.Float, 1),
-                    NodeElementArchetype.Factory.Output(2, "Time", ConnectionType.Float, 1),
+                    NodeElementArchetype.Factory.Output(2, "Time", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Length", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "Is Playing", ConnectionType.Bool, 4),
                     NodeElementArchetype.Factory.Input(0, "Speed", true, ConnectionType.Float, 5, 1),
