@@ -99,6 +99,7 @@ namespace FlaxEditor.Windows
             groupVisuals.AddChild(CreateActorItem("Exponential Height Fog", typeof(ExponentialHeightFog)));
             groupVisuals.AddChild(CreateActorItem("PostFx Volume", typeof(PostFxVolume)));
             groupVisuals.AddChild(CreateActorItem("Decal", typeof(Decal)));
+            groupVisuals.AddChild(CreateActorItem("Particle Effect", typeof(ParticleEffect)));
 
             var groupPhysics = CreateGroupWithList(actorGroups, "Physics");
             groupPhysics.AddChild(CreateActorItem("Rigid Body", typeof(RigidBody)));
