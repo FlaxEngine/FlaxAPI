@@ -514,6 +514,8 @@
     <Compile Include="Viewport\Previews\IESProfilePreview.cs" />
     <Compile Include="Viewport\Previews\MaterialPreview.cs" />
     <Compile Include="Viewport\Previews\ModelPreview.cs" />
+    <Compile Include="Viewport\Previews\ParticleEmitterPreview.cs" />
+    <Compile Include="Viewport\Previews\ParticleSystemPreview.cs" />
     <Compile Include="Viewport\Previews\PrefabPreview.cs" />
     <Compile Include="Viewport\Previews\TexturePreview.cs" />
     <Compile Include="ViewportDebugDrawData.cs" />
@@ -532,6 +534,7 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\Assets\ParticleEmitterWindow.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.Actions.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.Hierarchy.cs" />
