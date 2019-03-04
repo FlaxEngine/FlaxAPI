@@ -199,7 +199,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 29,
                 Title = "Derive Normal Z",
                 Description = "Derives the Z component of a tangent space normal given the X and Y components and outputs the resulting three-channel tangent space normal",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(170, 30),
                 Elements = new[]
                 {
@@ -212,7 +212,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 30,
                 Title = "Vector Transform",
                 Description = "Transform vector from source space to destination space",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(170, 40),
                 DefaultValues = new object[]
                 {
@@ -315,7 +315,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 42,
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.ParticleEmitterGraphOnly,
+                Flags = NodeFlags.AnimGraph | NodeFlags.ParticleEmitterGraph,
                 Title = "Near Equal",
                 Description = "Determines if two values are nearly equal within a given epsilon",
                 Size = new Vector2(200, 80),

@@ -47,7 +47,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Texture",
                 Description = "Two dimensional texture object",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -70,7 +70,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Texcoords",
                 Description = "Texture coordinates",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(110, 30),
                 Elements = new[]
                 {
@@ -82,7 +82,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Cube Texture",
                 Description = "Set of 6 textures arranged in a cube",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -105,7 +105,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Normal Map",
                 Description = "Two dimensional texture object sampled as a normal map",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -127,7 +127,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Parallax Occlusion Mapping",
                 Description = "Parallax occlusion mapping",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(260, 120),
                 DefaultValues = new object[]
                 {
@@ -159,7 +159,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Scene Texture",
                 Description = "Graphics pipeline textures lookup node",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(170, 120),
                 DefaultValues = new object[]
                 {
@@ -182,7 +182,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Scene Color",
                 Description = "Scene color texture lookup node",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 120),
                 Elements = new[]
                 {
@@ -200,7 +200,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 8,
                 Title = "Scene Depth",
                 Description = "Scene depth buffer texture lookup node",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 60),
                 Elements = new[]
                 {
@@ -214,7 +214,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 9,
                 Title = "Sample Texture",
                 Description = "Custom texture sampling",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(160, 110),
                 DefaultValues = new object[]
                 {

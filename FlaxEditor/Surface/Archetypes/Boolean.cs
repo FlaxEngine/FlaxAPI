@@ -17,7 +17,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = title,
                 Description = desc,
                 AlternativeTitles = altTitles,
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.ParticleEmitterGraphOnly,
+                Flags = NodeFlags.AnimGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(140, 20),
                 Elements = new[]
                 {
@@ -35,7 +35,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = title,
                 Description = desc,
                 AlternativeTitles = altTitles,
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.ParticleEmitterGraphOnly,
+                Flags = NodeFlags.AnimGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(140, 40),
                 DefaultValues = new object[]
                 {

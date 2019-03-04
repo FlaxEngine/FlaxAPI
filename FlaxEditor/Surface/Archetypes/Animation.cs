@@ -244,7 +244,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new Output(id, context, arch, groupArch),
                 Title = "Animation Output",
                 Description = "Main animation graph output node",
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(200, 100),
                 DefaultValues = new object[]
                 {
@@ -263,7 +263,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new Sample(id, context, arch, groupArch),
                 Title = "Animation",
                 Description = "Animation sampling",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(230, 160),
                 DefaultValues = new object[]
                 {
@@ -290,7 +290,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Transform Bone (local space)",
                 Description = "Transforms the skeleton bone",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(270, 130),
                 DefaultValues = new object[]
                 {
@@ -315,7 +315,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Transform Bone (global space)",
                 Description = "Transforms the skeleton bone",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(270, 130),
                 DefaultValues = new object[]
                 {
@@ -340,7 +340,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Local To Global",
                 Description = "Transforms the skeleton bones from local into global space",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
@@ -353,7 +353,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Global To Local",
                 Description = "Transforms the skeleton bones from global into local space",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
@@ -366,7 +366,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Copy Bone",
                 Description = "Copies the skeleton bone transformation data (in local space)",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(260, 140),
                 DefaultValues = new object[]
                 {
@@ -397,7 +397,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 8,
                 Title = "Get Bone Transform",
                 Description = "Samples the skeleton bone transformation (in global space)",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(250, 40),
                 DefaultValues = new object[]
                 {
@@ -416,7 +416,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 9,
                 Title = "Blend",
                 Description = "Blend animation poses",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(170, 80),
                 DefaultValues = new object[]
                 {
@@ -435,7 +435,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 10,
                 Title = "Blend Additive",
                 Description = "Blend animation poses (with additive mode)",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(170, 80),
                 DefaultValues = new object[]
                 {
@@ -454,7 +454,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 11,
                 Title = "Blend with Mask",
                 Description = "Blend animation poses using skeleton mask",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(180, 100),
                 DefaultValues = new object[]
                 {
@@ -476,7 +476,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new MultiBlend1D(id, context, arch, groupArch),
                 Title = "Multi Blend 1D",
                 Description = "Animation blending in 1D",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(420, 300),
                 DefaultValues = new object[]
                 {
@@ -525,7 +525,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new MultiBlend2D(id, context, arch, groupArch),
                 Title = "Multi Blend 2D",
                 Description = "Animation blending in 2D",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(420, 320),
                 DefaultValues = new object[]
                 {
@@ -580,7 +580,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new BlendPose(id, context, arch, groupArch),
                 Title = "Blend Poses",
                 Description = "Select animation pose to pass by index (with blending)",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(200, 200),
                 DefaultValues = new object[]
                 {
@@ -612,7 +612,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 15,
                 Title = "Get Root Motion",
                 Description = "Gets the computed root motion from the pose",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(180, 60),
                 Elements = new[]
                 {
@@ -626,7 +626,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 16,
                 Title = "Set Root Motion",
                 Description = "Overrides the root motion of the pose",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(180, 60),
                 Elements = new[]
                 {
@@ -641,7 +641,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 17,
                 Title = "Add Root Motion",
                 Description = "Applies the custom root motion transformation the root motion of the pose",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(180, 60),
                 Elements = new[]
                 {
@@ -657,7 +657,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new StateMachine(id, context, arch, groupArch),
                 Title = "State Machine",
                 Description = "The animation states machine output node",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(270, 100),
                 DefaultValues = new object[]
                 {
@@ -678,7 +678,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new StateMachineEntry(id, context, arch, groupArch),
                 Title = "Entry",
                 Description = "The animation states machine entry node",
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(100, 0),
                 DefaultValues = new object[]
                 {
@@ -691,7 +691,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new StateMachineState(id, context, arch, groupArch),
                 Title = "State",
                 Description = "The animation states machine state node",
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(100, 0),
                 DefaultValues = new object[]
                 {
@@ -705,7 +705,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 21,
                 Title = "State Output",
                 Description = "The animation states machine state output node",
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(120, 30),
                 Elements = new[]
                 {
@@ -717,7 +717,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 22,
                 Title = "Rule Output",
                 Description = "The animation states machine transition rule output node",
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(150, 30),
                 Elements = new[]
                 {
@@ -729,7 +729,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 23,
                 Title = "Transition Source State Anim",
                 Description = "The animation state machine transition source state animation data information",
-                Flags = NodeFlags.AnimGraphOnly | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(270, 110),
                 Elements = new[]
                 {
