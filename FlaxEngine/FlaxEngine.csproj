@@ -125,6 +125,10 @@
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
+    <Compile Include="API\BinaryAssets\ParticleEmitter.cs" />
+    <Compile Include="API\BinaryAssets\ParticleEmitter.Gen.cs" />
+    <Compile Include="API\BinaryAssets\ParticleSystem.cs" />
+    <Compile Include="API\BinaryAssets\ParticleSystem.Gen.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\SkeletonMask.cs" />
