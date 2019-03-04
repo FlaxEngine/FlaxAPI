@@ -69,6 +69,7 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\ContentView.DragDrop.cs" />
     <Compile Include="Content\Import\Request.cs" />
+    <Compile Include="Content\Proxy\ParticleEmitterProxy.cs" />
     <Compile Include="Content\Settings\NavigationSettings.cs" />
     <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />

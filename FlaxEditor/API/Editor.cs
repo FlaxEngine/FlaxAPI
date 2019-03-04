@@ -537,6 +537,11 @@ namespace FlaxEditor
             /// The skeleton mask. See <see cref="FlaxEngine.SkeletonMask"/>.
             /// </summary>
             SkeletonMask = 4,
+
+            /// <summary>
+            /// The particle emitter. See <see cref="FlaxEngine.ParticleEmitter"/>.
+            /// </summary>
+            ParticleEmitter = 5,
         }
 
         /// <summary>
