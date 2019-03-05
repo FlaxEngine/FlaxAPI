@@ -183,7 +183,29 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawRectangle(ref rect, ref color, thickness);
+            Internal_DrawRectangle1(ref rect, ref color, thickness);
+#endif
+        }
+
+        /// <summary>
+        /// Draw rectangle borders
+        /// </summary>
+        /// <param name="rect">Rectangle to draw</param>
+        /// <param name="color0">Color to use for upper left vertex</param>
+        /// <param name="color1">Color to use for upper right vertex</param>
+        /// <param name="color2">Color to use for bottom right vertex</param>
+        /// <param name="color3">Color to use for bottom left vertex</param>
+        /// <param name="thickness">Lines thickness (in pixels)</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawRectangle(Rectangle rect, Color color0, Color color1, Color color2, Color color3, float thickness = 1.0f)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawRectangle2(ref rect, ref color0, ref color1, ref color2, ref color3, thickness);
 #endif
         }
 
@@ -407,7 +429,10 @@ namespace FlaxEngine
         internal static extern void Internal_FillRectangle2(ref Rectangle rect, ref Color color0, ref Color color1, ref Color color2, ref Color color3);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawRectangle(ref Rectangle rect, ref Color color, float thickness);
+        internal static extern void Internal_DrawRectangle1(ref Rectangle rect, ref Color color, float thickness);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawRectangle2(ref Rectangle rect, ref Color color0, ref Color color1, ref Color color2, ref Color color3, float thickness);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawRenderTarget(IntPtr rt, ref Rectangle rect, ref Color color);
