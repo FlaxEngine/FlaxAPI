@@ -26,5 +26,10 @@ namespace FlaxEditor.Options
         /// The source code options.
         /// </summary>
         public SourceCodeOptions SourceCode = new SourceCodeOptions();
+
+        /// <summary>
+        /// The theme options.
+        /// </summary>
+        public ThemeOptions Theme = new ThemeOptions();
     }
 }
