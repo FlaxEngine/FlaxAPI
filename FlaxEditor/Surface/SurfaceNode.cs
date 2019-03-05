@@ -377,18 +377,12 @@ namespace FlaxEditor.Surface
         public override void Draw()
         {
             var style = Style.Current;
-            BackgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
 
-            base.Draw();
-
-            /*
-            // Node layout lines rendering
-            float marginX = SURFACE_NODE_MARGIN_X * _scale;
-            float marginY = SURFACE_NODE_MARGIN_Y * _scale;
-            float top = (SURFACE_NODE_HEADER_SIZE + SURFACE_NODE_MARGIN_Y) * _scale;
-            float footer = SURFACE_NODE_FOOTER_SIZE * _scale;
-            render.DrawRectangle(Rect(marginX, top, _width - 2 * marginX, _height - top - marginY - footer), Color::Red);
-            */
+            // Background
+            var backgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
+            if (IsMouseOver)
+                backgroundColor *= 1.07f;
+            Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), backgroundColor);
 
             // Header
             Render2D.FillRectangle(_headerRect, style.BackgroundHighlighted);
@@ -403,6 +397,8 @@ namespace FlaxEditor.Surface
 
             // Footer
             Render2D.FillRectangle(_footerRect, GroupArchetype.Color);
+
+            DrawChildren();
         }
 
         /// <inheritdoc />
