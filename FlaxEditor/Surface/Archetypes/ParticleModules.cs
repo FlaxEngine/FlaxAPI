@@ -29,7 +29,7 @@ namespace FlaxEditor.Surface.Archetypes
                     if (value != (bool)Values[0])
                     {
                         SetValue(0, value);
-                        _enabled.Checked = value;
+                        _enabled.State = value ? CheckBoxState.Checked : CheckBoxState.Intermediate;
                     }
                 }
             }
@@ -48,7 +48,7 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void OnEnabledStateChanged(CheckBox control)
             {
-                ModuleEnabled = control.Checked;
+                ModuleEnabled = control.State == CheckBoxState.Checked;
             }
 
             /// <inheritdoc />
@@ -56,7 +56,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.UpdateRectangles();
 
-                _enabled.Location = new Vector2(_closeButtonRect.X - _enabled.Width - 4, _closeButtonRect.Y);
+                _enabled.Location = new Vector2(_closeButtonRect.X - _enabled.Width - 2, _closeButtonRect.Y);
             }
 
             /// <inheritdoc />
