@@ -248,6 +248,7 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
+            SelectStyle();
             Editor.Windows.MainWindowClosing += OnMainWindowClosing;
             var mainWindow = Editor.Windows.MainWindow.GUI;
 
@@ -306,7 +307,19 @@ namespace FlaxEditor.Modules
             Style.Current = style;
         }
 
-        private Style CreateDefaultStyle()
+        private void SelectStyle()
+        {
+            var themeOptions = Editor.Options.Options.Theme;
+
+            // If a non-default style was chosen, switch to that style
+            string styleName = themeOptions.SelectedStyle;
+            if (styleName != "Default" && themeOptions.Styles.ContainsKey(styleName))
+            {
+                Style.Current = themeOptions.Styles[themeOptions.SelectedStyle];
+            }
+        }
+
+        public Style CreateDefaultStyle()
         {
             var style = new Style();
 
