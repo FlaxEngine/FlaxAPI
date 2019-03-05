@@ -41,15 +41,36 @@ namespace FlaxEditor.Surface
 
             IsLayoutLocked = true;
 
-            var modules = Nodes.OfType<ParticleModules.ParticleModuleNode>();
+            var modulesGroups = Nodes.OfType<ParticleModules.ParticleModuleNode>().GroupBy(x => x.ModuleType).ToList();
+            modulesGroups.Sort((a, b) => a.Key.CompareTo(b.Key));
+
             var width = _rootNode.Width;
-            var pos = _rootNode.Location + new Vector2(0, 500);
-            foreach (var module in modules)
+            var rootPos = _rootNode.Location;
+            var pos = rootPos;
+            pos.Y += Constants.NodeHeaderSize + 1.0f + 8.0f * Constants.LayoutOffsetY + 6.0f + 4.0f;
+
+            for (int i = 0; i < _rootNode.Headers.Length; i++)
             {
-                var height = module.Height;
-                module.Bounds = new Rectangle(pos.X, pos.Y, width, height);
-                pos.Y += height + 20;
+                var header = _rootNode.Headers[i];
+
+                var modulesStart = pos - rootPos;
+                var modules = modulesGroups.FirstOrDefault(x => x.Key == header.ModuleType);
+                pos.Y += Constants.NodeHeaderSize + 2.0f;
+                if (modules != null)
+                {
+                    foreach (var module in modules)
+                    {
+                        var height = module.Height;
+                        module.Bounds = new Rectangle(pos.X, pos.Y, width, height);
+                        pos.Y += height;
+                    }
+                }
+                pos.Y += 20.0f;
+                var modulesEnd = pos - rootPos;
+
+                header.Bounds = new Rectangle(modulesStart.X, modulesStart.Y, width, modulesEnd.Y - modulesStart.Y);
             }
+
             _rootNode.Height = pos.Y - _rootNode.Location.Y;
 
             IsLayoutLocked = false;

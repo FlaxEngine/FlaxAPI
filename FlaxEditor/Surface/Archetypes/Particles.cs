@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface.Archetypes
 {
@@ -16,14 +17,131 @@ namespace FlaxEditor.Surface.Archetypes
         public class ParticleEmitterNode : SurfaceNode
         {
             /// <summary>
+            /// The particle emitter modules set header (per context).
+            /// </summary>
+            /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+            public class ModulesHeader : ContainerControl
+            {
+                private static readonly string[] Names =
+                {
+                    "Spawn",
+                    "Initialize",
+                    "Update",
+                    "Render",
+                };
+
+                /// <summary>
+                /// The header height.
+                /// </summary>
+                public const float HeaderHeight = FlaxEditor.Surface.Constants.NodeHeaderSize;
+
+                /// <summary>
+                /// Gets the type of the module.
+                /// </summary>
+                public ParticleModules.ModuleType ModuleType { get; }
+
+                /// <summary>
+                /// The add module button.
+                /// </summary>
+                public readonly Button AddModuleButton;
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="ModulesHeader"/> class.
+                /// </summary>
+                /// <param name="parent">The parent emitter node.</param>
+                /// <param name="type">The module type.</param>
+                public ModulesHeader(ParticleEmitterNode parent, ParticleModules.ModuleType type)
+                {
+                    ModuleType = type;
+                    Parent = parent;
+                    CanFocus = false;
+
+                    float addButtonWidth = 80.0f;
+                    float addButtonHeight = 16.0f;
+                    AddModuleButton = new Button(Width * 0.5f, Height - addButtonHeight - 2.0f, addButtonWidth, addButtonHeight)
+                    {
+                        Text = "Add Module",
+                        TooltipText = "Add new particle modules to the emitter",
+                        AnchorStyle = AnchorStyle.BottomCenter,
+                        Parent = this
+                    };
+                }
+
+                /// <inheritdoc />
+                public override void Draw()
+                {
+                    var style = Style.Current;
+                    var backgroundRect = new Rectangle(Vector2.Zero, Size);
+                    var mousePosition = ((SurfaceNode)Parent).MousePosition;
+                    mousePosition = PointFromParent(ref mousePosition);
+
+                    // Background
+                    Render2D.FillRectangle(backgroundRect, style.BackgroundNormal);
+
+                    // Header
+                    var idx = (int)ModuleType;
+                    var headerRect = new Rectangle(0, 0, Width, HeaderHeight);
+                    var headerColor = style.BackgroundHighlighted;
+                    if (headerRect.Contains(mousePosition))
+                        headerColor *= 1.07f;
+                    Render2D.FillRectangle(headerRect, headerColor);
+                    Render2D.DrawText(style.FontLarge, Names[idx], headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
+
+                    DrawChildren();
+                }
+            }
+
+            /// <summary>
             /// Gets the particle emitter surface.
             /// </summary>
             public ParticleEmitterSurface ParticleSurface => (ParticleEmitterSurface)Surface;
+
+            /// <summary>
+            /// The particle modules sets headers (per context).
+            /// </summary>
+            public readonly ModulesHeader[] Headers = new ModulesHeader[4];
 
             /// <inheritdoc />
             public ParticleEmitterNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
             {
+                Headers[0] = new ModulesHeader(this, ParticleModules.ModuleType.Spawn);
+                Headers[1] = new ModulesHeader(this, ParticleModules.ModuleType.Initialize);
+                Headers[2] = new ModulesHeader(this, ParticleModules.ModuleType.Update);
+                Headers[3] = new ModulesHeader(this, ParticleModules.ModuleType.Render);
+            }
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                var style = Style.Current;
+                var backgroundRect = new Rectangle(Vector2.Zero, Size);
+
+                // Background
+                Render2D.FillRectangle(backgroundRect, style.BackgroundNormal);
+
+                // Header
+                var headerColor = style.BackgroundHighlighted;
+                if (_headerRect.Contains(ref _mousePosition))
+                    headerColor *= 1.07f;
+                Render2D.FillRectangle(_headerRect, headerColor);
+                Render2D.DrawText(style.FontLarge, Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
+
+                DrawChildren();
+
+                // Options border
+                var optionsAreaStart = FlaxEditor.Surface.Constants.NodeHeaderSize + 3.0f;
+                var optionsAreaHeight = 8 * FlaxEditor.Surface.Constants.LayoutOffsetY + 6.0f;
+                Render2D.DrawRectangle(new Rectangle(1, optionsAreaStart, Width - 2, optionsAreaHeight), style.BackgroundSelected, 1.5f);
+
+                // Selection outline
+                if (_isSelected)
+                {
+                    backgroundRect.Expand(1.5f);
+                    var colorTop = Color.OrangeRed;
+                    var colorBottom = Color.Orange;
+                    Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom, 1.5f);
+                }
             }
 
             /// <inheritdoc />
@@ -31,6 +149,10 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSurfaceLoaded();
 
+                // Always keep root node in the back (modules with lay on top of it)
+                IndexInParent = 0;
+
+                // Link and update modules
                 ParticleSurface._rootNode = this;
                 ParticleSurface.ArrangeModulesNodes();
             }
@@ -42,6 +164,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 if (Surface != null && ParticleSurface._rootNode == this)
                 {
+                    // Update modules to match root node location
                     ParticleSurface.ArrangeModulesNodes();
                 }
             }
@@ -49,6 +172,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override void Dispose()
             {
+                // Unlink
                 ParticleSurface._rootNode = null;
 
                 base.Dispose();

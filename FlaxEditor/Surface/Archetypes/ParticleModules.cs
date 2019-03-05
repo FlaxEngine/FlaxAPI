@@ -8,7 +8,7 @@ namespace FlaxEditor.Surface.Archetypes
     /// <summary>
     /// Contains archetypes for nodes from the Particle Modules group.
     /// </summary>
-    public static partial class ParticleModules
+    public static class ParticleModules
     {
         /// <summary>
         /// The particle emitter module types.
@@ -42,8 +42,15 @@ namespace FlaxEditor.Surface.Archetypes
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         public class ParticleModuleNode : SurfaceNode
         {
+            private static readonly Color[] Colors =
+            {
+                Color.ForestGreen,
+                Color.GreenYellow,
+                Color.Violet,
+                Color.Firebrick,
+            };
+
             private CheckBox _enabled;
-            private ModuleType _type;
 
             /// <summary>
             /// Gets the particle emitter surface.
@@ -69,7 +76,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// Gets the type of the module.
             /// </summary>
-            public ModuleType ModuleType => _type;
+            public ModuleType ModuleType { get; }
 
             /// <inheritdoc />
             public ParticleModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
@@ -82,14 +89,7 @@ namespace FlaxEditor.Surface.Archetypes
                 };
                 _enabled.StateChanged += OnEnabledStateChanged;
 
-                if (nodeArch.TypeID - 100 < 100)
-                    _type = ModuleType.Spawn;
-                else if (nodeArch.TypeID - 200 < 100)
-                    _type = ModuleType.Initialize;
-                else if (nodeArch.TypeID - 300 < 100)
-                    _type = ModuleType.Update;
-                else if (nodeArch.TypeID - 400 < 100)
-                    _type = ModuleType.Render;
+                ModuleType = (ModuleType)nodeArch.DefaultValues[1];
             }
 
             private void OnEnabledStateChanged(CheckBox control)
@@ -98,10 +98,34 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
+            public override void Draw()
+            {
+                var style = Style.Current;
+
+                // Header
+                var idx = (int)ModuleType;
+                var headerRect = new Rectangle(0, 0, Width, 16.0f);
+                Render2D.DrawText(style.FontMedium, Title, headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
+
+                // Close button
+                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+
+                DrawChildren();
+
+                // Border
+                Render2D.DrawRectangle(new Rectangle(1, 1, Width - 2, Height - 2), Colors[idx], 1.5f);
+            }
+
+            /// <inheritdoc />
             protected override void UpdateRectangles()
             {
-                base.UpdateRectangles();
-
+                const float headerSize = 16.0f;
+                const float closeButtonMargin = FlaxEditor.Surface.Constants.NodeCloseButtonMargin;
+                const float closeButtonSize = FlaxEditor.Surface.Constants.NodeCloseButtonSize;
+                _headerRect = new Rectangle(0, 0, Width, headerSize);
+                _closeButtonRect = new Rectangle(Width - closeButtonSize - closeButtonMargin, closeButtonMargin, closeButtonSize, closeButtonSize);
+                _footerRect = Rectangle.Empty;
                 _enabled.Location = new Vector2(_closeButtonRect.X - _enabled.Width - 2, _closeButtonRect.Y);
             }
 
@@ -164,6 +188,7 @@ namespace FlaxEditor.Surface.Archetypes
                 DefaultValues = new object[]
                 {
                     true,
+                    (int)ModuleType.Update,
                 },
             },
             // TODO: Euler Movement

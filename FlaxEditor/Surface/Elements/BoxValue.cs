@@ -15,8 +15,8 @@ namespace FlaxEditor.Surface.Elements
         private FloatValueBox _minX, _minY, _minZ, _maxX, _maxY, _maxZ;
         private const float BoxWidth = 50;
         private const float LabelWidth = 26;
-        private const float MarginX = 4;
-        private const float MarginY = 4;
+        private const float MarginX = 2;
+        private const float MarginY = 2;
         private const float SlideSpeed = 0.1f;
 
         /// <inheritdoc />

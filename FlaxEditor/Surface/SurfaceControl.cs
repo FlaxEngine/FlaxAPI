@@ -41,6 +41,11 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Gets the mouse position (in local control space).
+        /// </summary>
+        public Vector2 MousePosition => _mousePosition;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceControl"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
