@@ -69,7 +69,7 @@ namespace FlaxEditor.Surface
         public SurfaceControl GetControlUnderMouse()
         {
             var pos = _rootControl.PointFromParent(ref _mousePos);
-            if (_rootControl.GetChildAt(pos) is SurfaceControl control)
+            if (_rootControl.GetChildAtRecursive(pos) is SurfaceControl control)
                 return control;
             return null;
         }
@@ -261,6 +261,17 @@ namespace FlaxEditor.Surface
                 _rightMouseDownPos = location;
             }
 
+            // Base
+            bool handled = base.OnMouseDown(location, buttons);
+            if (!handled)
+                CustomMouseDown?.Invoke(ref location, buttons, ref handled);
+            if (handled)
+            {
+                // Clear flags to disable handling mouse events by itself (children should do)
+                _leftMouseDown = _rightMouseDown = false;
+                return true;
+            }
+
             // Check if any node is under the mouse
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
             Vector2 cLocation = _rootControl.PointFromParent(ref location);
@@ -310,17 +321,6 @@ namespace FlaxEditor.Surface
                 }
             }
 
-            // Base
-            bool handled = base.OnMouseDown(location, buttons);
-            if (!handled)
-                CustomMouseDown?.Invoke(ref location, buttons, ref handled);
-            if (handled)
-            {
-                // Clear flags to disable handling mouse events by itself (children should do)
-                _leftMouseDown = _rightMouseDown = false;
-                return true;
-            }
-
             Focus();
             return true;
         }
@@ -330,6 +330,15 @@ namespace FlaxEditor.Surface
         {
             // Cache mouse location
             _mousePos = location;
+
+            // Base
+            bool handled = base.OnMouseUp(location, buttons);
+            if (!handled)
+                CustomMouseUp?.Invoke(ref location, buttons, ref handled);
+            if (handled)
+            {
+                return true;
+            }
 
             // Check if any control is under the mouse
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
@@ -381,15 +390,6 @@ namespace FlaxEditor.Surface
                     }
                 }
                 _mouseMoveAmount = 0;
-            }
-
-            // Base
-            bool handled = base.OnMouseUp(location, buttons);
-            if (!handled)
-                CustomMouseUp?.Invoke(ref location, buttons, ref handled);
-            if (handled)
-            {
-                return true;
             }
 
             // Right clicking while attempting to connect a node to something

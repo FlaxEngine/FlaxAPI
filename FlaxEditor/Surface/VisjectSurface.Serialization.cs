@@ -62,7 +62,7 @@ namespace FlaxEditor.Surface
         /// </remarks>
         public void Save()
         {
-            var hasFocus = IsFocused;
+            var hasFocus = ContainsFocus;
             var wasEdited = IsEdited;
             Enabled = false;
 

@@ -86,6 +86,7 @@ namespace FlaxEditor.Surface
             ID = id;
             Archetype = nodeArch;
             GroupArchetype = groupArch;
+            CanFocus = false;
 
             if (Archetype.DefaultValues != null)
             {
