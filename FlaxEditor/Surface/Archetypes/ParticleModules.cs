@@ -90,6 +90,8 @@ namespace FlaxEditor.Surface.Archetypes
                 _enabled.StateChanged += OnEnabledStateChanged;
 
                 ModuleType = (ModuleType)nodeArch.DefaultValues[1];
+
+                Size = CalculateNodeSize(nodeArch.Size.X, nodeArch.Size.Y);
             }
 
             private void OnEnabledStateChanged(CheckBox control)
@@ -115,6 +117,12 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Border
                 Render2D.DrawRectangle(new Rectangle(1, 1, Width - 2, Height - 2), Colors[idx], 1.5f);
+            }
+
+            /// <inheritdoc />
+            protected sealed override Vector2 CalculateNodeSize(float width, float height)
+            {
+                return new Vector2(width + FlaxEditor.Surface.Constants.NodeMarginX * 2, height + FlaxEditor.Surface.Constants.NodeMarginY * 2 + 16.0f);
             }
 
             /// <inheritdoc />
@@ -158,6 +166,11 @@ namespace FlaxEditor.Surface.Archetypes
         {
             return new ParticleModuleNode(id, context, arch, groupArch);
         }
+
+        /// <summary>
+        /// The particle module node elements offset applied to controls to reduce default surface node header thickness.
+        /// </summary>
+        public const float NodeElementsOffset = 16.0f - Surface.Constants.NodeHeaderSize;
 
         /// <summary>
         /// The nodes for that group.

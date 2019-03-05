@@ -97,6 +97,17 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Calculates the size of the node including header, footer, and margins.
+        /// </summary>
+        /// <param name="width">The node area width.</param>
+        /// <param name="height">The node area height.</param>
+        /// <returns>The node control total size.</returns>
+        protected virtual Vector2 CalculateNodeSize(float width, float height)
+        {
+            return new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
+        }
+
+        /// <summary>
         /// Resizes the node area.
         /// </summary>
         /// <param name="width">The width.</param>
@@ -104,7 +115,7 @@ namespace FlaxEditor.Surface
         protected void Resize(float width, float height)
         {
             var prevSize = Size;
-            Size = new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
+            Size = CalculateNodeSize(width, height);
 
             // Update boxes on width change
             if (!Mathf.NearEqual(prevSize.X, Size.X))

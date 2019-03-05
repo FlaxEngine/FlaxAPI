@@ -73,7 +73,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 private void OnAddModuleButtonClicked(Button button)
                 {
-                    var modules = Nodes.Where(x => (ParticleModules.ModuleType)x.DefaultValues[1] == ModuleType);
+                    var modules = ParticleModules.Nodes.Where(x => (ParticleModules.ModuleType)x.DefaultValues[1] == ModuleType);
 
                     // Show context menu with list of module types to add
                     var cm = new ItemsListContextMenu(180);
