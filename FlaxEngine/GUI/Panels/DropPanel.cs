@@ -198,7 +198,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override bool OnTestTooltipOverControl(ref Vector2 location)
         {
-            return base.OnTestTooltipOverControl(ref location) && HeaderRectangle.Contains(ref location);
+            return HeaderRectangle.Contains(ref location);
         }
 
         /// <summary>
@@ -284,17 +284,17 @@ namespace FlaxEngine.GUI
             // Drop/down animation
             if (_animationProgress < 1.0f)
             {
-                float openCloseAniamtionTime = CloseAnimationTime;
+                float openCloseAnimationTime = CloseAnimationTime;
                 bool isDeltaSlow = deltaTime > (1 / 20.0f);
 
                 // Update progress
-                if (isDeltaSlow || openCloseAniamtionTime < Mathf.Epsilon)
+                if (isDeltaSlow || openCloseAnimationTime < Mathf.Epsilon)
                 {
                     _animationProgress = 1.0f;
                 }
                 else
                 {
-                    _animationProgress += deltaTime / openCloseAniamtionTime;
+                    _animationProgress += deltaTime / openCloseAnimationTime;
                     if (_animationProgress > 1.0f)
                         _animationProgress = 1.0f;
                 }
