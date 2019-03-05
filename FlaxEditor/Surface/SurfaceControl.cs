@@ -14,7 +14,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The mouse position in local control space. Updates by auto.
         /// </summary>
-        protected Vector2 _mousePosition;
+        protected Vector2 _mousePosition = Vector2.Minimum;
 
         /// <summary>
         /// The is selected flag for element.

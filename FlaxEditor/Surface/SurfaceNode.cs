@@ -87,6 +87,7 @@ namespace FlaxEditor.Surface
             Archetype = nodeArch;
             GroupArchetype = groupArch;
             CanFocus = false;
+            TooltipText = nodeArch.Description;
 
             if (Archetype.DefaultValues != null)
             {
@@ -320,6 +321,26 @@ namespace FlaxEditor.Surface
                     ob.DrawConnections();
                 }
             }
+        }
+
+        /// <inheritdoc />
+        protected override bool ShowTooltip => base.ShowTooltip && _headerRect.Contains(ref _mousePosition);
+
+        /// <inheritdoc />
+        public override bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
+        {
+            var result = base.OnShowTooltip(out text, out location, out area);
+
+            // Change the position
+            location = new Vector2(_headerRect.Width * 0.5f, _headerRect.Bottom);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override bool OnTestTooltipOverControl(ref Vector2 location)
+        {
+            return _headerRect.Contains(ref location);
         }
 
         /// <inheritdoc />
