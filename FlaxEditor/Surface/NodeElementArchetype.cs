@@ -34,6 +34,11 @@ namespace FlaxEditor.Surface
         public string Text;
 
         /// <summary>
+        /// Control tooltip text.
+        /// </summary>
+        public string Tooltip;
+
+        /// <summary>
         /// True if use single connections (for Input element).
         /// </summary>
         public bool Single;
@@ -337,14 +342,19 @@ namespace FlaxEditor.Surface
             /// <param name="x">The x location (in node area space).</param>
             /// <param name="y">The y location (in node area space).</param>
             /// <param name="text">The text to show.</param>
+            /// <param name="width">The control width.</param>
+            /// <param name="height">The control height.</param>
+            /// <param name="tooltip">The control tooltip text.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Text(float x, float y, string text)
+            public static NodeElementArchetype Text(float x, float y, string text, float width = 100.0f, float height = 16.0f, string tooltip = null)
             {
                 return new NodeElementArchetype
                 {
                     Type = NodeElementType.Text,
                     Position = new Vector2(x, y),
+                    Size = new Vector2(width, height),
                     Text = text,
+                    Tooltip = tooltip,
                     Single = false,
                     ValueIndex = -1,
                     BoxID = 0,

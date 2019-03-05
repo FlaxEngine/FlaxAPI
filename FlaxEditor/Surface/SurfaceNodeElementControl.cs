@@ -37,6 +37,8 @@ namespace FlaxEditor.Surface
         protected SurfaceNodeElementControl(SurfaceNode parentNode, NodeElementArchetype archetype, float width, float height, bool canFocus)
         : base(archetype.ActualPositionX, archetype.ActualPositionY, width, height)
         {
+            CanFocus = canFocus;
+            TooltipText = archetype.Tooltip;
             ParentNode = parentNode;
             Archetype = archetype;
         }
@@ -53,6 +55,7 @@ namespace FlaxEditor.Surface
         : base(location, size)
         {
             CanFocus = canFocus;
+            TooltipText = archetype.Tooltip;
             ParentNode = parentNode;
             Archetype = archetype;
         }
