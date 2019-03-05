@@ -373,6 +373,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = CreateGetNode,
                 Title = "Get Parameter",
                 Description = "Parameter value getter",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(140, 60),
                 DefaultValues = new object[]
                 {

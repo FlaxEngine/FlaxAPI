@@ -22,6 +22,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Bool",
                 Description = "Constant boolean value",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
@@ -53,6 +54,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Integer",
                 Description = "Constant integer value",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
@@ -80,6 +82,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Float",
                 Description = "Constant floating point",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
@@ -107,6 +110,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Vector2",
                 Description = "Constant Vector2",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(130, 60),
                 DefaultValues = new object[]
                 {
@@ -137,6 +141,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Vector3",
                 Description = "Constant Vector3",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(130, 80),
                 DefaultValues = new object[]
                 {
@@ -169,6 +174,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Vector4",
                 Description = "Constant Vector4",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(130, 100),
                 DefaultValues = new object[]
                 {
@@ -203,6 +209,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Color",
                 Description = "RGBA color",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(70, 100),
                 DefaultValues = new object[]
                 {
@@ -235,6 +242,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 8,
                 Title = "Rotation",
                 Description = "Euler angle rotation",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 60),
                 DefaultValues = new object[]
                 {
@@ -259,6 +267,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 10,
                 Title = "PI",
                 Description = "A value specifying the approximation of π which is 180 degrees",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(50, 20),
                 Elements = new[]
                 {

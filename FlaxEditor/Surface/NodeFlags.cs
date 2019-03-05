@@ -49,5 +49,10 @@ namespace FlaxEditor.Surface
         /// Node can be used in the animation graphs.
         /// </summary>
         AnimGraph = 64,
+
+        /// <summary>
+        /// Node can be used in the all visual graphs.
+        /// </summary>
+        AllGraphs = MaterialGraph | ParticleEmitterGraph | AnimGraph,
     }
 }
