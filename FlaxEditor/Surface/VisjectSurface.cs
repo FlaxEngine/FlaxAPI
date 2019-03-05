@@ -187,6 +187,16 @@ namespace FlaxEditor.Surface
         public bool IsCreatingComment => _isCommentCreateKeyDown && _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
+        /// Gets a value indicating whether the left mouse button is down.
+        /// </summary>
+        public bool IsLeftMouseButtonDown => _leftMouseDown;
+
+        /// <summary>
+        /// Gets a value indicating whether the right mouse button is down.
+        /// </summary>
+        public bool IsRightMouseButtonDown => _rightMouseDown;
+
+        /// <summary>
         /// Returns true if any node is selected by the user (one or more).
         /// </summary>
         public bool HasNodesSelection

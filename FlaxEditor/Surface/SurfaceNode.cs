@@ -324,7 +324,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        protected override bool ShowTooltip => base.ShowTooltip && _headerRect.Contains(ref _mousePosition);
+        protected override bool ShowTooltip => base.ShowTooltip && _headerRect.Contains(ref _mousePosition) && !Surface.IsLeftMouseButtonDown && !Surface.IsRightMouseButtonDown && !Surface.IsPrimaryMenuOpened;
 
         /// <inheritdoc />
         public override bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
@@ -340,7 +340,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool OnTestTooltipOverControl(ref Vector2 location)
         {
-            return _headerRect.Contains(ref location);
+            return _headerRect.Contains(ref location) && ShowTooltip;
         }
 
         /// <inheritdoc />

@@ -823,7 +823,7 @@ namespace FlaxEngine.GUI
             text = _tooltipText;
             location = Size * new Vector2(0.5f, 1.0f);
             area = new Rectangle(Vector2.Zero, Size);
-            return !string.IsNullOrEmpty(text);
+            return ShowTooltip;
         }
 
         /// <summary>
@@ -833,7 +833,7 @@ namespace FlaxEngine.GUI
         /// <returns>True if tooltip can be still visible, otherwise false.</returns>
         public virtual bool OnTestTooltipOverControl(ref Vector2 location)
         {
-            return ContainsPoint(ref location);
+            return ContainsPoint(ref location) && ShowTooltip;
         }
 
         #endregion
