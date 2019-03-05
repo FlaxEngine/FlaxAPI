@@ -568,11 +568,10 @@ namespace FlaxEditor.Surface
                 if ((node.Archetype.Flags & NodeFlags.NoRemove) != 0)
                     return;
 
-                node.RemoveConnections();
                 Nodes.Remove(node);
             }
 
-            control.Dispose();
+            Context.OnControlDeleted(control);
             MarkAsEdited();
         }
 
@@ -591,19 +590,17 @@ namespace FlaxEditor.Surface
                 {
                     if (node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
                     {
-                        node.RemoveConnections();
-                        node.Dispose();
-
                         Nodes.Remove(node);
-                        i--;
 
+                        Context.OnControlDeleted(node);
+                        i--;
                         edited = true;
                     }
                 }
                 else if (_rootControl.Children[i] is SurfaceControl control && control.IsSelected)
                 {
                     i--;
-                    control.Dispose();
+                    Context.OnControlDeleted(control);
                     edited = true;
                 }
             }

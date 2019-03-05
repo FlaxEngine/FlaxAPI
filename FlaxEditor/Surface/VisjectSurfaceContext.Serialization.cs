@@ -450,7 +450,7 @@ namespace FlaxEditor.Surface
                 for (int i = 0; i < nodesCount; i++)
                 {
                     var node = Nodes[i];
-                    
+
                     int valuesCnt = stream.ReadInt32();
                     int firstValueReadIdx = 0;
 
@@ -469,7 +469,7 @@ namespace FlaxEditor.Surface
                         firstValueReadIdx = 1;
                         if (string.IsNullOrEmpty(typeName as string))
                             throw new Exception("Missing custom node typename.");
-                        
+
                         // Find custom node archetype that matches this node type (it must be unique)
                         var customNodes = _surface.GetCustomNodes();
                         if (customNodes?.Archetypes == null)
@@ -531,7 +531,7 @@ namespace FlaxEditor.Surface
                         {
                             uint targetNodeID = stream.ReadUInt32();
                             byte targetBoxID = stream.ReadByte();
-                            
+
                             hint.NodeA = targetNodeID;
                             hint.BoxA = targetBoxID;
 
@@ -587,6 +587,15 @@ namespace FlaxEditor.Surface
         public virtual void OnControlSpawned(SurfaceControl control)
         {
             control.OnSpawned();
+        }
+
+        /// <summary>
+        /// Called when control gets removed from the surface as delete/cut operation (eg. remove comment or cut node).
+        /// </summary>
+        /// <param name="control">The control.</param>
+        public virtual void OnControlDeleted(SurfaceControl control)
+        {
+            control.OnDeleted();
         }
 
         /// <summary>

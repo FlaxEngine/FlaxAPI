@@ -101,10 +101,18 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Called when after adding the control to the surface after user spawn (eg. add comment, add new node, etc.).
+        /// Called after adding the control to the surface after user spawn (eg. add comment, add new node, etc.).
         /// </summary>
         public virtual void OnSpawned()
         {
+        }
+
+        /// <summary>
+        /// Called on removing the control from the surface after user delete/cut operation (eg. delete comment, cut node, etc.).
+        /// </summary>
+        public virtual void OnDeleted()
+        {
+            Dispose();
         }
 
         /// <summary>

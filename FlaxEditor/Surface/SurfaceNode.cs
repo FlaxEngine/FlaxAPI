@@ -363,6 +363,14 @@ namespace FlaxEditor.Surface
             }
         }
 
+        /// <inheritdoc />
+        public override void OnDeleted()
+        {
+            RemoveConnections();
+
+            base.OnDeleted();
+        }
+
         /// <summary>
         /// Sets the value of the node parameter.
         /// </summary>
