@@ -81,31 +81,31 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     // Capacity
-                    NodeElementArchetype.Factory.Text(0, 0, "Capacity"),
+                    NodeElementArchetype.Factory.Text(0, 0, "Capacity", 100.0f, 16.0f, "The particle system capacity (the maximum amount of particles to simulate at once)."),
                     NodeElementArchetype.Factory.Integer(110, 0, 0),
 
                     // Simulation Mode
-                    NodeElementArchetype.Factory.Text(0, 1 * Surface.Constants.LayoutOffsetY, "Simulation Mode"),
+                    NodeElementArchetype.Factory.Text(0, 1 * Surface.Constants.LayoutOffsetY, "Simulation Mode", 100.0f, 16.0f, "The particles simulation execution mode."),
                     NodeElementArchetype.Factory.ComboBox(110, 1 * Surface.Constants.LayoutOffsetY, 80, 1, typeof(ParticlesSimulationMode)),
 
                     // Simulation Space
-                    NodeElementArchetype.Factory.Text(0, 2 * Surface.Constants.LayoutOffsetY, "Simulation Space"),
+                    NodeElementArchetype.Factory.Text(0, 2 * Surface.Constants.LayoutOffsetY, "Simulation Space", 100.0f, 16.0f, "The particles simulation space."),
                     NodeElementArchetype.Factory.ComboBox(110, 2 * Surface.Constants.LayoutOffsetY, 80, 2, typeof(ParticlesSimulationSpace)),
 
                     // Update Mode
-                    NodeElementArchetype.Factory.Text(0, 3 * Surface.Constants.LayoutOffsetY, "Update Mode"),
+                    NodeElementArchetype.Factory.Text(0, 3 * Surface.Constants.LayoutOffsetY, "Update Mode", 100.0f, 16.0f, "The particles simulation update mode."),
                     NodeElementArchetype.Factory.ComboBox(110, 3 * Surface.Constants.LayoutOffsetY, 80, 3, typeof(ParticlesUpdateMode)),
 
                     // Fixed Timestep
-                    NodeElementArchetype.Factory.Text(0, 4 * Surface.Constants.LayoutOffsetY, "Fixed Timestep"),
+                    NodeElementArchetype.Factory.Text(0, 4 * Surface.Constants.LayoutOffsetY, "Fixed Timestep", 100.0f, 16.0f, "The fixed timestep. Used only if Update Mode is set to FixedTimestep."),
                     NodeElementArchetype.Factory.Float(110, 4 * Surface.Constants.LayoutOffsetY, 4),
 
                     // Enable Pooling
-                    NodeElementArchetype.Factory.Text(0, 5 * Surface.Constants.LayoutOffsetY, "Enable Pooling"),
+                    NodeElementArchetype.Factory.Text(0, 5 * Surface.Constants.LayoutOffsetY, "Enable Pooling", 100.0f, 16.0f, "True if enable pooling emitter instance data, otherwise immediately dispose. Pooling can improve performance and reduce memory usage."),
                     NodeElementArchetype.Factory.Bool(110, 5 * Surface.Constants.LayoutOffsetY, 5),
 
                     // Custom Bounds
-                    NodeElementArchetype.Factory.Text(0, 6 * Surface.Constants.LayoutOffsetY, "Custom Bounds"),
+                    NodeElementArchetype.Factory.Text(0, 6 * Surface.Constants.LayoutOffsetY, "Custom Bounds", 100.0f, 16.0f, "The custom bounds to use for the particles. Set to zero to use automatic bounds (valid only for CPU particles)."),
                     NodeElementArchetype.Factory.Box(110, 6 * Surface.Constants.LayoutOffsetY, 6),
                 }
             },
