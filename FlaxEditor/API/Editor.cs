@@ -686,14 +686,29 @@ namespace FlaxEditor
         /// <returns>The generated source code.</returns>
         public static string GetMaterialShaderSourceCode(Material asset)
         {
+            return GetShaderSourceCode(asset);
+        }
+
+        /// <summary>
+        /// Gets the particle emitter GPU simulation shader source code (HLSL shader code).
+        /// </summary>
+        /// <param name="asset">The particle emitter asset.</param>
+        /// <returns>The generated source code.</returns>
+        public static string GetParticleEmitterShaderSourceCode(ParticleEmitter asset)
+        {
+            return GetShaderSourceCode(asset);
+        }
+
+        private static string GetShaderSourceCode(Asset asset)
+        {
             if (asset == null)
                 throw new ArgumentNullException(nameof(asset));
             if (asset.WaitForLoaded())
                 throw new FlaxException("Failed to load asset.");
 
-            var source = Internal_GetMaterialShaderSourceCode(asset.unmanagedPtr);
+            var source = Internal_GetShaderSourceCode(asset.unmanagedPtr);
             if (source == null)
-                throw new FlaxException("Failed to get material source code.");
+                throw new FlaxException("Failed to get source code.");
 
             return source;
         }
@@ -1058,7 +1073,7 @@ namespace FlaxEditor
         internal static extern void Internal_BakeLightmaps(bool cancel);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetMaterialShaderSourceCode(IntPtr obj);
+        internal static extern string Internal_GetShaderSourceCode(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);

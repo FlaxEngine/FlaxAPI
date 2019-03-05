@@ -4,6 +4,7 @@ using System;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
+using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -24,8 +25,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            throw new NotImplementedException();
-            //return new ParticleEmitterWindow(editor, item as AssetItem);
+            return new ParticleEmitterWindow(editor, item as AssetItem);
         }
 
         /// <inheritdoc />

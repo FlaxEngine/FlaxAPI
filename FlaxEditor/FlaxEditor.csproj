@@ -414,6 +414,7 @@
     <Compile Include="Surface\NodeFactory.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
     <Compile Include="Surface\ParameterType.cs" />
+    <Compile Include="Surface\ParticleEmitterSurface.cs" />
     <Compile Include="Surface\SurfaceComment.cs" />
     <Compile Include="Surface\SurfaceControl.cs" />
     <Compile Include="Surface\SurfaceMeta.cs" />
