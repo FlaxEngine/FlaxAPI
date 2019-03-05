@@ -2,18 +2,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace FlaxEngine.Utilities
 {
     /// <summary>
     /// Collection of various extension methods.
     /// </summary>
-    public static partial class Extenstions
+    public static partial class Extensions
     {
         /// <summary>
         /// Creates deep clone for a class if all members of this class are marked as serializable (uses Json serialization).
@@ -24,32 +19,8 @@ namespace FlaxEngine.Utilities
         public static T DeepClone<T>(this T instance)
         where T : new()
         {
-            Type type = typeof(T);
-
-            JsonSerializer jsonSerializer = JsonSerializer.CreateDefault(Json.JsonSerializer.Settings);
-            jsonSerializer.Formatting = Formatting.None;
-
-            StringBuilder sb = new StringBuilder(256);
-            StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
-            using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
-            {
-                // Prepare writer settings
-                jsonWriter.IndentChar = '\t';
-                jsonWriter.Indentation = 0;
-                jsonWriter.Formatting = jsonSerializer.Formatting;
-                jsonWriter.DateFormatHandling = jsonSerializer.DateFormatHandling;
-                jsonWriter.DateTimeZoneHandling = jsonSerializer.DateTimeZoneHandling;
-                jsonWriter.FloatFormatHandling = jsonSerializer.FloatFormatHandling;
-                jsonWriter.StringEscapeHandling = jsonSerializer.StringEscapeHandling;
-                jsonWriter.Culture = jsonSerializer.Culture;
-                jsonWriter.DateFormatString = jsonSerializer.DateFormatString;
-
-                JsonSerializerInternalWriter serializerWriter = new JsonSerializerInternalWriter(jsonSerializer);
-
-                serializerWriter.Serialize(jsonWriter, instance, type);
-            }
-
-            return JsonConvert.DeserializeObject<T>(sb.ToString());
+            var json = Json.JsonSerializer.Serialize(instance);
+            return Json.JsonSerializer.Deserialize<T>(json);
         }
 
         /// <summary>
