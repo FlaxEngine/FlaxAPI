@@ -11,12 +11,39 @@ namespace FlaxEditor.Surface.Archetypes
     public static partial class ParticleModules
     {
         /// <summary>
+        /// The particle emitter module types.
+        /// </summary>
+        public enum ModuleType
+        {
+            /// <summary>
+            /// The spawn module.
+            /// </summary>
+            Spawn,
+
+            /// <summary>
+            /// The init module.
+            /// </summary>
+            Initialize,
+
+            /// <summary>
+            /// The update module.
+            /// </summary>
+            Update,
+
+            /// <summary>
+            /// The render module.
+            /// </summary>
+            Render,
+        }
+
+        /// <summary>
         /// Customized <see cref="SurfaceNode"/> for particle emitter module node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         public class ParticleModuleNode : SurfaceNode
         {
             private CheckBox _enabled;
+            private ModuleType _type;
 
             /// <summary>
             /// Gets or sets a value indicating whether the module is enabled.
@@ -34,6 +61,11 @@ namespace FlaxEditor.Surface.Archetypes
                 }
             }
 
+            /// <summary>
+            /// Gets the type of the module.
+            /// </summary>
+            public ModuleType ModuleType => _type;
+
             /// <inheritdoc />
             public ParticleModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
@@ -44,6 +76,15 @@ namespace FlaxEditor.Surface.Archetypes
                     Parent = this,
                 };
                 _enabled.StateChanged += OnEnabledStateChanged;
+
+                if (nodeArch.TypeID - 100 < 100)
+                    _type = ModuleType.Spawn;
+                else if (nodeArch.TypeID - 200 < 100)
+                    _type = ModuleType.Initialize;
+                else if (nodeArch.TypeID - 300 < 100)
+                    _type = ModuleType.Update;
+                else if (nodeArch.TypeID - 400 < 100)
+                    _type = ModuleType.Render;
             }
 
             private void OnEnabledStateChanged(CheckBox control)
