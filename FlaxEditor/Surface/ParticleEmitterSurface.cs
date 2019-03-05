@@ -29,6 +29,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         protected override bool ValidateDragItem(AssetItem assetItem)
         {
+            return false; // TODO: add support for sampling textures in Particle Emitter graph
             switch (assetItem.ItemDomain)
             {
             case ContentDomain.CubeTexture:
