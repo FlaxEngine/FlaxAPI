@@ -731,7 +731,7 @@ namespace FlaxEditor.Utilities
             }
             else
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException(string.Format("Invalid Common Value type {0}", value != null ? value.GetType().ToString() : "null"));
             }
         }
 
@@ -860,7 +860,7 @@ namespace FlaxEditor.Utilities
             }
             else
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException(string.Format("Invalid Common Value type {0}", value != null ? value.GetType().ToString() : "null"));
             }
         }
     }
