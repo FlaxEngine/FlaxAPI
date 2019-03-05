@@ -29,13 +29,13 @@ namespace FlaxEngine.GUI
         /// Gets or sets the color of the text.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text.")]
-        public Color TextColor { get; set; } = Color.White;
+        public Color TextColor { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the text when it is highlighted (mouse is over).
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the text when it is highlighted (mouse is over).")]
-        public Color TextColorHighlighted { get; set; } = Color.White;
+        public Color TextColorHighlighted { get; set; }
 
         /// <summary>
         /// Gets or sets the horizontal text alignment within the control bounds.
@@ -105,6 +105,8 @@ namespace FlaxEngine.GUI
             CanFocus = false;
             var style = Style.Current;
             Font = new FontReference(style.FontMedium);
+            TextColor = Style.Current.Foreground;
+            TextColorHighlighted = Style.Current.Foreground;
         }
 
         /// <inheritdoc />
@@ -114,6 +116,8 @@ namespace FlaxEngine.GUI
             CanFocus = false;
             var style = Style.Current;
             Font = new FontReference(style.FontMedium);
+            TextColor = Style.Current.Foreground;
+            TextColorHighlighted = Style.Current.Foreground;
         }
 
         /// <inheritdoc />
