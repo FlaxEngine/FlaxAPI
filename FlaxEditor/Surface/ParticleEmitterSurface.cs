@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using FlaxEditor.Content;
+using FlaxEditor.Surface.Archetypes;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -14,10 +16,44 @@ namespace FlaxEditor.Surface
     /// <seealso cref="FlaxEditor.Surface.VisjectSurface" />
     public class ParticleEmitterSurface : VisjectSurface
     {
+        internal Particles.ParticleEmitterNode _rootNode;
+
+        /// <summary>
+        /// Gets the root node of the emitter graph.
+        /// </summary>
+        public Particles.ParticleEmitterNode RootNode => _rootNode;
+
         /// <inheritdoc />
         public ParticleEmitterSurface(IVisjectSurfaceOwner owner, Action onSave)
         : base(owner, onSave)
         {
+        }
+
+        /// <summary>
+        /// Arranges the particle modules nodes.
+        /// </summary>
+        public void ArrangeModulesNodes()
+        {
+            if (IsLayoutLocked)
+                return;
+            if (_rootNode == null)
+                throw new InvalidOperationException("Missing root node.");
+
+            IsLayoutLocked = true;
+
+            var modules = Nodes.OfType<ParticleModules.ParticleModuleNode>();
+            var width = _rootNode.Width;
+            var pos = _rootNode.Location + new Vector2(0, 100);
+            foreach (var module in modules)
+            {
+                var height = module.Height;
+                module.Bounds = new Rectangle(pos.X, pos.Y, width, height);
+                pos.Y += height + 20;
+            }
+            _rootNode.Height = pos.Y - _rootNode.Location.Y;
+
+            IsLayoutLocked = false;
+            PerformLayout();
         }
 
         /// <inheritdoc />

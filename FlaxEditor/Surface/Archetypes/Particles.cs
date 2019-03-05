@@ -15,10 +15,43 @@ namespace FlaxEditor.Surface.Archetypes
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         public class ParticleEmitterNode : SurfaceNode
         {
+            /// <summary>
+            /// Gets the particle emitter surface.
+            /// </summary>
+            public ParticleEmitterSurface ParticleSurface => (ParticleEmitterSurface)Surface;
+
             /// <inheritdoc />
             public ParticleEmitterNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
             {
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                ParticleSurface._rootNode = this;
+                ParticleSurface.ArrangeModulesNodes();
+            }
+
+            /// <inheritdoc />
+            protected override void SetLocationInternal(ref Vector2 location)
+            {
+                base.SetLocationInternal(ref location);
+
+                if (Surface != null && ParticleSurface._rootNode == this)
+                {
+                    ParticleSurface.ArrangeModulesNodes();
+                }
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                ParticleSurface._rootNode = null;
+
+                base.Dispose();
             }
         }
 

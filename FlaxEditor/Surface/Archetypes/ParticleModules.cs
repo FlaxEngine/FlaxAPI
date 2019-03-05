@@ -46,6 +46,11 @@ namespace FlaxEditor.Surface.Archetypes
             private ModuleType _type;
 
             /// <summary>
+            /// Gets the particle emitter surface.
+            /// </summary>
+            public ParticleEmitterSurface ParticleSurface => (ParticleEmitterSurface)Surface;
+
+            /// <summary>
             /// Gets or sets a value indicating whether the module is enabled.
             /// </summary>
             public bool ModuleEnabled
@@ -98,6 +103,22 @@ namespace FlaxEditor.Surface.Archetypes
                 base.UpdateRectangles();
 
                 _enabled.Location = new Vector2(_closeButtonRect.X - _enabled.Width - 2, _closeButtonRect.Y);
+            }
+
+            /// <inheritdoc />
+            public override void OnSpawned()
+            {
+                base.OnSpawned();
+
+                ParticleSurface.ArrangeModulesNodes();
+            }
+
+            /// <inheritdoc />
+            public override void OnDeleted()
+            {
+                ParticleSurface.ArrangeModulesNodes();
+
+                base.OnDeleted();
             }
 
             /// <inheritdoc />
