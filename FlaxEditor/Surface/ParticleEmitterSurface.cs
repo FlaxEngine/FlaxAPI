@@ -43,7 +43,7 @@ namespace FlaxEditor.Surface
 
             var modules = Nodes.OfType<ParticleModules.ParticleModuleNode>();
             var width = _rootNode.Width;
-            var pos = _rootNode.Location + new Vector2(0, 100);
+            var pos = _rootNode.Location + new Vector2(0, 500);
             foreach (var module in modules)
             {
                 var height = module.Height;
