@@ -397,6 +397,26 @@ namespace FlaxEditor.Surface
                     ConnectionsType = ConnectionType.Invalid
                 };
             }
+
+            /// <summary>
+            /// Creates new element description for Bounding Box editing.
+            /// </summary>
+            /// <param name="x">The x location (in node area space).</param>
+            /// <param name="y">The y location (in node area space).</param>
+            /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
+            /// <returns>The archetype.</returns>
+            public static NodeElementArchetype Box(float x, float y, int valueIndex)
+            {
+                return new NodeElementArchetype
+                {
+                    Type = NodeElementType.BoxValue,
+                    Position = new Vector2(Constants.NodeMarginX + x, Constants.NodeMarginY + Constants.NodeHeaderSize + y),
+                    Text = null,
+                    Single = false,
+                    ValueIndex = valueIndex,
+                    ConnectionsType = ConnectionType.Invalid
+                };
+            }
         }
     }
 }

@@ -669,6 +669,9 @@ namespace FlaxEditor.Surface
                 case NodeElementType.SkeletonNodeSelect:
                     element = new SkeletonNodeSelectElement(node, arch);
                     break;
+                case NodeElementType.BoxValue:
+                    element = new BoxValue(node, arch);
+                    break;
                 }
                 if (element != null)
                 {
