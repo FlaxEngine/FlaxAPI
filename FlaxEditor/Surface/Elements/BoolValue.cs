@@ -32,7 +32,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public BoolValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-        : base(parentNode, archetype, 16, 16, true)
+        : base(parentNode, archetype, archetype.ActualPosition, new Vector2(16), true)
         {
         }
 

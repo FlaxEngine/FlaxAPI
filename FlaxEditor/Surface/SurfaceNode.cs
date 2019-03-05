@@ -409,13 +409,14 @@ namespace FlaxEditor.Surface
             var style = Style.Current;
 
             // Background
-            var backgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
-            if (IsMouseOver)
-                backgroundColor *= 1.07f;
-            Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), backgroundColor);
+            var backgroundRect = new Rectangle(Vector2.Zero, Size);
+            Render2D.FillRectangle(backgroundRect, style.BackgroundNormal);
 
             // Header
-            Render2D.FillRectangle(_headerRect, style.BackgroundHighlighted);
+            var headerColor = style.BackgroundHighlighted;
+            if (_headerRect.Contains(ref _mousePosition))
+                headerColor *= 1.07f;
+            Render2D.FillRectangle(_headerRect, headerColor);
             Render2D.DrawText(style.FontLarge, Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
 
             // Close button
@@ -429,6 +430,15 @@ namespace FlaxEditor.Surface
             Render2D.FillRectangle(_footerRect, GroupArchetype.Color);
 
             DrawChildren();
+
+            // Selection outline
+            if (_isSelected)
+            {
+                backgroundRect.Expand(1.5f);
+                var colorTop = Color.OrangeRed;
+                var colorBottom = Color.Orange;
+                Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom, 1.5f);
+            }
         }
 
         /// <inheritdoc />
