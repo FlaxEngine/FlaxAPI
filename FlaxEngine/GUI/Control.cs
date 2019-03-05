@@ -583,6 +583,12 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         public virtual void OnMouseMove(Vector2 location)
         {
+            // Update tooltip
+            if (_tooltipUpdate == null && ShowTooltip)
+            {
+                Tooltip.OnMouseEnterControl(this);
+                SetUpdate(ref _tooltipUpdate, OnUpdateTooltip);
+            }
         }
 
         /// <summary>
@@ -594,7 +600,7 @@ namespace FlaxEngine.GUI
             _isMouseOver = false;
 
             // Update tooltip
-            if (ShowTooltip)
+            if (_tooltipUpdate != null)
             {
                 SetUpdate(ref _tooltipUpdate, null);
                 Tooltip.OnMouseLeaveControl(this);
