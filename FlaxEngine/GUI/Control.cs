@@ -930,7 +930,9 @@ namespace FlaxEngine.GUI
         public Vector2 PointFromWindow(Vector2 location)
         {
             if (HasParent)
+            {
                 location = _parent.PointFromWindow(location);
+            }
             return PointFromParent(ref location);
         }
 
@@ -956,12 +958,11 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in local control's space</returns>
         public virtual Vector2 ScreenToClient(Vector2 location)
         {
-            location = PointFromParent(ref location);
             if (HasParent)
             {
                 location = _parent.ScreenToClient(location);
             }
-            return location;
+            return PointFromParent(ref location);
         }
 
         #endregion
