@@ -247,6 +247,18 @@ namespace FlaxEditor.Surface
             if (_connectionInstigator != null)
                 return true;
 
+            // Base
+            bool handled = base.OnMouseDown(location, buttons);
+            if (!handled)
+                CustomMouseDown?.Invoke(ref location, buttons, ref handled);
+            if (handled)
+            {
+                // Clear flags
+                _rightMouseDown = false;
+                _leftMouseDown = false;
+                return true;
+            }
+
             // Cache data
             _isMovingSelection = false;
             _mousePos = location;
@@ -259,17 +271,6 @@ namespace FlaxEditor.Surface
             {
                 _rightMouseDown = true;
                 _rightMouseDownPos = location;
-            }
-
-            // Base
-            bool handled = base.OnMouseDown(location, buttons);
-            if (!handled)
-                CustomMouseDown?.Invoke(ref location, buttons, ref handled);
-            if (handled)
-            {
-                // Clear flags to disable handling mouse events by itself (children should do)
-                _leftMouseDown = _rightMouseDown = false;
-                return true;
             }
 
             // Check if any node is under the mouse
@@ -337,6 +338,9 @@ namespace FlaxEditor.Surface
                 CustomMouseUp?.Invoke(ref location, buttons, ref handled);
             if (handled)
             {
+                // Clear flags
+                _rightMouseDown = false;
+                _leftMouseDown = false;
                 return true;
             }
 
