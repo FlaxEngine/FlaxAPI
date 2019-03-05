@@ -128,7 +128,7 @@ namespace FlaxEditor.Modules
         {
             InitOrder = -90;
 
-            CreateStyle();
+            SetupStyle();
         }
 
         /// <summary>
@@ -293,7 +293,20 @@ namespace FlaxEditor.Modules
             DockHintWindow.Proxy.Dispose();
         }
 
-        private void CreateStyle()
+        private void SetupStyle()
+        {
+            var style = CreateDefaultStyle();
+
+            // Color picking
+            ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
+
+            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
+
+            // Set as default
+            Style.Current = style;
+        }
+
+        private Style CreateDefaultStyle()
         {
             var style = new Style();
 
@@ -314,9 +327,6 @@ namespace FlaxEditor.Modules
             style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
             style.DragWindow = style.BackgroundSelected * 0.7f;
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
-
-            // Color picking
-            ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
 
             // Font
             var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
@@ -355,10 +365,7 @@ namespace FlaxEditor.Modules
 
             style.SharedTooltip = new Tooltip();
 
-            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
-
-            // Set as default
-            Style.Current = style;
+            return style;
         }
 
         private IColorPickerDialog ShowPickColorDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, bool useDynamicEditing)
