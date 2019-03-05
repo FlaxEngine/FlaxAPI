@@ -269,6 +269,45 @@ namespace FlaxEngine.Json
         }
 
         /// <summary>
+        /// Deserializes the specified .NET object type (from the input json data).
+        /// </summary>
+        /// <param name="json">The input json data.</param>
+        /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        public static T Deserialize<T>(string json)
+        {
+            return (T)Deserialize(json, typeof(T));
+        }
+
+        /// <summary>
+        /// Deserializes the specified .NET object type (from the input json data).
+        /// </summary>
+        /// <param name="json">The input json data.</param>
+        /// <param name="objectType">The <see cref="T:System.Type" /> of object being deserialized.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        public static object Deserialize(string json, Type objectType)
+        {
+            object result;
+            var cache = Cache.Value;
+            cache.IsDuringSerialization = false;
+
+            using (JsonReader reader = new JsonTextReader(new StringReader(json)))
+            {
+                result = cache.JsonSerializer.Deserialize(reader, objectType);
+
+                if (!cache.JsonSerializer.CheckAdditionalContent)
+                    return result;
+                while (reader.Read())
+                {
+                    if (reader.TokenType != JsonToken.Comment)
+                        throw new FlaxException("Additional text found in JSON string after finishing deserializing object.");
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Deserializes the specified object (from the input json data).
         /// </summary>
         /// <param name="input">The object.</param>
