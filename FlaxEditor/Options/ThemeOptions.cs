@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -14,9 +16,57 @@ namespace FlaxEditor.Options
     [CustomEditor(typeof(Editor<ThemeOptions>))]
     public sealed class ThemeOptions
     {
+        // TODO: This doesn't update until the user hits save. That's an issue.
+        internal class StyleOptionsEditor : CustomEditor
+        {
+            private ComboBoxElement _combobox;
+
+            /// <inheritdoc />
+            public override DisplayStyle Style => DisplayStyle.Inline;
+
+            /// <inheritdoc />
+            public override void Initialize(LayoutElementsContainer layout)
+            {
+                _combobox = layout.ComboBox();
+                ReloadOptions(_combobox.ComboBox);
+                _combobox.ComboBox.SelectedIndexChanged += OnComboBoxSelectedIndexChanged;
+                _combobox.ComboBox.PopupShowing += ReloadOptions;
+            }
+
+            private void ReloadOptions(ComboBox obj)
+            {
+                var styleOptions = Editor.Instance.Options.Options.Theme;
+                var options = new string[styleOptions.Styles.Count + 1];
+                options[0] = "Default";
+
+                int i = 0;
+                foreach (var styleName in styleOptions.Styles.Keys)
+                {
+                    options[i + 1] = styleName;
+                    i++;
+                }
+                _combobox.ComboBox.SetItems(options);
+                _combobox.ComboBox.SelectedItem = (string)Values[0];
+            }
+
+            private void OnComboBoxSelectedIndexChanged(ComboBox combobox)
+            {
+                SetValue(combobox.SelectedItem);
+            }
+
+            /// <inheritdoc />
+            public override void Refresh()
+            {
+                _combobox.ComboBox.SelectedItem = (string)Values[0];
+
+                base.Refresh();
+            }
+        }
+
         /// <summary>
         /// Currently selected style
         /// </summary>
+        [CustomEditor(typeof(StyleOptionsEditor))]
         public string SelectedStyle = "Default";
 
         /// <summary>
