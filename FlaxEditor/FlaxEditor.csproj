@@ -72,6 +72,7 @@
     <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
+    <Compile Include="CustomEditors\Editors\StyleEditor.cs" />
     <Compile Include="Gizmo\TransformGizmoBase.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
@@ -271,6 +272,7 @@
     <Compile Include="GUI\Row.cs" />
     <Compile Include="GUI\ItemsListContextMenu.cs" />
     <Compile Include="GUI\StatusBar.cs" />
+    <Compile Include="GUI\StyleValueEditor.cs" />
     <Compile Include="GUI\Table.cs" />
     <Compile Include="GUI\Tabs\Tab.cs" />
     <Compile Include="GUI\Tabs\Tabs.cs" />
@@ -569,6 +571,7 @@
     <Compile Include="Windows\SceneTreeWindow.Actors.cs" />
     <Compile Include="Windows\SceneTreeWindow.ContextMenu.cs" />
     <Compile Include="Windows\SceneTreeWindow.cs" />
+    <Compile Include="Windows\StyleEditorWindow.cs" />
     <Compile Include="Windows\ToolboxWindow.cs" />
   </ItemGroup>
   <ItemGroup>
