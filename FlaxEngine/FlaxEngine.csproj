@@ -470,7 +470,7 @@
     <Compile Include="Rendering\ViewFlags.cs" />
     <Compile Include="Rendering\ViewMode.cs" />
     <Compile Include="Utilities\Screenshot.cs" />
-    <Compile Include="Utilities\Extenstions.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\State.cs" />
     <Compile Include="Utilities\StateMachine.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
