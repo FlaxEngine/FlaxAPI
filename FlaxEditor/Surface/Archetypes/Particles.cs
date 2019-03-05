@@ -1,5 +1,8 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
+using System.Linq;
+using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -65,6 +68,31 @@ namespace FlaxEditor.Surface.Archetypes
                         AnchorStyle = AnchorStyle.BottomCenter,
                         Parent = this
                     };
+                    AddModuleButton.ButtonClicked += OnAddModuleButtonClicked;
+                }
+
+                private void OnAddModuleButtonClicked(Button button)
+                {
+                    var modules = Nodes.Where(x => (ParticleModules.ModuleType)x.DefaultValues[1] == ModuleType);
+
+                    // Show context menu with list of module types to add
+                    var cm = new ItemsListContextMenu(180);
+                    foreach (var module in modules)
+                    {
+                        cm.AddItem(new ItemsListContextMenu.Item(module.Title, module.TypeID)
+                        {
+                            TooltipText = module.Description,
+                        });
+                    }
+                    cm.ItemClicked += item => AddModule((ushort)item.Tag);
+                    cm.SortChildren();
+                    cm.Show(this, button.BottomLeft);
+                }
+
+                private void AddModule(ushort typeId)
+                {
+                    var parent = (SurfaceNode)Parent;
+                    parent.Surface.Context.SpawnNode(15, typeId, Vector2.Zero);
                 }
 
                 /// <inheritdoc />

@@ -183,7 +183,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = CreateParticleModuleNode,
                 Title = "Age",
                 Description = "Increases particle age every frame, based on delta time",
-                Flags = NodeFlags.ParticleEmitterGraph, // | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(200, 0),
                 DefaultValues = new object[]
                 {
