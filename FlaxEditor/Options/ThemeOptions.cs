@@ -16,7 +16,6 @@ namespace FlaxEditor.Options
     [CustomEditor(typeof(Editor<ThemeOptions>))]
     public sealed class ThemeOptions
     {
-        // TODO: This doesn't update until the user hits save. That's an issue.
         internal class StyleOptionsEditor : CustomEditor
         {
             private ComboBoxElement _combobox;
@@ -35,12 +34,12 @@ namespace FlaxEditor.Options
 
             private void ReloadOptions(ComboBox obj)
             {
-                var styleOptions = Editor.Instance.Options.Options.Theme;
-                var options = new string[styleOptions.Styles.Count + 1];
+                var themeOptions = (ThemeOptions)ParentEditor.Values[0];
+                var options = new string[themeOptions.Styles.Count + 1];
                 options[0] = "Default";
 
                 int i = 0;
-                foreach (var styleName in styleOptions.Styles.Keys)
+                foreach (var styleName in themeOptions.Styles.Keys)
                 {
                     options[i + 1] = styleName;
                     i++;
