@@ -110,6 +110,13 @@ namespace FlaxEditor.Surface
                 Color = new Color(121, 210, 176),
                 Archetypes = Archetypes.Particles.Nodes
             },
+            new GroupArchetype
+            {
+                GroupID = 15,
+                Name = "Particle Modules",
+                Color = new Color(221, 110, 176),
+                Archetypes = Archetypes.ParticleModules.Nodes
+            },
         };
 
         /// <summary>

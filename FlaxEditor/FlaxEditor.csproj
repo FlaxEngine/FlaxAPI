@@ -383,6 +383,7 @@
     <Compile Include="Surface\Archetypes\Math.cs" />
     <Compile Include="Surface\Archetypes\Packing.cs" />
     <Compile Include="Surface\Archetypes\Parameters.cs" />
+    <Compile Include="Surface\Archetypes\ParticleModules.cs" />
     <Compile Include="Surface\Archetypes\Particles.cs" />
     <Compile Include="Surface\Archetypes\Textures.cs" />
     <Compile Include="Surface\Archetypes\Tools.cs" />

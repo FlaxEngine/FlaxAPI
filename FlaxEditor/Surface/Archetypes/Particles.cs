@@ -34,7 +34,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Particle Emitter",
                 Description = "Main particle emitter node",
                 Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
-                Size = new Vector2(150, 300),
+                Size = new Vector2(200, 300),
                 /*Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "", true, ConnectionType.Impulse, 0),
