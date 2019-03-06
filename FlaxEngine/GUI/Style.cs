@@ -12,25 +12,57 @@ namespace FlaxEngine.GUI
         /// </summary>
         public static Style Current { get; set; }
 
+        [Serialize]
+        private FontReference _fontTitle;
+
         /// <summary>
         /// The font title.
         /// </summary>
-        public Font FontTitle;
+        [NoSerialize]
+        public Font FontTitle
+        {
+            get => _fontTitle.GetFont();
+            set => _fontTitle = new FontReference(value);
+        }
+
+        [Serialize]
+        private FontReference _fontLarge;
 
         /// <summary>
         /// The font large.
         /// </summary>
-        public Font FontLarge;
+        [NoSerialize]
+        public Font FontLarge
+        {
+            get => _fontLarge.GetFont();
+            set => _fontLarge = new FontReference(value);
+        }
+
+        [Serialize]
+        private FontReference _fontMedium;
 
         /// <summary>
         /// The font medium.
         /// </summary>
-        public Font FontMedium;
+        [NoSerialize]
+        public Font FontMedium
+        {
+            get => _fontMedium.GetFont();
+            set => _fontMedium = new FontReference(value);
+        }
+
+        [Serialize]
+        private FontReference _fontSmall;
 
         /// <summary>
         /// The font small.
         /// </summary>
-        public Font FontSmall;
+        [NoSerialize]
+        public Font FontSmall
+        {
+            get => _fontSmall.GetFont();
+            set => _fontSmall = new FontReference(value);
+        }
 
         /// <summary>
         /// The background color.
