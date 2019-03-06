@@ -47,11 +47,6 @@ namespace FlaxEditor.Surface
         public bool IsUIEditable;
 
         /// <summary>
-        /// List of nodes referencing to that parameter
-        /// </summary>
-        public readonly List<SurfaceNode> ReferencedBy = new List<SurfaceNode>();
-
-        /// <summary>
         /// Parameter value
         /// </summary>
         public object Value;

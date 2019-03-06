@@ -279,10 +279,8 @@ namespace FlaxEditor.Surface
                 stream.Write((byte)(param.IsUIVisible ? 1 : 0));
                 stream.Write((byte)(param.IsUIEditable ? 1 : 0));
 
-                // References
-                stream.Write(param.ReferencedBy.Count);
-                for (int j = 0; j < param.ReferencedBy.Count; j++)
-                    stream.Write(param.ReferencedBy[j].ID);
+                // References [Deprecated]
+                stream.Write(0);
 
                 // Value
                 Utils.WriteCommonValue(stream, param.Value);
@@ -421,22 +419,11 @@ namespace FlaxEditor.Surface
                     param.IsUIVisible = stream.ReadByte() != 0;
                     param.IsUIEditable = stream.ReadByte() != 0;
 
-                    // References
+                    // References [Deprecated]
                     int refsCount = stream.ReadInt32();
-                    param.ReferencedBy.Capacity = refsCount;
                     for (int j = 0; j < refsCount; j++)
                     {
                         uint refID = stream.ReadUInt32();
-                        var node = FindNode(refID);
-                        if (node == null)
-                        {
-                            // Error
-                            Editor.LogWarning($"Invalid node reference id (param: {param.Name}, node ref: {refID})");
-                        }
-                        else
-                        {
-                            param.ReferencedBy.Add(node);
-                        }
                     }
 
                     // Value
