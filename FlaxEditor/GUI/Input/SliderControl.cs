@@ -83,6 +83,21 @@ namespace FlaxEngine.GUI
             public bool IsSliding => _thumbClicked;
 
             /// <summary>
+            /// The color of the slider track line
+            /// </summary>
+            public Color TrackLineColor { get; set; }
+
+            /// <summary>
+            /// The color of the slider thumb when it's not selected
+            /// </summary>
+            public Color ThumbColor { get; set; }
+
+            /// <summary>
+            /// The color of the slider thumb when it's selected
+            /// </summary>
+            public Color ThumbColorSelected { get; set; }
+
+            /// <summary>
             /// Occurs when sliding starts.
             /// </summary>
             public Action SlidingStart;
@@ -101,6 +116,11 @@ namespace FlaxEngine.GUI
             : base(0, 0, width, height)
             {
                 CanFocus = false;
+
+                var style = Style.Current;
+                TrackLineColor = style.BackgroundHighlighted;
+                ThumbColor = style.BackgroundNormal;
+                ThumbColorSelected = style.BackgroundSelected;
             }
 
             private void updateThumb()
@@ -141,14 +161,12 @@ namespace FlaxEngine.GUI
             {
                 base.Draw();
 
-                var style = Style.Current;
-
                 // Draw track line
                 var lineRect = new Rectangle(4, Height / 2, Width - 8, 1);
-                Render2D.FillRectangle(lineRect, style.BackgroundHighlighted);
+                Render2D.FillRectangle(lineRect, TrackLineColor);
 
                 // Draw thumb
-                Render2D.FillRectangle(_thumbRect, _thumbClicked ? style.BackgroundSelected : style.BackgroundNormal);
+                Render2D.FillRectangle(_thumbRect, _thumbClicked ? ThumbColorSelected : ThumbColor);
             }
 
             /// <inheritdoc />
