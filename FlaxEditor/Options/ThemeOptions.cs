@@ -66,6 +66,7 @@ namespace FlaxEditor.Options
         /// Currently selected style
         /// </summary>
         [CustomEditor(typeof(StyleOptionsEditor))]
+        [Tooltip("Restart Editor to apply style")]
         public string SelectedStyle = "Default";
 
         /// <summary>

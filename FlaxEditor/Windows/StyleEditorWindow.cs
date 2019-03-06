@@ -150,7 +150,7 @@ namespace FlaxEditor.Windows
                 Parent = panel
             };
 
-            // TODO: Dropdown bug?
+            // TODO: There seems to be a dropdown bug?
             var dropDown = new Dropdown()
             {
                 Items = new List<string>() { "Item 1", "Item 2", "Item 3" },
@@ -196,7 +196,7 @@ namespace FlaxEditor.Windows
 
         private void OnCancelClicked()
         {
-            // Restore color
+            // Restore old style
             if (_useDynamicEditing)
                 _onChanged?.Invoke(_oldStyle, false);
 
