@@ -18,6 +18,7 @@ namespace FlaxEditor.Windows
     {
         private const float BUTTONS_WIDTH = 60.0f;
         private const float PICKER_MARGIN = 6.0f;
+        private const float PREVIEW_X = 50;
 
         private Style _oldStyle;
         private Style _newStyle;
@@ -31,8 +32,6 @@ namespace FlaxEditor.Windows
 
         private Panel _previewPanel;
 
-        private Control _test;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="StyleEditorWindow"/> class.
         /// </summary>
@@ -40,7 +39,7 @@ namespace FlaxEditor.Windows
         /// <param name="initialValue">The initial value.</param>
         /// <param name="valueChanged">The changed event.</param>
         /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will change event only on editing end.</param>
-        public StyleEditorWindow(Editor editor, Style initialValue, StyleValueEditor.ValueChangedEvent valueChanged, bool useDynamicEditing) : base(editor, false, ScrollBars.Both)
+        public StyleEditorWindow(Editor editor, Style initialValue, StyleValueEditor.ValueChangedEvent valueChanged, bool useDynamicEditing) : base(editor, false, ScrollBars.None)
         {
             this.Title = "Style";
             _oldStyle = initialValue;
@@ -55,30 +54,20 @@ namespace FlaxEditor.Windows
 
             var panel1 = container.AddChild<Panel>();
             panel1.DockStyle = DockStyle.Fill;
+            panel1.IsScrollable = true;
+            panel1.ScrollBars = ScrollBars.Vertical;
 
             _valueEditor = new CustomEditorPresenter(null);
             _valueEditor.Panel.Parent = panel1;
-            _valueEditor.ContainerControl.DockStyle = DockStyle.Fill;
-            _valueEditor.Panel.DockStyle = DockStyle.Fill;
-            _valueEditor.ContainerControl.IsScrollable = true;
-            _valueEditor.Panel.IsScrollable = true;
             _valueEditor.OverrideEditor = new GenericEditor();
             _valueEditor.Select(_newStyle);
             _valueEditor.Modified += OnEdited;
-            /*
-                        foreach (var child in _valueEditor.Children)
-                        {
-                            child.Control.DockStyle = DockStyle.Fill;
-                            child.Control.IsScrollable = true;
-                        }*/
 
             _previewPanel = container.AddChild<Panel>();
             _previewPanel.DockStyle = DockStyle.Fill;
 
             var preview = CreatePreview(_newStyle);
             preview.Parent = _previewPanel;
-
-            _test = _valueEditor.Panel;
         }
 
         /// <inheritdoc />
@@ -101,9 +90,6 @@ namespace FlaxEditor.Windows
                 AnchorStyle = AnchorStyle.BottomRight
             };
             _cOK.Clicked += OnOkClicked;
-
-            Debug.Log(this.Height);
-            Debug.Log(_test.Height);
         }
 
         /// <summary>
@@ -126,44 +112,60 @@ namespace FlaxEditor.Windows
             {
                 Text = "Example Label",
                 Parent = preview,
-                Location = new Vector2(50, 50),
+                Location = new Vector2(PREVIEW_X, 50),
                 TooltipText = "Example Tooltip"
             };
 
-            var button = new Button(50, 100)
+            var button = new Button(PREVIEW_X, 100)
             {
                 Text = "Example Button",
                 Parent = preview,
                 TooltipText = "Example Tooltip"
             };
 
-            var textBox = new TextBox(true, 50, 150)
+            var textBox = new TextBox(true, PREVIEW_X, 150)
             {
                 Text = "Example TextBox",
                 Parent = preview
             };
 
-            var checkBox = new CheckBox(50, 200)
+            var checkBox = new CheckBox(PREVIEW_X, 200)
             {
                 Parent = preview
             };
 
-            // TODO: Those 2 aren't optimal
-            var progressBar = new ProgressBar(50, 250, 100)
+            var panel = new Panel()
+            {
+                Parent = preview,
+                X = PREVIEW_X,
+                Y = 250,
+                BackgroundColor = style.BackgroundSelected,
+                Width = 250,
+                Height = 30
+            };
+
+            var progressBar = new ProgressBar(20, 5, 150, 20)
             {
                 Value = 42,
-                Parent = preview
+                Parent = panel
             };
 
+            // TODO: Dropdown bug?
             var dropDown = new Dropdown()
             {
                 Items = new List<string>() { "Item 1", "Item 2", "Item 3" },
-                X = 50,
+                X = PREVIEW_X,
                 Y = 300,
-                Parent = preview
+                Parent = preview,
+                SelectedIndex = 0,
+                SelectedItem = "Item 1"
             };
 
-            // TODO: Add a slider
+            var slider = new SliderControl(30, PREVIEW_X, 350, min: 0, max: 100)
+            {
+                Parent = preview
+            };
+            slider.Value = 31;
 
             Style.Current = currentStyle;
             return preview;
