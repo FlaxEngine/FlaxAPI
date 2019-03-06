@@ -68,7 +68,7 @@ namespace FlaxEditor.Surface.Archetypes
                     if (value != (bool)Values[0])
                     {
                         SetValue(0, value);
-                        _enabled.State = value ? CheckBoxState.Checked : CheckBoxState.Intermediate;
+                        _enabled.State = value ? CheckBoxState.Checked : CheckBoxState.Default;
                     }
                 }
             }
@@ -107,7 +107,7 @@ namespace FlaxEditor.Surface.Archetypes
                 // Header
                 var idx = (int)ModuleType;
                 var headerRect = new Rectangle(0, 0, Width, 16.0f);
-                Render2D.DrawText(style.FontMedium, Title, headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
+                Render2D.DrawText(style.FontMedium, Title, headerRect, ModuleEnabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
 
                 // Close button
                 float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
@@ -178,10 +178,28 @@ namespace FlaxEditor.Surface.Archetypes
         public static NodeArchetype[] Nodes =
         {
             // Spawn Modules
+            new NodeArchetype
+            {
+                TypeID = 100,
+                Create = CreateParticleModuleNode,
+                Title = "Constant Spawn Rate",
+                Description = "Emits constant amount of particles per second, depending of the rate property",
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Size = new Vector2(200, Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Spawn,
+                    10.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Rate", true, ConnectionType.Float, 0, 2),
+                },
+            },
+            // TODO: Variable Spawn Rate
             // TODO: Single Burst
             // TODO: Periodic Burst
-            // TODO: Constant Spawn Rate
-            // TODO: Custom Spawn
             // TODO: On Event Spawn
 
             // Initialize

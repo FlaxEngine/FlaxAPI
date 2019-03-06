@@ -48,7 +48,39 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetParticleSystem(unmanagedPtr); }
-            set { Internal_SetParticleSystem(unmanagedPtr, value); }
+            set { Internal_SetParticleSystem(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+        }
+
+        /// <summary>
+        /// Resets the particles simulation state (clears the instance state data but preserves the instance parameters values).
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void ResetSimulation()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_ResetSimulation(unmanagedPtr);
+#endif
+        }
+
+        /// <summary>
+        /// Performs the full particles simulation update (postponed for the next particle manager update).
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void UpdateSimulation()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_UpdateSimulation(unmanagedPtr);
 #endif
         }
 
@@ -59,7 +91,13 @@ namespace FlaxEngine
         internal static extern ParticleSystem Internal_GetParticleSystem(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetParticleSystem(IntPtr obj, ParticleSystem val);
+        internal static extern void Internal_SetParticleSystem(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ResetSimulation(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_UpdateSimulation(IntPtr obj);
 #endif
 
         #endregion

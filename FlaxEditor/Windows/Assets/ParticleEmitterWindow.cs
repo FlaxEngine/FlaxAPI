@@ -337,6 +337,7 @@ namespace FlaxEditor.Windows.Assets
             // ParticleEmitter preview
             _preview = new ParticleEmitterPreview(true)
             {
+                PlaySimulation = true,
                 Parent = _split2.Panel1
             };
 

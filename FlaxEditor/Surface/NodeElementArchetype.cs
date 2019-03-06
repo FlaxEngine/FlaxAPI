@@ -88,7 +88,7 @@ namespace FlaxEditor.Surface
             /// <param name="id">The unique box identifier.</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Input(int ylevel, string text, bool single, ConnectionType type, int id, int valueIndex = -1)
+            public static NodeElementArchetype Input(float ylevel, string text, bool single, ConnectionType type, int id, int valueIndex = -1)
             {
                 return new NodeElementArchetype
                 {
@@ -112,7 +112,7 @@ namespace FlaxEditor.Surface
             /// <param name="type">The type.</param>
             /// <param name="id">The unique box identifier.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Output(int ylevel, string text, ConnectionType type, int id)
+            public static NodeElementArchetype Output(float ylevel, string text, ConnectionType type, int id)
             {
                 return new NodeElementArchetype
                 {

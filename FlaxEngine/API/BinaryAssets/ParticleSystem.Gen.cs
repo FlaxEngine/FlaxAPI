@@ -19,9 +19,30 @@ namespace FlaxEngine
         {
         }
 
+        /// <summary>
+        /// Initializes the particle system that plays a given particles emitter.
+        /// </summary>
+        /// <param name="emitter">...</param>
+        /// <param name="duration">...</param>
+        /// <param name="loop">...</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Init(ParticleEmitter emitter, float duration, bool loop)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Init(unmanagedPtr, Object.GetUnmanagedPtr(emitter), duration, loop);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Init(IntPtr obj, IntPtr emitter, float duration, bool loop);
 #endif
 
         #endregion

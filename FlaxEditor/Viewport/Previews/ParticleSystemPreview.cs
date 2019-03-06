@@ -29,6 +29,11 @@ namespace FlaxEditor.Viewport.Previews
         public ParticleEffect PreviewActor => _previewEffect;
 
         /// <summary>
+        /// Gets or sets a value indicating whether play the particles simulation in editor.
+        /// </summary>
+        public bool PlaySimulation { get; set; } = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ParticleSystemPreview"/> class.
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
@@ -53,6 +58,18 @@ namespace FlaxEditor.Viewport.Previews
                 float targetSize = 30.0f;
                 float maxSize = Mathf.Max(0.001f, _previewEffect.Box.Size.MaxValue);
                 _previewEffect.Scale = new Vector3(targetSize / maxSize);
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            // Manually update simulation
+            if (PlaySimulation)
+            {
+                _previewEffect.UpdateSimulation();
             }
         }
 

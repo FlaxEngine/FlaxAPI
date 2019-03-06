@@ -25,7 +25,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (_emitter != value)
                 {
                     _emitter = value;
-                    // TODO: setup particle system to play looped single emitter
+                    _system.Init(value, 5.0f, true);
                 }
             }
         }

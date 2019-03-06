@@ -166,8 +166,8 @@ namespace FlaxEditor.Surface.Archetypes
                 if (_isSelected)
                 {
                     backgroundRect.Expand(1.5f);
-                    var colorTop = Color.OrangeRed;
-                    var colorBottom = Color.Orange;
+                    var colorTop = Color.Orange;
+                    var colorBottom = Color.OrangeRed;
                     Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom, 1.5f);
                 }
             }
