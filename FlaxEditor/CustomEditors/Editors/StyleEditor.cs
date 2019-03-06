@@ -31,7 +31,6 @@ namespace FlaxEditor.CustomEditors.Editors
             element = layout.Custom<StyleValueEditor>();
             element.CustomControl.Value = style;
             element.CustomControl.ValueChanged += OnValueChanged;
-            element.CustomControl.DockStyle = DockStyle.None;
         }
 
         private void OnValueChanged()

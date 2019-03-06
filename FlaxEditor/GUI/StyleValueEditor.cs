@@ -92,12 +92,70 @@ namespace FlaxEditor.GUI
             var style = Style.Current;
             var r = new Rectangle(2, 2, Width - 4, Height - 4);
 
-            Render2D.FillRectangle(r, Style.Current.BackgroundNormal);
+            if (Value != null)
+            {
+                // Draw the style colors
+                /*
+                -Background
+                -LightBackground
+                -DragWindow
+                -Foreground
+                -ForegroundDisabled
+                -BackgroundHighlighted
+                -BorderHighlighted
+                -BackgroundSelected
+                -BorderSelected
+                -BackgroundNormal
+                -BorderNormal
+                -TextBoxBackground
+                -TextBoxBackgroundSelected
+                -ProgressNormal
+                */
+
+                var size = new Vector2(r.Width / 7f, r.Height / 2f);
+                float x = 2;
+
+                Render2D.FillRectangle(new Rectangle(x, 2, size), Value.Foreground);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2, size), Value.ForegroundDisabled);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2, size), Value.DragWindow);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2, size), Value.BorderNormal);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2, size), Value.BorderHighlighted);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2, size), Value.BorderSelected);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2, size), Value.ProgressNormal);
+                x = 0;
+
+                Render2D.FillRectangle(new Rectangle(x, 2 + size.Y, size), Value.Background);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2 + size.Y, size), Value.BackgroundNormal);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2 + size.Y, size), Value.LightBackground);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2 + size.Y, size), Value.BackgroundHighlighted);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2 + size.Y, size), Value.BackgroundSelected);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2 + size.Y, size), Value.TextBoxBackground);
+                x += size.X;
+                Render2D.FillRectangle(new Rectangle(x, 2 + size.Y, size), Value.TextBoxBackgroundSelected);
+            }
+            else
+            {
+                Render2D.FillRectangle(r, Style.Current.BackgroundNormal);
+            }
+
             Render2D.DrawRectangle(r, IsMouseOver ? style.BackgroundSelected : Color.Black);
 
             if (_value == null)
             {
-                Render2D.DrawText(style.FontMedium, "No Style", r, style.Foreground);
+                Rectangle textRectangle = r;
+                textRectangle.X = 4;
+                Render2D.DrawText(style.FontMedium, "No Style", textRectangle, style.Foreground);
             }
         }
 
