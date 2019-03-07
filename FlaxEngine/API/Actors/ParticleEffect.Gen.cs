@@ -83,6 +83,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the particles simulation speed factor. Scales the particle system update delta time. Can be used to speed up or slow down the particles.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("Particle Effect"), EditorOrder(30), Tooltip("The particles simulation speed factor. Scales the particle system update delta time. Can be used to speed up or slow down the particles.")]
+        public float SimulationSpeed
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetSimulationSpeed(unmanagedPtr); }
+            set { Internal_SetSimulationSpeed(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Resets the particles simulation state (clears the instance state data but preserves the instance parameters values).
         /// </summary>
 #if UNIT_TEST_COMPILANT
@@ -134,6 +149,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetFixedTimestep(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetSimulationSpeed(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetSimulationSpeed(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ResetSimulation(IntPtr obj);
