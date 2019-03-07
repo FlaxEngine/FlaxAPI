@@ -242,7 +242,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 8,
                 Title = "Rotation",
                 Description = "Euler angle rotation",
-                Flags = NodeFlags.AllGraphs,
+                Flags = NodeFlags.AnimGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(110, 60),
                 DefaultValues = new object[]
                 {
