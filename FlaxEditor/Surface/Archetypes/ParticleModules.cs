@@ -222,13 +222,31 @@ namespace FlaxEditor.Surface.Archetypes
                     (int)ModuleType.Update,
                 },
             },
-            // TODO: Euler Movement
+
+            new NodeArchetype
+            {
+                TypeID = 301,
+                Create = CreateParticleModuleNode,
+                Title = "Gravity",
+                Description = "Applies the gravity force to particle velocity",
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Size = new Vector2(200, Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    new Vector3(0, -981.0f, 0),
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Force", true, ConnectionType.Vector3, 0, 2),
+                },
+            },
             // TODO: Collision (sphere/plane/box/cylinder/depth)
             // TODO: Set Position/Velocity/Color/…
             // TODO: Conform to sphere
             // TODO: Force
             // TODO: Drag
-            // TODO: Gravity
             // TODO: Turbulence
             // TODO: Kill (box/sphere/custom)
 
