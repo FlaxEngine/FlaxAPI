@@ -53,6 +53,36 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the particles simulation update mode. Defines how to update particles emitter.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("Particle Effect"), EditorOrder(10), Tooltip("The particles simulation update mode. Defines how to update particles emitter.")]
+        public SimulationUpdateMode UpdateMode
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetUpdateMode(unmanagedPtr); }
+            set { Internal_SetUpdateMode(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the fixed timestep for simulation updates. Used only if UpdateMode is set to FixedTimestep.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("Particle Effect"), EditorOrder(20), VisibleIf(nameof(IsFixedTimestep)), Tooltip("The fixed timestep for simulation updates. Used only if UpdateMode is set to FixedTimestep.")]
+        public float FixedTimestep
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetFixedTimestep(unmanagedPtr); }
+            set { Internal_SetFixedTimestep(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Resets the particles simulation state (clears the instance state data but preserves the instance parameters values).
         /// </summary>
 #if UNIT_TEST_COMPILANT
@@ -92,6 +122,18 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetParticleSystem(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern SimulationUpdateMode Internal_GetUpdateMode(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetUpdateMode(IntPtr obj, SimulationUpdateMode val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetFixedTimestep(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetFixedTimestep(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ResetSimulation(IntPtr obj);

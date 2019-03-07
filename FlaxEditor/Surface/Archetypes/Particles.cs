@@ -159,7 +159,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Options border
                 var optionsAreaStart = FlaxEditor.Surface.Constants.NodeHeaderSize + 3.0f;
-                var optionsAreaHeight = 8 * FlaxEditor.Surface.Constants.LayoutOffsetY + 6.0f;
+                var optionsAreaHeight = 6 * FlaxEditor.Surface.Constants.LayoutOffsetY + 6.0f;
                 Render2D.DrawRectangle(new Rectangle(1, optionsAreaStart, Width - 2, optionsAreaHeight), style.BackgroundSelected, 1.5f);
 
                 // Selection outline
@@ -225,8 +225,6 @@ namespace FlaxEditor.Surface.Archetypes
                     1024, // Capacity
                     (int)ParticlesSimulationMode.Default, // Simulation Mode
                     (int)ParticlesSimulationSpace.World, // Simulation Space
-                    (int)ParticlesUpdateMode.Realtime, // Update Mode
-                    60.0f, // Fixed Timestep
                     true, // Enable Pooling
                     BoundingBox.Zero, // Custom Bounds
                 },
@@ -244,21 +242,13 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Text(0, 2 * Surface.Constants.LayoutOffsetY, "Simulation Space", 100.0f, 16.0f, "The particles simulation space."),
                     NodeElementArchetype.Factory.ComboBox(110, 2 * Surface.Constants.LayoutOffsetY, 80, 2, typeof(ParticlesSimulationSpace)),
 
-                    // Update Mode
-                    NodeElementArchetype.Factory.Text(0, 3 * Surface.Constants.LayoutOffsetY, "Update Mode", 100.0f, 16.0f, "The particles simulation update mode."),
-                    NodeElementArchetype.Factory.ComboBox(110, 3 * Surface.Constants.LayoutOffsetY, 80, 3, typeof(ParticlesUpdateMode)),
-
-                    // Fixed Timestep
-                    NodeElementArchetype.Factory.Text(0, 4 * Surface.Constants.LayoutOffsetY, "Fixed Timestep", 100.0f, 16.0f, "The fixed timestep. Used only if Update Mode is set to FixedTimestep."),
-                    NodeElementArchetype.Factory.Float(110, 4 * Surface.Constants.LayoutOffsetY, 4),
-
                     // Enable Pooling
-                    NodeElementArchetype.Factory.Text(0, 5 * Surface.Constants.LayoutOffsetY, "Enable Pooling", 100.0f, 16.0f, "True if enable pooling emitter instance data, otherwise immediately dispose. Pooling can improve performance and reduce memory usage."),
-                    NodeElementArchetype.Factory.Bool(110, 5 * Surface.Constants.LayoutOffsetY, 5),
+                    NodeElementArchetype.Factory.Text(0, 3 * Surface.Constants.LayoutOffsetY, "Enable Pooling", 100.0f, 16.0f, "True if enable pooling emitter instance data, otherwise immediately dispose. Pooling can improve performance and reduce memory usage."),
+                    NodeElementArchetype.Factory.Bool(110, 3 * Surface.Constants.LayoutOffsetY, 3),
 
                     // Custom Bounds
-                    NodeElementArchetype.Factory.Text(0, 6 * Surface.Constants.LayoutOffsetY, "Custom Bounds", 100.0f, 16.0f, "The custom bounds to use for the particles. Set to zero to use automatic bounds (valid only for CPU particles)."),
-                    NodeElementArchetype.Factory.Box(110, 6 * Surface.Constants.LayoutOffsetY, 6),
+                    NodeElementArchetype.Factory.Text(0, 4 * Surface.Constants.LayoutOffsetY, "Custom Bounds", 100.0f, 16.0f, "The custom bounds to use for the particles. Set to zero to use automatic bounds (valid only for CPU particles)."),
+                    NodeElementArchetype.Factory.Box(110, 4 * Surface.Constants.LayoutOffsetY, 4),
                 }
             },
         };

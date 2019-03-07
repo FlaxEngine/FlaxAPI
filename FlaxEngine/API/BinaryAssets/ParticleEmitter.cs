@@ -39,22 +39,6 @@ namespace FlaxEngine
         Local = 1,
     }
 
-    /// <summary>
-    /// The particles simulation update modes.
-    /// </summary>
-    public enum ParticlesUpdateMode
-    {
-        /// <summary>
-        /// Use realtime simulation updates. Updates particles during every game logic update.
-        /// </summary>
-        Realtime = 0,
-
-        /// <summary>
-        /// Use fixed timestep delta time to update particles simulation with a custom frequency.
-        /// </summary>
-        FixedTimestep = 1,
-    }
-
     public sealed partial class ParticleEmitter
     {
     }

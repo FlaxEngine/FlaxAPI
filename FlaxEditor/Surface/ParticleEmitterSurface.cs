@@ -47,7 +47,7 @@ namespace FlaxEditor.Surface
             var width = _rootNode.Width;
             var rootPos = _rootNode.Location;
             var pos = rootPos;
-            pos.Y += Constants.NodeHeaderSize + 1.0f + 8.0f * Constants.LayoutOffsetY + 6.0f + 4.0f;
+            pos.Y += Constants.NodeHeaderSize + 1.0f + 6 * Constants.LayoutOffsetY + 6.0f + 4.0f;
 
             for (int i = 0; i < _rootNode.Headers.Length; i++)
             {
