@@ -141,6 +141,10 @@ namespace FlaxEditor.Viewport.Previews
                         guiMaterial = _material;
                         break;
                     case MaterialDomain.Terrain:
+                        // TODO: create a temporary, virtual terrain chunk to preview the material
+                        break;
+                    case MaterialDomain.Particle:
+                        // TODO: draw a simple particle effect with a fixed single sprite particle
                         break;
                     default: throw new ArgumentOutOfRangeException();
                     }

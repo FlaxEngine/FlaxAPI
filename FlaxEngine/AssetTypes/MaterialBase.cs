@@ -78,6 +78,14 @@ namespace FlaxEngine
         public bool IsTerrain => Info.Domain == MaterialDomain.Terrain;
 
         /// <summary>
+        /// Gets a value indicating whether this material is a particle shader (cannot be used with a normal meshes).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this material is a particle shader; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsParticle => Info.Domain == MaterialDomain.Particle;
+
+        /// <summary>
         /// Gets or sets the material parameters collection.
         /// </summary>
         /// <value>

@@ -34,6 +34,11 @@ namespace FlaxEngine.Rendering
         /// The terrain shader. Can be used only with landscape chunks geometry that use optimized vertex data and support multi-layered blending.
         /// </summary>
         Terrain = 4,
+
+        /// <summary>
+        /// The particle shader. Can be used only with particles geometry (sprites, trails and ribbons). Supports reading particle data on a GPU.
+        /// </summary>
+        Particle = 5,
     }
 
     /// <summary>
