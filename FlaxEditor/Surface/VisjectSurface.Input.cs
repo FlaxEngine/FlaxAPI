@@ -447,7 +447,7 @@ namespace FlaxEditor.Surface
                 return;
             if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey))
                 return;
-            if (_activeVisjectCM.Visible)
+            if (_activeVisjectCM == null || _activeVisjectCM.Visible)
                 return;
 
             // # => color
