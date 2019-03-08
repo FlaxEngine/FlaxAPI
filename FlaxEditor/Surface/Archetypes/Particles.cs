@@ -217,7 +217,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Create = (id, context, arch, groupArch) => new ParticleEmitterNode(id, context, arch, groupArch),
                 Title = "Particle Emitter",
-                Description = "Main particle emitter node",
+                Description = "Main particle emitter node. Contains a set of modules per emitter context. Modules are executed in order from top to bottom of the stack.",
                 Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(300, 600),
                 DefaultValues = new object[]

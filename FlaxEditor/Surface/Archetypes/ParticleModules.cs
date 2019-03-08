@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -34,6 +35,37 @@ namespace FlaxEditor.Surface.Archetypes
             /// The render module.
             /// </summary>
             Render,
+        }
+
+        /// <summary>
+        /// The sprite rendering facing modes.
+        /// </summary>
+        public enum ParticleSpriteFacingMode
+        {
+            /// <summary>
+            /// Particles will face camera position.
+            /// </summary>
+            FaceCameraPosition,
+
+            /// <summary>
+            /// Particles will face camera plane.
+            /// </summary>
+            FaceCameraPlane,
+
+            /// <summary>
+            /// Particles will orient along velocity vector.
+            /// </summary>
+            AlongVelocity,
+
+            /// <summary> 
+            /// Particles will orient to look at the given position vector.
+            /// </summary>
+            LookAtPosition,
+
+            /// <summary>
+            /// Particles will use the custom vector for facing.
+            /// </summary>
+            CustomFacingVector,
         }
 
         /// <summary>
@@ -107,6 +139,7 @@ namespace FlaxEditor.Surface.Archetypes
                 // Header
                 var idx = (int)ModuleType;
                 var headerRect = new Rectangle(0, 0, Width, 16.0f);
+                //Render2D.FillRectangle(headerRect, Color.Red);
                 Render2D.DrawText(style.FontMedium, Title, headerRect, ModuleEnabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
 
                 // Close button
@@ -212,7 +245,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 300,
                 Create = CreateParticleModuleNode,
-                Title = "Age",
+                Title = "Update Age",
                 Description = "Increases particle age every frame, based on delta time",
                 Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(200, 0),
@@ -222,7 +255,6 @@ namespace FlaxEditor.Surface.Archetypes
                     (int)ModuleType.Update,
                 },
             },
-
             new NodeArchetype
             {
                 TypeID = 301,
@@ -251,10 +283,32 @@ namespace FlaxEditor.Surface.Archetypes
             // TODO: Kill (box/sphere/custom)
 
             // Render Modules
+            new NodeArchetype
+            {
+                TypeID = 400,
+                Create = CreateParticleModuleNode,
+                Title = "Sprite Rendering",
+                Description = "Draws quad-shaped sprite for every particle",
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Size = new Vector2(200, 80),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Render,
+                    Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    // Material
+                    NodeElementArchetype.Factory.Text(0, -10, "Material", 80.0f, 16.0f, "The material used for sprites rendering (quads). It must have Domain set to Particle."),
+                    NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Material),
+                },
+            },
+            // TODO: Orient
             // TODO: Sort
-            // TODO: Sprite Rendering
             // TODO: Mesh Rendering
-            // TODO: Trail Rendering
+            // TODO: Ribbon Rendering
+            // TODO: Light
         };
     }
 }
