@@ -327,7 +327,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Capacity
                     NodeElementArchetype.Factory.Text(0, 0, "Capacity", 100.0f, 16.0f, "The particle system capacity (the maximum amount of particles to simulate at once)."),
-                    NodeElementArchetype.Factory.Integer(110, 0, 0),
+                    NodeElementArchetype.Factory.Integer(110, 0, 0, -1, 1),
 
                     // Simulation Mode
                     NodeElementArchetype.Factory.Text(0, 1 * Surface.Constants.LayoutOffsetY, "Simulation Mode", 100.0f, 16.0f, "The particles simulation execution mode."),
