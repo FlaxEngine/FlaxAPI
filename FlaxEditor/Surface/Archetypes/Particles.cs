@@ -208,6 +208,101 @@ namespace FlaxEditor.Surface.Archetypes
         }
 
         /// <summary>
+        /// Customized <see cref="SurfaceNode"/> for particle data access node.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+        public class ParticleAttributeNode : SurfaceNode
+        {
+            /// <summary>
+            /// The particle value types.
+            /// </summary>
+            public enum ValueTypes
+            {
+                /// <summary>
+                ///  <see cref="float"/>
+                /// </summary>
+                Float,
+
+                /// <summary>
+                /// <see cref="FlaxEngine.Vector2"/>
+                /// </summary>
+                Vector2,
+
+                /// <summary>
+                /// <see cref="FlaxEngine.Vector3"/>
+                /// </summary>
+                Vector3,
+
+                /// <summary>
+                /// <see cref="FlaxEngine.Vector4"/>
+                /// </summary>
+                Vector4,
+
+                /// <summary>
+                /// <see cref="int"/>
+                /// </summary>
+                Int,
+
+                /// <summary>
+                /// <see cref="uint"/>
+                /// </summary>
+                Uint,
+            };
+
+            /// <inheritdoc />
+            public ParticleAttributeNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                UpdateOutputBoxType();
+            }
+
+            /// <inheritdoc />
+            public override void SetValue(int index, object value)
+            {
+                base.SetValue(index, value);
+
+                // Update on type change
+                if (index == 1)
+                    UpdateOutputBoxType();
+            }
+
+            private void UpdateOutputBoxType()
+            {
+                ConnectionType type;
+                switch ((ValueTypes)Values[1])
+                {
+                case ValueTypes.Float:
+                    type = ConnectionType.Float;
+                    break;
+                case ValueTypes.Vector2:
+                    type = ConnectionType.Vector2;
+                    break;
+                case ValueTypes.Vector3:
+                    type = ConnectionType.Vector3;
+                    break;
+                case ValueTypes.Vector4:
+                    type = ConnectionType.Vector4;
+                    break;
+                case ValueTypes.Int:
+                    type = ConnectionType.Integer;
+                    break;
+                case ValueTypes.Uint:
+                    type = ConnectionType.Integer;
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+                }
+                GetBox(0).CurrentType = type;
+            }
+        }
+
+        /// <summary>
         /// The nodes for that group.
         /// </summary>
         public static NodeArchetype[] Nodes =
@@ -249,6 +344,28 @@ namespace FlaxEditor.Surface.Archetypes
                     // Custom Bounds
                     NodeElementArchetype.Factory.Text(0, 4 * Surface.Constants.LayoutOffsetY, "Custom Bounds", 100.0f, 16.0f, "The custom bounds to use for the particles. Set to zero to use automatic bounds (valid only for CPU particles)."),
                     NodeElementArchetype.Factory.Box(110, 4 * Surface.Constants.LayoutOffsetY, 4),
+                }
+            },
+
+            // Particle data access nodes
+            new NodeArchetype
+            {
+                TypeID = 100,
+                Create = (id, context, arch, groupArch) => new ParticleAttributeNode(id, context, arch, groupArch),
+                Title = "Particle Attribute",
+                Description = "Particle attribute data access node. Use it to read the particle data.",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 50),
+                DefaultValues = new object[]
+                {
+                    "Color", // Name
+                    (int)ParticleAttributeNode.ValueTypes.Vector4, // ValueType
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.TextBox(0, 0, 120, TextBox.DefaultHeight, 0, false),
+                    NodeElementArchetype.Factory.ComboBox(0, Surface.Constants.LayoutOffsetY, 120, 1, typeof(ParticleAttributeNode.ValueTypes)),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.All, 0),
                 }
             },
         };
