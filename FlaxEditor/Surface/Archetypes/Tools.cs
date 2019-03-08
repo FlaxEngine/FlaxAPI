@@ -131,6 +131,19 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Linear Depth", ConnectionType.Float, 1),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 8,
+                Title = "Time",
+                Description = "Simulation time and update delta time access",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(140, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Simulation Time", ConnectionType.Float, 0),
+                    NodeElementArchetype.Factory.Output(1, "Delta Seconds", ConnectionType.Float, 1),
+                }
+            },
         };
     }
 }
