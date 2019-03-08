@@ -148,6 +148,7 @@ namespace FlaxEditor.Surface
                 color = Colors.Bool;
                 break;
             case ConnectionType.Integer:
+            case ConnectionType.UnsignedInteger:
                 color = Colors.Integer;
                 break;
             case ConnectionType.Float:

@@ -51,6 +51,7 @@ namespace FlaxEditor.Surface.Elements
                     isValid = _defaultValueEditor is CheckBox;
                     break;
                 case ConnectionType.Integer:
+                case ConnectionType.UnsignedInteger:
                     isValid = _defaultValueEditor is IntValueBox;
                     break;
                 case ConnectionType.Float:
@@ -141,9 +142,10 @@ namespace FlaxEditor.Surface.Elements
                 break;
             }
             case ConnectionType.Integer:
+            case ConnectionType.UnsignedInteger:
             {
                 int value = IntegerValue.Get(ParentNode, Archetype);
-                var control = new IntValueBox(value, x, y, 40, int.MinValue, int.MaxValue, 0.01f)
+                var control = new IntValueBox(value, x, y, 40, CurrentType == ConnectionType.UnsignedInteger ? 0 : int.MinValue, int.MaxValue, 0.01f)
                 {
                     Height = height,
                     Parent = Parent

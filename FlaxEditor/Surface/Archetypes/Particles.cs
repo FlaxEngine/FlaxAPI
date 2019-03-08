@@ -294,7 +294,7 @@ namespace FlaxEditor.Surface.Archetypes
                     type = ConnectionType.Integer;
                     break;
                 case ValueTypes.Uint:
-                    type = ConnectionType.Integer;
+                    type = ConnectionType.UnsignedInteger;
                     break;
                 default: throw new ArgumentOutOfRangeException();
                 }
