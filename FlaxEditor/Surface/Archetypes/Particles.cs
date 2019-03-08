@@ -14,6 +14,42 @@ namespace FlaxEditor.Surface.Archetypes
     public static class Particles
     {
         /// <summary>
+        /// The particle value types.
+        /// </summary>
+        public enum ValueTypes
+        {
+            /// <summary>
+            ///  <see cref="float"/>
+            /// </summary>
+            Float,
+
+            /// <summary>
+            /// <see cref="FlaxEngine.Vector2"/>
+            /// </summary>
+            Vector2,
+
+            /// <summary>
+            /// <see cref="FlaxEngine.Vector3"/>
+            /// </summary>
+            Vector3,
+
+            /// <summary>
+            /// <see cref="FlaxEngine.Vector4"/>
+            /// </summary>
+            Vector4,
+
+            /// <summary>
+            /// <see cref="int"/>
+            /// </summary>
+            Int,
+
+            /// <summary>
+            /// <see cref="uint"/>
+            /// </summary>
+            Uint,
+        }
+
+        /// <summary>
         /// Customized <see cref="SurfaceNode"/> for main particle emitter node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
@@ -213,42 +249,6 @@ namespace FlaxEditor.Surface.Archetypes
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         public class ParticleAttributeNode : SurfaceNode
         {
-            /// <summary>
-            /// The particle value types.
-            /// </summary>
-            public enum ValueTypes
-            {
-                /// <summary>
-                ///  <see cref="float"/>
-                /// </summary>
-                Float,
-
-                /// <summary>
-                /// <see cref="FlaxEngine.Vector2"/>
-                /// </summary>
-                Vector2,
-
-                /// <summary>
-                /// <see cref="FlaxEngine.Vector3"/>
-                /// </summary>
-                Vector3,
-
-                /// <summary>
-                /// <see cref="FlaxEngine.Vector4"/>
-                /// </summary>
-                Vector4,
-
-                /// <summary>
-                /// <see cref="int"/>
-                /// </summary>
-                Int,
-
-                /// <summary>
-                /// <see cref="uint"/>
-                /// </summary>
-                Uint,
-            };
-
             /// <inheritdoc />
             public ParticleAttributeNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
@@ -359,12 +359,12 @@ namespace FlaxEditor.Surface.Archetypes
                 DefaultValues = new object[]
                 {
                     "Color", // Name
-                    (int)ParticleAttributeNode.ValueTypes.Vector4, // ValueType
+                    (int)ValueTypes.Vector4, // ValueType
                 },
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.TextBox(0, 0, 120, TextBox.DefaultHeight, 0, false),
-                    NodeElementArchetype.Factory.ComboBox(0, Surface.Constants.LayoutOffsetY, 120, 1, typeof(ParticleAttributeNode.ValueTypes)),
+                    NodeElementArchetype.Factory.ComboBox(0, Surface.Constants.LayoutOffsetY, 120, 1, typeof(ValueTypes)),
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.All, 0),
                 }
             },

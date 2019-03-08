@@ -195,9 +195,69 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
+        public class SetParticleAttributeModuleNode : ParticleModuleNode
+        {
+            /// <inheritdoc />
+            public SetParticleAttributeModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                UpdateOutputBoxType();
+            }
+
+            /// <inheritdoc />
+            public override void SetValue(int index, object value)
+            {
+                base.SetValue(index, value);
+
+                // Update on type change
+                if (index == 1)
+                    UpdateOutputBoxType();
+            }
+
+            private void UpdateOutputBoxType()
+            {
+                ConnectionType type;
+                switch ((Particles.ValueTypes)Values[3])
+                {
+                case Particles.ValueTypes.Float:
+                    type = ConnectionType.Float;
+                    break;
+                case Particles.ValueTypes.Vector2:
+                    type = ConnectionType.Vector2;
+                    break;
+                case Particles.ValueTypes.Vector3:
+                    type = ConnectionType.Vector3;
+                    break;
+                case Particles.ValueTypes.Vector4:
+                    type = ConnectionType.Vector4;
+                    break;
+                case Particles.ValueTypes.Int:
+                    type = ConnectionType.Integer;
+                    break;
+                case Particles.ValueTypes.Uint:
+                    type = ConnectionType.UnsignedInteger;
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+                }
+                GetBox(0).CurrentType = type;
+            }
+        }
+
         private static SurfaceNode CreateParticleModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
         {
             return new ParticleModuleNode(id, context, arch, groupArch);
+        }
+
+        private static SurfaceNode CreateSetParticleAttributeModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
+        {
+            return new SetParticleAttributeModuleNode(id, context, arch, groupArch);
         }
 
         /// <summary>
@@ -236,6 +296,29 @@ namespace FlaxEditor.Surface.Archetypes
             // TODO: On Event Spawn
 
             // Initialize
+            new NodeArchetype
+            {
+                TypeID = 200,
+                Create = CreateSetParticleAttributeModuleNode,
+                Title = "Set Attribute",
+                Description = "Sets the particle attribute value",
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    "Color",
+                    (int)Particles.ValueTypes.Vector4,
+                    Color.White,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, -10.0f, 80, 3, typeof(Particles.ValueTypes)),
+                    NodeElementArchetype.Factory.TextBox(90, -10.0f, 120, TextBox.DefaultHeight, 2, false),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, string.Empty, true, ConnectionType.All, 0, 4),
+                },
+            },
             // TODO: Set Velocity/Lifetime/..
             // TODO: Position (sphere/plane/circle/disc/box/cylinder/line/torus/depth)
             // TODO: Inherit Position/Velocity/..
@@ -272,6 +355,29 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(-0.5f, "Force", true, ConnectionType.Vector3, 0, 2),
+                },
+            },
+            new NodeArchetype
+            {
+                TypeID = 302,
+                Create = CreateSetParticleAttributeModuleNode,
+                Title = "Set Attribute",
+                Description = "Sets the particle attribute value",
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    "Color",
+                    (int)Particles.ValueTypes.Vector4,
+                    Color.White,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, -10.0f, 80, 3, typeof(Particles.ValueTypes)),
+                    NodeElementArchetype.Factory.TextBox(90, -10.0f, 120, TextBox.DefaultHeight, 2, false),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, string.Empty, true, ConnectionType.All, 0, 4),
                 },
             },
             // TODO: Collision (sphere/plane/box/cylinder/depth)
