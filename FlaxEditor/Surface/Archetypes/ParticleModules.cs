@@ -114,12 +114,11 @@ namespace FlaxEditor.Surface.Archetypes
             public ParticleModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
             {
-                _enabled = new CheckBox(0, 0, ModuleEnabled, FlaxEditor.Surface.Constants.NodeCloseButtonSize)
+                _enabled = new CheckBox(0, 0, true, FlaxEditor.Surface.Constants.NodeCloseButtonSize)
                 {
                     TooltipText = "Enabled/disables this module",
                     Parent = this,
                 };
-                _enabled.StateChanged += OnEnabledStateChanged;
 
                 ModuleType = (ModuleType)nodeArch.DefaultValues[1];
 
@@ -176,6 +175,15 @@ namespace FlaxEditor.Surface.Archetypes
                 base.OnSpawned();
 
                 ParticleSurface.ArrangeModulesNodes();
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                _enabled.Checked = ModuleEnabled;
+                _enabled.StateChanged += OnEnabledStateChanged;
+
+                base.OnSurfaceLoaded();
             }
 
             /// <inheritdoc />
