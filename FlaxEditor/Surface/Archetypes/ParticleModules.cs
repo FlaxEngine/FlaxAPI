@@ -114,7 +114,7 @@ namespace FlaxEditor.Surface.Archetypes
             public ParticleModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
             {
-                _enabled = new CheckBox(0, 0, true, FlaxEditor.Surface.Constants.NodeCloseButtonSize)
+                _enabled = new CheckBox(0, 0, ModuleEnabled, FlaxEditor.Surface.Constants.NodeCloseButtonSize)
                 {
                     TooltipText = "Enabled/disables this module",
                     Parent = this,
@@ -195,6 +195,10 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
+        /// <summary>
+        /// The particle emitter module that can wrtie to the particle attribute.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.Archetypes.ParticleModules.ParticleModuleNode" />
         public class SetParticleAttributeModuleNode : ParticleModuleNode
         {
             /// <inheritdoc />
