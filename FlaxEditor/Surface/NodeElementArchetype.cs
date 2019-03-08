@@ -49,6 +49,16 @@ namespace FlaxEditor.Surface
         public int ValueIndex;
 
         /// <summary>
+        /// The minimum value.
+        /// </summary>
+        public float ValueMin;
+
+        /// <summary>
+        /// The maximum value.
+        /// </summary>
+        public float ValueMax;
+
+        /// <summary>
         /// Unique ID of the box in the graph data to link it to this element (Output/Input elements).
         /// </summary>
         public int BoxID;
@@ -156,8 +166,10 @@ namespace FlaxEditor.Surface
             /// <param name="y">The y location (in node area space).</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
             /// <param name="component">The index of the component to edit. For vectors this can be set to modify only single component of it. Eg. for vec2 value component set to 1 will edit only Y component. Default value -1 will be used to edit whole value.</param>
+            /// <param name="valueMin">The minimum value range.</param>
+            /// <param name="valueMax">The maximum value range.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Integer(float x, float y, int valueIndex = -1, int component = -1)
+            public static NodeElementArchetype Integer(float x, float y, int valueIndex = -1, int component = -1, int valueMin = -1000000, int valueMax = 1000000)
             {
                 return new NodeElementArchetype
                 {
@@ -166,6 +178,8 @@ namespace FlaxEditor.Surface
                     Text = null,
                     Single = false,
                     ValueIndex = valueIndex,
+                    ValueMin = valueMin,
+                    ValueMax = valueMax,
                     BoxID = -1,
                     ConnectionsType = ConnectionType.Invalid
                 };
@@ -178,8 +192,10 @@ namespace FlaxEditor.Surface
             /// <param name="y">The y location (in node area space).</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
             /// <param name="component">The index of the component to edit. For vectors this can be set to modify only single component of it. Eg. for vec2 value component set to 1 will edit only Y component. Default value -1 will be used to edit whole value.</param>
+            /// <param name="valueMin">The minimum value range.</param>
+            /// <param name="valueMax">The maximum value range.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Float(float x, float y, int valueIndex = -1, int component = -1)
+            public static NodeElementArchetype Float(float x, float y, int valueIndex = -1, int component = -1, float valueMin = -1000000, float valueMax = 1000000)
             {
                 return new NodeElementArchetype
                 {
@@ -188,6 +204,8 @@ namespace FlaxEditor.Surface
                     Text = null,
                     Single = false,
                     ValueIndex = valueIndex,
+                    ValueMin = valueMin,
+                    ValueMax = valueMax,
                     BoxID = component,
                     ConnectionsType = ConnectionType.Invalid
                 };
