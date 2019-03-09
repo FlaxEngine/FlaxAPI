@@ -139,16 +139,22 @@ namespace FlaxEditor.Surface.Archetypes
                 var idx = (int)ModuleType;
                 var headerRect = new Rectangle(0, 0, Width, 16.0f);
                 //Render2D.FillRectangle(headerRect, Color.Red);
-                Render2D.DrawText(style.FontMedium, Title, headerRect, ModuleEnabled ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
-
-                // Close button
-                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+                Render2D.DrawText(style.FontMedium, Title, headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
 
                 DrawChildren();
 
                 // Border
                 Render2D.DrawRectangle(new Rectangle(1, 1, Width - 2, Height - 2), Colors[idx], 1.5f);
+
+                // Close button
+                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+
+                // Disabled overlay
+                if (!ModuleEnabled)
+                {
+                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), new Color(0, 0, 0, 0.4f));
+                }
             }
 
             /// <inheritdoc />
