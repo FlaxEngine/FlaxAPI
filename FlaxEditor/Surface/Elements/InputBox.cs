@@ -182,6 +182,10 @@ namespace FlaxEditor.Surface.Elements
                 {
                     value = new Vector2(vec4);
                 }
+                else if (v is Color col)
+                {
+                    value = new Vector2(col.R, col.G);
+                }
                 else if (v is float f)
                 {
                     value = new Vector2(f);
@@ -227,6 +231,10 @@ namespace FlaxEditor.Surface.Elements
                 else if (v is Vector4 vec4)
                 {
                     value = new Vector3(vec4);
+                }
+                else if (v is Color col)
+                {
+                    value = col;
                 }
                 else if (v is float f)
                 {
@@ -279,6 +287,10 @@ namespace FlaxEditor.Surface.Elements
                 else if (v is Vector4 vec4)
                 {
                     value = vec4;
+                }
+                else if (v is Color col)
+                {
+                    value = col;
                 }
                 else if (v is float f)
                 {
@@ -344,7 +356,7 @@ namespace FlaxEditor.Surface.Elements
         {
             var x = ((FloatValueBox)((ContainerControl)_defaultValueEditor).Children[0]).Value;
             var y = ((FloatValueBox)((ContainerControl)_defaultValueEditor).Children[1]).Value;
-            ParentNode.Values[Archetype.ValueIndex] = new Vector2(x, y);
+            ParentNode.SetValue(Archetype.ValueIndex, new Vector2(x, y));
         }
 
         private void OnVector3ValueChanged()
@@ -352,7 +364,7 @@ namespace FlaxEditor.Surface.Elements
             var x = ((FloatValueBox)((ContainerControl)_defaultValueEditor).Children[0]).Value;
             var y = ((FloatValueBox)((ContainerControl)_defaultValueEditor).Children[1]).Value;
             var z = ((FloatValueBox)((ContainerControl)_defaultValueEditor).Children[2]).Value;
-            ParentNode.Values[Archetype.ValueIndex] = new Vector3(x, y, z);
+            ParentNode.SetValue(Archetype.ValueIndex, new Vector3(x, y, z));
         }
 
         private void OnVector4ValueChanged()
@@ -361,7 +373,7 @@ namespace FlaxEditor.Surface.Elements
             var y = ((FloatValueBox)((ContainerControl)_defaultValueEditor).Children[1]).Value;
             var z = ((FloatValueBox)((ContainerControl)_defaultValueEditor).Children[2]).Value;
             var w = ((FloatValueBox)((ContainerControl)_defaultValueEditor).Children[3]).Value;
-            ParentNode.Values[Archetype.ValueIndex] = new Vector4(x, y, z, w);
+            ParentNode.SetValue(Archetype.ValueIndex, new Vector4(x, y, z, w));
         }
     }
 }
