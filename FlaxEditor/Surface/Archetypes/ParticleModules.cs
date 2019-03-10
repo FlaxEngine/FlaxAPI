@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Linq;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -83,6 +84,8 @@ namespace FlaxEditor.Surface.Archetypes
             };
 
             private CheckBox _enabled;
+            private Rectangle _arrangeButtonRect;
+            private bool _arrangeButtonInUse;
 
             /// <summary>
             /// Gets the particle emitter surface.
@@ -144,17 +147,134 @@ namespace FlaxEditor.Surface.Archetypes
                 DrawChildren();
 
                 // Border
-                Render2D.DrawRectangle(new Rectangle(1, 1, Width - 2, Height - 2), Colors[idx], 1.5f);
+                Render2D.DrawRectangle(new Rectangle(1, 0, Width - 2, Height - 1), Colors[idx], 1.5f);
 
                 // Close button
                 float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
                 Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+
+                // Arrange button
+                alpha = _arrangeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
+                Render2D.DrawSprite(Editor.Instance.Icons.DragBar12, _arrangeButtonRect, _arrangeButtonInUse ? Color.Orange : new Color(alpha));
+                if (_arrangeButtonInUse && ArrangeAreaCheck(out _, out var arrangeTargetRect))
+                {
+                    Render2D.FillRectangle(arrangeTargetRect, Color.Orange * 0.8f);
+                }
 
                 // Disabled overlay
                 if (!ModuleEnabled)
                 {
                     Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), new Color(0, 0, 0, 0.4f));
                 }
+            }
+
+            private bool ArrangeAreaCheck(out int index, out Rectangle rect)
+            {
+                var barSidesExtend = 20.0f;
+                var barHeight = 10.0f;
+                var barCheckAreaHeight = 40.0f;
+
+                var pos = PointToParent(ref _mousePosition).Y + barCheckAreaHeight * 0.5f;
+                var modules = Surface.Nodes.OfType<ParticleModuleNode>().Where(x => x.ModuleType == ModuleType).ToList();
+                for (var i = 0; i < modules.Count; i++)
+                {
+                    var module = modules[i];
+                    if (Mathf.IsInRange(pos, module.Top, module.Top + barCheckAreaHeight) || (i == 0 && pos < module.Top))
+                    {
+                        index = i;
+                        var p1 = module.UpperLeft;
+                        rect = new Rectangle(PointFromParent(ref p1) - new Vector2(barSidesExtend * 0.5f, barHeight * 0.5f), Width + barSidesExtend, barHeight);
+                        return true;
+                    }
+                }
+
+                var p2 = modules[modules.Count - 1].BottomLeft;
+                if (pos > p2.Y)
+                {
+                    index = modules.Count;
+                    rect = new Rectangle(PointFromParent(ref p2) - new Vector2(barSidesExtend * 0.5f, barHeight * 0.5f), Width + barSidesExtend, barHeight);
+                    return true;
+                }
+
+                index = -1;
+                rect = Rectangle.Empty;
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnEndMouseCapture()
+            {
+                base.OnEndMouseCapture();
+
+                _arrangeButtonInUse = false;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (buttons == MouseButton.Left && _arrangeButtonRect.Contains(ref location))
+                {
+                    _arrangeButtonInUse = true;
+                    Focus();
+                    StartMouseCapture();
+                    return true;
+                }
+
+                return base.OnMouseDown(location, buttons);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (buttons == MouseButton.Left && _arrangeButtonInUse)
+                {
+                    _arrangeButtonInUse = false;
+                    EndMouseCapture();
+
+                    if (ArrangeAreaCheck(out var index, out _))
+                    {
+                        var modules = Surface.Nodes.OfType<ParticleModuleNode>().Where(x => x.ModuleType == ModuleType).ToList();
+
+                        foreach (var module in modules)
+                        {
+                            Surface.Nodes.Remove(module);
+                        }
+
+                        int oldIndex = modules.IndexOf(this);
+                        modules.RemoveAt(oldIndex);
+                        if (index < 0 || index >= modules.Count)
+                            modules.Add(this);
+                        else
+                            modules.Insert(index, this);
+
+                        foreach (var module in modules)
+                        {
+                            Surface.Nodes.Add(module);
+                        }
+
+                        foreach (var module in modules)
+                        {
+                            module.IndexInParent = int.MaxValue;
+                        }
+
+                        ParticleSurface.ArrangeModulesNodes();
+                        Surface.MarkAsEdited();
+                    }
+                }
+
+                return base.OnMouseUp(location, buttons);
+            }
+
+            /// <inheritdoc />
+            public override void OnLostFocus()
+            {
+                if (_arrangeButtonInUse)
+                {
+                    _arrangeButtonInUse = false;
+                    EndMouseCapture();
+                }
+
+                base.OnLostFocus();
             }
 
             /// <inheritdoc />
@@ -173,6 +293,7 @@ namespace FlaxEditor.Surface.Archetypes
                 _closeButtonRect = new Rectangle(Width - closeButtonSize - closeButtonMargin, closeButtonMargin, closeButtonSize, closeButtonSize);
                 _footerRect = Rectangle.Empty;
                 _enabled.Location = new Vector2(_closeButtonRect.X - _enabled.Width - 2, _closeButtonRect.Y);
+                _arrangeButtonRect = new Rectangle(_enabled.X - closeButtonSize - closeButtonMargin, closeButtonMargin, closeButtonSize, closeButtonSize);
             }
 
             /// <inheritdoc />
@@ -210,7 +331,7 @@ namespace FlaxEditor.Surface.Archetypes
         }
 
         /// <summary>
-        /// The particle emitter module that can wrtie to the particle attribute.
+        /// The particle emitter module that can write to the particle attribute.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.Archetypes.ParticleModules.ParticleModuleNode" />
         public class SetParticleAttributeModuleNode : ParticleModuleNode
@@ -295,7 +416,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Description = description,
                 Flags = DefaultModuleFlags,
                 Size = new Vector2(200, 1 * Surface.Constants.LayoutOffsetY),
-                DefaultValues = new object[]
+                DefaultValues = new[]
                 {
                     true,
                     (int)moduleType,
@@ -336,7 +457,7 @@ namespace FlaxEditor.Surface.Archetypes
             // TODO: Variable Spawn Rate
             // TODO: Single Burst
             // TODO: Periodic Burst
-            // TODO: On Event Spawn
+            // TODO: Spawn On Event
 
             // Initialize
             new NodeArchetype

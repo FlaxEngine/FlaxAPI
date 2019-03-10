@@ -459,7 +459,7 @@ namespace FlaxEditor.Surface
                 return true;
 
             // Close
-            if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
+            if (buttons == MouseButton.Left && (Archetype.Flags & NodeFlags.NoCloseButton) == 0)
             {
                 if (_closeButtonRect.Contains(ref location))
                 {
