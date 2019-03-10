@@ -14,6 +14,8 @@ namespace FlaxEditor.Viewport.Previews
     /// <seealso cref="FlaxEditor.Viewport.EditorViewport" />
     public abstract class AssetPreview : EditorViewport
     {
+        private ContextMenuButton _showDefaultSceneButton;
+
         /// <summary>
         /// The preview light. Allows to modify rendering settings.
         /// </summary>
@@ -53,6 +55,9 @@ namespace FlaxEditor.Viewport.Previews
                     EnvProbe.IsActive = value;
                     Sky.IsActive = value;
                     SkyLight.IsActive = value;
+
+                    if (_showDefaultSceneButton != null)
+                        _showDefaultSceneButton.Checked = value;
                 }
             }
         }
@@ -70,6 +75,13 @@ namespace FlaxEditor.Viewport.Previews
             Task.AllowGlobalCustomPostFx = false;
 
             ((ArcBallCamera)ViewportCamera).SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
+
+            if (useWidgets)
+            {
+                // Show Default Scene
+                _showDefaultSceneButton = ViewWidgetShowMenu.AddButton("Show Default Scene", () => ShowDefaultSceneActors = !ShowDefaultSceneActors);
+                _showDefaultSceneButton.Checked = true;
+            }
 
             // Setup preview scene
             PreviewLight = DirectionalLight.New();
