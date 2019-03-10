@@ -41,7 +41,7 @@ namespace FlaxEditor.Surface
         ParticleEmitterGraph = 16,
 
         /// <summary>
-        /// Disable removing that node from the graph.
+        /// Disables removing that node from the graph.
         /// </summary>
         NoRemove = 32,
 
@@ -49,6 +49,11 @@ namespace FlaxEditor.Surface
         /// Node can be used in the animation graphs.
         /// </summary>
         AnimGraph = 64,
+
+        /// <summary>
+        /// Disables moving node (by user).
+        /// </summary>
+        NoMove = 128,
 
         /// <summary>
         /// Node can be used in the all visual graphs.

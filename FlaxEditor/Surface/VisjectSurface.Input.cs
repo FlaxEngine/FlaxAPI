@@ -149,6 +149,9 @@ namespace FlaxEditor.Surface
                         {
                             if (_rootControl.Children[i] is SurfaceControl control && control.IsSelected)
                             {
+                                if (control is SurfaceNode node && (node.Archetype.Flags & NodeFlags.NoMove) == NodeFlags.NoMove)
+                                    continue;
+
                                 control.Location += delta;
                             }
                         }
