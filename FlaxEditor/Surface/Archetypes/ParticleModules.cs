@@ -281,7 +281,9 @@ namespace FlaxEditor.Surface.Archetypes
         /// <summary>
         /// The particle module node elements offset applied to controls to reduce default surface node header thickness.
         /// </summary>
-        public const float NodeElementsOffset = 16.0f - Surface.Constants.NodeHeaderSize;
+        private const float NodeElementsOffset = 16.0f - Surface.Constants.NodeHeaderSize;
+
+        private const NodeFlags DefaultModuleFlags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI | NodeFlags.NoMove;
 
         /// <summary>
         /// The nodes for that group.
@@ -295,7 +297,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = CreateParticleModuleNode,
                 Title = "Constant Spawn Rate",
                 Description = "Emits constant amount of particles per second, depending of the rate property",
-                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Flags = DefaultModuleFlags,
                 Size = new Vector2(200, Surface.Constants.LayoutOffsetY),
                 DefaultValues = new object[]
                 {
@@ -320,7 +322,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = CreateSetParticleAttributeModuleNode,
                 Title = "Set Attribute",
                 Description = "Sets the particle attribute value",
-                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Flags = DefaultModuleFlags,
                 Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
                 DefaultValues = new object[]
                 {
@@ -348,7 +350,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = CreateParticleModuleNode,
                 Title = "Update Age",
                 Description = "Increases particle age every frame, based on delta time",
-                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Flags = DefaultModuleFlags,
                 Size = new Vector2(200, 0),
                 DefaultValues = new object[]
                 {
@@ -362,7 +364,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = CreateParticleModuleNode,
                 Title = "Gravity",
                 Description = "Applies the gravity force to particle velocity",
-                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Flags = DefaultModuleFlags,
                 Size = new Vector2(200, Surface.Constants.LayoutOffsetY),
                 DefaultValues = new object[]
                 {
@@ -381,7 +383,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = CreateSetParticleAttributeModuleNode,
                 Title = "Set Attribute",
                 Description = "Sets the particle attribute value",
-                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Flags = DefaultModuleFlags,
                 Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
                 DefaultValues = new object[]
                 {
@@ -413,7 +415,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = CreateParticleModuleNode,
                 Title = "Sprite Rendering",
                 Description = "Draws quad-shaped sprite for every particle",
-                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI,
+                Flags = DefaultModuleFlags,
                 Size = new Vector2(200, 80),
                 DefaultValues = new object[]
                 {
