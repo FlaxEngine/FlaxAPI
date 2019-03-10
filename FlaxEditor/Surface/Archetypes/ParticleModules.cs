@@ -285,6 +285,29 @@ namespace FlaxEditor.Surface.Archetypes
 
         private const NodeFlags DefaultModuleFlags = NodeFlags.ParticleEmitterGraph | NodeFlags.NoSpawnViaGUI | NodeFlags.NoMove;
 
+        private static NodeArchetype GetParticleAttribute(ModuleType moduleType, ushort typeId, string title, string description, ConnectionType type, object defaultValue)
+        {
+            return new NodeArchetype
+            {
+                TypeID = typeId,
+                Create = CreateParticleModuleNode,
+                Title = title,
+                Description = description,
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 1 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)moduleType,
+                    defaultValue,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, string.Empty, true, type, 0, 2),
+                },
+            };
+        }
+
         /// <summary>
         /// The nodes for that group.
         /// </summary>
@@ -339,9 +362,17 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 1.0f, string.Empty, true, ConnectionType.All, 0, 4),
                 },
             },
-            // TODO: Set Velocity/Lifetime/..
             // TODO: Position (sphere/plane/circle/disc/box/cylinder/line/torus/depth)
             // TODO: Inherit Position/Velocity/..
+            GetParticleAttribute(ModuleType.Initialize, 250, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
+            GetParticleAttribute(ModuleType.Initialize, 251, "Set Lifetime", "Sets the particle lifetime (in seconds)", ConnectionType.Float, 10.0f),
+            GetParticleAttribute(ModuleType.Initialize, 252, "Set Age", "Sets the particle age (in seconds)", ConnectionType.Float, 0.0f),
+            GetParticleAttribute(ModuleType.Initialize, 253, "Set Color", "Sets the particle color (RGBA)", ConnectionType.Vector4, Color.White),
+            GetParticleAttribute(ModuleType.Initialize, 254, "Set Velocity", "Sets the particle velocity (position delta per second)", ConnectionType.Vector3, Vector3.Zero),
+            GetParticleAttribute(ModuleType.Initialize, 255, "Set Sprite Size", "Sets the particle size (width and height of the sprite)", ConnectionType.Vector2, new Vector2(10.0f, 10.0f)),
+            GetParticleAttribute(ModuleType.Initialize, 256, "Set Mass", "Sets the particle mass (in kilograms)", ConnectionType.Float, 1.0f),
+            GetParticleAttribute(ModuleType.Initialize, 257, "Set Rotation", "Sets the particle rotation (in XYZ)", ConnectionType.Vector3, Vector3.Zero),
+            GetParticleAttribute(ModuleType.Initialize, 258, "Set Angular Velocity", "Sets the angular particle velocity (rotation delta per second)", ConnectionType.Vector3, Vector3.Zero),
 
             // Update Modules
             new NodeArchetype
@@ -401,12 +432,20 @@ namespace FlaxEditor.Surface.Archetypes
                 },
             },
             // TODO: Collision (sphere/plane/box/cylinder/depth)
-            // TODO: Set Position/Velocity/Color/…
             // TODO: Conform to sphere
             // TODO: Force
             // TODO: Drag
             // TODO: Turbulence
             // TODO: Kill (box/sphere/custom)
+            GetParticleAttribute(ModuleType.Update, 350, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
+            GetParticleAttribute(ModuleType.Update, 351, "Set Lifetime", "Sets the particle lifetime (in seconds)", ConnectionType.Float, 10.0f),
+            GetParticleAttribute(ModuleType.Update, 352, "Set Age", "Sets the particle age (in seconds)", ConnectionType.Float, 0.0f),
+            GetParticleAttribute(ModuleType.Update, 353, "Set Color", "Sets the particle color (RGBA)", ConnectionType.Vector4, Color.White),
+            GetParticleAttribute(ModuleType.Update, 354, "Set Velocity", "Sets the particle velocity (position delta per second)", ConnectionType.Vector3, Vector3.Zero),
+            GetParticleAttribute(ModuleType.Update, 355, "Set Sprite Size", "Sets the particle size (width and height of the sprite)", ConnectionType.Vector2, new Vector2(10.0f, 10.0f)),
+            GetParticleAttribute(ModuleType.Update, 356, "Set Mass", "Sets the particle mass (in kilograms)", ConnectionType.Float, 1.0f),
+            GetParticleAttribute(ModuleType.Update, 357, "Set Rotation", "Sets the particle rotation (in XYZ)", ConnectionType.Vector3, Vector3.Zero),
+            GetParticleAttribute(ModuleType.Update, 358, "Set Angular Velocity", "Sets the angular particle velocity (rotation delta per second)", ConnectionType.Vector3, Vector3.Zero),
 
             // Render Modules
             new NodeArchetype
