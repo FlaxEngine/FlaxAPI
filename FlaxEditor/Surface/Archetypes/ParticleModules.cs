@@ -235,7 +235,7 @@ namespace FlaxEditor.Surface.Archetypes
                 base.SetValue(index, value);
 
                 // Update on type change
-                if (index == 1)
+                if (index == 3)
                     UpdateOutputBoxType();
             }
 
