@@ -476,6 +476,18 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 110,
+                Title = "Particle Normalized Age",
+                Description = "Particle normalized age to range 0-1 (age divided by lifetime).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(230, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
+                }
+            },
         };
     }
 }
