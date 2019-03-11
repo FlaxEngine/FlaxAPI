@@ -368,6 +368,114 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.All, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 101,
+                Title = "Particle Position",
+                Description = "Particle position (in simulation space).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 102,
+                Title = "Particle Lifetime",
+                Description = "Particle lifetime (in seconds).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 103,
+                Title = "Particle Age",
+                Description = "Particle age (in seconds).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 104,
+                Title = "Particle Color",
+                Description = "Particle color (RGBA).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 105,
+                Title = "Particle Velocity",
+                Description = "Particle velocity (position delta per second).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 106,
+                Title = "Particle Sprite Size",
+                Description = "Particle size (width and height of the sprite).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector2, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 1027,
+                Title = "Particle Mass",
+                Description = "Particle mass (in kilograms).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 108,
+                Title = "Particle Rotation",
+                Description = "Particle rotation (in XYZ).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(200, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 109,
+                Title = "Particle Angular Velocity",
+                Description = "Particle velocity (rotation delta per second).",
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(230, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
         };
     }
 }
