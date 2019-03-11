@@ -58,11 +58,6 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             AlongVelocity,
 
-            /// <summary> 
-            /// Particles will orient to look at the given position vector.
-            /// </summary>
-            LookAtPosition,
-
             /// <summary>
             /// Particles will use the custom vector for facing.
             /// </summary>
@@ -389,6 +384,42 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
+        /// <summary>
+        /// The particle emitter module applies the sprite orientation.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.Archetypes.ParticleModules.ParticleModuleNode" />
+        public class OrientSpriteNode : ParticleModuleNode
+        {
+            /// <inheritdoc />
+            public OrientSpriteNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                UpdateInputBox();
+            }
+
+            /// <inheritdoc />
+            public override void SetValue(int index, object value)
+            {
+                base.SetValue(index, value);
+
+                // Update on mode change
+                if (index == 2)
+                    UpdateInputBox();
+            }
+
+            private void UpdateInputBox()
+            {
+                GetBox(0).Enabled = (ParticleSpriteFacingMode)Values[2] == ParticleSpriteFacingMode.CustomFacingVector;
+            }
+        }
+
         private static SurfaceNode CreateParticleModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
         {
             return new ParticleModuleNode(id, context, arch, groupArch);
@@ -397,6 +428,11 @@ namespace FlaxEditor.Surface.Archetypes
         private static SurfaceNode CreateSetParticleAttributeModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
         {
             return new SetParticleAttributeModuleNode(id, context, arch, groupArch);
+        }
+
+        private static SurfaceNode CreateOrientSpriteNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
+        {
+            return new OrientSpriteNode(id, context, arch, groupArch);
         }
 
         /// <summary>
@@ -483,6 +519,27 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 1.0f, string.Empty, true, ConnectionType.All, 0, 4),
                 },
             },
+            new NodeArchetype
+            {
+                TypeID = 201,
+                Create = CreateOrientSpriteNode,
+                Title = "Orient Sprite",
+                Description = "Orientates the sprite particles in the space",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    (int)ParticleSpriteFacingMode.FaceCameraPosition,
+                    Vector3.Forward,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, -10.0f, 160, 2, typeof(ParticleSpriteFacingMode)),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Custom Vector", true, ConnectionType.Vector3, 0, 3),
+                },
+            },
             // TODO: Position (sphere/plane/circle/disc/box/cylinder/line/torus/depth)
             // TODO: Inherit Position/Velocity/..
             GetParticleAttribute(ModuleType.Initialize, 250, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
@@ -552,6 +609,27 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 1.0f, string.Empty, true, ConnectionType.All, 0, 4),
                 },
             },
+            new NodeArchetype
+            {
+                TypeID = 303,
+                Create = CreateOrientSpriteNode,
+                Title = "Orient Sprite",
+                Description = "Orientates the sprite particles in the space",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    (int)ParticleSpriteFacingMode.FaceCameraPosition,
+                    Vector3.Forward,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, -10.0f, 160, 2, typeof(ParticleSpriteFacingMode)),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Custom Vector", true, ConnectionType.Vector3, 0, 3),
+                },
+            },
             // TODO: Collision (sphere/plane/box/cylinder/depth)
             // TODO: Conform to sphere
             // TODO: Force
@@ -590,7 +668,6 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Material),
                 },
             },
-            // TODO: Orient
             // TODO: Sort
             // TODO: Mesh Rendering
             // TODO: Ribbon Rendering
