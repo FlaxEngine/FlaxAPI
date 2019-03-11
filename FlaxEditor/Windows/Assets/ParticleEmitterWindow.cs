@@ -4,7 +4,9 @@ using System;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -40,7 +42,6 @@ namespace FlaxEditor.Windows.Assets
             public class ParametersEditor : CustomEditor
             {
                 private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
-                private int _parametersHash;
 
                 private enum NewParameterType
                 {
@@ -51,13 +52,13 @@ namespace FlaxEditor.Windows.Assets
                     Vector3 = (int)ParameterType.Vector3,
                     Vector4 = (int)ParameterType.Vector4,
                     Color = (int)ParameterType.Color,
-                    Texture = (int)ParameterType.Texture,
-                    CubeTexture = (int)ParameterType.CubeTexture,
-                    NormalMap = (int)ParameterType.NormalMap,
-                    RenderTarget = (int)ParameterType.RenderTarget,
-                    RenderTargetArray = (int)ParameterType.RenderTargetArray,
-                    RenderTargetCube = (int)ParameterType.RenderTargetCube,
-                    RenderTargetVolume = (int)ParameterType.RenderTargetVolume,
+                    //Texture = (int)ParameterType.Texture,
+                    //CubeTexture = (int)ParameterType.CubeTexture,
+                    //NormalMap = (int)ParameterType.NormalMap,
+                    //RenderTarget = (int)ParameterType.RenderTarget,
+                    //RenderTargetArray = (int)ParameterType.RenderTargetArray,
+                    //RenderTargetCube = (int)ParameterType.RenderTargetCube,
+                    //RenderTargetVolume = (int)ParameterType.RenderTargetVolume,
                     Matrix = (int)ParameterType.Matrix,
                 }
 
@@ -69,22 +70,14 @@ namespace FlaxEditor.Windows.Assets
                 {
                     var particleEmitterWin = Values[0] as ParticleEmitterWindow;
                     var particleEmitter = particleEmitterWin?.Asset;
-                    if (particleEmitter == null)
+                    if (particleEmitter == null || !particleEmitter.IsLoaded)
                     {
-                        _parametersHash = -1;
-                        layout.Label("No parameters");
-                        return;
-                    }
-                    if (!particleEmitter.IsLoaded)
-                    {
-                        _parametersHash = -2;
                         layout.Label("Loading...");
                         return;
                     }
-                    /*_parametersHash = particleEmitter._parametersHash;
-                    var parameters = particleEmitter.Parameters;
+                    var parameters = particleEmitterWin.Surface.Parameters;
 
-                    for (int i = 0; i < parameters.Length; i++)
+                    for (int i = 0; i < parameters.Count; i++)
                     {
                         var p = parameters[i];
                         if (!p.IsPublic)
@@ -97,19 +90,19 @@ namespace FlaxEditor.Windows.Assets
                         object[] attributes = null;
                         switch (p.Type)
                         {
-                        case ParticleEmitterParameterType.CubeTexture:
+                        case ParameterType.CubeTexture:
                             pType = typeof(CubeTexture);
                             pGuidType = true;
                             break;
-                        case ParticleEmitterParameterType.Texture:
-                        case ParticleEmitterParameterType.NormalMap:
+                        case ParameterType.Texture:
+                        case ParameterType.NormalMap:
                             pType = typeof(Texture);
                             pGuidType = true;
                             break;
-                        case ParticleEmitterParameterType.RenderTarget:
-                        case ParticleEmitterParameterType.RenderTargetArray:
-                        case ParticleEmitterParameterType.RenderTargetCube:
-                        case ParticleEmitterParameterType.RenderTargetVolume:
+                        case ParameterType.RenderTarget:
+                        case ParameterType.RenderTargetArray:
+                        case ParameterType.RenderTargetCube:
+                        case ParameterType.RenderTargetVolume:
                             pType = typeof(RenderTarget);
                             pGuidType = true;
                             break;
@@ -125,13 +118,11 @@ namespace FlaxEditor.Windows.Assets
                             pValue,
                             (instance, index) =>
                             {
-                                // Get ParticleEmitter parameter
                                 var win = (ParticleEmitterWindow)instance;
-                                return win.Asset.Parameters[pIndex].Value;
+                                return win.Surface.Parameters[pIndex].Value;
                             },
                             (instance, index, value) =>
                             {
-                                // Set ParticleEmitter parameter and surface parameter
                                 var win = (ParticleEmitterWindow)instance;
 
                                 // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
@@ -139,9 +130,7 @@ namespace FlaxEditor.Windows.Assets
                                 if (pGuidType)
                                     surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
 
-                                win.Asset.Parameters[pIndex].Value = value;
                                 win.Surface.Parameters[pIndex].Value = surfaceParam;
-                                win._paramValueChange = true;
                             },
                             attributes
                         );
@@ -155,21 +144,22 @@ namespace FlaxEditor.Windows.Assets
                         property.Object(propertyValue);
                     }
 
-                    if (parameters.Length > 0)
+                    if (parameters.Count > 0)
                         layout.Space(10);
+                    else
+                        layout.Label("No parameters");
 
                     // Parameters creating
                     var paramType = layout.Enum(typeof(NewParameterType));
                     paramType.Value = (int)NewParameterType.Float;
                     var newParam = layout.Button("Add parameter");
-                    newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);*/
+                    newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
                 }
-                /*
+
                 private DragData DragParameter(DragablePropertyNameLabel label)
                 {
                     var win = (ParticleEmitterWindow)Values[0];
-                    var particleEmitter = win.Asset;
-                    var parameter = particleEmitter.Parameters[(int)label.Tag];
+                    var parameter = win.Surface.Parameters[(int)label.Tag];
                     return DragSurfaceParameters.GetDragData(parameter.Name);
                 }
 
@@ -209,6 +199,7 @@ namespace FlaxEditor.Windows.Assets
                     }
                     win.Surface.Parameters.Add(param);
                     win.Surface.OnParamCreated(param);
+                    RebuildLayout();
                 }
 
                 /// <summary>
@@ -219,8 +210,7 @@ namespace FlaxEditor.Windows.Assets
                 private void StartParameterRenaming(int index, Control label)
                 {
                     var win = (ParticleEmitterWindow)Values[0];
-                    var particleEmitter = win.Asset;
-                    var parameter = particleEmitter.Parameters[index];
+                    var parameter = win.Surface.Parameters[index];
                     var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
                     dialog.Tag = index;
                     dialog.Renamed += OnParameterRenamed;
@@ -235,6 +225,7 @@ namespace FlaxEditor.Windows.Assets
                     var param = win.Surface.Parameters[index];
                     param.Name = newName;
                     win.Surface.OnParamRenamed(param);
+                    RebuildLayout();
                 }
 
                 /// <summary>
@@ -247,35 +238,8 @@ namespace FlaxEditor.Windows.Assets
                     var param = win.Surface.Parameters[index];
                     win.Surface.Parameters.RemoveAt(index);
                     win.Surface.OnParamDeleted(param);
+                    RebuildLayout();
                 }
-                
-                /// <inheritdoc />
-                public override void Refresh()
-                {
-                    base.Refresh();
-
-                    var particleEmitterWin = Values[0] as ParticleEmitterWindow;
-                    var particleEmitter = particleEmitterWin?.Asset;
-                    int parametersHash = -1;
-                    if (particleEmitter)
-                    {
-                        if (particleEmitter.IsLoaded)
-                        {
-                            var parameters = particleEmitter.Parameters; // need to ask for params here to sync valid hash   
-                            parametersHash = particleEmitter._parametersHash;
-                        }
-                        else
-                        {
-                            parametersHash = -2;
-                        }
-                    }
-
-                    if (parametersHash != _parametersHash)
-                    {
-                        // Parameters has been modified (loaded/unloaded/edited)
-                        RebuildLayout();
-                    }
-                }*/
             }
 
             /// <summary>
@@ -302,12 +266,12 @@ namespace FlaxEditor.Windows.Assets
         private readonly SplitPanel _split2;
         private readonly ParticleEmitterPreview _preview;
         private readonly ParticleEmitterSurface _surface;
+        private readonly CustomEditorPresenter _propertiesEditor;
 
         private readonly ToolStripButton _saveButton;
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpParticleEmitterIsDirty;
-        internal bool _paramValueChange;
 
         /// <summary>
         /// Gets the Particle Emitter surface.
@@ -347,6 +311,7 @@ namespace FlaxEditor.Windows.Assets
             _properties = new PropertiesProxy();
             propertiesEditor.Select(_properties);
             propertiesEditor.Modified += OnParticleEmitterPropertyEdited;
+            _propertiesEditor = propertiesEditor;
 
             // Surface
             _surface = new ParticleEmitterSurface(this, Save)
@@ -366,8 +331,7 @@ namespace FlaxEditor.Windows.Assets
 
         private void OnParticleEmitterPropertyEdited()
         {
-            _surface.MarkAsEdited(!_paramValueChange);
-            _paramValueChange = false;
+            _surface.MarkAsEdited();
         }
 
         /// <summary>
@@ -571,6 +535,7 @@ namespace FlaxEditor.Windows.Assets
 
                 // Setup
                 _surface.Enabled = true;
+                _propertiesEditor.BuildLayout();
                 ClearEditedFlag();
             }
         }
