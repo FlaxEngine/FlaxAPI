@@ -541,6 +541,7 @@ namespace FlaxEditor.Surface.Archetypes
                 },
             },
             // TODO: Position (sphere/plane/circle/disc/box/cylinder/line/torus/depth)
+            // TODO: Init Seed
             // TODO: Inherit Position/Velocity/..
             GetParticleAttribute(ModuleType.Initialize, 250, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Initialize, 251, "Set Lifetime", "Sets the particle lifetime (in seconds)", ConnectionType.Float, 10.0f),

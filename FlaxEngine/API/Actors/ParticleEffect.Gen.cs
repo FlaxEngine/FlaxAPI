@@ -98,6 +98,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the particle system play mode looping. Determines whether the particle effect should loop when it finishes playing.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("Particle Effect"), EditorOrder(40), Tooltip("Determines whether the particle effect should loop when it finishes playing.")]
+        public bool IsLooping
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetIsLooping(unmanagedPtr); }
+            set { Internal_SetIsLooping(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Resets the particles simulation state (clears the instance state data but preserves the instance parameters values).
         /// </summary>
 #if UNIT_TEST_COMPILANT
@@ -155,6 +170,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetSimulationSpeed(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsLooping(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetIsLooping(IntPtr obj, bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ResetSimulation(IntPtr obj);
