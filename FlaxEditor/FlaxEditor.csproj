@@ -276,6 +276,7 @@
     <Compile Include="GUI\Table.cs" />
     <Compile Include="GUI\Tabs\Tab.cs" />
     <Compile Include="GUI\Tabs\Tabs.cs" />
+    <Compile Include="GUI\Timeline\Media.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />
@@ -439,6 +440,8 @@
     <Compile Include="Surface\ISurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
+    <Compile Include="GUI\Timeline\Timeline.cs" />
+    <Compile Include="GUI\Timeline\Track.cs" />
     <Compile Include="Tools\Foliage\Brush.cs" />
     <Compile Include="Tools\Foliage\EditFoliageGizmo.cs" />
     <Compile Include="Tools\Foliage\EditFoliageGizmoMode.cs" />
