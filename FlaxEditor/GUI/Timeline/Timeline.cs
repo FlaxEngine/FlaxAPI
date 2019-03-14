@@ -89,5 +89,15 @@ namespace FlaxEditor.GUI.Timeline
         {
             TracksChanged?.Invoke();
         }
+
+        /// <summary>
+        /// Mark timeline as edited.
+        /// </summary>
+        public void MarkAsEdited()
+        {
+            _isModified = true;
+
+            Modified?.Invoke();
+        }
     }
 }

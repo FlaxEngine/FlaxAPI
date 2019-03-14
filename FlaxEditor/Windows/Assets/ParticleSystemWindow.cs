@@ -6,7 +6,6 @@ using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Timeline;
-using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -19,8 +18,7 @@ namespace FlaxEditor.Windows.Assets
     /// </summary>
     /// <seealso cref="ParticleSystem" />
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
-    /// <seealso cref="FlaxEditor.Surface.IVisjectSurfaceOwner" />
-    public sealed class ParticleSystemWindow : ClonedAssetEditorWindowBase<ParticleSystem>, IVisjectSurfaceOwner
+    public sealed class ParticleSystemWindow : ClonedAssetEditorWindowBase<ParticleSystem>
     {
         private readonly SplitPanel _split1;
         private readonly SplitPanel _split2;
@@ -30,6 +28,7 @@ namespace FlaxEditor.Windows.Assets
 
         private readonly ToolStripButton _saveButton;
         private bool _tmpParticleSystemIsDirty;
+        private bool _isWaitingForTimelineLoad;
 
         /// <inheritdoc />
         public ParticleSystemWindow(Editor editor, AssetItem item)
@@ -83,51 +82,20 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Shows the ParticleSystem source code window.
-        /// </summary>
-        /// <param name="ParticleSystem">The ParticleSystem asset.</param>
-        public static void ShowSourceCode(ParticleSystem ParticleSystem)
-        {
-            var source = Editor.GetParticleSystemShaderSourceCode(ParticleSystem);
-
-            CreateWindowSettings settings = CreateWindowSettings.Default;
-            settings.ActivateWhenFirstShown = true;
-            settings.AllowMaximize = false;
-            settings.AllowMinimize = false;
-            settings.HasSizingFrame = false;
-            settings.StartPosition = WindowStartPosition.CenterScreen;
-            settings.Size = new Vector2(500, 600);
-            settings.Title = "Particle Emitter GPU Simulation Source";
-            var dialog = Window.Create(settings);
-
-            var copyButton = new Button(4, 4, 100);
-            copyButton.Text = "Copy";
-            copyButton.Clicked += () => Application.ClipboardText = source;
-            copyButton.Parent = dialog.GUI;
-
-            var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);
-            sourceTextBox.Height = settings.Size.Y - sourceTextBox.Top - 2;
-            sourceTextBox.Text = source;
-            sourceTextBox.Parent = dialog.GUI;
-
-            dialog.Show();
-            dialog.Focus();
-        }
-
-        /// <summary>
-        /// Refreshes temporary asset to see changes live when editing the surface.
+        /// Refreshes temporary asset to see changes live when editing the timeline.
         /// </summary>
         /// <returns>True if cannot refresh it, otherwise false.</returns>
         public bool RefreshTempAsset()
         {
             // Early check
-            if (_asset == null || _isWaitingForSurfaceLoad)
+            if (_asset == null || _isWaitingForTimelineLoad)
                 return true;
 
             // Check if surface has been edited
-            if (_surface.IsEdited)
+            if (_timeline.IsModified)
             {
-                _surface.Save();
+                // TODO: saving timeline data
+                //_timeline.Save();
             }
 
             return false;
@@ -163,7 +131,6 @@ namespace FlaxEditor.Windows.Assets
             ClearEditedFlag();
 
             // Update
-            OnSurfaceEditedChanged();
             _item.RefreshThumbnail();
         }
 
@@ -178,9 +145,8 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void UnlinkItem()
         {
-            _properties.OnClean();
-            _preview.Emitter = null;
-            _isWaitingForSurfaceLoad = false;
+            _preview.System = null;
+            _isWaitingForTimelineLoad = false;
 
             base.UnlinkItem();
         }
@@ -188,54 +154,10 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void OnAssetLinked()
         {
-            _preview.Emitter = _asset;
-            _isWaitingForSurfaceLoad = true;
+            _preview.System = _asset;
+            _isWaitingForTimelineLoad = true;
 
             base.OnAssetLinked();
-        }
-
-        /// <inheritdoc />
-        public string SurfaceName => "Particle Emitter";
-
-        /// <inheritdoc />
-        public byte[] SurfaceData
-        {
-            get => _asset.LoadSurface(true);
-            set
-            {
-                // Save data to the temporary asset
-                if (_asset.SaveSurface(value))
-                {
-                    // Error
-                    _surface.MarkAsEdited();
-                    Editor.LogError("Failed to save Particle Emitter surface data");
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        public void OnContextCreated(VisjectSurfaceContext context)
-        {
-        }
-
-        /// <inheritdoc />
-        public void OnSurfaceEditedChanged()
-        {
-            if (_surface.IsEdited)
-                MarkAsEdited();
-        }
-
-        /// <inheritdoc />
-        public void OnSurfaceGraphEdited()
-        {
-            // Mark as dirty
-            _tmpParticleSystemIsDirty = true;
-        }
-
-        /// <inheritdoc />
-        public void OnSurfaceClose()
-        {
-            Close();
         }
 
         /// <inheritdoc />
@@ -253,16 +175,15 @@ namespace FlaxEditor.Windows.Assets
                 RefreshTempAsset();
             }
 
-            // Check if need to load surface
-            if (_isWaitingForSurfaceLoad && _asset.IsLoaded)
+            // Check if need to load timeline
+            if (_isWaitingForTimelineLoad && _asset.IsLoaded)
             {
                 // Clear flag
-                _isWaitingForSurfaceLoad = false;
+                _isWaitingForTimelineLoad = false;
 
-                // Init asset properties and parameters proxy
-                _properties.OnLoad(this);
-
-                // Load surface data from the asset
+                // TODO: loading timeline data from the asset
+                /*
+                // Load timeline data from the asset
                 byte[] data = _asset.LoadSurface(true);
                 if (data == null)
                 {
@@ -280,9 +201,9 @@ namespace FlaxEditor.Windows.Assets
                     Close();
                     return;
                 }
-
+                */
                 // Setup
-                _surface.Enabled = true;
+                _timeline.Enabled = true;
                 _propertiesEditor.BuildLayout();
                 ClearEditedFlag();
             }
