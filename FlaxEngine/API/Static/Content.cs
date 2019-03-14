@@ -230,6 +230,7 @@ namespace FlaxEngine
                 typeof(T) != typeof(SkinnedModel) &&
                 typeof(T) != typeof(CollisionData) &&
                 typeof(T) != typeof(ParticleSystem) &&
+                typeof(T) != typeof(RawDataAsset) &&
                 typeof(T) != typeof(Model))
                 throw new InvalidOperationException("Asset type " + typeName + " does not support virtual assets.");
 
