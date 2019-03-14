@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -10,6 +11,8 @@ namespace FlaxEngine
     /// </summary>
     public static class Scripting
     {
+        private static readonly List<Action> UpdateActions = new List<Action>();
+
         /// <summary>
         /// Occurs on scripting update.
         /// </summary>
@@ -30,10 +33,31 @@ namespace FlaxEngine
         /// </summary>
         public static event Action Exit;
 
+        /// <summary>
+        /// Calls the given action on the next scripting update.
+        /// </summary>
+        /// <param name="action">The action to invoke.</param>
+        public static void InvokeOnUpdate(Action action)
+        {
+            UpdateActions.Add(action);
+        }
+
         internal static void Internal_Update()
         {
             Time.SyncData();
             Update?.Invoke();
+            for (int i = 0; i < UpdateActions.Count; i++)
+            {
+                try
+                {
+                    UpdateActions[i]();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+            }
+            UpdateActions.Clear();
         }
 
         internal static void Internal_LateUpdate()
