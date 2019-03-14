@@ -111,7 +111,7 @@ namespace FlaxEngine
             if (type == CollisionDataType.None)
                 throw new ArgumentException(nameof(type));
 
-            if (Internal_CookCollision(type, model.unmanagedPtr, modelLodIndex, convexFlags, convexVertexLimit))
+            if (Internal_CookCollision(unmanagedPtr, type, model.unmanagedPtr, modelLodIndex, convexFlags, convexVertexLimit))
                 throw new FlaxException("Mesh cooking failed. See log to learn more.");
         }
 
@@ -120,7 +120,7 @@ namespace FlaxEngine
         internal static extern void Internal_GetCookOptions(IntPtr obj, out int modelLodIndex, out ConvexMeshGenerationFlags convexFlags, out int convexVertexLimit);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_CookCollision(CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
+        internal static extern bool Internal_CookCollision(IntPtr obj, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
 #endif
     }
 }
