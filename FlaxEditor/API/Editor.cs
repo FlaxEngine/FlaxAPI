@@ -542,6 +542,11 @@ namespace FlaxEditor
             /// The particle emitter. See <see cref="FlaxEngine.ParticleEmitter"/>.
             /// </summary>
             ParticleEmitter = 5,
+
+            /// <summary>
+            /// The particle emitter. See <see cref="FlaxEngine.ParticleSystem"/>.
+            /// </summary>
+            ParticleSystem = 6,
         }
 
         /// <summary>

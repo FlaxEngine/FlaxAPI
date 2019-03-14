@@ -13,6 +13,7 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class Timeline : ContainerControl
     {
+        private bool _isModified;
         private float _framesPerSecond;
         private readonly List<Track> _tracks = new List<Track>();
 
@@ -46,6 +47,16 @@ namespace FlaxEditor.GUI.Timeline
         /// Occurs when tracks collection gets changed.
         /// </summary>
         public event Action TracksChanged;
+
+        /// <summary>
+        /// Gets a value indicating whether this timeline was modified by the user (needs saving and flushing with data source).
+        /// </summary>
+        public bool IsModified => _isModified;
+
+        /// <summary>
+        /// Occurs when timeline gets modified (track edited, media moved, etc.).
+        /// </summary>
+        public event Action Modified;
 
         /// <summary>
         /// Adds the track.
