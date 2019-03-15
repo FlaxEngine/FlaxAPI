@@ -38,5 +38,37 @@ namespace FlaxEditor.GUI.Timeline
         {
             _timeline = timeline;
         }
+
+        /// <summary>
+        /// Adds the media.
+        /// </summary>
+        /// <param name="media">The media.</param>
+        public virtual void AddMedia(Media media)
+        {
+            _media.Add(media);
+            media.OnTimelineChanged(this);
+
+            OnMediaChanged();
+        }
+
+        /// <summary>
+        /// Removes the media.
+        /// </summary>
+        /// <param name="media">The media.</param>
+        public virtual void RemoveMedia(Media media)
+        {
+            media.OnTimelineChanged(null);
+            _media.Remove(media);
+
+            OnMediaChanged();
+        }
+
+        /// <summary>
+        /// Called when collection of the media items gets changed.
+        /// </summary>
+        protected virtual void OnMediaChanged()
+        {
+            MediaChanged?.Invoke(this);
+        }
     }
 }

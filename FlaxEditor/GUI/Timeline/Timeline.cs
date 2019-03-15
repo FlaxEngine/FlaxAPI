@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -13,9 +14,32 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class Timeline : ContainerControl
     {
+        /// <summary>
+        /// The timeline playback buttons types.
+        /// </summary>
+        [Flags]
+        public enum PlaybackButtons
+        {
+            /// <summary>
+            /// The play/pause button.
+            /// </summary>
+            Play = 1,
+
+            /// <summary>
+            /// The stop button.
+            /// </summary>
+            Stop = 2,
+        }
+
         private bool _isModified;
         private float _framesPerSecond;
         private readonly List<Track> _tracks = new List<Track>();
+
+        private SplitPanel _splitter;
+        private Button _addTrackButton;
+        private VerticalPanel _tracksPanel;
+        private Image _playbackStop;
+        private Image _playbackPlay;
 
         /// <summary>
         /// Gets or sets the frames amount per second of the timeline animation.
@@ -57,6 +81,145 @@ namespace FlaxEditor.GUI.Timeline
         /// Occurs when timeline gets modified (track edited, media moved, etc.).
         /// </summary>
         public event Action Modified;
+
+        /// <summary>
+        /// Occurs when timeline starts playing animation.
+        /// </summary>
+        public event Action Play;
+
+        /// <summary>
+        /// Occurs when timeline pauses playing animation.
+        /// </summary>
+        public event Action Pause;
+
+        /// <summary>
+        /// Occurs when timeline stops playing animation.
+        /// </summary>
+        public event Action Stop;
+
+        /// <summary>
+        /// Gets the splitter.
+        /// </summary>
+        public SplitPanel Splitter => _splitter;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Timeline"/> class.
+        /// </summary>
+        /// <param name="playbackButtons">The playback buttons to use.</param>
+        public Timeline(PlaybackButtons playbackButtons)
+        {
+            _splitter = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
+            {
+                SplitterValue = 0.2f,
+                DockStyle = DockStyle.Fill,
+                Parent = this
+            };
+
+            _addTrackButton = new Button(2, 2, 80.0f, 18.0f)
+            {
+                Text = "Add Track",
+                Parent = _splitter.Panel1
+            };
+
+            var playbackButtonsSize = 20.0f;
+            var icons = Editor.Instance.Icons;
+            var playbackButtonsArea = new ContainerControl(0, 0, 100, playbackButtonsSize)
+            {
+                DockStyle = DockStyle.Bottom,
+                Parent = _splitter.Panel1
+            };
+            var playbackButtonsPanel = new ContainerControl(0, 0, 0, playbackButtonsSize)
+            {
+                AnchorStyle = AnchorStyle.Center,
+                Parent = playbackButtonsArea
+            };
+            if ((playbackButtons & PlaybackButtons.Stop) == PlaybackButtons.Stop)
+            {
+                _playbackStop = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
+                {
+                    Brush = new SpriteBrush(icons.Stop32),
+                    Enabled = false,
+                    Parent = playbackButtonsPanel
+                };
+                _playbackStop.Clicked += OnStopClicked;
+                playbackButtonsPanel.Width += playbackButtonsSize;
+            }
+            if ((playbackButtons & PlaybackButtons.Play) == PlaybackButtons.Play)
+            {
+                _playbackPlay = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
+                {
+                    Brush = new SpriteBrush(icons.Play32),
+                    Tag = false, // Set to true if image is set to Pause, false if Play
+                    Parent = playbackButtonsPanel
+                };
+                _playbackPlay.Clicked += OnPlayClicked;
+                playbackButtonsPanel.Width += playbackButtonsSize;
+            }
+        }
+
+        private void OnStopClicked(Image stop, MouseButton button)
+        {
+            if (button == MouseButton.Left)
+            {
+                OnStop();
+            }
+        }
+
+        private void OnPlayClicked(Image play, MouseButton button)
+        {
+            if (button == MouseButton.Left)
+            {
+                if ((bool)play.Tag)
+                    OnPause();
+                else
+                    OnPlay();
+            }
+        }
+
+        /// <summary>
+        /// Called when animation should stop.
+        /// </summary>
+        public virtual void OnStop()
+        {
+            Stop?.Invoke();
+
+            // Update buttons UI
+            var icons = Editor.Instance.Icons;
+            _playbackStop.Enabled = false;
+            _playbackPlay.Enabled = true;
+            _playbackPlay.Brush = new SpriteBrush(icons.Play32);
+            _playbackPlay.Tag = false;
+        }
+
+        /// <summary>
+        /// Called when animation should play.
+        /// </summary>
+        public virtual void OnPlay()
+        {
+            Play?.Invoke();
+
+            // Update buttons UI
+            var icons = Editor.Instance.Icons;
+            _playbackStop.Enabled = true;
+            _playbackPlay.Enabled = true;
+            _playbackPlay.Brush = new SpriteBrush(icons.Pause32);
+            _playbackPlay.Tag = true;
+        }
+
+        /// <summary>
+        /// Called when animation should pause.
+        /// </summary>
+        public virtual void OnPause()
+        {
+            Pause?.Invoke();
+
+            // Update buttons UI
+            var icons = Editor.Instance.Icons;
+            _playbackStop.Enabled = true;
+            _playbackPlay.Enabled = true;
+            _playbackPlay.Brush = new SpriteBrush(icons.Play32);
+            _playbackPlay.Tag = false;
+        }
 
         /// <summary>
         /// Adds the track.

@@ -32,5 +32,15 @@ namespace FlaxEditor.GUI.Timeline
         /// Gets the track.
         /// </summary>
         public Track Track => _tack;
+
+        /// <summary>
+        /// Called when parent track gets changed.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        public virtual void OnTimelineChanged(Track track)
+        {
+            _timeline = track?.Timeline;
+            _tack = track;
+        }
     }
 }
