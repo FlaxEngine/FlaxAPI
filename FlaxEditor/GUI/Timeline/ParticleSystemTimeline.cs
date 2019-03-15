@@ -38,12 +38,16 @@ namespace FlaxEditor.GUI.Timeline
 
         private Track CreateFolderTrack(TrackArchetype archetype)
         {
-            return new Track();
+            return new FolderTrack(archetype);
         }
 
         private Track CreateEmitterTrack(TrackArchetype archetype)
         {
-            return new Track();
+            return new Track
+            {
+                // TODO: ensure tis unique name
+                Text = archetype.Name,
+            };
         }
     }
 }

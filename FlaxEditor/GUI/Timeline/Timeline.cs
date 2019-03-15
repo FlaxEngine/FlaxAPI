@@ -92,6 +92,21 @@ namespace FlaxEditor.GUI.Timeline
         public readonly List<TrackArchetype> TrackArchetypes = new List<TrackArchetype>(32);
 
         /// <summary>
+        /// The selected tracks.
+        /// </summary>
+        public readonly List<Track> SelectedTracks = new List<Track>();
+
+        /// <summary>
+        /// The selected media events.
+        /// </summary>
+        public readonly List<Media> SelectedMedia = new List<Media>();
+
+        /// <summary>
+        /// Occurs when any collection of the selected objects in the timeline gets changed.
+        /// </summary>
+        public event Action SelectionChanged;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
@@ -114,6 +129,7 @@ namespace FlaxEditor.GUI.Timeline
             var addTrackButtonWidth = 50.0f;
             _addTrackButton = new Button(2, 2, addTrackButtonWidth, 18.0f)
             {
+                TooltipText = "Add new tracks to the timeline",
                 Text = "Add",
                 Parent = headerTopArea
             };
@@ -136,6 +152,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 _playbackStop = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
                 {
+                    TooltipText = "Stop playback",
                     Brush = new SpriteBrush(icons.Stop32),
                     Enabled = false,
                     Parent = playbackButtonsPanel
@@ -147,6 +164,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 _playbackPlay = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
                 {
+                    TooltipText = "Play/pause playback",
                     Brush = new SpriteBrush(icons.Play32),
                     Tag = false, // Set to true if image is set to Pause, false if Play
                     Parent = playbackButtonsPanel
@@ -163,6 +181,8 @@ namespace FlaxEditor.GUI.Timeline
             };
             _tracksPanel = new VerticalPanel
             {
+                DockStyle = DockStyle.Top,
+                IsScrollable = true,
                 Parent = _tracksPanelArea
             };
             _noTracksLabel = new Label
@@ -299,6 +319,91 @@ namespace FlaxEditor.GUI.Timeline
         {
             _noTracksLabel.Visible = _tracks.Count == 0;
             TracksChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Selects the specified track.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        /// <param name="addToSelection">If set to <c>true</c> track will be added to selection, otherwise will clear selection before.</param>
+        public void Select(Track track, bool addToSelection)
+        {
+            if (SelectedTracks.Contains(track) && (addToSelection || (SelectedTracks.Count == 1 && SelectedMedia.Count == 0)))
+                return;
+
+            if (!addToSelection)
+            {
+                SelectedTracks.Clear();
+                SelectedMedia.Clear();
+            }
+            SelectedTracks.Add(track);
+            OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// Deselects the specified track.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        public void Deselect(Track track)
+        {
+            if (!SelectedTracks.Contains(track))
+                return;
+
+            SelectedTracks.Remove(track);
+            OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// Selects the specified media event.
+        /// </summary>
+        /// <param name="media">The media.</param>
+        /// <param name="addToSelection">If set to <c>true</c> track will be added to selection, otherwise will clear selection before.</param>
+        public void Select(Media media, bool addToSelection)
+        {
+            if (SelectedMedia.Contains(media) && (addToSelection || (SelectedTracks.Count == 0 && SelectedMedia.Count == 1)))
+                return;
+
+            if (!addToSelection)
+            {
+                SelectedTracks.Clear();
+                SelectedMedia.Clear();
+            }
+            SelectedMedia.Add(media);
+            OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// Deselects the specified media event.
+        /// </summary>
+        /// <param name="media">The media.</param>
+        public void Deselect(Media media)
+        {
+            if (!SelectedMedia.Contains(media))
+                return;
+
+            SelectedMedia.Remove(media);
+            OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// Deselects all media and tracks.
+        /// </summary>
+        public void Deselect()
+        {
+            if (SelectedMedia.Count == 0 && SelectedTracks.Count == 0)
+                return;
+
+            SelectedTracks.Clear();
+            SelectedMedia.Clear();
+            OnSelectionChanged();
+        }
+
+        /// <summary>
+        /// Called when selection gets changed.
+        /// </summary>
+        protected virtual void OnSelectionChanged()
+        {
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
