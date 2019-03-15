@@ -79,6 +79,7 @@ namespace FlaxEditor.GUI
         {
             CanFocus = false;
             DockStyle = DockStyle.Top;
+            BackgroundColor = Style.Current.LightBackground;
         }
 
         /// <summary>
@@ -147,13 +148,6 @@ namespace FlaxEditor.GUI
         internal void OnButtonClicked(ToolStripButton button)
         {
             ButtonClicked?.Invoke(button);
-        }
-
-        /// <inheritdoc />
-        public override void Draw()
-        {
-            BackgroundColor = Style.Current.LightBackground;
-            base.Draw();
         }
 
         /// <inheritdoc />
