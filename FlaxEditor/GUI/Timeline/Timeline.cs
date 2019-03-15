@@ -35,11 +35,12 @@ namespace FlaxEditor.GUI.Timeline
         private float _framesPerSecond;
         private readonly List<Track> _tracks = new List<Track>();
 
-        private SplitPanel _splitter;
+        private readonly SplitPanel _splitter;
         private Button _addTrackButton;
         private VerticalPanel _tracksPanel;
-        private Image _playbackStop;
-        private Image _playbackPlay;
+        private readonly Image _playbackStop;
+        private readonly Image _playbackPlay;
+        private readonly Label _noTracksLabel;
 
         /// <summary>
         /// Gets or sets the frames amount per second of the timeline animation.
@@ -115,16 +116,24 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = this
             };
 
-            _addTrackButton = new Button(2, 2, 80.0f, 18.0f)
+            var headerTopAreaHeight = 22.0f;
+            var headerTopArea = new ContainerControl(0, 0, _splitter.Panel1.Width, headerTopAreaHeight)
             {
-                Text = "Add Track",
+                BackgroundColor = Style.Current.LightBackground,
+                DockStyle = DockStyle.Top,
                 Parent = _splitter.Panel1
+            };
+            _addTrackButton = new Button(2, 2, 50.0f, 18.0f)
+            {
+                Text = "Add",
+                Parent = headerTopArea
             };
 
             var playbackButtonsSize = 20.0f;
             var icons = Editor.Instance.Icons;
             var playbackButtonsArea = new ContainerControl(0, 0, 100, playbackButtonsSize)
             {
+                BackgroundColor = Style.Current.LightBackground,
                 DockStyle = DockStyle.Bottom,
                 Parent = _splitter.Panel1
             };
@@ -155,6 +164,25 @@ namespace FlaxEditor.GUI.Timeline
                 _playbackPlay.Clicked += OnPlayClicked;
                 playbackButtonsPanel.Width += playbackButtonsSize;
             }
+
+            var trackPanelArea = new Panel(ScrollBars.Vertical)
+            {
+                Size = new Vector2(_splitter.Panel1.Width, _splitter.Panel1.Height - playbackButtonsSize - headerTopAreaHeight),
+                DockStyle = DockStyle.Fill,
+                Parent = _splitter.Panel1
+            };
+            _tracksPanel = new VerticalPanel
+            {
+                Parent = trackPanelArea
+            };
+            _noTracksLabel = new Label
+            {
+                AnchorStyle = AnchorStyle.Center,
+                TextColor = Color.Gray,
+                TextColorHighlighted = Color.Gray * 1.1f,
+                Text = "No tracks",
+                Parent = trackPanelArea
+            };
         }
 
         private void OnStopClicked(Image stop, MouseButton button)
@@ -250,6 +278,7 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         protected virtual void OnTracksChanged()
         {
+            _noTracksLabel.Visible = _tracks.Count == 0;
             TracksChanged?.Invoke();
         }
 
