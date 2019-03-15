@@ -279,6 +279,7 @@
     <Compile Include="GUI\Tabs\Tabs.cs" />
     <Compile Include="GUI\Timeline\Media.cs" />
     <Compile Include="GUI\Timeline\ParticleSystemTimeline.cs" />
+    <Compile Include="GUI\Timeline\Timeline.Types.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />

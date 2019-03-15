@@ -20,6 +20,30 @@ namespace FlaxEditor.GUI.Timeline
         : base(PlaybackButtons.Play | PlaybackButtons.Stop)
         {
             _preview = preview;
+
+            // Setup track types
+            var icons = Editor.Instance.Icons;
+            TrackArchetypes.Add(new TrackArchetype
+            {
+                Name = "Folder",
+                Icon = icons.Folder64,
+                Create = CreateFolderTrack
+            });
+            TrackArchetypes.Add(new TrackArchetype
+            {
+                Name = "Emitter",
+                Create = CreateEmitterTrack
+            });
+        }
+
+        private Track CreateFolderTrack(TrackArchetype archetype)
+        {
+            return new Track();
+        }
+
+        private Track CreateEmitterTrack(TrackArchetype archetype)
+        {
+            return new Track();
         }
     }
 }

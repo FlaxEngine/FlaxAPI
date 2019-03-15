@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -12,31 +11,15 @@ namespace FlaxEditor.GUI.Timeline
     /// The timeline control that contains tracks section and headers. Can be used to create time-based media interface for camera tracks editing, audio mixing and events tracking.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-    public class Timeline : ContainerControl
+    public partial class Timeline : ContainerControl
     {
-        /// <summary>
-        /// The timeline playback buttons types.
-        /// </summary>
-        [Flags]
-        public enum PlaybackButtons
-        {
-            /// <summary>
-            /// The play/pause button.
-            /// </summary>
-            Play = 1,
-
-            /// <summary>
-            /// The stop button.
-            /// </summary>
-            Stop = 2,
-        }
-
         private bool _isModified;
         private float _framesPerSecond;
         private readonly List<Track> _tracks = new List<Track>();
 
         private readonly SplitPanel _splitter;
         private Button _addTrackButton;
+        private Panel _tracksPanelArea;
         private VerticalPanel _tracksPanel;
         private readonly Image _playbackStop;
         private readonly Image _playbackPlay;
@@ -104,6 +87,11 @@ namespace FlaxEditor.GUI.Timeline
         public SplitPanel Splitter => _splitter;
 
         /// <summary>
+        /// The track archetypes.
+        /// </summary>
+        public readonly List<TrackArchetype> TrackArchetypes = new List<TrackArchetype>(32);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
@@ -123,11 +111,13 @@ namespace FlaxEditor.GUI.Timeline
                 DockStyle = DockStyle.Top,
                 Parent = _splitter.Panel1
             };
-            _addTrackButton = new Button(2, 2, 50.0f, 18.0f)
+            var addTrackButtonWidth = 50.0f;
+            _addTrackButton = new Button(2, 2, addTrackButtonWidth, 18.0f)
             {
                 Text = "Add",
                 Parent = headerTopArea
             };
+            _addTrackButton.Clicked += OnAddTrackButtonClicked;
 
             var playbackButtonsSize = 20.0f;
             var icons = Editor.Instance.Icons;
@@ -165,7 +155,7 @@ namespace FlaxEditor.GUI.Timeline
                 playbackButtonsPanel.Width += playbackButtonsSize;
             }
 
-            var trackPanelArea = new Panel(ScrollBars.Vertical)
+            _tracksPanelArea = new Panel(ScrollBars.Vertical)
             {
                 Size = new Vector2(_splitter.Panel1.Width, _splitter.Panel1.Height - playbackButtonsSize - headerTopAreaHeight),
                 DockStyle = DockStyle.Fill,
@@ -173,7 +163,7 @@ namespace FlaxEditor.GUI.Timeline
             };
             _tracksPanel = new VerticalPanel
             {
-                Parent = trackPanelArea
+                Parent = _tracksPanelArea
             };
             _noTracksLabel = new Label
             {
@@ -181,8 +171,33 @@ namespace FlaxEditor.GUI.Timeline
                 TextColor = Color.Gray,
                 TextColorHighlighted = Color.Gray * 1.1f,
                 Text = "No tracks",
-                Parent = trackPanelArea
+                Parent = _tracksPanelArea
             };
+        }
+
+        private void OnAddTrackButtonClicked()
+        {
+            // TODO: maybe cache context menu object?
+            var menu = new ContextMenu();
+            for (int i = 0; i < TrackArchetypes.Count; i++)
+            {
+                var archetype = TrackArchetypes[i];
+
+                var button = menu.AddButton(archetype.Name, OnAddTrackOptionClicked);
+                button.Tag = archetype;
+                button.Icon = archetype.Icon;
+            }
+            menu.Show(_addTrackButton.Parent, _addTrackButton.BottomLeft);
+        }
+
+        private void OnAddTrackOptionClicked(ContextMenuButton button)
+        {
+            var archetype = (TrackArchetype)button.Tag;
+            var track = archetype.Create(archetype);
+            if (track != null)
+            {
+                AddTrack(track);
+            }
         }
 
         private void OnStopClicked(Image stop, MouseButton button)
@@ -257,8 +272,11 @@ namespace FlaxEditor.GUI.Timeline
         {
             _tracks.Add(track);
             track.OnTimelineChanged(this);
+            track.Parent = _tracksPanel;
 
             OnTracksChanged();
+
+            _tracksPanelArea.ScrollViewTo(track);
         }
 
         /// <summary>
@@ -267,6 +285,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <param name="track">The track.</param>
         public virtual void RemoveTrack(Track track)
         {
+            track.Parent = null;
             track.OnTimelineChanged(null);
             _tracks.Remove(track);
 
