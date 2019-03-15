@@ -64,8 +64,9 @@ namespace FlaxEditor.Windows.Assets
             _propertiesEditor = propertiesEditor;
 
             // Timeline
-            _timeline = new ParticleSystemTimeline
+            _timeline = new ParticleSystemTimeline(_preview)
             {
+                DockStyle = DockStyle.Fill,
                 Parent = _split1.Panel2,
                 Enabled = false
             };
@@ -217,6 +218,7 @@ namespace FlaxEditor.Windows.Assets
         {
             writer.WriteAttributeString("Split1", _split1.SplitterValue.ToString());
             writer.WriteAttributeString("Split2", _split2.SplitterValue.ToString());
+            writer.WriteAttributeString("Split3", _timeline.Splitter.SplitterValue.ToString());
         }
 
         /// <inheritdoc />
@@ -228,6 +230,8 @@ namespace FlaxEditor.Windows.Assets
                 _split1.SplitterValue = value1;
             if (float.TryParse(node.GetAttribute("Split2"), out value1))
                 _split2.SplitterValue = value1;
+            if (float.TryParse(node.GetAttribute("Split3"), out value1))
+                _timeline.Splitter.SplitterValue = value1;
         }
 
         /// <inheritdoc />
@@ -235,6 +239,7 @@ namespace FlaxEditor.Windows.Assets
         {
             _split1.SplitterValue = 0.6f;
             _split2.SplitterValue = 0.5f;
+            _timeline.Splitter.SplitterValue = 0.2f;
         }
     }
 }

@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.Viewport.Previews;
+
 namespace FlaxEditor.GUI.Timeline
 {
     /// <summary>
@@ -8,5 +10,16 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEditor.GUI.Timeline.Timeline" />
     public sealed class ParticleSystemTimeline : Timeline
     {
+        private ParticleSystemPreview _preview;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParticleSystemTimeline"/> class.
+        /// </summary>
+        /// <param name="preview">The particle system preview.</param>
+        public ParticleSystemTimeline(ParticleSystemPreview preview)
+        : base(PlaybackButtons.Play | PlaybackButtons.Stop)
+        {
+            _preview = preview;
+        }
     }
 }
