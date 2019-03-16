@@ -112,6 +112,11 @@ namespace FlaxEditor.GUI.Timeline
         public Sprite Icon;
 
         /// <summary>
+        /// The icon color (tint).
+        /// </summary>
+        public Color IconColor = Color.White;
+
+        /// <summary>
         /// Gets or sets a value indicating whether this track is expanded.
         /// </summary>
         public bool IsExpanded
@@ -147,6 +152,7 @@ namespace FlaxEditor.GUI.Timeline
         public Track()
         : base(0, 0, 100, 22.0f)
         {
+            CanFocus = false;
         }
 
         /// <summary>
@@ -570,7 +576,7 @@ namespace FlaxEditor.GUI.Timeline
             // Draw icon
             if (Icon.IsValid)
             {
-                Render2D.DrawSprite(Icon, new Rectangle(textRect.Left, (height - 16) * 0.5f, 16, 16));
+                Render2D.DrawSprite(Icon, new Rectangle(textRect.Left, (height - 16) * 0.5f, 16, 16), IconColor);
                 textRect.X += 18.0f;
                 textRect.Width -= 18.0f;
             }
@@ -608,6 +614,10 @@ namespace FlaxEditor.GUI.Timeline
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
+            // Base
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
             // Check if mouse hits bar and track isn't a root
             if (IsMouseOver)
             {
@@ -632,6 +642,10 @@ namespace FlaxEditor.GUI.Timeline
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
+            // Base
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
             // Check if mouse hits bar
             if (buttons == MouseButton.Right)
             {
