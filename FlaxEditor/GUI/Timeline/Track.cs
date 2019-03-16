@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -13,10 +15,14 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class Track : ContainerControl
     {
+        /// <summary>
+        /// The default prefix for drag data used for tracks dragging.
+        /// </summary>
+        public const string DragPrefix = "TRACK!?";
+
         private Timeline _timeline;
         private Track _parentTrack;
-        private float _xOffset;
-        private float ChildrenIndent = 12.0f;
+        internal float _xOffset;
         private float DefaultNodeOffsetY = 1.0f;
         private float DefaultDragInsertPositionMargin = 2.0f;
         private Margin _margin = new Margin(2.0f);
@@ -28,6 +34,8 @@ namespace FlaxEditor.GUI.Timeline
         private bool _mouseOverArrow;
         private Vector2 _mouseDownPos;
 
+        private DragNames _dragTracks;
+        private DragHandlers _dragHandlers;
         private DragItemPositioning _dragOverMode;
         private bool _isDragOverHeader;
 
@@ -39,7 +47,39 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// Gets the parent track (null if this track is one of the root tracks in timeline).
         /// </summary>
-        public Track ParentTrack => _parentTrack;
+        public Track ParentTrack
+        {
+            get => _parentTrack;
+            set
+            {
+                if (_parentTrack != value)
+                {
+                    _parentTrack?.RemoveSubTrack(this);
+                    value?.AdSubTrack(this);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the index of the track (in timeline track list).
+        /// </summary>
+        public int TrackIndex
+        {
+            get
+            {
+                int result = -1;
+                for (int i = 0; i < _timeline.Tracks.Count; i++)
+                {
+                    if (_timeline.Tracks[i] == this)
+                    {
+                        result = i;
+                        break;
+                    }
+                }
+                return result;
+            }
+            set => _timeline.ChangeTrackIndex(this, value);
+        }
 
         /// <summary>
         /// Gets the collection of the media events added to this track (read-only list).
@@ -64,7 +104,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// The track text.
         /// </summary>
-        public string Text;
+        public string Name;
 
         /// <summary>
         /// The track icon.
@@ -72,7 +112,7 @@ namespace FlaxEditor.GUI.Timeline
         public Sprite Icon;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this node is expanded.
+        /// Gets or sets a value indicating whether this track is expanded.
         /// </summary>
         public bool IsExpanded
         {
@@ -87,7 +127,7 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this node is collapsed.
+        /// Gets or sets a value indicating whether this track is collapsed.
         /// </summary>
         public bool IsCollapsed
         {
@@ -112,7 +152,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// Gets the arrow rectangle.
         /// </summary>
-        protected Rectangle ArrowRect => new Rectangle(_xOffset + 2 + _margin.Left, 2, 12, 12);
+        protected Rectangle ArrowRect => new Rectangle(_xOffset + 2 + _margin.Left, (Height - 12) * 0.5f, 12, 12);
 
         /// <summary>
         /// Called when parent timeline gets changed.
@@ -130,6 +170,16 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnParentTrackChanged(Track parent)
         {
             _parentTrack = parent;
+        }
+
+        /// <summary>
+        /// Determines whether the specified track contains is contained in this track sub track or any sub track children.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        /// <returns><c>true</c> if this track contains the specified track; otherwise, <c>false</c>.</returns>
+        public bool ContainsTrack(Track track)
+        {
+            return _subTracks.Any(x => x == track || ContainsTrack(x));
         }
 
         /// <summary>
@@ -197,10 +247,140 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Called when drag and drop enters the track header area.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Drag action response.</returns>
+        protected virtual DragDropEffect OnDragEnterHeader(DragData data)
+        {
+            if (_dragHandlers == null)
+                _dragHandlers = new DragHandlers();
+
+            // Check if drop tracks
+            if (_dragTracks == null)
+            {
+                _dragTracks = new DragNames(DragPrefix, ValidateTrackDrag);
+                _dragHandlers.Add(_dragTracks);
+            }
+            if (_dragTracks.OnDragEnter(data))
+                return _dragTracks.Effect;
+
+            return DragDropEffect.None;
+        }
+
+        private bool ValidateTrackDrag(string name)
+        {
+            // Find track
+            var track = _timeline.Tracks.FirstOrDefault(x => x.Name == name);
+
+            // Validate track
+            if (track == null || !CanAddChildTrack(track))
+                return false;
+
+            // Reject dragging parents and itself
+            return track != this && !track.ContainsTrack(this);
+        }
+
+        /// <summary>
+        /// Called when drag and drop moves over the track header area.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Drag action response.</returns>
+        protected virtual DragDropEffect OnDragMoveHeader(DragData data)
+        {
+            return _dragHandlers.Effect;
+        }
+
+        /// <summary>
+        /// Called when drag and drop performs over the track header area.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Drag action response.</returns>
+        protected virtual DragDropEffect OnDragDropHeader(DragData data)
+        {
+            var result = DragDropEffect.None;
+
+            // Use drag positioning to change target parent and index
+            Track newParent;
+            int newOrder;
+            if (_dragOverMode == DragItemPositioning.Above)
+            {
+                newParent = _parentTrack;
+                newOrder = TrackIndex;
+            }
+            else if (_dragOverMode == DragItemPositioning.Below)
+            {
+                newParent = _parentTrack;
+                newOrder = TrackIndex + 1;
+            }
+            else
+            {
+                newParent = this;
+                newOrder = (_subTracks.Count > 0 ? _subTracks.Last().TrackIndex : TrackIndex) + 1;
+            }
+
+            // Drag tracks
+            if (_dragTracks != null && _dragTracks.HasValidDrag)
+            {
+                var targetTracks = _dragTracks.Objects.ConvertAll(x => _timeline.SelectedTracks.Find(y => y.Name == x));
+                for (int i = 0; i < targetTracks.Count; i++)
+                {
+                    var targetActor = targetTracks[i];
+                    targetActor.ParentTrack = newParent;
+                    targetActor.TrackIndex = newOrder;
+                }
+                _timeline.OnTracksOrderChanged();
+
+                result = DragDropEffect.Move;
+            }
+
+            // Clear cache
+            _dragHandlers.OnDragDrop(null);
+
+            // Expand if dropped sth
+            if (result != DragDropEffect.None)
+            {
+                Expand();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Called when drag and drop leaves the track header area.
+        /// </summary>
+        protected virtual void OnDragLeaveHeader()
+        {
+            _dragHandlers.OnDragLeave();
+        }
+
+        /// <summary>
         /// Begins the drag drop operation.
         /// </summary>
         protected virtual void DoDragDrop()
         {
+            DragData data;
+
+            // Check if this node is selected
+            if (_timeline.SelectedTracks.Contains(this))
+            {
+                // Get selected tracks
+                var names = new List<string>();
+                for (var i = 0; i < _timeline.SelectedTracks.Count; i++)
+                {
+                    var track = _timeline.SelectedTracks[i];
+                    if (track.CanDrag)
+                        names.Add(track.Name);
+                }
+                data = DragNames.GetDragData(DragPrefix, names);
+            }
+            else
+            {
+                data = DragNames.GetDragData(DragPrefix, Name);
+            }
+
+            // Start drag operation
+            DoDragDrop(data);
         }
 
         /// <summary>
@@ -208,6 +388,46 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         protected virtual void OnExpandedChanged()
         {
+            _timeline.ArrangeTracks();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether can drag this track.
+        /// </summary>
+        protected virtual bool CanDrag => true;
+
+        /// <summary>
+        /// Determines whether this track can get the child track.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        /// <returns>True if can add this track, otherwise false.</returns>
+        protected virtual bool CanAddChildTrack(Track track)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Updates the drag over mode based on the given mouse location.
+        /// </summary>
+        /// <param name="location">The location.</param>
+        private void UpdateDrawPositioning(ref Vector2 location)
+        {
+            if (new Rectangle(0, 0 - DefaultDragInsertPositionMargin - DefaultNodeOffsetY, Width, DefaultDragInsertPositionMargin * 2.0f).Contains(location))
+                _dragOverMode = DragItemPositioning.Above;
+            else if (IsCollapsed && new Rectangle(0, Height - DefaultDragInsertPositionMargin, Width, DefaultDragInsertPositionMargin * 2.0f).Contains(location))
+                _dragOverMode = DragItemPositioning.Below;
+            else
+                _dragOverMode = DragItemPositioning.At;
+        }
+
+        /// <summary>
+        /// Tests the header hit.
+        /// </summary>
+        /// <param name="location">The location.</param>
+        /// <returns>True if hits it.</returns>
+        protected virtual bool TestHeaderHit(ref Vector2 location)
+        {
+            return new Rectangle(0, 0, Width, Height).Contains(ref location);
         }
 
         /// <summary>
@@ -215,19 +435,11 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public void Expand()
         {
-            // Parents first
             ExpandAllParents();
 
-            // Change state
-            bool prevState = _opened;
             _opened = true;
 
-            // Update
             OnExpandedChanged();
-            if (HasParent)
-                Parent.PerformLayout();
-            else
-                PerformLayout();
         }
 
         /// <summary>
@@ -235,15 +447,9 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public void Collapse()
         {
-            // Change state
             _opened = false;
 
-            // Update
             OnExpandedChanged();
-            if (HasParent)
-                Parent.PerformLayout();
-            else
-                PerformLayout();
         }
 
         /// <summary>
@@ -291,7 +497,7 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
-        /// Ensure that all node parents are expanded.
+        /// Ensure that all track parents are expanded.
         /// </summary>
         public void ExpandAllParents()
         {
@@ -299,61 +505,46 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        protected override void PerformLayoutSelf()
-        {
-            base.PerformLayoutSelf();
-
-            // Arrange sub tracks
-            float xOffset = _xOffset + ChildrenIndent;
-            for (int i = 0; i < SubTracks.Count; i++)
-            {
-                var track = SubTracks[i];
-                track._xOffset = xOffset;
-            }
-        }
-
-        /// <inheritdoc />
         public override void Draw()
         {
             // Cache data
-            //BackgroundColor = Style.Current.BackgroundNormal;
             var style = Style.Current;
             bool isSelected = _timeline.SelectedTracks.Contains(this);
             bool isFocused = _timeline.ContainsFocus;
             var left = _xOffset + 16; // offset + arrow
-            var _headerHeight = Height;
-            var _headerRect = new Rectangle(0, 0, Width, _headerHeight);
-            var textRect = new Rectangle(left, 0, Width - left, _headerHeight);
+            var height = Height;
+            var bounds = new Rectangle(Vector2.Zero, Size);
+            var textRect = new Rectangle(left, 0, Width - left, height);
             _margin.ShrinkRectangle(ref textRect);
             var TextColor = style.Foreground;
             var BackgroundColorSelected = style.BackgroundSelected;
             var BackgroundColorHighlighted = style.BackgroundHighlighted;
             var BackgroundColorSelectedUnfocused = style.LightBackground;
             var TextFont = new FontReference(style.FontSmall);
-            var _mouseOverHeader = IsMouseOver;
+            var isMouseOver = IsMouseOver;
 
             // Draw background
-            if (isSelected || _mouseOverHeader)
+            if (isSelected || isMouseOver)
             {
-                Render2D.FillRectangle(_headerRect, (isSelected && isFocused) ? BackgroundColorSelected : (_mouseOverHeader ? BackgroundColorHighlighted : BackgroundColorSelectedUnfocused));
+                Render2D.FillRectangle(bounds, (isSelected && isFocused) ? BackgroundColorSelected : (isMouseOver ? BackgroundColorHighlighted : BackgroundColorSelectedUnfocused));
             }
 
             // Draw arrow
             if (SubTracks.Count > 0)
             {
-                Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
+                Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, isMouseOver ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
             }
 
             // Draw icon
             if (Icon.IsValid)
             {
-                Render2D.DrawSprite(Icon, new Rectangle(textRect.Left, (_headerHeight - 16) * 0.5f, 16, 16));
+                Render2D.DrawSprite(Icon, new Rectangle(textRect.Left, (height - 16) * 0.5f, 16, 16));
                 textRect.X += 18.0f;
                 textRect.Width -= 18.0f;
             }
 
             // Draw text
-            Render2D.DrawText(TextFont.GetFont(), Text, textRect, TextColor, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(TextFont.GetFont(), Name, textRect, TextColor, TextAlignment.Near, TextAlignment.Center);
 
             // Draw drag and drop effect
             if (IsDragOver)
@@ -385,7 +576,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            // Check if mouse hits bar and node isn't a root
+            // Check if mouse hits bar and track isn't a root
             if (IsMouseOver)
             {
                 // Check if left button goes down
@@ -421,7 +612,7 @@ namespace FlaxEditor.GUI.Timeline
                 _mouseDownTime = -1;
             }
 
-            // Prevent from selecting node when user is just clicking at an arrow
+            // Prevent from selecting track when user is just clicking at an arrow
             if (!_mouseOverArrow)
             {
                 var window = Root;
@@ -444,10 +635,10 @@ namespace FlaxEditor.GUI.Timeline
             if (SubTracks.Count > 0 && _mouseOverArrow)
             {
                 // Toggle open state
-                /*if (_opened)
+                if (_opened)
                     Collapse();
                 else
-                    Expand();*/
+                    Expand();
             }
 
             // Handled
@@ -495,6 +686,112 @@ namespace FlaxEditor.GUI.Timeline
 
             // Base
             base.OnMouseLeave();
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragEnter(ref location, data);
+
+            // Check if no children handled that event
+            _dragOverMode = DragItemPositioning.None;
+            if (result == DragDropEffect.None)
+            {
+                UpdateDrawPositioning(ref location);
+
+                // Check if mouse is over header
+                _isDragOverHeader = TestHeaderHit(ref location);
+                if (_isDragOverHeader)
+                {
+                    // Check if mouse is over arrow
+                    if (_children.Count > 0 && ArrowRect.Contains(location))
+                    {
+                        // Expand track
+                        Expand();
+                    }
+
+                    result = OnDragEnterHeader(data);
+                }
+
+                if (result == DragDropEffect.None)
+                    _dragOverMode = DragItemPositioning.None;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragMove(ref location, data);
+
+            // Check if no children handled that event
+            _dragOverMode = DragItemPositioning.None;
+            if (result == DragDropEffect.None)
+            {
+                UpdateDrawPositioning(ref location);
+
+                // Check if mouse is over header
+                bool isDragOverHeader = TestHeaderHit(ref location);
+                if (isDragOverHeader)
+                {
+                    // Check if mouse is over arrow
+                    if (_children.Count > 0 && ArrowRect.Contains(location))
+                    {
+                        // Expand track
+                        Expand();
+                    }
+
+                    if (!_isDragOverHeader)
+                        result = OnDragEnterHeader(data);
+                    else
+                        result = OnDragMoveHeader(data);
+                }
+                _isDragOverHeader = isDragOverHeader;
+
+                if (result == DragDropEffect.None)
+                    _dragOverMode = DragItemPositioning.None;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+        {
+            var result = base.OnDragDrop(ref location, data);
+
+            // Check if no children handled that event
+            if (result == DragDropEffect.None)
+            {
+                UpdateDrawPositioning(ref location);
+
+                // Check if mouse is over header
+                if (TestHeaderHit(ref location))
+                {
+                    result = OnDragDropHeader(data);
+                }
+            }
+
+            // Clear cache
+            _isDragOverHeader = false;
+            _dragOverMode = DragItemPositioning.None;
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override void OnDragLeave()
+        {
+            // Clear cache
+            if (_isDragOverHeader)
+            {
+                _isDragOverHeader = false;
+                OnDragLeaveHeader();
+            }
+            _dragOverMode = DragItemPositioning.None;
+
+            base.OnDragLeave();
         }
     }
 }

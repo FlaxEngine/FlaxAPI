@@ -14,8 +14,14 @@ namespace FlaxEditor.GUI.Timeline
         /// <param name="archetype">The archetype.</param>
         public FolderTrack(Timeline.TrackArchetype archetype)
         {
-            Text = archetype.Name;
+            Name = archetype.Name;
             Icon = archetype.Icon;
+        }
+
+        /// <inheritdoc />
+        protected override bool CanAddChildTrack(Track track)
+        {
+            return true;
         }
     }
 }

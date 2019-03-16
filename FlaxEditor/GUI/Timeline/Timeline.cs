@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -216,6 +217,14 @@ namespace FlaxEditor.GUI.Timeline
             var track = archetype.Create(archetype);
             if (track != null)
             {
+                // Ensure name is unique
+                int idx = 1;
+                var name = track.Name;
+                while (!IsTrackNameValid(track.Name))
+                {
+                    track.Name = string.Format("{0} {1}", name, idx++);
+                }
+
                 AddTrack(track);
             }
         }
@@ -414,6 +423,87 @@ namespace FlaxEditor.GUI.Timeline
             _isModified = true;
 
             Modified?.Invoke();
+        }
+
+        internal void ChangeTrackIndex(Track track, int newIndex)
+        {
+            int oldIndex = _tracks.IndexOf(track);
+            _tracks.RemoveAt(oldIndex);
+
+            // Check if index is invalid
+            if (newIndex < 0 || newIndex >= _tracks.Count)
+            {
+                // Append at the end
+                _tracks.Add(track);
+            }
+            else
+            {
+                // Change order
+                _tracks.Insert(newIndex, track);
+            }
+        }
+
+        /// <summary>
+        /// Called when tracks order gets changed.
+        /// </summary>
+        public void OnTracksOrderChanged()
+        {
+            _tracksPanel.IsLayoutLocked = true;
+
+            for (int i = 0; i < _tracks.Count; i++)
+            {
+                _tracks[i].Parent = null;
+            }
+
+            for (int i = 0; i < _tracks.Count; i++)
+            {
+                _tracks[i].Parent = _tracksPanel;
+            }
+
+            ArrangeTracks();
+
+            _tracksPanel.IsLayoutLocked = false;
+            _tracksPanel.PerformLayout();
+        }
+
+        /// <summary>
+        /// Determines whether the specified track name is valid.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns> <c>true</c> if is track name is valid; otherwise, <c>false</c>.</returns>
+        public bool IsTrackNameValid(string name)
+        {
+            name = name?.Trim();
+            return !string.IsNullOrEmpty(name) && _tracks.All(x => x.Name != name);
+        }
+
+        /// <summary>
+        /// Arranges the tracks.
+        /// </summary>
+        public void ArrangeTracks()
+        {
+            for (int i = 0; i < _tracks.Count; i++)
+            {
+                var track = _tracks[i];
+                if (track.ParentTrack == null)
+                {
+                    track._xOffset = 0;
+                    track.Visible = true;
+                }
+                else
+                {
+                    track._xOffset = track.ParentTrack._xOffset + 12.0f;
+                    track.Visible = track.ParentTrack.Visible && track.ParentTrack.IsExpanded;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override void PerformLayout(bool force = false)
+        {
+            ArrangeTracks();
+
+            base.PerformLayout(force);
         }
     }
 }

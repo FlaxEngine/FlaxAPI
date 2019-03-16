@@ -46,7 +46,7 @@ namespace FlaxEditor.GUI.Timeline
             return new Track
             {
                 // TODO: ensure tis unique name
-                Text = archetype.Name,
+                Name = archetype.Name,
             };
         }
     }
