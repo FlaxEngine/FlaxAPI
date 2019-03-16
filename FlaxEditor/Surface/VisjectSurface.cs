@@ -315,7 +315,7 @@ namespace FlaxEditor.Surface
 
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
-            DragHandlers.Add(_dragParameters = new DragSurfaceParameters<DragDropEventArgs>(ValidateDragParameter));
+            DragHandlers.Add(_dragParameters = new DragNames<DragDropEventArgs>(SurfaceParameter.DragPrefix, ValidateDragParameter));
         }
 
         private void OnRootContextModified(VisjectSurfaceContext context, bool graphEdited)

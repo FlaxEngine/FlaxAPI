@@ -243,7 +243,7 @@ namespace FlaxEditor.Windows.Assets
                     var win = (AnimationGraphWindow)Values[0];
                     var animatedModel = win.PreviewActor;
                     var parameter = animatedModel.Parameters[(int)label.Tag];
-                    return DragSurfaceParameters.GetDragData(parameter.Name);
+                    return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
                 }
 
                 /// <summary>

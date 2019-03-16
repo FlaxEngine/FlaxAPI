@@ -229,7 +229,7 @@ namespace FlaxEditor.Windows.Assets
                     var win = (MaterialWindow)Values[0];
                     var material = win.Asset;
                     var parameter = material.Parameters[(int)label.Tag];
-                    return DragSurfaceParameters.GetDragData(parameter.Name);
+                    return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
                 }
 
                 /// <summary>

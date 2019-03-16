@@ -76,6 +76,7 @@
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
     <Compile Include="Gizmo\TransformGizmoBase.cs" />
+    <Compile Include="GUI\Drag\DragNames.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
@@ -212,7 +213,6 @@
     <Compile Include="GUI\Drag\DragHandlers.cs" />
     <Compile Include="GUI\Drag\DragScriptItems.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
-    <Compile Include="GUI\Drag\DragSurfaceParameter.cs" />
     <Compile Include="GUI\Input\ColorValueBox.cs" />
     <Compile Include="GUI\Input\DoubleValueBox.cs" />
     <Compile Include="GUI\Input\FloatValueBox.cs" />

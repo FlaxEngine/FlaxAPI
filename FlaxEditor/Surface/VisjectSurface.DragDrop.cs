@@ -12,7 +12,7 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface
     {
         private readonly DragAssets<DragDropEventArgs> _dragAssets;
-        private readonly DragSurfaceParameters<DragDropEventArgs> _dragParameters;
+        private readonly DragNames<DragDropEventArgs> _dragParameters;
 
         /// <summary>
         /// The custom drag drop event arguments.

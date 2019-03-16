@@ -160,7 +160,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     var win = (ParticleEmitterWindow)Values[0];
                     var parameter = win.Surface.Parameters[(int)label.Tag];
-                    return DragSurfaceParameters.GetDragData(parameter.Name);
+                    return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
                 }
 
                 /// <summary>
