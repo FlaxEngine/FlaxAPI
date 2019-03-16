@@ -431,6 +431,38 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Starts the track renaming action.
+        /// </summary>
+        public void StartRenaming()
+        {
+            _timeline.Select(this, false);
+
+            // Start renaming the track
+            var dialog = RenamePopup.Show(this, new Rectangle(Vector2.Zero, Size), Name, false);
+            dialog.Renamed += OnRenamed;
+        }
+
+        private void OnRenamed(RenamePopup renamePopup)
+        {
+            if (!_timeline.IsTrackNameValid(renamePopup.Text))
+            {
+                MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBox.Buttons.OK, MessageBox.Icon.Warning);
+                return;
+            }
+
+            OnRename(renamePopup.Text);
+        }
+
+        /// <summary>
+        /// Called when track should be renamed.
+        /// </summary>
+        /// <param name="newName">The new name.</param>
+        protected virtual void OnRename(string newName)
+        {
+            Name = newName;
+        }
+
+        /// <summary>
         /// Expand track.
         /// </summary>
         public void Expand()
@@ -792,6 +824,33 @@ namespace FlaxEditor.GUI.Timeline
             _dragOverMode = DragItemPositioning.None;
 
             base.OnDragLeave();
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        {
+            if (TestHeaderHit(ref location))
+            {
+                StartRenaming();
+                return true;
+            }
+
+            return base.OnMouseDoubleClick(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (IsFocused)
+            {
+                if (key == Keys.F2)
+                {
+                    StartRenaming();
+                    return true;
+                }
+            }
+
+            return base.OnKeyDown(key);
         }
     }
 }
