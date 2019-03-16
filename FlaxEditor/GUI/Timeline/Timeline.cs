@@ -136,7 +136,7 @@ namespace FlaxEditor.GUI.Timeline
             };
             _addTrackButton.Clicked += OnAddTrackButtonClicked;
 
-            var playbackButtonsSize = 20.0f;
+            var playbackButtonsSize = 24.0f;
             var icons = Editor.Instance.Icons;
             var playbackButtonsArea = new ContainerControl(0, 0, 100, playbackButtonsSize)
             {
@@ -445,6 +445,7 @@ namespace FlaxEditor.GUI.Timeline
                     OnDeleteTrack(tracks[i]);
                 }
                 SelectedTracks.Clear();
+                OnTracksChanged();
             }
         }
 
