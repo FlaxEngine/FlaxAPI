@@ -415,6 +415,49 @@ namespace FlaxEditor.GUI.Timeline
             SelectionChanged?.Invoke();
         }
 
+        private void GetTracks(Track track, List<Track> tracks)
+        {
+            tracks.Add(track);
+            tracks.AddRange(track.SubTracks);
+        }
+
+        /// <summary>
+        /// Deletes the selected tracks/media events.
+        /// </summary>
+        public void DeleteSelection()
+        {
+            if (SelectedMedia.Count > 0)
+            {
+                throw new NotImplementedException("TODO: removing selected media events");
+            }
+            else
+            {
+                // Delete selected tracks
+                var tracks = new List<Track>(SelectedTracks.Count);
+                for (int i = 0; i < SelectedTracks.Count; i++)
+                {
+                    var track = SelectedTracks[i];
+                    track.ParentTrack = null;
+                    GetTracks(track, tracks);
+                }
+                for (int i = 0; i < tracks.Count; i++)
+                {
+                    OnDeleteTrack(tracks[i]);
+                }
+                SelectedTracks.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Called to delete track.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        protected virtual void OnDeleteTrack(Track track)
+        {
+            _tracks.Remove(track);
+            track.Dispose();
+        }
+
         /// <summary>
         /// Mark timeline as edited.
         /// </summary>

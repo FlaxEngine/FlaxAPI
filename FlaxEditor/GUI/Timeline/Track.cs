@@ -843,11 +843,16 @@ namespace FlaxEditor.GUI.Timeline
         {
             if (IsFocused)
             {
-                if (key == Keys.F2)
+                switch (key)
                 {
+                case Keys.F2:
                     StartRenaming();
                     return true;
+                case Keys.Delete:
+                    _timeline.DeleteSelection();
+                    return true;
                 }
+                // TODO: track duplicate with Ctrl+D
             }
 
             return base.OnKeyDown(key);
