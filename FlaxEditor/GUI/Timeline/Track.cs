@@ -469,6 +469,14 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Deletes this track.
+        /// </summary>
+        public void Delete()
+        {
+            _timeline.Delete(this);
+        }
+
+        /// <summary>
         /// Expand track.
         /// </summary>
         public void Expand()
@@ -639,6 +647,14 @@ namespace FlaxEditor.GUI.Timeline
             return true;
         }
 
+        /// <summary>
+        /// Called when context menu is being prepared to show. Can be sued to add custom options.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        protected virtual void OnContextMenu(ContextMenu menu)
+        {
+        }
+
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
@@ -649,7 +665,12 @@ namespace FlaxEditor.GUI.Timeline
             // Check if mouse hits bar
             if (buttons == MouseButton.Right)
             {
-                // TODO: show context menu for this track
+                // Show context menu
+                var menu = new ContextMenu();
+                menu.AddButton("Rename", StartRenaming);
+                menu.AddButton("Delete", Delete);
+                OnContextMenu(menu);
+                menu.Show(this, location);
             }
             else if (buttons == MouseButton.Left)
             {

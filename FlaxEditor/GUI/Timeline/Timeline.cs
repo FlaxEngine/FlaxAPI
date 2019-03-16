@@ -440,13 +440,33 @@ namespace FlaxEditor.GUI.Timeline
                     track.ParentTrack = null;
                     GetTracks(track, tracks);
                 }
+                SelectedTracks.Clear();
                 for (int i = 0; i < tracks.Count; i++)
                 {
                     OnDeleteTrack(tracks[i]);
                 }
-                SelectedTracks.Clear();
                 OnTracksChanged();
             }
+        }
+
+        /// <summary>
+        /// Deletes the tracks.
+        /// </summary>
+        /// <param name="track">The track to delete (and its sub tracks).</param>
+        public void Delete(Track track)
+        {
+            if (track == null)
+                throw new ArgumentNullException();
+
+            // Delete tracks
+            var tracks = new List<Track>(SelectedTracks.Count);
+            track.ParentTrack = null;
+            GetTracks(track, tracks);
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                OnDeleteTrack(tracks[i]);
+            }
+            OnTracksChanged();
         }
 
         /// <summary>
@@ -455,6 +475,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <param name="track">The track.</param>
         protected virtual void OnDeleteTrack(Track track)
         {
+            SelectedTracks.Remove(track);
             _tracks.Remove(track);
             track.Dispose();
         }
