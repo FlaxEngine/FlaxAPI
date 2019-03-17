@@ -27,27 +27,13 @@ namespace FlaxEditor.GUI.Timeline
             {
                 Name = "Folder",
                 Icon = icons.Folder64,
-                Create = CreateFolderTrack
+                Create = (archetype) => new FolderTrack(archetype),
             });
             TrackArchetypes.Add(new TrackArchetype
             {
                 Name = "Emitter",
-                Create = CreateEmitterTrack
+                Create = (archetype) => new ParticleEmitterTrack(archetype),
             });
-        }
-
-        private Track CreateFolderTrack(TrackArchetype archetype)
-        {
-            return new FolderTrack(archetype);
-        }
-
-        private Track CreateEmitterTrack(TrackArchetype archetype)
-        {
-            return new Track
-            {
-                // TODO: ensure tis unique name
-                Name = archetype.Name,
-            };
         }
     }
 }

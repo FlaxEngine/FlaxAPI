@@ -316,6 +316,8 @@ namespace FlaxEditor.GUI.Timeline
             track.OnSpawned();
 
             _tracksPanelArea.ScrollViewTo(track);
+
+            MarkAsEdited();
         }
 
         /// <summary>
@@ -440,7 +442,8 @@ namespace FlaxEditor.GUI.Timeline
             {
                 throw new NotImplementedException("TODO: removing selected media events");
             }
-            else
+
+            if (SelectedTracks.Count > 0)
             {
                 // Delete selected tracks
                 var tracks = new List<Track>(SelectedTracks.Count);
@@ -456,6 +459,7 @@ namespace FlaxEditor.GUI.Timeline
                     OnDeleteTrack(tracks[i]);
                 }
                 OnTracksChanged();
+                MarkAsEdited();
             }
         }
 
@@ -477,6 +481,7 @@ namespace FlaxEditor.GUI.Timeline
                 OnDeleteTrack(tracks[i]);
             }
             OnTracksChanged();
+            MarkAsEdited();
         }
 
         /// <summary>

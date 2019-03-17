@@ -20,12 +20,24 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public const string DragPrefix = "TRACK!?";
 
+        /// <summary>
+        /// The default node offset in y.
+        /// </summary>
+        public const float DefaultNodeOffsetY = 1.0f;
+
+        /// <summary>
+        /// The default drag insert position margin.
+        /// </summary>
+        public const float DefaultDragInsertPositionMargin = 2.0f;
+
+        /// <summary>
+        /// The header height.
+        /// </summary>
+        public const float HeaderHeight = 22.0f;
+
         private Timeline _timeline;
         private Track _parentTrack;
         internal float _xOffset;
-        private float DefaultNodeOffsetY = 1.0f;
-        private float DefaultDragInsertPositionMargin = 2.0f;
-        private float HeaderHeight = 22.0f;
         private Margin _margin = new Margin(2.0f);
         private readonly List<Media> _media = new List<Media>();
         private readonly List<Track> _subTracks = new List<Track>();
@@ -736,6 +748,8 @@ namespace FlaxEditor.GUI.Timeline
         /// <inheritdoc />
         public override void OnMouseMove(Vector2 location)
         {
+            base.OnMouseMove(location);
+
             // Cache flag
             _mouseOverArrow = SubTracks.Count > 0 && ArrowRect.Contains(location);
 
@@ -747,15 +761,14 @@ namespace FlaxEditor.GUI.Timeline
 
                 // Start
                 DoDragDrop();
-                return;
             }
-
-            base.OnMouseMove(location);
         }
 
         /// <inheritdoc />
         public override void OnMouseLeave()
         {
+            base.OnMouseLeave();
+
             // Clear flags
             _mouseOverArrow = false;
 
@@ -768,9 +781,6 @@ namespace FlaxEditor.GUI.Timeline
                 // Start
                 DoDragDrop();
             }
-
-            // Base
-            base.OnMouseLeave();
         }
 
         /// <inheritdoc />
@@ -882,13 +892,16 @@ namespace FlaxEditor.GUI.Timeline
         /// <inheritdoc />
         public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
+            if (base.OnMouseDoubleClick(location, buttons))
+                return true;
+
             if (TestHeaderHit(ref location))
             {
                 StartRenaming();
                 return true;
             }
 
-            return base.OnMouseDoubleClick(location, buttons);
+            return false;
         }
 
         /// <inheritdoc />
