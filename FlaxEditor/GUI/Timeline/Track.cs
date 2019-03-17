@@ -25,12 +25,12 @@ namespace FlaxEditor.GUI.Timeline
         internal float _xOffset;
         private float DefaultNodeOffsetY = 1.0f;
         private float DefaultDragInsertPositionMargin = 2.0f;
+        private float HeaderHeight = 22.0f;
         private Margin _margin = new Margin(2.0f);
         private readonly List<Media> _media = new List<Media>();
         private readonly List<Track> _subTracks = new List<Track>();
         private bool _opened;
         private bool _isMouseDown;
-        private float _mouseDownTime;
         private bool _mouseOverArrow;
         private Vector2 _mouseDownPos;
 
@@ -158,7 +158,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// Gets the arrow rectangle.
         /// </summary>
-        protected Rectangle ArrowRect => new Rectangle(_xOffset + 2 + _margin.Left, (Height - 12) * 0.5f, 12, 12);
+        protected Rectangle ArrowRect => new Rectangle(_xOffset + 2 + _margin.Left, (HeaderHeight - 12) * 0.5f, 12, 12);
 
         /// <summary>
         /// Called when parent timeline gets changed.
@@ -186,6 +186,28 @@ namespace FlaxEditor.GUI.Timeline
         public bool ContainsTrack(Track track)
         {
             return _subTracks.Any(x => x == track || ContainsTrack(x));
+        }
+
+        /// <summary>
+        /// Called when track gets loaded from the serialized timeline data.
+        /// </summary>
+        public virtual void OnLoaded()
+        {
+        }
+
+        /// <summary>
+        /// Called when tracks gets spawned by the user.
+        /// </summary>
+        public virtual void OnSpawned()
+        {
+        }
+
+        /// <summary>
+        /// Called when tracks gets removed by the user.
+        /// </summary>
+        public virtual void OnDeleted()
+        {
+            Dispose();
         }
 
         /// <summary>
@@ -433,7 +455,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <returns>True if hits it.</returns>
         protected virtual bool TestHeaderHit(ref Vector2 location)
         {
-            return new Rectangle(0, 0, Width, Height).Contains(ref location);
+            return new Rectangle(0, 0, Width, HeaderHeight).Contains(ref location);
         }
 
         /// <summary>
@@ -444,7 +466,7 @@ namespace FlaxEditor.GUI.Timeline
             _timeline.Select(this, false);
 
             // Start renaming the track
-            var dialog = RenamePopup.Show(this, new Rectangle(Vector2.Zero, Size), Name, false);
+            var dialog = RenamePopup.Show(this, new Rectangle(0, 0, Width, HeaderHeight), Name, false);
             dialog.Renamed += OnRenamed;
         }
 
@@ -558,7 +580,7 @@ namespace FlaxEditor.GUI.Timeline
             bool isSelected = _timeline.SelectedTracks.Contains(this);
             bool isFocused = _timeline.ContainsFocus;
             var left = _xOffset + 16; // offset + arrow
-            var height = Height;
+            var height = HeaderHeight;
             var bounds = new Rectangle(Vector2.Zero, Size);
             var textRect = new Rectangle(left, 0, Width - left, height);
             _margin.ShrinkRectangle(ref textRect);
@@ -634,7 +656,6 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     _isMouseDown = true;
                     _mouseDownPos = location;
-                    _mouseDownTime = Time.UnscaledGameTime;
                 }
 
                 // Handled
@@ -676,7 +697,6 @@ namespace FlaxEditor.GUI.Timeline
             {
                 // Clear flag
                 _isMouseDown = false;
-                _mouseDownTime = -1;
             }
 
             // Prevent from selecting track when user is just clicking at an arrow
@@ -724,7 +744,6 @@ namespace FlaxEditor.GUI.Timeline
             {
                 // Clear flag
                 _isMouseDown = false;
-                _mouseDownTime = -1;
 
                 // Start
                 DoDragDrop();
@@ -745,7 +764,6 @@ namespace FlaxEditor.GUI.Timeline
             {
                 // Clear flag
                 _isMouseDown = false;
-                _mouseDownTime = -1;
 
                 // Start
                 DoDragDrop();

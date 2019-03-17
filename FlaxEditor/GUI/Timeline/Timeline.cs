@@ -214,19 +214,7 @@ namespace FlaxEditor.GUI.Timeline
         private void OnAddTrackOptionClicked(ContextMenuButton button)
         {
             var archetype = (TrackArchetype)button.Tag;
-            var track = archetype.Create(archetype);
-            if (track != null)
-            {
-                // Ensure name is unique
-                int idx = 1;
-                var name = track.Name;
-                while (!IsTrackNameValid(track.Name))
-                {
-                    track.Name = string.Format("{0} {1}", name, idx++);
-                }
-
-                AddTrack(track);
-            }
+            AddTrack(archetype);
         }
 
         private void OnStopClicked(Image stop, MouseButton button)
@@ -296,6 +284,27 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// Adds the track.
         /// </summary>
+        /// <param name="archetype">The archetype.</param>
+        public void AddTrack(TrackArchetype archetype)
+        {
+            var track = archetype.Create(archetype);
+            if (track != null)
+            {
+                // Ensure name is unique
+                int idx = 1;
+                var name = track.Name;
+                while (!IsTrackNameValid(track.Name))
+                {
+                    track.Name = string.Format("{0} {1}", name, idx++);
+                }
+
+                AddTrack(track);
+            }
+        }
+
+        /// <summary>
+        /// Adds the track.
+        /// </summary>
         /// <param name="track">The track.</param>
         public virtual void AddTrack(Track track)
         {
@@ -304,6 +313,7 @@ namespace FlaxEditor.GUI.Timeline
             track.Parent = _tracksPanel;
 
             OnTracksChanged();
+            track.OnSpawned();
 
             _tracksPanelArea.ScrollViewTo(track);
         }
@@ -477,7 +487,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             SelectedTracks.Remove(track);
             _tracks.Remove(track);
-            track.Dispose();
+            track.OnDeleted();
         }
 
         /// <summary>
