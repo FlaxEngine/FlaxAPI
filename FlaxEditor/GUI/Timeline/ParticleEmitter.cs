@@ -38,7 +38,11 @@ namespace FlaxEditor.GUI.Timeline
                 ParticleEmitterMedia media;
                 if (Media.Count == 0)
                 {
-                    media = new ParticleEmitterMedia();
+                    media = new ParticleEmitterMedia
+                    {
+                        StartFrame = 0,
+                        DurationFrames = Timeline.DurationFrames,
+                    };
                     AddMedia(media);
                 }
                 else

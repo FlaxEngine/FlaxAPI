@@ -15,7 +15,8 @@ namespace FlaxEditor.GUI.Timeline
     public partial class Timeline : ContainerControl
     {
         private bool _isModified;
-        private float _framesPerSecond;
+        private float _framesPerSecond = 30.0f;
+        private int _durationFrames = 30 * 5;
         private readonly List<Track> _tracks = new List<Track>();
 
         private readonly SplitPanel _splitter;
@@ -46,6 +47,34 @@ namespace FlaxEditor.GUI.Timeline
         /// Occurs when frames per second gets changed changed.
         /// </summary>
         public event Action FramesPerSecondChanged;
+
+        /// <summary>
+        /// Gets or sets the timeline animation duration in frames.
+        /// </summary>
+        /// <seealso cref="FramesPerSecond"/>
+        public int DurationFrames
+        {
+            get => _durationFrames;
+            set
+            {
+                if (_durationFrames == value)
+                    return;
+
+                _durationFrames = value;
+                DurationFramesChanged?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the timeline animation duration in seconds.
+        /// </summary>
+        /// <seealso cref="FramesPerSecond"/>
+        public float Duration => _durationFrames / FramesPerSecond;
+
+        /// <summary>
+        /// Occurs when timeline duration gets changed changed.
+        /// </summary>
+        public event Action DurationFramesChanged;
 
         /// <summary>
         /// Gets the collection of the tracks added to this timeline (read-only list).
