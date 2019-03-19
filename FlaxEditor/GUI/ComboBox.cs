@@ -151,6 +151,11 @@ namespace FlaxEngine.GUI
         public event Action<ComboBox> PopupShowing;
 
         /// <summary>
+        /// Gets the popup menu (it may be null if not used - lazy init).
+        /// </summary>
+        public ContextMenu Popup => _popupMenu;
+
+        /// <summary>
         /// Gets a value indicating whether this popup menu is opened.
         /// </summary>
         public bool IsPopupOpened => _popupMenu != null && _popupMenu.IsOpened;

@@ -14,13 +14,33 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public partial class Timeline : ContainerControl
     {
+        private static readonly KeyValuePair<float, string>[] FPSValues =
+        {
+            new KeyValuePair<float, string>(12f, "12 fps"),
+            new KeyValuePair<float, string>(15f, "15 fps"),
+            new KeyValuePair<float, string>(23.976f, "23.97 (NTSC)"),
+            new KeyValuePair<float, string>(24f, "24 fps"),
+            new KeyValuePair<float, string>(25f, "25 (PAL)"),
+            new KeyValuePair<float, string>(30f, "30 fps"),
+            new KeyValuePair<float, string>(48f, "48 fps"),
+            new KeyValuePair<float, string>(50f, "50 (PAL)"),
+            new KeyValuePair<float, string>(60f, "60 fps"),
+            new KeyValuePair<float, string>(100f, "100 fps"),
+            new KeyValuePair<float, string>(120f, "120 fps"),
+            new KeyValuePair<float, string>(240f, "240 fps"),
+            new KeyValuePair<float, string>(0, "Custom"),
+        };
+
         private bool _isModified;
+        private bool _isChangingFps;
         private float _framesPerSecond = 30.0f;
         private int _durationFrames = 30 * 5;
         private readonly List<Track> _tracks = new List<Track>();
 
         private readonly SplitPanel _splitter;
         private Button _addTrackButton;
+        private ComboBox _fpsComboBox;
+        private FloatValueBox _fpsCustomValue;
         private Panel _tracksPanelArea;
         private VerticalPanel _tracksPanel;
         private readonly Image _playbackStop;
@@ -35,10 +55,30 @@ namespace FlaxEditor.GUI.Timeline
             get => _framesPerSecond;
             set
             {
+                value = Mathf.Clamp(value, 0.1f, 1000.0f);
                 if (Mathf.NearEqual(_framesPerSecond, value))
                     return;
 
+                _isChangingFps = true;
                 _framesPerSecond = value;
+                if (_fpsComboBox != null)
+                {
+                    int index = FPSValues.Length - 1;
+                    for (int i = 0; i < FPSValues.Length; i++)
+                    {
+                        if (Mathf.NearEqual(FPSValues[i].Key, value))
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+                    _fpsComboBox.SelectedIndex = index;
+                }
+                if (_fpsCustomValue != null)
+                {
+                    _fpsCustomValue.Value = value;
+                }
+                _isChangingFps = false;
                 FramesPerSecondChanged?.Invoke();
             }
         }
@@ -140,7 +180,8 @@ namespace FlaxEditor.GUI.Timeline
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
-        public Timeline(PlaybackButtons playbackButtons)
+        /// <param name="canChangeFps">True if user can modify the timeline FPS, otherwise it will be fixed or controlled from the code.</param>
+        public Timeline(PlaybackButtons playbackButtons, bool canChangeFps = true)
         {
             _splitter = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
@@ -164,6 +205,26 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = headerTopArea
             };
             _addTrackButton.Clicked += OnAddTrackButtonClicked;
+
+            if (canChangeFps)
+            {
+                var changeFpsWidth = 70.0f;
+                _fpsComboBox = new ComboBox(_addTrackButton.Right + 2, 2, changeFpsWidth)
+                {
+                    TooltipText = "Change timeline frames per second",
+                    Parent = headerTopArea
+                };
+                for (int i = 0; i < FPSValues.Length; i++)
+                {
+                    _fpsComboBox.AddItem(FPSValues[i].Value);
+                    if (Mathf.NearEqual(_framesPerSecond, FPSValues[i].Key))
+                        _fpsComboBox.SelectedIndex = i;
+                }
+                if (_fpsComboBox.SelectedIndex == -1)
+                    _fpsComboBox.SelectedIndex = FPSValues.Length - 1;
+                _fpsComboBox.SelectedIndexChanged += OnFpsSelectedIndexChanged;
+                _fpsComboBox.PopupShowing += OnFpsPopupShowing;
+            }
 
             var playbackButtonsSize = 24.0f;
             var icons = Editor.Instance.Icons;
@@ -223,6 +284,45 @@ namespace FlaxEditor.GUI.Timeline
                 Text = "No tracks",
                 Parent = _tracksPanelArea
             };
+        }
+
+        private void OnFpsPopupShowing(ComboBox comboBox)
+        {
+            if (_fpsCustomValue == null)
+            {
+                _fpsCustomValue = new FloatValueBox(_framesPerSecond, 63, 295, 45.0f, 0.1f, 1000.0f, 0.1f)
+                {
+                    Parent = comboBox.Popup
+                };
+                _fpsCustomValue.ValueChanged += OnFpsCustomValueChanged;
+            }
+            _fpsCustomValue.Value = FramesPerSecond;
+        }
+
+        private void OnFpsCustomValueChanged()
+        {
+            if (_isChangingFps || _fpsComboBox.SelectedIndex != FPSValues.Length - 1)
+                return;
+
+            // Custom value
+            FramesPerSecond = _fpsCustomValue.Value;
+        }
+
+        private void OnFpsSelectedIndexChanged(ComboBox comboBox)
+        {
+            if (_isChangingFps)
+                return;
+
+            if (comboBox.SelectedIndex == FPSValues.Length - 1)
+            {
+                // Custom value
+                FramesPerSecond = _fpsCustomValue.Value;
+            }
+            else
+            {
+                // Predefined value
+                FramesPerSecond = FPSValues[comboBox.SelectedIndex].Key;
+            }
         }
 
         private void OnAddTrackButtonClicked()
