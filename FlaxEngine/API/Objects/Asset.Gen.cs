@@ -80,7 +80,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public bool WaitForLoaded(double timeoutInMilliseconds = 10000.0)
+        public bool WaitForLoaded(double timeoutInMilliseconds = 30000.0)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
