@@ -31,6 +31,9 @@ namespace FlaxEditor.GUI.Timeline
             new KeyValuePair<float, string>(0, "Custom"),
         };
 
+        private static readonly float HeaderTopAreaHeight = 22.0f;
+        private static readonly float UnitsPerSecond = 100.0f;
+
         private bool _isModified;
         private bool _isChangingFps;
         private float _framesPerSecond = 30.0f;
@@ -38,6 +41,9 @@ namespace FlaxEditor.GUI.Timeline
         private readonly List<Track> _tracks = new List<Track>();
 
         private readonly SplitPanel _splitter;
+        private TimeIntervalsHeader _timeIntervalsHeader;
+        private Background _background;
+        private Panel _backgroundArea;
         private Button _addTrackButton;
         private ComboBox _fpsComboBox;
         private FloatValueBox _fpsCustomValue;
@@ -101,6 +107,7 @@ namespace FlaxEditor.GUI.Timeline
                     return;
 
                 _durationFrames = value;
+                ArrangeTracks();
                 DurationFramesChanged?.Invoke();
             }
         }
@@ -190,8 +197,7 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = this
             };
 
-            var headerTopAreaHeight = 22.0f;
-            var headerTopArea = new ContainerControl(0, 0, _splitter.Panel1.Width, headerTopAreaHeight)
+            var headerTopArea = new ContainerControl(0, 0, _splitter.Panel1.Width, HeaderTopAreaHeight)
             {
                 BackgroundColor = Style.Current.LightBackground,
                 DockStyle = DockStyle.Top,
@@ -266,7 +272,7 @@ namespace FlaxEditor.GUI.Timeline
 
             _tracksPanelArea = new Panel(ScrollBars.Vertical)
             {
-                Size = new Vector2(_splitter.Panel1.Width, _splitter.Panel1.Height - playbackButtonsSize - headerTopAreaHeight),
+                Size = new Vector2(_splitter.Panel1.Width, _splitter.Panel1.Height - playbackButtonsSize - HeaderTopAreaHeight),
                 DockStyle = DockStyle.Fill,
                 Parent = _splitter.Panel1
             };
@@ -283,6 +289,25 @@ namespace FlaxEditor.GUI.Timeline
                 TextColorHighlighted = Color.Gray * 1.1f,
                 Text = "No tracks",
                 Parent = _tracksPanelArea
+            };
+
+            _timeIntervalsHeader = new TimeIntervalsHeader
+            {
+                BackgroundColor = Color.Blue,
+                Height = HeaderTopAreaHeight,
+                DockStyle = DockStyle.Top,
+                Parent = _splitter.Panel2
+            };
+            _backgroundArea = new Panel(ScrollBars.Both)
+            {
+                DockStyle = DockStyle.Fill,
+                Parent = _splitter.Panel2
+            };
+            _background = new Background
+            {
+                BackgroundColor = Color.Red,
+                Height = 0,
+                Parent = _backgroundArea
             };
         }
 
@@ -467,8 +492,8 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         protected virtual void OnTracksChanged()
         {
-            _noTracksLabel.Visible = _tracks.Count == 0;
             TracksChanged?.Invoke();
+            ArrangeTracks();
         }
 
         /// <summary>
@@ -691,6 +716,11 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public void ArrangeTracks()
         {
+            if (_noTracksLabel != null)
+            {
+                _noTracksLabel.Visible = _tracks.Count == 0;
+            }
+
             for (int i = 0; i < _tracks.Count; i++)
             {
                 var track = _tracks[i];
@@ -704,6 +734,12 @@ namespace FlaxEditor.GUI.Timeline
                     track._xOffset = track.ParentTrack._xOffset + 12.0f;
                     track.Visible = track.ParentTrack.Visible && track.ParentTrack.IsExpanded;
                 }
+            }
+
+            if (_background != null)
+            {
+                float height = _tracksPanel.Height;
+                _background.Bounds = new Rectangle(0, 0, Duration * UnitsPerSecond, height);
             }
         }
 

@@ -365,9 +365,9 @@ namespace FlaxEditor.GUI.Timeline
                 var targetTracks = _dragTracks.Objects.ConvertAll(x => _timeline.SelectedTracks.Find(y => y.Name == x));
                 for (int i = 0; i < targetTracks.Count; i++)
                 {
-                    var targetActor = targetTracks[i];
-                    targetActor.ParentTrack = newParent;
-                    targetActor.TrackIndex = newOrder;
+                    var targetTrack = targetTracks[i];
+                    targetTrack.ParentTrack = newParent;
+                    targetTrack.TrackIndex = newOrder;
                 }
                 _timeline.OnTracksOrderChanged();
 
