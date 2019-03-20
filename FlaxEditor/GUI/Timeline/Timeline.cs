@@ -31,8 +31,9 @@ namespace FlaxEditor.GUI.Timeline
             new KeyValuePair<float, string>(0, "Custom"),
         };
 
-        private static readonly float HeaderTopAreaHeight = 22.0f;
-        private static readonly float UnitsPerSecond = 100.0f;
+        internal static readonly float HeaderTopAreaHeight = 22.0f;
+        internal static readonly float UnitsPerSecond = 100.0f;
+        internal static readonly float StartOffset = 50.0f;
 
         private bool _isModified;
         private bool _isChangingFps;
@@ -293,19 +294,20 @@ namespace FlaxEditor.GUI.Timeline
 
             _timeIntervalsHeader = new TimeIntervalsHeader
             {
-                BackgroundColor = Color.Blue,
+                BackgroundColor = Style.Current.Background.RGBMultiplied(0.9f),
                 Height = HeaderTopAreaHeight,
                 DockStyle = DockStyle.Top,
                 Parent = _splitter.Panel2
             };
             _backgroundArea = new Panel(ScrollBars.Both)
             {
+                BackgroundColor = Style.Current.Background.RGBMultiplied(0.7f),
                 DockStyle = DockStyle.Fill,
                 Parent = _splitter.Panel2
             };
-            _background = new Background
+            _background = new Background(this)
             {
-                BackgroundColor = Color.Red,
+                BackgroundColor = Style.Current.Background,
                 Height = 0,
                 Parent = _backgroundArea
             };
@@ -739,7 +741,8 @@ namespace FlaxEditor.GUI.Timeline
             if (_background != null)
             {
                 float height = _tracksPanel.Height;
-                _background.Bounds = new Rectangle(0, 0, Duration * UnitsPerSecond, height);
+                _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond, height);
+                _background.Visible = _tracks.Count > 0;
             }
         }
 
