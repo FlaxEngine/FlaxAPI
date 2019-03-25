@@ -267,9 +267,8 @@ namespace FlaxEngine
         {
             if (_control == null || _control.GetType() != controlType)
             {
-                if (controlType == null)
-                    throw new FlaxException("Missing UIControl type.");
-                Control = (Control)Activator.CreateInstance(controlType);
+                if (controlType != null)
+                    Control = (Control)Activator.CreateInstance(controlType);
             }
 
             if (_control != null)
