@@ -525,6 +525,10 @@ namespace FlaxEditor.Modules
             }
             else
             {
+                // Check if actor is selected in editor
+                if (Editor.SceneEditing.Selection.Contains(node))
+                    Editor.SceneEditing.Deselect();
+
                 // Remove node (user may unlink actor from the scene but not destroy the actor)
                 node.Dispose();
             }
