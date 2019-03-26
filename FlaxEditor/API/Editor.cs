@@ -210,6 +210,20 @@ namespace FlaxEditor
 
             ScriptsBuilder.ScriptsReloadBegin += ScriptsBuilder_ScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd += ScriptsBuilder_ScriptsReloadEnd;
+            UIControl.FallbackParentGetDelegate += OnUIControlFallbackParentGet;
+        }
+
+        private ContainerControl OnUIControlFallbackParentGet(UIControl control)
+        {
+            // Check if prefab root control is this UIControl
+            var loadingPreview = Viewport.Previews.PrefabPreview.LoadingPreview;
+            if (loadingPreview != null)
+            {
+                // Link it to the prefab preview to see it in the editor
+                loadingPreview.customControlLinked = control.Control;
+                return loadingPreview;
+            }
+            return null;
         }
 
         private void ScriptsBuilder_ScriptsReloadBegin()
