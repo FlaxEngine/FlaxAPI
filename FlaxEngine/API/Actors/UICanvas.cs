@@ -270,23 +270,26 @@ namespace FlaxEngine
                 // In 3D world
                 GetLocalToWorldMatrix(out world);
             }
-            else if (_renderMode == CanvasRenderMode.CameraSpace && RenderCamera)
+            else if (_renderMode == CanvasRenderMode.CameraSpace)
             {
                 Matrix tmp1, tmp2;
 
+                // Use default camera is not specified
+                var camera = RenderCamera ?? Camera.MainCamera;
+
                 // Adjust GUI size to the viewport size at the given distance form the camera
-                var viewport = RenderCamera.Viewport;
-                if (RenderCamera.UsePerspective)
+                var viewport = camera.Viewport;
+                if (camera.UsePerspective)
                 {
                     Matrix tmp3;
-                    RenderCamera.GetMatrices(out tmp1, out tmp3, ref viewport);
+                    camera.GetMatrices(out tmp1, out tmp3, ref viewport);
                     Matrix.Multiply(ref tmp1, ref tmp3, out tmp2);
                     var frustum = new BoundingFrustum(tmp2);
                     _guiRoot.Size = new Vector2(frustum.GetWidthAtDepth(Distance), frustum.GetHeightAtDepth(Distance));
                 }
                 else
                 {
-                    _guiRoot.Size = viewport.Size * RenderCamera.OrthographicScale;
+                    _guiRoot.Size = viewport.Size * camera.OrthographicScale;
                 }
 
                 // Center viewport (and flip)
@@ -295,8 +298,8 @@ namespace FlaxEngine
                 Matrix.Multiply(ref world, ref tmp2, out tmp1);
 
                 // In front of the camera
-                var viewPos = RenderCamera.Position;
-                var viewRot = RenderCamera.Orientation;
+                var viewPos = camera.Position;
+                var viewRot = camera.Orientation;
                 var viewUp = Vector3.Up * viewRot;
                 var viewForward = Vector3.Forward * viewRot;
                 var pos = viewPos + viewForward * Distance;
