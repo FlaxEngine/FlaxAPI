@@ -343,6 +343,8 @@ namespace FlaxEngine
                 {
                     _renderer = New<CanvasRenderer>();
                     _renderer.Canvas = this;
+                    if (IsActiveInHierarchy && Scene)
+                        SceneRenderTask.GlobalCustomPostFx.Add(_renderer);
                 }
                 break;
             }
