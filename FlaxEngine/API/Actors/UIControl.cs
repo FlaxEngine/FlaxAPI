@@ -173,7 +173,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// The fallback callback used to handle <see cref="UIControl"/> parent container control to link when it fails to find the default parent. Can be sued to link the controls into a custom control.
+        /// The fallback callback used to handle <see cref="UIControl"/> parent container control to link when it fails to find the default parent. Can be used to link the controls into a custom control.
         /// </summary>
         public static Func<UIControl, ContainerControl> FallbackParentGetDelegate;
 
