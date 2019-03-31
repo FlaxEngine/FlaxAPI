@@ -198,6 +198,7 @@ namespace FlaxEditor.Content.Import
             {
                 var entry = (ImportFileEntry)Tag;
                 entry.ModifyResultFilename(popup.Text);
+                Text = string.Format("{0} ({1})", Path.GetFileName(entry.SourceUrl), popup.Text);
             }
         }
 
