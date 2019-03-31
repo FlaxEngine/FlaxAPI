@@ -894,11 +894,31 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">The input location of the point to convert.</param>
         /// <returns>The converted point location in parent control coordinates.</returns>
+        public Vector2 PointToParent(Vector2 location)
+        {
+            return PointToParent(ref location);
+        }
+
+        /// <summary>
+        /// Converts point in local control's space into parent control coordinates.
+        /// </summary>
+        /// <param name="location">The input location of the point to convert.</param>
+        /// <returns>The converted point location in parent control coordinates.</returns>
         public virtual Vector2 PointToParent(ref Vector2 location)
         {
             Vector2 result;
             Matrix3x3.Transform2D(ref location, ref _cachedTransform, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Converts point in parent control coordinates into local control's space.
+        /// </summary>
+        /// <param name="locationParent">The input location of the point to convert.</param>
+        /// <returns>The converted point location in control's space.</returns>
+        public Vector2 PointFromParent(Vector2 locationParent)
+        {
+            return PointFromParent(ref locationParent);
         }
 
         /// <summary>
