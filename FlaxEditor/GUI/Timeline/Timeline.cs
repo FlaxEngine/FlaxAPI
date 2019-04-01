@@ -31,9 +31,20 @@ namespace FlaxEditor.GUI.Timeline
             new KeyValuePair<float, string>(0, "Custom"),
         };
 
-        internal static readonly float HeaderTopAreaHeight = 22.0f;
-        internal static readonly float UnitsPerSecond = 100.0f;
-        internal static readonly float StartOffset = 50.0f;
+        /// <summary>
+        /// The header top area height (in pixels).
+        /// </summary>
+        public static readonly float HeaderTopAreaHeight = 22.0f;
+
+        /// <summary>
+        /// The timeline units per second (on time axis).
+        /// </summary>
+        public static readonly float UnitsPerSecond = 100.0f;
+
+        /// <summary>
+        /// The start offset for the timeline (on time axis).
+        /// </summary>
+        public static readonly float StartOffset = 50.0f;
 
         private bool _isModified;
         private bool _isChangingFps;
@@ -43,6 +54,7 @@ namespace FlaxEditor.GUI.Timeline
 
         private readonly SplitPanel _splitter;
         private TimeIntervalsHeader _timeIntervalsHeader;
+        private ContainerControl _backgroundScroll;
         private Background _background;
         private Panel _backgroundArea;
         private Button _addTrackButton;
@@ -114,7 +126,7 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
-        /// Gets or sets the timeline animation duration in seconds.
+        /// Gets the timeline animation duration in seconds.
         /// </summary>
         /// <seealso cref="FramesPerSecond"/>
         public float Duration => _durationFrames / FramesPerSecond;
@@ -183,6 +195,16 @@ namespace FlaxEditor.GUI.Timeline
         /// Occurs when any collection of the selected objects in the timeline gets changed.
         /// </summary>
         public event Action SelectionChanged;
+
+        /// <summary>
+        /// Gets the media controls background panel (with scroll bars).
+        /// </summary>
+        public Panel MediaBackground => _backgroundArea;
+
+        /// <summary>
+        /// Gets the media controls parent panel.
+        /// </summary>
+        public Background MediaPanel => _background;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
@@ -305,9 +327,15 @@ namespace FlaxEditor.GUI.Timeline
                 DockStyle = DockStyle.Fill,
                 Parent = _splitter.Panel2
             };
+            _backgroundScroll = new ContainerControl
+            {
+                ClipChildren = false,
+                Height = 0,
+                Parent = _backgroundArea
+            };
             _background = new Background(this)
             {
-                BackgroundColor = Style.Current.Background,
+                ClipChildren = false,
                 Height = 0,
                 Parent = _backgroundArea
             };
@@ -736,13 +764,24 @@ namespace FlaxEditor.GUI.Timeline
                     track._xOffset = track.ParentTrack._xOffset + 12.0f;
                     track.Visible = track.ParentTrack.Visible && track.ParentTrack.IsExpanded;
                 }
+
+                for (int j = 0; j < track.Media.Count; j++)
+                {
+                    var media = track.Media[j];
+
+                    media.Visible = track.Visible;
+                    media.Bounds = new Rectangle(media.X, track.Y, media.Width, track.Height);
+                }
             }
 
             if (_background != null)
             {
                 float height = _tracksPanel.Height;
-                _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond, height);
+
                 _background.Visible = _tracks.Count > 0;
+                _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond, height);
+
+                _backgroundScroll.Bounds = new Rectangle(0, 0, _background.Width + 5 * StartOffset, height);
             }
         }
 

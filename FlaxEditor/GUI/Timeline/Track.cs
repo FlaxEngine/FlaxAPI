@@ -276,6 +276,7 @@ namespace FlaxEditor.GUI.Timeline
         protected virtual void OnMediaChanged()
         {
             MediaChanged?.Invoke(this);
+            _timeline?.ArrangeTracks();
         }
 
         /// <summary>
