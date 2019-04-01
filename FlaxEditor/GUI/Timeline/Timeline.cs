@@ -323,6 +323,7 @@ namespace FlaxEditor.GUI.Timeline
             };
             _backgroundArea = new Panel(ScrollBars.Both)
             {
+                ClipChildren = false,
                 BackgroundColor = Style.Current.Background.RGBMultiplied(0.7f),
                 DockStyle = DockStyle.Fill,
                 Parent = _splitter.Panel2

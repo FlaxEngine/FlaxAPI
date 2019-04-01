@@ -367,8 +367,11 @@ namespace FlaxEditor.GUI.Timeline
                 for (int i = 0; i < targetTracks.Count; i++)
                 {
                     var targetTrack = targetTracks[i];
-                    targetTrack.ParentTrack = newParent;
-                    targetTrack.TrackIndex = newOrder;
+                    if (targetTrack != null)
+                    {
+                        targetTrack.ParentTrack = newParent;
+                        targetTrack.TrackIndex = newOrder;
+                    }
                 }
                 _timeline.OnTracksOrderChanged();
 

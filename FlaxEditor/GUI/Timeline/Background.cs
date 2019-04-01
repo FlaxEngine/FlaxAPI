@@ -31,6 +31,11 @@ namespace FlaxEditor.GUI.Timeline
             var linesColor = Style.Current.BackgroundNormal;
             var areaLeft = -X;
             var areaRight = Parent.Width + mediaBackground.ScrollRightCorner.X;
+            var height = Height;
+            var leftSideMin = PointFromParent(Vector2.Zero);
+            var leftSideMax = BottomLeft;
+            var rightSideMin = UpperRight;
+            var rightSideMax = PointFromParent(Parent.BottomRight) + mediaBackground.ScrollRightCorner;
 
             // Draw lines between tracks
             Render2D.DrawLine(new Vector2(areaLeft, 0.5f), new Vector2(areaRight, 0.5f), linesColor);
@@ -57,21 +62,32 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Draw vertical lines for time axis
-            
-            // TODO: vertical lines
+            var leftTime = Mathf.Floor((leftSideMin.X - Timeline.StartOffset) / Timeline.UnitsPerSecond);
+            var rightTime = Mathf.Ceil((rightSideMax.X - Timeline.StartOffset) / Timeline.UnitsPerSecond);
+            var verticalLinesHeaderExtend = Timeline.HeaderTopAreaHeight * 0.5f;
+            for (float time = leftTime; time <= rightTime; time += 1.0f)
+            {
+                float x = time * Timeline.UnitsPerSecond + Timeline.StartOffset;
 
-            // TODO: time codes
+                // Vertical line
+                Render2D.FillRectangle(new Rectangle(x - 0.5f, 0, 1.0f, height), style.ForegroundDisabled.RGBMultiplied(0.7f));
+
+                // Header line
+                Render2D.FillRectangle(new Rectangle(x - 0.5f, -verticalLinesHeaderExtend, 1.0f, verticalLinesHeaderExtend), style.Foreground.RGBMultiplied(0.8f));
+
+                // Time
+                // TODO: display modes configuration (frames, time, timecode)
+                var frame = x / _timeline.FramesPerSecond;
+                var label = frame.ToString("0000");
+                var labelRect = new Rectangle(x + 2, -verticalLinesHeaderExtend, 50, verticalLinesHeaderExtend);
+                Render2D.DrawText(style.FontSmall, label, labelRect, style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.8f);
+            }
 
             DrawChildren();
 
             // Darken area outside the duration
             var outsideDurationAreaColor = new Color(0, 0, 0, 100);
-            var height = Height;
-            var leftSideMin = PointFromParent(Vector2.Zero);
-            var leftSideMax = BottomLeft;
             Render2D.FillRectangle(new Rectangle(leftSideMin, leftSideMax.X - leftSideMin.X, height), outsideDurationAreaColor);
-            var rightSideMin = UpperRight;
-            var rightSideMax = PointFromParent(Parent.BottomRight) + mediaBackground.ScrollRightCorner;
             Render2D.FillRectangle(new Rectangle(rightSideMin, rightSideMax.X - rightSideMin.X, height), outsideDurationAreaColor);
         }
     }
