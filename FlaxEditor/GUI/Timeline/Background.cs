@@ -61,9 +61,15 @@ namespace FlaxEditor.GUI.Timeline
 
             DrawChildren();
 
-            // TODO: darken area outside the duration
-
-            // 
+            // Darken area outside the duration
+            var outsideDurationAreaColor = new Color(0, 0, 0, 100);
+            var height = Height;
+            var leftSideMin = PointFromParent(Vector2.Zero);
+            var leftSideMax = BottomLeft;
+            Render2D.FillRectangle(new Rectangle(leftSideMin, leftSideMax.X - leftSideMin.X, height), outsideDurationAreaColor);
+            var rightSideMin = UpperRight;
+            var rightSideMax = PointFromParent(Parent.BottomRight);
+            Render2D.FillRectangle(new Rectangle(rightSideMin, rightSideMax.X - rightSideMin.X, height), outsideDurationAreaColor);
         }
     }
 }
