@@ -26,10 +26,11 @@ namespace FlaxEditor.GUI.Timeline
         public override void Draw()
         {
             var style = Style.Current;
+            var mediaBackground = _timeline.MediaBackground;
             var tracks = _timeline.Tracks;
             var linesColor = Style.Current.BackgroundNormal;
             var areaLeft = -X;
-            var areaRight = Parent.Width;
+            var areaRight = Parent.Width + mediaBackground.ScrollRightCorner.X;
 
             // Draw lines between tracks
             Render2D.DrawLine(new Vector2(areaLeft, 0.5f), new Vector2(areaRight, 0.5f), linesColor);
@@ -55,6 +56,8 @@ namespace FlaxEditor.GUI.Timeline
                 }
             }
 
+            // Draw vertical lines for time axis
+            
             // TODO: vertical lines
 
             // TODO: time codes
@@ -68,7 +71,7 @@ namespace FlaxEditor.GUI.Timeline
             var leftSideMax = BottomLeft;
             Render2D.FillRectangle(new Rectangle(leftSideMin, leftSideMax.X - leftSideMin.X, height), outsideDurationAreaColor);
             var rightSideMin = UpperRight;
-            var rightSideMax = PointFromParent(Parent.BottomRight);
+            var rightSideMax = PointFromParent(Parent.BottomRight) + mediaBackground.ScrollRightCorner;
             Render2D.FillRectangle(new Rectangle(rightSideMin, rightSideMax.X - rightSideMin.X, height), outsideDurationAreaColor);
         }
     }
