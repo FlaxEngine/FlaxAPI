@@ -20,21 +20,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Initializes the particle system that plays a given particles emitter.
+        /// Initializes the particle system that plays a single particles emitter.
         /// </summary>
-        /// <param name="emitter">...</param>
-        /// <param name="duration">...</param>
-        /// <param name="loop">...</param>
+        /// <remarks>
+        /// This can be used only for virtual assets.
+        /// </remarks>
+        /// <param name="emitter">The emitter to playback.</param>
+        /// <param name="duration">the timeline animation duration in seconds.</param>
+        /// <param name="fps">The amount of frames per second of the timeline animation.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Init(ParticleEmitter emitter, float duration, bool loop)
+        public void Init(ParticleEmitter emitter, float duration, float fps = 60.0f)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Init(unmanagedPtr, Object.GetUnmanagedPtr(emitter), duration, loop);
+            Internal_Init(unmanagedPtr, Object.GetUnmanagedPtr(emitter), duration, fps);
 #endif
         }
 
@@ -42,7 +45,7 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Init(IntPtr obj, IntPtr emitter, float duration, bool loop);
+        internal static extern void Internal_Init(IntPtr obj, IntPtr emitter, float duration, float fps);
 #endif
 
         #endregion

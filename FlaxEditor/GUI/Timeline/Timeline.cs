@@ -67,7 +67,7 @@ namespace FlaxEditor.GUI.Timeline
         private readonly Label _noTracksLabel;
 
         /// <summary>
-        /// Gets or sets the frames amount per second of the timeline animation.
+        /// Gets or sets the amount of frames per second of the timeline animation.
         /// </summary>
         public float FramesPerSecond
         {
@@ -99,6 +99,7 @@ namespace FlaxEditor.GUI.Timeline
                 }
                 _isChangingFps = false;
                 FramesPerSecondChanged?.Invoke();
+                MarkAsEdited();
             }
         }
 
@@ -400,6 +401,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             var archetype = (TrackArchetype)button.Tag;
             AddTrack(archetype);
+            MarkAsEdited();
         }
 
         private void OnStopClicked(Image stop, MouseButton button)
@@ -771,7 +773,7 @@ namespace FlaxEditor.GUI.Timeline
                     var media = track.Media[j];
 
                     media.Visible = track.Visible;
-                    media.Bounds = new Rectangle(media.X, track.Y, media.Width, track.Height);
+                    media.Bounds = new Rectangle(media.X, track.Y + 2, media.Width, track.Height - 4);
                 }
             }
 

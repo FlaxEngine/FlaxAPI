@@ -25,7 +25,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (_emitter != value)
                 {
                     _emitter = value;
-                    _system.Init(value, 5.0f, true);
+                    _system.Init(value, 5.0f);
                 }
             }
         }
