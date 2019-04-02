@@ -113,7 +113,11 @@ namespace FlaxEditor.Surface.Elements
 
             // Note: this value box may edit on component of the vector like Vector3.Y, BoxID from Archetype tells which component pick
 
-            if (value is int valueInt)
+            if (value is bool valueBool)
+            {
+                result = valueBool;
+            }
+            else if (value is int valueInt)
             {
                 result = valueInt != 0;
             }
