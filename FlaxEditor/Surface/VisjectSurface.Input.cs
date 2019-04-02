@@ -257,6 +257,7 @@ namespace FlaxEditor.Surface
             if (handled)
             {
                 // Clear flags
+                _isMovingSelection = false;
                 _rightMouseDown = false;
                 _leftMouseDown = false;
                 return true;
