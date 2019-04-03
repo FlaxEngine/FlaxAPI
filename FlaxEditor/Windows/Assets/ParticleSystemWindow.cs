@@ -88,15 +88,12 @@ namespace FlaxEditor.Windows.Assets
         /// <returns>True if cannot refresh it, otherwise false.</returns>
         public bool RefreshTempAsset()
         {
-            // Early check
             if (_asset == null || _isWaitingForTimelineLoad)
                 return true;
 
-            // Check if surface has been edited
             if (_timeline.IsModified)
             {
-                // TODO: saving timeline data
-                //_timeline.Save();
+                _timeline.Save(_asset);
             }
 
             return false;
@@ -116,12 +113,7 @@ namespace FlaxEditor.Windows.Assets
                 return;
             }
 
-            // Copy shader cache from the temporary Particle Emitter (will skip compilation on Reload - faster)
-            Guid dstId = _item.ID;
-            Guid srcId = _asset.ID;
-            Editor.Internal_CopyCache(ref dstId, ref srcId);
-
-            // Update original Particle Emitter so user can see changes in the scene
+            // Update original particle system so user can see changes in the scene
             if (SaveToOriginal())
             {
                 // Error
@@ -182,27 +174,9 @@ namespace FlaxEditor.Windows.Assets
                 // Clear flag
                 _isWaitingForTimelineLoad = false;
 
-                // TODO: loading timeline data from the asset
-                /*
                 // Load timeline data from the asset
-                byte[] data = _asset.LoadSurface(true);
-                if (data == null)
-                {
-                    // Error
-                    Editor.LogError("Failed to load Particle Emitter surface data.");
-                    Close();
-                    return;
-                }
+                _timeline.Load(_asset);
 
-                // Load surface graph
-                if (_surface.Load(data))
-                {
-                    // Error
-                    Editor.LogError("Failed to load Particle Emitter surface.");
-                    Close();
-                    return;
-                }
-                */
                 // Setup
                 _timeline.Enabled = true;
                 _propertiesEditor.BuildLayout();

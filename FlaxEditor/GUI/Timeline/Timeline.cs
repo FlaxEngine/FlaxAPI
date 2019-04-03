@@ -50,7 +50,11 @@ namespace FlaxEditor.GUI.Timeline
         private bool _isChangingFps;
         private float _framesPerSecond = 30.0f;
         private int _durationFrames = 30 * 5;
-        private readonly List<Track> _tracks = new List<Track>();
+
+        /// <summary>
+        /// The tracks collection.
+        /// </summary>
+        protected readonly List<Track> _tracks = new List<Track>();
 
         private readonly SplitPanel _splitter;
         private TimeIntervalsHeader _timeIntervalsHeader;
@@ -690,6 +694,36 @@ namespace FlaxEditor.GUI.Timeline
             _isModified = true;
 
             Modified?.Invoke();
+        }
+
+        /// <summary>
+        /// Clears this instance. Removes all tracks, parameters and state.
+        /// </summary>
+        public void Clear()
+        {
+            Deselect();
+
+            // Remove all tracks
+            var tracks = new List<Track>(_tracks);
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                OnDeleteTrack(tracks[i]);
+            }
+            OnTracksChanged();
+
+            ClearEditedFlag();
+        }
+
+        /// <summary>
+        /// Clears the modification flag.
+        /// </summary>
+        public void ClearEditedFlag()
+        {
+            if (_isModified)
+            {
+                _isModified = false;
+                Modified?.Invoke();
+            }
         }
 
         internal void ChangeTrackIndex(Track track, int newIndex)
