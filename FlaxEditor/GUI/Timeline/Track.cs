@@ -179,6 +179,14 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnTimelineChanged(Timeline timeline)
         {
             _timeline = timeline;
+
+            if (_media.Count > 0)
+            {
+                foreach (var media in _media)
+                {
+                    media.OnTimelineChanged(this);
+                }
+            }
         }
 
         /// <summary>
@@ -374,6 +382,7 @@ namespace FlaxEditor.GUI.Timeline
                     }
                 }
                 _timeline.OnTracksOrderChanged();
+                _timeline.MarkAsEdited();
 
                 result = DragDropEffect.Move;
             }
@@ -504,6 +513,7 @@ namespace FlaxEditor.GUI.Timeline
         protected virtual void OnRename(string newName)
         {
             Name = newName;
+            Timeline.MarkAsEdited();
         }
 
         /// <summary>

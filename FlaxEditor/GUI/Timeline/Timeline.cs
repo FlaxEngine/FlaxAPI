@@ -512,6 +512,17 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Adds the loaded track. Does not handle any UI updates.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        protected void AddLoadedTrack(Track track)
+        {
+            _tracks.Add(track);
+            track.OnTimelineChanged(this);
+            track.Parent = _tracksPanel;
+        }
+
+        /// <summary>
         /// Removes the track.
         /// </summary>
         /// <param name="track">The track.</param>

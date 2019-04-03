@@ -46,6 +46,7 @@ namespace FlaxEditor.GUI.Timeline
         private void OnColorChanged(Color color, bool sliding)
         {
             IconColor = color;
+            Timeline.MarkAsEdited();
         }
 
         /// <inheritdoc />

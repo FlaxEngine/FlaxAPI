@@ -41,7 +41,7 @@ namespace FlaxEditor.GUI.Timeline
                     media = new ParticleEmitterMedia
                     {
                         StartFrame = 0,
-                        DurationFrames = Timeline.DurationFrames,
+                        DurationFrames = Timeline?.DurationFrames ?? 60,
                     };
                     AddMedia(media);
                 }
@@ -54,7 +54,7 @@ namespace FlaxEditor.GUI.Timeline
                 if (prev != media.Emitter)
                 {
                     _picker.SelectedAsset = value;
-                    Timeline.MarkAsEdited();
+                    Timeline?.MarkAsEdited();
                 }
             }
         }

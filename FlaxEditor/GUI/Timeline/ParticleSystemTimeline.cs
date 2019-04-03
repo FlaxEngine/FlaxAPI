@@ -106,13 +106,13 @@ namespace FlaxEditor.GUI.Timeline
                     // Emitter
                     case 0:
                     {
-                        track = new ParticleEmitterTrack(TrackArchetypes[0]);
+                        track = new ParticleEmitterTrack(TrackArchetypes[1]);
                         break;
                     }
                     // Folder
                     case 1:
                     {
-                        track = new FolderTrack(TrackArchetypes[1]);
+                        track = new FolderTrack(TrackArchetypes[0]);
                         break;
                     }
                     default: throw new Exception("Unknown Particle System track type " + type);
@@ -120,6 +120,7 @@ namespace FlaxEditor.GUI.Timeline
                     int parentIndex = stream.ReadInt32();
                     int childrenCount = stream.ReadInt32();
                     track.Name = Utilities.Utils.ReadStr(stream, -13);
+                    track.Tag = parentIndex;
 
                     switch (type)
                     {
@@ -143,9 +144,23 @@ namespace FlaxEditor.GUI.Timeline
                         break;
                     }
                     }
+
+                    AddLoadedTrack(track);
+                }
+                for (int i = 0; i < tracksCount; i++)
+                {
+                    var parentIndex = (int)_tracks[i].Tag;
+                    _tracks[i].Tag = null;
+                    if (parentIndex != -1)
+                        _tracks[i].ParentTrack = _tracks[parentIndex];
+                }
+                for (int i = 0; i < tracksCount; i++)
+                {
+                    _tracks[i].OnLoaded();
                 }
             }
 
+            ArrangeTracks();
             ClearEditedFlag();
         }
 
@@ -216,14 +231,23 @@ namespace FlaxEditor.GUI.Timeline
                     case 0:
                     {
                         var e = (ParticleEmitterTrack)track;
-                        var m = e.Media[0];
-                        var emitter = emitters[i].Emitter;
-                        var id = emitter ? emitter.ID : Guid.Empty;
+                        var emitter = e.Emitter;
+                        if (emitter)
+                        {
+                            var m = e.Media[0];
 
-                        stream.Write(id.ToByteArray());
-                        stream.Write(emitters.IndexOf(e));
-                        stream.Write(m.StartFrame);
-                        stream.Write(m.DurationFrames);
+                            stream.Write(emitter.ID.ToByteArray());
+                            stream.Write(emitters.IndexOf(e));
+                            stream.Write(m.StartFrame);
+                            stream.Write(m.DurationFrames);
+                        }
+                        else
+                        {
+                            stream.Write(Guid.Empty.ToByteArray());
+                            stream.Write(emitters.IndexOf(e));
+                            stream.Write(0);
+                            stream.Write(DurationFrames);
+                        }
                         break;
                     }
                     // Folder
