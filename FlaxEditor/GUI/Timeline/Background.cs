@@ -62,12 +62,12 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Draw vertical lines for time axis
-            var leftTime = Mathf.Floor((leftSideMin.X - Timeline.StartOffset) / Timeline.UnitsPerSecond);
-            var rightTime = Mathf.Ceil((rightSideMax.X - Timeline.StartOffset) / Timeline.UnitsPerSecond);
+            var leftFrame = Mathf.Floor((leftSideMin.X - Timeline.StartOffset) / Timeline.UnitsPerSecond) * _timeline.FramesPerSecond;
+            var rightFrame = Mathf.Ceil((rightSideMax.X - Timeline.StartOffset) / Timeline.UnitsPerSecond) * _timeline.FramesPerSecond;
             var verticalLinesHeaderExtend = Timeline.HeaderTopAreaHeight * 0.5f;
-            for (float time = leftTime; time <= rightTime; time += 1.0f)
+            for (float frame = leftFrame; frame <= rightFrame; frame += _timeline.FramesPerSecond)
             {
-                float x = time * Timeline.UnitsPerSecond + Timeline.StartOffset;
+                float x = (frame / _timeline.FramesPerSecond) * Timeline.UnitsPerSecond + Timeline.StartOffset;
 
                 // Vertical line
                 Render2D.FillRectangle(new Rectangle(x - 0.5f, 0, 1.0f, height), style.ForegroundDisabled.RGBMultiplied(0.7f));
@@ -77,7 +77,6 @@ namespace FlaxEditor.GUI.Timeline
 
                 // Time
                 // TODO: display modes configuration (frames, time, timecode)
-                var frame = x / _timeline.FramesPerSecond;
                 var label = frame.ToString("0000");
                 var labelRect = new Rectangle(x + 2, -verticalLinesHeaderExtend, 50, verticalLinesHeaderExtend);
                 Render2D.DrawText(style.FontSmall, label, labelRect, style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.8f);
