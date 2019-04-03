@@ -41,11 +41,54 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Loads the particle system timeline data from the asset.
+        /// </summary>
+        /// <returns>Loaded timeline bytes or null if cannot load it.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public byte[] LoadTimeline()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_LoadTimeline(unmanagedPtr);
+#endif
+        }
+
+        /// <summary>
+        /// Saves the particle system timeline data. Timeline is saved to the asset and then asset is reloaded.
+        /// </summary>
+        /// <remarks>
+        /// The cannot be used by virtual assets.
+        /// </remarks>
+        /// <param name="data">The timeline data.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void SaveTimeline(byte[] data)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_SaveTimeline(unmanagedPtr, data);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Init(IntPtr obj, IntPtr emitter, float duration, float fps);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_LoadTimeline(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SaveTimeline(IntPtr obj, byte[] data);
 #endif
 
         #endregion
