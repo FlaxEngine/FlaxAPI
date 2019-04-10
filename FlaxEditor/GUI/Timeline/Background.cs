@@ -23,6 +23,14 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
+        public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
+        {
+            // Pass all events
+            location = PointFromParent(ref locationParent);
+            return true;
+        }
+
+        /// <inheritdoc />
         public override void Draw()
         {
             var style = Style.Current;

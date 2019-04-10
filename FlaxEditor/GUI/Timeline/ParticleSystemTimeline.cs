@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 
@@ -45,7 +44,7 @@ namespace FlaxEditor.GUI.Timeline
         /// Loads the timeline from the specified <see cref="FlaxEngine.ParticleSystem"/> asset.
         /// </summary>
         /// <param name="asset">The asset.</param>
-        public void Load(FlaxEngine.ParticleSystem asset)
+        public void Load(ParticleSystem asset)
         {
             var data = asset.LoadTimeline();
             Load(data);
@@ -272,7 +271,7 @@ namespace FlaxEditor.GUI.Timeline
         /// Saves the timeline data to the <see cref="FlaxEngine.ParticleSystem"/> asset.
         /// </summary>
         /// <param name="asset">The asset.</param>
-        public void Save(FlaxEngine.ParticleSystem asset)
+        public void Save(ParticleSystem asset)
         {
             var data = Save();
             asset.SaveTimeline(data);
