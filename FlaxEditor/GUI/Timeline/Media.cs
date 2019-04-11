@@ -156,7 +156,7 @@ namespace FlaxEditor.GUI.Timeline
             if (buttons == MouseButton.Left)
             {
                 _isMoving = true;
-                _startMoveLocation = location;
+                _startMoveLocation = Root.MousePosition;
                 _startMoveStartFrame = StartFrame;
                 _startMoveDuration = DurationFrames;
                 _startMoveLeftEdge = MoveLeftEdgeRect.Contains(ref location);
@@ -177,8 +177,9 @@ namespace FlaxEditor.GUI.Timeline
 
             if (_isMoving)
             {
-                Vector2 moveLocation = location + Root.TrackingMouseOffset;
-                int moveDelta = Mathf.RoundToInt((moveLocation.X - _startMoveLocation.X) * 0.1f);
+                var moveLocation = Root.MousePosition;
+                var moveLocationDelta = moveLocation - _startMoveLocation;
+                var moveDelta = (int)(moveLocationDelta.X / Timeline.UnitsPerSecond * _timeline.FramesPerSecond);
                 var startFrame = StartFrame;
                 var durationFrames = DurationFrames;
 
