@@ -284,6 +284,7 @@
     <Compile Include="GUI\Timeline\ParticleEmitter.cs" />
     <Compile Include="GUI\Timeline\ParticleSystemTimeline.cs" />
     <Compile Include="GUI\Timeline\Timeline.Types.cs" />
+    <Compile Include="GUI\Timeline\TimelineEdge.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />

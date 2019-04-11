@@ -56,19 +56,21 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         protected readonly List<Track> _tracks = new List<Track>();
 
-        private readonly SplitPanel _splitter;
+        private SplitPanel _splitter;
         private TimeIntervalsHeader _timeIntervalsHeader;
         private ContainerControl _backgroundScroll;
         private Background _background;
         private Panel _backgroundArea;
+        private TimelineEdge _leftEdge;
+        private TimelineEdge _rightEdge;
         private Button _addTrackButton;
         private ComboBox _fpsComboBox;
         private FloatValueBox _fpsCustomValue;
         private Panel _tracksPanelArea;
         private VerticalPanel _tracksPanel;
-        private readonly Image _playbackStop;
-        private readonly Image _playbackPlay;
-        private readonly Label _noTracksLabel;
+        private Image _playbackStop;
+        private Image _playbackPlay;
+        private Label _noTracksLabel;
 
         /// <summary>
         /// Gets or sets the amount of frames per second of the timeline animation.
@@ -121,6 +123,7 @@ namespace FlaxEditor.GUI.Timeline
             get => _durationFrames;
             set
             {
+                value = Mathf.Max(value, 1);
                 if (_durationFrames == value)
                     return;
 
@@ -342,6 +345,16 @@ namespace FlaxEditor.GUI.Timeline
             _background = new Background(this)
             {
                 ClipChildren = false,
+                Height = 0,
+                Parent = _backgroundArea
+            };
+            _leftEdge = new TimelineEdge(this, true, false)
+            {
+                Height = 0,
+                Parent = _backgroundArea
+            };
+            _rightEdge = new TimelineEdge(this, false, true)
+            {
                 Height = 0,
                 Parent = _backgroundArea
             };
@@ -829,6 +842,10 @@ namespace FlaxEditor.GUI.Timeline
                 _background.Visible = _tracks.Count > 0;
                 _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond, height);
 
+                var edgeWidth = 6.0f;
+                _leftEdge.Bounds = new Rectangle(_background.Left - edgeWidth * 0.5f + StartOffset, -HeaderTopAreaHeight * 0.5f, edgeWidth, height + HeaderTopAreaHeight * 0.5f);
+                _rightEdge.Bounds = new Rectangle(_background.Right - edgeWidth * 0.5f + StartOffset, -HeaderTopAreaHeight * 0.5f, edgeWidth, height + HeaderTopAreaHeight * 0.5f);
+
                 _backgroundScroll.Bounds = new Rectangle(0, 0, _background.Width + 5 * StartOffset, height);
             }
         }
@@ -839,6 +856,29 @@ namespace FlaxEditor.GUI.Timeline
             ArrangeTracks();
 
             base.PerformLayout(force);
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            // Clear references to the controls
+            _splitter = null;
+            _timeIntervalsHeader = null;
+            _backgroundScroll = null;
+            _background = null;
+            _backgroundArea = null;
+            _leftEdge = null;
+            _rightEdge = null;
+            _addTrackButton = null;
+            _fpsComboBox = null;
+            _fpsCustomValue = null;
+            _tracksPanelArea = null;
+            _tracksPanel = null;
+            _playbackStop = null;
+            _playbackPlay = null;
+            _noTracksLabel = null;
+
+            base.Dispose();
         }
     }
 }
