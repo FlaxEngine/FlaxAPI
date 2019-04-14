@@ -52,9 +52,21 @@ namespace FlaxEditor.Content.Settings
         public Texture OverrideIcon;
 
         /// <summary>
-        /// Enables support for DirectX 10 and DirectX 10.1. Otherwise app won't launch if no DirectX 11 supported. This reduces compiled shaders count.
+        /// Enables support for DirectX 11. Disabling it reduces compiled shaders count.
         /// </summary>
-        [EditorOrder(1040), EditorDisplay("Other", "Support DirectX 10"), Tooltip("Enables support for DirectX 10 and DirectX 10.1. Otherwise app won't launch if no DirectX 11 supported. This reduces compiled shaders count.")]
+        [EditorOrder(2000), EditorDisplay("Graphics", "Support DirectX 11"), Tooltip("Enables support for DirectX 11. Disabling it reduces compiled shaders count.")]
+        public bool SupportDX11 = true;
+
+        /// <summary>
+        /// Enables support for DirectX 10 and DirectX 10.1. Disabling it reduces compiled shaders count.
+        /// </summary>
+        [EditorOrder(2010), EditorDisplay("Graphics", "Support DirectX 10"), Tooltip("Enables support for DirectX 10 and DirectX 10.1. Disabling it reduces compiled shaders count.")]
         public bool SupportDX10 = false;
+
+        /// <summary>
+        /// Enables support for Vulkan. Disabling it reduces compiled shaders count.
+        /// </summary>
+        [EditorOrder(2020), EditorDisplay("Graphics", "Support Vulkan"), Tooltip("Enables support for Vulkan. Disabling it reduces compiled shaders count.")]
+        public bool SupportVulkan = false;
     }
 }
