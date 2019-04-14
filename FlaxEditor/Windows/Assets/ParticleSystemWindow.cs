@@ -139,6 +139,11 @@ namespace FlaxEditor.Windows.Assets
         private bool _isWaitingForTimelineLoad;
 
         /// <summary>
+        /// Gets the particle system preview.
+        /// </summary>
+        public ParticleSystemPreview Preview => _preview;
+
+        /// <summary>
         /// Gets the timeline editor.
         /// </summary>
         public ParticleSystemTimeline Timeline => _timeline;
