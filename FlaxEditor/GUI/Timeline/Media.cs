@@ -112,6 +112,17 @@ namespace FlaxEditor.GUI.Timeline
             }
         }
 
+        /// <summary>
+        /// Called when timeline FPS gets changed.
+        /// </summary>
+        /// <param name="before">The before value.</param>
+        /// <param name="after">The after value.</param>
+        public virtual void OnTimelineFpsChanged(float before, float after)
+        {
+            StartFrame = (int)((_startFrame / before) * after);
+            DurationFrames = (int)((_durationFrames / before) * after);
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {

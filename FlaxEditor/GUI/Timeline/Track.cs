@@ -180,12 +180,22 @@ namespace FlaxEditor.GUI.Timeline
         {
             _timeline = timeline;
 
-            if (_media.Count > 0)
+            for (var i = 0; i < _media.Count; i++)
             {
-                foreach (var media in _media)
-                {
-                    media.OnTimelineChanged(this);
-                }
+                _media[i].OnTimelineChanged(this);
+            }
+        }
+
+        /// <summary>
+        /// Called when timeline FPS gets changed.
+        /// </summary>
+        /// <param name="before">The before value.</param>
+        /// <param name="after">The after value.</param>
+        public virtual void OnTimelineFpsChanged(float before, float after)
+        {
+            for (var i = 0; i < _media.Count; i++)
+            {
+                _media[i].OnTimelineFpsChanged(before, after);
             }
         }
 

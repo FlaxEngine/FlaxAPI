@@ -108,6 +108,9 @@ namespace FlaxEditor.GUI.Timeline
                 if (Mathf.NearEqual(_framesPerSecond, value))
                     return;
 
+                var oldDuration = Duration;
+                var oldValue = _framesPerSecond;
+
                 _isChangingFps = true;
                 _framesPerSecond = value;
                 if (_fpsComboBox != null)
@@ -129,7 +132,17 @@ namespace FlaxEditor.GUI.Timeline
                 }
                 _isChangingFps = false;
                 FramesPerSecondChanged?.Invoke();
+
+                // Preserve media events and duration
+                for (var i = 0; i < _tracks.Count; i++)
+                {
+                    _tracks[i].OnTimelineFpsChanged(oldValue, value);
+                }
+                Duration = oldDuration;
+
                 MarkAsEdited();
+                ArrangeTracks();
+                UpdatePositionHandle();
             }
         }
 
@@ -161,7 +174,11 @@ namespace FlaxEditor.GUI.Timeline
         /// Gets the timeline animation duration in seconds.
         /// </summary>
         /// <seealso cref="FramesPerSecond"/>
-        public float Duration => _durationFrames / FramesPerSecond;
+        public float Duration
+        {
+            get => _durationFrames / FramesPerSecond;
+            set => DurationFrames = (int)(value * FramesPerSecond);
+        }
 
         /// <summary>
         /// Occurs when timeline duration gets changed.
