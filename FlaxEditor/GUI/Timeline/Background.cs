@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -73,9 +74,11 @@ namespace FlaxEditor.GUI.Timeline
             var leftFrame = Mathf.Floor((leftSideMin.X - Timeline.StartOffset) / Timeline.UnitsPerSecond) * _timeline.FramesPerSecond;
             var rightFrame = Mathf.Ceil((rightSideMax.X - Timeline.StartOffset) / Timeline.UnitsPerSecond) * _timeline.FramesPerSecond;
             var verticalLinesHeaderExtend = Timeline.HeaderTopAreaHeight * 0.5f;
+            var timeShowMode = _timeline.TimeShowMode;
             for (float frame = leftFrame; frame <= rightFrame; frame += _timeline.FramesPerSecond)
             {
-                float x = (frame / _timeline.FramesPerSecond) * Timeline.UnitsPerSecond + Timeline.StartOffset;
+                var time = frame / _timeline.FramesPerSecond;
+                var x = time * Timeline.UnitsPerSecond + Timeline.StartOffset;
 
                 // Vertical line
                 Render2D.FillRectangle(new Rectangle(x - 0.5f, 0, 1.0f, height), style.ForegroundDisabled.RGBMultiplied(0.7f));
@@ -84,8 +87,20 @@ namespace FlaxEditor.GUI.Timeline
                 Render2D.FillRectangle(new Rectangle(x - 0.5f, -verticalLinesHeaderExtend, 1.0f, verticalLinesHeaderExtend), style.Foreground.RGBMultiplied(0.8f));
 
                 // Time
-                // TODO: display modes configuration (frames, time, timecode)
-                var label = frame.ToString("0000");
+                string label;
+                switch (timeShowMode)
+                {
+                case Timeline.TimeShowModes.Frames:
+                    label = frame.ToString("0000");
+                    break;
+                case Timeline.TimeShowModes.Seconds:
+                    label = time.ToString() + 's';
+                    break;
+                case Timeline.TimeShowModes.Time:
+                    label = TimeSpan.FromSeconds(time).ToString();
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+                }
                 var labelRect = new Rectangle(x + 2, -verticalLinesHeaderExtend, 50, verticalLinesHeaderExtend);
                 Render2D.DrawText(style.FontSmall, label, labelRect, style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.8f);
             }

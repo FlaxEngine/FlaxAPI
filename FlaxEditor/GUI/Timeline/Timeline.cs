@@ -32,6 +32,27 @@ namespace FlaxEditor.GUI.Timeline
         };
 
         /// <summary>
+        /// The time axis value formatting modes.
+        /// </summary>
+        public enum TimeShowModes
+        {
+            /// <summary>
+            /// The frame numbers.
+            /// </summary>
+            Frames,
+
+            /// <summary>
+            /// The seconds amount.
+            /// </summary>
+            Seconds,
+
+            /// <summary>
+            /// The time.
+            /// </summary>
+            Time,
+        }
+
+        /// <summary>
         /// The header top area height (in pixels).
         /// </summary>
         public static readonly float HeaderTopAreaHeight = 22.0f;
@@ -51,6 +72,7 @@ namespace FlaxEditor.GUI.Timeline
         private float _framesPerSecond = 30.0f;
         private int _durationFrames = 30 * 5;
         private int _currentFrame;
+        private TimeShowModes _timeShowMode = TimeShowModes.Frames;
 
         /// <summary>
         /// The tracks collection.
@@ -66,6 +88,7 @@ namespace FlaxEditor.GUI.Timeline
         private TimelineEdge _rightEdge;
         private Button _addTrackButton;
         private ComboBox _fpsComboBox;
+        private Button _viewButton;
         private FloatValueBox _fpsCustomValue;
         private Panel _tracksPanelArea;
         private VerticalPanel _tracksPanel;
@@ -73,6 +96,27 @@ namespace FlaxEditor.GUI.Timeline
         private Image _playbackPlay;
         private Label _noTracksLabel;
         private PositionHandle _positionHandle;
+
+        /// <summary>
+        /// Gets or sets the current time showing mode.
+        /// </summary>
+        public TimeShowModes TimeShowMode
+        {
+            get => _timeShowMode;
+            set
+            {
+                if (_timeShowMode == value)
+                    return;
+
+                _timeShowMode = value;
+                TimeShowModeChanged?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Occurs when current time showing mode gets changed.
+        /// </summary>
+        public event Action TimeShowModeChanged;
 
         /// <summary>
         /// Gets or sets the current animation playback time position (frame number).
@@ -87,14 +131,14 @@ namespace FlaxEditor.GUI.Timeline
 
                 _currentFrame = value;
                 UpdatePositionHandle();
-                CurrentFrameChange?.Invoke();
+                CurrentFrameChangeed?.Invoke();
             }
         }
 
         /// <summary>
         /// Occurs when current playback animation frame gets changed.
         /// </summary>
-        public event Action CurrentFrameChange;
+        public event Action CurrentFrameChangeed;
 
         /// <summary>
         /// Gets or sets the amount of frames per second of the timeline animation.
@@ -275,7 +319,7 @@ namespace FlaxEditor.GUI.Timeline
                 DockStyle = DockStyle.Top,
                 Parent = _splitter.Panel1
             };
-            var addTrackButtonWidth = 50.0f;
+            var addTrackButtonWidth = 40.0f;
             _addTrackButton = new Button(2, 2, addTrackButtonWidth, 18.0f)
             {
                 TooltipText = "Add new tracks to the timeline",
@@ -283,11 +327,19 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = headerTopArea
             };
             _addTrackButton.Clicked += OnAddTrackButtonClicked;
+            var viewButtonWidth = 40.0f;
+            _viewButton = new Button(_addTrackButton.Right + 2, 2, viewButtonWidth, 18.0f)
+            {
+                TooltipText = "Change timeline view options",
+                Text = "View",
+                Parent = headerTopArea
+            };
+            _viewButton.Clicked += OnViewButtonClicked;
 
             if (canChangeFps)
             {
                 var changeFpsWidth = 70.0f;
-                _fpsComboBox = new ComboBox(_addTrackButton.Right + 2, 2, changeFpsWidth)
+                _fpsComboBox = new ComboBox(_viewButton.Right + 2, 2, changeFpsWidth)
                 {
                     TooltipText = "Change timeline frames per second",
                     Parent = headerTopArea
@@ -477,6 +529,20 @@ namespace FlaxEditor.GUI.Timeline
             var archetype = (TrackArchetype)button.Tag;
             AddTrack(archetype);
             MarkAsEdited();
+        }
+
+        private void OnViewButtonClicked()
+        {
+            // TODO: maybe cache context menu object?
+            // TODO: maybe add some customization options/events to allow editor plugins for extending this part?
+            var menu = new ContextMenu();
+
+            var showTimeAs = menu.AddChildMenu("Show time as");
+            showTimeAs.ContextMenu.AddButton("Frames", () => TimeShowMode = TimeShowModes.Frames).Checked = TimeShowMode == TimeShowModes.Frames;
+            showTimeAs.ContextMenu.AddButton("Seconds", () => TimeShowMode = TimeShowModes.Seconds).Checked = TimeShowMode == TimeShowModes.Seconds;
+            showTimeAs.ContextMenu.AddButton("Time", () => TimeShowMode = TimeShowModes.Time).Checked = TimeShowMode == TimeShowModes.Time;
+
+            menu.Show(_addTrackButton.Parent, _addTrackButton.BottomLeft);
         }
 
         private void OnStopClicked(Image stop, MouseButton button)
@@ -943,6 +1009,7 @@ namespace FlaxEditor.GUI.Timeline
             _rightEdge = null;
             _addTrackButton = null;
             _fpsComboBox = null;
+            _viewButton = null;
             _fpsCustomValue = null;
             _tracksPanelArea = null;
             _tracksPanel = null;
