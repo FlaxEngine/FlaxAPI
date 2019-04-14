@@ -25,19 +25,18 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private class GeneralProxy
         {
-            [HideInEditor]
-            public readonly ParticleSystemWindow Window;
+            private readonly ParticleSystemWindow _window;
 
             [EditorDisplay("Particle System"), EditorOrder(100), Limit(1), Tooltip("The timeline animation duration in frames.")]
             public int TimelineDurationFrames
             {
-                get => Window.Timeline.DurationFrames;
-                set => Window.Timeline.DurationFrames = value;
+                get => _window.Timeline.DurationFrames;
+                set => _window.Timeline.DurationFrames = value;
             }
 
             public GeneralProxy(ParticleSystemWindow window)
             {
-                Window = window;
+                _window = window;
             }
         }
 
@@ -46,51 +45,50 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private class EmitterTrackProxy
         {
-            [HideInEditor]
-            public readonly ParticleEmitterTrack Track;
+            private readonly ParticleEmitterTrack _track;
 
             [EditorDisplay("Particle Emitter"), EditorOrder(0), Tooltip("The name text.")]
             public string Name
             {
-                get => Track.Name;
+                get => _track.Name;
                 set
                 {
-                    if (!Track.Timeline.IsTrackNameValid(value))
+                    if (!_track.Timeline.IsTrackNameValid(value))
                     {
                         MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBox.Buttons.OK, MessageBox.Icon.Warning);
                         return;
                     }
 
-                    Track.Name = value;
+                    _track.Name = value;
                 }
             }
 
             [EditorDisplay("Particle Emitter"), EditorOrder(100), Tooltip("The particle emitter to use for the track media event playback.")]
             public ParticleEmitter Emitter
             {
-                get => Track.Emitter;
-                set => Track.Emitter = value;
+                get => _track.Emitter;
+                set => _track.Emitter = value;
             }
 
-            private bool HasEmitter => Track.Emitter != null;
+            private bool HasEmitter => _track.Emitter != null;
 
             [EditorDisplay("Particle Emitter"), VisibleIf("HasEmitter"), EditorOrder(200), Tooltip("The start frame of the media event.")]
             public int StartFrame
             {
-                get => Track.Media.Count > 0 ? Track.EmitterMedia.StartFrame : 0;
-                set => Track.EmitterMedia.StartFrame = value;
+                get => _track.Media.Count > 0 ? _track.EmitterMedia.StartFrame : 0;
+                set => _track.EmitterMedia.StartFrame = value;
             }
 
             [EditorDisplay("Particle Emitter"), Limit(1), VisibleIf("HasEmitter"), EditorOrder(300), Tooltip("The total duration of the media event in the timeline sequence frames amount.")]
             public int DurationFrames
             {
-                get => Track.Media.Count > 0 ? Track.EmitterMedia.DurationFrames : 0;
-                set => Track.EmitterMedia.DurationFrames = value;
+                get => _track.Media.Count > 0 ? _track.EmitterMedia.DurationFrames : 0;
+                set => _track.EmitterMedia.DurationFrames = value;
             }
 
             public EmitterTrackProxy(ParticleEmitterTrack track)
             {
-                Track = track;
+                _track = track;
             }
         }
 
@@ -99,35 +97,34 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private class FolderTrackProxy
         {
-            [HideInEditor]
-            public readonly FolderTrack Track;
+            private readonly FolderTrack _track;
 
             [EditorDisplay("Folder"), EditorOrder(0), Tooltip("The name text.")]
             public string Name
             {
-                get => Track.Name;
+                get => _track.Name;
                 set
                 {
-                    if (!Track.Timeline.IsTrackNameValid(value))
+                    if (!_track.Timeline.IsTrackNameValid(value))
                     {
                         MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBox.Buttons.OK, MessageBox.Icon.Warning);
                         return;
                     }
 
-                    Track.Name = value;
+                    _track.Name = value;
                 }
             }
 
             [EditorDisplay("Folder"), EditorOrder(200), Tooltip("The folder icon color.")]
             public Color Color
             {
-                get => Track.IconColor;
-                set => Track.IconColor = value;
+                get => _track.IconColor;
+                set => _track.IconColor = value;
             }
 
             public FolderTrackProxy(FolderTrack track)
             {
-                Track = track;
+                _track = track;
             }
         }
 
