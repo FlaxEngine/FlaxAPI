@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -20,15 +19,45 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class ParticleSystemWindow : ClonedAssetEditorWindowBase<ParticleSystem>
     {
+        /// <summary>
+        /// The proxy object for editing particle system properties. Use for the Custom Editors pipeline.
+        /// </summary>
+        private class Proxy
+        {
+            [HideInEditor]
+            public readonly ParticleSystemWindow Window;
+
+            [EditorDisplay("Particle System"), EditorOrder(100), Limit(1), Tooltip("The timeline animation duration in frames.")]
+            public int Duration
+            {
+                get => Window.Timeline.DurationFrames;
+                set => Window.Timeline.DurationFrames = value;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Proxy"/> class.
+            /// </summary>
+            /// <param name="window">The window.</param>
+            public Proxy(ParticleSystemWindow window)
+            {
+                Window = window;
+            }
+        }
+
         private readonly SplitPanel _split1;
         private readonly SplitPanel _split2;
         private readonly ParticleSystemTimeline _timeline;
         private readonly ParticleSystemPreview _preview;
-        private readonly CustomEditorPresenter _propertiesEditor;
-
+        private readonly CustomEditorPresenter _propertiesEditor1;
+        private readonly CustomEditorPresenter _propertiesEditor2;
         private readonly ToolStripButton _saveButton;
         private bool _tmpParticleSystemIsDirty;
         private bool _isWaitingForTimelineLoad;
+
+        /// <summary>
+        /// Gets the timeline editor.
+        /// </summary>
+        public ParticleSystemTimeline Timeline => _timeline;
 
         /// <inheritdoc />
         public ParticleSystemWindow(Editor editor, AssetItem item)
@@ -57,11 +86,18 @@ namespace FlaxEditor.Windows.Assets
                 Parent = _split2.Panel1
             };
 
-            // Properties editor
-            var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.Parent = _split2.Panel2;
-            propertiesEditor.Modified += OnParticleSystemPropertyEdited;
-            _propertiesEditor = propertiesEditor;
+            // Properties editor (general)
+            var propertiesEditor1 = new CustomEditorPresenter(null, string.Empty);
+            propertiesEditor1.Panel.Parent = _split2.Panel2;
+            propertiesEditor1.Modified += OnParticleSystemPropertyEdited;
+            _propertiesEditor1 = propertiesEditor1;
+            propertiesEditor1.Select(new Proxy(this));
+
+            // Properties editor (selection)
+            var propertiesEditor2 = new CustomEditorPresenter(null, string.Empty);
+            propertiesEditor2.Panel.Parent = _split2.Panel2;
+            propertiesEditor2.Modified += OnParticleSystemPropertyEdited;
+            _propertiesEditor2 = propertiesEditor2;
 
             // Timeline
             _timeline = new ParticleSystemTimeline(_preview)
@@ -145,6 +181,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void UnlinkItem()
         {
+            _propertiesEditor2.Deselect();
             _preview.System = null;
             _isWaitingForTimelineLoad = false;
 
@@ -186,7 +223,8 @@ namespace FlaxEditor.Windows.Assets
 
                 // Setup
                 _timeline.Enabled = true;
-                _propertiesEditor.BuildLayout();
+                _propertiesEditor1.BuildLayout();
+                _propertiesEditor2.Deselect();
                 ClearEditedFlag();
             }
         }
