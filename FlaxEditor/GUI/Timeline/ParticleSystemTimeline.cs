@@ -40,6 +40,14 @@ namespace FlaxEditor.GUI.Timeline
             });
         }
 
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            CurrentFrame = (int)(_preview.PreviewActor.Time * _preview.System.FramesPerSecond);
+
+            base.Update(deltaTime);
+        }
+
         /// <summary>
         /// Loads the timeline from the specified <see cref="FlaxEngine.ParticleSystem"/> asset.
         /// </summary>

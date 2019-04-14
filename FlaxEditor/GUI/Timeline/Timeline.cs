@@ -50,6 +50,7 @@ namespace FlaxEditor.GUI.Timeline
         private bool _isChangingFps;
         private float _framesPerSecond = 30.0f;
         private int _durationFrames = 30 * 5;
+        private int _currentFrame;
 
         /// <summary>
         /// The tracks collection.
@@ -71,6 +72,29 @@ namespace FlaxEditor.GUI.Timeline
         private Image _playbackStop;
         private Image _playbackPlay;
         private Label _noTracksLabel;
+        private PositionHandle _positionHandle;
+
+        /// <summary>
+        /// Gets or sets the current animation playback time position (frame number).
+        /// </summary>
+        public int CurrentFrame
+        {
+            get => _currentFrame;
+            set
+            {
+                if (_currentFrame == value)
+                    return;
+
+                _currentFrame = value;
+                UpdatePositionHandle();
+                CurrentFrameChange?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Occurs when current playback animation frame gets changed.
+        /// </summary>
+        public event Action CurrentFrameChange;
 
         /// <summary>
         /// Gets or sets the amount of frames per second of the timeline animation.
@@ -110,7 +134,7 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
-        /// Occurs when frames per second gets changed changed.
+        /// Occurs when frames per second gets changed.
         /// </summary>
         public event Action FramesPerSecondChanged;
 
@@ -140,7 +164,7 @@ namespace FlaxEditor.GUI.Timeline
         public float Duration => _durationFrames / FramesPerSecond;
 
         /// <summary>
-        /// Occurs when timeline duration gets changed changed.
+        /// Occurs when timeline duration gets changed.
         /// </summary>
         public event Action DurationFramesChanged;
 
@@ -358,6 +382,23 @@ namespace FlaxEditor.GUI.Timeline
                 Height = 0,
                 Parent = _backgroundArea
             };
+
+            _positionHandle = new PositionHandle(this)
+            {
+                ClipChildren = false,
+                Parent = _backgroundArea,
+            };
+            UpdatePositionHandle();
+        }
+
+        private void UpdatePositionHandle()
+        {
+            var handleWidth = 12.0f;
+            _positionHandle.Bounds = new Rectangle(
+                StartOffset * 2.0f - handleWidth * 0.5f + _currentFrame / _framesPerSecond * UnitsPerSecond,
+                HeaderTopAreaHeight * -0.5f,
+                handleWidth,
+                HeaderTopAreaHeight * 0.5f);
         }
 
         private void OnFpsPopupShowing(ComboBox comboBox)
@@ -843,8 +884,8 @@ namespace FlaxEditor.GUI.Timeline
                 _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond, height);
 
                 var edgeWidth = 6.0f;
-                _leftEdge.Bounds = new Rectangle(_background.Left - edgeWidth * 0.5f + StartOffset, -HeaderTopAreaHeight * 0.5f, edgeWidth, height + HeaderTopAreaHeight * 0.5f);
-                _rightEdge.Bounds = new Rectangle(_background.Right - edgeWidth * 0.5f + StartOffset, -HeaderTopAreaHeight * 0.5f, edgeWidth, height + HeaderTopAreaHeight * 0.5f);
+                _leftEdge.Bounds = new Rectangle(_background.Left - edgeWidth * 0.5f + StartOffset, HeaderTopAreaHeight * -0.5f, edgeWidth, height + HeaderTopAreaHeight * 0.5f);
+                _rightEdge.Bounds = new Rectangle(_background.Right - edgeWidth * 0.5f + StartOffset, HeaderTopAreaHeight * -0.5f, edgeWidth, height + HeaderTopAreaHeight * 0.5f);
 
                 _backgroundScroll.Bounds = new Rectangle(0, 0, _background.Width + 5 * StartOffset, height);
             }
@@ -877,6 +918,7 @@ namespace FlaxEditor.GUI.Timeline
             _playbackStop = null;
             _playbackPlay = null;
             _noTracksLabel = null;
+            _positionHandle = null;
 
             base.Dispose();
         }

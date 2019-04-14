@@ -29,7 +29,7 @@ namespace FlaxEditor.Windows.Assets
             public readonly ParticleSystemWindow Window;
 
             [EditorDisplay("Particle System"), EditorOrder(100), Limit(1), Tooltip("The timeline animation duration in frames.")]
-            public int TimelineDuration
+            public int TimelineDurationFrames
             {
                 get => Window.Timeline.DurationFrames;
                 set => Window.Timeline.DurationFrames = value;
@@ -75,14 +75,14 @@ namespace FlaxEditor.Windows.Assets
             private bool HasEmitter => Track.Emitter != null;
 
             [EditorDisplay("Particle Emitter"), VisibleIf("HasEmitter"), EditorOrder(200), Tooltip("The start frame of the media event.")]
-            public int Start
+            public int StartFrame
             {
                 get => Track.Media.Count > 0 ? Track.EmitterMedia.StartFrame : 0;
                 set => Track.EmitterMedia.StartFrame = value;
             }
 
             [EditorDisplay("Particle Emitter"), Limit(1), VisibleIf("HasEmitter"), EditorOrder(300), Tooltip("The total duration of the media event in the timeline sequence frames amount.")]
-            public int Duration
+            public int DurationFrames
             {
                 get => Track.Media.Count > 0 ? Track.EmitterMedia.DurationFrames : 0;
                 set => Track.EmitterMedia.DurationFrames = value;
