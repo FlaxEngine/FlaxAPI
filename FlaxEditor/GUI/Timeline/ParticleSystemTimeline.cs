@@ -48,6 +48,32 @@ namespace FlaxEditor.GUI.Timeline
             base.Update(deltaTime);
         }
 
+        /// <inheritdoc />
+        public override void OnPlay()
+        {
+            _preview.PlaySimulation = true;
+
+            base.OnPlay();
+        }
+
+        /// <inheritdoc />
+        public override void OnPause()
+        {
+            _preview.PlaySimulation = false;
+            _preview.PreviewActor.LastUpdateTime = -1.0f;
+
+            base.OnPause();
+        }
+
+        /// <inheritdoc />
+        public override void OnStop()
+        {
+            _preview.PlaySimulation = false;
+            _preview.PreviewActor.ResetSimulation();
+
+            base.OnStop();
+        }
+
         /// <summary>
         /// Loads the timeline from the specified <see cref="FlaxEngine.ParticleSystem"/> asset.
         /// </summary>
@@ -169,6 +195,7 @@ namespace FlaxEditor.GUI.Timeline
 
             ArrangeTracks();
             ClearEditedFlag();
+            OnPlay();
         }
 
         /// <summary>
