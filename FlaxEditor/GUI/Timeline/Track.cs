@@ -705,7 +705,7 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
-        /// Called when context menu is being prepared to show. Can be sued to add custom options.
+        /// Called when context menu is being prepared to show. Can be used to add custom options.
         /// </summary>
         /// <param name="menu">The menu.</param>
         protected virtual void OnContextMenu(ContextMenu menu)

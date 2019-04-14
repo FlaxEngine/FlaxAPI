@@ -13,7 +13,7 @@ namespace FlaxEditor.Gizmo
     public abstract partial class TransformGizmoBase : GizmoBase
     {
         /// <summary>
-        /// The start transforms list cached for selected objects before transformation apply. Can be sued to create undo operations.
+        /// The start transforms list cached for selected objects before transformation apply. Can be used to create undo operations.
         /// </summary>
         protected readonly List<Transform> _startTransforms = new List<Transform>();
 
