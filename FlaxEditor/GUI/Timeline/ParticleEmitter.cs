@@ -60,6 +60,11 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Gets the emitter media object (or null if not created.
+        /// </summary>
+        public ParticleEmitterMedia EmitterMedia => Media.Count > 0 ? (ParticleEmitterMedia)Media[0] : null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ParticleEmitterTrack"/> class.
         /// </summary>
         /// <param name="archetype">The archetype.</param>

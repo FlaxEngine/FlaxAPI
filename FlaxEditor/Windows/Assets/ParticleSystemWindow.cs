@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -20,27 +21,113 @@ namespace FlaxEditor.Windows.Assets
     public sealed class ParticleSystemWindow : ClonedAssetEditorWindowBase<ParticleSystem>
     {
         /// <summary>
-        /// The proxy object for editing particle system properties. Use for the Custom Editors pipeline.
+        /// The proxy object for editing particle system properties.
         /// </summary>
-        private class Proxy
+        private class GeneralProxy
         {
             [HideInEditor]
             public readonly ParticleSystemWindow Window;
 
             [EditorDisplay("Particle System"), EditorOrder(100), Limit(1), Tooltip("The timeline animation duration in frames.")]
-            public int Duration
+            public int TimelineDuration
             {
                 get => Window.Timeline.DurationFrames;
                 set => Window.Timeline.DurationFrames = value;
             }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Proxy"/> class.
-            /// </summary>
-            /// <param name="window">The window.</param>
-            public Proxy(ParticleSystemWindow window)
+            public GeneralProxy(ParticleSystemWindow window)
             {
                 Window = window;
+            }
+        }
+
+        /// <summary>
+        /// The proxy object for editing particle system track properties.
+        /// </summary>
+        private class EmitterTrackProxy
+        {
+            [HideInEditor]
+            public readonly ParticleEmitterTrack Track;
+
+            [EditorDisplay("Particle Emitter"), EditorOrder(0), Tooltip("The name text.")]
+            public string Name
+            {
+                get => Track.Name;
+                set
+                {
+                    if (!Track.Timeline.IsTrackNameValid(value))
+                    {
+                        MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBox.Buttons.OK, MessageBox.Icon.Warning);
+                        return;
+                    }
+
+                    Track.Name = value;
+                }
+            }
+
+            [EditorDisplay("Particle Emitter"), EditorOrder(100), Tooltip("The particle emitter to use for the track media event playback.")]
+            public ParticleEmitter Emitter
+            {
+                get => Track.Emitter;
+                set => Track.Emitter = value;
+            }
+
+            private bool HasEmitter => Track.Emitter != null;
+
+            [EditorDisplay("Particle Emitter"), VisibleIf("HasEmitter"), EditorOrder(200), Tooltip("The start frame of the media event.")]
+            public int Start
+            {
+                get => Track.Media.Count > 0 ? Track.EmitterMedia.StartFrame : 0;
+                set => Track.EmitterMedia.StartFrame = value;
+            }
+
+            [EditorDisplay("Particle Emitter"), Limit(1), VisibleIf("HasEmitter"), EditorOrder(300), Tooltip("The total duration of the media event in the timeline sequence frames amount.")]
+            public int Duration
+            {
+                get => Track.Media.Count > 0 ? Track.EmitterMedia.DurationFrames : 0;
+                set => Track.EmitterMedia.DurationFrames = value;
+            }
+
+            public EmitterTrackProxy(ParticleEmitterTrack track)
+            {
+                Track = track;
+            }
+        }
+
+        /// <summary>
+        /// The proxy object for editing folder track properties.
+        /// </summary>
+        private class FolderTrackProxy
+        {
+            [HideInEditor]
+            public readonly FolderTrack Track;
+
+            [EditorDisplay("Folder"), EditorOrder(0), Tooltip("The name text.")]
+            public string Name
+            {
+                get => Track.Name;
+                set
+                {
+                    if (!Track.Timeline.IsTrackNameValid(value))
+                    {
+                        MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBox.Buttons.OK, MessageBox.Icon.Warning);
+                        return;
+                    }
+
+                    Track.Name = value;
+                }
+            }
+
+            [EditorDisplay("Folder"), EditorOrder(200), Tooltip("The folder icon color.")]
+            public Color Start
+            {
+                get => Track.IconColor;
+                set => Track.IconColor = value;
+            }
+
+            public FolderTrackProxy(FolderTrack track)
+            {
+                Track = track;
             }
         }
 
@@ -91,7 +178,7 @@ namespace FlaxEditor.Windows.Assets
             propertiesEditor1.Panel.Parent = _split2.Panel2;
             propertiesEditor1.Modified += OnParticleSystemPropertyEdited;
             _propertiesEditor1 = propertiesEditor1;
-            propertiesEditor1.Select(new Proxy(this));
+            propertiesEditor1.Select(new GeneralProxy(this));
 
             // Properties editor (selection)
             var propertiesEditor2 = new CustomEditorPresenter(null, string.Empty);
@@ -107,6 +194,7 @@ namespace FlaxEditor.Windows.Assets
                 Enabled = false
             };
             _timeline.Modified += OnTimelineModified;
+            _timeline.SelectionChanged += OnTimelineSelectionChanged;
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
@@ -118,6 +206,34 @@ namespace FlaxEditor.Windows.Assets
         {
             _tmpParticleSystemIsDirty = true;
             MarkAsEdited();
+        }
+
+        private void OnTimelineSelectionChanged()
+        {
+            if (_timeline.SelectedTracks.Count == 0)
+            {
+                _propertiesEditor2.Deselect();
+                return;
+            }
+
+            var tracks = new object[_timeline.SelectedTracks.Count];
+            for (var i = 0; i < _timeline.SelectedTracks.Count; i++)
+            {
+                var track = _timeline.SelectedTracks[i];
+                if (track is ParticleEmitterTrack particleEmitterTrack)
+                {
+                    tracks[i] = new EmitterTrackProxy(particleEmitterTrack);
+                }
+                else if (track is FolderTrack folderTrack)
+                {
+                    tracks[i] = new FolderTrackProxy(folderTrack);
+                }
+                else
+                {
+                    throw new NotImplementedException("Invalid track type.");
+                }
+            }
+            _propertiesEditor2.Select(tracks);
         }
 
         private void OnParticleSystemPropertyEdited()
