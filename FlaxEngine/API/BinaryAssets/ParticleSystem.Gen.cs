@@ -20,6 +20,45 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the frames amount per second of the timeline animation.
+        /// </summary>
+        [UnmanagedCall]
+        public float FramesPerSecond
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetFramesPerSecond(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the animation duration (in frames).
+        /// </summary>
+        [UnmanagedCall]
+        public int DurationFrames
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDurationFrames(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the animation duration (in seconds).
+        /// </summary>
+        [UnmanagedCall]
+        public float Duration
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDuration(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Initializes the particle system that plays a single particles emitter.
         /// </summary>
         /// <remarks>
@@ -81,6 +120,15 @@ namespace FlaxEngine
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetFramesPerSecond(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetDurationFrames(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetDuration(IntPtr obj);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Init(IntPtr obj, IntPtr emitter, float duration, float fps);
 

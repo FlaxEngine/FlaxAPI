@@ -113,6 +113,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the current time position of the particle system timeline animation playback (in seconds).
+        /// </summary>
+        /// <remarks>
+        /// Please not that setting time value does not perform proper reving operation but changes the current animation position (editing value might result in flickered update).
+        /// </remarks>
+        [UnmanagedCall]
+        [HideInEditor]
+        public float Time
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetTime(unmanagedPtr); }
+            set { Internal_SetTime(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Resets the particles simulation state (clears the instance state data but preserves the instance parameters values).
         /// </summary>
 #if UNIT_TEST_COMPILANT
@@ -176,6 +194,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetIsLooping(IntPtr obj, bool val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetTime(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetTime(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ResetSimulation(IntPtr obj);
