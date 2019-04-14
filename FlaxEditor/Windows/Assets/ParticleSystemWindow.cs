@@ -119,7 +119,7 @@ namespace FlaxEditor.Windows.Assets
             }
 
             [EditorDisplay("Folder"), EditorOrder(200), Tooltip("The folder icon color.")]
-            public Color Start
+            public Color Color
             {
                 get => Track.IconColor;
                 set => Track.IconColor = value;
