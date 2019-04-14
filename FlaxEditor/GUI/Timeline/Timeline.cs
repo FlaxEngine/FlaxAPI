@@ -917,6 +917,20 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            // Synchronize scroll vertical bars for tracks and media panels to keep the view in sync
+            var scroll1 = _tracksPanelArea.VScrollBar;
+            var scroll2 = _backgroundArea.VScrollBar;
+            if (scroll1.IsThumbClicked)
+                scroll2.TargetValue = scroll1.Value;
+            else
+                scroll1.TargetValue = scroll2.Value;
+        }
+
+        /// <inheritdoc />
         public override void Dispose()
         {
             // Clear references to the controls
