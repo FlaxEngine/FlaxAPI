@@ -49,7 +49,7 @@ namespace FlaxEditor
     public abstract class UndoActionBase<TData> : IUndoAction where TData : struct
     {
         [Serialize]
-        private string _data;
+        protected string _data;
 
         /// <summary>
         /// Gets or sets the serialized undo data.

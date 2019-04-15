@@ -15,7 +15,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
     public abstract class EditTerrainMapAction : IUndoAction
     {
         [Serializable]
-        private struct PatchData
+        protected struct PatchData
         {
             public Int2 PatchCoord;
             public IntPtr Before;
@@ -41,8 +41,11 @@ namespace FlaxEditor.Tools.Terrain.Undo
         [Serialize]
         protected readonly int _heightmapDataSize;
 
+        /// <summary>
+        /// The terrain patches
+        /// </summary>
         [Serialize]
-        private readonly List<PatchData> _patches;
+        protected readonly List<PatchData> _patches;
 
         /// <summary>
         /// Gets a value indicating whether this action has any modification to the terrain (recorded patches changes).
