@@ -123,6 +123,14 @@ namespace FlaxEditor.GUI.Timeline
             DurationFrames = (int)((_durationFrames / before) * after);
         }
 
+        /// <summary>
+        /// Called when media gets removed by the user.
+        /// </summary>
+        public virtual void OnDeleted()
+        {
+            Dispose();
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {

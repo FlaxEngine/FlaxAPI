@@ -237,6 +237,11 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public virtual void OnDeleted()
         {
+            for (var i = 0; i < _media.Count; i++)
+            {
+                _media[i].OnDeleted();
+            }
+
             Dispose();
         }
 
