@@ -146,6 +146,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the CPU particles count (total).
+        /// </summary>
+        [UnmanagedCall]
+        public int CPUParticlesCount
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetCPUParticlesCount(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Resets the particles simulation state (clears the instance state data but preserves the instance parameters values).
         /// </summary>
 #if UNIT_TEST_COMPILANT
@@ -221,6 +234,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetLastUpdateTime(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetCPUParticlesCount(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ResetSimulation(IntPtr obj);
