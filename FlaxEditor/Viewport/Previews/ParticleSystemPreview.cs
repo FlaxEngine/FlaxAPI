@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
@@ -81,6 +82,8 @@ namespace FlaxEditor.Viewport.Previews
         public ParticleSystemPreview(bool useWidgets)
         : base(useWidgets)
         {
+            ((ArcBallCamera)ViewportCamera).OrbitRadius = 200.0f;
+
             // Setup preview scene
             _previewEffect = ParticleEffect.New();
             _previewEffect.IsLooping = true;
@@ -107,8 +110,9 @@ namespace FlaxEditor.Viewport.Previews
         /// Fits the particle system into view (scales the emitter based on the current bounds of the system).
         /// </summary>
         /// <param name="targetSize">The target size of the effect.</param>
-        public void FitIntoView(float targetSize = 30.0f)
+        public void FitIntoView(float targetSize = 300.0f)
         {
+            _previewEffect.Scale = Vector3.One;
             float maxSize = Mathf.Max(0.001f, _previewEffect.Box.Size.MaxValue);
             _previewEffect.Scale = new Vector3(targetSize / maxSize);
         }
@@ -137,6 +141,7 @@ namespace FlaxEditor.Viewport.Previews
             // Cleanup objects
             _previewEffect.ParticleSystem = null;
             Object.Destroy(ref _previewEffect);
+            _showBoundsButton = null;
 
             base.OnDestroy();
         }

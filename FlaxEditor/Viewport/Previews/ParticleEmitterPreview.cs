@@ -26,6 +26,7 @@ namespace FlaxEditor.Viewport.Previews
                 {
                     _emitter = value;
                     _system.Init(value, 5.0f);
+                    PreviewActor.ResetSimulation();
                 }
             }
         }
