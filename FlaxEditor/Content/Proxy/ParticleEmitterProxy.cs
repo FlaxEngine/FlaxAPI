@@ -18,6 +18,7 @@ namespace FlaxEditor.Content
     public class ParticleEmitterProxy : BinaryAssetProxy
     {
         private ParticleEmitterPreview _preview;
+        private ThumbnailRequest _warmupRequest;
 
         /// <inheritdoc />
         public override string Name => "Particle Emitter";
@@ -64,23 +65,52 @@ namespace FlaxEditor.Content
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
                 _preview.SyncBackbufferSize();
             }
+
+            // Mark for initial warmup
+            request.Tag = 0;
         }
 
         /// <inheritdoc />
         public override bool CanDrawThumbnail(ThumbnailRequest request)
         {
-            if (!_preview.HasLoadedAssets)
+            var state = (int)request.Tag;
+            if (state == 2)
+                return true;
+
+            // Allow only one request at once during warmup time
+            if (_warmupRequest != null && _warmupRequest != request)
                 return false;
 
-            // Check if asset is streamed enough
+            // Ensure assets are ready to be used
+            if (!_preview.HasLoadedAssets)
+                return false;
             var asset = (ParticleEmitter)request.Asset;
-            return asset.IsLoaded;
+            if (!asset.IsLoaded)
+                return false;
+
+            if (state == 0)
+            {
+                // Start the warmup
+                _warmupRequest = request;
+                request.Tag = 1;
+                _preview.Emitter = asset;
+            }
+            else if (_preview.PreviewActor.Time >= 0.6f)
+            {
+                // End the warmup
+                request.Tag = 2;
+                _preview.FitIntoView();
+                return true;
+            }
+
+            // Handle warmup time for the preview
+            _preview.PreviewActor.UpdateSimulation();
+            return false;
         }
 
         /// <inheritdoc />
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
-            _preview.Emitter = (ParticleEmitter)request.Asset;
             _preview.Parent = guiRoot;
 
             _preview.Task.Internal_Render(context);
@@ -89,8 +119,22 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void OnThumbnailDrawEnd(ThumbnailRequest request, ContainerControl guiRoot)
         {
+            if (_warmupRequest == request)
+            {
+                _warmupRequest = null;
+            }
+
             _preview.Emitter = null;
             _preview.Parent = null;
+        }
+
+        /// <inheritdoc />
+        public override void OnThumbnailDrawCleanup(ThumbnailRequest request)
+        {
+            if (_warmupRequest == request)
+            {
+                _warmupRequest = null;
+            }
         }
 
         /// <inheritdoc />
