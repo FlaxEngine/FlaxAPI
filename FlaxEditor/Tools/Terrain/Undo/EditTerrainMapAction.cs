@@ -11,8 +11,10 @@ namespace FlaxEditor.Tools.Terrain.Undo
     /// The terrain heightmap or visibility map editing action that records before and after states to swap between unmodified and modified terrain data.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
+    [Serializable]
     public abstract class EditTerrainMapAction : IUndoAction
     {
+        [Serializable]
         private struct PatchData
         {
             public Int2 PatchCoord;
@@ -24,28 +26,34 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// <summary>
         /// The terrain (actor Id).
         /// </summary>
+        [Serialize]
         protected readonly Guid _terrain;
 
         /// <summary>
         /// The heightmap length (vertex count).
         /// </summary>
+        [Serialize]
         protected readonly int _heightmapLength;
 
         /// <summary>
         /// The heightmap data size (in bytes).
         /// </summary>
+        [Serialize]
         protected readonly int _heightmapDataSize;
 
+        [Serialize]
         private readonly List<PatchData> _patches;
 
         /// <summary>
         /// Gets a value indicating whether this action has any modification to the terrain (recorded patches changes).
         /// </summary>
+        [NoSerialize]
         public bool HasAnyModification => _patches.Count > 0;
 
         /// <summary>
         /// Gets the terrain.
         /// </summary>
+        [NoSerialize]
         public FlaxEngine.Terrain Terrain
         {
             get

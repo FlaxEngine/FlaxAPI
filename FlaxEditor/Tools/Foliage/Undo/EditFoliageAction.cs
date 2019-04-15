@@ -9,10 +9,16 @@ namespace FlaxEditor.Tools.Foliage.Undo
     /// The foliage heightmap or visibility map editing action that records before and after states to swap between unmodified and modified terrain data.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
+    [Serializable]
     public sealed class EditFoliageAction : IUndoAction
     {
+        [Serialize]
         private readonly Guid _foliageId;
+
+        [Serialize]
         private string _before;
+
+        [Serialize]
         private string _after;
 
         /// <summary>
