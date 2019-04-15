@@ -15,7 +15,9 @@ namespace FlaxEditor.Viewport.Previews
     {
         private ParticleEffect _previewEffect;
         private ContextMenuButton _showBoundsButton;
+        private ContextMenuButton _showParticleCounterButton;
         private StaticModel _boundsModel;
+        private bool _showParticlesCounter;
 
         /// <summary>
         /// Gets or sets the particle system asset to preview.
@@ -71,7 +73,26 @@ namespace FlaxEditor.Viewport.Previews
                     Task.CustomActors.Remove(_boundsModel);
                 }
 
-                _showBoundsButton.Checked = value;
+                if (_showBoundsButton != null)
+                    _showBoundsButton.Checked = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show spawned particles counter (for CPU particles only).
+        /// </summary>
+        public bool ShowParticlesCounter
+        {
+            get => _showParticlesCounter;
+            set
+            {
+                if (value == _showParticlesCounter)
+                    return;
+
+                _showParticlesCounter = value;
+
+                if (_showParticleCounterButton != null)
+                    _showParticleCounterButton.Checked = value;
             }
         }
 
@@ -94,6 +115,7 @@ namespace FlaxEditor.Viewport.Previews
             if (useWidgets)
             {
                 _showBoundsButton = ViewWidgetShowMenu.AddButton("Show Bounds", () => ShowBounds = !ShowBounds);
+                _showParticleCounterButton = ViewWidgetShowMenu.AddButton("Show Particles Counter (CPU only)", () => ShowParticlesCounter = !ShowParticlesCounter);
             }
         }
 
@@ -139,12 +161,31 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
+        public override void Draw()
+        {
+            base.Draw();
+
+            if (_showParticlesCounter)
+            {
+                var count = _previewEffect.CPUParticlesCount;
+                Render2D.DrawText(
+                    Style.Current.FontSmall,
+                    "Particles: " + count,
+                    new Rectangle(Vector2.Zero, Size),
+                    Color.Wheat,
+                    TextAlignment.Near,
+                    TextAlignment.Far);
+            }
+        }
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
             // Cleanup objects
             _previewEffect.ParticleSystem = null;
             Object.Destroy(ref _previewEffect);
             _showBoundsButton = null;
+            _showParticleCounterButton = null;
 
             base.OnDestroy();
         }
