@@ -43,6 +43,9 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
+        public override bool HasLoadedAssets => (_emitter == null || _emitter.IsLoaded) && base.HasLoadedAssets;
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
             // Cleanup objects
