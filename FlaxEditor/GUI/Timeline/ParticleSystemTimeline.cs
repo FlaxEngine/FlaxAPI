@@ -100,30 +100,6 @@ namespace FlaxEditor.GUI.Timeline
                 FramesPerSecond = stream.ReadSingle();
                 DurationFrames = stream.ReadInt32();
 
-                // Load parameters
-                int parametersCount = stream.ReadInt32();
-                // TODO: reading parameters
-                if (parametersCount != 0)
-                    throw new NotSupportedException("TODO: reading timeline parameters");
-                /*Parameters.Resize(parametersCount, false);
-                for (int32 i = 0; i < parametersCount; i++)
-                {
-                    auto param = &Parameters[i];
-
-                    param->Type = static_cast<GraphParamType>(stream.ReadByte());
-                    stream.ReadGuid(&param->ID);
-                    stream.ReadString(&param->Name, 97);
-                    param->IsPublic = stream.ReadBool();
-                    param->IsStatic = stream.ReadBool();
-                    param->IsUIVisible = stream.ReadBool();
-                    param->IsUIEditable = stream.ReadBool();
-
-                    stream.ReadCommonValue(&param->Value);
-
-                    if (param->Meta.Load(engineBuild, &stream, true))
-                        return LoadResult::Failed;
-                }*/
-
                 // Load emitters
                 int emittersCount = stream.ReadInt32();
 
@@ -213,28 +189,6 @@ namespace FlaxEditor.GUI.Timeline
                 stream.Write(FramesPerSecond);
                 stream.Write(DurationFrames);
 
-                // Save parameters
-                const int parametersCount = 0; //Parameters.Count();
-                stream.Write(parametersCount);
-                // TODO: serialize parameters
-                /*for (int i = 0; i < parametersCount; i++)
-                {
-                    var param = &Parameters[i];
-
-                    stream.WriteByte((byte)param->Type);
-                    stream.WriteGuid(param->ID);
-                    stream.WriteString(param->Name, 97);
-                    stream.WriteBool(param->IsPublic);
-                    stream.WriteBool(param->IsStatic);
-                    stream.WriteBool(param->IsUIVisible);
-                    stream.WriteBool(param->IsUIEditable);
-
-                    stream.WriteCommonValue(param->Value);
-
-                    if (param->Meta.Save(&stream, true))
-                        return true;
-                }*/
-
                 // Save emitters
                 var emitters = Tracks.Where(track => track is ParticleEmitterTrack).Cast<ParticleEmitterTrack>().ToList();
                 int emittersCount = emitters.Count;
@@ -266,22 +220,23 @@ namespace FlaxEditor.GUI.Timeline
                     {
                         var e = (ParticleEmitterTrack)track;
                         var emitter = e.Emitter;
-                        if (emitter)
+                        var emitterId = emitter?.ID ?? Guid.Empty;
+
+                        stream.Write(emitterId.ToByteArray());
+                        stream.Write(emitters.IndexOf(e));
+
+                        if (e.Media.Count != 0)
                         {
                             var m = e.Media[0];
-
-                            stream.Write(emitter.ID.ToByteArray());
-                            stream.Write(emitters.IndexOf(e));
                             stream.Write(m.StartFrame);
                             stream.Write(m.DurationFrames);
                         }
                         else
                         {
-                            stream.Write(Guid.Empty.ToByteArray());
-                            stream.Write(emitters.IndexOf(e));
                             stream.Write(0);
                             stream.Write(DurationFrames);
                         }
+
                         break;
                     }
                     // Folder
