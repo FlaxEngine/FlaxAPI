@@ -232,6 +232,30 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.ComboBox(50, Surface.Constants.LayoutOffsetY * 4, 100, 0, typeof(CommonSamplerType))
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 10,
+                Title = "Flipbook",
+                Description = "Texture sheet animation",
+                Flags = NodeFlags.MaterialGraph,
+                Size = new Vector2(160, 110),
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    new Vector2(4, 4),
+                    false,
+                    false
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Input(1, "Frame", true, ConnectionType.Float, 1, 0),
+                    NodeElementArchetype.Factory.Input(2, "Frames X&Y", true, ConnectionType.Vector2, 2, 1),
+                    NodeElementArchetype.Factory.Input(3, "Invert X", true, ConnectionType.Bool, 3, 2),
+                    NodeElementArchetype.Factory.Input(4, "Invert Y", true, ConnectionType.Bool, 4, 3),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector2, 5),
+                }
+            },
         };
     }
 }
