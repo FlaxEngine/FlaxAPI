@@ -530,6 +530,27 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Delay", true, ConnectionType.Float, 1, 3),
                 },
             },
+            new NodeArchetype
+            {
+                TypeID = 103,
+                Create = CreateParticleModuleNode,
+                Title = "Periodic Burst (range)",
+                Description = "Emits random amount of particles in random periods of time (customizable ranges)",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, Surface.Constants.LayoutOffsetY * 2),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Spawn,
+                    new Vector2(5.0f, 10.0f),
+                    new Vector2(1.0f, 2.0f),
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Count (min, max)", true, ConnectionType.Vector2, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Delay (min, max)", true, ConnectionType.Vector2, 1, 3),
+                },
+            },
             // TODO: Spawn On Event
 
             // Initialize
