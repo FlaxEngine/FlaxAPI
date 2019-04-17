@@ -509,7 +509,27 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f, "Count", true, ConnectionType.Float, 0, 2),
                 },
             },
-            // TODO: Periodic Burst
+            new NodeArchetype
+            {
+                TypeID = 102,
+                Create = CreateParticleModuleNode,
+                Title = "Periodic Burst",
+                Description = "Emits particles in periods of time",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, Surface.Constants.LayoutOffsetY * 2),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Spawn,
+                    10.0f,
+                    2.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Count", true, ConnectionType.Float, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Delay", true, ConnectionType.Float, 1, 3),
+                },
+            },
             // TODO: Spawn On Event
 
             // Initialize
