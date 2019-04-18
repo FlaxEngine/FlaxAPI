@@ -598,7 +598,37 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Custom Vector", true, ConnectionType.Vector3, 0, 3),
                 },
             },
-            // TODO: Position (sphere/plane/circle/disc/box/cylinder/line/torus/depth)
+            new NodeArchetype
+            {
+                TypeID = 202,
+                Create = CreateParticleModuleNode,
+                Title = "Position (sphere)",
+                Description = "Places the particles on surface of the sphere",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 3 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    Vector3.Zero,
+                    100.0f,
+                    360.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Center", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Radius", true, ConnectionType.Float, 1, 3),
+                    NodeElementArchetype.Factory.Input(-0.5f + 2.0f, "Arc", true, ConnectionType.Float, 2, 4),
+                },
+            },
+            // TODO: Position (plane)
+            // TODO: Position (circle)
+            // TODO: Position (disc)
+            // TODO: Position (box)
+            // TODO: Position (cylinder)
+            // TODO: Position (line)
+            // TODO: Position (torus)
+            // TODO: Position (depth)
             // TODO: Init Seed
             // TODO: Inherit Position/Velocity/..
             GetParticleAttribute(ModuleType.Initialize, 250, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
