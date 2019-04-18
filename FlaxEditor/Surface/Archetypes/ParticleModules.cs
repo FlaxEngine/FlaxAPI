@@ -648,7 +648,27 @@ namespace FlaxEditor.Surface.Archetypes
             // TODO: Position (disc)
             // TODO: Position (box)
             // TODO: Position (cylinder)
-            // TODO: Position (line)
+            new NodeArchetype
+            {
+                TypeID = 208,
+                Create = CreateParticleModuleNode,
+                Title = "Position (line)",
+                Description = "Places the particles on the line",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    Vector3.Zero,
+                    new Vector3(100.0f, 0, 0),
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Start", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "End", true, ConnectionType.Vector3, 1, 3),
+                },
+            },
             // TODO: Position (torus)
             // TODO: Position (depth)
             // TODO: Init Seed
