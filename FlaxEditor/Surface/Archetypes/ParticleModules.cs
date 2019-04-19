@@ -669,7 +669,31 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "End", true, ConnectionType.Vector3, 1, 3),
                 },
             },
-            // TODO: Position (torus)
+            new NodeArchetype
+            {
+                TypeID = 209,
+                Create = CreateParticleModuleNode,
+                Title = "Position (torus)",
+                Description = "Places the particles on a surface of the torus",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 4 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    Vector3.Zero,
+                    100.0f,
+                    20.0f,
+                    360.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Center", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Radius", true, ConnectionType.Float, 1, 3),
+                    NodeElementArchetype.Factory.Input(-0.5f + 2.0f, "Thickness", true, ConnectionType.Float, 2, 4),
+                    NodeElementArchetype.Factory.Input(-0.5f + 3.0f, "Arc", true, ConnectionType.Float, 3, 5),
+                },
+            },
             // TODO: Position (depth)
             // TODO: Init Seed
             // TODO: Inherit Position/Velocity/..
