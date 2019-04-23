@@ -621,7 +621,27 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 2.0f, "Arc", true, ConnectionType.Float, 2, 4),
                 },
             },
-            // TODO: Position (plane)
+            new NodeArchetype
+            {
+                TypeID = 203,
+                Create = CreateParticleModuleNode,
+                Title = "Position (plane)",
+                Description = "Places the particles on plane",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    Vector3.Zero,
+                    new Vector2(100.0f, 100.0f),
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Center", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Size", true, ConnectionType.Vector2, 1, 3),
+                },
+            },
             new NodeArchetype
             {
                 TypeID = 204,
