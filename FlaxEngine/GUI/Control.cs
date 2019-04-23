@@ -1022,7 +1022,7 @@ namespace FlaxEngine.GUI
             _parent?.OnChildResized(this);
 
             // Auto-center
-            if (_anchorStyle == AnchorStyle.Center)
+            if (_anchorStyle == AnchorStyle.Center && _parent != null)
             {
                 UpdateCenterAnchor();
             }
