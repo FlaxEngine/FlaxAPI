@@ -55,6 +55,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CircularBufferTests.cs" />
+    <Compile Include="TestModulusOperator.cs" />
     <Compile Include="TestQuaternion.cs" />
     <Compile Include="TestSerialization.cs" />
     <Compile Include="TestStringUtils.cs" />
