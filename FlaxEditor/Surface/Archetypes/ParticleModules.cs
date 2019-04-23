@@ -892,11 +892,55 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Custom Vector", true, ConnectionType.Vector3, 0, 3),
                 },
             },
+            new NodeArchetype
+            {
+                TypeID = 304,
+                Create = CreateParticleModuleNode,
+                Title = "Force",
+                Description = "Applies the force vector to particle velocity",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    new Vector3(100.0f, 0, 0),
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Force", true, ConnectionType.Vector3, 0, 2),
+                },
+            },
+            new NodeArchetype
+            {
+                TypeID = 305,
+                Create = CreateParticleModuleNode,
+                Title = "Conform to Sphere",
+                Description = "Applies the force vector to particles to conform around sphere",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 6 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    Vector3.Zero,
+                    100.0f,
+                    5.0f,
+                    2000.0f,
+                    1.0f,
+                    5000.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Sphere Center", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Sphere Radius", true, ConnectionType.Float, 1, 3),
+                    NodeElementArchetype.Factory.Input(-0.5f + 2.0f, "Attraction Speed", true, ConnectionType.Float, 2, 4),
+                    NodeElementArchetype.Factory.Input(-0.5f + 3.0f, "Attraction Force", true, ConnectionType.Float, 3, 5),
+                    NodeElementArchetype.Factory.Input(-0.5f + 4.0f, "Stick Distance", true, ConnectionType.Float, 4, 6),
+                    NodeElementArchetype.Factory.Input(-0.5f + 5.0f, "Stick Force", true, ConnectionType.Float, 5, 7),
+                },
+            },
             // TODO: Collision (sphere/plane/box/cylinder/depth)
-            // TODO: Conform to sphere
-            // TODO: Force
-            // TODO: Drag
-            // TODO: Turbulence
             // TODO: Kill (box/sphere/custom)
             GetParticleAttribute(ModuleType.Update, 350, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Update, 351, "Set Lifetime", "Sets the particle lifetime (in seconds)", ConnectionType.Float, 10.0f),
