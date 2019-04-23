@@ -12,19 +12,19 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// The target amount of the game logic updates per second (script updates frequency).
         /// </summary>
-        [EditorOrder(1), Limit(0, 240), EditorDisplay(null, "Update FPS"), Tooltip("Target amount of the game logic updates per second (script updates frequency). Use 0 for infinity.")]
+        [EditorOrder(1), Limit(1, 240), EditorDisplay(null, "Update FPS"), Tooltip("Target amount of the game logic updates per second (script updates frequency). Use 0 for infinity.")]
         public float UpdateFPS = 30.0f;
 
         /// <summary>
         /// The target amount of the physics simulation updates per second (also fixed updates frequency).
         /// </summary>
-        [EditorOrder(2), Limit(0, 240), EditorDisplay(null, "Physics FPS"), Tooltip("Target amount of the physics simulation updates per second (also fixed updates frequency). Use 0 for infinity.")]
+        [EditorOrder(2), Limit(1, 240), EditorDisplay(null, "Physics FPS"), Tooltip("Target amount of the physics simulation updates per second (also fixed updates frequency). Use 0 for infinity.")]
         public float PhysicsFPS = 60.0f;
 
         /// <summary>
         /// The target amount of the frames rendered per second (actual game FPS).
         /// </summary>
-        [EditorOrder(3), Limit(0, 240), EditorDisplay(null, "Draw FPS"), Tooltip("Target amount of the frames rendered per second (actual game FPS). Use 0 for infinity.")]
+        [EditorOrder(3), Limit(1, 240), EditorDisplay(null, "Draw FPS"), Tooltip("Target amount of the frames rendered per second (actual game FPS). Use 0 for infinity.")]
         public float DrawFPS = 60.0f;
 
         /// <summary>
