@@ -2003,6 +2003,39 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector3 operator %(Vector3 value, float scale)
+        {
+            return new Vector3(value.X % scale, value.Y % scale, value.Z % scale);
+        }
+        
+        /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The amount by which to scale the vector.</param>
+        /// <param name="scale">The vector to scale.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector3 operator %(float value, Vector3 scale)
+        {
+            return new Vector3(value % scale.X, value % scale.Y, value % scale.Z);
+        }
+        
+        /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector3 operator %(Vector3 value, Vector3 scale)
+        {
+            return new Vector3(value.X % scale.X, value.Y % scale.Y, value.Z % scale.Z);
+        }
+        
+        /// <summary>
         /// Perform a component-wise addition
         /// </summary>
         /// <param name="value">The input vector.</param>
