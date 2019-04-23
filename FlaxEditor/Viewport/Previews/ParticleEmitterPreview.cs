@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
+using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
@@ -13,6 +14,7 @@ namespace FlaxEditor.Viewport.Previews
     {
         private ParticleEmitter _emitter;
         private ParticleSystem _system;
+        private float _playbackDuration = 5.0f;
 
         /// <summary>
         /// Gets or sets the particle emitter asset to preview.
@@ -25,7 +27,28 @@ namespace FlaxEditor.Viewport.Previews
                 if (_emitter != value)
                 {
                     _emitter = value;
-                    _system.Init(value, 5.0f);
+                    _system.Init(value, _playbackDuration);
+                    PreviewActor.ResetSimulation();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the duration of the emitter playback (in seconds).
+        /// </summary>
+        public float PlaybackDuration
+        {
+            get => _playbackDuration;
+            set
+            {
+                value = Mathf.Clamp(value, 0.1f, 100000000000.0f);
+                if (Mathf.NearEqual(_playbackDuration, value))
+                    return;
+
+                _playbackDuration = value;
+                if (_system != null)
+                {
+                    _system.Init(_emitter, _playbackDuration);
                     PreviewActor.ResetSimulation();
                 }
             }
@@ -40,6 +63,15 @@ namespace FlaxEditor.Viewport.Previews
         {
             _system = FlaxEngine.Content.CreateVirtualAsset<ParticleSystem>();
             System = _system;
+
+            if (useWidgets)
+            {
+                var playbackDuration = ViewWidgetButtonMenu.AddButton("Duration");
+                var playbackDurationValue = new FloatValueBox(_playbackDuration, 75, 2, 50.0f, 0.1f, 1000000.0f, 0.1f);
+                playbackDurationValue.Parent = playbackDuration;
+                playbackDurationValue.ValueChanged += () => PlaybackDuration = playbackDurationValue.Value;
+                ViewWidgetButtonMenu.VisibleChanged += control => playbackDurationValue.Value = PlaybackDuration;
+            }
         }
 
         /// <inheritdoc />
