@@ -52,23 +52,5 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(10 % new Int4(3, 3, 3, 3), new Int4(1, 1, 1, 1));
             Assert.AreEqual(new Int4(10, 10, 10, 10) % new Int4(3, 2, 3, 2), new Int4(1, 0, 1, 0));
         }
-        
-        [Test]
-        public void TestHalf2Modulus()
-        {
-            
-        }
-        
-        [Test]
-        public void TestHalf3Modulus()
-        {
-            
-        }
-        
-        [Test]
-        public void TestHalf4Modulus()
-        {
-            
-        }
     }
 }
