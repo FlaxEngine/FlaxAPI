@@ -57,7 +57,7 @@ namespace FlaxEngine
         /// </summary>
         [UnmanagedCall]
         [EditorOrder(20), EditorDisplay("Skybox"), Tooltip("Skybox custom material used to override default")]
-        public MaterialBase CustomMatrial
+        public MaterialBase CustomMaterial
         {
 #if UNIT_TEST_COMPILANT
             get; set;
