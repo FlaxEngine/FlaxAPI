@@ -40,7 +40,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             var codeEditing = Editor.Instance.CodeEditing;
             
             // Favor the newest Visual Studio
-            for (int i = (int)ScriptsBuilder.InBuildEditorTypes.VS2017; i >= (int)ScriptsBuilder.InBuildEditorTypes.VS2008; i--)
+            for (int i = (int)ScriptsBuilder.InBuildEditorTypes.VS2019; i >= (int)ScriptsBuilder.InBuildEditorTypes.VS2008; i--)
             {
                 var visualStudio = codeEditing.GetInBuildEditor((ScriptsBuilder.InBuildEditorTypes)i);
                 if (visualStudio != null)
