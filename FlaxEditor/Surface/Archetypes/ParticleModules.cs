@@ -940,8 +940,73 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 5.0f, "Stick Force", true, ConnectionType.Float, 5, 7),
                 },
             },
+            new NodeArchetype
+            {
+                TypeID = 306,
+                Create = CreateParticleModuleNode,
+                Title = "Kill (sphere)",
+                Description = "Kills particles that enter/leave the sphere",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 3 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    Vector3.Zero,
+                    100.0f,
+                    false,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Sphere Center", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Sphere Radius", true, ConnectionType.Float, 1, 3),
+                    NodeElementArchetype.Factory.Text(20.0f, (-0.5f + 2.0f) * Surface.Constants.LayoutOffsetY, "Invert"),
+                    NodeElementArchetype.Factory.Bool(0, (-0.5f + 2.0f) * Surface.Constants.LayoutOffsetY, 4),
+                },
+            },
+            new NodeArchetype
+            {
+                TypeID = 307,
+                Create = CreateParticleModuleNode,
+                Title = "Kill (box)",
+                Description = "Kills particles that enter/leave the axis-aligned box",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 3 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    Vector3.Zero,
+                    new Vector3(100.0f),
+                    false,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Box Center", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Box Size", true, ConnectionType.Vector3, 1, 3),
+                    NodeElementArchetype.Factory.Text(20.0f, (-0.5f + 2.0f) * Surface.Constants.LayoutOffsetY, "Invert"),
+                    NodeElementArchetype.Factory.Bool(0, (-0.5f + 2.0f) * Surface.Constants.LayoutOffsetY, 4),
+                },
+            },
+            new NodeArchetype
+            {
+                TypeID = 308,
+                Create = CreateParticleModuleNode,
+                Title = "Kill (custom)",
+                Description = "Kills particles based on a custom boolean rule",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 1 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Kill", true, ConnectionType.Bool, 0),
+                },
+            },
             // TODO: Collision (sphere/plane/box/cylinder/depth)
-            // TODO: Kill (box/sphere/custom)
             GetParticleAttribute(ModuleType.Update, 350, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Update, 351, "Set Lifetime", "Sets the particle lifetime (in seconds)", ConnectionType.Float, 10.0f),
             GetParticleAttribute(ModuleType.Update, 352, "Set Age", "Sets the particle age (in seconds)", ConnectionType.Float, 0.0f),
