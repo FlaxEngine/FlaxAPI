@@ -1,7 +1,7 @@
 REM Press Build->Build Solution (F6) or Build->Build FlaxEngine (Shift+F6) to invoke this script automatically form Visual Studio Enviroment
 @echo off
 
-set outputDir=..\Source\Bin\Editor
+set outputDir=..\Bin\Editor
 set outputAssembliesDir=%outputDir%\Assemblies
 
 if exist %outputDir% (
