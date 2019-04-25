@@ -2,6 +2,7 @@
 
 using System.IO;
 using System.Text;
+using FlaxEditor.Content.Settings;
 using FlaxEditor.Windows;
 using FlaxEngine;
 
@@ -92,7 +93,10 @@ namespace FlaxEditor.Content
                 scriptNamespace += subNamespace;
 
             // Format
+            var gameSettings = GameSettings.Load();
             var scriptName = ScriptItem.CreateScriptName(outputPath);
+            var copyrightComment = string.IsNullOrEmpty(gameSettings.CopyrightNotice) ? string.Empty : string.Format("// {0}\n\n", gameSettings.CopyrightNotice);
+            scriptTemplate = scriptTemplate.Replace("%copyright%", copyrightComment);
             scriptTemplate = scriptTemplate.Replace("%class%", scriptName);
             scriptTemplate = scriptTemplate.Replace("%namespace%", scriptNamespace);
 

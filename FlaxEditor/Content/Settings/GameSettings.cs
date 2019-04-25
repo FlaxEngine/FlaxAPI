@@ -25,6 +25,12 @@ namespace FlaxEditor.Content.Settings
         public string CompanyName;
 
         /// <summary>
+        /// The copyright note used for content signing (eg. source code header).
+        /// </summary>
+        [EditorOrder(15), EditorDisplay("General"), Tooltip("The copyright note used for content signing (eg. source code header).")]
+        public string CopyrightNotice;
+
+        /// <summary>
         /// The product version. Separated with dots: major.minor.build.revision.
         /// </summary>
         [EditorOrder(20), EditorDisplay("General"), Tooltip("The product version. Separated with dots: major.minor.build.revision.")]
