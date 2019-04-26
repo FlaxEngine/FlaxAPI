@@ -50,6 +50,9 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             case ScriptsBuilder.InBuildEditorTypes.VS2017:
                 Name = "Visual Studio 2017";
                 break;
+            case ScriptsBuilder.InBuildEditorTypes.VS2019:
+                Name = "Visual Studio 2019";
+                break;
             default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
