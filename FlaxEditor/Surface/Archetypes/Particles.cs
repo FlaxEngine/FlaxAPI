@@ -488,6 +488,42 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 200,
+                Title = "Effect Position",
+                Description = "Particle effect position (in world space).",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(230, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 201,
+                Title = "Effect Rotation",
+                Description = "Particle effect rotation (in world space).",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(230, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Rotation, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 202,
+                Title = "Effect Scale",
+                Description = "Particle effect scale (in world space).",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(230, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
         };
     }
 }
