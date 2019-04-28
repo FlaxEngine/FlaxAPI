@@ -1029,7 +1029,6 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f, "Kill", true, ConnectionType.Bool, 0),
                 },
             },
-            // TODO: Collision (box/cylinder/depth)
             new NodeArchetype
             {
                 TypeID = 330,
@@ -1135,6 +1134,44 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 7, "Box Size", true, ConnectionType.Vector3, 6, 9),
                 },
             },
+            new NodeArchetype
+            {
+                TypeID = 333,
+                Create = CreateParticleModuleNode,
+                Title = "Collision (cylinder)",
+                Description = "Collides particles with the cylinder",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 9 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    false, // Invert
+                    0.0f, // Radius
+                    0.0f, // Roughness 
+                    0.1f, // Elasticity 
+                    0.0f, // Friction 
+                    0.0f, // Lifetime Loss 
+                    Vector3.Zero, // Cylinder Position
+                    100.0f, // Cylinder Height
+                    50.0f, // Cylinder Radius
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Text(20.0f, -0.5f * Surface.Constants.LayoutOffsetY, "Invert"),
+                    NodeElementArchetype.Factory.Bool(0, -0.5f * Surface.Constants.LayoutOffsetY, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1, "Radius", true, ConnectionType.Float, 0, 3),
+                    NodeElementArchetype.Factory.Input(-0.5f + 2, "Roughness", true, ConnectionType.Float, 1, 4),
+                    NodeElementArchetype.Factory.Input(-0.5f + 3, "Elasticity", true, ConnectionType.Float, 2, 5),
+                    NodeElementArchetype.Factory.Input(-0.5f + 4, "Friction", true, ConnectionType.Float, 3, 6),
+                    NodeElementArchetype.Factory.Input(-0.5f + 5, "Lifetime Loss", true, ConnectionType.Float, 4, 7),
+
+                    NodeElementArchetype.Factory.Input(-0.5f + 6, "Cylinder Position", true, ConnectionType.Vector3, 5, 8),
+                    NodeElementArchetype.Factory.Input(-0.5f + 7, "Cylinder Height", true, ConnectionType.Float, 6, 9),
+                    NodeElementArchetype.Factory.Input(-0.5f + 8, "Cylinder Radius", true, ConnectionType.Float, 7, 10),
+                },
+            },
+            // TODO: Collision (depth)
             GetParticleAttribute(ModuleType.Update, 350, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Update, 351, "Set Lifetime", "Sets the particle lifetime (in seconds)", ConnectionType.Float, 10.0f),
             GetParticleAttribute(ModuleType.Update, 352, "Set Age", "Sets the particle age (in seconds)", ConnectionType.Float, 0.0f),
