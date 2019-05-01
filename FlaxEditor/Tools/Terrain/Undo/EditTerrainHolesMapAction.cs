@@ -10,6 +10,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
     /// <seealso cref="EditTerrainMapAction" />
+    [Serializable]
     public class EditTerrainHolesMapAction : EditTerrainMapAction
     {
         /// <summary>

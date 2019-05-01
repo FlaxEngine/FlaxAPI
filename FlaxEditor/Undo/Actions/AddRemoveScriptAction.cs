@@ -10,17 +10,37 @@ namespace FlaxEditor.Actions
     /// Implementation of <see cref="IUndoAction"/> used to add/remove <see cref="Script"/> from the <see cref="Actor"/>.
     /// </summary>
     /// <seealso cref="IUndoAction" />
+    [Serializable]
     public sealed class AddRemoveScript : IUndoAction
     {
+        [Serialize]
         private bool _isAdd;
+
+        [Serialize]
         private Script _script;
+
+        [Serialize]
         private Guid _scriptId;
+
+        [Serialize]
         private Guid _prefabId;
+
+        [Serialize]
         private Guid _prefabObjectId;
+
+        [Serialize]
         private Type _scriptType;
+
+        [Serialize]
         private string _scriptData;
+
+        [Serialize]
         private Guid _parentId;
+
+        [Serialize]
         private int _orderInParent;
+
+        [Serialize]
         private bool _enabled;
 
         internal AddRemoveScript(bool isAdd, Script script)

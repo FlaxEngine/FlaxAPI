@@ -17,6 +17,7 @@ namespace FlaxEditor.History
         /// <summary>
         /// The data value storage to solve issue for flax objects and editor scene tree nodes which are serialized by ref id.
         /// </summary>
+        [Serializable]
         public struct DataValue
         {
             /// <summary>

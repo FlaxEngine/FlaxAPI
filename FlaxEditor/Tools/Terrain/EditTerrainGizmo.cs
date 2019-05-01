@@ -139,21 +139,23 @@ namespace FlaxEditor.Tools.Terrain
             }
         }
 
+        [Serializable]
         private class AddPatchAction : IUndoAction
         {
-            private readonly Editor _editor;
+            [Serialize]
             private Guid _terrainId;
+
+            [Serialize]
             private Int2 _patchCoord;
 
             /// <inheritdoc />
             public string ActionString => "Add terrain patch";
 
-            public AddPatchAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord)
+            public AddPatchAction(FlaxEngine.Terrain terrain, ref Int2 patchCoord)
             {
                 if (terrain == null)
                     throw new ArgumentException(nameof(terrain));
 
-                _editor = editor ?? throw new ArgumentException(nameof(editor));
                 _terrainId = terrain.ID;
                 _patchCoord = patchCoord;
             }
@@ -174,7 +176,7 @@ namespace FlaxEditor.Tools.Terrain
                     Editor.LogError("Failed to initialize terrain patch.");
                 }
 
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
             }
 
             /// <inheritdoc />
@@ -189,7 +191,7 @@ namespace FlaxEditor.Tools.Terrain
 
                 terrain.RemovePatch(ref _patchCoord);
 
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
             }
 
             /// <inheritdoc />
@@ -207,7 +209,7 @@ namespace FlaxEditor.Tools.Terrain
                 if (!terrain.HasPatch(ref patchCoord))
                 {
                     // Add a new patch (with undo)
-                    var action = new AddPatchAction(Editor.Instance, terrain, ref patchCoord);
+                    var action = new AddPatchAction(terrain, ref patchCoord);
                     action.Do();
                     Editor.Instance.Undo.AddAction(action);
                     return true;

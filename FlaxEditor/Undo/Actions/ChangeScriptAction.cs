@@ -11,12 +11,22 @@ namespace FlaxEditor.Actions
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
     /// <seealso cref="FlaxEditor.ISceneEditAction" />
+    [Serializable]
     public class ChangeScriptAction : IUndoAction, ISceneEditAction
     {
+        [Serialize]
         private Guid _scriptId;
+
+        [Serialize]
         private bool _enableA;
+
+        [Serialize]
         private int _orderA;
+
+        [Serialize]
         private bool _enableB;
+
+        [Serialize]
         private int _orderB;
 
         private ChangeScriptAction(Script script, bool enable, int order)

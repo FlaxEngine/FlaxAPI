@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEngine;
 
 namespace FlaxEditor
 {
@@ -10,11 +11,13 @@ namespace FlaxEditor
     /// Implementation of <see cref="IUndoAction"/> that contains one or more child actions performed at once. Allows to merge different actions.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
+    [Serializable]
     public class MultiUndoAction : IUndoAction
     {
         /// <summary>
         /// The child actions.
         /// </summary>
+        [Serialize]
         public readonly IUndoAction[] Actions;
 
         /// <summary>

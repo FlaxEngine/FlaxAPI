@@ -110,22 +110,26 @@ namespace FlaxEditor.Tools.Terrain
             OnGizmoModeChanged();
         }
 
+        [Serializable]
         private class DeletePatchAction : IUndoAction
         {
-            private readonly Editor _editor;
+            [Serialize]
             private Guid _terrainId;
+
+            [Serialize]
             private Int2 _patchCoord;
+
+            [Serialize]
             private string _data;
 
             /// <inheritdoc />
             public string ActionString => "Delete terrain patch";
 
-            public DeletePatchAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord)
+            public DeletePatchAction(FlaxEngine.Terrain terrain, ref Int2 patchCoord)
             {
                 if (terrain == null)
                     throw new ArgumentException(nameof(terrain));
 
-                _editor = editor ?? throw new ArgumentException(nameof(editor));
                 _terrainId = terrain.ID;
                 _patchCoord = patchCoord;
                 _data = TerrainTools.SerializePatch(terrain, ref patchCoord);
@@ -143,7 +147,7 @@ namespace FlaxEditor.Tools.Terrain
 
                 terrain.RemovePatch(ref _patchCoord);
 
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
             }
 
             /// <inheritdoc />
@@ -159,7 +163,7 @@ namespace FlaxEditor.Tools.Terrain
                 terrain.AddPatch(ref _patchCoord);
                 TerrainTools.DeserializePatch(terrain, ref _patchCoord, _data);
 
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
             }
 
             /// <inheritdoc />
@@ -178,29 +182,37 @@ namespace FlaxEditor.Tools.Terrain
             if (!CarveTab.SelectedTerrain.HasPatch(ref patchCoord))
                 return;
 
-            var action = new DeletePatchAction(CarveTab.Editor, CarveTab.SelectedTerrain, ref patchCoord);
+            var action = new DeletePatchAction(CarveTab.SelectedTerrain, ref patchCoord);
             action.Do();
             CarveTab.Editor.Undo.AddAction(action);
         }
 
+        [Serializable]
         private class EditChunkMaterialAction : IUndoAction
         {
-            private readonly Editor _editor;
+            [Serialize]
             private Guid _terrainId;
+
+            [Serialize]
             private Int2 _patchCoord;
+
+            [Serialize]
             private Int2 _chunkCoord;
+
+            [Serialize]
             private Guid _beforeMaterial;
+
+            [Serialize]
             private Guid _afterMaterial;
 
             /// <inheritdoc />
             public string ActionString => "Edit terrain chunk material";
 
-            public EditChunkMaterialAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord, ref Int2 chunkCoord, MaterialBase toSet)
+            public EditChunkMaterialAction(FlaxEngine.Terrain terrain, ref Int2 patchCoord, ref Int2 chunkCoord, MaterialBase toSet)
             {
                 if (terrain == null)
                     throw new ArgumentException(nameof(terrain));
 
-                _editor = editor ?? throw new ArgumentException(nameof(editor));
                 _terrainId = terrain.ID;
                 _patchCoord = patchCoord;
                 _chunkCoord = chunkCoord;
@@ -236,7 +248,7 @@ namespace FlaxEditor.Tools.Terrain
 
                 terrain.SetChunkOverrideMaterial(ref _patchCoord, ref _chunkCoord, FlaxEngine.Content.LoadAsync<MaterialBase>(ref id));
 
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
             }
         }
 
@@ -247,7 +259,7 @@ namespace FlaxEditor.Tools.Terrain
 
             var patchCoord = Gizmo.SelectedPatchCoord;
             var chunkCoord = Gizmo.SelectedChunkCoord;
-            var action = new EditChunkMaterialAction(CarveTab.Editor, CarveTab.SelectedTerrain, ref patchCoord, ref chunkCoord, _chunkOverrideMaterial.SelectedAsset as MaterialBase);
+            var action = new EditChunkMaterialAction(CarveTab.SelectedTerrain, ref patchCoord, ref chunkCoord, _chunkOverrideMaterial.SelectedAsset as MaterialBase);
             action.Do();
             CarveTab.Editor.Undo.AddAction(action);
         }
