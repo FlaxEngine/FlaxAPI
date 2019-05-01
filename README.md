@@ -12,7 +12,7 @@ From stunning graphics to powerful scripts - Flax can give everything for your g
 This repository contains an open source public C# API as well as full source code of the Flax Editor. Anyone is welcome to contribute or use the modified source in Flax-based games.
 
 # Features
-* PBR Rendering (DirectX 10, 11, 12)
+* Physically Based Rendering (DirectX 11, DirectX 12, Vulkan)
 * C# Scripting (C# 7.2)
 * Physics (NVIDIA PhysX)
 * Nested Prefabs
