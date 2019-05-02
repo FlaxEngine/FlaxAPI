@@ -1204,10 +1204,32 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Material),
                 },
             },
+            new NodeArchetype
+            {
+                TypeID = 401,
+                Create = CreateParticleModuleNode,
+                Title = "Light Rendering",
+                Description = "Renders the lights at the particles positions",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 3 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Render,
+                    Color.White, // Color
+                    1000.0f, // Brightness
+                    8.0f, // Fall Off Exponent
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f + 0, "Color", true, ConnectionType.Vector4, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1, "Radius", true, ConnectionType.Float, 1, 3),
+                    NodeElementArchetype.Factory.Input(-0.5f + 2, "Fall Off Exponent", true, ConnectionType.Float, 2, 4),
+                },
+            },
             // TODO: Sort
             // TODO: Mesh Rendering
             // TODO: Ribbon Rendering
-            // TODO: Light
         };
     }
 }
