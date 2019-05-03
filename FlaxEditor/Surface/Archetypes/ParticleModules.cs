@@ -2,6 +2,8 @@
 
 using System;
 using System.Linq;
+using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -62,6 +64,37 @@ namespace FlaxEditor.Surface.Archetypes
             /// Particles will use the custom vector for facing.
             /// </summary>
             CustomFacingVector,
+        }
+
+        /// <summary>
+        /// The particles sorting modes.
+        /// </summary>
+        public enum ParticleSortMode
+        {
+            /// <summary>
+            /// Do not perform additional sorting prior to rendering.
+            /// </summary>
+            None,
+
+            /// <summary>
+            /// Sorts particles by depth to the view's near plane.
+            /// </summary>
+            ViewDepth,
+
+            /// <summary>
+            /// Sorts particles by distance to the view's origin.
+            /// </summary>
+            ViewDistance,
+
+            /// <summary>
+            /// The custom sorting according to a per particle attribute. Lower values are rendered before higher values.
+            /// </summary>
+            CustomAscending,
+
+            /// <summary>
+            /// The custom sorting according to a per particle attribute. Higher values are rendered before lower values.
+            /// </summary>
+            CustomDescending,
         }
 
         /// <summary>
@@ -420,6 +453,43 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
+        /// <summary>
+        /// The particle emitter module that can sort particles.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.Archetypes.ParticleModules.ParticleModuleNode" />
+        public class SortModuleNode : ParticleModuleNode
+        {
+            /// <inheritdoc />
+            public SortModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                UpdateTextBox();
+            }
+
+            /// <inheritdoc />
+            public override void SetValue(int index, object value)
+            {
+                base.SetValue(index, value);
+
+                // Update on sort mode change
+                if (index == 2)
+                    UpdateTextBox();
+            }
+
+            private void UpdateTextBox()
+            {
+                var mode = (ParticleSortMode)Values[2];
+                ((TextBoxView)Elements[2]).Visible = mode == ParticleSortMode.CustomAscending || mode == ParticleSortMode.CustomDescending;
+            }
+        }
+
         private static SurfaceNode CreateParticleModuleNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
         {
             return new ParticleModuleNode(id, context, arch, groupArch);
@@ -433,6 +503,11 @@ namespace FlaxEditor.Surface.Archetypes
         private static SurfaceNode CreateOrientSpriteNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
         {
             return new OrientSpriteNode(id, context, arch, groupArch);
+        }
+
+        private static SurfaceNode CreateSortNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
+        {
+            return new SortModuleNode(id, context, arch, groupArch);
         }
 
         /// <summary>
@@ -1227,7 +1302,28 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 2, "Fall Off Exponent", true, ConnectionType.Float, 2, 4),
                 },
             },
-            // TODO: Sort
+            new NodeArchetype
+            {
+                TypeID = 402,
+                Create = CreateSortNode,
+                Title = "Sort",
+                Description = "Sorts the particles for the rendering",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Render,
+                    (int)ParticleSortMode.ViewDistance, // Sort Mode
+                    "Age", // Custom Attribute
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Text(0, -10.0f, "Mode:", 40),
+                    NodeElementArchetype.Factory.ComboBox(40, -10.0f, 140, 2, typeof(ParticleSortMode)),
+                    NodeElementArchetype.Factory.TextBox(185, -10.0f, 100, TextBox.DefaultHeight, 3, false),
+                },
+            },
             // TODO: Mesh Rendering
             // TODO: Ribbon Rendering
         };
