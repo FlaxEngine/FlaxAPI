@@ -577,6 +577,23 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 23,
+                Title = "Depth Fade",
+                Description = "Creates a gradient of 0 near the scene depth geometry. Useful for preventing particles from clipping with geometry (use it for soft particles).",
+                Flags = NodeFlags.MaterialGraph,
+                Size = new Vector2(200, 40),
+                DefaultValues = new object[]
+                {
+                    10.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Fade Distance", true, ConnectionType.Float, 0, 0),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 1),
+                }
+            },
         };
     }
 }
