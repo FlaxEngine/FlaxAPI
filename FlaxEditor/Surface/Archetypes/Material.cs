@@ -346,7 +346,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Screen Position",
                 Description = "Gathers screen position or texcoord",
                 Flags = NodeFlags.MaterialGraph,
-                Size = new Vector2(140, 40),
+                Size = new Vector2(150, 40),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "Position", ConnectionType.Vector2, 0),
@@ -359,7 +359,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Screen Size",
                 Description = "Gathers screen size",
                 Flags = NodeFlags.MaterialGraph,
-                Size = new Vector2(120, 40),
+                Size = new Vector2(150, 40),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "Size", ConnectionType.Vector2, 0),
@@ -429,7 +429,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Vector2(200, 60),
                 DefaultValues = new object[]
                 {
-                    500.0f,
+                    200.0f,
                     24.0f
                 },
                 Elements = new[]
