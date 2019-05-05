@@ -1324,7 +1324,31 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.TextBox(185, -10.0f, 100, TextBox.DefaultHeight, 3, false),
                 },
             },
-            // TODO: Mesh Rendering
+            new NodeArchetype
+            {
+                TypeID = 403,
+                Create = CreateParticleModuleNode,
+                Title = "Model Rendering",
+                Description = "Draws model for every particle",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 160),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Render,
+                    Guid.Empty,
+                    Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    // Model
+                    NodeElementArchetype.Factory.Text(0, -10, "Model", 80.0f, 16.0f, "model material used for rendering."),
+                    NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Model),
+                    // Material
+                    NodeElementArchetype.Factory.Text(0, -10 + 70, "Material", 80.0f, 16.0f, "The material used for models rendering. It must have Domain set to Particle."),
+                    NodeElementArchetype.Factory.Asset(80, -10 + 70, 3, ContentDomain.Material),
+                },
+            },
             // TODO: Ribbon Rendering
         };
     }
