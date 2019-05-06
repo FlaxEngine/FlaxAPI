@@ -41,7 +41,7 @@ namespace FlaxEditor.Surface.Archetypes
         }
 
         /// <summary>
-        /// The sprite rendering facing modes.
+        /// The sprite particle rendering facing modes.
         /// </summary>
         public enum ParticleSpriteFacingMode
         {
@@ -64,6 +64,27 @@ namespace FlaxEditor.Surface.Archetypes
             /// Particles will use the custom vector for facing.
             /// </summary>
             CustomFacingVector,
+        }
+
+        /// <summary>
+        /// The model particle rendering facing modes.
+        /// </summary>
+        public enum ParticleModelFacingMode
+        {
+            /// <summary>
+            /// Particles will face camera position.
+            /// </summary>
+            FaceCameraPosition,
+
+            /// <summary>
+            /// Particles will face camera plane.
+            /// </summary>
+            FaceCameraPlane,
+
+            /// <summary>
+            /// Particles will orient along velocity vector.
+            /// </summary>
+            AlongVelocity,
         }
 
         /// <summary>
@@ -900,6 +921,25 @@ namespace FlaxEditor.Surface.Archetypes
                 },
             },
             // TODO: Position (depth)
+            new NodeArchetype
+            {
+                TypeID = 213,
+                Create = CreateParticleModuleNode,
+                Title = "Orient Model",
+                Description = "Orientates the model particles in the space",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 1 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    (int)ParticleModelFacingMode.FaceCameraPosition,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, -10.0f, 160, 2, typeof(ParticleModelFacingMode)),
+                },
+            },
             // TODO: Init Seed
             // TODO: Inherit Position/Velocity/..
             GetParticleAttribute(ModuleType.Initialize, 250, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
@@ -1103,6 +1143,25 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(-0.5f, "Kill", true, ConnectionType.Bool, 0),
+                },
+            },
+            new NodeArchetype
+            {
+                TypeID = 309,
+                Create = CreateParticleModuleNode,
+                Title = "Orient Model",
+                Description = "Orientates the model particles in the space",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 1 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    (int)ParticleModelFacingMode.FaceCameraPosition,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, -10.0f, 160, 2, typeof(ParticleModelFacingMode)),
                 },
             },
             new NodeArchetype
