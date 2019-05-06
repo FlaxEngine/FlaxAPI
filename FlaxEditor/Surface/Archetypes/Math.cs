@@ -349,6 +349,8 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Bool, 3),
                 }
             },
+            Op1(43, "Degrees", "Converts the specified value from radians to degrees."),
+            Op1(44, "Radians", "Converts the specified value from degrees to radians."),
         };
     }
 }
