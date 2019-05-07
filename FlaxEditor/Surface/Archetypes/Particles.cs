@@ -319,7 +319,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     1024, // Capacity
                     (int)ParticlesSimulationMode.Default, // Simulation Mode
-                    (int)ParticlesSimulationSpace.World, // Simulation Space
+                    (int)ParticlesSimulationSpace.Local, // Simulation Space
                     true, // Enable Pooling
                     BoundingBox.Zero, // Custom Bounds
                 },
