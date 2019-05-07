@@ -940,6 +940,30 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.ComboBox(0, -10.0f, 160, 2, typeof(ParticleModelFacingMode)),
                 },
             },
+            
+            new NodeArchetype
+            {
+                TypeID = 214,
+                Create = CreateParticleModuleNode,
+                Title = "Position (spiral)",
+                Description = "Places the particles on rotating spiral",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 3 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    Vector3.Zero,
+                    360.0f, // Rotation Speed
+                    200.0f, // Velocity Scale
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Center", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Rotation Speed", true, ConnectionType.Float, 1, 3),
+                    NodeElementArchetype.Factory.Input(-0.5f + 2.0f, "Velocity Scale", true, ConnectionType.Float, 2, 4),
+                },
+            },
             // TODO: Init Seed
             // TODO: Inherit Position/Velocity/..
             GetParticleAttribute(ModuleType.Initialize, 250, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
