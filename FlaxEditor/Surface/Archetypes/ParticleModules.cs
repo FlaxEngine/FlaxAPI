@@ -940,7 +940,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.ComboBox(0, -10.0f, 160, 2, typeof(ParticleModelFacingMode)),
                 },
             },
-            
+
             new NodeArchetype
             {
                 TypeID = 214,
@@ -1434,7 +1434,40 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Asset(80, -10 + 70, 3, ContentDomain.Material),
                 },
             },
-            // TODO: Ribbon Rendering
+            new NodeArchetype
+            {
+                TypeID = 404,
+                Create = CreateParticleModuleNode,
+                Title = "Ribbon Rendering",
+                Description = "Draws a a ribbon connecting all particles in order by particle age.",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 150),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Render,
+                    Guid.Empty, // Material
+                    0.0f, // UV Tiling Distance
+                    Vector2.One, // UV Scale
+                    Vector2.Zero, // UV Offset
+                },
+                Elements = new[]
+                {
+                    // Material
+                    NodeElementArchetype.Factory.Text(0, -10, "Material", 80.0f, 16.0f, "The material used for ribbons rendering. It must have Domain set to Particle."),
+                    NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Material),
+
+                    // UV options
+                    NodeElementArchetype.Factory.Text(0.0f, 3.0f * Surface.Constants.LayoutOffsetY, "UV Tiling Distance"),
+                    NodeElementArchetype.Factory.Float(100.0f, 3.0f * Surface.Constants.LayoutOffsetY, 3, -1, 0.0f),
+                    NodeElementArchetype.Factory.Text(0.0f, 4.0f * Surface.Constants.LayoutOffsetY, "UV Scale"),
+                    NodeElementArchetype.Factory.Vector_X(100.0f, 4.0f * Surface.Constants.LayoutOffsetY, 4),
+                    NodeElementArchetype.Factory.Vector_Y(155.0f, 4.0f * Surface.Constants.LayoutOffsetY, 4),
+                    NodeElementArchetype.Factory.Text(0.0f, 5.0f * Surface.Constants.LayoutOffsetY, "UV Offset"),
+                    NodeElementArchetype.Factory.Vector_X(100.0f, 5.0f * Surface.Constants.LayoutOffsetY, 5),
+                    NodeElementArchetype.Factory.Vector_Y(155.0f, 5.0f * Surface.Constants.LayoutOffsetY, 5),
+                },
+            },
         };
     }
 }

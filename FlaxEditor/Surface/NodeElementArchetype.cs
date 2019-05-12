@@ -217,10 +217,12 @@ namespace FlaxEditor.Surface
             /// <param name="x">The x location (in node area space).</param>
             /// <param name="y">The y location (in node area space).</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
+            /// <param name="valueMin">The minimum value range.</param>
+            /// <param name="valueMax">The maximum value range.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Vector_X(float x, float y, int valueIndex = -1)
+            public static NodeElementArchetype Vector_X(float x, float y, int valueIndex = -1, float valueMin = -1000000, float valueMax = 1000000)
             {
-                return Float(x, y, valueIndex, 0);
+                return Float(x, y, valueIndex, 0, valueMin, valueMax);
             }
 
             /// <summary>
@@ -229,10 +231,12 @@ namespace FlaxEditor.Surface
             /// <param name="x">The x location (in node area space).</param>
             /// <param name="y">The y location (in node area space). The actual position is offset by 1 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
+            /// <param name="valueMin">The minimum value range.</param>
+            /// <param name="valueMax">The maximum value range.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Vector_Y(float x, float y, int valueIndex = -1)
+            public static NodeElementArchetype Vector_Y(float x, float y, int valueIndex = -1, float valueMin = -1000000, float valueMax = 1000000)
             {
-                return Float(x, y + 1 * Constants.LayoutOffsetY, valueIndex, 1);
+                return Float(x, y, valueIndex, 1, valueMin, valueMax);
             }
 
             /// <summary>
@@ -241,10 +245,12 @@ namespace FlaxEditor.Surface
             /// <param name="x">The x location (in node area space).</param>
             /// <param name="y">The y location (in node area space). The actual position is offset by 2 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
+            /// <param name="valueMin">The minimum value range.</param>
+            /// <param name="valueMax">The maximum value range.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Vector_Z(float x, float y, int valueIndex = -1)
+            public static NodeElementArchetype Vector_Z(float x, float y, int valueIndex = -1, float valueMin = -1000000, float valueMax = 1000000)
             {
-                return Float(x, y + 2 * Constants.LayoutOffsetY, valueIndex, 2);
+                return Float(x, y, valueIndex, 2, valueMin, valueMax);
             }
 
             /// <summary>
@@ -253,10 +259,12 @@ namespace FlaxEditor.Surface
             /// <param name="x">The x location (in node area space).</param>
             /// <param name="y">The y location (in node area space). The actual position is offset by 3 times <see cref="Constants.LayoutOffsetY"/> to make it easier to arrange.</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
+            /// <param name="valueMin">The minimum value range.</param>
+            /// <param name="valueMax">The maximum value range.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Vector_W(float x, float y, int valueIndex = -1)
+            public static NodeElementArchetype Vector_W(float x, float y, int valueIndex = -1, float valueMin = -1000000, float valueMax = 1000000)
             {
-                return Float(x, y + 3 * Constants.LayoutOffsetY, valueIndex, 3);
+                return Float(x, y, valueIndex, 3, valueMin, valueMax);
             }
 
             /// <summary>

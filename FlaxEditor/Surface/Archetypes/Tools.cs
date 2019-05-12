@@ -47,9 +47,9 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(1, "Scale", true, ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2 + 5, "Luminance Factors"),
-                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0),
-                    NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, 1 * Surface.Constants.LayoutOffsetY * 3 + 5, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY * 3 + 5, 0),
+                    NodeElementArchetype.Factory.Vector_Z(0, 3 * Surface.Constants.LayoutOffsetY * 3 + 5, 0)
                 }
             },
             new NodeArchetype

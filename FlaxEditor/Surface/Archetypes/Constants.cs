@@ -121,8 +121,8 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.Vector2, 0),
                     NodeElementArchetype.Factory.Output(1, "X", ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Output(2, "Y", ConnectionType.Float, 2),
-                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, 1 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY, 0)
                 },
                 TryParseText = (string filterText, out object[] data) =>
                 {
@@ -153,9 +153,9 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(1, "X", ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Output(2, "Y", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Z", ConnectionType.Float, 3),
-                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, 1 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Z(0, 3 * Surface.Constants.LayoutOffsetY, 0)
                 },
                 TryParseText = (string filterText, out object[] data) =>
                 {
@@ -187,10 +187,10 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(2, "Y", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Z", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "W", ConnectionType.Float, 4),
-                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_W(0, Surface.Constants.LayoutOffsetY, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, 1* Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Z(0, 3 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_W(0, 4 * Surface.Constants.LayoutOffsetY, 0)
                 },
                 TryParseText = (string filterText, out object[] data) =>
                 {
@@ -227,7 +227,8 @@ namespace FlaxEditor.Surface.Archetypes
                 TryParseText = (string filterText, out object[] data) =>
                 {
                     data = null;
-                    if (!filterText.StartsWith("#")) return false;
+                    if (!filterText.StartsWith("#"))
+                        return false;
                     Color color;
                     if (Color.TryParseHex(filterText, out color))
                     {
