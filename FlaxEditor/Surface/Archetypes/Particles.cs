@@ -524,6 +524,19 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 203,
+                Title = "Simulation Mode",
+                Description = "Particle emitter simulation execution mode.",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(230, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "CPU", ConnectionType.Bool, 0),
+                    NodeElementArchetype.Factory.Output(1, "GPU", ConnectionType.Bool, 1),
+                }
+            },
         };
     }
 }
