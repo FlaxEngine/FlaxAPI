@@ -976,6 +976,9 @@ namespace FlaxEditor.Surface.Archetypes
             GetParticleAttribute(ModuleType.Initialize, 257, "Set Rotation", "Sets the particle rotation (in XYZ as euler angle in degrees)", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Initialize, 258, "Set Angular Velocity", "Sets the angular particle velocity (rotation delta per second)", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Initialize, 259, "Set Scale", "Sets the particle scale (used by model particles)", ConnectionType.Vector3, Vector3.One),
+            GetParticleAttribute(ModuleType.Initialize, 260, "Set Ribbon Width", "Sets the ribbon width", ConnectionType.Float, 20.0f),
+            GetParticleAttribute(ModuleType.Initialize, 261, "Set Ribbon Twist", "Sets the ribbon twist angle (in degrees)", ConnectionType.Float, 0.0f),
+            GetParticleAttribute(ModuleType.Initialize, 262, "Set Ribbon Facing Vector", "Sets the ribbon particles facing vector", ConnectionType.Vector3, Vector3.Up),
 
             // Update Modules
             new NodeArchetype
@@ -1341,6 +1344,9 @@ namespace FlaxEditor.Surface.Archetypes
             GetParticleAttribute(ModuleType.Update, 357, "Set Rotation", "Sets the particle rotation (in XYZ as euler angle in degrees)", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Update, 358, "Set Angular Velocity", "Sets the angular particle velocity (rotation delta per second)", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Update, 359, "Set Scale", "Sets the particle scale (used by model particles)", ConnectionType.Vector3, Vector3.One),
+            GetParticleAttribute(ModuleType.Update, 360, "Set Ribbon Width", "Sets the ribbon width", ConnectionType.Float, 20.0f),
+            GetParticleAttribute(ModuleType.Update, 361, "Set Ribbon Twist", "Sets the ribbon twist angle (in degrees)", ConnectionType.Float, 0.0f),
+            GetParticleAttribute(ModuleType.Update, 362, "Set Ribbon Facing Vector", "Sets the ribbon particles facing vector", ConnectionType.Vector3, Vector3.Up),
 
             // Render Modules
             new NodeArchetype
