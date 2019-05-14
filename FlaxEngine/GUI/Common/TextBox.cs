@@ -272,6 +272,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Gets or sets the text wrapping within the control bounds.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The text wrapping within the control bounds.")]
+        public TextWrapping Wrapping { get => _layout.TextWrapping; set => _layout.TextWrapping = value; }
+
+        /// <summary>
         /// Gets or sets the font.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
