@@ -211,7 +211,7 @@ namespace FlaxEditor.Content.Thumbnails
             _task = RenderTask.Create<CustomRenderTask>();
             _task.Order = 50; // Render this task later
             _task.Enabled = false;
-            _task.OnRender += OnRender;
+            _task.Render += OnRender;
         }
 
         private void OnRender(GPUContext context)

@@ -18,7 +18,7 @@ namespace FlaxEngine
     /// </summary>
     /// <param name="exception">The exception.</param>
     /// <param name="obj">The object.</param>
-    public delegate void LogExceptionDegetae(Exception exception, Object obj);
+    public delegate void LogExceptionDelegate(Exception exception, Object obj);
 
     /// <summary>
     /// Logger interface.

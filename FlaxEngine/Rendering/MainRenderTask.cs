@@ -41,9 +41,9 @@ namespace FlaxEngine.Rendering
             base.OnBegin(context);
         }
 
-        internal override bool Internal_Begin(out IntPtr outputPtr)
+        internal override bool OnBegin(out IntPtr outputPtr)
         {
-            bool result = base.Internal_Begin(out outputPtr);
+            bool result = base.OnBegin(out outputPtr);
 
             if (!Application.IsEditor)
             {
