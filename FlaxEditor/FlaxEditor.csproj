@@ -297,6 +297,7 @@
     <Compile Include="IEditable.cs" />
     <Compile Include="Modules\ContentDatabaseModule.cs" />
     <Compile Include="Modules\ContentEditingModule.cs" />
+    <Compile Include="Modules\ContentFindingModule.cs" />
     <Compile Include="Modules\ContentImportingModule.cs" />
     <Compile Include="Modules\EditorModule.cs" />
     <Compile Include="Modules\PrefabsModule.cs" />
@@ -398,6 +399,8 @@
     <Compile Include="Surface\Archetypes\Textures.cs" />
     <Compile Include="Surface\Archetypes\Tools.cs" />
     <Compile Include="Surface\Constants.cs" />
+    <Compile Include="Surface\ContextMenu\ContentFinder.cs" />
+    <Compile Include="Surface\ContextMenu\FinderItem.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCM.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCMGroup.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCMItem.cs" />

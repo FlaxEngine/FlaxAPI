@@ -119,6 +119,11 @@ namespace FlaxEditor
         public readonly ContentImportingModule ContentImporting;
 
         /// <summary>
+        /// The content finder module.
+        /// </summary>
+        public readonly ContentFindingModule ContentFinding;
+        
+        /// <summary>
         /// The content editing
         /// </summary>
         public readonly CodeEditingModule CodeEditing;
@@ -204,6 +209,7 @@ namespace FlaxEditor
             RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
             RegisterModule(ProgressReporting = new ProgressReportingModule(this));
+            RegisterModule(ContentFinding = new ContentFindingModule(this));
 
             StateMachine = new EditorStateMachine(this);
             Undo = new EditorUndo(this);
