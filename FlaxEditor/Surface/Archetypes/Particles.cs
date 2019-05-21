@@ -195,7 +195,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 // Options border
                 var optionsAreaStart = FlaxEditor.Surface.Constants.NodeHeaderSize + 3.0f;
-                var optionsAreaHeight = 6 * FlaxEditor.Surface.Constants.LayoutOffsetY + 6.0f;
+                var optionsAreaHeight = 7 * FlaxEditor.Surface.Constants.LayoutOffsetY + 6.0f;
                 Render2D.DrawRectangle(new Rectangle(1, optionsAreaStart, Width - 2, optionsAreaHeight), style.BackgroundSelected, 1.5f);
 
                 // Selection outline
@@ -321,7 +321,8 @@ namespace FlaxEditor.Surface.Archetypes
                     (int)ParticlesSimulationMode.Default, // Simulation Mode
                     (int)ParticlesSimulationSpace.Local, // Simulation Space
                     true, // Enable Pooling
-                    BoundingBox.Zero, // Custom Bounds
+                    new BoundingBox(new Vector3(-500.0f), new Vector3(500.0f)), // Custom Bounds
+                    true, // Use Auto Bounds
                 },
                 Elements = new[]
                 {
@@ -341,9 +342,13 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Text(0, 3 * Surface.Constants.LayoutOffsetY, "Enable Pooling", 100.0f, 16.0f, "True if enable pooling emitter instance data, otherwise immediately dispose. Pooling can improve performance and reduce memory usage."),
                     NodeElementArchetype.Factory.Bool(110, 3 * Surface.Constants.LayoutOffsetY, 3),
 
+                    // Use Auto Bounds
+                    NodeElementArchetype.Factory.Text(0, 4 * Surface.Constants.LayoutOffsetY, "Use Auto Bounds", 100.0f, 16.0f, "True if enable using automatic bounds (valid only for CPU particles)."),
+                    NodeElementArchetype.Factory.Bool(110, 4 * Surface.Constants.LayoutOffsetY, 5),
+
                     // Custom Bounds
-                    NodeElementArchetype.Factory.Text(0, 4 * Surface.Constants.LayoutOffsetY, "Custom Bounds", 100.0f, 16.0f, "The custom bounds to use for the particles. Set to zero to use automatic bounds (valid only for CPU particles)."),
-                    NodeElementArchetype.Factory.Box(110, 4 * Surface.Constants.LayoutOffsetY, 4),
+                    NodeElementArchetype.Factory.Text(0, 5 * Surface.Constants.LayoutOffsetY, "Custom Bounds", 100.0f, 16.0f, "The custom bounds to use for the particles. In local-space of the emitter."),
+                    NodeElementArchetype.Factory.Box(110, 5 * Surface.Constants.LayoutOffsetY, 4),
                 }
             },
 
