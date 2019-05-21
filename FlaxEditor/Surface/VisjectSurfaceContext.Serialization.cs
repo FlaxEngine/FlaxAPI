@@ -499,7 +499,17 @@ namespace FlaxEditor.Surface
 
                         object dummy = null;
                         for (int j = firstValueReadIdx; j < valuesCnt; j++)
+                        {
                             Utils.ReadCommonValue(stream, ref dummy);
+
+                            if (j < nodeValuesCnt &&
+                                dummy != null &&
+                                node.Values[j] != null &&
+                                node.Values[j].GetType() == dummy.GetType())
+                            {
+                                node.Values[j] = dummy;
+                            }
+                        }
                     }
 
                     // Boxes
