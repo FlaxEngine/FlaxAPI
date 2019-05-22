@@ -65,7 +65,7 @@ namespace FlaxEditor.Options
         public bool EnabbleAutoSaves { get; set; } = true;
         
         [DefaultValue(2)]
-        [EditorDisplay("Auto Saves", "Interval in seconds"), EditorOrder(1000), Tooltip("Set the interval between auto saves in minutes")]
+        [EditorDisplay("Auto Saves", "Interval In Seconds"), EditorOrder(1000), Tooltip("Set the interval between auto saves in minutes")]
         public int AutoSavesInterval { get; set; } = 2;
     }
 }
