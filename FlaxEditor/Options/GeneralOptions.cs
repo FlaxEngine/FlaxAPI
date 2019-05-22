@@ -59,5 +59,13 @@ namespace FlaxEditor.Options
         [DefaultValue(true)]
         [EditorDisplay("Analytics"), EditorOrder(1000), Tooltip("Enables or disables anonymous editor analytics service used to improve editor experience and the quality")]
         public bool EnableEditorAnalytics { get; set; } = true;
+        
+        [DefaultValue(true)]
+        [EditorDisplay("Auto Saves", "Enable Auto Saves"), EditorOrder(1000), Tooltip("Enables or disables auto saves")]
+        public bool EnabbleAutoSaves { get; set; } = true;
+        
+        [DefaultValue(2)]
+        [EditorDisplay("Auto Saves", "Interval"), EditorOrder(1000), Tooltip("Set the interval between auto saves in minutes")]
+        public int AutoSavesInterval { get; set; } = 2;
     }
 }
