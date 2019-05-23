@@ -220,7 +220,7 @@ namespace FlaxEditor
 
         private void InitAutoSaveTimer()
         {
-            if (!Options.Options.General.EnabbleAutoSaves)
+            if (!Options.Options.General.EnableAutoSaves)
                 return;
             
             _autoSaveTimer = new Timer(Options.Options.General.AutoSavesInterval * 60 * 1000);
@@ -237,7 +237,7 @@ namespace FlaxEditor
 
         private void UpdateAutoSaveTimer()
         {
-            if (_autoSaveTimer != null && !Options.Options.General.EnabbleAutoSaves)
+            if (_autoSaveTimer != null && !Options.Options.General.EnableAutoSaves)
             {
                 _autoSaveTimer.Stop();
                 _autoSaveTimer.Dispose();
@@ -421,6 +421,10 @@ namespace FlaxEditor
         {
             Log("Editor exit");
 
+            // Auto Save 
+            _autoSaveTimer.Stop();
+            _autoSaveTimer.Dispose();
+            
             // Start exit
             StateMachine.GoToState<ClosingState>();
 
