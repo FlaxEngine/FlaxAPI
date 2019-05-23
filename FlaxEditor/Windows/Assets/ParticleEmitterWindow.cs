@@ -341,6 +341,11 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(ParticleEmitter particleEmitter)
         {
             var source = Editor.GetParticleEmitterShaderSourceCode(particleEmitter);
+            if (string.IsNullOrEmpty(source))
+            {
+                MessageBox.Show("No generated shader source code.", "No source.");
+                return;
+            }
 
             CreateWindowSettings settings = CreateWindowSettings.Default;
             settings.ActivateWhenFirstShown = true;

@@ -496,6 +496,11 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(Material material)
         {
             var source = Editor.GetMaterialShaderSourceCode(material);
+            if (string.IsNullOrEmpty(source))
+            {
+                MessageBox.Show("No generated shader source code.", "No source.");
+                return;
+            }
 
             CreateWindowSettings settings = CreateWindowSettings.Default;
             settings.ActivateWhenFirstShown = true;
