@@ -3,19 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FlaxEditor.Content;
+using FlaxEditor.Modules;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface.ContextMenu
 {
-
-    public struct FinderResult
-    {
-        public string Name;
-        public string TypeName;
-        public ContentItem Item;
-    }
-    
     public class ContentFinder : ContextMenuBase
     {
         private bool _ctrlKey;
@@ -23,7 +16,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private Panel _resultPanel;
         private TextBox _searchBox;
         private Match _match;
-        private FinderItem _selectedItem;
+        private SearchItem _selectedItem;
         
         /// <summary>
         /// Gets or sets the height per item.
@@ -43,7 +36,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Gets or sets the selected item.
         /// </summary>
-        public FinderItem SelectedItem {
+        public SearchItem SelectedItem {
             get { return _selectedItem; }
 
             set
@@ -69,7 +62,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Gets actual matched item list.
         /// </summary>
-        public List<FinderItem> MatchedItems { get; } = new List<FinderItem>();
+        public List<SearchItem> MatchedItems { get; } = new List<SearchItem>();
         
         internal bool Hand { get; set; }
         
@@ -99,26 +92,13 @@ namespace FlaxEditor.Surface.ContextMenu
         private void OnTextChanged()
         {
             MatchedItems.Clear();
-            
-            var text = _searchBox.Text;
 
-            var regex = new Regex(text.Trim(), RegexOptions.IgnoreCase);
+            List<SearchResult> results = Editor.Instance.ContentFinding.Search(_searchBox.Text);
             
-            BlockingCollection<FinderResult> matches = new BlockingCollection<FinderResult>();
-            
-            List<ContentItem> assetsItems = Editor.Instance.ContentDatabase.ProjectContent.Folder.Children;
-            List<ContentItem> scriptsItems = Editor.Instance.ContentDatabase.ProjectSource.Folder.Children;
-            
-            if (!text.Trim().Equals(""))
-            {
-                ProcessItems(regex, assetsItems, matches);
-                ProcessItems(regex, scriptsItems, matches);
-            }
-            
-            BuildList(matches.ToList());
+            BuildList(results);
         }
 
-        private void BuildList(List<FinderResult> items)
+        private void BuildList(List<SearchResult> items)
         {
             _resultPanel.DisposeChildren();
 
@@ -146,7 +126,7 @@ namespace FlaxEditor.Surface.ContextMenu
             int count = 0;
             items.ForEach((item) =>
             {
-                var i = new FinderItem(count, item.Name, item.TypeName, item.Item, this);
+                var i = new SearchItem(count, item.Name, item.Type, item.Item, this);
                 MatchedItems.Add(i);
                 _resultPanel.AddChild(i);
                 i.Build(ItemHeight, ItemLogoSize);
@@ -156,59 +136,6 @@ namespace FlaxEditor.Surface.ContextMenu
             RootWindow.Window.ClientSize = new Vector2(RootWindow.Window.ClientSize.X, Height);
             
             PerformLayout();
-        }
-        
-        private void ProcessItems(Regex regex, List<ContentItem> items, BlockingCollection<FinderResult> matches)
-        {
-            foreach (var contentItem in items)
-            {
-                if (contentItem.IsAsset)
-                {
-                    _match = regex.Match(contentItem.ShortName);
-                    if (_match.Success)
-                    {
-                        var asset = contentItem as AssetItem;
-                        string finalName;
-                        
-                        if (_aliases.ContainsKey(asset.TypeName))
-                        {
-                            finalName = _aliases[asset.TypeName];
-                        }
-                        else
-                        {
-                            var splits = asset.TypeName.Split('.');
-                            finalName = splits[splits.Length - 1];
-                        }
-                        matches.Add(new FinderResult() { Name = asset.ShortName, TypeName = finalName, Item = asset});
-                    }
-                }
-                else if(contentItem.IsFolder)
-                {
-                    //ThreadPool.QueueUserWorkItem((state) => ProcessItems(regex, ((ContentFolder) contentItem).Children, matches));
-                    ProcessItems(regex, ((ContentFolder) contentItem).Children, matches);
-                }
-                else if (contentItem.GetType().Name.Equals("FileItem"))
-                {
-                    
-                }
-                else
-                {
-                    _match = regex.Match(contentItem.ShortName);
-                    if (_match.Success)
-                    {
-                        string finalName;
-                        if (_aliases.ContainsKey(contentItem.GetType().Name))
-                        {
-                            finalName = _aliases[contentItem.GetType().Name];
-                        }
-                        else
-                        {
-                            finalName = contentItem.GetType().Name.Replace("Item", "");
-                        }
-                        matches.Add(new FinderResult() { Name = contentItem.ShortName, TypeName = finalName, Item = contentItem});
-                    }
-                }
-            }
         }
 
         public override void Show(Control parent, Vector2 location)
@@ -271,7 +198,13 @@ namespace FlaxEditor.Surface.ContextMenu
                 if(_selectedItem != null)
                 {
                     Hide();
-                    Editor.Instance.ContentEditing.Open(_selectedItem.Item);
+                    switch (_selectedItem.Item)
+                    {
+                    case ContentItem contentItem: Editor.Instance.ContentEditing.Open(contentItem);
+                        break;
+                    case QuickAction quickAction: quickAction.Action();
+                        break;
+                    }
                 }
 
                 return true;
@@ -314,13 +247,7 @@ namespace FlaxEditor.Surface.ContextMenu
             }
         }
 
-        private Dictionary<string, string> _aliases = new Dictionary<string, string>()
-        {
-            {"FlaxEditor.Content.Settings.GameSettings", "Settings"},
-            {"FlaxEditor.Content.Settings.GraphicsSettings", "Settings"},
-            {"FlaxEditor.Content.Settings.InputSettings", "Settings"},
-            {"SceneItem", "Scene"}
-        };
+        
 
         public override void Dispose()
         {

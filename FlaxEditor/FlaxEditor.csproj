@@ -400,7 +400,7 @@
     <Compile Include="Surface\Archetypes\Tools.cs" />
     <Compile Include="Surface\Constants.cs" />
     <Compile Include="Surface\ContextMenu\ContentFinder.cs" />
-    <Compile Include="Surface\ContextMenu\FinderItem.cs" />
+    <Compile Include="Surface\ContextMenu\SearchItem.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCM.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCMGroup.cs" />
     <Compile Include="Surface\ContextMenu\VisjectCMItem.cs" />

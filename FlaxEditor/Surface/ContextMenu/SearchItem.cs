@@ -1,31 +1,34 @@
 using System;
 using FlaxEditor;
 using FlaxEditor.Content;
+using FlaxEditor.GUI;
+using FlaxEditor.Modules;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface.ContextMenu
 {
-    public class FinderItem : Panel
+    public class SearchItem : Panel
     {
         private static Texture _flaxTexture = FlaxEngine.Content.Load<Texture>(Globals.EditorFolder+@"/miniLogo.flax");
-        private int ItemNumber;
+        private int _itemCount;
         public string Name;
-        public string TypeName;
-        public ContentItem Item;
+        public string Type;
+        public object Item;
         private ContentFinder _finder;
-        public FinderItem(int count, string name, string typeName, ContentItem item, ContentFinder finder)
+        
+        public SearchItem(int count, string name, string type, object item, ContentFinder finder)
         {
-            ItemNumber = count;
+            _itemCount = count;
             Name = name;
-            TypeName = typeName;
+            Type = type;
             Item = item;
             _finder = finder;
         }
 
         public void Build(float itemHeight, float logoSize)
         {
-            Y = ItemNumber * itemHeight;
+            Y = _itemCount * itemHeight;
             Width = Parent.Width;
             Height = itemHeight;
             
@@ -49,7 +52,7 @@ namespace FlaxEditor.Surface.ContextMenu
             typeLabel.Y = (itemHeight - nameLabel.Height) / 2;
             typeLabel.X = X + Width - typeLabel.Width - 17;
             typeLabel.HorizontalAlignment = TextAlignment.Far;
-            typeLabel.Text = TypeName;
+            typeLabel.Text = Type;
         }
 
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
@@ -57,7 +60,14 @@ namespace FlaxEditor.Surface.ContextMenu
             if (buttons == MouseButton.Left)
             {
                 _finder.Hide();
-                Editor.Instance.ContentEditing.Open(Item);
+                
+                switch (Item)
+                {
+                case ContentItem contentItem: Editor.Instance.ContentEditing.Open(contentItem);
+                    break;
+                case QuickAction quickAction: quickAction.Action();
+                    break;
+                }
             }
             
             return base.OnMouseUp(location, buttons);
