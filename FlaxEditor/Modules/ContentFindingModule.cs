@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using FlaxEditor.Content;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
@@ -49,8 +50,8 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Add <paramref name="action"/> to quick action list.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="action"></param>
+        /// <param name="name">Action's name</param>
+        /// <param name="action">The actual action</param>
         public void AddQuickAction(string name, Action action)
         {
             _quickActions.Add(new QuickAction() { Name = name, Action = action });
@@ -59,8 +60,8 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Remove a quick action by his name
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns>Return true if it succeed, false if there is no QuickAction with this name</returns>
+        /// <param name="name">Action's name</param>
+        /// <returns>Return true when it succeed, false if there is no QuickAction with this name</returns>
         public bool RemoveQuickAction(string name)
         {
             foreach (var action in _quickActions)
@@ -75,6 +76,12 @@ namespace FlaxEditor.Modules
             return false;
         }
 
+        /// <summary>
+        /// Search any assets/scripts/quick actions that match the provided type and name.
+        /// </summary>
+        /// <param name="charsToFind">Two pattern can be used, the first one will just take a string without ':' and will only match names.
+        /// The second looks like this "name:type", it will match name and type. Experimental : You can use regular expressions, might break if you are using ':' character.</param>
+        /// <returns></returns>
         public List<SearchResult> Search(string charsToFind)
         {
             string type = ".*";
@@ -89,8 +96,6 @@ namespace FlaxEditor.Modules
             
             if (name.Equals(""))
                 name = ".*";
-
-            Debug.Log("Search : type = " + type + "  name = " + name);
 
             Regex typeRegex = new Regex(type, RegexOptions.IgnoreCase);
             Regex nameRegex = new Regex(name, RegexOptions.IgnoreCase);
@@ -116,7 +121,6 @@ namespace FlaxEditor.Modules
         {
             foreach (var contentItem in items)
             {
-                //Debug.Log(contentItem.GetType().Name);
                 if (contentItem.IsAsset)
                 {
                     if (nameRegex.Match(contentItem.ShortName).Success)
@@ -142,7 +146,6 @@ namespace FlaxEditor.Modules
                 }
                 else if (contentItem.IsFolder)
                 {
-                    //ThreadPool.QueueUserWorkItem((state) => ProcessItems(regex, ((ContentFolder) contentItem).Children, matches));
                     ProcessItems(nameRegex, typeRegex, ((ContentFolder)contentItem).Children, matches);
                 }
                 else if (contentItem.GetType().Name.Equals("FileItem"))
@@ -162,10 +165,17 @@ namespace FlaxEditor.Modules
 
         private Dictionary<string, string> _aliases = new Dictionary<string, string>()
         {
+            { "FlaxEditor.Content.Settings.AudioSettings", "Settings" },
+            { "FlaxEditor.Content.Settings.BuildSettings", "Settings" },
             { "FlaxEditor.Content.Settings.GameSettings", "Settings" },
             { "FlaxEditor.Content.Settings.GraphicsSettings", "Settings" },
             { "FlaxEditor.Content.Settings.InputSettings", "Settings" },
-            { "SceneItem", "Scene" }
+            { "FlaxEditor.Content.Settings.LayersAndTagsSettings", "Settings" },
+            { "FlaxEditor.Content.Settings.NavigationSettings", "Settings" },
+            { "FlaxEditor.Content.Settings.PhysicsSettings", "Settings" },
+            { "FlaxEditor.Content.Settings.TimeSettings", "Settings" },
+            { "FlaxEditor.Content.Settings.UWPPlatformSettings", "Settings" },
+            { "FlaxEditor.Content.Settings.WindowsPlatformSettings", "Settings" },
         };
     }
 }
