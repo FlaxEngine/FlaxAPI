@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FlaxEditor.Content;
 using FlaxEditor.Modules;
+using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -198,13 +199,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 if(_selectedItem != null)
                 {
                     Hide();
-                    switch (_selectedItem.Item)
-                    {
-                    case ContentItem contentItem: Editor.Instance.ContentEditing.Open(contentItem);
-                        break;
-                    case QuickAction quickAction: quickAction.Action();
-                        break;
-                    }
+                    Editor.Instance.ContentFinding.Open(_selectedItem.Item);
                 }
 
                 return true;

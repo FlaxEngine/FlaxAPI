@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using FlaxEditor.Content;
+using FlaxEditor.SceneGraph;
+using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
 
@@ -107,7 +109,8 @@ namespace FlaxEditor.Modules
 
             ProcessItems(nameRegex, typeRegex, assetsItems, matches);
             ProcessItems(nameRegex, typeRegex, scriptsItems, matches);
-
+            ProcessSceneNodes(nameRegex, typeRegex, Editor.Instance.Scene.Root, matches);
+            
             _quickActions.ForEach((action) =>
             {
                 if (nameRegex.Match(action.Name).Success && typeRegex.Match("Quick Action").Success)
@@ -117,6 +120,31 @@ namespace FlaxEditor.Modules
             return matches.ToList();
         }
 
+        private void ProcessSceneNodes(Regex nameRegex, Regex typeRegex, SceneGraphNode root, BlockingCollection<SearchResult> matches)
+        {
+            root.ChildNodes.ForEach((node) =>
+            {
+                if (typeRegex.Match(node.GetType().Name).Success && nameRegex.Match(node.Name).Success)
+                {
+                    string finalName = node.GetType().Name;
+                    if (_aliases.ContainsKey(node.GetType().Name))
+                    {
+                        finalName = _aliases[node.GetType().Name];
+                    }
+                    
+                    matches.Add(new SearchResult() { Name = node.Name, Type = finalName, Item = node});
+                }
+
+                if (node.ChildNodes.Count != 0)
+                { 
+                    node.ChildNodes.ForEach((n) =>
+                    {
+                        ProcessSceneNodes(nameRegex, typeRegex, n, matches);
+                    });
+                }
+            });
+        }
+        
         private void ProcessItems(Regex nameRegex, Regex typeRegex, List<ContentItem> items, BlockingCollection<SearchResult> matches)
         {
             foreach (var contentItem in items)
@@ -163,8 +191,23 @@ namespace FlaxEditor.Modules
             }
         }
 
+        internal void Open(object o)
+        {
+            switch (o)
+            {
+            case ContentItem contentItem: Editor.Instance.ContentEditing.Open(contentItem);
+                break;
+            case QuickAction quickAction: quickAction.Action();
+                break;
+            case SceneGraphNode sceneNode: Editor.Instance.SceneEditing.Select((Actor)sceneNode.EditableObject);
+                Editor.Instance.Windows.EditWin.ShowSelectedActors();
+                break;
+            }
+        }
+        
         private Dictionary<string, string> _aliases = new Dictionary<string, string>()
         {
+            // Assets
             { "FlaxEditor.Content.Settings.AudioSettings", "Settings" },
             { "FlaxEditor.Content.Settings.BuildSettings", "Settings" },
             { "FlaxEditor.Content.Settings.GameSettings", "Settings" },
@@ -176,6 +219,34 @@ namespace FlaxEditor.Modules
             { "FlaxEditor.Content.Settings.TimeSettings", "Settings" },
             { "FlaxEditor.Content.Settings.UWPPlatformSettings", "Settings" },
             { "FlaxEditor.Content.Settings.WindowsPlatformSettings", "Settings" },
+            
+            // Scene nodes
+            {typeof(AnimatedModelNode).Name, "Animated Model"},
+            {typeof(AudioListenerNode).Name, "Audio Listener"},
+            {typeof(AudioSourceNode).Name, "Audio Source"},
+            {typeof(BoneSocketNode).Name, "Bone Socket"},
+            {typeof(BoxBrushNode).Name, "Box Brush"},
+            {typeof(CameraNode).Name, "Camera"},
+            {typeof(ColliderNode).Name, "Collider"},
+            {typeof(DecalNode).Name, "Decal"},
+            {typeof(DirectionalLightNode).Name, "Directional Light"},
+            {typeof(EnvironmentProbeNode).Name, "Environment Probe"},
+            {typeof(ExponentialHeightFogNode).Name, "Height Fog"},
+            {typeof(FoliageNode).Name, "Foliage"},
+            {typeof(NavLinkNode).Name, "NavLink"},
+            {typeof(NavMeshBoundsVolumeNode).Name, "Nav Mesh Bounds"},
+            {typeof(ParticleEffectNode).Name, "Particle Effect"},
+            {typeof(PointLightNode).Name, "Point Light"},
+            {typeof(PostFxVolumeNode).Name, "Post Fx Volume"},
+            {typeof(SceneNode).Name, "Scene Root"},
+            {typeof(SkyboxNode).Name, "Skybox"},
+            {typeof(SkyLightNode).Name, "Sky Light"},
+            {typeof(SkyNode).Name, "Sky"},
+            {typeof(SpotLightNode).Name, "Spot Light"},
+            {typeof(StaticModelNode).Name, "Static Model"},
+            {typeof(TerrainNode).Name, "Terrain"},
+            {typeof(TextRenderNode).Name, "Text Renderer"},
+            
         };
     }
 }

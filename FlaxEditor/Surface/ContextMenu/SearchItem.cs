@@ -3,6 +3,7 @@ using FlaxEditor;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.Modules;
+using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -60,14 +61,7 @@ namespace FlaxEditor.Surface.ContextMenu
             if (buttons == MouseButton.Left)
             {
                 _finder.Hide();
-                
-                switch (Item)
-                {
-                case ContentItem contentItem: Editor.Instance.ContentEditing.Open(contentItem);
-                    break;
-                case QuickAction quickAction: quickAction.Action();
-                    break;
-                }
+                Editor.Instance.ContentFinding.Open(Item);
             }
             
             return base.OnMouseUp(location, buttons);
