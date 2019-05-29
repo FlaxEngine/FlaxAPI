@@ -881,6 +881,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<InputSettings>());
             Proxy.Add(new SettingsProxy<WindowsPlatformSettings>());
             Proxy.Add(new SettingsProxy<UWPPlatformSettings>());
+            Proxy.Add(new SettingsProxy<LinuxPlatformSettings>());
             Proxy.Add(new SettingsProxy<AudioSettings>());
 
             // Last add generic json (won't override other json proxies)

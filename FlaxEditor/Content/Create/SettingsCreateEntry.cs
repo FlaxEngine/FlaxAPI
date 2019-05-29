@@ -71,6 +71,11 @@ namespace FlaxEditor.Content.Create
             /// The UWP settings.
             /// </summary>
             UWPPlatformSettings,
+
+            /// <summary>
+            /// The Linux settings.
+            /// </summary>
+            LinuxPlatformSettings,
         }
 
         private static readonly Type[] _types =
@@ -86,6 +91,7 @@ namespace FlaxEditor.Content.Create
             typeof(InputSettings),
             typeof(WindowsPlatformSettings),
             typeof(UWPPlatformSettings),
+            typeof(LinuxPlatformSettings),
         };
 
         /// <summary>
