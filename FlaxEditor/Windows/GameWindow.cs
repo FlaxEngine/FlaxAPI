@@ -1,6 +1,8 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using FlaxEditor.Options;
+using FlaxEditor.SceneGraph.Actors;
+using FlaxEditor.Viewport;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -287,6 +289,18 @@ namespace FlaxEditor.Windows
                     Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha);
                 }
             }
+
+            var selection = Editor.Instance.SceneEditing.Selection;
+                
+            selection.ForEach((node) =>
+            {
+                if (node.EditableObject is UIControl controlActor)
+                {
+                    if (controlActor.Control != null)
+                        Render2D.DrawRectangle(controlActor.Control.Bounds, Color.Green, 5f);
+                }
+            });
+            
         }
 
         /// <summary>
