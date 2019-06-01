@@ -78,7 +78,7 @@ namespace FlaxEditor.Content
             _preview.Model = (Model)request.Asset;
             _preview.Parent = guiRoot;
 
-            _preview.Task.Internal_Render(context);
+            _preview.Task.OnRender(context);
         }
 
         /// <inheritdoc />

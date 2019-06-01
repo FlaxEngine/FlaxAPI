@@ -168,7 +168,7 @@ namespace FlaxEditor.Content
                 _preview.Instance.Position = Vector3.Zero;
             }
 
-            _preview.Task.Internal_Render(context);
+            _preview.Task.OnRender(context);
         }
 
         /// <inheritdoc />

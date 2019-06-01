@@ -374,11 +374,19 @@ namespace FlaxEditor.SceneGraph.GUI
             _dragHandlers.OnDragLeave();
         }
 
+        [Serializable]
         private class ReparentAction : IUndoAction
         {
+            [Serialize]
             private Guid[] _ids;
+
+            [Serialize]
             private int _actorsCount;
+
+            [Serialize]
             private Guid[] _prefabIds;
+
+            [Serialize]
             private Guid[] _prefabObjectIds;
 
             public ReparentAction(Actor actor)

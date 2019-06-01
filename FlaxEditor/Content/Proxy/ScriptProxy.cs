@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.IO;
 using System.Text;
 using FlaxEditor.Content.Settings;
@@ -95,7 +96,7 @@ namespace FlaxEditor.Content
             // Format
             var gameSettings = GameSettings.Load();
             var scriptName = ScriptItem.CreateScriptName(outputPath);
-            var copyrightComment = string.IsNullOrEmpty(gameSettings.CopyrightNotice) ? string.Empty : string.Format("// {0}\n\n", gameSettings.CopyrightNotice);
+            var copyrightComment = string.IsNullOrEmpty(gameSettings.CopyrightNotice) ? string.Empty : string.Format("// {0}{1}{1}", gameSettings.CopyrightNotice, Environment.NewLine);
             scriptTemplate = scriptTemplate.Replace("%copyright%", copyrightComment);
             scriptTemplate = scriptTemplate.Replace("%class%", scriptName);
             scriptTemplate = scriptTemplate.Replace("%namespace%", scriptNamespace);

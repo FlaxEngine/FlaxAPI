@@ -14,6 +14,7 @@ namespace FlaxEditor
     /// Since we use this kind of action very ofter (for <see cref="FlaxEditor.Gizmo.TransformGizmo"/> operations) it's better to provide faster implementation.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
+    [Serializable]
     public sealed class TransformObjectsAction : UndoActionBase<TransformObjectsAction.DataStorage>, ISceneEditAction
     {
         /// <summary>

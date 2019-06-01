@@ -75,6 +75,7 @@
     <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
+    <Compile Include="CustomEditors\Editors\PostProcessSettingsEditor.cs" />
     <Compile Include="Gizmo\TransformGizmoBase.cs" />
     <Compile Include="GUI\Drag\DragNames.cs" />
     <Compile Include="GUI\NavigationBar.cs" />

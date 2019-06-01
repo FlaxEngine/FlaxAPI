@@ -17,7 +17,7 @@ namespace FlaxEngine
         /// <summary>
         /// Occurs on sending a log message.
         /// </summary>
-        public event LogExceptionDegetae SendExceptionLog;
+        public event LogExceptionDelegate SendExceptionLog;
 
         /// <inheritdoc />
         public void LogWrite(LogType logType, string message)

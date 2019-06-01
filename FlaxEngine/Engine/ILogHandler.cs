@@ -17,7 +17,7 @@ namespace FlaxEngine
         /// <summary>
         /// Occurs on sending a exception log message.
         /// </summary>
-        event LogExceptionDegetae SendExceptionLog;
+        event LogExceptionDelegate SendExceptionLog;
 
         /// <summary>
         /// Logs the raw message to the log.

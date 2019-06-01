@@ -326,6 +326,9 @@ namespace FlaxEngine.Rendering
         [NoSerialize]
         internal bool isDataDirty;
 
+        [NoSerialize]
+        private MaterialBase[] _postFxMaterials;
+
         [Serialize]
         internal Data data;
 
@@ -2020,20 +2023,23 @@ namespace FlaxEngine.Rendering
         /// Gets the post effect materials collection.
         /// </summary>
         [NoSerialize, EditorOrder(10000), EditorDisplay("PostFx Materials", EditorDisplayAttribute.InlineStyle), Tooltip("Post effect materials to render")]
+        [CustomEditorAlias("FlaxEditor.CustomEditors.Editors.Test1")]
         public unsafe MaterialBase[] PostFxMaterials
         {
             get
             {
-                var result = new MaterialBase[data.PostFxMaterialsCount];
+                if (_postFxMaterials == null || _postFxMaterials.Length != data.PostFxMaterialsCount)
+                    _postFxMaterials = new MaterialBase[data.PostFxMaterialsCount];
+
                 fixed (Guid* postFxMaterials = &data.PostFxMaterial0)
                 {
                     for (int i = 0; i < data.PostFxMaterialsCount; i++)
                     {
-                        result[i] = Content.LoadAsync<MaterialBase>(postFxMaterials[i]);
+                        _postFxMaterials[i] = Content.LoadAsync<MaterialBase>(postFxMaterials[i]);
                     }
                 }
 
-                return result;
+                return _postFxMaterials;
             }
             set
             {
@@ -2066,7 +2072,10 @@ namespace FlaxEngine.Rendering
 
                     data.PostFxMaterialsCount = postFxLength;
                     if (posFxMaterialsChanged)
+                    {
+                        _postFxMaterials = null;
                         isDataDirty = true;
+                    }
                 }
             }
         }

@@ -9,6 +9,7 @@ namespace FlaxEditor
     /// Objects selection change action.
     /// </summary>
     /// <seealso cref="IUndoAction" />
+    [Serializable]
     public class SelectionChangeAction : UndoActionBase<SelectionChangeAction.DataStorage>
     {
         /// <summary>
@@ -30,7 +31,13 @@ namespace FlaxEditor
 
         private Action<SceneGraphNode[]> _callback;
 
-        internal SelectionChangeAction(SceneGraphNode[] before, SceneGraphNode[] after, Action<SceneGraphNode[]> callback)
+        /// <summary>
+        /// User selection has changed
+        /// </summary>
+        /// <param name="before">Previously selected nodes</param>
+        /// <param name="after">Newly selected nodes</param>
+        /// <param name="callback">Selection change callback</param>
+        public SelectionChangeAction(SceneGraphNode[] before, SceneGraphNode[] after, Action<SceneGraphNode[]> callback)
         {
             Data = new DataStorage
             {
