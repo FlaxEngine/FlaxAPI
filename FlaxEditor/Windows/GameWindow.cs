@@ -289,10 +289,8 @@ namespace FlaxEditor.Windows
                     Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha);
                 }
             }
-
-            var selection = Editor.Instance.SceneEditing.Selection;
-                
-            selection.ForEach((node) =>
+            
+            Editor.Instance.SceneEditing.Selection.ForEach((node) =>
             {
                 if (node.EditableObject is UIControl controlActor)
                 {
