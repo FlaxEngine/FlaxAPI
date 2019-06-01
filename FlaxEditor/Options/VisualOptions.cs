@@ -19,6 +19,13 @@ namespace FlaxEditor.Options
         public bool ShowSelectionOutline { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the selection outline size for screen space controls.
+        /// </summary>
+        [DefaultValue(3F)]
+        [EditorDisplay("Gizmo", "Control Outline Size"), EditorOrder(100), Tooltip("Size of the selection outline for screen space controls.")]
+        public float UISelectionOutlineSize { get; set; } = 3F;
+        
+        /// <summary>
         /// Gets or sets the first outline color.
         /// </summary>
         [DefaultValue(typeof(Color), "0.039,0.827,0.156")]
