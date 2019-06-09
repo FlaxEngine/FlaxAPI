@@ -97,6 +97,11 @@ namespace FlaxEditor.Content
         Json,
 
         /// <summary>
+        /// The particles.
+        /// </summary>
+        Particles,
+
+        /// <summary>
         /// The other.
         /// </summary>
         Other,
