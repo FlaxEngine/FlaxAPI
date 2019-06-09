@@ -542,6 +542,55 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(1, "GPU", ConnectionType.Bool, 1),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 204,
+                Title = "View Position",
+                Description = "World-space camera location (of the main game view)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 205,
+                Title = "View Direction",
+                Description = "Camera forward vector (of the main game view)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 206,
+                Title = "View Far Plane",
+                Description = "Camera far plane distance (of the main game view)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 207,
+                Title = "Screen Size",
+                Description = "Gets the screen size (of the main game view)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Size", ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(1, "Inv Size", ConnectionType.Vector2, 1),
+                }
+            },
         };
     }
 }
