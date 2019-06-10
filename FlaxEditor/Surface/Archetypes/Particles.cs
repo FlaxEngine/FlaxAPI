@@ -591,6 +591,54 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(1, "Inv Size", ConnectionType.Vector2, 1),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 208,
+                Title = "Random Float",
+                Description = "Gets the random floating point value (normalized to 0-1 range)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 209,
+                Title = "Random Vector2",
+                Description = "Gets the random Vector2 value (normalized to 0-1 range)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector2, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 210,
+                Title = "Random Vector3",
+                Description = "Gets the random Vector3 value (normalized to 0-1 range)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 211,
+                Title = "Random Vector4",
+                Description = "Gets the random Vector4 value (normalized to 0-1 range)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 0),
+                }
+            },
         };
     }
 }
