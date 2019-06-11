@@ -130,14 +130,78 @@ namespace FlaxEditor.Surface
             }
         }
 
-        internal void AddElement(ISurfaceNodeElement element)
+        /// <summary>
+        /// Creates an element from the archetype and adds the element to the node.
+        /// </summary>
+        /// <param name="arch">The element archetype.</param>
+        /// <returns>The created element. Null if the archetype is invalid.</returns>
+        public ISurfaceNodeElement AddElement(ref NodeElementArchetype arch)
+        {
+            ISurfaceNodeElement element = null;
+            switch (arch.Type)
+            {
+            case NodeElementType.Input:
+                element = new InputBox(this, arch);
+                break;
+            case NodeElementType.Output:
+                element = new OutputBox(this, arch);
+                break;
+            case NodeElementType.BoolValue:
+                element = new BoolValue(this, arch);
+                break;
+            case NodeElementType.FloatValue:
+                element = new FloatValue(this, arch);
+                break;
+            case NodeElementType.IntegerValue:
+                element = new IntegerValue(this, arch);
+                break;
+            case NodeElementType.ColorValue:
+                element = new ColorValue(this, arch);
+                break;
+            case NodeElementType.ComboBox:
+                element = new ComboBoxElement(this, arch);
+                break;
+            case NodeElementType.Asset:
+                element = new AssetSelect(this, arch);
+                break;
+            case NodeElementType.Text:
+                element = new TextView(this, arch);
+                break;
+            case NodeElementType.TextBox:
+                element = new TextBoxView(this, arch);
+                break;
+            case NodeElementType.SkeletonNodeSelect:
+                element = new SkeletonNodeSelectElement(this, arch);
+                break;
+            case NodeElementType.BoxValue:
+                element = new BoxValue(this, arch);
+                break;
+            }
+            if (element != null)
+            {
+                AddElement(element);
+            }
+
+            return element;
+        }
+
+        /// <summary>
+        /// Adds the element to the node.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        public void AddElement(ISurfaceNodeElement element)
         {
             Elements.Add(element);
             if (element is Control control)
                 AddChild(control);
         }
 
-        internal void RemoveElement(ISurfaceNodeElement element, bool dispose = true)
+        /// <summary>
+        /// Removes the element from the node.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="dispose">if set to <c>true</c> dispose control after removing, otherwise false.</param>
+        public void RemoveElement(ISurfaceNodeElement element, bool dispose = true)
         {
             if (element is Box box)
                 box.RemoveConnections();
