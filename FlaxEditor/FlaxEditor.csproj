@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -60,6 +60,7 @@
     <Compile Include="API\Static\TerrainTools.Gen.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.Gen.cs" />
+    <Compile Include="ContentDomain.cs" />
     <Compile Include="Content\AssetItemConverter.cs" />
     <Compile Include="Content\Create\CreateFileEntry.cs" />
     <Compile Include="Content\Create\CreateFilesDialog.cs" />
@@ -68,12 +69,16 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\ContentView.DragDrop.cs" />
     <Compile Include="Content\Import\Request.cs" />
+    <Compile Include="Content\Proxy\ParticleEmitterProxy.cs" />
+    <Compile Include="Content\Proxy\ParticleSystemProxy.cs" />
     <Compile Include="Content\Settings\LinuxPlatformSettings.cs" />
     <Compile Include="Content\Settings\NavigationSettings.cs" />
     <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
+    <Compile Include="CustomEditors\Editors\PostProcessSettingsEditor.cs" />
     <Compile Include="Gizmo\TransformGizmoBase.cs" />
+    <Compile Include="GUI\Drag\DragNames.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
@@ -210,7 +215,6 @@
     <Compile Include="GUI\Drag\DragHandlers.cs" />
     <Compile Include="GUI\Drag\DragScriptItems.cs" />
     <Compile Include="GUI\Drag\DragScripts.cs" />
-    <Compile Include="GUI\Drag\DragSurfaceParameter.cs" />
     <Compile Include="GUI\Input\ColorValueBox.cs" />
     <Compile Include="GUI\Input\DoubleValueBox.cs" />
     <Compile Include="GUI\Input\FloatValueBox.cs" />
@@ -275,6 +279,15 @@
     <Compile Include="GUI\Table.cs" />
     <Compile Include="GUI\Tabs\Tab.cs" />
     <Compile Include="GUI\Tabs\Tabs.cs" />
+    <Compile Include="GUI\Timeline\Background.cs" />
+    <Compile Include="GUI\Timeline\BackgroundHeader.cs" />
+    <Compile Include="GUI\Timeline\FolderTrack.cs" />
+    <Compile Include="GUI\Timeline\Media.cs" />
+    <Compile Include="GUI\Timeline\ParticleEmitter.cs" />
+    <Compile Include="GUI\Timeline\ParticleSystemTimeline.cs" />
+    <Compile Include="GUI\Timeline\PositionHandle.cs" />
+    <Compile Include="GUI\Timeline\Timeline.Types.cs" />
+    <Compile Include="GUI\Timeline\TimelineEdge.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />
@@ -337,6 +350,7 @@
     <Compile Include="SceneGraph\Actors\FoliageNode.cs" />
     <Compile Include="SceneGraph\Actors\NavLinkNode.cs" />
     <Compile Include="SceneGraph\Actors\NavMeshBoundsVolumeNode.cs" />
+    <Compile Include="SceneGraph\Actors\ParticleEffectNode.cs" />
     <Compile Include="SceneGraph\Actors\StaticModelNode.cs" />
     <Compile Include="SceneGraph\Actors\PointLightNode.cs" />
     <Compile Include="SceneGraph\Actors\PostFxVolumeNode.cs" />
@@ -381,6 +395,8 @@
     <Compile Include="Surface\Archetypes\Math.cs" />
     <Compile Include="Surface\Archetypes\Packing.cs" />
     <Compile Include="Surface\Archetypes\Parameters.cs" />
+    <Compile Include="Surface\Archetypes\ParticleModules.cs" />
+    <Compile Include="Surface\Archetypes\Particles.cs" />
     <Compile Include="Surface\Archetypes\Textures.cs" />
     <Compile Include="Surface\Archetypes\Tools.cs" />
     <Compile Include="Surface\Constants.cs" />
@@ -391,6 +407,7 @@
     <Compile Include="Surface\Elements\BoolValue.cs" />
     <Compile Include="Surface\Elements\Box.cs" />
     <Compile Include="Surface\ConnectionType.cs" />
+    <Compile Include="Surface\Elements\BoxValue.cs" />
     <Compile Include="Surface\Elements\ColorValue.cs" />
     <Compile Include="Surface\Elements\ComboBoxElement.cs" />
     <Compile Include="Surface\Elements\FloatValue.cs" />
@@ -411,6 +428,7 @@
     <Compile Include="Surface\NodeFactory.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
     <Compile Include="Surface\ParameterType.cs" />
+    <Compile Include="Surface\ParticleEmitterSurface.cs" />
     <Compile Include="Surface\SurfaceComment.cs" />
     <Compile Include="Surface\SurfaceControl.cs" />
     <Compile Include="Surface\SurfaceMeta.cs" />
@@ -433,6 +451,8 @@
     <Compile Include="Surface\ISurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.cs" />
     <Compile Include="Surface\VisjectSurfaceContext.Serialization.cs" />
+    <Compile Include="GUI\Timeline\Timeline.cs" />
+    <Compile Include="GUI\Timeline\Track.cs" />
     <Compile Include="Tools\Foliage\Brush.cs" />
     <Compile Include="Tools\Foliage\EditFoliageGizmo.cs" />
     <Compile Include="Tools\Foliage\EditFoliageGizmoMode.cs" />
@@ -511,6 +531,8 @@
     <Compile Include="Viewport\Previews\IESProfilePreview.cs" />
     <Compile Include="Viewport\Previews\MaterialPreview.cs" />
     <Compile Include="Viewport\Previews\ModelPreview.cs" />
+    <Compile Include="Viewport\Previews\ParticleEmitterPreview.cs" />
+    <Compile Include="Viewport\Previews\ParticleSystemPreview.cs" />
     <Compile Include="Viewport\Previews\PrefabPreview.cs" />
     <Compile Include="Viewport\Previews\TexturePreview.cs" />
     <Compile Include="ViewportDebugDrawData.cs" />
@@ -529,6 +551,8 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\Assets\ParticleEmitterWindow.cs" />
+    <Compile Include="Windows\Assets\ParticleSystemWindow.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.Actions.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.Hierarchy.cs" />

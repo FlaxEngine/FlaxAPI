@@ -305,7 +305,7 @@ namespace FlaxEngine
         public static event Action<string> ActionTriggered;
 
         /// <summary>
-        /// The gamepads changed event. Called when new gamepad device gets disconnected or added. Called always on main thread before the scripts update or during <see cref="ScanGamepads"/> call.
+        /// The gamepads changed event. Called when new gamepad device gets disconnected or added. Can be called always on main thread before the scripts update.
         /// </summary>
         public static event Action GamepadsChanged;
 

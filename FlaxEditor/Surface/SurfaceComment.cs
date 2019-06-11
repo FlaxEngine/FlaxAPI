@@ -44,6 +44,7 @@ namespace FlaxEditor.Surface
         public SurfaceComment(VisjectSurface surface, ref Rectangle surfaceArea)
         : base(surface, ref surfaceArea)
         {
+            CanFocus = false;
             Title = "Comment";
             Color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
         }
@@ -85,6 +86,7 @@ namespace FlaxEditor.Surface
         {
             var style = Style.Current;
             var color = Color;
+            var backgroundRect = new Rectangle(Vector2.Zero, Size);
             var headerColor = new Color(Mathf.Clamp(color.R, 0.1f, 0.3f), Mathf.Clamp(color.G, 0.1f, 0.3f), Mathf.Clamp(color.B, 0.1f, 0.3f), 0.4f);
             if (IsSelected)
                 headerColor *= 2.0f;
@@ -113,6 +115,15 @@ namespace FlaxEditor.Surface
             // Resize button
             alpha = _resizeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
             Render2D.DrawSprite(style.Scale, _resizeButtonRect, new Color(alpha));
+
+            // Selection outline
+            if (_isSelected)
+            {
+                backgroundRect.Expand(1.5f);
+                var colorTop = Color.Orange;
+                var colorBottom = Color.OrangeRed;
+                Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom, 1.5f);
+            }
         }
 
         /// <inheritdoc />

@@ -54,7 +54,10 @@ namespace FlaxEditor.Content
                 SearchFilter = ContentItemSearchFilter.Animation;
                 break;
             default:
-                SearchFilter = ContentItemSearchFilter.Other;
+                if (Type == typeof(ParticleEmitter) || Type == typeof(ParticleSystem))
+                    SearchFilter = ContentItemSearchFilter.Particles;
+                else
+                    SearchFilter = ContentItemSearchFilter.Other;
                 break;
             }
         }

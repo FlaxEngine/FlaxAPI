@@ -125,6 +125,8 @@ namespace FlaxEditor.Surface
                 _rootControl.PointFromParent(ref _cmStartPos),
                 visjectCmItem.Data
             );
+            if (node == null)
+                return;
 
             // And, if the user is patiently waiting for his box to get connected to the newly created one fulfill his wish!
             if (selectedBox is Box startBox)

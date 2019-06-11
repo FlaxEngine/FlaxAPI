@@ -20,6 +20,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 20,
                 Title = "Pack Vector2",
                 Description = "Pack components to Vector2",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(150, 40),
                 DefaultValues = new object[]
                 {
@@ -38,6 +39,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 21,
                 Title = "Pack Vector3",
                 Description = "Pack components to Vector3",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(150, 60),
                 DefaultValues = new object[]
                 {
@@ -58,6 +60,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 22,
                 Title = "Pack Vector4",
                 Description = "Pack components to Vector4",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(150, 80),
                 DefaultValues = new object[]
                 {
@@ -80,6 +83,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 23,
                 Title = "Pack Rotation",
                 Description = "Pack components to Rotation",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(150, 80),
                 DefaultValues = new object[]
                 {
@@ -100,6 +104,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 24,
                 Title = "Pack Transform",
                 Description = "Pack components to Transform",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(150, 80),
                 Elements = new[]
                 {
@@ -117,6 +122,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 30,
                 Title = "Unpack Vector2",
                 Description = "Unpack components from Vector2",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
@@ -130,6 +136,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 31,
                 Title = "Unpack Vector3",
                 Description = "Unpack components from Vector3",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(150, 60),
                 Elements = new[]
                 {
@@ -144,6 +151,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 32,
                 Title = "Unpack Vector4",
                 Description = "Unpack components from Vector4",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(150, 80),
                 Elements = new[]
                 {
@@ -159,6 +167,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 33,
                 Title = "Unpack Rotation",
                 Description = "Unpack components from Rotation",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(170, 60),
                 Elements = new[]
                 {
@@ -173,6 +182,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 34,
                 Title = "Unpack Transform",
                 Description = "Unpack components from Transform",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(170, 60),
                 Elements = new[]
                 {
@@ -190,6 +200,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 40,
                 Title = "Mask X",
                 Description = "Unpack X component from Vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -202,6 +213,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 41,
                 Title = "Mask Y",
                 Description = "Unpack Y component from Vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -214,6 +226,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 42,
                 Title = "Mask Z",
                 Description = "Unpack Z component from Vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -226,6 +239,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 43,
                 Title = "Mask W",
                 Description = "Unpack W component from Vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -240,6 +254,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 44,
                 Title = "Mask XY",
                 Description = "Unpack XY components from Vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -252,6 +267,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 45,
                 Title = "Mask XZ",
                 Description = "Unpack XZ components from Vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -264,6 +280,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 46,
                 Title = "Mask YZ",
                 Description = "Unpack YZ components from Vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -278,6 +295,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 70,
                 Title = "Mask XYZ",
                 Description = "Unpack XYZ components from Vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {

@@ -28,6 +28,11 @@ namespace FlaxEngine.Rendering
             public bool HasDepthAsSRV;
 
             /// <summary>
+            /// True if device supports depth buffer texture as a readonly depth buffer (can be sampled in the shader while performing depth-test).
+            /// </summary>
+            public bool HasReadOnlyDepth;
+
+            /// <summary>
             /// True if device supports multisampled depth buffer texture as a shader resource view.
             /// </summary>
             public bool HasMultisampleDepthAsSRV;

@@ -44,5 +44,10 @@ namespace FlaxEngine.Rendering
         /// Create render target handles per texture array/volume slice (valid only for Texture2D and Texture3D with ShaderResource or RenderTarget flag).
         /// </summary>
         PerSliceHandles = 0x0020,
+
+        /// <summary>
+        /// Create read-only handle for depth-stencil buffer. Valid only if texture uses depth-stencil and the graphics device supports it.
+        /// </summary>
+        ReadOnlyDepthHandle = 0x0040,
     }
 }

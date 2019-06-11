@@ -583,6 +583,12 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         public virtual void OnMouseMove(Vector2 location)
         {
+            // Update tooltip
+            if (_tooltipUpdate == null && ShowTooltip)
+            {
+                Tooltip.OnMouseEnterControl(this);
+                SetUpdate(ref _tooltipUpdate, OnUpdateTooltip);
+            }
         }
 
         /// <summary>
@@ -594,7 +600,7 @@ namespace FlaxEngine.GUI
             _isMouseOver = false;
 
             // Update tooltip
-            if (ShowTooltip)
+            if (_tooltipUpdate != null)
             {
                 SetUpdate(ref _tooltipUpdate, null);
                 Tooltip.OnMouseLeaveControl(this);
@@ -817,7 +823,7 @@ namespace FlaxEngine.GUI
             text = _tooltipText;
             location = Size * new Vector2(0.5f, 1.0f);
             area = new Rectangle(Vector2.Zero, Size);
-            return !string.IsNullOrEmpty(text);
+            return ShowTooltip;
         }
 
         /// <summary>
@@ -827,7 +833,7 @@ namespace FlaxEngine.GUI
         /// <returns>True if tooltip can be still visible, otherwise false.</returns>
         public virtual bool OnTestTooltipOverControl(ref Vector2 location)
         {
-            return ContainsPoint(ref location);
+            return ContainsPoint(ref location) && ShowTooltip;
         }
 
         #endregion
@@ -888,11 +894,31 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">The input location of the point to convert.</param>
         /// <returns>The converted point location in parent control coordinates.</returns>
+        public Vector2 PointToParent(Vector2 location)
+        {
+            return PointToParent(ref location);
+        }
+
+        /// <summary>
+        /// Converts point in local control's space into parent control coordinates.
+        /// </summary>
+        /// <param name="location">The input location of the point to convert.</param>
+        /// <returns>The converted point location in parent control coordinates.</returns>
         public virtual Vector2 PointToParent(ref Vector2 location)
         {
             Vector2 result;
             Matrix3x3.Transform2D(ref location, ref _cachedTransform, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Converts point in parent control coordinates into local control's space.
+        /// </summary>
+        /// <param name="locationParent">The input location of the point to convert.</param>
+        /// <returns>The converted point location in control's space.</returns>
+        public Vector2 PointFromParent(Vector2 locationParent)
+        {
+            return PointFromParent(ref locationParent);
         }
 
         /// <summary>
@@ -930,7 +956,9 @@ namespace FlaxEngine.GUI
         public Vector2 PointFromWindow(Vector2 location)
         {
             if (HasParent)
+            {
                 location = _parent.PointFromWindow(location);
+            }
             return PointFromParent(ref location);
         }
 
@@ -956,12 +984,11 @@ namespace FlaxEngine.GUI
         /// <returns>Converted point location in local control's space</returns>
         public virtual Vector2 ScreenToClient(Vector2 location)
         {
-            location = PointFromParent(ref location);
             if (HasParent)
             {
                 location = _parent.ScreenToClient(location);
             }
-            return location;
+            return PointFromParent(ref location);
         }
 
         #endregion
@@ -995,7 +1022,7 @@ namespace FlaxEngine.GUI
             _parent?.OnChildResized(this);
 
             // Auto-center
-            if (_anchorStyle == AnchorStyle.Center)
+            if (_anchorStyle == AnchorStyle.Center && _parent != null)
             {
                 UpdateCenterAnchor();
             }

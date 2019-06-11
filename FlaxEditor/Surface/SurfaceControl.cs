@@ -14,7 +14,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The mouse position in local control space. Updates by auto.
         /// </summary>
-        protected Vector2 _mousePosition;
+        protected Vector2 _mousePosition = Vector2.Minimum;
 
         /// <summary>
         /// The is selected flag for element.
@@ -39,6 +39,11 @@ namespace FlaxEditor.Surface
             get => _isSelected;
             internal set { _isSelected = value; }
         }
+
+        /// <summary>
+        /// Gets the mouse position (in local control space).
+        /// </summary>
+        public Vector2 MousePosition => _mousePosition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceControl"/> class.
@@ -101,10 +106,18 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Called when after adding the control to the surface after user spawn (eg. add comment, add new node, etc.).
+        /// Called after adding the control to the surface after user spawn (eg. add comment, add new node, etc.).
         /// </summary>
         public virtual void OnSpawned()
         {
+        }
+
+        /// <summary>
+        /// Called on removing the control from the surface after user delete/cut operation (eg. delete comment, cut node, etc.).
+        /// </summary>
+        public virtual void OnDeleted()
+        {
+            Dispose();
         }
 
         /// <summary>

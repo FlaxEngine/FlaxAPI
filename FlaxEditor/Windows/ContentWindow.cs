@@ -549,6 +549,9 @@ namespace FlaxEditor.Windows
         /// <param name="asset">The asset to select.</param>
         public void Select(Asset asset)
         {
+            if (asset == null)
+                throw new ArgumentNullException();
+
             var item = Editor.ContentDatabase.Find(asset.ID);
             if (item != null)
                 Select(item);

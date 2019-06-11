@@ -576,6 +576,12 @@ namespace FlaxEditor.Viewport
 
         private static bool ValidateDragItem(ContentItem contentItem)
         {
+            if (contentItem is BinaryAssetItem binaryAssetItem)
+            {
+                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                    return true;
+            }
+
             switch (contentItem.ItemDomain)
             {
             case ContentDomain.Material:
@@ -632,6 +638,23 @@ namespace FlaxEditor.Viewport
 
         private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector3 hitLocation)
         {
+            // TODO: refactor this and dont use ContentDomain but only asset Type for matching
+
+            if (item is BinaryAssetItem binaryAssetItem)
+            {
+                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                {
+                    var particleSystem = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
+                    var actor = ParticleEffect.New();
+                    actor.Name = item.ShortName;
+                    actor.ParticleSystem = particleSystem;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Spawn(actor);
+
+                    return;
+                }
+            }
+
             switch (item.ItemDomain)
             {
             case ContentDomain.Material:

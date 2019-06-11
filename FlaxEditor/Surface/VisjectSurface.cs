@@ -187,6 +187,16 @@ namespace FlaxEditor.Surface
         public bool IsCreatingComment => _isCommentCreateKeyDown && _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
+        /// Gets a value indicating whether the left mouse button is down.
+        /// </summary>
+        public bool IsLeftMouseButtonDown => _leftMouseDown;
+
+        /// <summary>
+        /// Gets a value indicating whether the right mouse button is down.
+        /// </summary>
+        public bool IsRightMouseButtonDown => _rightMouseDown;
+
+        /// <summary>
         /// Returns true if any node is selected by the user (one or more).
         /// </summary>
         public bool HasNodesSelection
@@ -265,6 +275,7 @@ namespace FlaxEditor.Surface
         public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, SurfaceStyle style = null, List<GroupArchetype> groups = null)
         {
             DockStyle = DockStyle.Fill;
+            CanFocus = false; // Disable to prevent autofocus and event handling on OnMouseDown event
 
             Owner = owner;
             Style = style ?? SurfaceStyle.CreateStyleHandler(Editor.Instance);
@@ -304,7 +315,7 @@ namespace FlaxEditor.Surface
 
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
-            DragHandlers.Add(_dragParameters = new DragSurfaceParameters<DragDropEventArgs>(ValidateDragParameter));
+            DragHandlers.Add(_dragParameters = new DragNames<DragDropEventArgs>(SurfaceParameter.DragPrefix, ValidateDragParameter));
         }
 
         private void OnRootContextModified(VisjectSurfaceContext context, bool graphEdited)
@@ -567,11 +578,10 @@ namespace FlaxEditor.Surface
                 if ((node.Archetype.Flags & NodeFlags.NoRemove) != 0)
                     return;
 
-                node.RemoveConnections();
                 Nodes.Remove(node);
             }
 
-            control.Dispose();
+            Context.OnControlDeleted(control);
             MarkAsEdited();
         }
 
@@ -590,19 +600,17 @@ namespace FlaxEditor.Surface
                 {
                     if (node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
                     {
-                        node.RemoveConnections();
-                        node.Dispose();
-
                         Nodes.Remove(node);
-                        i--;
 
+                        Context.OnControlDeleted(node);
+                        i--;
                         edited = true;
                     }
                 }
                 else if (_rootControl.Children[i] is SurfaceControl control && control.IsSelected)
                 {
                     i--;
-                    control.Dispose();
+                    Context.OnControlDeleted(control);
                     edited = true;
                 }
             }

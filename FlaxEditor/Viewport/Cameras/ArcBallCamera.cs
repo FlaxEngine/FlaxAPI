@@ -19,7 +19,11 @@ namespace FlaxEditor.Viewport.Cameras
         public Vector3 OrbitCenter
         {
             get => _orbitCenter;
-            set => _orbitCenter = value;
+            set
+            {
+                _orbitCenter = value;
+                UpdatePosition();
+            }
         }
 
         /// <summary>
@@ -28,7 +32,11 @@ namespace FlaxEditor.Viewport.Cameras
         public float OrbitRadius
         {
             get => _orbitRadius;
-            set => _orbitRadius = Mathf.Max(value, 0.0001f);
+            set
+            {
+                _orbitRadius = Mathf.Max(value, 0.0001f);
+                UpdatePosition();
+            }
         }
 
         /// <summary>

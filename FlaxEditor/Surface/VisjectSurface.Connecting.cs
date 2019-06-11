@@ -61,6 +61,7 @@ namespace FlaxEditor.Surface
                 {
                 case ConnectionType.Bool:
                 case ConnectionType.Integer:
+                case ConnectionType.UnsignedInteger:
                 case ConnectionType.Float:
                 case ConnectionType.Vector2:
                 case ConnectionType.Vector3:
@@ -70,6 +71,7 @@ namespace FlaxEditor.Surface
                     {
                     case ConnectionType.Bool:
                     case ConnectionType.Integer:
+                    case ConnectionType.UnsignedInteger:
                     case ConnectionType.Float:
                     case ConnectionType.Vector2:
                     case ConnectionType.Vector3:

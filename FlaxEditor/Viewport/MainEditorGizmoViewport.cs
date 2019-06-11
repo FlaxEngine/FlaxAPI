@@ -662,12 +662,21 @@ namespace FlaxEditor.Viewport
 
         private static bool ValidateDragItem(ContentItem contentItem)
         {
+            if (!SceneManager.IsAnySceneLoaded)
+                return false;
+
+            if (contentItem is BinaryAssetItem binaryAssetItem)
+            {
+                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                    return true;
+            }
+
             switch (contentItem.ItemDomain)
             {
             case ContentDomain.Material:
             case ContentDomain.Model:
             case ContentDomain.Audio:
-            case ContentDomain.Prefab: return SceneManager.IsAnySceneLoaded;
+            case ContentDomain.Prefab: return true;
             case ContentDomain.Scene: return true;
             default: return false;
             }
@@ -725,6 +734,23 @@ namespace FlaxEditor.Viewport
 
         private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector3 hitLocation)
         {
+            // TODO: refactor this and dont use ContentDomain but only asset Type for matching
+
+            if (item is BinaryAssetItem binaryAssetItem)
+            {
+                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                {
+                    var particleSystem = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
+                    var actor = ParticleEffect.New();
+                    actor.Name = item.ShortName;
+                    actor.ParticleSystem = particleSystem;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Editor.Instance.SceneEditing.Spawn(actor);
+
+                    return;
+                }
+            }
+
             switch (item.ItemDomain)
             {
             case ContentDomain.Material:

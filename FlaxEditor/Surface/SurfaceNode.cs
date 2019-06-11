@@ -86,12 +86,25 @@ namespace FlaxEditor.Surface
             ID = id;
             Archetype = nodeArch;
             GroupArchetype = groupArch;
+            CanFocus = false;
+            TooltipText = nodeArch.Description;
 
             if (Archetype.DefaultValues != null)
             {
                 Values = new object[Archetype.DefaultValues.Length];
                 Array.Copy(Archetype.DefaultValues, Values, Values.Length);
             }
+        }
+
+        /// <summary>
+        /// Calculates the size of the node including header, footer, and margins.
+        /// </summary>
+        /// <param name="width">The node area width.</param>
+        /// <param name="height">The node area height.</param>
+        /// <returns>The node control total size.</returns>
+        protected virtual Vector2 CalculateNodeSize(float width, float height)
+        {
+            return new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
         }
 
         /// <summary>
@@ -102,7 +115,7 @@ namespace FlaxEditor.Surface
         protected void Resize(float width, float height)
         {
             var prevSize = Size;
-            Size = new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
+            Size = CalculateNodeSize(width, height);
 
             // Update boxes on width change
             if (!Mathf.NearEqual(prevSize.X, Size.X))
@@ -322,6 +335,26 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
+        protected override bool ShowTooltip => base.ShowTooltip && _headerRect.Contains(ref _mousePosition) && !Surface.IsLeftMouseButtonDown && !Surface.IsRightMouseButtonDown && !Surface.IsPrimaryMenuOpened;
+
+        /// <inheritdoc />
+        public override bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
+        {
+            var result = base.OnShowTooltip(out text, out location, out area);
+
+            // Change the position
+            location = new Vector2(_headerRect.Width * 0.5f, _headerRect.Bottom);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override bool OnTestTooltipOverControl(ref Vector2 location)
+        {
+            return _headerRect.Contains(ref location) && ShowTooltip;
+        }
+
+        /// <inheritdoc />
         public override bool CanSelect(ref Vector2 location)
         {
             return _headerRect.MakeOffseted(Location).Contains(ref location);
@@ -339,6 +372,14 @@ namespace FlaxEditor.Surface
                 if (Elements[i] is Box box)
                     box.OnConnectionsChanged();
             }
+        }
+
+        /// <inheritdoc />
+        public override void OnDeleted()
+        {
+            RemoveConnections();
+
+            base.OnDeleted();
         }
 
         /// <summary>
@@ -377,21 +418,16 @@ namespace FlaxEditor.Surface
         public override void Draw()
         {
             var style = Style.Current;
-            BackgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
 
-            base.Draw();
-
-            /*
-            // Node layout lines rendering
-            float marginX = SURFACE_NODE_MARGIN_X * _scale;
-            float marginY = SURFACE_NODE_MARGIN_Y * _scale;
-            float top = (SURFACE_NODE_HEADER_SIZE + SURFACE_NODE_MARGIN_Y) * _scale;
-            float footer = SURFACE_NODE_FOOTER_SIZE * _scale;
-            render.DrawRectangle(Rect(marginX, top, _width - 2 * marginX, _height - top - marginY - footer), Color::Red);
-            */
+            // Background
+            var backgroundRect = new Rectangle(Vector2.Zero, Size);
+            Render2D.FillRectangle(backgroundRect, style.BackgroundNormal);
 
             // Header
-            Render2D.FillRectangle(_headerRect, style.BackgroundHighlighted);
+            var headerColor = style.BackgroundHighlighted;
+            if (_headerRect.Contains(ref _mousePosition))
+                headerColor *= 1.07f;
+            Render2D.FillRectangle(_headerRect, headerColor);
             Render2D.DrawText(style.FontLarge, Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
 
             // Close button
@@ -403,6 +439,17 @@ namespace FlaxEditor.Surface
 
             // Footer
             Render2D.FillRectangle(_footerRect, GroupArchetype.Color);
+
+            DrawChildren();
+
+            // Selection outline
+            if (_isSelected)
+            {
+                backgroundRect.Expand(1.5f);
+                var colorTop = Color.Orange;
+                var colorBottom = Color.OrangeRed;
+                Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom, 1.5f);
+            }
         }
 
         /// <inheritdoc />
@@ -412,7 +459,7 @@ namespace FlaxEditor.Surface
                 return true;
 
             // Close
-            if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
+            if (buttons == MouseButton.Left && (Archetype.Flags & NodeFlags.NoCloseButton) == 0)
             {
                 if (_closeButtonRect.Contains(ref location))
                 {

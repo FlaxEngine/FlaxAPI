@@ -33,7 +33,7 @@ namespace FlaxEditor.Surface
                         Create = (id, context, arch, groupArch) => new Animation.StateMachineState(id, context, arch, groupArch),
                         Title = "State",
                         Description = "The animation states machine state node",
-                        Flags = NodeFlags.AnimGraphOnly,
+                        Flags = NodeFlags.AnimGraph,
                         DefaultValues = new object[]
                         {
                             "State",
@@ -58,7 +58,7 @@ namespace FlaxEditor.Surface
                     TypeID = 23,
                     Title = "Transition Source State Anim",
                     Description = "The animation state machine transition source state animation data information",
-                    Flags = NodeFlags.AnimGraphOnly,
+                    Flags = NodeFlags.AnimGraph,
                     Size = new Vector2(270, 110),
                     Elements = new[]
                     {
@@ -145,9 +145,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
-            if ((nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0 || (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
-                return false;
-            return base.CanSpawnNodeType(nodeArchetype);
+            return (nodeArchetype.Flags & NodeFlags.AnimGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />

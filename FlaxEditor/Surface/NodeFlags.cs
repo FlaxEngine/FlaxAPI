@@ -31,23 +31,33 @@ namespace FlaxEditor.Surface
         NoSpawnViaGUI = 4,
 
         /// <summary>
-        /// Node only for the materials.
+        /// Node can be used in the material graphs.
         /// </summary>
-        MaterialOnly = 8,
+        MaterialGraph = 8,
 
         /// <summary>
-        /// Node only for the scripts.
+        /// Node can be used in the particle emitter graphs.
         /// </summary>
-        VisjectOnly = 16,
+        ParticleEmitterGraph = 16,
 
         /// <summary>
-        /// Disable removing that node from the graph.
+        /// Disables removing that node from the graph.
         /// </summary>
         NoRemove = 32,
 
         /// <summary>
-        /// Node only for the animation graphs.
+        /// Node can be used in the animation graphs.
         /// </summary>
-        AnimGraphOnly = 64,
+        AnimGraph = 64,
+
+        /// <summary>
+        /// Disables moving node (by user).
+        /// </summary>
+        NoMove = 128,
+
+        /// <summary>
+        /// Node can be used in the all visual graphs.
+        /// </summary>
+        AllGraphs = MaterialGraph | ParticleEmitterGraph | AnimGraph,
     }
 }

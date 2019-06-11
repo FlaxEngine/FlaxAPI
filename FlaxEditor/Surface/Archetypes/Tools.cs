@@ -20,7 +20,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Fresnel",
                 Description = "Calculates a falloff based on the dot product of the surface normal and the direction to the camera",
-                Flags = NodeFlags.MaterialOnly | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(140, 60),
                 Elements = new[]
                 {
@@ -35,7 +35,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Desaturation",
                 Description = "Desaturates input, or converts the colors of its input into shades of gray, based a certain percentage",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 130),
                 DefaultValues = new object[]
                 {
@@ -47,9 +47,9 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(1, "Scale", true, ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2 + 5, "Luminance Factors"),
-                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0),
-                    NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, 1 * Surface.Constants.LayoutOffsetY * 3 + 5, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY * 3 + 5, 0),
+                    NodeElementArchetype.Factory.Vector_Z(0, 3 * Surface.Constants.LayoutOffsetY * 3 + 5, 0)
                 }
             },
             new NodeArchetype
@@ -57,7 +57,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Time",
                 Description = "Game time constant",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(110, 20),
                 Elements = new[]
                 {
@@ -69,7 +69,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Fresnel",
                 Description = "Calculates a falloff based on the dot product of the surface normal and the direction to the camera",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(200, 60),
                 DefaultValues = new object[]
                 {
@@ -89,7 +89,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Time",
                 Description = "Game time constant",
-                Flags = NodeFlags.AnimGraphOnly,
+                Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(140, 40),
                 Elements = new[]
                 {
@@ -102,7 +102,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Panner",
                 Description = "Animates UVs over time",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(170, 80),
                 DefaultValues = new object[]
                 {
@@ -123,12 +123,25 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Linearize Depth",
                 Description = "Scene depth buffer texture lookup node",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(240, 40),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Hardware Depth", true, ConnectionType.Float, 0),
                     NodeElementArchetype.Factory.Output(0, "Linear Depth", ConnectionType.Float, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 8,
+                Title = "Time",
+                Description = "Simulation time and update delta time access",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(140, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, "Simulation Time", ConnectionType.Float, 0),
+                    NodeElementArchetype.Factory.Output(1, "Delta Seconds", ConnectionType.Float, 1),
                 }
             },
         };

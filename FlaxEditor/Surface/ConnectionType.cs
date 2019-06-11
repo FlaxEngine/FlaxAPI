@@ -83,9 +83,14 @@ namespace FlaxEditor.Surface
         ImpulseSecondary = 1 << 12,
 
         /// <summary>
+        /// Unsigned integer value
+        /// </summary>
+        UnsignedInteger = 1 << 13,
+
+        /// <summary>
         /// Bool, Int, Float
         /// </summary>
-        Scalar = Bool | Integer | Float,
+        Scalar = Bool | Integer | Float | UnsignedInteger,
 
         /// <summary>
         /// Vector2, Vector3, Vector4

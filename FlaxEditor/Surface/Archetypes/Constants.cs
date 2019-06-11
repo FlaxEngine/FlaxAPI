@@ -22,6 +22,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Bool",
                 Description = "Constant boolean value",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
@@ -53,6 +54,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Integer",
                 Description = "Constant integer value",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
@@ -80,6 +82,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Float",
                 Description = "Constant floating point",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 20),
                 DefaultValues = new object[]
                 {
@@ -107,6 +110,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Vector2",
                 Description = "Constant Vector2",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(130, 60),
                 DefaultValues = new object[]
                 {
@@ -117,8 +121,8 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.Vector2, 0),
                     NodeElementArchetype.Factory.Output(1, "X", ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Output(2, "Y", ConnectionType.Float, 2),
-                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, 1 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY, 0)
                 },
                 TryParseText = (string filterText, out object[] data) =>
                 {
@@ -137,6 +141,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Vector3",
                 Description = "Constant Vector3",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(130, 80),
                 DefaultValues = new object[]
                 {
@@ -148,9 +153,9 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(1, "X", ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Output(2, "Y", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Z", ConnectionType.Float, 3),
-                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, 1 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Z(0, 3 * Surface.Constants.LayoutOffsetY, 0)
                 },
                 TryParseText = (string filterText, out object[] data) =>
                 {
@@ -169,6 +174,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Vector4",
                 Description = "Constant Vector4",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(130, 100),
                 DefaultValues = new object[]
                 {
@@ -181,10 +187,10 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(2, "Y", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Z", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "W", ConnectionType.Float, 4),
-                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY, 0),
-                    NodeElementArchetype.Factory.Vector_W(0, Surface.Constants.LayoutOffsetY, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, 1* Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_Z(0, 3 * Surface.Constants.LayoutOffsetY, 0),
+                    NodeElementArchetype.Factory.Vector_W(0, 4 * Surface.Constants.LayoutOffsetY, 0)
                 },
                 TryParseText = (string filterText, out object[] data) =>
                 {
@@ -203,6 +209,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Color",
                 Description = "RGBA color",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(70, 100),
                 DefaultValues = new object[]
                 {
@@ -220,7 +227,8 @@ namespace FlaxEditor.Surface.Archetypes
                 TryParseText = (string filterText, out object[] data) =>
                 {
                     data = null;
-                    if (!filterText.StartsWith("#")) return false;
+                    if (!filterText.StartsWith("#"))
+                        return false;
                     Color color;
                     if (Color.TryParseHex(filterText, out color))
                     {
@@ -235,6 +243,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 8,
                 Title = "Rotation",
                 Description = "Euler angle rotation",
+                Flags = NodeFlags.AnimGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(110, 60),
                 DefaultValues = new object[]
                 {
@@ -259,6 +268,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 10,
                 Title = "PI",
                 Description = "A value specifying the approximation of π which is 180 degrees",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(50, 20),
                 Elements = new[]
                 {

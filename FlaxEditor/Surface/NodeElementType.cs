@@ -71,5 +71,10 @@ namespace FlaxEditor.Surface
         /// The skeleton node selection.
         /// </summary>
         SkeletonNodeSelect = 15,
+
+        /// <summary>
+        /// The bounding box value.
+        /// </summary>
+        BoxValue = 16,
     }
 }

@@ -69,7 +69,7 @@ namespace FlaxEditor.Surface
         public SurfaceControl GetControlUnderMouse()
         {
             var pos = _rootControl.PointFromParent(ref _mousePos);
-            if (_rootControl.GetChildAt(pos) is SurfaceControl control)
+            if (_rootControl.GetChildAtRecursive(pos) is SurfaceControl control)
                 return control;
             return null;
         }
@@ -149,6 +149,9 @@ namespace FlaxEditor.Surface
                         {
                             if (_rootControl.Children[i] is SurfaceControl control && control.IsSelected)
                             {
+                                if (control is SurfaceNode node && (node.Archetype.Flags & NodeFlags.NoMove) == NodeFlags.NoMove)
+                                    continue;
+
                                 control.Location += delta;
                             }
                         }
@@ -247,6 +250,19 @@ namespace FlaxEditor.Surface
             if (_connectionInstigator != null)
                 return true;
 
+            // Base
+            bool handled = base.OnMouseDown(location, buttons);
+            if (!handled)
+                CustomMouseDown?.Invoke(ref location, buttons, ref handled);
+            if (handled)
+            {
+                // Clear flags
+                _isMovingSelection = false;
+                _rightMouseDown = false;
+                _leftMouseDown = false;
+                return true;
+            }
+
             // Cache data
             _isMovingSelection = false;
             _mousePos = location;
@@ -308,17 +324,6 @@ namespace FlaxEditor.Surface
                     Focus();
                     return true;
                 }
-            }
-
-            // Base
-            bool handled = base.OnMouseDown(location, buttons);
-            if (!handled)
-                CustomMouseDown?.Invoke(ref location, buttons, ref handled);
-            if (handled)
-            {
-                // Clear flags to disable handling mouse events by itself (children should do)
-                _leftMouseDown = _rightMouseDown = false;
-                return true;
             }
 
             Focus();
@@ -389,6 +394,9 @@ namespace FlaxEditor.Surface
                 CustomMouseUp?.Invoke(ref location, buttons, ref handled);
             if (handled)
             {
+                // Clear flags
+                _rightMouseDown = false;
+                _leftMouseDown = false;
                 return true;
             }
 

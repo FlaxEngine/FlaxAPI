@@ -1,10 +1,12 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.Windows
 {
@@ -101,6 +103,17 @@ namespace FlaxEditor.Windows
             UpdateItemsSearch();
         }
 
+        private bool TryParseAssetId(string text, out AssetItem item)
+        {
+            item = null;
+            if (text.Length != 32)
+                return false;
+
+            JsonSerializer.ParseID(text, out var id);
+            item = Editor.ContentDatabase.FindAsset(id);
+            return item != null;
+        }
+
         private void UpdateItemsSearch()
         {
             // Skip events during setup or init stuff
@@ -134,6 +147,8 @@ namespace FlaxEditor.Windows
                     filters[i] = true;
                 }
             }
+
+            // Search by filter only
             if (string.IsNullOrWhiteSpace(query))
             {
                 if (SelectedNode == _root)
@@ -150,6 +165,12 @@ namespace FlaxEditor.Windows
                     UpdateItemsSearchFilter(CurrentViewFolder, items, filters);
                 }
             }
+            // Search by asset ID
+            else if (TryParseAssetId(query, out var assetItem))
+            {
+                items.Add(assetItem);
+            }
+            // Search by custom query text
             else
             {
                 if (SelectedNode == _root)
@@ -166,6 +187,7 @@ namespace FlaxEditor.Windows
                     UpdateItemsSearchFilter(CurrentViewFolder, items, filters, query);
                 }
             }
+
             _view.IsSearching = true;
             _view.ShowItems(items);
         }
@@ -200,7 +222,7 @@ namespace FlaxEditor.Windows
                 {
                     UpdateItemsSearchFilter(childFolder, items, filters, filterText);
                 }
-                else
+                else if (filters[(int)child.SearchFilter])
                 {
                     if (filters[(int)child.SearchFilter] && QueryFilterHelper.Match(filterText, child.ShortName))
                     {

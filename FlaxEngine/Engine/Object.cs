@@ -126,14 +126,17 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Check if object exists
+        /// Checks if the object exists (reference is not null and the unmanaged object pointer is valid).
         /// </summary>
-        /// <param name="obj">Object to check</param>
+        /// <param name="obj">The object to check.</param>
+        /// <returns>True if object is valid, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator bool(Object obj)
         {
             return obj != null && obj.unmanagedPtr != IntPtr.Zero;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IntPtr GetUnmanagedPtr(Object obj)
         {
             return obj?.unmanagedPtr ?? IntPtr.Zero;

@@ -83,6 +83,8 @@
     <Compile Include="API\Actors\NavLink.Gen.cs" />
     <Compile Include="API\Actors\NavMeshBoundsVolume.cs" />
     <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
+    <Compile Include="API\Actors\ParticleEffect.cs" />
+    <Compile Include="API\Actors\ParticleEffect.Gen.cs" />
     <Compile Include="API\Actors\StaticModel.cs" />
     <Compile Include="API\Actors\PostFxVolume.cs" />
     <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
@@ -125,6 +127,10 @@
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
+    <Compile Include="API\BinaryAssets\ParticleEmitter.cs" />
+    <Compile Include="API\BinaryAssets\ParticleEmitter.Gen.cs" />
+    <Compile Include="API\BinaryAssets\ParticleSystem.cs" />
+    <Compile Include="API\BinaryAssets\ParticleSystem.Gen.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.Gen.cs" />
     <Compile Include="API\BinaryAssets\SkeletonMask.cs" />

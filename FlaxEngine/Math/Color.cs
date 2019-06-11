@@ -719,12 +719,22 @@ namespace FlaxEngine
             return new Color(a.R - b.R, a.G - b.G, a.B - b.B, a.A - b.A);
         }
 
-        internal Color RGBMultiplied(float multiplier)
+        /// <summary>
+        /// Returns the color with RGB channels multiplied by the given scale factor. The alpha channels remains the same.
+        /// </summary>
+        /// <param name="multiplier">The multiplier.</param>
+        /// <returns>The modified color.</returns>
+        public Color RGBMultiplied(float multiplier)
         {
             return new Color(R * multiplier, G * multiplier, B * multiplier, A);
         }
 
-        internal Color RGBMultiplied(Color multiplier)
+        /// <summary>
+        /// Returns the color with RGB channels multiplied by the given color. The alpha channels remains the same.
+        /// </summary>
+        /// <param name="multiplier">The multiplier.</param>
+        /// <returns>The modified color.</returns>
+        public Color RGBMultiplied(Color multiplier)
         {
             return new Color(R * multiplier.R, G * multiplier.G, B * multiplier.B, A);
         }

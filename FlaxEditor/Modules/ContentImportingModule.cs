@@ -120,7 +120,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="item">The item.</param>
         /// <param name="settings">The import settings to override.</param>
-        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be sued when importing files from code.</param>
+        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be used when importing files from code.</param>
         public void Reimport(BinaryAssetItem item, object settings = null, bool skipSettingsDialog = false)
         {
             string importPath;
@@ -153,7 +153,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="files">The files.</param>
         /// <param name="targetLocation">The target location.</param>
-        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be sued when importing files from code.</param>
+        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be used when importing files from code.</param>
         public void Import(IEnumerable<string> files, ContentFolder targetLocation, bool skipSettingsDialog = false)
         {
             if (targetLocation == null)
@@ -176,7 +176,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         /// <param name="file">The file.</param>
         /// <param name="targetLocation">The target location.</param>
-        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be sued when importing files from code.</param>
+        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be used when importing files from code.</param>
         /// <param name="settings">Import settings to override. Use null to skip this value.</param>
         public void Import(string file, ContentFolder targetLocation, bool skipSettingsDialog = false, object settings = null)
         {
@@ -243,7 +243,7 @@ namespace FlaxEditor.Modules
         /// <param name="inputPath">The input path.</param>
         /// <param name="outputPath">The output path.</param>
         /// <param name="isBinaryAsset">True if output file is a binary asset.</param>
-        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be sued when importing files from code.</param>
+        /// <param name="skipSettingsDialog">True if skip any popup dialogs showing for import options adjusting. Can be used when importing files from code.</param>
         /// <param name="settings">Import settings to override. Use null to skip this value.</param>
         private void Import(string inputPath, string outputPath, bool isBinaryAsset, bool skipSettingsDialog = false, object settings = null)
         {

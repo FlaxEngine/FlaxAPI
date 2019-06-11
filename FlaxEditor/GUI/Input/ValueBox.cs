@@ -85,7 +85,7 @@ namespace FlaxEngine.GUI
         public event Action SlidingEnd;
 
         /// <summary>
-        /// Gets or sets the slider speed.
+        /// Gets or sets the slider speed. Use value 0 to disable and hide slider UI.
         /// </summary>
         public float SlideSpeed
         {

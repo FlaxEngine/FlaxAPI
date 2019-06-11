@@ -73,6 +73,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(Foliage), typeof(FoliageNode));
             CustomNodesTypes.Add(typeof(NavMeshBoundsVolume), typeof(NavMeshBoundsVolumeNode));
             CustomNodesTypes.Add(typeof(NavLink), typeof(NavLinkNode));
+            CustomNodesTypes.Add(typeof(ParticleEffect), typeof(ParticleEffectNode));
         }
 
         /// <summary>

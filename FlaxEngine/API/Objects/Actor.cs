@@ -100,10 +100,16 @@ namespace FlaxEngine
             get => Vector3.Forward * Orientation;
             set
             {
-                Vector3 right = Vector3.Cross(value, Vector3.Up);
-                Vector3 up = Vector3.Cross(right, value);
-                //up = Vector3.Up;
-                Orientation = Quaternion.LookRotation(value, up);
+                if (Vector3.Dot(value, Vector3.Up) >= 0.999f)
+                {
+                    Orientation = Quaternion.RotationAxis(Vector3.Left, Mathf.PiOverTwo);
+                }
+                else
+                {
+                    Vector3 right = Vector3.Cross(value, Vector3.Up);
+                    Vector3 up = Vector3.Cross(right, value);
+                    Orientation = Quaternion.LookRotation(value, up);
+                }
             }
         }
 

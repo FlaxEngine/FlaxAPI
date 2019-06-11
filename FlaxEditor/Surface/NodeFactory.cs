@@ -103,6 +103,20 @@ namespace FlaxEditor.Surface
                 Archetypes = Archetypes.Comparisons.Nodes
             },
             // GroupID = 13 -> Custom Nodes provided externally
+            new GroupArchetype
+            {
+                GroupID = 14,
+                Name = "Particles",
+                Color = new Color(121, 210, 176),
+                Archetypes = Archetypes.Particles.Nodes
+            },
+            new GroupArchetype
+            {
+                GroupID = 15,
+                Name = "Particle Modules",
+                Color = new Color(221, 110, 176),
+                Archetypes = Archetypes.ParticleModules.Nodes
+            },
         };
 
         /// <summary>

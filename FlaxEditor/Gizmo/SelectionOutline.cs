@@ -18,6 +18,7 @@ namespace FlaxEditor.Gizmo
         private MaterialInstance _material;
         private Color _color0, _color1;
         private bool _enabled;
+        private bool _useEditorOptions;
 
         /// <summary>
         /// The cached actors list used for drawing (reusable to reduce memory allocations). Always cleared before and after objects rendering.
@@ -28,6 +29,56 @@ namespace FlaxEditor.Gizmo
         /// The selection getter.
         /// </summary>
         public Func<List<SceneGraphNode>> SelectionGetter;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show selection outline effect.
+        /// </summary>
+        public bool ShowSelectionOutline
+        {
+            get => _enabled;
+            set => _enabled = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the selection outline first color (top of the screen-space gradient).
+        /// </summary>
+        public Color SelectionOutlineColor0
+        {
+            get => _color0;
+            set => _color0 = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the selection outline second color (bottom of the screen-space gradient).
+        /// </summary>
+        public Color SelectionOutlineColor1
+        {
+            get => _color1;
+            set => _color1 = value;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether use editor options for selection outline color and visibility. Otherwise, if disabled it can be controlled from code.
+        /// </summary>
+        public bool UseEditorOptions
+        {
+            get => _useEditorOptions;
+            set
+            {
+                if (_useEditorOptions != value)
+                {
+                    var options = Editor.Instance.Options;
+
+                    if (_useEditorOptions)
+                        options.OptionsChanged -= OnOptionsChanged;
+
+                    _useEditorOptions = value;
+
+                    if (_useEditorOptions)
+                        options.OptionsChanged += OnOptionsChanged;
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionOutline"/> class.
@@ -44,6 +95,7 @@ namespace FlaxEditor.Gizmo
                 Editor.LogWarning("Failed to load gizmo selection outline material");
             }
 
+            _useEditorOptions = true;
             var options = Editor.Instance.Options;
             options.OptionsChanged += OnOptionsChanged;
             OnOptionsChanged(options.Options);

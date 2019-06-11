@@ -12,6 +12,11 @@ namespace FlaxEditor.Surface
     public class SurfaceParameter
     {
         /// <summary>
+        /// The default prefix for drag data used for <see cref="FlaxEditor.Surface.SurfaceParameter"/>.
+        /// </summary>
+        public const string DragPrefix = "SURFPARAM!?";
+
+        /// <summary>
         /// Parameter type
         /// </summary>
         public ParameterType Type;

@@ -129,12 +129,29 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the target value (target, not smooth).
         /// </summary>
-        public float TargetValue => _targetValue;
+        public float TargetValue
+        {
+            get => _targetValue;
+            set
+            {
+                value = Mathf.Clamp(value, _minimum, _maximum);
+                if (!Mathf.NearEqual(value, _targetValue))
+                {
+                    _targetValue = value;
+                    SetValue(value);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the value slow down.
         /// </summary>
         public float ValueSlowDown => _targetValue - _value;
+
+        /// <summary>
+        /// Gets a value indicating whether thumb is being clicked (scroll bar is in use).
+        /// </summary>
+        public bool IsThumbClicked => _thumbClicked;
 
         /// <summary>
         /// Gets the size of the track.

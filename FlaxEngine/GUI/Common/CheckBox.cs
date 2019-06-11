@@ -161,7 +161,7 @@ namespace FlaxEngine.GUI
         : base(x, y, size, size)
         {
             _state = isChecked ? CheckBoxState.Checked : CheckBoxState.Default;
-            _boxSize = 16.0f;
+            _boxSize = Mathf.Min(16.0f, size);
 
             var style = Style.Current;
             ImageColor = style.BorderSelected * 1.2f;

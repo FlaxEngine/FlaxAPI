@@ -858,6 +858,8 @@ namespace FlaxEditor.Modules
             Proxy.Add(new CubeTextureProxy());
             Proxy.Add(new PreviewsCacheProxy());
             Proxy.Add(new FontProxy());
+            Proxy.Add(new ParticleEmitterProxy());
+            Proxy.Add(new ParticleSystemProxy());
             Proxy.Add(new ScriptProxy());
             Proxy.Add(new SceneProxy());
             Proxy.Add(new PrefabProxy());

@@ -890,6 +890,9 @@ namespace FlaxEngine.GUI
                     }
                 }
             }
+
+            // Base
+            base.OnMouseMove(location);
         }
 
         /// <inheritdoc />

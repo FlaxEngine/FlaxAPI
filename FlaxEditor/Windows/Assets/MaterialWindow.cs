@@ -229,7 +229,7 @@ namespace FlaxEditor.Windows.Assets
                     var win = (MaterialWindow)Values[0];
                     var material = win.Asset;
                     var parameter = material.Parameters[(int)label.Tag];
-                    return DragSurfaceParameters.GetDragData(parameter.Name);
+                    return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
                 }
 
                 /// <summary>
@@ -496,6 +496,11 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(Material material)
         {
             var source = Editor.GetMaterialShaderSourceCode(material);
+            if (string.IsNullOrEmpty(source))
+            {
+                MessageBox.Show("No generated shader source code.", "No source.");
+                return;
+            }
 
             CreateWindowSettings settings = CreateWindowSettings.Default;
             settings.ActivateWhenFirstShown = true;
