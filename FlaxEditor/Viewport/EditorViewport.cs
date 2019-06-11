@@ -90,15 +90,16 @@ namespace FlaxEditor.Viewport
             /// Gathers input from the specified window.
             /// </summary>
             /// <param name="window">The window.</param>
-            public void Gather(Window window)
+            /// <param name="useMouse">True if use mouse input, otherwise will skip mouse.</param>
+            public void Gather(Window window, bool useMouse)
             {
                 IsControlDown = window.GetKey(Keys.Control);
                 IsShiftDown = window.GetKey(Keys.Shift);
                 IsAltDown = window.GetKey(Keys.Alt);
 
-                IsMouseRightDown = window.GetMouseButton(MouseButton.Right);
-                IsMouseMiddleDown = window.GetMouseButton(MouseButton.Middle);
-                IsMouseLeftDown = window.GetMouseButton(MouseButton.Left);
+                IsMouseRightDown = useMouse && window.GetMouseButton(MouseButton.Right);
+                IsMouseMiddleDown = useMouse && window.GetMouseButton(MouseButton.Middle);
+                IsMouseLeftDown = useMouse && window.GetMouseButton(MouseButton.Left);
             }
 
             /// <summary>
@@ -798,9 +799,10 @@ namespace FlaxEditor.Viewport
             // Update input
             {
                 // Get input buttons and keys (skip if viewport has no focus or mouse is over a child control)
+                bool useMouse = Mathf.IsInRange(_viewMousePos.X, 0, Width) && Mathf.IsInRange(_viewMousePos.Y, 0, Height);
                 _prevInput = _input;
                 if (ContainsFocus && GetChildAt(_viewMousePos, c => c.Visible) == null)
-                    _input.Gather(win.Window);
+                    _input.Gather(win.Window, useMouse);
                 else
                     _input.Clear();
 
