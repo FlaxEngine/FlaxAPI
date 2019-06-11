@@ -52,13 +52,13 @@ namespace FlaxEditor.Windows.Assets
                     Vector3 = (int)ParameterType.Vector3,
                     Vector4 = (int)ParameterType.Vector4,
                     Color = (int)ParameterType.Color,
-                    //Texture = (int)ParameterType.Texture,
-                    //CubeTexture = (int)ParameterType.CubeTexture,
-                    //NormalMap = (int)ParameterType.NormalMap,
-                    //RenderTarget = (int)ParameterType.RenderTarget,
-                    //RenderTargetArray = (int)ParameterType.RenderTargetArray,
-                    //RenderTargetCube = (int)ParameterType.RenderTargetCube,
-                    //RenderTargetVolume = (int)ParameterType.RenderTargetVolume,
+                    Texture = (int)ParameterType.Texture,
+                    CubeTexture = (int)ParameterType.CubeTexture,
+                    NormalMap = (int)ParameterType.NormalMap,
+                    RenderTarget = (int)ParameterType.RenderTarget,
+                    RenderTargetArray = (int)ParameterType.RenderTargetArray,
+                    RenderTargetCube = (int)ParameterType.RenderTargetCube,
+                    RenderTargetVolume = (int)ParameterType.RenderTargetVolume,
                     Matrix = (int)ParameterType.Matrix,
                 }
 
@@ -385,6 +385,7 @@ namespace FlaxEditor.Windows.Assets
             if (_surface.IsEdited)
             {
                 _surface.Save();
+                _preview.PreviewActor.ResetSimulation();
             }
 
             return false;

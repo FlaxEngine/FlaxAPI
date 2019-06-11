@@ -317,7 +317,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Vector2(300, 600),
                 DefaultValues = new object[]
                 {
-                    1024, // Capacity
+                    500, // Capacity
                     (int)ParticlesSimulationMode.Default, // Simulation Mode
                     (int)ParticlesSimulationSpace.Local, // Simulation Space
                     true, // Enable Pooling
