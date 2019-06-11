@@ -202,7 +202,7 @@ namespace FlaxEditor.Surface.Archetypes
                     {
                         for (var i = 0; i < elements.Length; i++)
                         {
-                            var element = AddElement(ref elements[i]);
+                            var element = AddElement(elements[i]);
                             _dynamicChildren.Add(element);
                         }
                         height += Mathf.Max(0, elements.Length - 2) * 20.0f;
@@ -366,19 +366,6 @@ namespace FlaxEditor.Surface.Archetypes
         }
 
         /// <summary>
-        /// Creates the get node.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="context">The surface.</param>
-        /// <param name="arch">The node archetype.</param>
-        /// <param name="groupArch">The group archetype.</param>
-        /// <returns>The created node.</returns>
-        public static SurfaceNode CreateGetNode(uint id, VisjectSurfaceContext context, NodeArchetype arch, GroupArchetype groupArch)
-        {
-            return new SurfaceNodeParamsGet(id, context, arch, groupArch);
-        }
-
-        /// <summary>
         /// The nodes for that group.
         /// </summary>
         public static NodeArchetype[] Nodes =
@@ -386,7 +373,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 1,
-                Create = CreateGetNode,
+                Create = (id, context, arch, groupArch) => new SurfaceNodeParamsGet(id, context, arch, groupArch),
                 Title = "Get Parameter",
                 Description = "Parameter value getter",
                 Flags = NodeFlags.AllGraphs,

@@ -629,7 +629,7 @@ namespace FlaxEditor.Surface
             for (int i = 0; i < elementsCount; i++)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                node.AddElement(ref node.Archetype.Elements[i]);
+                node.AddElement(node.Archetype.Elements[i]);
             }
 
             // Load metadata

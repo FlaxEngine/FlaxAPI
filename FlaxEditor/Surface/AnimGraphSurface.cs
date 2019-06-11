@@ -122,7 +122,11 @@ namespace FlaxEditor.Surface
             {
                 if (_cmStateMachineMenu == null)
                 {
-                    _cmStateMachineMenu = new VisjectCM(StateMachineGroupArchetypes, (arch) => true);
+                    _cmStateMachineMenu = new VisjectCM(new VisjectCM.InitInfo
+                    {
+                        Groups = StateMachineGroupArchetypes,
+                        CanSpawnNode = (arch) => true,
+                    });
                     _cmStateMachineMenu.ShowExpanded = true;
                 }
                 menu = _cmStateMachineMenu;
@@ -133,7 +137,13 @@ namespace FlaxEditor.Surface
             {
                 if (_cmStateMachineTransitionMenu == null)
                 {
-                    _cmStateMachineTransitionMenu = new VisjectCM(NodeFactory.DefaultGroups, CanSpawnNodeType, null, GetCustomNodes());
+                    _cmStateMachineTransitionMenu = new VisjectCM(new VisjectCM.InitInfo
+                    {
+                        Groups = NodeFactory.DefaultGroups,
+                        CanSpawnNode = CanSpawnNodeType,
+                        ParametersGetter = null,
+                        CustomNodesGroup = GetCustomNodes(),
+                    });
                     _cmStateMachineTransitionMenu.AddGroup(StateMachineTransitionGroupArchetype);
                 }
                 menu = _cmStateMachineTransitionMenu;

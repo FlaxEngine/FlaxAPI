@@ -135,7 +135,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="arch">The element archetype.</param>
         /// <returns>The created element. Null if the archetype is invalid.</returns>
-        public ISurfaceNodeElement AddElement(ref NodeElementArchetype arch)
+        public ISurfaceNodeElement AddElement(NodeElementArchetype arch)
         {
             ISurfaceNodeElement element = null;
             switch (arch.Type)

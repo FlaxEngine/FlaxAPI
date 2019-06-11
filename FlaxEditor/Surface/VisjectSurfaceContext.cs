@@ -332,7 +332,7 @@ namespace FlaxEditor.Surface
 
             if (!_surface.CanSpawnNodeType(nodeArchetype))
             {
-                Editor.LogWarning("Cannot spawn given node type.");
+                Editor.LogWarning("Cannot spawn given node type. Title: " + nodeArchetype.Title);
                 return null;
             }
 

@@ -56,7 +56,14 @@ namespace FlaxEditor.Surface
         /// <returns>The created menu.</returns>
         protected VisjectCM CreateDefaultPrimaryMenu()
         {
-            return new VisjectCM(NodeArchetypes, CanSpawnNodeType, () => Parameters, GetCustomNodes());
+            return new VisjectCM(new VisjectCM.InitInfo
+            {
+                Groups = NodeArchetypes,
+                CanSpawnNode = CanSpawnNodeType,
+                ParametersGetter = () => Parameters,
+                CustomNodesGroup = GetCustomNodes(),
+                ParameterGetNodeArchetype = Archetypes.Parameters.Nodes[0],
+            });
         }
 
         /// <summary>
