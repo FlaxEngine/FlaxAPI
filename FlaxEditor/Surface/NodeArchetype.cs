@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -15,7 +16,7 @@ namespace FlaxEditor.Surface
     /// <summary>
     /// Surface node archetype description.
     /// </summary>
-    public sealed class NodeArchetype
+    public sealed class NodeArchetype : ICloneable
     {
         /// <summary>
         /// Create custom node callback.
@@ -99,5 +100,27 @@ namespace FlaxEditor.Surface
         /// Tries to parse some text and extract the data from it.
         /// </summary>
         public NodeArchetypeTryParseHandler TryParseText;
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            return new NodeArchetype
+            {
+                TypeID = TypeID,
+                Create = Create,
+                Size = Size,
+                Flags = Flags,
+                Title = Title,
+                Description = Title,
+                AlternativeTitles = (string[])AlternativeTitles?.Clone(),
+                Tag = Tag,
+                DefaultValues = (object[])DefaultValues?.Clone(),
+                DefaultType = DefaultType,
+                IndependentBoxes = (int[])IndependentBoxes?.Clone(),
+                DependentBoxes = (int[])DependentBoxes?.Clone(),
+                Elements = (NodeElementArchetype[])Elements?.Clone(),
+                TryParseText = TryParseText,
+            };
+        }
     }
 }
