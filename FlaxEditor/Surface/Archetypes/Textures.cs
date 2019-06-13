@@ -56,7 +56,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
                     NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
@@ -91,7 +91,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector3, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
                     NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
@@ -114,7 +114,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Vector", ConnectionType.Vector3, 1),
                     NodeElementArchetype.Factory.Output(2, "X", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Y", ConnectionType.Float, 3),
@@ -168,7 +168,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
                     NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
@@ -187,7 +187,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
                     NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
@@ -205,7 +205,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Depth", ConnectionType.Float, 1),
                 }
             },
@@ -254,6 +254,40 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(3, "Invert X", true, ConnectionType.Bool, 3, 2),
                     NodeElementArchetype.Factory.Input(4, "Invert Y", true, ConnectionType.Bool, 4, 3),
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector2, 5),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 11,
+                Title = "Texture",
+                Description = "Two dimensional texture object",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(140, 80),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 0),
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.Texture)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 12,
+                Title = "Cube Texture",
+                Description = "Set of 6 textures arranged in a cube",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(140, 80),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 0),
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.CubeTexture)
                 }
             },
         };

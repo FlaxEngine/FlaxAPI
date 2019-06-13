@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using FlaxEditor.Content;
 using FlaxEditor.Surface.Archetypes;
-using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -94,7 +93,6 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         protected override bool ValidateDragItem(AssetItem assetItem)
         {
-            return false; // TODO: add support for sampling textures in Particle Emitter graph
             switch (assetItem.ItemDomain)
             {
             case ContentDomain.CubeTexture:
@@ -115,26 +113,13 @@ namespace FlaxEditor.Surface
                 {
                 case ContentDomain.Texture:
                 {
-                    // Check if it's a normal map
-                    bool isNormalMap = false;
-                    var obj = FlaxEngine.Content.LoadAsync<Texture>(item.ID);
-                    if (obj)
-                    {
-                        Thread.Sleep(50);
-
-                        if (!obj.WaitForLoaded())
-                        {
-                            isNormalMap = obj.IsNormalMap;
-                        }
-                    }
-
-                    node = Context.SpawnNode(5, (ushort)(isNormalMap ? 4 : 1), args.SurfaceLocation, new object[] { item.ID });
+                    node = Context.SpawnNode(5, 11, args.SurfaceLocation, new object[] { item.ID });
                     break;
                 }
 
                 case ContentDomain.CubeTexture:
                 {
-                    node = Context.SpawnNode(5, 3, args.SurfaceLocation, new object[] { item.ID });
+                    node = Context.SpawnNode(5, 12, args.SurfaceLocation, new object[] { item.ID });
                     break;
                 }
                 }
