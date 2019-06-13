@@ -62,7 +62,7 @@ namespace FlaxEditor.Surface
                 CanSpawnNode = CanSpawnNodeType,
                 ParametersGetter = () => Parameters,
                 CustomNodesGroup = GetCustomNodes(),
-                ParameterGetNodeArchetype = Archetypes.Parameters.Nodes[0],
+                ParameterGetNodeArchetype = GetParameterGetterNodeArchetype(out _),
             });
         }
 

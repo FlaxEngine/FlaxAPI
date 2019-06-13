@@ -129,19 +129,31 @@ namespace FlaxEditor.Surface
         /// <param name="args">The drag drop arguments data.</param>
         protected virtual void HandleDragDropParameters(List<string> objects, DragDropEventArgs args)
         {
+            var arch = GetParameterGetterNodeArchetype(out var groupId);
             for (int i = 0; i < objects.Count; i++)
             {
                 var parameter = GetParameter(objects[i]);
                 if (parameter == null)
                     throw new InvalidDataException();
 
-                var node = Context.SpawnNode(6, 1, args.SurfaceLocation, new object[]
-                {
-                    parameter.ID
-                });
+                var values = (object[])arch.DefaultValues.Clone();
+                values[0] = parameter.ID;
+
+                var node = Context.SpawnNode(groupId, arch.TypeID, args.SurfaceLocation, values);
 
                 args.SurfaceLocation.X += node.Width + 10;
             }
+        }
+
+        /// <summary>
+        /// Gets the parameter getter node archetype to use.
+        /// </summary>
+        /// <param name="groupId">The group ID.</param>
+        /// <returns>The node archetype.</returns>
+        protected virtual NodeArchetype GetParameterGetterNodeArchetype(out ushort groupId)
+        {
+            groupId = 6;
+            return Archetypes.Parameters.Nodes[0];
         }
     }
 }

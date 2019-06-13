@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Surface.ContextMenu
 {
@@ -354,21 +355,10 @@ namespace FlaxEditor.Surface.ContextMenu
                     if (!parameters[i].IsPublic)
                         continue;
 
-                    archetypes[archetypeIndex++] = new NodeArchetype
-                    {
-                        TypeID = _parameterGetNodeArchetype.TypeID,
-                        Create = _parameterGetNodeArchetype.Create,
-                        Flags = _parameterGetNodeArchetype.Flags,
-                        Tag = _parameterGetNodeArchetype.Tag,
-                        Title = "Get " + parameters[i].Name,
-                        Description = _parameterGetNodeArchetype.Description,
-                        Size = _parameterGetNodeArchetype.Size,
-                        DefaultValues = new object[]
-                        {
-                            parameters[i].ID
-                        },
-                        Elements = _parameterGetNodeArchetype.Elements,
-                    };
+                    var node = (NodeArchetype)_parameterGetNodeArchetype.Clone();
+                    node.Title = "Get " + parameters[i].Name;
+                    node.DefaultValues[0] = parameters[i].ID;
+                    archetypes[archetypeIndex++] = node;
                 }
 
                 var groupArchetype = new GroupArchetype

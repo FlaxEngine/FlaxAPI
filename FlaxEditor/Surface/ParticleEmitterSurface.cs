@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using FlaxEditor.Content;
 using FlaxEditor.Surface.Archetypes;
+using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -81,6 +82,13 @@ namespace FlaxEditor.Surface
         public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
             return (nodeArchetype.Flags & NodeFlags.ParticleEmitterGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);
+        }
+
+        /// <inheritdoc />
+        protected override NodeArchetype GetParameterGetterNodeArchetype(out ushort groupId)
+        {
+            groupId = 6;
+            return Archetypes.Parameters.Nodes[1];
         }
 
         /// <inheritdoc />

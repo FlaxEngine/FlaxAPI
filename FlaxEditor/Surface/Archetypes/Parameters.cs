@@ -25,7 +25,15 @@ namespace FlaxEditor.Surface.Archetypes
             private float _layoutHeight;
             private ParameterType _layoutType;
 
-            static readonly Dictionary<ParameterType, NodeElementArchetype[]> Prototypes = new Dictionary<ParameterType, NodeElementArchetype[]>
+            /// <summary>
+            /// The prototypes to use for this node to setup elements based on the parameter type.
+            /// </summary>
+            public Dictionary<ParameterType, NodeElementArchetype[]> Prototypes = DefaultPrototypes;
+
+            /// <summary>
+            /// The default prototypes for thr node elements to use for the given parameter type.
+            /// </summary>
+            public static readonly Dictionary<ParameterType, NodeElementArchetype[]> DefaultPrototypes = new Dictionary<ParameterType, NodeElementArchetype[]>
             {
                 {
                     ParameterType.Bool,
@@ -366,6 +374,134 @@ namespace FlaxEditor.Surface.Archetypes
         }
 
         /// <summary>
+        /// Surface node type for parameters group Get node for Particle Emitter graph.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+        public class SurfaceNodeParamsGetParticleEmitter : SurfaceNodeParamsGet
+        {
+            /// <summary>
+            /// The <see cref="SurfaceNodeParamsGet.DefaultPrototypes"/> implementation for Particle Emitter graph.
+            /// </summary>
+            public static readonly Dictionary<ParameterType, NodeElementArchetype[]> DefaultPrototypesParticleEmitter = new Dictionary<ParameterType, NodeElementArchetype[]>
+            {
+                {
+                    ParameterType.Bool,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Bool, 0),
+                    }
+                },
+                {
+                    ParameterType.Integer,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Integer, 0),
+                    }
+                },
+                {
+                    ParameterType.Float,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Float, 0),
+                    }
+                },
+                {
+                    ParameterType.Vector2,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Vector2, 0),
+                        NodeElementArchetype.Factory.Output(2, "X", ConnectionType.Float, 1),
+                        NodeElementArchetype.Factory.Output(3, "Y", ConnectionType.Float, 2),
+                    }
+                },
+                {
+                    ParameterType.Vector3,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Vector3, 0),
+                        NodeElementArchetype.Factory.Output(2, "X", ConnectionType.Float, 1),
+                        NodeElementArchetype.Factory.Output(3, "Y", ConnectionType.Float, 2),
+                        NodeElementArchetype.Factory.Output(4, "Z", ConnectionType.Float, 3),
+                    }
+                },
+                {
+                    ParameterType.Vector4,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, "Value", ConnectionType.Vector4, 0),
+                        NodeElementArchetype.Factory.Output(2, "X", ConnectionType.Float, 1),
+                        NodeElementArchetype.Factory.Output(3, "Y", ConnectionType.Float, 2),
+                        NodeElementArchetype.Factory.Output(4, "Z", ConnectionType.Float, 3),
+                        NodeElementArchetype.Factory.Output(5, "W", ConnectionType.Float, 4),
+                    }
+                },
+                {
+                    ParameterType.Color,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 0),
+                        NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 1),
+                        NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 2),
+                        NodeElementArchetype.Factory.Output(4, "B", ConnectionType.Float, 3),
+                        NodeElementArchetype.Factory.Output(5, "A", ConnectionType.Float, 4),
+                    }
+                },
+                {
+                    ParameterType.Texture,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),
+                    }
+                },
+                {
+                    ParameterType.RenderTarget,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),
+                    }
+                },
+                {
+                    ParameterType.RenderTargetArray,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),
+                    }
+                },
+                {
+                    ParameterType.RenderTargetCube,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),
+                    }
+                },
+                {
+                    ParameterType.RenderTargetVolume,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),
+                    }
+                },
+                {
+                    ParameterType.Matrix,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Output(1, "Row 0", ConnectionType.Vector4, 0),
+                        NodeElementArchetype.Factory.Output(2, "Row 1", ConnectionType.Vector4, 1),
+                        NodeElementArchetype.Factory.Output(3, "Row 2", ConnectionType.Vector4, 2),
+                        NodeElementArchetype.Factory.Output(4, "Row 3", ConnectionType.Vector4, 3),
+                    }
+                },
+            };
+
+            /// <inheritdoc />
+            public SurfaceNodeParamsGetParticleEmitter(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+                Prototypes = DefaultPrototypesParticleEmitter;
+            }
+        }
+
+        /// <summary>
         /// The nodes for that group.
         /// </summary>
         public static NodeArchetype[] Nodes =
@@ -376,7 +512,24 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new SurfaceNodeParamsGet(id, context, arch, groupArch),
                 Title = "Get Parameter",
                 Description = "Parameter value getter",
-                Flags = NodeFlags.AllGraphs,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.AnimGraph,
+                Size = new Vector2(140, 60),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(2, 0, 116)
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 2,
+                Create = (id, context, arch, groupArch) => new SurfaceNodeParamsGetParticleEmitter(id, context, arch, groupArch),
+                Title = "Get Parameter",
+                Description = "Parameter value getter",
+                Flags = NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(140, 60),
                 DefaultValues = new object[]
                 {
