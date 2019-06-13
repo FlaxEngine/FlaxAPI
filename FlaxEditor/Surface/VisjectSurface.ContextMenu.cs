@@ -21,13 +21,13 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether the primary surface context menu is being opened (eg. user is adding nodes).
         /// </summary>
-        public bool IsPrimaryMenuOpened => _activeVisjectCM != null && _activeVisjectCM.Visible;
+        public virtual bool IsPrimaryMenuOpened => _activeVisjectCM != null && _activeVisjectCM.Visible;
 
         /// <summary>
         /// Sets the primary menu for the Visject nodes spawning. Can be overriden per surface or surface context. Set to null to restore the default menu.
         /// </summary>
         /// <param name="menu">The menu to override with (use null if restore the default value).</param>
-        protected void SetPrimaryMenu(VisjectCM menu)
+        protected virtual void SetPrimaryMenu(VisjectCM menu)
         {
             menu = menu ?? _cmPrimaryMenu;
 
@@ -54,7 +54,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <remarks>This method is being called in <see cref="ShowPrimaryMenu"/> on first time when need to show the default menu (no overrides specified for the surface context).</remarks>
         /// <returns>The created menu.</returns>
-        protected VisjectCM CreateDefaultPrimaryMenu()
+        protected virtual VisjectCM CreateDefaultPrimaryMenu()
         {
             return new VisjectCM(new VisjectCM.InitInfo
             {
@@ -70,7 +70,7 @@ namespace FlaxEditor.Surface
         /// Shows the primary menu.
         /// </summary>
         /// <param name="location">The location in the Surface Space.</param>
-        public void ShowPrimaryMenu(Vector2 location)
+        public virtual void ShowPrimaryMenu(Vector2 location)
         {
             // Check if need to create default context menu (no override specified)
             if (_activeVisjectCM == null && _cmPrimaryMenu == null)
@@ -91,7 +91,7 @@ namespace FlaxEditor.Surface
         /// Shows the secondary context menu.
         /// </summary>
         /// <param name="location">The location in the Surface Space.</param>
-        public void ShowSecondaryCM(Vector2 location)
+        public virtual void ShowSecondaryCM(Vector2 location)
         {
             var selection = SelectedNodes;
             if (selection.Count == 0)
@@ -124,7 +124,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="visjectCmItem">The item.</param>
         /// <param name="selectedBox">The selected box.</param>
-        protected void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem, Box selectedBox)
+        protected virtual void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem, Box selectedBox)
         {
             var node = Context.SpawnNode(
                 visjectCmItem.GroupArchetype,
