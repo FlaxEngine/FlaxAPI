@@ -54,7 +54,6 @@ namespace FlaxEditor.Windows.Assets
                     Color = (int)ParameterType.Color,
                     Texture = (int)ParameterType.Texture,
                     CubeTexture = (int)ParameterType.CubeTexture,
-                    NormalMap = (int)ParameterType.NormalMap,
                     RenderTarget = (int)ParameterType.RenderTarget,
                     RenderTargetArray = (int)ParameterType.RenderTargetArray,
                     RenderTargetCube = (int)ParameterType.RenderTargetCube,
@@ -385,7 +384,6 @@ namespace FlaxEditor.Windows.Assets
             if (_surface.IsEdited)
             {
                 _surface.Save();
-                _preview.PreviewActor.ResetSimulation();
             }
 
             return false;
@@ -468,6 +466,7 @@ namespace FlaxEditor.Windows.Assets
                     _surface.MarkAsEdited();
                     Editor.LogError("Failed to save Particle Emitter surface data");
                 }
+                _preview.PreviewActor.ResetSimulation();
             }
         }
 
