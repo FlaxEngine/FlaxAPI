@@ -290,6 +290,20 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.CubeTexture)
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 13,
+                Title = "Load Texture",
+                Description = "Reads data from the texture at the given location (unsigned integer in range [0; size-1] per axis, last component is a mipmap level)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 60),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 0),
+                    NodeElementArchetype.Factory.Input(0, "Texture", true, ConnectionType.Object, 1),
+                    NodeElementArchetype.Factory.Input(1, "Location", true, ConnectionType.Vector, 2),
+                }
+            },
         };
     }
 }
