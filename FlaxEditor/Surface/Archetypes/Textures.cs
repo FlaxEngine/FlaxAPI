@@ -273,7 +273,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.Texture)
                 }
             },
-            new NodeArchetype
+            /*new NodeArchetype
             {
                 TypeID = 12,
                 Title = "Cube Texture",
@@ -289,7 +289,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 0),
                     NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.CubeTexture)
                 }
-            },
+            },*/
             new NodeArchetype
             {
                 TypeID = 13,
