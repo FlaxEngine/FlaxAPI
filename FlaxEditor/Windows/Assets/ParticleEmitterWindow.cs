@@ -53,10 +53,8 @@ namespace FlaxEditor.Windows.Assets
                     Vector4 = (int)ParameterType.Vector4,
                     Color = (int)ParameterType.Color,
                     Texture = (int)ParameterType.Texture,
-                    CubeTexture = (int)ParameterType.CubeTexture,
                     RenderTarget = (int)ParameterType.RenderTarget,
                     RenderTargetArray = (int)ParameterType.RenderTargetArray,
-                    RenderTargetCube = (int)ParameterType.RenderTargetCube,
                     RenderTargetVolume = (int)ParameterType.RenderTargetVolume,
                     Matrix = (int)ParameterType.Matrix,
                 }

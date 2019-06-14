@@ -95,7 +95,6 @@ namespace FlaxEditor.Surface
         {
             switch (assetItem.ItemDomain)
             {
-            case ContentDomain.CubeTexture:
             case ContentDomain.Texture: return true;
             }
             return base.ValidateDragItem(assetItem);
