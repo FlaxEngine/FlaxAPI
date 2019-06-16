@@ -131,6 +131,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the custom render task used as a view information source (effect will use its render buffers and rendering resolution information for particles simulation).
+        /// </summary>
+        [UnmanagedCall]
+        [HideInEditor]
+        public FlaxEngine.Rendering.RenderTask CustomViewRenderTask
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetCustomViewRenderTask(unmanagedPtr); }
+            set { Internal_SetCustomViewRenderTask(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the last game time when particle system was updated. Value 01 indicates no previous updates.
         /// </summary>
         [UnmanagedCall]
@@ -228,6 +243,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetTime(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern FlaxEngine.Rendering.RenderTask Internal_GetCustomViewRenderTask(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetCustomViewRenderTask(IntPtr obj, IntPtr val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetLastUpdateTime(IntPtr obj);
