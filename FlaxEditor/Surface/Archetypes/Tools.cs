@@ -123,7 +123,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Linearize Depth",
                 Description = "Scene depth buffer texture lookup node",
-                Flags = NodeFlags.MaterialGraph,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(240, 40),
                 Elements = new[]
                 {
@@ -142,6 +142,19 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Output(0, "Simulation Time", ConnectionType.Float, 0),
                     NodeElementArchetype.Factory.Output(1, "Delta Seconds", ConnectionType.Float, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 9,
+                Title = "Transform Position To Screen UV",
+                Description = "Transforms world-space position into screen space coordinates (normalized)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(300, 40),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "World Space", true, ConnectionType.Vector3, 0),
+                    NodeElementArchetype.Factory.Output(0, "Screen Space UV", ConnectionType.Vector2, 1),
                 }
             },
         };
