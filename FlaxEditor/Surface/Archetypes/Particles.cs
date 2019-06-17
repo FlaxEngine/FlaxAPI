@@ -377,7 +377,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 101,
                 Title = "Particle Position",
-                Description = "Particle position (in simulation space).",
+                Description = "Particle position (in simulation space for emitter graph, world space in material graph).",
                 Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(200, 30),
                 Elements = new[]
@@ -637,6 +637,18 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 212,
+                Title = "Particle Position (world space)",
+                Description = "Particle position (in world space).",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(280, 30),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
                 }
             },
         };
