@@ -647,7 +647,6 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Delay (min, max)", true, ConnectionType.Vector2, 1, 3),
                 },
             },
-            // TODO: Spawn On Event
 
             // Initialize
             new NodeArchetype
@@ -920,7 +919,28 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 2.0f, "Arc", true, ConnectionType.Float, 2, 4),
                 },
             },
-            // TODO: Position (depth)
+            new NodeArchetype
+            {
+                TypeID = 212,
+                Create = CreateParticleModuleNode,
+                Title = "Position (depth)",
+                Description = "Places the particles on top of the scene objects using depth buffer",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 3 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Initialize,
+                    new Vector2(0.0f, 1.0f),
+                    10.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "UV", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1.0f, "Depth Cull Range", true, ConnectionType.Vector2, 1, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 2.0f, "Depth Offset", true, ConnectionType.Float, 2, 3),
+                },
+            },
             new NodeArchetype
             {
                 TypeID = 213,
@@ -964,8 +984,6 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(-0.5f + 2.0f, "Velocity Scale", true, ConnectionType.Float, 2, 4),
                 },
             },
-            // TODO: Init Seed
-            // TODO: Inherit Position/Velocity/..
             GetParticleAttribute(ModuleType.Initialize, 250, "Set Position", "Sets the particle position", ConnectionType.Vector3, Vector3.Zero),
             GetParticleAttribute(ModuleType.Initialize, 251, "Set Lifetime", "Sets the particle lifetime (in seconds)", ConnectionType.Float, 10.0f),
             GetParticleAttribute(ModuleType.Initialize, 252, "Set Age", "Sets the particle age (in seconds)", ConnectionType.Float, 0.0f),
