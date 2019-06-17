@@ -159,7 +159,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Scene Texture",
                 Description = "Graphics pipeline textures lookup node",
-                Flags = NodeFlags.MaterialGraph,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(170, 120),
                 DefaultValues = new object[]
                 {
@@ -200,7 +200,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 8,
                 Title = "Scene Depth",
                 Description = "Scene depth buffer texture lookup node",
-                Flags = NodeFlags.MaterialGraph,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(140, 60),
                 Elements = new[]
                 {
