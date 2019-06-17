@@ -190,6 +190,11 @@ namespace FlaxEngine.Rendering
         /// The flag used to indicate that material uses dithered model LOD transition for smoother LODs switching.
         /// </summary>
         UseDitheredLODTransition = 1 << 14,
+
+        /// <summary>
+        /// The flag used to indicate that material uses refraction feature.
+        /// </summary>
+        UseRefraction = 1 << 14,
     }
 
     /// <summary>
