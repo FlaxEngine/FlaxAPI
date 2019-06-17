@@ -194,7 +194,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The flag used to indicate that material uses refraction feature.
         /// </summary>
-        UseRefraction = 1 << 14,
+        UseRefraction = 1 << 15,
     }
 
     /// <summary>
