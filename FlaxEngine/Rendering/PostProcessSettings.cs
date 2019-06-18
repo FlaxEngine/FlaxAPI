@@ -2023,7 +2023,7 @@ namespace FlaxEngine.Rendering
         /// Gets the post effect materials collection.
         /// </summary>
         [NoSerialize, EditorOrder(10000), EditorDisplay("PostFx Materials", EditorDisplayAttribute.InlineStyle), Tooltip("Post effect materials to render")]
-        [CustomEditorAlias("FlaxEditor.CustomEditors.Editors.Test1")]
+        [CustomEditorAlias("FlaxEditor.CustomEditors.Editors.PostFxMaterials")]
         public unsafe MaterialBase[] PostFxMaterials
         {
             get
