@@ -10,10 +10,10 @@ namespace FlaxEditor.Content.Settings
     public class WindowsPlatformSettings : SettingsBase
     {
         /// <summary>
-        /// Use fullscreen mode as default.
+        /// The default game window mode.
         /// </summary>
-        [EditorOrder(10), EditorDisplay("Window"), Tooltip("Use fullscreen mode as default.")]
-        public bool FullscreenMode = false;
+        [EditorOrder(10), EditorDisplay("Window"), Tooltip("The default game window mode.")]
+        public GameWindowMode WindowMode = GameWindowMode.Fullscreen;
 
         /// <summary>
         /// The default game window width (in pixels).
