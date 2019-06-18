@@ -13,7 +13,7 @@ namespace FlaxEditor.Content.Settings
         /// The default game window mode.
         /// </summary>
         [EditorOrder(10), EditorDisplay("Window"), Tooltip("The default game window mode.")]
-        public GameWindowMode WindowMode = GameWindowMode.Fullscreen;
+        public GameWindowMode WindowMode = GameWindowMode.Windowed;
 
         /// <summary>
         /// The default game window width (in pixels).
