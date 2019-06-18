@@ -88,6 +88,7 @@ namespace FlaxEditor.Windows
                 "Wojciech Figat",
                 "Tomasz Juszczak",
                 "Damian Korczowski",
+                "Michał Winiarski",
             });
             authors.Sort();
             var authorsLabel = new Label(4, topParentControl.Bottom + 20, Width - 8, 50)
