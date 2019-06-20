@@ -1,11 +1,15 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Timeline;
+using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -43,8 +47,11 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// The proxy object for editing particle system track properties.
         /// </summary>
+        [CustomEditor(typeof(EmitterTrackProxyEditor))]
         private class EmitterTrackProxy
         {
+            private readonly ParticleSystemWindow _window;
+            private readonly ParticleEffect _effect;
             private readonly ParticleEmitterTrack _track;
 
             [EditorDisplay("Particle Emitter"), EditorOrder(0), Tooltip("The name text.")]
@@ -86,9 +93,45 @@ namespace FlaxEditor.Windows.Assets
                 set => _track.EmitterMedia.DurationFrames = value;
             }
 
-            public EmitterTrackProxy(ParticleEmitterTrack track)
+            public EmitterTrackProxy(ParticleSystemWindow window, ParticleEffect effect, ParticleEmitterTrack track)
             {
+                _window = window;
+                _effect = effect;
                 _track = track;
+            }
+
+            private sealed class EmitterTrackProxyEditor : GenericEditor
+            {
+                /// <inheritdoc />
+                public override void Initialize(LayoutElementsContainer layout)
+                {
+                    base.Initialize(layout);
+
+                    var value = Values[0] as EmitterTrackProxy;
+                    if (value?._effect?.Parameters == null)
+                        return;
+
+                    var group = layout.Group("Parameters (instanced)");
+                    var parameters = value._effect.Parameters.Where(x => x.Emitter == value.Emitter && x.IsPublic);
+
+                    if (!parameters.Any())
+                    {
+                        group.Label("No parameters", TextAlignment.Center);
+                        return;
+                    }
+
+                    foreach (var parameter in parameters)
+                    {
+                        var type = VisjectSurface.GetParameterValueType((ParameterType)parameter.Type);
+                        var propertyValue = new CustomValueContainer(type, parameter.Value, (instance, index) => parameter.Value, (instance, index, _) =>
+                        {
+                            value._window._isEditingInstancedParameterValue = true;
+                            parameter.Value = _;
+                        });
+
+                        group.Property(parameter.Name, propertyValue);
+                    }
+                }
             }
         }
 
@@ -137,6 +180,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly ToolStripButton _saveButton;
         private bool _tmpParticleSystemIsDirty;
         private bool _isWaitingForTimelineLoad;
+        private bool _isEditingInstancedParameterValue;
 
         /// <summary>
         /// Gets the particle system preview.
@@ -174,6 +218,17 @@ namespace FlaxEditor.Windows.Assets
                 PlaySimulation = true,
                 Parent = _split2.Panel1
             };
+            _preview.PreviewActor.ParametersChanged += e => OnTimelineSelectionChanged();
+
+            // Timeline
+            _timeline = new ParticleSystemTimeline(_preview)
+            {
+                DockStyle = DockStyle.Fill,
+                Parent = _split1.Panel2,
+                Enabled = false
+            };
+            _timeline.Modified += OnTimelineModified;
+            _timeline.SelectionChanged += OnTimelineSelectionChanged;
 
             // Properties editor (general)
             var propertiesEditor1 = new CustomEditorPresenter(null, string.Empty);
@@ -187,16 +242,6 @@ namespace FlaxEditor.Windows.Assets
             propertiesEditor2.Panel.Parent = _split2.Panel2;
             propertiesEditor2.Modified += OnParticleSystemPropertyEdited;
             _propertiesEditor2 = propertiesEditor2;
-
-            // Timeline
-            _timeline = new ParticleSystemTimeline(_preview)
-            {
-                DockStyle = DockStyle.Fill,
-                Parent = _split1.Panel2,
-                Enabled = false
-            };
-            _timeline.Modified += OnTimelineModified;
-            _timeline.SelectionChanged += OnTimelineSelectionChanged;
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
@@ -224,7 +269,7 @@ namespace FlaxEditor.Windows.Assets
                 var track = _timeline.SelectedTracks[i];
                 if (track is ParticleEmitterTrack particleEmitterTrack)
                 {
-                    tracks[i] = new EmitterTrackProxy(particleEmitterTrack);
+                    tracks[i] = new EmitterTrackProxy(this, Preview.PreviewActor, particleEmitterTrack);
                 }
                 else if (track is FolderTrack folderTrack)
                 {
@@ -240,6 +285,9 @@ namespace FlaxEditor.Windows.Assets
 
         private void OnParticleSystemPropertyEdited()
         {
+            if (_isEditingInstancedParameterValue)
+                return;
+
             _timeline.MarkAsEdited();
         }
 
@@ -254,6 +302,8 @@ namespace FlaxEditor.Windows.Assets
 
             if (_timeline.IsModified)
             {
+                _propertiesEditor1.BuildLayoutOnUpdate();
+                _propertiesEditor2.BuildLayoutOnUpdate();
                 _timeline.Save(_asset);
             }
 
@@ -345,6 +395,9 @@ namespace FlaxEditor.Windows.Assets
                 _propertiesEditor2.Deselect();
                 ClearEditedFlag();
             }
+
+            // Clear flag
+            _isEditingInstancedParameterValue = false;
         }
 
         /// <inheritdoc />

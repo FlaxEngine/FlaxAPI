@@ -685,5 +685,41 @@ namespace FlaxEditor.Surface
 
             base.OnDestroy();
         }
+
+        /// <summary>
+        /// Gets the type of the parameter (enum to runtime value type).
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The runtime value time.</returns>
+        public static Type GetParameterValueType(ParameterType type)
+        {
+            switch (type)
+            {
+            case ParameterType.Bool: return typeof(bool);
+            case ParameterType.Integer: return typeof(int);
+            case ParameterType.Float: return typeof(float);
+            case ParameterType.Vector2: return typeof(Vector2);
+            case ParameterType.Vector3: return typeof(Vector3);
+            case ParameterType.Vector4: return typeof(Vector4);
+            case ParameterType.Color: return typeof(Color);
+            case ParameterType.Texture:
+            case ParameterType.NormalMap: return typeof(Texture);
+            case ParameterType.String: return typeof(string);
+            case ParameterType.Box: return typeof(Box);
+            case ParameterType.Rotation: return typeof(Quaternion);
+            case ParameterType.Transform: return typeof(Transform);
+            case ParameterType.Asset: return typeof(Asset);
+            case ParameterType.Actor: return typeof(Actor);
+            case ParameterType.Rectangle: return typeof(Rectangle);
+            case ParameterType.CubeTexture: return typeof(CubeTexture);
+            case ParameterType.SceneTexture: return typeof(int);
+            case ParameterType.RenderTarget: return typeof(bool);
+            case ParameterType.Matrix: return typeof(Matrix);
+            case ParameterType.RenderTargetArray: return typeof(bool);
+            case ParameterType.RenderTargetVolume: return typeof(bool);
+            case ParameterType.RenderTargetCube: return typeof(Matrix);
+            default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
     }
 }
