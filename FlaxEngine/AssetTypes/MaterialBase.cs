@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using FlaxEngine.Rendering;
 
@@ -86,17 +87,14 @@ namespace FlaxEngine
         public bool IsParticle => Info.Domain == MaterialDomain.Particle;
 
         /// <summary>
-        /// Gets or sets the material parameters collection.
+        /// Gets the material parameters collection.
         /// </summary>
-        /// <value>
-        /// The parameters.
-        /// </value>
         public MaterialParameter[] Parameters
         {
             get
             {
                 // Check if has cached value or is not loaded
-                if (_parameters != null || !IsLoaded)
+                if (_parameters != null || WaitForLoaded())
                     return _parameters;
 
                 // Get next hash #hashtag
@@ -123,7 +121,7 @@ namespace FlaxEngine
                 else
                 {
                     // No parameters at all
-                    _parameters = new MaterialParameter[0];
+                    _parameters = Enumerable.Empty<MaterialParameter>() as MaterialParameter[];
                 }
 
                 return _parameters;
@@ -177,10 +175,10 @@ namespace FlaxEngine
         internal static extern string Internal_GetParamName(IntPtr obj, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_SetParamValue(IntPtr obj, int index, IntPtr ptr);
+        internal static extern void Internal_SetParamValue(IntPtr obj, int index, IntPtr ptr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetParamValue(IntPtr obj, int index, IntPtr ptr);
+        internal static extern void Internal_GetParamValue(IntPtr obj, int index, IntPtr ptr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetParamIndexByName(IntPtr obj, string name);
