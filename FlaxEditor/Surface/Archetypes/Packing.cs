@@ -55,7 +55,7 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void UpdateOutputType(Box box)
             {
-                if (!_in0.HasAnyConnection && !_in1.HasAnyConnection)
+                if (!_in0.HasAnyConnection || !_in1.HasAnyConnection)
                 {
                     _out.CurrentType = ConnectionType.Vector;
                     return;
