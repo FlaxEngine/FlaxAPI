@@ -144,6 +144,8 @@ namespace FlaxEngine.Rendering
         {
             if (Output)
                 Output.Dispose();
+            CustomActors.Clear();
+            CustomPostFx.Clear();
 
             base.Dispose();
         }
