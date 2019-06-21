@@ -21,7 +21,7 @@ namespace FlaxEngine
         /// <summary>
         /// Perform window hit test delegate.
         /// </summary>
-        /// <param name="mouse">The mouse position.</param>
+        /// <param name="mouse">The mouse position. The coordinate is relative to the upper-left corner of the screen. Use <see cref="ScreenToClient"/> to convert position into client space coordinates.</param>
         /// <returns>Hit result.</returns>
         public delegate WindowHitCodes HitTestDelegate(ref Vector2 mouse);
 

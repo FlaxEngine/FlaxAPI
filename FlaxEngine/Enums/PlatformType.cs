@@ -21,5 +21,10 @@ namespace FlaxEngine
         /// Running Windows Store App (Universal Windows Platform).
         /// </summary>
         WindowsStore = 3,
+
+        /// <summary>
+        /// Running on Linux system.
+        /// </summary>
+        Linux = 4,
     }
 }
