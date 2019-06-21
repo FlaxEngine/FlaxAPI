@@ -55,7 +55,7 @@ namespace FlaxEditor.Windows
 
         private class GameRoot : ContainerControl
         {
-            public bool EnableEvents => SceneManager.IsGameLogicRunning;
+            public bool EnableEvents => !Time.GamePaused;
 
             public override bool OnCharInput(char c)
             {

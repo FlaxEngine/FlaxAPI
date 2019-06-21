@@ -111,20 +111,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets value indicating whenever game logic is running (physics, script updates, etc.).
-        /// </summary>
-        [UnmanagedCall]
-        public static bool IsGameLogicRunning
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_IsGameLogicRunning(); }
-            set { Internal_SetGameLogicRunning(value); }
-#endif
-        }
-
-        /// <summary>
         /// Checks if any scene action is pending.
         /// </summary>
         [UnmanagedCall]
@@ -413,12 +399,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Scene Internal_FindScene(ref Guid id);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IsGameLogicRunning();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetGameLogicRunning(bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_IsAnyActionPending();

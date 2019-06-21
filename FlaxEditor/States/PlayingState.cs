@@ -55,13 +55,13 @@ namespace FlaxEditor.States
         /// </summary>
         public bool IsPaused
         {
-            get => !SceneManager.IsGameLogicRunning;
+            get => Time.GamePaused;
             set
             {
                 if (!IsActive)
                     throw new InvalidOperationException();
 
-                SceneManager.IsGameLogicRunning = !value;
+                Time.GamePaused = value;
             }
         }
 
