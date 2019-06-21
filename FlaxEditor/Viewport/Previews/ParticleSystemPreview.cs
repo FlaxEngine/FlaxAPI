@@ -107,6 +107,7 @@ namespace FlaxEditor.Viewport.Previews
 
             // Setup preview scene
             _previewEffect = ParticleEffect.New();
+            _previewEffect.UseTimeScale = false;
             _previewEffect.IsLooping = true;
             _previewEffect.CustomViewRenderTask = Task;
 

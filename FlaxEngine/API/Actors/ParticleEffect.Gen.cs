@@ -98,10 +98,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the global time scale usage for particle simulation. Determines whether the particle effect should take into account the global game time scale for simulation updates..
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("Particle Effect"), EditorOrder(40), Tooltip("Determines whether the particle effect should take into account the global game time scale for simulation updates.")]
+        public bool UseTimeScale
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetUseTimeScale(unmanagedPtr); }
+            set { Internal_SetUseTimeScale(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the particle system play mode looping. Determines whether the particle effect should loop when it finishes playing.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Particle Effect"), EditorOrder(40), Tooltip("Determines whether the particle effect should loop when it finishes playing.")]
+        [EditorDisplay("Particle Effect"), EditorOrder(50), Tooltip("Determines whether the particle effect should loop when it finishes playing.")]
         public bool IsLooping
         {
 #if UNIT_TEST_COMPILANT
@@ -231,6 +246,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetSimulationSpeed(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetUseTimeScale(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetUseTimeScale(IntPtr obj, bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetIsLooping(IntPtr obj);
