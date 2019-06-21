@@ -15,8 +15,10 @@ namespace FlaxEditor.Viewport.Previews
     {
         private ParticleEffect _previewEffect;
         private ContextMenuButton _showBoundsButton;
+        private ContextMenuButton _showOriginButton;
         private ContextMenuButton _showParticleCounterButton;
         private StaticModel _boundsModel;
+        private StaticModel _originModel;
         private bool _showParticlesCounter;
 
         /// <summary>
@@ -79,6 +81,46 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show particle effect origin point.
+        /// </summary>
+        public bool ShowOrigin
+        {
+            get => _originModel?.IsActive ?? false;
+            set
+            {
+                if (value == ShowOrigin)
+                    return;
+
+                if (value)
+                {
+                    if (!_originModel)
+                    {
+                        _originModel = StaticModel.New();
+                        _originModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/Sphere");
+                        _originModel.Model.WaitForLoaded();
+                        _originModel.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialAxisFocus");
+                        _originModel.Position = _previewEffect.Position;
+                        _originModel.Scale = new Vector3(0.1f);
+                        Task.CustomActors.Add(_originModel);
+                    }
+                    else if (!_originModel.IsActive)
+                    {
+                        _originModel.IsActive = true;
+                        Task.CustomActors.Add(_originModel);
+                    }
+                }
+                else
+                {
+                    _originModel.IsActive = false;
+                    Task.CustomActors.Remove(_originModel);
+                }
+
+                if (_showOriginButton != null)
+                    _showOriginButton.Checked = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to show spawned particles counter (for CPU particles only).
         /// </summary>
         public bool ShowParticlesCounter
@@ -117,6 +159,7 @@ namespace FlaxEditor.Viewport.Previews
             if (useWidgets)
             {
                 _showBoundsButton = ViewWidgetShowMenu.AddButton("Show Bounds", () => ShowBounds = !ShowBounds);
+                _showOriginButton = ViewWidgetShowMenu.AddButton("Show Origin", () => ShowOrigin = !ShowOrigin);
                 _showParticleCounterButton = ViewWidgetShowMenu.AddButton("Show Particles Counter (CPU only)", () => ShowParticlesCounter = !ShowParticlesCounter);
             }
         }
@@ -186,7 +229,10 @@ namespace FlaxEditor.Viewport.Previews
             // Cleanup objects
             _previewEffect.ParticleSystem = null;
             Object.Destroy(ref _previewEffect);
+            Object.Destroy(ref _boundsModel);
+            Object.Destroy(ref _originModel);
             _showBoundsButton = null;
+            _showOriginButton = null;
             _showParticleCounterButton = null;
 
             base.OnDestroy();
