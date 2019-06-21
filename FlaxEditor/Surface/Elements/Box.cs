@@ -119,6 +119,11 @@ namespace FlaxEditor.Surface.Elements
             }
         }
 
+        /// <summary>
+        /// Event called when the current type of the box gets changed.
+        /// </summary>
+        public Action<Box> CurrentTypeChanged;
+
         /// <inheritdoc />
         protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location)
         : base(parentNode, archetype, location, new Vector2(Constants.BoxSize), false)
@@ -336,6 +341,7 @@ namespace FlaxEditor.Surface.Elements
         {
             Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
             TooltipText = CurrentType.ToString();
+            CurrentTypeChanged?.Invoke(this);
         }
 
         /// <summary>

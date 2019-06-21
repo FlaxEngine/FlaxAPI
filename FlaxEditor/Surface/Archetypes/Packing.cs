@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface.Archetypes
@@ -9,6 +11,79 @@ namespace FlaxEditor.Surface.Archetypes
     /// </summary>
     public static class Packing
     {
+        private class AppendNode : SurfaceNode
+        {
+            private InputBox _in0;
+            private InputBox _in1;
+            private OutputBox _out;
+
+            /// <inheritdoc />
+            public AppendNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                _in0 = (InputBox)GetBox(0);
+                _in1 = (InputBox)GetBox(1);
+                _out = (OutputBox)GetBox(2);
+
+                _in0.CurrentTypeChanged += UpdateOutputType;
+                _in1.CurrentTypeChanged += UpdateOutputType;
+
+                UpdateOutputType(null);
+            }
+
+            private static int CountComponents(ConnectionType type)
+            {
+                switch (type)
+                {
+                case ConnectionType.Bool:
+                case ConnectionType.Integer:
+                case ConnectionType.Float:
+                case ConnectionType.UnsignedInteger: return 1;
+                case ConnectionType.Vector2: return 2;
+                case ConnectionType.Vector3: return 3;
+                case ConnectionType.Vector4: return 4;
+                default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+            }
+
+            private void UpdateOutputType(Box box)
+            {
+                if (!_in0.HasAnyConnection && !_in1.HasAnyConnection)
+                {
+                    _out.CurrentType = ConnectionType.Vector;
+                    return;
+                }
+
+                var count0 = CountComponents(_in0.CurrentType);
+                var count1 = CountComponents(_in1.CurrentType);
+                var count = count0 + count1;
+                ConnectionType outType = ConnectionType.Vector4;
+                switch (count)
+                {
+                case 1:
+                    outType = ConnectionType.Float;
+                    break;
+                case 2:
+                    outType = ConnectionType.Vector2;
+                    break;
+                case 3:
+                    outType = ConnectionType.Vector3;
+                    break;
+                case 4:
+                    outType = ConnectionType.Vector4;
+                    break;
+                }
+                _out.CurrentType = outType;
+            }
+        }
+
         /// <summary>
         /// The nodes for that group.
         /// </summary>
@@ -301,6 +376,22 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Input(0, "Value", true, ConnectionType.Vector, 0),
                     NodeElementArchetype.Factory.Output(0, "XYZ", ConnectionType.Vector3, 1)
+                }
+            },
+
+            new NodeArchetype
+            {
+                TypeID = 100,
+                Title = "Append",
+                Description = "Appends vector or scalar value into vector",
+                Create = (id, context, nodeArch, groupArch) => new AppendNode(id, context, nodeArch, groupArch),
+                Flags = NodeFlags.AllGraphs,
+                Size = new Vector2(140, 50),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Scalar | ConnectionType.Vector, 0),
+                    NodeElementArchetype.Factory.Input(1, string.Empty, true, ConnectionType.Variable | ConnectionType.Vector, 1),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector, 2)
                 }
             },
         };
