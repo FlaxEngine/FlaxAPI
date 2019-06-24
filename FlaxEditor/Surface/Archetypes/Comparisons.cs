@@ -16,7 +16,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = id,
                 Title = title,
                 Description = desc,
-                Flags = NodeFlags.AnimGraph | NodeFlags.ParticleEmitterGraph | NodeFlags.MaterialGraph,
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(100, 40),
                 DefaultType = inputTypes,
                 IndependentBoxes = new[]
@@ -49,6 +49,36 @@ namespace FlaxEditor.Surface.Archetypes
             Op(4, "<", "Determines whether the first value is less than the other", ConnectionType.Variable),
             Op(5, "<=", "Determines whether the first value is less or equal to the other", ConnectionType.Variable),
             Op(6, ">=", "Determines whether the first value is greater or equal to the other", ConnectionType.Variable),
+            new NodeArchetype
+            {
+                TypeID = 7,
+                Title = "Branch",
+                Description = "Returns one of the input values based on the condition value",
+                Flags = NodeFlags.AllGraphs,
+                Size = new Vector2(100, 60),
+                DefaultType = ConnectionType.Variable,
+                IndependentBoxes = new[]
+                {
+                    1,
+                    2,
+                },
+                DependentBoxes = new[]
+                {
+                    3,
+                },
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    0.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Condition", true, ConnectionType.Bool, 0),
+                    NodeElementArchetype.Factory.Input(1, "False", true, ConnectionType.Variable, 1, 0),
+                    NodeElementArchetype.Factory.Input(2, "True", true, ConnectionType.Variable, 2, 1),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Variable, 3)
+                }
+            },
         };
     }
 }
