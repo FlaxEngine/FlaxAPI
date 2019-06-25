@@ -706,7 +706,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    100.0f,
+                    1000.0f,
                     360.0f,
                 },
                 Elements = new[]
@@ -729,7 +729,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    new Vector2(100.0f, 100.0f),
+                    new Vector2(1000.0f, 1000.0f),
                 },
                 Elements = new[]
                 {
@@ -750,7 +750,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    100.0f,
+                    1000.0f,
                     360.0f,
                 },
                 Elements = new[]
@@ -773,7 +773,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    100.0f,
+                    1000.0f,
                     360.0f,
                 },
                 Elements = new[]
@@ -796,7 +796,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    new Vector3(100.0f),
+                    new Vector3(1000.0f),
                 },
                 Elements = new[]
                 {
@@ -817,7 +817,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    new Vector3(100.0f),
+                    new Vector3(1000.0f),
                 },
                 Elements = new[]
                 {
@@ -838,8 +838,8 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    100.0f,
-                    200.0f,
+                    500.0f,
+                    2000.0f,
                     360.0f,
                 },
                 Elements = new[]
@@ -862,8 +862,8 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     true,
                     (int)ModuleType.Initialize,
-                    Vector3.Zero,
-                    new Vector3(100.0f, 0, 0),
+                    new Vector3(-500.0f, 0, 0),
+                    new Vector3(500.0f, 0, 0),
                 },
                 Elements = new[]
                 {
@@ -884,8 +884,8 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    100.0f,
-                    20.0f,
+                    500.0f,
+                    200.0f,
                     360.0f,
                 },
                 Elements = new[]
@@ -909,7 +909,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Initialize,
                     Vector3.Zero,
-                    100.0f,
+                    1000.0f,
                     360.0f,
                 },
                 Elements = new[]

@@ -321,7 +321,7 @@ namespace FlaxEditor.Surface.Archetypes
                     (int)ParticlesSimulationMode.Default, // Simulation Mode
                     (int)ParticlesSimulationSpace.Local, // Simulation Space
                     true, // Enable Pooling
-                    new BoundingBox(new Vector3(-500.0f), new Vector3(500.0f)), // Custom Bounds
+                    new BoundingBox(new Vector3(-1000.0f), new Vector3(1000.0f)), // Custom Bounds
                     true, // Use Auto Bounds
                 },
                 Elements = new[]
