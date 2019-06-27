@@ -37,6 +37,11 @@ namespace FlaxEngine
         public bool RightAssociative { get; set; }
     }
 
+    public class ParsingException: Exception {
+        public ParsingException(string msg)
+            :base("Parsing error: " + msg) {}
+    }
+
     static class Parser
     {
         /// <summary>
@@ -78,7 +83,7 @@ namespace FlaxEngine
             if (operators.ContainsKey(Convert.ToString(ch)))
                 return TokenType.Operator;
 
-            throw new Exception("Wrong character");
+            throw new ParsingException("wrong character");
         }
 
         /// <summary>
@@ -160,7 +165,7 @@ namespace FlaxEngine
                         break;
 
                     default:
-                        throw new Exception("Wrong token");
+                        throw new ParsingException("wrong token");
                 }
             }
 
@@ -171,7 +176,7 @@ namespace FlaxEngine
 
                 // Parenthesis still on stack mean a mismatch
                 if (tok.Type == TokenType.Parenthesis)
-                    throw new Exception("Mismatched parentheses");
+                    throw new ParsingException("mismatched parentheses");
 
                 yield return tok;
             }
@@ -180,24 +185,24 @@ namespace FlaxEngine
         /// <summary>
         /// Third parsing step - evaluate reverse polish notation into single float.
         /// </summary>
-        public static float EvaluateRPN(IEnumerable<Token> tokens)
+        public static double EvaluateRPN(IEnumerable<Token> tokens)
         {
-            var stack = new Stack<float>();
+            var stack = new Stack<double>();
 
             foreach (var token in tokens) 
             {
                 if (token.Type == TokenType.Number)
                 {
-                    stack.Push(float.Parse(token.Value));
+                    stack.Push(double.Parse(token.Value));
                 } 
                 else
                 {
                     // In this step there always should be 2 values on stack
                     if (stack.Count < 2)
-                        throw new Exception("Evaluation error");
+                        throw new ParsingException("evaluation error");
 
-                    var f1 = (float)stack.Pop();
-                    var f2 = (float)stack.Pop();
+                    var f1 = stack.Pop();
+                    var f2 = stack.Pop();
 
                     switch (token.Value)
                     {
@@ -216,7 +221,7 @@ namespace FlaxEngine
                             f2 /= f1;
                             break;
                         case "^":
-                            f2 = (float)Math.Pow(f2, f1);
+                            f2 = Math.Pow(f2, f1);
                             break;
                     }
 
