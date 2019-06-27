@@ -420,6 +420,7 @@
     <Compile Include="Math\Matrix3x3.cs" />
     <Compile Include="Math\OrientedBoundingBox.cs" />
     <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\ShuntingYardParser.cs" />
     <Compile Include="Math\SphericalHarmonics.cs" />
     <Compile Include="Math\Transform.cs" />
     <Compile Include="Math\TypeConverters\ColorConverter.cs" />
