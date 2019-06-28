@@ -199,21 +199,6 @@ namespace FlaxEditor.Surface.Archetypes
 
                 var controlsLevel = _gradient.Bottom + 4.0f + 20.0f + 40.0f;
 
-                _addButton = new Button(_gradient.Right - 20.0f, controlsLevel, 20, 20)
-                {
-                    Text = "+",
-                    TooltipText = "Add gradient stop",
-                    Parent = this
-                };
-                _addButton.Clicked += OnAddButtonClicked;
-                _removeButton = new Button(_addButton.Left - 24.0f, _addButton.Y, 20, 20)
-                {
-                    Text = "-",
-                    TooltipText = "Remove selected gradient stop",
-                    Parent = this
-                };
-                _removeButton.Clicked += OnRemoveButtonClicked;
-
                 _labelValue = new Label(_gradient.Left, controlsLevel - 20.0f, 70.0f, 20.0f)
                 {
                     Text = "Selected:",
@@ -221,17 +206,35 @@ namespace FlaxEditor.Surface.Archetypes
                     HorizontalAlignment = TextAlignment.Near,
                     Parent = this
                 };
+
                 _timeValue = new FloatValueBox(0.0f, _gradient.Left, controlsLevel, 100.0f, 0.0f, 1.0f, 0.001f)
                 {
                     Parent = this
                 };
                 _timeValue.ValueChanged += OnTimeValueChanged;
+
                 _colorValue = new ColorValueBox(Color.Black, _timeValue.Right + 4.0f, controlsLevel)
                 {
                     Height = _timeValue.Height,
                     Parent = this
                 };
                 _colorValue.ValueChanged += OnColorValueChanged;
+
+                _removeButton = new Button(_colorValue.Right + 4.0f, controlsLevel, 20, 20)
+                {
+                    Text = "-",
+                    TooltipText = "Remove selected gradient stop",
+                    Parent = this
+                };
+                _removeButton.Clicked += OnRemoveButtonClicked;
+
+                _addButton = new Button(_gradient.Right - 20.0f, controlsLevel, 20, 20)
+                {
+                    Text = "+",
+                    TooltipText = "Add gradient stop",
+                    Parent = this
+                };
+                _addButton.Clicked += OnAddButtonClicked;
 
                 UpdateStops();
             }
@@ -370,7 +373,7 @@ namespace FlaxEditor.Surface.Archetypes
                     stop.TooltipText = stop.Color + " at " + time;
                 }
 
-                // Update selected stop
+                // Update UI
                 if (_selected != null)
                 {
                     var index = _stops.IndexOf(_selected);
@@ -380,17 +383,16 @@ namespace FlaxEditor.Surface.Archetypes
                     _labelValue.Visible = true;
                     _timeValue.Visible = true;
                     _colorValue.Visible = true;
+                    _removeButton.Visible = true;
                 }
                 else
                 {
                     _labelValue.Visible = false;
                     _timeValue.Visible = false;
                     _colorValue.Visible = false;
+                    _removeButton.Visible = false;
                 }
-
-                // Update buttons
                 _addButton.Enabled = count < MaxStops;
-                _removeButton.Enabled = count > 0 && _selected != null;
             }
         }
 
