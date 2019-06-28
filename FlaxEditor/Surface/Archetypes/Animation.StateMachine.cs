@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -646,7 +647,7 @@ namespace FlaxEditor.Surface.Archetypes
                     transition.Edit();
                     break;
                 case MouseButton.Right:
-                    var contextMenu = new FlaxEngine.GUI.ContextMenu();
+                    var contextMenu = new FlaxEditor.GUI.ContextMenu.ContextMenu();
                     contextMenu.AddButton("Edit").Clicked += transition.Edit;
                     contextMenu.AddSeparator();
                     contextMenu.AddButton("Delete").Clicked += transition.Delete;

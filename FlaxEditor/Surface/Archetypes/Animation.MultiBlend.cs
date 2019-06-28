@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 

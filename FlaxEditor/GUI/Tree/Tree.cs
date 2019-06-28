@@ -7,7 +7,7 @@ using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI
+namespace FlaxEditor.GUI.Tree
 {
     /// <summary>
     /// Tree control.

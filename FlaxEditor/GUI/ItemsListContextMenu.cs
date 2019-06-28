@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;

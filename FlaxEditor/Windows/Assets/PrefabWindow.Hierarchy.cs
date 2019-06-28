@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.GUI.Tree;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -40,7 +42,7 @@ namespace FlaxEditor.Windows.Assets
         /// <summary>
         /// The prefab hierarchy tree control.
         /// </summary>
-        /// <seealso cref="FlaxEditor.GUI.Tree" />
+        /// <seealso cref="Tree" />
         public class PrefabTree : Tree
         {
             /// <summary>

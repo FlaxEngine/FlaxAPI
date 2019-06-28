@@ -2,9 +2,10 @@
 
 using System;
 using System.Globalization;
-using FlaxEditor;
+using FlaxEditor.Utilities;
+using FlaxEngine;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Double precision floating point value editor.

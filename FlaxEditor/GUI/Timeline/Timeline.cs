@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -512,7 +514,7 @@ namespace FlaxEditor.GUI.Timeline
         private void OnAddTrackButtonClicked()
         {
             // TODO: maybe cache context menu object?
-            var menu = new ContextMenu();
+            var menu = new ContextMenu.ContextMenu();
             for (int i = 0; i < TrackArchetypes.Count; i++)
             {
                 var archetype = TrackArchetypes[i];
@@ -535,7 +537,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             // TODO: maybe cache context menu object?
             // TODO: maybe add some customization options/events to allow editor plugins for extending this part?
-            var menu = new ContextMenu();
+            var menu = new ContextMenu.ContextMenu();
 
             var showTimeAs = menu.AddChildMenu("Show time as");
             showTimeAs.ContextMenu.AddButton("Frames", () => TimeShowMode = TimeShowModes.Frames).Checked = TimeShowMode == TimeShowModes.Frames;

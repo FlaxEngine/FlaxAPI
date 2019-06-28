@@ -7,6 +7,7 @@ using System.Linq;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;

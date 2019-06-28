@@ -2,8 +2,10 @@
 
 using System;
 using FlaxEditor.GUI.Dialogs;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Color value editor with picking support.

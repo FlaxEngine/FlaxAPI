@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
@@ -11,7 +12,7 @@ namespace FlaxEditor.Tools.Terrain
     /// <summary>
     /// Carve tab related to terrain editing. Allows to pick a terrain patch and remove it or add new patches. Can be used to modify selected chunk properties.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="Tab" />
     public class EditTab : Tab
     {
         /// <summary>

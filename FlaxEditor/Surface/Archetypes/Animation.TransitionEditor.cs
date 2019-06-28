@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -12,7 +13,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// <summary>
         /// TheAnim Graph state machine transition editor (as contextual popup).
         /// </summary>
-        /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
+        /// <seealso cref="ContextMenuBase" />
         internal class TransitionEditor : ContextMenuBase
         {
             private StateMachineTransition _transition;

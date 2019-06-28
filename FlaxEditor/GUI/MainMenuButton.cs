@@ -19,7 +19,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The context menu.
         /// </summary>
-        public readonly ContextMenu ContextMenu = new ContextMenu();
+        public readonly ContextMenu.ContextMenu ContextMenu = new ContextMenu.ContextMenu();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainMenuButton"/> class.

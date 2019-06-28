@@ -98,7 +98,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The secondary context menu.
         /// </summary>
-        protected FlaxEngine.GUI.ContextMenu _cmSecondaryMenu;
+        protected FlaxEditor.GUI.ContextMenu.ContextMenu _cmSecondaryMenu;
 
         /// <summary>
         /// The context menu start position.
@@ -288,7 +288,7 @@ namespace FlaxEditor.Surface
             RootContext.Modified += OnRootContextModified;
 
             // Create secondary menu (for other actions)
-            _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();
+            _cmSecondaryMenu = new FlaxEditor.GUI.ContextMenu.ContextMenu();
             _cmSecondaryMenu.AddButton("Save", onSave);
             _cmSecondaryMenu.AddSeparator();
             _cmCopyButton = _cmSecondaryMenu.AddButton("Copy", Copy);

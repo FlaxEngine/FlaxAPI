@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -71,7 +72,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// <summary>
         /// The custom combobox for enum editing. Supports some special cases for flag enums.
         /// </summary>
-        /// <seealso cref="FlaxEngine.GUI.ComboBox" />
+        /// <seealso cref="ComboBox" />
         protected class EnumComboBox : ComboBox
         {
             private readonly EnumElement _element;

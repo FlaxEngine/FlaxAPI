@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
@@ -12,7 +13,7 @@ namespace FlaxEditor.Tools.Terrain
     /// <summary>
     /// Terrain carving tab. Supports different modes for terrain editing including: carving, painting and managing tools.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="Tab" />
     public class CarveTab : Tab
     {
         private readonly Tabs _modes;

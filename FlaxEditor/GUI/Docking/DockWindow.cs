@@ -404,7 +404,7 @@ namespace FlaxEditor.GUI.Docking
         /// Called when dock panel wants to show the context menu for this window. Can be used to inject custom buttons and items to the context menu (on top).
         /// </summary>
         /// <param name="menu">The menu.</param>
-        public virtual void OnShowContextMenu(ContextMenu menu)
+        public virtual void OnShowContextMenu(ContextMenu.ContextMenu menu)
         {
         }
     }

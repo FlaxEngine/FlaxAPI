@@ -6,6 +6,7 @@ using System.Linq;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.GUI.Tree;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -16,7 +17,7 @@ namespace FlaxEditor.SceneGraph.GUI
     /// <summary>
     /// Tree node GUI control used as a proxy object for actors hierarchy.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.TreeNode" />
+    /// <seealso cref="TreeNode" />
     public class ActorTreeNode : TreeNode
     {
         private int _orderInParent;

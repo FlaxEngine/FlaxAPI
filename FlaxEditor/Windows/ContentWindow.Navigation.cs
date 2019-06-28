@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tree;
 
 namespace FlaxEditor.Windows
 {

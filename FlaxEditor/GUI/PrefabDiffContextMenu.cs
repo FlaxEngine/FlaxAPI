@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -15,7 +16,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The tree control where you should add your nodes.
         /// </summary>
-        public readonly Tree Tree;
+        public readonly Tree.Tree Tree;
 
         /// <summary>
         /// The event called to revert all the changes applied.
@@ -55,7 +56,7 @@ namespace FlaxEditor.GUI
                 Bounds = new Rectangle(0, applyAll.Bottom + 2.0f, Width, Height - applyAll.Bottom - 2.0f),
                 Parent = this
             };
-            Tree = new Tree
+            Tree = new Tree.Tree
             {
                 DockStyle = DockStyle.Top,
                 IsScrollable = true,

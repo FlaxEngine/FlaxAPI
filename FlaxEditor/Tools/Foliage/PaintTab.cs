@@ -4,6 +4,7 @@ using System;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -12,7 +13,7 @@ namespace FlaxEditor.Tools.Foliage
     /// <summary>
     /// Foliage painting tab. Allows to add or remove foliage instances defined for the current foliage object.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="GUI.Tabs.Tab" />
     public class PaintTab : Tab
     {
         /// <summary>

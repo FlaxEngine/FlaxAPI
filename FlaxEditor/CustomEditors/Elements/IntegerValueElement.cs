@@ -2,6 +2,7 @@
 
 using System.Linq;
 using System.Reflection;
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 

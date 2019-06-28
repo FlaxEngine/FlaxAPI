@@ -7,6 +7,7 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tree;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;

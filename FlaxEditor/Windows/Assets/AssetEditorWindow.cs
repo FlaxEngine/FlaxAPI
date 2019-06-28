@@ -3,6 +3,7 @@
 using System;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 

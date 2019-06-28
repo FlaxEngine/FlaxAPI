@@ -1,6 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-namespace FlaxEngine.GUI
+using FlaxEngine;
+using FlaxEngine.GUI;
+
+namespace FlaxEditor.GUI.ContextMenu
 {
     /// <summary>
     /// Context Menu child control.

@@ -2,8 +2,10 @@
 
 using System;
 using System.Globalization;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Float value editor with fixed size text box and slider.

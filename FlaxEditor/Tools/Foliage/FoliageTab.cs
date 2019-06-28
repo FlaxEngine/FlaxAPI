@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Viewport.Modes;
@@ -14,7 +15,7 @@ namespace FlaxEditor.Tools.Foliage
     /// <summary>
     /// Foliage editing tab. Supports different modes for foliage editing including: spawning, removing, and managing tools.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="Tab" />
     public class FoliageTab : Tab
     {
         private readonly Tabs _modes;

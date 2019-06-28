@@ -2,6 +2,8 @@
 
 using System;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
+using FlaxEditor.GUI.Tree;
 using FlaxEditor.Tools.Foliage;
 using FlaxEditor.Tools.Terrain;
 using FlaxEditor.Viewport.Modes;

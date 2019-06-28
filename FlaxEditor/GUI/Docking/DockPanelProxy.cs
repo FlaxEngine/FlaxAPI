@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -476,7 +477,7 @@ namespace FlaxEditor.GUI.Docking
 
         private void ShowContextMenu(DockWindow tab, ref Vector2 location)
         {
-            var menu = new ContextMenu();
+            var menu = new ContextMenu.ContextMenu();
             menu.Tag = tab;
             tab.OnShowContextMenu(menu);
             menu.AddButton("Close", OnTabMenuCloseClicked);

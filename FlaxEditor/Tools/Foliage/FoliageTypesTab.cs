@@ -5,6 +5,7 @@ using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -13,7 +14,7 @@ namespace FlaxEditor.Tools.Foliage
     /// <summary>
     /// Foliage types editor tab. Allows to add, remove or modify foliage instance types defined for the current foliage object.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="GUI.Tabs.Tab" />
     public class FoliageTypesTab : Tab
     {
         /// <summary>

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Utilities;
@@ -150,7 +151,7 @@ namespace FlaxEditor.Windows
         /// <summary>
         /// Plugins category control.
         /// </summary>
-        /// <seealso cref="FlaxEditor.GUI.Tab" />
+        /// <seealso cref="Tab" />
         public class CategoryEntry : Tab
         {
             /// <summary>

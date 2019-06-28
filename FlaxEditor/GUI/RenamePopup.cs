@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -9,7 +10,7 @@ namespace FlaxEditor.GUI
     /// <summary>
     /// Popup menu useful for renaming objects via UI. Displays text box for renaming.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
+    /// <seealso cref="ContextMenuBase" />
     public class RenamePopup : ContextMenuBase
     {
         private string _startValue;

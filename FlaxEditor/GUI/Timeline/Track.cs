@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.GUI.Tree;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -713,7 +714,7 @@ namespace FlaxEditor.GUI.Timeline
         /// Called when context menu is being prepared to show. Can be used to add custom options.
         /// </summary>
         /// <param name="menu">The menu.</param>
-        protected virtual void OnContextMenu(ContextMenu menu)
+        protected virtual void OnContextMenu(ContextMenu.ContextMenu menu)
         {
         }
 
@@ -728,7 +729,7 @@ namespace FlaxEditor.GUI.Timeline
             if (buttons == MouseButton.Right)
             {
                 // Show context menu
-                var menu = new ContextMenu();
+                var menu = new ContextMenu.ContextMenu();
                 menu.AddButton("Rename", StartRenaming);
                 menu.AddButton("Delete", Delete);
                 OnContextMenu(menu);

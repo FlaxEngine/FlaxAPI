@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Utilities;
@@ -12,7 +13,7 @@ namespace FlaxEditor.Surface.ContextMenu
     /// <summary>
     /// The Visject Surface dedicated context menu for nodes spawning.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
+    /// <seealso cref="ContextMenuBase" />
     public class VisjectCM : ContextMenuBase
     {
         /// <summary>

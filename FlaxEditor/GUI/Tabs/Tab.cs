@@ -4,7 +4,7 @@ using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI
+namespace FlaxEditor.GUI.Tabs
 {
     /// <summary>
     /// Single tab control used by <see cref="Tabs"/>.

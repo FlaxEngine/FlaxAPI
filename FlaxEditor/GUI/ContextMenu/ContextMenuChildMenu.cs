@@ -1,6 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-namespace FlaxEngine.GUI
+using FlaxEngine;
+using FlaxEngine.GUI;
+
+namespace FlaxEditor.GUI.ContextMenu
 {
     /// <summary>
     /// Context Menu control that cn be expanded to the child popup menu.

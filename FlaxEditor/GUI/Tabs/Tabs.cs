@@ -4,7 +4,7 @@ using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI
+namespace FlaxEditor.GUI.Tabs
 {
     /// <summary>
     /// Represents control which contains collection of <see cref="Tab"/>.
