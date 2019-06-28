@@ -454,7 +454,15 @@ namespace FlaxEditor.Surface
         public virtual void SetValue(int index, object value)
         {
             Values[index] = value;
+            OnValuesChanged();
             Surface.MarkAsEdited();
+        }
+
+        /// <summary>
+        /// Called when node values set gets changed.
+        /// </summary>
+        public virtual void OnValuesChanged()
+        {
         }
 
         /// <summary>
