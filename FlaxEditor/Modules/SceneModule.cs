@@ -156,7 +156,7 @@ namespace FlaxEditor.Modules
             sky.StaticFlags = StaticFlags.FullyStatic;
             //
             sun.Name = "Sun";
-            sun.Brightness = 4.0f;
+            sun.Brightness = 10.0f;
             sun.LocalPosition = new Vector3(40, 160, 0);
             sun.LocalEulerAngles = new Vector3(45, 0, 0);
             sun.StaticFlags = StaticFlags.FullyStatic;
