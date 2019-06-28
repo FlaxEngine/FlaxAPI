@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FlaxEngine
+namespace FlaxEditor.Utilities
 {
     /// <summary>
     /// The Shunting-Yard algorithm parsing utilities.

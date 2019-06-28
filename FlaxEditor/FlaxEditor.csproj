@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -513,6 +513,7 @@
     <Compile Include="Modules\SourceCodeEditing\CodeEditingModule.cs" />
     <Compile Include="Modules\SourceCodeEditing\ISourceCodeEditor.cs" />
     <Compile Include="Utilities\SelectionCache.cs" />
+    <Compile Include="Utilities\ShuntingYardParser.cs" />
     <Compile Include="Viewport\Cameras\ArcBallCamera.cs" />
     <Compile Include="Viewport\Cameras\FPSCamera.cs" />
     <Compile Include="Viewport\Cameras\IViewportCamera.cs" />
