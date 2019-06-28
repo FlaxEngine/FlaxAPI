@@ -550,7 +550,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Color Gradient",
                 Create = (id, context, arch, groupArch) => new ColorGradientNode(id, context, arch, groupArch),
                 Description = "Linear color gradient sampler",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(400, 150.0f),
                 DefaultValues = new object[]
                 {
