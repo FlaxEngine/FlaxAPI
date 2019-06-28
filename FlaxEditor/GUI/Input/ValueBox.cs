@@ -206,7 +206,6 @@ namespace FlaxEngine.GUI
                 base.OnLostFocus();
 
                 // Update
-                TryGetValue();
                 UpdateText();
             }
 

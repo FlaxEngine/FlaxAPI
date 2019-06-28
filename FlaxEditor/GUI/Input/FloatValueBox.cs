@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using FlaxEditor;
 
 namespace FlaxEngine.GUI
 {
@@ -146,9 +147,19 @@ namespace FlaxEngine.GUI
         protected override void TryGetValue()
         {
             var text = Text.Replace(',', '.');
-            if (double.TryParse(text, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var value))
+
+            try
             {
+                var tokens = Parser.Tokenize(text);
+                var rpn = Parser.ShuntingYard(tokens);
+                var value  = Parser.EvaluateRPN(rpn);
+
                 Value = (float)Math.Round(value, 5);
+            }
+            catch(Exception ex)
+            {
+                // Fall back to previous value
+                Editor.LogWarning(ex);
             }
         }
 

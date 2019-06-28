@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NoWarn>1591,1572,1571,1573,1587,1570,1574,0419,0162</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -419,6 +420,7 @@
     <Compile Include="Math\Matrix3x3.cs" />
     <Compile Include="Math\OrientedBoundingBox.cs" />
     <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\ShuntingYardParser.cs" />
     <Compile Include="Math\SphericalHarmonics.cs" />
     <Compile Include="Math\Transform.cs" />
     <Compile Include="Math\TypeConverters\ColorConverter.cs" />
