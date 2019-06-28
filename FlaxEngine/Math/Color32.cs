@@ -75,7 +75,7 @@ namespace FlaxEngine
         /// <param name="t"></param>
         public static Color32 Lerp(Color32 a, Color32 b, float t)
         {
-            t = Mathf.Clamp01(t);
+            t = Mathf.Saturate(t);
             return new Color32((byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t), (byte)(a.A + (b.A - a.A) * t));
         }
 
@@ -99,7 +99,7 @@ namespace FlaxEngine
         /// </returns>
         public static implicit operator Color32(Color c)
         {
-            return new Color32((byte)(Mathf.Clamp01(c.R) * 255f), (byte)(Mathf.Clamp01(c.G) * 255f), (byte)(Mathf.Clamp01(c.B) * 255f), (byte)(Mathf.Clamp01(c.A) * 255f));
+            return new Color32((byte)(Mathf.Saturate(c.R) * 255f), (byte)(Mathf.Saturate(c.G) * 255f), (byte)(Mathf.Saturate(c.B) * 255f), (byte)(Mathf.Saturate(c.A) * 255f));
         }
 
         /// <summary>

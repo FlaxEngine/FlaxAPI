@@ -143,18 +143,6 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="value">Value to clamp</param>
         /// <returns>Result value</returns>
-        public static float Clamp01(float value)
-        {
-            if (value < 0f)
-                return 0f;
-            return value > 1f ? 1f : value;
-        }
-
-        /// <summary>
-        /// Clamps value between 0 and 1 and returns value.
-        /// </summary>
-        /// <param name="value">Value to clamp</param>
-        /// <returns>Result value</returns>
         public static float Saturate(float value)
         {
             if (value < 0f)
@@ -231,7 +219,7 @@ namespace FlaxEngine
         {
             if (a == b)
                 return 0f;
-            return Clamp01((value - a) / (b - a));
+            return Saturate((value - a) / (b - a));
         }
 
         /// <summary>
@@ -245,7 +233,7 @@ namespace FlaxEngine
             float single = Repeat(b - a, 360f);
             if (single > 180f)
                 single = single - 360f;
-            return a + single * Clamp01(t);
+            return a + single * Saturate(t);
         }
 
         /// <summary>
@@ -614,7 +602,7 @@ namespace FlaxEngine
         /// <param name="t"></param>
         public static float SmoothStep(float from, float to, float t)
         {
-            t = Clamp01(t);
+            t = Saturate(t);
             t = -2f * t * t * t + 3f * t * t;
             return to * t + from * (1f - t);
         }

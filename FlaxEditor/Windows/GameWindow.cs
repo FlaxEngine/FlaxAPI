@@ -272,7 +272,7 @@ namespace FlaxEditor.Windows
                 float animTime = time - timeout;
                 if (animTime < 0)
                 {
-                    float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
+                    float alpha = Mathf.Saturate(-animTime / fadeOutTime);
                     Rectangle rect = new Rectangle(new Vector2(6), Size - 12);
                     Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect + new Vector2(1.0f), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
                     Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect, Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
@@ -283,7 +283,7 @@ namespace FlaxEditor.Windows
                 animTime = time - timeout;
                 if (animTime < 0)
                 {
-                    float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
+                    float alpha = Mathf.Saturate(-animTime / fadeOutTime);
                     Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha);
                 }
             }

@@ -149,7 +149,7 @@ namespace FlaxEngine.GUI
                     // Lerp or not if running slow
                     float value;
                     if (!isDeltaSlow && UseSmoothing)
-                        value = Mathf.Lerp(_current, _value, Mathf.Clamp01(deltaTime * 5.0f * SmoothingScale));
+                        value = Mathf.Lerp(_current, _value, Mathf.Saturate(deltaTime * 5.0f * SmoothingScale));
                     else
                         value = _value;
                     _current = value;
