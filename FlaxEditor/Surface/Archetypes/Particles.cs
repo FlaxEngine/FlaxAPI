@@ -597,7 +597,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Random Float",
                 Description = "Gets the random floating point value (normalized to 0-1 range)",
                 Flags = NodeFlags.ParticleEmitterGraph,
-                Size = new Vector2(160, 40),
+                Size = new Vector2(160, 30),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
@@ -609,7 +609,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Random Vector2",
                 Description = "Gets the random Vector2 value (normalized to 0-1 range)",
                 Flags = NodeFlags.ParticleEmitterGraph,
-                Size = new Vector2(160, 40),
+                Size = new Vector2(160, 30),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector2, 0),
@@ -621,7 +621,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Random Vector3",
                 Description = "Gets the random Vector3 value (normalized to 0-1 range)",
                 Flags = NodeFlags.ParticleEmitterGraph,
-                Size = new Vector2(160, 40),
+                Size = new Vector2(160, 30),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
@@ -633,7 +633,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Random Vector4",
                 Description = "Gets the random Vector4 value (normalized to 0-1 range)",
                 Flags = NodeFlags.ParticleEmitterGraph,
-                Size = new Vector2(160, 40),
+                Size = new Vector2(160, 30),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 0),
@@ -649,6 +649,110 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 213,
+                Title = "Random Float Range",
+                Description = "Gets the random floating point value from a given range",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(260, 40),
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    1.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
+
+                    NodeElementArchetype.Factory.Text(0, 0, "Min", 30.0f, 18.0f),
+                    NodeElementArchetype.Factory.Float(30, 0, 0),
+
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Max", 30.0f, 18.0f),
+                    NodeElementArchetype.Factory.Float(30, Surface.Constants.LayoutOffsetY, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 214,
+                Title = "Random Vector2 Range",
+                Description = "Gets the random Vector2 value from a given range (per-component range)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(260, 40),
+                DefaultValues = new object[]
+                {
+                    new Vector2(0.0f),
+                    new Vector2(1.0f),
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector2, 0),
+
+                    NodeElementArchetype.Factory.Text(0, 0, "Min", 30.0f, 18.0f),
+                    NodeElementArchetype.Factory.Vector_X(30, 0, 0),
+                    NodeElementArchetype.Factory.Vector_Y(83, 0, 0),
+
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Max", 30.0f, 18.0f),
+                    NodeElementArchetype.Factory.Vector_X(30, Surface.Constants.LayoutOffsetY, 1),
+                    NodeElementArchetype.Factory.Vector_Y(83, Surface.Constants.LayoutOffsetY, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 215,
+                Title = "Random Vector3 Range",
+                Description = "Gets the random Vector3 value from a given range (per-component range)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(260, 40),
+                DefaultValues = new object[]
+                {
+                    new Vector3(0.0f),
+                    new Vector3(1.0f),
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector3, 0),
+
+                    NodeElementArchetype.Factory.Text(0, 0, "Min", 30.0f, 18.0f),
+                    NodeElementArchetype.Factory.Vector_X(30, 0, 0),
+                    NodeElementArchetype.Factory.Vector_Y(83, 0, 0),
+                    NodeElementArchetype.Factory.Vector_Z(136, 0, 0),
+
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Max", 30.0f, 18.0f),
+                    NodeElementArchetype.Factory.Vector_X(30, Surface.Constants.LayoutOffsetY, 1),
+                    NodeElementArchetype.Factory.Vector_Y(83, Surface.Constants.LayoutOffsetY, 1),
+                    NodeElementArchetype.Factory.Vector_Z(136, Surface.Constants.LayoutOffsetY, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 216,
+                Title = "Random Vector4 Range",
+                Description = "Gets the random Vector4 value from a given range (per-component range)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(260, 40),
+                DefaultValues = new object[]
+                {
+                    new Vector4(0.0f),
+                    new Vector4(1.0f),
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 0),
+
+                    NodeElementArchetype.Factory.Text(0, 0, "Min", 30.0f, 18.0f),
+                    NodeElementArchetype.Factory.Vector_X(30, 0, 0),
+                    NodeElementArchetype.Factory.Vector_Y(83, 0, 0),
+                    NodeElementArchetype.Factory.Vector_Z(136, 0, 0),
+                    NodeElementArchetype.Factory.Vector_W(189, 0, 0),
+
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY, "Max", 30.0f, 18.0f),
+                    NodeElementArchetype.Factory.Vector_X(30, Surface.Constants.LayoutOffsetY, 1),
+                    NodeElementArchetype.Factory.Vector_Y(83, Surface.Constants.LayoutOffsetY, 1),
+                    NodeElementArchetype.Factory.Vector_Z(136, Surface.Constants.LayoutOffsetY, 1),
+                    NodeElementArchetype.Factory.Vector_W(189, Surface.Constants.LayoutOffsetY, 1),
                 }
             },
         };
