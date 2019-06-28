@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor;
 
 namespace FlaxEngine.GUI
 {
@@ -103,12 +104,15 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void TryGetValue()
         {
-            // Try to parse long
-            ulong value;
-            if (ulong.TryParse(Text, out value))
+            try
             {
-                // Set value
-                Value = value;
+                var value = ShuntingYard.Parse(Text);
+                Value = (ulong)value;
+            }
+            catch (Exception ex)
+            {
+                // Fall back to previous value
+                Editor.LogWarning(ex);
             }
         }
 
