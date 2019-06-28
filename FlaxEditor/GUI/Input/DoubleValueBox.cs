@@ -146,14 +146,9 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void TryGetValue()
         {
-            var text = Text.Replace(',', '.');
-
             try
             {
-                var tokens = Parser.Tokenize(text);
-                var rpn = Parser.ShuntingYard(tokens);
-
-                Value = Parser.EvaluateRPN(rpn);
+                Value = ShuntingYard.Parse(Text);
             }
             catch(Exception ex)
             {

@@ -8,46 +8,68 @@ using System.Text;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Types of possible tokens used in Shunting-Yard parser.
+    /// The Shunting-Yard algorithm parsing utilities.
     /// </summary>
-    enum TokenType { Number, Parenthesis, Operator, WhiteSpace };
-
-    /// <summary>
-    /// Token representation containing its type and value.
-    /// </summary>
-    struct Token
+    public static class ShuntingYard
     {
-        public TokenType Type { get; }
-        public string Value { get; }
-
-        public Token(TokenType type, string value)
+        /// <summary>
+        /// The Shunting-Yard parser exception type.
+        /// </summary>
+        /// <seealso cref="System.Exception" />
+        public class ParsingException: Exception
         {
-            Type = type;
-            Value = value;
+            public ParsingException(string msg)
+            : base("Parsing error: " + msg)
+            {
+            }
         }
-    }
 
-    /// <summary>
-    /// Represents simple mathematical operation.
-    /// </summary>
-    class Operator
-    {
-        public string Name { get; set; }
-        public int Precedence { get; set; }
-        public bool RightAssociative { get; set; }
-    }
+        /// <summary>
+        /// Types of possible tokens used in Shunting-Yard parser.
+        /// </summary>
+        public enum TokenType { Number, Parenthesis, Operator, WhiteSpace };
 
-    public class ParsingException: Exception {
-        public ParsingException(string msg)
-            :base("Parsing error: " + msg) {}
-    }
+        /// <summary>
+        /// Token representation containing its type and value.
+        /// </summary>
+        public struct Token
+        {
+            /// <summary>
+            /// Gets the token type.
+            /// </summary>
+            public TokenType Type;
 
-    static class Parser
-    {
+            /// <summary>
+            /// Gets the token value.
+            /// </summary>
+            public string Value;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Token"/> struct.
+            /// </summary>
+            /// <param name="type">The type.</param>
+            /// <param name="value">The value.</param>
+            public Token(TokenType type, string value)
+            {
+                Type = type;
+                Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Represents simple mathematical operation.
+        /// </summary>
+        private class Operator
+        {
+            public string Name;
+            public int Precedence;
+            public bool RightAssociative;
+        }
+
         /// <summary>
         /// Describe all operators available for parsing.
         /// </summary>
-        private static IDictionary<string, Operator> operators = new Dictionary<string, Operator>
+        private static readonly IDictionary<string, Operator> Operators = new Dictionary<string, Operator>
         {
             ["+"] = new Operator { Name = "+", Precedence = 1 },
             ["-"] = new Operator { Name = "-", Precedence = 1 },
@@ -59,28 +81,33 @@ namespace FlaxEngine
         /// <summary>
         /// Compare operators based on precedence: ^ >> * / >> + -
         /// </summary>
+        /// <param name="oper1">The first operator.</param>
+        /// <param name="oper2">The second operator.</param>
+        /// <returns>The comparision result.</returns>
         private static bool CompareOperators(string oper1, string oper2) 
         {
-            var op1 = operators[oper1];
-            var op2 = operators[oper2];
+            var op1 = Operators[oper1];
+            var op2 = Operators[oper2];
             return op1.RightAssociative ? op1.Precedence < op2.Precedence : op1.Precedence <= op2.Precedence;
         }
 
         /// <summary>
         /// Assign a single character to its TokenType.
         /// </summary>
-        private static TokenType DetermineType(char ch)
+        /// <param name="c">The input character.</param>
+        /// <returns>The token type.</returns>
+        private static TokenType DetermineType(char c)
         {
-            if (char.IsDigit(ch) || ch == '.')
+            if (char.IsDigit(c) || c == '.')
                 return TokenType.Number;
 
-            if (char.IsWhiteSpace(ch))
+            if (char.IsWhiteSpace(c))
                 return TokenType.WhiteSpace;
 
-            if (ch == '(' || ch == ')')
+            if (c == '(' || c == ')')
                 return TokenType.Parenthesis;
 
-            if (operators.ContainsKey(Convert.ToString(ch)))
+            if (Operators.ContainsKey(Convert.ToString(c)))
                 return TokenType.Operator;
 
             throw new ParsingException("wrong character");
@@ -89,9 +116,14 @@ namespace FlaxEngine
         /// <summary>
         /// First parsing step - tokenization of a string.
         /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <returns>The collection of parsed tokens.</returns>
         public static IEnumerable<Token> Tokenize(string text)
         {
-            // Nessesary to correctly parse negative numbers
+            // Prepare text
+            text = text.Replace(',', '.');
+
+            // Necessary to correctly parse negative numbers
             var previous = TokenType.WhiteSpace;
 
             for (int i = 0; i < text.Length; i++)
@@ -127,7 +159,9 @@ namespace FlaxEngine
         /// <summary>
         /// Second parsing step - order tokens in reverse polish notation.
         /// </summary>
-        public static IEnumerable<Token> ShuntingYard(IEnumerable<Token> tokens)
+        /// <param name="tokens">The input tokens collection.</param>
+        /// <returns>The collection of the tokens in reverse polish notation order.</returns>
+        public static IEnumerable<Token> OrderTokens(IEnumerable<Token> tokens)
         {
             var stack = new Stack<Token>();
 
@@ -140,7 +174,7 @@ namespace FlaxEngine
                         yield return tok;
                         break;
 
-                    // Operators go on stack, unless last operator on stack has higher presedence
+                    // Operators go on stack, unless last operator on stack has higher precedence
                     case TokenType.Operator:
                         while (stack.Any() && stack.Peek().Type == TokenType.Operator && 
                                CompareOperators(tok.Value, stack.Peek().Value))
@@ -151,8 +185,8 @@ namespace FlaxEngine
                         stack.Push(tok);
                         break;
 
-                    // Left parentasis goes on stack
-                    // Right parentasis takes all symbols (...) to output
+                    // Left parenthesis goes on stack
+                    // Right parenthesis takes all symbols (...) to output
                     case TokenType.Parenthesis:
                         if (tok.Value == "(")
                             stack.Push(tok);
@@ -185,6 +219,8 @@ namespace FlaxEngine
         /// <summary>
         /// Third parsing step - evaluate reverse polish notation into single float.
         /// </summary>
+        /// <param name="tokens">The input token collection.</param>
+        /// <returns>The result value.</returns>
         public static double EvaluateRPN(IEnumerable<Token> tokens)
         {
             var stack = new Stack<double>();
@@ -216,8 +252,8 @@ namespace FlaxEngine
                             f2 *= f1;
                             break;
                         case "/":
-                            if (f1 == 0)
-                                throw new Exception("Division by 0");
+                            if (Math.Abs(f1) < 1e-7f)
+                                throw new Exception("division by 0");
                             f2 /= f1;
                             break;
                         case "^":
@@ -230,6 +266,18 @@ namespace FlaxEngine
             }
             
             return stack.Pop();
+        }
+
+        /// <summary>
+        /// Parses the specified text and performs the Shunting-Yard algorithm execution.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <returns>The result value.</returns>
+        public static double Parse(string text)
+        {
+            var tokens = Tokenize(text);
+            var rpn = OrderTokens(tokens);
+            return EvaluateRPN(rpn);
         }
     }
 }
