@@ -77,6 +77,7 @@ namespace FlaxEditor.Surface.Archetypes
             private class GradientStop : Control
             {
                 private bool _isMoving;
+                private Vector2 _startMovePos;
 
                 public ColorGradientNode Node;
                 public Color Color;
@@ -107,6 +108,7 @@ namespace FlaxEditor.Surface.Archetypes
                     {
                         Node.Select(this);
                         _isMoving = true;
+                        _startMovePos = location;
                         StartMouseCapture();
                         return true;
                     }
@@ -143,8 +145,9 @@ namespace FlaxEditor.Surface.Archetypes
                 /// <inheritdoc />
                 public override void OnMouseMove(Vector2 location)
                 {
-                    if (_isMoving)
+                    if (_isMoving && Vector2.DistanceSquared(ref location, ref _startMovePos) > 25.0f)
                     {
+                        _startMovePos = Vector2.Minimum;
                         var index = Node._stops.IndexOf(this);
                         var time = (PointToParent(location).X - Node._gradient.BottomLeft.X) / Node._gradient.Width;
                         Node.SetStopTime(index, time);
