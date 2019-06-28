@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using FlaxEditor.Content;
 using FlaxEditor.Surface.Archetypes;
 using FlaxEngine;

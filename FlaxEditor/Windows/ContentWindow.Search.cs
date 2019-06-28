@@ -1,12 +1,10 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.Utilities;
 using FlaxEngine;
-using FlaxEngine.GUI;
 using FlaxEngine.Json;
 
 namespace FlaxEditor.Windows

@@ -4,7 +4,6 @@ using System;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Windows;
 using FlaxEngine;
-using FlaxEngine.GUI;
 
 namespace FlaxEditor.Content
 {

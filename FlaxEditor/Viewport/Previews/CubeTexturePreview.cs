@@ -4,7 +4,6 @@ using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Viewport.Previews
 {

@@ -2,7 +2,6 @@
 
 using System;
 using FlaxEditor.GUI;
-using FlaxEngine;
 
 namespace FlaxEditor.Surface.Elements
 {

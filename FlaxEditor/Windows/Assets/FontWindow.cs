@@ -3,7 +3,6 @@
 using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Windows.Assets
 {

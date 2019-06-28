@@ -3,7 +3,6 @@
 using System;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
-using FlaxEngine.Json;
 using Newtonsoft.Json;
 using JsonSerializer = FlaxEngine.Json.JsonSerializer;
 

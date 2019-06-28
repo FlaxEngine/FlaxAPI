@@ -2,7 +2,6 @@
 
 using FlaxEditor.GUI.Input;
 using FlaxEngine;
-using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews

@@ -9,7 +9,6 @@ using System.Text;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.GUI.Dialogs;
-using FlaxEditor.GUI.Docking;
 using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;

@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.CustomEditors;
-using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.GUI.Tree;
 using FlaxEngine;

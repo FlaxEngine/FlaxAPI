@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Tree;
 using FlaxEditor.SceneGraph;

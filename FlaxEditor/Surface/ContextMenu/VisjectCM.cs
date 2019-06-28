@@ -6,7 +6,6 @@ using System.Linq;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Surface.ContextMenu
 {

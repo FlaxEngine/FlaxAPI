@@ -1,9 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using FlaxEditor.GUI.Input;
-using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
-using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 

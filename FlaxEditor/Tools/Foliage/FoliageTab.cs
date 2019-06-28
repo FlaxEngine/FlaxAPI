@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using FlaxEditor.GUI;
 using FlaxEditor.GUI.Tabs;
 using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph.Actors;
