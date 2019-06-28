@@ -158,9 +158,9 @@ namespace FlaxEditor.Viewport.Previews
 
             if (useWidgets)
             {
-                _showBoundsButton = ViewWidgetShowMenu.AddButton("Show Bounds", () => ShowBounds = !ShowBounds);
-                _showOriginButton = ViewWidgetShowMenu.AddButton("Show Origin", () => ShowOrigin = !ShowOrigin);
-                _showParticleCounterButton = ViewWidgetShowMenu.AddButton("Show Particles Counter (CPU only)", () => ShowParticlesCounter = !ShowParticlesCounter);
+                _showBoundsButton = ViewWidgetShowMenu.AddButton("Bounds", () => ShowBounds = !ShowBounds);
+                _showOriginButton = ViewWidgetShowMenu.AddButton("Origin", () => ShowOrigin = !ShowOrigin);
+                _showParticleCounterButton = ViewWidgetShowMenu.AddButton("Particles Counter (CPU only)", () => ShowParticlesCounter = !ShowParticlesCounter);
             }
         }
 

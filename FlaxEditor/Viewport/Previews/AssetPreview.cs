@@ -79,7 +79,7 @@ namespace FlaxEditor.Viewport.Previews
             if (useWidgets)
             {
                 // Show Default Scene
-                _showDefaultSceneButton = ViewWidgetShowMenu.AddButton("Show Default Scene", () => ShowDefaultSceneActors = !ShowDefaultSceneActors);
+                _showDefaultSceneButton = ViewWidgetShowMenu.AddButton("Default Scene", () => ShowDefaultSceneActors = !ShowDefaultSceneActors);
                 _showDefaultSceneButton.Checked = true;
             }
 

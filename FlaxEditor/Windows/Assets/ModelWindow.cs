@@ -39,7 +39,7 @@ namespace FlaxEditor.Windows.Assets
                 _window = window;
 
                 // Show floor widget
-                _showFloorButton = ViewWidgetShowMenu.AddButton("Show floor", OnShowFloorModelClicked);
+                _showFloorButton = ViewWidgetShowMenu.AddButton("Floor", OnShowFloorModelClicked);
                 _showFloorButton.IndexInParent = 1;
 
                 // Floor model
