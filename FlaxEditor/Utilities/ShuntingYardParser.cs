@@ -16,7 +16,7 @@ namespace FlaxEditor.Utilities
         /// The Shunting-Yard parser exception type.
         /// </summary>
         /// <seealso cref="System.Exception" />
-        public class ParsingException: Exception
+        public class ParsingException : Exception
         {
             public ParsingException(string msg)
             : base("Parsing error: " + msg)
@@ -27,7 +27,13 @@ namespace FlaxEditor.Utilities
         /// <summary>
         /// Types of possible tokens used in Shunting-Yard parser.
         /// </summary>
-        public enum TokenType { Number, Parenthesis, Operator, WhiteSpace };
+        public enum TokenType
+        {
+            Number,
+            Parenthesis,
+            Operator,
+            WhiteSpace
+        };
 
         /// <summary>
         /// Token representation containing its type and value.
@@ -84,7 +90,7 @@ namespace FlaxEditor.Utilities
         /// <param name="oper1">The first operator.</param>
         /// <param name="oper2">The second operator.</param>
         /// <returns>The comparision result.</returns>
-        private static bool CompareOperators(string oper1, string oper2) 
+        private static bool CompareOperators(string oper1, string oper2)
         {
             var op1 = Operators[oper1];
             var op2 = Operators[oper2];
@@ -127,10 +133,10 @@ namespace FlaxEditor.Utilities
             var previous = TokenType.WhiteSpace;
 
             for (int i = 0; i < text.Length; i++)
-            {   
+            {
                 var token = new StringBuilder();
                 var type = DetermineType(text[i]);
-                
+
                 if (type == TokenType.WhiteSpace)
                     continue;
 
@@ -169,37 +175,36 @@ namespace FlaxEditor.Utilities
             {
                 switch (tok.Type)
                 {
-                    // Number tokens go directly to output
-                    case TokenType.Number:
-                        yield return tok;
-                        break;
+                // Number tokens go directly to output
+                case TokenType.Number:
+                    yield return tok;
+                    break;
 
-                    // Operators go on stack, unless last operator on stack has higher precedence
-                    case TokenType.Operator:
-                        while (stack.Any() && stack.Peek().Type == TokenType.Operator && 
-                               CompareOperators(tok.Value, stack.Peek().Value))
-                        {
-                            yield return stack.Pop();
-                        }
+                // Operators go on stack, unless last operator on stack has higher precedence
+                case TokenType.Operator:
+                    while (stack.Any() && stack.Peek().Type == TokenType.Operator &&
+                           CompareOperators(tok.Value, stack.Peek().Value))
+                    {
+                        yield return stack.Pop();
+                    }
 
+                    stack.Push(tok);
+                    break;
+
+                // Left parenthesis goes on stack
+                // Right parenthesis takes all symbols (...) to output
+                case TokenType.Parenthesis:
+                    if (tok.Value == "(")
                         stack.Push(tok);
-                        break;
+                    else
+                    {
+                        while (stack.Peek().Value != "(")
+                            yield return stack.Pop();
+                        stack.Pop();
+                    }
+                    break;
 
-                    // Left parenthesis goes on stack
-                    // Right parenthesis takes all symbols (...) to output
-                    case TokenType.Parenthesis:
-                        if (tok.Value == "(")
-                            stack.Push(tok);
-                        else
-                        {
-                            while (stack.Peek().Value != "(")
-                                yield return stack.Pop();
-                            stack.Pop();
-                        }
-                        break;
-
-                    default:
-                        throw new ParsingException("wrong token");
+                default: throw new ParsingException("wrong token");
                 }
             }
 
@@ -225,12 +230,12 @@ namespace FlaxEditor.Utilities
         {
             var stack = new Stack<double>();
 
-            foreach (var token in tokens) 
+            foreach (var token in tokens)
             {
                 if (token.Type == TokenType.Number)
                 {
                     stack.Push(double.Parse(token.Value));
-                } 
+                }
                 else
                 {
                     // In this step there always should be 2 values on stack
@@ -242,29 +247,29 @@ namespace FlaxEditor.Utilities
 
                     switch (token.Value)
                     {
-                        case "+":
-                            f2 += f1;
-                            break;
-                        case "-":
-                            f2 -= f1;
-                            break;
-                        case "*":
-                            f2 *= f1;
-                            break;
-                        case "/":
-                            if (Math.Abs(f1) < 1e-7f)
-                                throw new Exception("division by 0");
-                            f2 /= f1;
-                            break;
-                        case "^":
-                            f2 = Math.Pow(f2, f1);
-                            break;
+                    case "+":
+                        f2 += f1;
+                        break;
+                    case "-":
+                        f2 -= f1;
+                        break;
+                    case "*":
+                        f2 *= f1;
+                        break;
+                    case "/":
+                        if (Math.Abs(f1) < 1e-7f)
+                            throw new Exception("division by 0");
+                        f2 /= f1;
+                        break;
+                    case "^":
+                        f2 = Math.Pow(f2, f1);
+                        break;
                     }
 
                     stack.Push(f2);
                 }
             }
-            
+
             return stack.Pop();
         }
 
