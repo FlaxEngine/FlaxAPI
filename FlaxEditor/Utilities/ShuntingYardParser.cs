@@ -127,7 +127,7 @@ namespace FlaxEditor.Utilities
             if (Operators.ContainsKey(str))
                 return TokenType.Operator;
 
-            if (char.IsLetter(c) && Variables.ContainsKey(str))
+            if (char.IsLetter(c))
                 return TokenType.Variable;
 
             throw new ParsingException("wrong character");
