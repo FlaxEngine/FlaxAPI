@@ -30,6 +30,7 @@ namespace FlaxEditor.Utilities
         public enum TokenType
         {
             Number,
+            Variable,
             Parenthesis,
             Operator,
             WhiteSpace
@@ -85,6 +86,15 @@ namespace FlaxEditor.Utilities
         };
 
         /// <summary>
+        /// Describe all predefined variables
+        /// </summary>
+        private static readonly IDictionary<string, double> variables = new Dictionary<string, double>
+        {
+            ["pi"] = Math.PI,
+            ["e"] = Math.E
+        };
+
+        /// <summary>
         /// Compare operators based on precedence: ^ >> * / >> + -
         /// </summary>
         /// <param name="oper1">The first operator.</param>
@@ -115,6 +125,9 @@ namespace FlaxEditor.Utilities
 
             if (Operators.ContainsKey(Convert.ToString(c)))
                 return TokenType.Operator;
+
+            if (char.IsLetter(ch))
+                return TokenType.Variable;
 
             throw new ParsingException("wrong character");
         }
@@ -156,6 +169,15 @@ namespace FlaxEditor.Utilities
                     if (token.Length != 1)
                         type = TokenType.Number;
                 }
+                else if (type == TokenType.Variable)
+                {
+                    // Continue till the end of the variable
+                    while (i + 1 < text.Length && DetermineType(text[i + 1]) == TokenType.Variable)
+                    {
+                        i++;
+                        token.Append(text[i]);
+                    }
+                }
 
                 previous = type;
                 yield return new Token(type, token.ToString());
@@ -175,7 +197,8 @@ namespace FlaxEditor.Utilities
             {
                 switch (tok.Type)
                 {
-                // Number tokens go directly to output
+                // Number and variable tokens go directly to output
+                case TokenType.Variable:
                 case TokenType.Number:
                     yield return tok;
                     break;
@@ -235,6 +258,17 @@ namespace FlaxEditor.Utilities
                 if (token.Type == TokenType.Number)
                 {
                     stack.Push(double.Parse(token.Value));
+                }
+                else if (token.Type == TokenType.Variable)
+                {
+                    if(variables.TryGetValue(token.Value.ToLower(), out double variableValue))
+                    {
+                        stack.Push(variableValue);
+                    }
+                    else
+                    {
+                        throw new ParsingException("unknown variable");
+                    }
                 }
                 else
                 {
