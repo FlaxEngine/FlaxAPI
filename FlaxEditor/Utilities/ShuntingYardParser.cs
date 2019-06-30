@@ -86,9 +86,9 @@ namespace FlaxEditor.Utilities
         };
 
         /// <summary>
-        /// Describe all predefined variables
+        /// Describe all predefined variables for parsing.
         /// </summary>
-        private static readonly IDictionary<string, double> variables = new Dictionary<string, double>
+        private static readonly IDictionary<string, double> Variables = new Dictionary<string, double>
         {
             ["pi"] = Math.PI,
             ["e"] = Math.E
@@ -123,10 +123,11 @@ namespace FlaxEditor.Utilities
             if (c == '(' || c == ')')
                 return TokenType.Parenthesis;
 
-            if (Operators.ContainsKey(Convert.ToString(c)))
+            var str = char.ToString(c);
+            if (Operators.ContainsKey(str))
                 return TokenType.Operator;
 
-            if (char.IsLetter(ch))
+            if (char.IsLetter(c) && Variables.ContainsKey(str))
                 return TokenType.Variable;
 
             throw new ParsingException("wrong character");
@@ -261,7 +262,7 @@ namespace FlaxEditor.Utilities
                 }
                 else if (token.Type == TokenType.Variable)
                 {
-                    if(variables.TryGetValue(token.Value.ToLower(), out double variableValue))
+                    if (Variables.TryGetValue(token.Value.ToLower(), out double variableValue))
                     {
                         stack.Push(variableValue);
                     }
