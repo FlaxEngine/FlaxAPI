@@ -82,6 +82,7 @@ namespace FlaxEditor.GUI
                 new PlatformData(PlatformType.Windows, icons.Windows),
                 new PlatformData(PlatformType.XboxOne, icons.XboxOne),
                 new PlatformData(PlatformType.WindowsStore, icons.WindowsStore),
+                //new PlatformData(PlatformType.Linux, icons.Document64), // TODO: Linux platform icon
             };
 
             const float IconSize = 48.0f;

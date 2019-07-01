@@ -36,12 +36,12 @@ namespace FlaxEditor
     public enum BuildPlatform
     {
         /// <summary>
-        /// Windows x86 (32-bit architecture)
+        /// Windows (x86 architecture)
         /// </summary>
         Windows32 = 1,
 
         /// <summary>
-        /// Windows x64 (64-bit architecture)
+        /// Windows (x64 architecture)
         /// </summary>
         Windows64 = 2,
 
@@ -59,6 +59,11 @@ namespace FlaxEditor
         /// Xbox One (x64 architecture)
         /// </summary>
         XboxOne = 5,
+
+        /// <summary>
+        /// Linux (x64 architecture)
+        /// </summary>
+        LinuxX64 = 6,
     }
 
     /// <summary>
@@ -189,6 +194,7 @@ namespace FlaxEditor
             case BuildPlatform.WindowsStoreX86:
             case BuildPlatform.WindowsStoreX64: return PlatformType.WindowsStore;
             case BuildPlatform.XboxOne: return PlatformType.XboxOne;
+            case BuildPlatform.LinuxX64: return PlatformType.Linux;
             default: throw new ArgumentOutOfRangeException(nameof(buildPlatform), buildPlatform, null);
             }
         }
