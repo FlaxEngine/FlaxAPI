@@ -44,5 +44,11 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1020), EditorDisplay("Other"), Tooltip("Limits maximum amount of concurrent game instances running to one, otherwise user may launch application more than once.")]
         public bool ForceSingleInstance = false;
+
+        /// <summary>
+        /// Enables support for Vulkan. Disabling it reduces compiled shaders count.
+        /// </summary>
+        [EditorOrder(2020), EditorDisplay("Graphics", "Support Vulkan"), Tooltip("Enables support for Vulkan. Disabling it reduces compiled shaders count.")]
+        public bool SupportVulkan = true;
     }
 }
