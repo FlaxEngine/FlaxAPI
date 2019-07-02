@@ -15,13 +15,13 @@ namespace FlaxEngine
         internal readonly IntPtr unmanagedPtr = IntPtr.Zero;
 
         [NonSerialized]
-        internal Guid id = Guid.Empty;
+        internal Guid _internalId = Guid.Empty;
 
         /// <summary>
         /// Gets unique object ID
         /// </summary>
         [HideInEditor]
-        public Guid ID => id;
+        public Guid ID => _internalId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Object"/>.

@@ -55,7 +55,7 @@ namespace FlaxEditor.Actions
         {
             if (actor == null)
                 throw new ArgumentNullException(nameof(actor));
-            return new BreakPrefabLinkAction(true, actor.id, Guid.Empty);
+            return new BreakPrefabLinkAction(true, actor._internalId, Guid.Empty);
         }
 
         /// <summary>

@@ -78,7 +78,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         throw new ArgumentException("Invalid object type.");
 
                     // Special case for missing objects (eg. referenced actor in script that is deleted in editor)
-                    if (value != null && (value.unmanagedPtr == IntPtr.Zero || value.id == Guid.Empty))
+                    if (value != null && (value.unmanagedPtr == IntPtr.Zero || value._internalId == Guid.Empty))
                         value = null;
 
                     if (_value != value)

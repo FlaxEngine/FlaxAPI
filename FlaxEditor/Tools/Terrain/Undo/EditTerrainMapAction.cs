@@ -74,7 +74,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// <param name="stride">The data stride (eg. sizeof(float)).</param>
         protected EditTerrainMapAction(FlaxEngine.Terrain terrain, int stride)
         {
-            _terrain = terrain.id;
+            _terrain = terrain._internalId;
             _patches = new List<PatchData>(4);
             var chunkSize = terrain.ChunkSize;
             var heightmapSize = chunkSize * FlaxEngine.Terrain.PatchEdgeChunksCount + 1;

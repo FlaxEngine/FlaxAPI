@@ -28,7 +28,7 @@ namespace FlaxEditor.Tools.Foliage.Undo
         /// <param name="foliage">The foliage.</param>
         public EditFoliageAction(FlaxEngine.Foliage foliage)
         {
-            _foliageId = foliage.id;
+            _foliageId = foliage._internalId;
             _before = Actor.Serialize(foliage);
         }
 

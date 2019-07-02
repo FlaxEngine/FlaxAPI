@@ -405,7 +405,7 @@ namespace FlaxEngine.Json
         {
             Guid id = Guid.Empty;
             if (obj != null)
-                id = obj.id;
+                id = obj._internalId;
             return GetStringID(&id);
         }
 
