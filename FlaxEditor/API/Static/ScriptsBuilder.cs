@@ -16,7 +16,7 @@ namespace FlaxEditor.Scripting
         internal enum InBuildEditorTypes
         {
             Custom,
-            Text,
+            SystemDefault,
             VS2008,
             VS2010,
             VS2012,

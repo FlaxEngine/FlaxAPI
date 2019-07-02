@@ -29,8 +29,8 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             case ScriptsBuilder.InBuildEditorTypes.Custom:
                 Name = "Custom";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.Text:
-                Name = "Text Editor";
+            case ScriptsBuilder.InBuildEditorTypes.SystemDefault:
+                Name = "System Default";
                 break;
             case ScriptsBuilder.InBuildEditorTypes.VS2008:
                 Name = "Visual Studio 2008";

@@ -50,8 +50,8 @@ namespace FlaxEditor.Modules.SourceCodeEditing
                 }
             }
 
-            // Fallback text editor (always valid)
-            _currentEditor = codeEditing.GetInBuildEditor(ScriptsBuilder.InBuildEditorTypes.Text);
+            // Fallback default editor (always valid)
+            _currentEditor = codeEditing.GetInBuildEditor(ScriptsBuilder.InBuildEditorTypes.SystemDefault);
         }
 
         /// <inheritdoc />
