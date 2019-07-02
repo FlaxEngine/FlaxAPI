@@ -298,7 +298,7 @@ namespace FlaxEditor.Windows
             UpdateCount();
 
             // Split panel
-            _split = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
+            _split = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Both)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.8f,
@@ -309,9 +309,9 @@ namespace FlaxEditor.Windows
             _logInfo = new Label(0, 0, 120, 1)
             {
                 Parent = _split.Panel2,
+                AutoWidth = true,
                 AutoHeight = true,
                 Margin = new Margin(4),
-                HorizontalAlignment = TextAlignment.Near
             };
 
             // Entries panel
