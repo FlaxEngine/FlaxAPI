@@ -101,6 +101,27 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Utility to crate a new virtual Material Instance asset, set its parent to the currently applied material, and assign it to the entry. Can be used to modify the material parameters from code.
+        /// </summary>
+        /// <returns>The created virtual material instance.</returns>
+        public MaterialInstance CreateAndSetVirtualMaterialInstance()
+        {
+            var material = Material;
+            if (material == null)
+                throw new FlaxException("Cannot create virtual material. Model Entry has missing material.");
+
+            if (material.WaitForLoaded())
+                throw new FlaxException("Cannot create virtual material. Model Entry material failed to load.");
+
+            var result = material.CreateVirtualInstance();
+            if (result == null)
+                throw new FlaxException("Cannot create virtual material.");
+            Material = result;
+
+            return result;
+        }
+
+        /// <summary>
         /// Determines if there is an intersection between the model actor mesh entry and a ray.
         /// If mesh data is available on the CPU performs exact intersection check with the geometry.
         /// Otherwise performs simple <see cref="BoundingBox"/> vs <see cref="Ray"/> test.
