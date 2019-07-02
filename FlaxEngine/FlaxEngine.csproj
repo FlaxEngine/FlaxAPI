@@ -442,7 +442,6 @@
     <Compile Include="Attributes\RequireChildActorAttribute.cs" />
     <Compile Include="Enums\ShadowsCastingMode.cs" />
     <Compile Include="Enums\StaticFlags.cs" />
-    <Compile Include="Internals\UnhandledExceptionHandler.cs" />
     <Compile Include="Engine\Exceptions\FlaxException.cs" />
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
