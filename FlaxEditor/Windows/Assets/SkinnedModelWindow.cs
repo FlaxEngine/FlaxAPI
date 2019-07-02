@@ -334,6 +334,7 @@ namespace FlaxEditor.Windows.Assets
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
                         group.Label("Nodes: " + nodes.Length);
                         group.Label("Bones: " + bones.Length);
+                        group.Label("Size: " + proxy.Asset.Box.Size);
                     }
 
                     // Group per mesh
@@ -427,7 +428,7 @@ namespace FlaxEditor.Windows.Assets
                         }
                     }
                 }
-                
+
                 private void BuildSkeletonNodesTree(SkeletonNode[] nodes, TreeNodeElement layout, int nodeIndex)
                 {
                     for (int i = 0; i < nodes.Length; i++)
