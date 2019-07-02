@@ -9,6 +9,7 @@ namespace FlaxEngine.GUI
     public class Label : ContainerControl
     {
         private string _text;
+        private bool _autoWidth;
         private bool _autoHeight;
 
         /// <summary>
@@ -80,6 +81,23 @@ namespace FlaxEngine.GUI
         public bool ClipText { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets a value indicating whether set automatic width based on text contents.
+        /// </summary>
+        [EditorOrder(85), Tooltip("If checked, the control width will be based on text contents.")]
+        public bool AutoWidth
+        {
+            get => _autoWidth;
+            set
+            {
+                if (_autoWidth != value)
+                {
+                    _autoWidth = value;
+                    PerformLayout();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether set automatic height based on text contents.
         /// </summary>
         [EditorOrder(90), Tooltip("If checked, the control height will be based on text contents.")]
@@ -137,7 +155,7 @@ namespace FlaxEngine.GUI
                 Text,
                 rect,
                 color,
-                HorizontalAlignment,
+                _autoWidth ? TextAlignment.Near : HorizontalAlignment,
                 _autoHeight ? TextAlignment.Near : VerticalAlignment,
                 Wrapping
             );
@@ -150,7 +168,7 @@ namespace FlaxEngine.GUI
         protected override void PerformLayoutSelf()
         {
             // Check if size is controlled via text
-            if (AutoHeight)
+            if (_autoWidth || _autoHeight)
             {
                 var font = Font.GetFont();
                 if (font)
@@ -159,7 +177,12 @@ namespace FlaxEngine.GUI
                     Vector2 textSize = font.MeasureText(_text);
 
                     // Update size
-                    Height = textSize.Y + Margin.Size.Y;
+                    var size = Size;
+                    if (_autoWidth)
+                        size.X = textSize.X + Margin.Width;
+                    if (_autoHeight)
+                        size.Y = textSize.Y + Margin.Height;
+                    Size = size;
                 }
             }
 
