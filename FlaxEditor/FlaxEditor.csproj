@@ -79,6 +79,7 @@
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
     <Compile Include="CustomEditors\Editors\PostProcessSettingsEditor.cs" />
     <Compile Include="Gizmo\TransformGizmoBase.cs" />
+    <Compile Include="GUI\CurveEditor.cs" />
     <Compile Include="GUI\Drag\DragNames.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
@@ -281,13 +282,11 @@
     <Compile Include="GUI\Tabs\Tab.cs" />
     <Compile Include="GUI\Tabs\Tabs.cs" />
     <Compile Include="GUI\Timeline\Background.cs" />
-    <Compile Include="GUI\Timeline\BackgroundHeader.cs" />
     <Compile Include="GUI\Timeline\FolderTrack.cs" />
     <Compile Include="GUI\Timeline\Media.cs" />
     <Compile Include="GUI\Timeline\ParticleEmitter.cs" />
     <Compile Include="GUI\Timeline\ParticleSystemTimeline.cs" />
     <Compile Include="GUI\Timeline\PositionHandle.cs" />
-    <Compile Include="GUI\Timeline\Timeline.Types.cs" />
     <Compile Include="GUI\Timeline\TimelineEdge.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />

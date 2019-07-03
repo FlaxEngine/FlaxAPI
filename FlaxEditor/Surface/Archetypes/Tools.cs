@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -397,6 +398,63 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
+        private class CurveNode : SurfaceNode
+        {
+            private const int MaxKeyframes = 7;
+            private CurveEditor<float> _curve;
+
+            /// <inheritdoc />
+            public CurveNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            public override void OnLoaded()
+            {
+                base.OnLoaded();
+
+                var upperLeft = GetBox(0).BottomLeft;
+                var upperRight = GetBox(1).BottomRight;
+                float curveMargin = 20.0f;
+
+                _curve = new CurveEditor<float>
+                {
+                    Bounds = new Rectangle(upperLeft + new Vector2(curveMargin, 10.0f), upperRight.X - upperLeft.X - curveMargin * 2.0f, 140.0f),
+                    Parent = this
+                };
+                _curve.UnlockChildrenRecursive();
+                _curve.PerformLayout();
+
+                UpdateCurveKeyframes();
+            }
+
+            private void UpdateCurveKeyframes()
+            {
+                var count = (int)Values[0];
+                var keyframes = new CurveEditor<float>.Keyframe[count];
+                for (int i = 0; i < count; i++)
+                {
+                    keyframes[i] = new CurveEditor<float>.Keyframe
+                    {
+                        Time = (float)Values[i * 4 + 1],
+                        Value = (float)Values[i * 4 + 2],
+                        TangentIn = (float)Values[i * 4 + 3],
+                        TangentOut = (float)Values[i * 4 + 4],
+                    };
+                }
+                _curve.SetKeyframes(keyframes);
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                _curve = null;
+
+                base.Dispose();
+            }
+        }
+
         /// <summary>
         /// The nodes for that group.
         /// </summary>
@@ -578,6 +636,44 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Input(0, "Time", true, ConnectionType.Float, 0),
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 11,
+                Title = "Curve",
+                Create = (id, context, arch, groupArch) => new CurveNode(id, context, arch, groupArch),
+                Description = "An animation spline represented by a set of keyframes, each representing an endpoint of a cubic hermite curve.",
+                Flags = NodeFlags.AllGraphs,
+                Size = new Vector2(400, 180.0f),
+                DefaultValues = new object[]
+                {
+                    // Keyframes count
+                    2,
+
+                    // Key 0
+                    0.0f, // Time
+                    0.0f, // Value
+                    0.0f, // Tangent In
+                    0.0f, // Tangent Out
+
+                    // Key 1
+                    1.0f, // Time
+                    1.0f, // Value
+                    0.0f, // Tangent In
+                    0.0f, // Tangent Out
+
+                    // Empty keys 2-6
+                    0.0f, 0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f, 0.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Time", true, ConnectionType.Float, 0),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 1),
                 }
             },
         };
