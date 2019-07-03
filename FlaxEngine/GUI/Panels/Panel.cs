@@ -16,10 +16,10 @@ namespace FlaxEngine.GUI
         private ScrollBars _scrollBars;
 
         /// <summary>
-        /// The scroll right corner. Used to scroll contents of the panel control.
+        /// The cached scroll area bounds. Used to scroll contents of the panel control. Cached during performing layout.
         /// </summary>
-        [NoSerialize]
-        protected Vector2 _scrollRightCorner;
+        [HideInEditor, NoSerialize]
+        protected Rectangle _controlsBounds;
 
         /// <summary>
         /// The vertical scroll bar.
@@ -34,19 +34,14 @@ namespace FlaxEngine.GUI
         public HScrollBar HScrollBar;
 
         /// <summary>
-        /// Gets the scrolling right corner.
-        /// </summary>
-        [HideInEditor, NoSerialize]
-        public Vector2 ScrollRightCorner
-        {
-            get => _scrollRightCorner;
-            internal set => _scrollRightCorner = value;
-        }
-
-        /// <summary>
         /// Gets the view bottom.
         /// </summary>
         public Vector2 ViewBottom => Size + _viewOffset;
+
+        /// <summary>
+        /// Gets the cached scroll area bounds. Used to scroll contents of the panel control. Cached during performing layout.
+        /// </summary>
+        public Rectangle ControlsBounds => _controlsBounds;
 
         /// <summary>
         /// Gets or sets the scroll bars usage by this panel.
@@ -326,10 +321,11 @@ namespace FlaxEngine.GUI
             ArrangeAndGetBounds();
 
             // Scroll bars
+            var boundsBottomRight = _controlsBounds.BottomRight;
             if (VScrollBar != null)
             {
                 float height = Height;
-                bool vScrollEnabled = _scrollRightCorner.Y > height + 0.01f && height > ScrollBar.DefaultMinimumSize;
+                bool vScrollEnabled = boundsBottomRight.Y > height + 0.01f && height > ScrollBar.DefaultMinimumSize;
 
                 if (VScrollBar.Enabled != vScrollEnabled)
                 {
@@ -348,13 +344,13 @@ namespace FlaxEngine.GUI
 
                 if (vScrollEnabled)
                 {
-                    VScrollBar.Maximum = _scrollRightCorner.Y - height * (1 - scrollSpaceLeft);
+                    VScrollBar.Maximum = boundsBottomRight.Y - height * (1 - scrollSpaceLeft);
                 }
             }
             if (HScrollBar != null)
             {
                 float width = Width;
-                bool hScrollEnabled = _scrollRightCorner.X > width + 0.01f && width > ScrollBar.DefaultMinimumSize;
+                bool hScrollEnabled = boundsBottomRight.X > width + 0.01f && width > ScrollBar.DefaultMinimumSize;
 
                 if (HScrollBar.Enabled != hScrollEnabled)
                 {
@@ -374,7 +370,7 @@ namespace FlaxEngine.GUI
 
                 if (hScrollEnabled)
                 {
-                    HScrollBar.Maximum = _scrollRightCorner.X - width * (1 - scrollSpaceLeft);
+                    HScrollBar.Maximum = boundsBottomRight.X - width * (1 - scrollSpaceLeft);
                 }
             }
         }
@@ -387,18 +383,24 @@ namespace FlaxEngine.GUI
             Arrange();
 
             // Calculate scroll area bounds
-            Vector2 rigthBottom = Vector2.Zero;
+            Vector2 totalMin = Vector2.Zero;
+            Vector2 totalMax = Vector2.Zero;
             for (int i = 0; i < _children.Count; i++)
             {
                 var c = _children[i];
                 if (c.Visible && c.IsScrollable)
                 {
-                    rigthBottom = Vector2.Max(rigthBottom, c.BottomRight);
+                    Vector2 min = Vector2.Zero;
+                    Vector2 max = c.Size;
+                    Matrix3x3.Transform2D(ref min, ref c._cachedTransform, out min);
+                    Matrix3x3.Transform2D(ref max, ref c._cachedTransform, out max);
+                    Vector2.Min(ref min, ref totalMin, out totalMin);
+                    Vector2.Max(ref max, ref totalMax, out totalMax);
                 }
             }
 
             // Cache result
-            _scrollRightCorner = rigthBottom;
+            _controlsBounds = new Rectangle(totalMin, totalMax - totalMin);
         }
 
         /// <summary>

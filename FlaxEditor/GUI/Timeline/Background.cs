@@ -39,12 +39,12 @@ namespace FlaxEditor.GUI.Timeline
             var tracks = _timeline.Tracks;
             var linesColor = Style.Current.BackgroundNormal;
             var areaLeft = -X;
-            var areaRight = Parent.Width + mediaBackground.ScrollRightCorner.X;
+            var areaRight = Parent.Width + mediaBackground.ControlsBounds.BottomRight.X;
             var height = Height;
             var leftSideMin = PointFromParent(Vector2.Zero);
             var leftSideMax = BottomLeft;
             var rightSideMin = UpperRight;
-            var rightSideMax = PointFromParent(Parent.BottomRight) + mediaBackground.ScrollRightCorner;
+            var rightSideMax = PointFromParent(Parent.BottomRight) + mediaBackground.ControlsBounds.BottomRight;
 
             // Draw lines between tracks
             Render2D.DrawLine(new Vector2(areaLeft, 0.5f), new Vector2(areaRight, 0.5f), linesColor);

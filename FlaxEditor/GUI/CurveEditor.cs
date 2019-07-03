@@ -73,12 +73,12 @@ namespace FlaxEditor.GUI
                 var mainPanel = _curve._mainPanel;
                 var linesColor = Style.Current.BackgroundNormal;
                 var areaLeft = -X;
-                var areaRight = Parent.Width + mainPanel.ScrollRightCorner.X;
+                var areaRight = Parent.Width + mainPanel.ControlsBounds.BottomRight.X;
                 var height = Height;
                 var leftSideMin = PointFromParent(Vector2.Zero);
                 var leftSideMax = BottomLeft;
                 var rightSideMin = UpperRight;
-                var rightSideMax = PointFromParent(Parent.BottomRight) + mainPanel.ScrollRightCorner;
+                var rightSideMax = PointFromParent(Parent.BottomRight) + mainPanel.ControlsBounds.BottomRight;
                 /*
                 // Draw vertical lines for time axis
                 var framesPerSecond = 60.0f;
