@@ -227,6 +227,23 @@ namespace FlaxEngine.Json
         }
 
         /// <summary>
+        /// Serializes the specified object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="obj">The object type. Can be typeof(object) to handle generic object serialization.</param>
+        /// <returns>The output json string.</returns>
+        public static string Serialize(object obj, Type type)
+        {
+            var cache = Cache.Value;
+
+            cache.StringBuilder.Clear();
+            cache.IsDuringSerialization = true;
+            cache.SerializerWriter.Serialize(cache.JsonWriter, obj, type);
+
+            return cache.StringBuilder.ToString();
+        }
+
+        /// <summary>
         /// Serializes the specified object difference to the other object of the same type. Used to serialize modified properties of the object during prefab instance serialization.
         /// </summary>
         /// <param name="obj">The object.</param>
@@ -294,6 +311,33 @@ namespace FlaxEngine.Json
             using (JsonReader reader = new JsonTextReader(new StringReader(json)))
             {
                 result = cache.JsonSerializer.Deserialize(reader, objectType);
+
+                if (!cache.JsonSerializer.CheckAdditionalContent)
+                    return result;
+                while (reader.Read())
+                {
+                    if (reader.TokenType != JsonToken.Comment)
+                        throw new FlaxException("Additional text found in JSON string after finishing deserializing object.");
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Deserializes the .NET object (from the input json data).
+        /// </summary>
+        /// <param name="json">The input json data.</param>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        public static object Deserialize(string json)
+        {
+            object result;
+            var cache = Cache.Value;
+            cache.IsDuringSerialization = false;
+
+            using (JsonReader reader = new JsonTextReader(new StringReader(json)))
+            {
+                result = cache.JsonSerializer.Deserialize(reader);
 
                 if (!cache.JsonSerializer.CheckAdditionalContent)
                     return result;
