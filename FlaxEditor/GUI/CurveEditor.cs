@@ -16,6 +16,169 @@ namespace FlaxEditor.GUI
     public class CurveEditor<T> : ContainerControl where T : struct
     {
         /// <summary>
+        /// The generic keyframe value accessor object for curve editor.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+        public interface IKeyframeAccess<T> where T : struct
+        {
+            /// <summary>
+            /// Gets the curve components count. Vector types should return amount of component to use for value editing.
+            /// </summary>
+            /// <returns>The components count.</returns>
+            int GetCurveComponents();
+
+            /// <summary>
+            /// Gets the value of the component for the curve.
+            /// </summary>
+            /// <param name="value">The keyframe value.</param>
+            /// <param name="component">The component index.</param>
+            /// <returns>The curve value.</returns>
+            float GetCurveValue(ref T value, int component);
+
+            /// <summary>
+            /// Sets the curve value of the component.
+            /// </summary>
+            /// <param name="curve">The curve value to assign.</param>
+            /// <param name="value">The keyframe value.</param>
+            /// <param name="component">The component index.</param>
+            void SetCurveValue(float curve, ref T value, int component);
+        }
+
+        private class KeyframeAccess :
+        IKeyframeAccess<int>,
+        IKeyframeAccess<double>,
+        IKeyframeAccess<float>,
+        IKeyframeAccess<Vector2>,
+        IKeyframeAccess<Vector3>,
+        IKeyframeAccess<Vector4>,
+        IKeyframeAccess<Quaternion>,
+        IKeyframeAccess<Color>
+        {
+            int IKeyframeAccess<int>.GetCurveComponents()
+            {
+                return 1;
+            }
+
+            float IKeyframeAccess<int>.GetCurveValue(ref int value, int component)
+            {
+                return value;
+            }
+
+            void IKeyframeAccess<int>.SetCurveValue(float curve, ref int value, int component)
+            {
+                value = (int)curve;
+            }
+
+            int IKeyframeAccess<double>.GetCurveComponents()
+            {
+                return 1;
+            }
+
+            float IKeyframeAccess<double>.GetCurveValue(ref double value, int component)
+            {
+                return (float)value;
+            }
+
+            void IKeyframeAccess<double>.SetCurveValue(float curve, ref double value, int component)
+            {
+                value = curve;
+            }
+
+            int IKeyframeAccess<float>.GetCurveComponents()
+            {
+                return 1;
+            }
+
+            float IKeyframeAccess<float>.GetCurveValue(ref float value, int component)
+            {
+                return value;
+            }
+
+            void IKeyframeAccess<float>.SetCurveValue(float curve, ref float value, int component)
+            {
+                value = curve;
+            }
+
+            int IKeyframeAccess<Vector2>.GetCurveComponents()
+            {
+                return 2;
+            }
+
+            float IKeyframeAccess<Vector2>.GetCurveValue(ref Vector2 value, int component)
+            {
+                return value[component];
+            }
+
+            void IKeyframeAccess<Vector2>.SetCurveValue(float curve, ref Vector2 value, int component)
+            {
+                value[component] = curve;
+            }
+
+            int IKeyframeAccess<Vector3>.GetCurveComponents()
+            {
+                return 3;
+            }
+
+            float IKeyframeAccess<Vector3>.GetCurveValue(ref Vector3 value, int component)
+            {
+                return value[component];
+            }
+
+            void IKeyframeAccess<Vector3>.SetCurveValue(float curve, ref Vector3 value, int component)
+            {
+                value[component] = curve;
+            }
+
+            int IKeyframeAccess<Vector4>.GetCurveComponents()
+            {
+                return 4;
+            }
+
+            float IKeyframeAccess<Vector4>.GetCurveValue(ref Vector4 value, int component)
+            {
+                return value[component];
+            }
+
+            void IKeyframeAccess<Vector4>.SetCurveValue(float curve, ref Vector4 value, int component)
+            {
+                value[component] = curve;
+            }
+
+            int IKeyframeAccess<Quaternion>.GetCurveComponents()
+            {
+                return 3;
+            }
+
+            float IKeyframeAccess<Quaternion>.GetCurveValue(ref Quaternion value, int component)
+            {
+                return value.EulerAngles[component];
+            }
+
+            void IKeyframeAccess<Quaternion>.SetCurveValue(float curve, ref Quaternion value, int component)
+            {
+                var euler = value.EulerAngles;
+                euler[component] = curve;
+                Quaternion.Euler(euler.X, euler.Y, euler.Z, out value);
+            }
+
+            int IKeyframeAccess<Color>.GetCurveComponents()
+            {
+                return 4;
+            }
+
+            float IKeyframeAccess<Color>.GetCurveValue(ref Color value, int component)
+            {
+                return value[component];
+            }
+
+            void IKeyframeAccess<Color>.SetCurveValue(float curve, ref Color value, int component)
+            {
+                value[component] = curve;
+            }
+        }
+
+        /// <summary>
         /// A single keyframe that can be injected into Bezier curve.
         /// </summary>
         public struct Keyframe
@@ -92,7 +255,7 @@ namespace FlaxEditor.GUI
 
                     // Vertical line
                     Render2D.FillRectangle(new Rectangle(x - 0.5f, 0, 1.0f, height), style.ForegroundDisabled.RGBMultiplied(0.7f));
-
+                    
                     // Header line
                     Render2D.FillRectangle(new Rectangle(x - 0.5f, -verticalLinesHeaderExtend, 1.0f, verticalLinesHeaderExtend), style.Foreground.RGBMultiplied(0.8f));
 
@@ -216,11 +379,17 @@ namespace FlaxEditor.GUI
             set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.05f), new Vector2(4.0f));
         }
 
+        /// <summary>
+        /// The keyframes data accessor.
+        /// </summary>
+        public readonly IKeyframeAccess<T> Accessor = new KeyframeAccess() as IKeyframeAccess<T>;
+
         public CurveEditor()
         {
             _mainPanel = new Panel(ScrollBars.Both)
             {
                 AlwaysShowScrollbars = true,
+                //ScrollMargin = new Margin(50.0f),
                 BackgroundColor = Style.Current.Background.RGBMultiplied(0.7f),
                 DockStyle = DockStyle.Fill,
                 Parent = this
@@ -228,7 +397,7 @@ namespace FlaxEditor.GUI
             _contents = new Contents(this)
             {
                 ClipChildren = false,
-                BackgroundColor = Color.Red,
+                BackgroundColor = Color.Red.AlphaMultiplied(0.1f),
                 Parent = _mainPanel
             };
             _background = new Background(this)
@@ -238,7 +407,7 @@ namespace FlaxEditor.GUI
                 Parent = _contents
             };
 
-            UpdateBackgroundBounds();
+            UpdateKeyframes();
         }
 
         /// <summary>
@@ -272,6 +441,9 @@ namespace FlaxEditor.GUI
                 _points.RemoveAt(last);
             }
 
+            if (Accessor.GetCurveComponents() != 1)
+                throw new NotImplementedException("TODO: add support for multi-component curves editing");
+
             while (_points.Count < _keyframes.Count)
             {
                 _points.Add(new KeyframePoint
@@ -283,21 +455,56 @@ namespace FlaxEditor.GUI
                 });
             }
 
-            UpdateBackgroundBounds();
+            UpdateKeyframes();
 
             KeyframesChanged?.Invoke();
         }
 
-        private void UpdateBackgroundBounds()
+        private void UpdateKeyframes()
         {
-            // TODO: get proper values from keyframes
-            float minTime = 0.0f;
-            float maxTime = 1.0f;
-            float minValue = 0.0f;
-            float maxValue = 1.0f;
+            if (_points.Count == 0)
+            {
+                // No keyframes
+                _contents.Bounds = Rectangle.Empty;
+                return;
+            }
 
-            _background.Bounds = new Rectangle(minTime * UnitsPerSecond, minValue * UnitsPerSecond, (maxTime - minTime) * UnitsPerSecond, (maxValue - minValue) * UnitsPerSecond);
-            _contents.Bounds = _background.Bounds;
+            _mainPanel.IsLayoutLocked = true;
+
+            // Place keyframes
+            for (int i = 0; i < _keyframes.Count; i++)
+            {
+                var p = _points[i];
+                var k = _keyframes[i];
+
+                var x = k.Time;
+                var y = Accessor.GetCurveValue(ref k.Value, 0);
+
+                p.Location = new Vector2
+                (
+                    x * UnitsPerSecond - p.Width * 0.5f,
+                    y * UnitsPerSecond - p.Height * 0.5f
+                );
+            }
+
+            // Calculate bounds
+            var bounds = _points[0].Bounds;
+            for (var i = 1; i < _points.Count; i++)
+            {
+                bounds = Rectangle.Union(bounds, _points[i].Bounds);
+            }
+
+            // Adjust contents bounds to fill the curve area
+            _contents.Bounds = bounds;
+
+            // Offset the keyframes (parent container changed its location)
+            for (var i = 0; i < _points.Count; i++)
+            {
+                _points[i].Location -= bounds.Location;
+            }
+
+            _mainPanel.IsLayoutLocked = false;
+            _mainPanel.PerformLayout();
         }
 
         /// <inheritdoc />
