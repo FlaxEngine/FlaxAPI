@@ -8,6 +8,7 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.History;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -89,7 +90,7 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(220), EditorDisplay("Misc"), Tooltip("The post fx material rendering location")]
             public MaterialPostFxLocation PostFxLocation { get; set; }
 
-            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
+            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor)), NoSerialize]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public MaterialWindow MaterialWinRef { get; set; }
 
@@ -472,7 +473,7 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Material properties editor
-            _propertiesEditor = new CustomEditorPresenter(null);
+            _propertiesEditor = new CustomEditorPresenter(_undo);
             _propertiesEditor.Panel.Parent = _split2.Panel2;
             _properties = new PropertiesProxy();
             _propertiesEditor.Select(_properties);
@@ -499,6 +500,14 @@ namespace FlaxEditor.Windows.Assets
 
         private void OnUndo(IUndoAction action)
         {
+            // Hack for material properties proxy object
+            if (action is MultiUndoAction multiUndo && multiUndo.Actions.Length == 1 && multiUndo.Actions[0] is UndoActionObject undoActionObject && undoActionObject.Target == _properties)
+            {
+                OnMaterialPropertyEdited();
+                UpdateToolstrip();
+                return;
+            }
+
             _paramValueChange = false;
             MarkAsEdited();
             UpdateToolstrip();

@@ -113,6 +113,11 @@ namespace FlaxEditor.History
         private readonly MemberInfoPath[] Members;
 
         /// <summary>
+        /// Gets the target.
+        /// </summary>
+        public object Target => TargetInstance;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UndoActionObject"/> class.
         /// </summary>
         /// <param name="diff">The difference.</param>
