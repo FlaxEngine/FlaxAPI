@@ -38,6 +38,12 @@ namespace FlaxEngine
         /// <param name="platform">The runtime platform.</param>
         internal static void Init(int flags, PlatformType platform)
         {
+#if DEBUG
+            Debug.Logger.LogHandler.LogWrite(LogType.Log, "Using FlaxAPI in Debug");
+#else
+            Debug.Logger.LogHandler.LogWrite(LogType.Log, "Using FlaxAPI in Release");
+#endif
+
             Application._is64Bit = (flags & 0x01) != 0;
             Application._isEditor = (flags & 0x02) != 0;
             Application._mainThreadId = Thread.CurrentThread.ManagedThreadId;
