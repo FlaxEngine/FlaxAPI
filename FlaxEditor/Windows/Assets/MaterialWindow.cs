@@ -424,10 +424,15 @@ namespace FlaxEditor.Windows.Assets
         private readonly MaterialSurface _surface;
 
         private readonly ToolStripButton _saveButton;
+        private readonly ToolStripButton _undoButton;
+        private readonly ToolStripButton _redoButton;
+        private readonly CustomEditorPresenter _propertiesEditor;
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
         internal bool _paramValueChange;
+
+        private Undo _undo;
 
         /// <summary>
         /// Gets the material surface.
@@ -438,6 +443,12 @@ namespace FlaxEditor.Windows.Assets
         public MaterialWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            // Undo
+            _undo = new Undo();
+            _undo.UndoDone += OnUndo;
+            _undo.RedoDone += OnUndo;
+            _undo.ActionDone += OnUndo;
+
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
@@ -461,14 +472,14 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Material properties editor
-            var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.Parent = _split2.Panel2;
+            _propertiesEditor = new CustomEditorPresenter(null);
+            _propertiesEditor.Panel.Parent = _split2.Panel2;
             _properties = new PropertiesProxy();
-            propertiesEditor.Select(_properties);
-            propertiesEditor.Modified += OnMaterialPropertyEdited;
+            _propertiesEditor.Select(_properties);
+            _propertiesEditor.Modified += OnMaterialPropertyEdited;
 
             // Surface
-            _surface = new MaterialSurface(this, Save)
+            _surface = new MaterialSurface(this, Save, _undo)
             {
                 Parent = _split1.Panel1,
                 Enabled = false
@@ -477,10 +488,21 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
             _toolstrip.AddSeparator();
+            _undoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Undo32, _undo.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
+            _redoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Redo32, _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
+            _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.PageScale32, _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.BracketsSlash32, () => ShowSourceCode(_asset)).LinkTooltip("Show generated shader source code");
             _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/materials/index.html")).LinkTooltip("See documentation to learn more");
+        }
+
+        private void OnUndo(IUndoAction action)
+        {
+            _paramValueChange = false;
+            MarkAsEdited();
+            UpdateToolstrip();
+            _propertiesEditor.BuildLayoutOnUpdate();
         }
 
         private void OnMaterialPropertyEdited()
@@ -643,6 +665,8 @@ namespace FlaxEditor.Windows.Assets
         protected override void UpdateToolstrip()
         {
             _saveButton.Enabled = IsEdited;
+            _undoButton.Enabled = _undo.CanUndo;
+            _redoButton.Enabled = _undo.CanRedo;
 
             base.UpdateToolstrip();
         }
@@ -758,9 +782,33 @@ namespace FlaxEditor.Windows.Assets
                 }
 
                 // Setup
+                _undo.Clear();
                 _surface.Enabled = true;
                 ClearEditedFlag();
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (Root.GetKey(Keys.Control))
+            {
+                switch (key)
+                {
+                case Keys.Z:
+                    _undo.PerformUndo();
+                    return true;
+                case Keys.Y:
+                    _undo.PerformRedo();
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -789,6 +837,18 @@ namespace FlaxEditor.Windows.Assets
         {
             _split1.SplitterValue = 0.7f;
             _split2.SplitterValue = 0.4f;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_undo != null)
+            {
+                _undo.Clear();
+                _undo = null;
+            }
+
+            base.Dispose();
         }
     }
 }
