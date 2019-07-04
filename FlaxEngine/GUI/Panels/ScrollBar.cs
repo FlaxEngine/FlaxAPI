@@ -234,7 +234,6 @@ namespace FlaxEngine.GUI
         {
             _value = value;
 
-            // Update
             UpdateThumb();
 
             // Change parent panel view offset
@@ -292,6 +291,8 @@ namespace FlaxEngine.GUI
                 Value = minimum;
             else if (Value > maximum)
                 Value = maximum;
+
+            UpdateThumb();
         }
 
         /// <inheritdoc />

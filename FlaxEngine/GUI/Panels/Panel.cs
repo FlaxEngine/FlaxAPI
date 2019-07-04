@@ -14,6 +14,7 @@ namespace FlaxEngine.GUI
         private bool _alwaysShowScrollbars;
         private int _layoutUpdateLock;
         private ScrollBars _scrollBars;
+        private Margin _scrollMargin;
 
         /// <summary>
         /// The cached scroll area bounds. Used to scroll contents of the panel control. Cached during performing layout.
@@ -103,6 +104,23 @@ namespace FlaxEngine.GUI
                 if (_alwaysShowScrollbars != value)
                 {
                     _alwaysShowScrollbars = value;
+                    PerformLayout();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the scroll margin applies to the child controls area. Can be used to expand the scroll area bounds by adding a margin.
+        /// </summary>
+        [EditorOrder(20), Tooltip("Scroll margin applies to the child controls area. Can be used to expand the scroll area bounds by adding a margin.")]
+        public Margin ScrollMargin
+        {
+            get => _scrollMargin;
+            set
+            {
+                if (_scrollMargin != value)
+                {
+                    _scrollMargin = value;
                     PerformLayout();
                 }
             }
@@ -315,17 +333,17 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            const float scrollSpaceLeft = 0.1f;
-
             // Arrange controls and get scroll bounds
             ArrangeAndGetBounds();
 
-            // Scroll bars
-            var boundsBottomRight = _controlsBounds.BottomRight;
+            // Update scroll bars
+            var controlsBounds = _controlsBounds;
+            var scrollBounds = controlsBounds;
+            _scrollMargin.ExpandRectangle(ref scrollBounds);
             if (VScrollBar != null)
             {
                 float height = Height;
-                bool vScrollEnabled = boundsBottomRight.Y > height + 0.01f && height > ScrollBar.DefaultMinimumSize;
+                bool vScrollEnabled = (controlsBounds.Bottom > height + 0.01f || controlsBounds.Y < 0.0f) && height > ScrollBar.DefaultMinimumSize;
 
                 if (VScrollBar.Enabled != vScrollEnabled)
                 {
@@ -338,23 +356,23 @@ namespace FlaxEngine.GUI
                     VScrollBar.Reset();
                     _viewOffset.Y = 0;
 
-                    // Update
+                    // Get the new bounds after changing scroll
                     ArrangeAndGetBounds();
                 }
 
                 if (vScrollEnabled)
                 {
-                    VScrollBar.Maximum = boundsBottomRight.Y - height * (1 - scrollSpaceLeft);
+                    VScrollBar.SetScrollRange(scrollBounds.Top, Mathf.Max(Mathf.Max(0, scrollBounds.Top), scrollBounds.Height - height));
                 }
             }
             if (HScrollBar != null)
             {
                 float width = Width;
-                bool hScrollEnabled = boundsBottomRight.X > width + 0.01f && width > ScrollBar.DefaultMinimumSize;
+                bool hScrollEnabled = (controlsBounds.Right > width + 0.01f || controlsBounds.X < 0.0f) && width > ScrollBar.DefaultMinimumSize;
 
                 if (HScrollBar.Enabled != hScrollEnabled)
                 {
-                    // Set scroll bar visibility 
+                    // Set scroll bar visibility
                     HScrollBar.Enabled = hScrollEnabled;
                     HScrollBar.Visible = hScrollEnabled || _alwaysShowScrollbars;
                     _layoutChanged = true;
@@ -364,13 +382,13 @@ namespace FlaxEngine.GUI
 
                     _viewOffset.X = 0;
 
-                    // Update
+                    // Get the new bounds after changing scroll
                     ArrangeAndGetBounds();
                 }
 
                 if (hScrollEnabled)
                 {
-                    HScrollBar.Maximum = boundsBottomRight.X - width * (1 - scrollSpaceLeft);
+                    HScrollBar.SetScrollRange(scrollBounds.Left, Mathf.Max(Mathf.Max(0, scrollBounds.Left), scrollBounds.Width - width));
                 }
             }
         }
