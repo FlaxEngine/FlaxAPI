@@ -31,6 +31,7 @@ namespace FlaxEditor.Windows
         : base(editor, true, ScrollBars.Both)
         {
             Title = "Scene";
+            ScrollMargin = new Margin(0, 0, 0, 100.0f);
 
             // Scene searching query input box
             var headerPanel = new ContainerControl();
