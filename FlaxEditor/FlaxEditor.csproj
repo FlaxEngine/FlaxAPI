@@ -440,6 +440,7 @@
     <Compile Include="Surface\SurfaceRootControl.cs" />
     <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\TransformCoordinateSystem.cs" />
+    <Compile Include="Surface\Undo\AddNodeAction.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
     <Compile Include="Surface\VisjectSurface.Context.cs" />
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />

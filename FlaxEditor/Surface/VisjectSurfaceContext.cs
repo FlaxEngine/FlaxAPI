@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -359,6 +360,9 @@ namespace FlaxEditor.Surface
             node.OnSurfaceLoaded();
             node.Location = location;
             OnControlSpawned(node);
+
+            // Undo action
+            Surface.Undo?.AddAction(new AddNodeAction(this, node));
 
             MarkAsModified();
 
