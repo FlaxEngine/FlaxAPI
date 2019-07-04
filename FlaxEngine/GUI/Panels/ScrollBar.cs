@@ -17,9 +17,14 @@ namespace FlaxEngine.GUI
         public const int DefaultSize = 16;
 
         /// <summary>
-        /// The default thickness.
+        /// The default thumb rectangle thickness.
         /// </summary>
-        public const int DefaultThickness = 6;
+        public const int DefaultThumbThickness = 6;
+
+        /// <summary>
+        /// The default track line thickness.
+        /// </summary>
+        public const int DefaultTrackThickness = 1;
 
         /// <summary>
         /// The default minimum opacity.
@@ -45,7 +50,7 @@ namespace FlaxEngine.GUI
 
         // Thumb data
 
-        private Rectangle _thumbRect;
+        private Rectangle _thumbRect, _trackRect;
         private bool _thumbClicked;
         private float _thumbCenter, _thumbSize;
 
@@ -198,6 +203,8 @@ namespace FlaxEngine.GUI
         private void UpdateThumb()
         {
             // Cache data
+            var width = Width;
+            var height = Height;
             float trackSize = TrackSize;
             float range = _maximum - _minimum;
             _thumbSize = Mathf.Min(trackSize, Mathf.Max(trackSize / range * 10.0f, 30.0f));
@@ -205,11 +212,12 @@ namespace FlaxEngine.GUI
             float percentage = (_value - _minimum) / range;
             float thumbPosition = (int)(percentage * pixelRange);
             _thumbCenter = thumbPosition + _thumbSize / 2;
-
-            if (_orientation == Orientation.Vertical)
-                _thumbRect = new Rectangle((Width - DefaultThickness) / 2, thumbPosition + 4, DefaultThickness, _thumbSize - 8);
-            else
-                _thumbRect = new Rectangle(thumbPosition + 4, (Height - DefaultThickness) / 2, _thumbSize - 8, DefaultThickness);
+            _thumbRect = _orientation == Orientation.Vertical
+                         ? new Rectangle((width - DefaultThumbThickness) / 2, thumbPosition + 4, DefaultThumbThickness, _thumbSize - 8)
+                         : new Rectangle(thumbPosition + 4, (height - DefaultThumbThickness) / 2, _thumbSize - 8, DefaultThumbThickness);
+            _trackRect = _orientation == Orientation.Vertical
+                         ? new Rectangle((width - DefaultTrackThickness) / 2, 4, DefaultTrackThickness, height - 8)
+                         : new Rectangle(4, (height - DefaultTrackThickness) / 2, width - 8, DefaultTrackThickness);
         }
 
         private void EndTracking()
@@ -301,12 +309,7 @@ namespace FlaxEngine.GUI
             base.Draw();
 
             var style = Style.Current;
-
-            // Draw track line
-            var lineRect = _orientation == Orientation.Vertical ? new Rectangle(Width / 2, 4, 1, Height - 8) : new Rectangle(4, Height / 2, Width - 8, 1);
-            Render2D.FillRectangle(lineRect, style.BackgroundHighlighted * _thumbOpacity);
-
-            // Draw thumb
+            Render2D.FillRectangle(_trackRect, style.BackgroundHighlighted * _thumbOpacity);
             Render2D.FillRectangle(_thumbRect, (_thumbClicked ? style.BackgroundSelected : style.BackgroundNormal) * _thumbOpacity);
         }
 
