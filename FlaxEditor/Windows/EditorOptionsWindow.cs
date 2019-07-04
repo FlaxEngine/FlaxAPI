@@ -1,12 +1,14 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Tabs;
 using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Json;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Windows
@@ -21,6 +23,7 @@ namespace FlaxEditor.Windows
         private Tabs _tabs;
         private EditorOptions _options;
         private ToolStripButton _saveButton;
+        private readonly List<Tab> _customTabs = new List<Tab>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorOptionsWindow"/> class.
@@ -56,7 +59,7 @@ namespace FlaxEditor.Windows
             _tabs.SelectedTabIndex = 0;
         }
 
-        private void CreateTab(string name, Func<object> getValue)
+        private Tab CreateTab(string name, Func<object> getValue)
         {
             var tab = _tabs.AddTab(new Tab(name));
 
@@ -70,6 +73,8 @@ namespace FlaxEditor.Windows
             settings.Panel.Parent = panel;
             settings.Panel.Tag = getValue;
             settings.Modified += MarkAsEdited;
+
+            return tab;
         }
 
         private void MarkAsEdited()
@@ -96,11 +101,7 @@ namespace FlaxEditor.Windows
         private void GatherData()
         {
             // Clone options (edit cloned version, not the current ones)
-            _options = new EditorOptions();
-            _options.General = Editor.Options.Options.General.DeepClone();
-            _options.Interface = Editor.Options.Options.Interface.DeepClone();
-            _options.Visual = Editor.Options.Options.Visual.DeepClone();
-            _options.SourceCode = Editor.Options.Options.SourceCode.DeepClone();
+            _options = Editor.Options.Options.DeepClone();
 
             // Refresh tabs
             foreach (var c in _tabs.Children)
@@ -126,15 +127,80 @@ namespace FlaxEditor.Windows
             if (_options == null || !_isDataDirty)
                 return;
 
+            // Flush custom settings
+            foreach (var tab in _customTabs)
+            {
+                var name = tab.Text;
+
+                var panel = tab.GetChild<Panel>();
+                var settingsPanel = panel.GetChild<CustomEditorPresenter.PresenterPanel>();
+                var settings = settingsPanel.Presenter;
+
+                _options.CustomSettings[name] = JsonSerializer.Serialize(settings.Selection[0], typeof(object));
+            }
+
             Editor.Options.Apply(_options);
 
             ClearDirtyFlag();
         }
 
+        private void SetupCustomTabs()
+        {
+            // Remove old tabs
+            foreach (var tab in _customTabs)
+            {
+                var panel = tab.GetChild<Panel>();
+                var settingsPanel = panel.GetChild<CustomEditorPresenter.PresenterPanel>();
+                var settings = settingsPanel.Presenter;
+                settings.Deselect();
+
+                tab.Dispose();
+            }
+            _customTabs.Clear();
+
+            // Add new tabs
+            foreach (var e in Editor.Options.CustomSettings)
+            {
+                var name = e.Key;
+
+                // Ensure to have options object for that settings type
+                if (!_options.CustomSettings.ContainsKey(name))
+                    _options.CustomSettings.Add(name, JsonSerializer.Serialize(e.Value(), typeof(object)));
+
+                // Create tab
+                var tab = CreateTab(name, () => JsonSerializer.Deserialize(_options.CustomSettings[name]));
+                tab.UnlockChildrenRecursive();
+                _customTabs.Add(tab);
+
+                // Update value
+                var settingsPanel = tab.GetChild<Panel>().GetChild<CustomEditorPresenter.PresenterPanel>();
+                settingsPanel.Presenter.Select(JsonSerializer.Deserialize(_options.CustomSettings[name]));
+            }
+            if (_customTabs.Count != 0)
+                _tabs.PerformLayout();
+        }
+
         /// <inheritdoc />
         public override void OnInit()
         {
+            // Add custom settings tabs
+            SetupCustomTabs();
+
+            // Register for custom settings changes
+            Editor.Options.CustomSettingsChanged += SetupCustomTabs;
+
+            // Update UI
             GatherData();
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            _customTabs.Clear();
+            _tabs = null;
+            _saveButton = null;
+
+            base.OnDestroy();
         }
     }
 }

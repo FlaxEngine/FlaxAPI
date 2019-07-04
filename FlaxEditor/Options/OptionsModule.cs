@@ -1,9 +1,11 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.Modules;
 using FlaxEngine;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.Options
 {
@@ -23,7 +25,24 @@ namespace FlaxEditor.Options
         /// </summary>
         public event Action<EditorOptions> OptionsChanged;
 
+        /// <summary>
+        /// Occurs when editor options get changed (reloaded or applied).
+        /// </summary>
+        public event Action CustomSettingsChanged;
+
+        /// <summary>
+        /// The custom settings factory delegate. It should return the default settings object for a given options contenxt.
+        /// </summary>
+        /// <returns>The custom settings object.</returns>
+        public delegate object CreateCustomSettingsDelegate();
+
         private readonly string _optionsFilePath;
+        private readonly Dictionary<string, CreateCustomSettingsDelegate> _customSettings = new Dictionary<string, CreateCustomSettingsDelegate>();
+
+        /// <summary>
+        /// Gets the custom settings factories. Each entry defines the custom settings type identified by teh given key name. The value si a factory function that returns the default options fpr a given type.
+        /// </summary>
+        public IReadOnlyDictionary<string, CreateCustomSettingsDelegate> CustomSettings => _customSettings;
 
         internal OptionsModule(Editor editor)
         : base(editor)
@@ -32,6 +51,39 @@ namespace FlaxEditor.Options
             InitOrder = -1000000;
 
             _optionsFilePath = Path.Combine(Editor.LocalCachePath, "EditorOptions.json");
+        }
+
+        /// <summary>
+        /// Adds the custom settings factory.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="factory">The factory function.</param>
+        public void AddCustomSettings(string name, CreateCustomSettingsDelegate factory)
+        {
+            if (_customSettings.ContainsKey(name))
+                throw new ArgumentException(string.Format("Custom settings \'{0}\' already added.", name), nameof(name));
+
+            Editor.Log(string.Format("Add custom editor settings \'{0}\'", name));
+            _customSettings.Add(name, factory);
+            if (!Options.CustomSettings.ContainsKey(name))
+            {
+                Options.CustomSettings.Add(name, JsonSerializer.Serialize(factory(), typeof(object)));
+            }
+            CustomSettingsChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Removes the custom settings factory.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        public void RemoveCustomSettings(string name)
+        {
+            if (!_customSettings.ContainsKey(name))
+                throw new ArgumentException(string.Format("Custom settings \'{0}\' has not been added.", name), nameof(name));
+
+            Editor.Log(string.Format("Remove custom editor settings \'{0}\'", name));
+            _customSettings.Remove(name);
+            CustomSettingsChanged?.Invoke();
         }
 
         /// <summary>
@@ -60,6 +112,13 @@ namespace FlaxEditor.Options
                 var assetObj = asset.CreateInstance();
                 if (assetObj is EditorOptions options)
                 {
+                    // Add missing custom options
+                    foreach (var e in _customSettings)
+                    {
+                        if (!options.CustomSettings.ContainsKey(e.Key))
+                            options.CustomSettings.Add(e.Key, JsonSerializer.Serialize(e.Value()));
+                    }
+
                     Options = options;
                     OnOptionsChanged();
                 }
