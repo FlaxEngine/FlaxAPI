@@ -202,8 +202,8 @@ namespace FlaxEngine.GUI
             float range = _maximum - _minimum;
             _thumbSize = Mathf.Min(trackSize, Mathf.Max(trackSize / range * 10.0f, 30.0f));
             float pixelRange = trackSize - _thumbSize;
-            float perc = (_value - _minimum) / range;
-            float thumbPosition = (int)(perc * pixelRange);
+            float percentage = (_value - _minimum) / range;
+            float thumbPosition = (int)(percentage * pixelRange);
             _thumbCenter = thumbPosition + _thumbSize / 2;
 
             if (_orientation == Orientation.Vertical)
@@ -275,6 +275,25 @@ namespace FlaxEngine.GUI
             }
         }
 
+        /// <summary>
+        /// Sets the scroll range (min and max at once).
+        /// </summary>
+        /// <param name="minimum">The minimum scroll range value (see <see cref="Minimum"/>).</param>
+        /// <param name="maximum">The maximum scroll range value (see <see cref="Minimum"/>).</param>
+        public void SetScrollRange(float minimum, float maximum)
+        {
+            if (minimum > maximum)
+                throw new ArgumentOutOfRangeException();
+
+            _minimum = minimum;
+            _maximum = maximum;
+
+            if (Value < minimum)
+                Value = minimum;
+            else if (Value > maximum)
+                Value = maximum;
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {
@@ -309,7 +328,7 @@ namespace FlaxEngine.GUI
                 float mousePosition = _orientation == Orientation.Vertical ? slidePosition.Y : slidePosition.X;
 
                 float percentage = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
-                Value = percentage * _maximum;
+                Value = _minimum + percentage * (_maximum - _minimum);
             }
         }
 
