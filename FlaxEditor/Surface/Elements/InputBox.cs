@@ -18,6 +18,184 @@ namespace FlaxEditor.Surface.Elements
         public InputBox(SurfaceNode parentNode, NodeElementArchetype archetype)
         : base(parentNode, archetype, archetype.Position)
         {
+            // Check if use inlined default value editor
+            if (Archetype.ValueIndex != -1)
+            {
+                ParentNode.ValuesChanged += OnNodeValuesChanged;
+            }
+        }
+
+        private void OnNodeValuesChanged()
+        {
+            if (_defaultValueEditor == null)
+                return;
+
+            switch (CurrentType)
+            {
+            case ConnectionType.Bool:
+                if (_defaultValueEditor is CheckBox checkBox)
+                {
+                    checkBox.Checked = BoolValue.Get(ParentNode, Archetype);
+                }
+                break;
+            case ConnectionType.Integer:
+            case ConnectionType.UnsignedInteger:
+                if (_defaultValueEditor is IntValueBox intValue)
+                {
+                    intValue.Value = IntegerValue.Get(ParentNode, Archetype);
+                }
+                break;
+            case ConnectionType.Float:
+                if (_defaultValueEditor is FloatValueBox floatValue)
+                {
+                    floatValue.Value = FloatValue.Get(ParentNode, Archetype);
+                }
+                break;
+            case ConnectionType.Vector2:
+            {
+                if (_defaultValueEditor is ContainerControl vec2
+                    && vec2.ChildrenCount == 2
+                    && vec2.Children[0] is FloatValueBox x
+                    && vec2.Children[1] is FloatValueBox y)
+                {
+                    Vector2 value = GetValueVector2(ParentNode, Archetype);
+                    x.Value = value.X;
+                    y.Value = value.Y;
+                }
+                break;
+            }
+            case ConnectionType.Vector3:
+            {
+                if (_defaultValueEditor is ContainerControl vec3
+                    && vec3.ChildrenCount == 3
+                    && vec3.Children[0] is FloatValueBox x
+                    && vec3.Children[1] is FloatValueBox y
+                    && vec3.Children[2] is FloatValueBox z)
+                {
+                    Vector3 value = GetValueVector3(ParentNode, Archetype);
+                    x.Value = value.X;
+                    y.Value = value.Y;
+                    z.Value = value.Z;
+                }
+                break;
+            }
+            case ConnectionType.Vector4:
+            {
+                if (_defaultValueEditor is ContainerControl vec4
+                    && vec4.ChildrenCount == 4
+                    && vec4.Children[0] is FloatValueBox x
+                    && vec4.Children[1] is FloatValueBox y
+                    && vec4.Children[2] is FloatValueBox z
+                    && vec4.Children[3] is FloatValueBox w)
+                {
+                    Vector4 value = GetValueVector4(ParentNode, Archetype);
+                    x.Value = value.X;
+                    y.Value = value.Y;
+                    z.Value = value.Z;
+                    w.Value = value.W;
+                }
+                break;
+            }
+            }
+        }
+
+        private static Vector2 GetValueVector2(SurfaceNode parentNode, NodeElementArchetype archetype)
+        {
+            Vector2 value = Vector2.Zero;
+            var v = parentNode.Values[archetype.ValueIndex];
+
+            if (v is Vector2 vec2)
+            {
+                value = vec2;
+            }
+            else if (v is Vector3 vec3)
+            {
+                value = new Vector2(vec3);
+            }
+            else if (v is Vector4 vec4)
+            {
+                value = new Vector2(vec4);
+            }
+            else if (v is Color col)
+            {
+                value = new Vector2(col.R, col.G);
+            }
+            else if (v is float f)
+            {
+                value = new Vector2(f);
+            }
+            else if (v is int i)
+            {
+                value = new Vector2(i);
+            }
+
+            return value;
+        }
+
+        private static Vector3 GetValueVector3(SurfaceNode parentNode, NodeElementArchetype archetype)
+        {
+            Vector3 value = Vector3.Zero;
+            var v = parentNode.Values[archetype.ValueIndex];
+
+            if (v is Vector2 vec2)
+            {
+                value = new Vector3(vec2, 0.0f);
+            }
+            else if (v is Vector3 vec3)
+            {
+                value = vec3;
+            }
+            else if (v is Vector4 vec4)
+            {
+                value = new Vector3(vec4);
+            }
+            else if (v is Color col)
+            {
+                value = col;
+            }
+            else if (v is float f)
+            {
+                value = new Vector3(f);
+            }
+            else if (v is int i)
+            {
+                value = new Vector3(i);
+            }
+
+            return value;
+        }
+
+        private static Vector4 GetValueVector4(SurfaceNode parentNode, NodeElementArchetype archetype)
+        {
+            Vector4 value = Vector4.Zero;
+            var v = parentNode.Values[archetype.ValueIndex];
+
+            if (v is Vector2 vec2)
+            {
+                value = new Vector4(vec2, 0.0f, 0.0f);
+            }
+            else if (v is Vector3 vec3)
+            {
+                value = new Vector4(vec3, 0.0f);
+            }
+            else if (v is Vector4 vec4)
+            {
+                value = vec4;
+            }
+            else if (v is Color col)
+            {
+                value = col;
+            }
+            else if (v is float f)
+            {
+                value = new Vector4(f);
+            }
+            else if (v is int i)
+            {
+                value = new Vector4(i);
+            }
+
+            return value;
         }
 
         /// <inheritdoc />
@@ -55,33 +233,33 @@ namespace FlaxEditor.Surface.Elements
                     isValid = _defaultValueEditor is IntValueBox;
                     break;
                 case ConnectionType.Float:
-                    isValid = _defaultValueEditor is FloatValue;
+                    isValid = _defaultValueEditor is FloatValueBox;
                     break;
                 case ConnectionType.Vector2:
                 {
                     isValid = _defaultValueEditor is ContainerControl vec2
                               && vec2.ChildrenCount == 2
-                              && vec2.Children[0] is FloatValue
-                              && vec2.Children[1] is FloatValue;
+                              && vec2.Children[0] is FloatValueBox
+                              && vec2.Children[1] is FloatValueBox;
                     break;
                 }
                 case ConnectionType.Vector3:
                 {
                     isValid = _defaultValueEditor is ContainerControl vec3
                               && vec3.ChildrenCount == 3
-                              && vec3.Children[0] is FloatValue
-                              && vec3.Children[1] is FloatValue
-                              && vec3.Children[2] is FloatValue;
+                              && vec3.Children[0] is FloatValueBox
+                              && vec3.Children[1] is FloatValueBox
+                              && vec3.Children[2] is FloatValueBox;
                     break;
                 }
                 case ConnectionType.Vector4:
                 {
                     isValid = _defaultValueEditor is ContainerControl vec4
                               && vec4.ChildrenCount == 4
-                              && vec4.Children[0] is FloatValue
-                              && vec4.Children[1] is FloatValue
-                              && vec4.Children[2] is FloatValue
-                              && vec4.Children[3] is FloatValue;
+                              && vec4.Children[0] is FloatValueBox
+                              && vec4.Children[1] is FloatValueBox
+                              && vec4.Children[2] is FloatValueBox
+                              && vec4.Children[3] is FloatValueBox;
                     break;
                 }
                 }
@@ -168,33 +346,7 @@ namespace FlaxEditor.Surface.Elements
             }
             case ConnectionType.Vector2:
             {
-                Vector2 value = Vector2.Zero;
-                var v = ParentNode.Values[Archetype.ValueIndex];
-                if (v is Vector2 vec2)
-                {
-                    value = vec2;
-                }
-                else if (v is Vector3 vec3)
-                {
-                    value = new Vector2(vec3);
-                }
-                else if (v is Vector4 vec4)
-                {
-                    value = new Vector2(vec4);
-                }
-                else if (v is Color col)
-                {
-                    value = new Vector2(col.R, col.G);
-                }
-                else if (v is float f)
-                {
-                    value = new Vector2(f);
-                }
-                else if (v is int i)
-                {
-                    value = new Vector2(i);
-                }
-
+                Vector2 value = GetValueVector2(ParentNode, Archetype);
                 var control = new ContainerControl(x, y, 22 * 2 - 2, height)
                 {
                     ClipChildren = false,
@@ -218,33 +370,7 @@ namespace FlaxEditor.Surface.Elements
             }
             case ConnectionType.Vector3:
             {
-                Vector3 value = Vector3.Zero;
-                var v = ParentNode.Values[Archetype.ValueIndex];
-                if (v is Vector2 vec2)
-                {
-                    value = new Vector3(vec2, 0.0f);
-                }
-                else if (v is Vector3 vec3)
-                {
-                    value = vec3;
-                }
-                else if (v is Vector4 vec4)
-                {
-                    value = new Vector3(vec4);
-                }
-                else if (v is Color col)
-                {
-                    value = col;
-                }
-                else if (v is float f)
-                {
-                    value = new Vector3(f);
-                }
-                else if (v is int i)
-                {
-                    value = new Vector3(i);
-                }
-
+                Vector3 value = GetValueVector3(ParentNode, Archetype);
                 var control = new ContainerControl(x, y, 22 * 3 - 2, height)
                 {
                     ClipChildren = false,
@@ -274,33 +400,7 @@ namespace FlaxEditor.Surface.Elements
             }
             case ConnectionType.Vector4:
             {
-                Vector4 value = Vector4.Zero;
-                var v = ParentNode.Values[Archetype.ValueIndex];
-                if (v is Vector2 vec2)
-                {
-                    value = new Vector4(vec2, 0.0f, 0.0f);
-                }
-                else if (v is Vector3 vec3)
-                {
-                    value = new Vector4(vec3, 0.0f);
-                }
-                else if (v is Vector4 vec4)
-                {
-                    value = vec4;
-                }
-                else if (v is Color col)
-                {
-                    value = col;
-                }
-                else if (v is float f)
-                {
-                    value = new Vector4(f);
-                }
-                else if (v is int i)
-                {
-                    value = new Vector4(i);
-                }
-
+                Vector4 value = GetValueVector4(ParentNode, Archetype);
                 var control = new ContainerControl(x, y, 22 * 4 - 2, height)
                 {
                     ClipChildren = false,
