@@ -8,6 +8,7 @@ using FlaxEditor.Surface.Archetypes;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Surface.GUI;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -307,16 +308,45 @@ namespace FlaxEditor.Surface
             _cmRemoveNodeConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that node(s)", () =>
             {
                 var nodes = ((List<SurfaceNode>)_cmSecondaryMenu.Tag);
-                foreach (var node in nodes)
+
+                if (Undo != null)
                 {
-                    node.RemoveConnections();
+                    var actions = new List<IUndoAction>(nodes.Count);
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node);
+                        node.RemoveConnections();
+                        action.End();
+                        actions.Add(action);
+                    }
+                    Undo.AddAction(new MultiUndoAction(actions, actions[0].ActionString));
                 }
+                else
+                {
+                    foreach (var node in nodes)
+                    {
+                        node.RemoveConnections();
+                    }
+                }
+
                 MarkAsEdited();
             });
             _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
             {
                 var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
-                boxUnderMouse.RemoveConnections();
+
+                if (Undo != null)
+                {
+                    var action = new EditNodeConnections(Context, boxUnderMouse.ParentNode);
+                    boxUnderMouse.RemoveConnections();
+                    action.End();
+                    Undo.AddAction(action);
+                }
+                else
+                {
+                    boxUnderMouse.RemoveConnections();
+                }
+
                 MarkAsEdited();
             });
 

@@ -443,6 +443,7 @@
     <Compile Include="Surface\Undo\AddNodeAction.cs" />
     <Compile Include="Surface\Undo\BoxHandle.cs" />
     <Compile Include="Surface\Undo\ConnectBoxesAction.cs" />
+    <Compile Include="Surface\Undo\EditNodeConnections.cs" />
     <Compile Include="Surface\Undo\EditNodeValuesAction.cs" />
     <Compile Include="Surface\Undo\MoveNodesAction.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
