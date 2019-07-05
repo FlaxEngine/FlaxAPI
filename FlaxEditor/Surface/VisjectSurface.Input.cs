@@ -352,7 +352,7 @@ namespace FlaxEditor.Surface
                     var p1 = _rootControl.PointFromParent(ref _leftMouseDownPos);
                     var p2 = _rootControl.PointFromParent(ref _mousePos);
                     var selectionRect = Rectangle.FromPoints(p1, p2);
-                    Context.CreateComment(ref selectionRect);
+                    Context.CreateComment(ref selectionRect, "Comment", new Color(1.0f, 1.0f, 1.0f, 0.2f));
                 }
                 // Selecting
                 else if (!_isMovingSelection && _connectionInstigator == null)

@@ -10,23 +10,17 @@ namespace FlaxEditor.Surface
     /// <summary>
     /// Visject Surface comment control.
     /// </summary>
-    /// <seealso cref="SurfaceControl" />
-    public class SurfaceComment : SurfaceControl
+    /// <seealso cref="SurfaceNode" />
+    public class SurfaceComment : SurfaceNode
     {
-        private Rectangle _headerRect;
-        private Rectangle _closeButtonRect;
         private Rectangle _colorButtonRect;
         private Rectangle _resizeButtonRect;
+        private Vector2 _startResizingSize;
 
         /// <summary>
         /// True if sizing tool is in use.
         /// </summary>
         protected bool _isResizing;
-
-        /// <summary>
-        /// Gets or sets the comment title text.
-        /// </summary>
-        public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the comment.
@@ -37,23 +31,52 @@ namespace FlaxEditor.Surface
             set => BackgroundColor = value;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SurfaceComment"/> class.
-        /// </summary>
-        /// <param name="surface">The surface.</param>
-        /// <param name="surfaceArea">The comment bounds.</param>
-        public SurfaceComment(VisjectSurface surface, ref Rectangle surfaceArea)
-        : base(surface, ref surfaceArea)
+        private string TitleValue
+        {
+            get => (string)Values[0];
+            set => SetValue(0, value);
+        }
+
+        private Color ColorValue
+        {
+            get => (Color)Values[1];
+            set => SetValue(1, value);
+        }
+
+        private Vector2 SizeValue
+        {
+            get => (Vector2)Values[2];
+            set => SetValue(2, value);
+        }
+
+        /// <inheritdoc />
+        public SurfaceComment(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+        : base(id, context, nodeArch, groupArch)
         {
             CanFocus = false;
-            Title = "Comment";
-            Color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
+        }
+
+        /// <inheritdoc />
+        public override void OnSurfaceLoaded()
+        {
+            base.OnSurfaceLoaded();
+
+            // Read node data
+            Title = TitleValue;
+            Color = ColorValue;
+            Size = SizeValue;
         }
 
         private void EndResizing()
         {
             // Clear state
             _isResizing = false;
+
+            if (_startResizingSize != Size)
+            {
+                SizeValue = Size;
+                Surface.MarkAsEdited(false);
+            }
 
             EndMouseCapture();
         }
@@ -92,7 +115,11 @@ namespace FlaxEditor.Surface
             if (IsSelected)
                 headerColor *= 2.0f;
 
-            base.Draw();
+            // Paint background
+            Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), BackgroundColor);
+
+            // Draw child controls
+            DrawChildren();
 
             // Header
             Render2D.FillRectangle(_headerRect, headerColor);
@@ -125,6 +152,12 @@ namespace FlaxEditor.Surface
                 var colorBottom = Color.OrangeRed;
                 Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom, 1.5f);
             }
+        }
+
+        /// <inheritdoc />
+        protected override Vector2 CalculateNodeSize(float width, float height)
+        {
+            return Size;
         }
 
         /// <inheritdoc />
@@ -171,6 +204,7 @@ namespace FlaxEditor.Surface
             {
                 // Start sliding
                 _isResizing = true;
+                _startResizingSize = Size;
                 StartMouseCapture();
 
                 return true;
@@ -187,7 +221,6 @@ namespace FlaxEditor.Surface
             {
                 // Update size
                 Size = Vector2.Max(location, new Vector2(140.0f, _headerRect.Bottom));
-                Surface.MarkAsEdited(false);
             }
             else
             {
@@ -216,7 +249,7 @@ namespace FlaxEditor.Surface
 
         private void OnRenamed(RenamePopup renamePopup)
         {
-            Title = renamePopup.Text;
+            Title = TitleValue = renamePopup.Text;
             Surface.MarkAsEdited(false);
         }
 
@@ -251,7 +284,7 @@ namespace FlaxEditor.Surface
 
         private void OnColorChanged(Color color, bool sliding)
         {
-            Color = color;
+            Color = ColorValue = color;
             Surface.MarkAsEdited(false);
         }
     }

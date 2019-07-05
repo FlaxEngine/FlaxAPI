@@ -266,22 +266,32 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Spawns the comment object. Used by the <see cref="CreateComment"/> and loading method. Can be overriden to provide custom comment object implementations.
         /// </summary>
-        /// <param name="surfaceArea">The surface area.</param>
+        /// <param name="surfaceArea">The surface area to create comment.</param>
+        /// <param name="title">The comment title.</param>
+        /// <param name="color">The comment color.</param>
         /// <returns>The comment object</returns>
-        public virtual SurfaceComment SpawnComment(ref Rectangle surfaceArea)
+        public virtual SurfaceComment SpawnComment(ref Rectangle surfaceArea, string title, Color color)
         {
-            return new SurfaceComment(_surface, ref surfaceArea);
+            var values = new object[]
+            {
+                title, // Title
+                color, // Color
+                surfaceArea.Size, // Size
+            };
+            return (SurfaceComment)SpawnNode(7, 11, surfaceArea.Location, values);
         }
 
         /// <summary>
         /// Creates the comment.
         /// </summary>
         /// <param name="surfaceArea">The surface area to create comment.</param>
+        /// <param name="title">The comment title.</param>
+        /// <param name="color">The comment color.</param>
         /// <returns>The comment object</returns>
-        public SurfaceComment CreateComment(ref Rectangle surfaceArea)
+        public SurfaceComment CreateComment(ref Rectangle surfaceArea, string title, Color color)
         {
             // Create comment
-            var comment = SpawnComment(ref surfaceArea);
+            var comment = SpawnComment(ref surfaceArea, title, color);
             if (comment == null)
             {
                 Editor.LogWarning("Failed to create comment.");

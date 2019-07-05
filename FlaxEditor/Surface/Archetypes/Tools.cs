@@ -580,6 +580,20 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 1),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 11,
+                Title = "Comment",
+                Create = (id, context, arch, groupArch) => new SurfaceComment(id, context, arch, groupArch),
+                Flags = NodeFlags.AllGraphs,
+                Size = new Vector2(400.0f, 400.0f),
+                DefaultValues = new object[]
+                {
+                    "Comment", // Title
+                    new Color(1.0f, 1.0f, 1.0f, 0.2f), // Color
+                    new Vector2(400.0f, 400.0f), // Size
+                },
+            },
         };
     }
 }

@@ -555,7 +555,7 @@ namespace FlaxEditor.Surface
                 surfaceArea = Rectangle.Union(surfaceArea, selection[i].Bounds.MakeExpanded(80.0f));
             }
 
-            _context.CreateComment(ref surfaceArea);
+            _context.CreateComment(ref surfaceArea, "Comment", new Color(1.0f, 1.0f, 1.0f, 0.2f));
         }
 
         /// <summary>
