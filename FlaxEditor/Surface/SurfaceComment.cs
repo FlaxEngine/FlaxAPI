@@ -34,19 +34,19 @@ namespace FlaxEditor.Surface
         private string TitleValue
         {
             get => (string)Values[0];
-            set => SetValue(0, value);
+            set => SetValue(0, value, false);
         }
 
         private Color ColorValue
         {
             get => (Color)Values[1];
-            set => SetValue(1, value);
+            set => SetValue(1, value, false);
         }
 
         private Vector2 SizeValue
         {
             get => (Vector2)Values[2];
-            set => SetValue(2, value);
+            set => SetValue(2, value, false);
         }
 
         /// <inheritdoc />

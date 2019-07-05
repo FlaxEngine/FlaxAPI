@@ -170,9 +170,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void SetValue(int index, object value, bool graphEdited = true)
             {
-                base.SetValue(index, value);
+                base.SetValue(index, value, graphEdited);
 
                 UpdateUI();
             }
@@ -536,9 +536,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void SetValue(int index, object value, bool graphEdited = true)
             {
-                base.SetValue(index, value);
+                base.SetValue(index, value, graphEdited);
 
                 // Check for external state data changes (eg. via undo)
                 if (!_isSavingData && index == 2)

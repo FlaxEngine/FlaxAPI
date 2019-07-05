@@ -40,9 +40,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void SetValue(int index, object value, bool graphEdited = true)
             {
-                base.SetValue(index, value);
+                base.SetValue(index, value, graphEdited);
                 UpdateTitle();
             }
 
@@ -178,9 +178,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void SetValue(int index, object value, bool graphEdited = true)
             {
-                base.SetValue(index, value);
+                base.SetValue(index, value, graphEdited);
 
                 // Check if update amount of blend pose inputs
                 if (index == 2 && _blendPoses.Count != BlendPosesCount)

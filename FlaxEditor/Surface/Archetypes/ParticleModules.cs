@@ -399,9 +399,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void SetValue(int index, object value, bool graphEdited = true)
             {
-                base.SetValue(index, value);
+                base.SetValue(index, value, graphEdited);
 
                 // Update on type change
                 if (index == 3)
@@ -458,9 +458,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void SetValue(int index, object value, bool graphEdited = true)
             {
-                base.SetValue(index, value);
+                base.SetValue(index, value, graphEdited);
 
                 // Update on mode change
                 if (index == 2)
@@ -494,9 +494,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void SetValue(int index, object value, bool graphEdited = true)
             {
-                base.SetValue(index, value);
+                base.SetValue(index, value, graphEdited);
 
                 // Update on sort mode change
                 if (index == 2)

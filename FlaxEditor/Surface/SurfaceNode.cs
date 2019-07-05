@@ -451,11 +451,12 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="index">The value index.</param>
         /// <param name="value">The value.</param>
-        public virtual void SetValue(int index, object value)
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value).</param>
+        public virtual void SetValue(int index, object value, bool graphEdited = true)
         {
             Values[index] = value;
             OnValuesChanged();
-            Surface.MarkAsEdited();
+            Surface.MarkAsEdited(graphEdited);
         }
 
         /// <summary>

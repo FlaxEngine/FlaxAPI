@@ -537,9 +537,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void SetValue(int index, object value, bool graphEdited = true)
             {
-                base.SetValue(index, value);
+                base.SetValue(index, value, graphEdited);
 
                 UpdateUI();
             }
