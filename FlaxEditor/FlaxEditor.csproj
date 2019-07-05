@@ -442,6 +442,7 @@
     <Compile Include="Surface\TransformCoordinateSystem.cs" />
     <Compile Include="Surface\Undo\AddNodeAction.cs" />
     <Compile Include="Surface\Undo\EditNodeValuesAction.cs" />
+    <Compile Include="Surface\Undo\MoveNodesAction.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
     <Compile Include="Surface\VisjectSurface.Context.cs" />
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />
