@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.Surface.Elements;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -454,9 +455,13 @@ namespace FlaxEditor.Surface
         /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value).</param>
         public virtual void SetValue(int index, object value, bool graphEdited = true)
         {
+            var before = Surface.Undo != null ? (object[])Values.Clone() : null;
+
             Values[index] = value;
             OnValuesChanged();
             Surface.MarkAsEdited(graphEdited);
+
+            Surface.Undo?.AddAction(new EditNodeValuesAction(Context, this, before, graphEdited));
         }
 
         /// <summary>

@@ -67,6 +67,17 @@ namespace FlaxEditor.Surface
             Size = SizeValue;
         }
 
+        /// <inheritdoc />
+        public override void OnValuesChanged()
+        {
+            base.OnValuesChanged();
+
+            // Read node data
+            Title = TitleValue;
+            Color = ColorValue;
+            Size = SizeValue;
+        }
+
         private void EndResizing()
         {
             // Clear state
