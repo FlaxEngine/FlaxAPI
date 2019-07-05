@@ -315,14 +315,12 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void OnParamCreated(SurfaceParameter param)
             {
-                // Update
                 UpdateCombo();
             }
 
             /// <inheritdoc />
             public void OnParamRenamed(SurfaceParameter param)
             {
-                // Update
                 UpdateCombo();
                 UpdateTitle();
             }
@@ -330,14 +328,12 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public void OnParamDeleted(SurfaceParameter param)
             {
-                // Check if that parameter is selected
+                // Deselect if that parameter is selected
                 if ((Guid)Values[0] == param.ID)
                 {
-                    // Deselect
                     _combobox.SelectedIndex = -1;
                 }
 
-                // Update
                 UpdateCombo();
             }
 
@@ -346,7 +342,6 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnLoaded();
 
-                // Setup
                 UpdateCombo();
                 UpdateLayout();
             }
@@ -356,8 +351,16 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSurfaceLoaded();
 
-                // Setup
                 UpdateTitle();
+            }
+
+            /// <inheritdoc />
+            public override void OnValuesChanged()
+            {
+                base.OnValuesChanged();
+
+                UpdateCombo();
+                UpdateLayout();
             }
 
             private void UpdateTitle()
