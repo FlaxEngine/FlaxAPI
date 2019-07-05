@@ -39,14 +39,19 @@ namespace FlaxEditor.Surface.Elements
             _isAutoSelect = Archetype.Text != null;
             if (Archetype.Text != null)
             {
-                // Get the fucking items xD
                 var items = Archetype.Text.Split('\n');
                 AddItems(items);
-
-                // Select saved value
-                _selectedIndices.Clear();
-                _selectedIndices.Add((int)ParentNode.Values[Archetype.ValueIndex]);
+                
+                OnNodeValuesChanged();
+                ParentNode.ValuesChanged += OnNodeValuesChanged;
             }
+        }
+
+        private void OnNodeValuesChanged()
+        {
+            _selectedIndices.Clear();
+            _selectedIndices.Add((int)ParentNode.Values[Archetype.ValueIndex]);
+            OnSelectedIndexChanged();
         }
 
         /// <inheritdoc />

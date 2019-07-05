@@ -33,6 +33,13 @@ namespace FlaxEditor.Surface.Elements
         {
             ParentNode = parentNode;
             Archetype = archetype;
+
+            ParentNode.ValuesChanged += OnNodeValuesChanged;
+        }
+
+        private void OnNodeValuesChanged()
+        {
+            Value = Get(ParentNode, Archetype);
         }
 
         /// <inheritdoc />

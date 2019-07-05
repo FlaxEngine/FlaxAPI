@@ -19,7 +19,7 @@ namespace FlaxEditor.Surface.Elements
         public bool Value
         {
             get => (bool)ParentNode.Values[Archetype.ValueIndex];
-            set { ParentNode.SetValue(Archetype.ValueIndex, value); }
+            set => ParentNode.SetValue(Archetype.ValueIndex, value);
         }
 
         /// <summary>
