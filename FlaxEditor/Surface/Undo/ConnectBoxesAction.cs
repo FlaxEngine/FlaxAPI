@@ -2,8 +2,6 @@
 
 using System.Collections.Generic;
 using FlaxEditor.Surface.Elements;
-using FlaxEngine;
-using FlaxEngine.Assertions;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Surface.Undo
@@ -115,12 +113,18 @@ namespace FlaxEditor.Surface.Undo
                 box.OnConnectionsChanged();
                 box.ConnectionTick();
             }
+
+            _context.MarkAsModified();
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
             _context = null;
+            _inputBefore = null;
+            _inputAfter = null;
+            _outputBefore = null;
+            _outputAfter = null;
         }
     }
 }
