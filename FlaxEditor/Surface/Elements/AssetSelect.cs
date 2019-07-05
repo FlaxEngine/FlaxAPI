@@ -41,9 +41,10 @@ namespace FlaxEditor.Surface.Elements
         /// <inheritdoc />
         protected override void OnSelectedItemChanged()
         {
-            if (ParentNode != null)
+            var selectedId = SelectedID;
+            if (ParentNode != null && (Guid)ParentNode.Values[Archetype.ValueIndex] != selectedId)
             {
-                ParentNode.SetValue(Archetype.ValueIndex, SelectedID);
+                ParentNode.SetValue(Archetype.ValueIndex, selectedId);
             }
 
             base.OnSelectedItemChanged();
