@@ -16,6 +16,11 @@ namespace FlaxEditor.Surface
     public class SurfaceNode : SurfaceControl
     {
         /// <summary>
+        /// Flag used to discard node values setting during event sending for node UI flushing.
+        /// </summary>
+        protected bool _isDuringValuesEditing;
+
+        /// <summary>
         /// The header rectangle (local space).
         /// </summary>
         protected Rectangle _headerRect;
@@ -63,15 +68,17 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets the type (packed GroupID (higher 16 bits) and TypeID (lower 16 bits)).
         /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
         public uint Type => ((uint)GroupArchetype.GroupID << 16) | Archetype.TypeID;
 
         /// <summary>
         /// The metadata.
         /// </summary>
         public readonly SurfaceMeta Meta = new SurfaceMeta();
+
+        /// <summary>
+        /// Occurs when node values collection gets changed.
+        /// </summary>
+        public event Action ValuesChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceNode"/> class.
@@ -455,6 +462,11 @@ namespace FlaxEditor.Surface
         /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value).</param>
         public virtual void SetValue(int index, object value, bool graphEdited = true)
         {
+            if (_isDuringValuesEditing)
+                return;
+
+            _isDuringValuesEditing = true;
+
             var before = Surface.Undo != null ? (object[])Values.Clone() : null;
 
             Values[index] = value;
@@ -462,6 +474,39 @@ namespace FlaxEditor.Surface
             Surface.MarkAsEdited(graphEdited);
 
             Surface.Undo?.AddAction(new EditNodeValuesAction(Context, this, before, graphEdited));
+
+            _isDuringValuesEditing = false;
+        }
+
+        /// <summary>
+        /// Sets the values of the node parameters.
+        /// </summary>
+        /// <param name="values">The values.</param>
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value).</param>
+        public virtual void SetValues(object[] values, bool graphEdited = true)
+        {
+            if (_isDuringValuesEditing)
+                return;
+
+            if (values == null || Values == null || values.Length != Values.Length)
+                throw new ArgumentException();
+
+            _isDuringValuesEditing = true;
+
+            var before = Surface.Undo != null ? (object[])Values.Clone() : null;
+
+            Array.Copy(values, Values, values.Length);
+            OnValuesChanged();
+            Surface.MarkAsEdited(graphEdited);
+
+            Surface.Undo?.AddAction(new EditNodeValuesAction(Context, this, before, graphEdited));
+
+            _isDuringValuesEditing = false;
+        }
+
+        internal void SetIsDuringValuesEditing(bool value)
+        {
+            _isDuringValuesEditing = value;
         }
 
         /// <summary>
@@ -469,6 +514,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public virtual void OnValuesChanged()
         {
+            ValuesChanged?.Invoke();
         }
 
         /// <summary>

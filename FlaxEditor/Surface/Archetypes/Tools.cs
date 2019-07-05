@@ -242,7 +242,8 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void OnAddButtonClicked()
             {
-                var count = (int)Values[0];
+                var values = (object[])Values.Clone();
+                var count = (int)values[0];
 
                 var time = 0.0f;
                 var color = Color.Black;
@@ -258,31 +259,34 @@ namespace FlaxEditor.Surface.Archetypes
                     index = 1;
                     var left = 1;
                     var right = 3;
-                    time = ((float)Values[left] + (float)Values[right]) / 2;
-                    color = Color.Lerp((Color)Values[left + 1], (Color)Values[right + 1], time);
+                    time = ((float)values[left] + (float)values[right]) / 2;
+                    color = Color.Lerp((Color)values[left + 1], (Color)values[right + 1], time);
 
                     // Shift higher stops to have empty place at stop 1
-                    Array.Copy(Values, 3, Values, 5, count * 2 - 2);
+                    Array.Copy(values, 3, values, 5, count * 2 - 2);
                 }
 
                 // Insert
-                Values[1 + index * 2] = time;
-                Values[1 + index * 2 + 1] = color;
+                values[1 + index * 2] = time;
+                values[1 + index * 2 + 1] = color;
 
-                Values[0] = count + 1;
-                OnValuesChanged();
+                values[0] = count + 1;
+
+                SetValues(values);
             }
 
             private void OnRemoveButtonClicked()
             {
+                var values = (object[])Values.Clone();
                 var index = _stops.IndexOf(_selected);
                 _selected = null;
 
-                var count = (int)Values[0];
+                var count = (int)values[0];
                 if (count > 0)
-                    Array.Copy(Values, 1 + index * 2 + 2, Values, 1 + index * 2, (count - index - 1) * 2);
-                Values[0] = count - 1;
-                OnValuesChanged();
+                    Array.Copy(values, 1 + index * 2 + 2, values, 1 + index * 2, (count - index - 1) * 2);
+                values[0] = count - 1;
+
+                SetValues(values);
             }
 
             private void OnTimeValueChanged()
