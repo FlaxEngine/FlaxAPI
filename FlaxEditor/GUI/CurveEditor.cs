@@ -282,6 +282,14 @@ namespace FlaxEditor.GUI
         private class Contents : ContainerControl
         {
             private readonly CurveEditor<T> _curve;
+            private bool _leftMouseDown;
+            private bool _rightMouseDown;
+            private Vector2 _leftMouseDownPos = Vector2.Minimum;
+            private Vector2 _rightMouseDownPos = Vector2.Minimum;
+            private Vector2 _mousePos = Vector2.Minimum;
+            private float _mouseMoveAmount;
+            private bool _isMovingSelection;
+            private Vector2 _movingSelectionViewPos;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Contents"/> class.
@@ -301,16 +309,224 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
+            public override void OnMouseEnter(Vector2 location)
+            {
+                _mousePos = location;
+
+                base.OnMouseEnter(location);
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseMove(Vector2 location)
+            {
+                _mousePos = location;
+
+                // Moving view
+                if (_rightMouseDown)
+                {
+                    // Calculate delta
+                    Vector2 delta = location - _rightMouseDownPos;
+                    if (delta.LengthSquared > 0.01f)
+                    {
+                        // Move view
+                        _mouseMoveAmount += delta.Length;
+                        _curve.ViewOffset += delta * _curve.ViewScale;
+                        _rightMouseDownPos = location;
+                        Cursor = CursorType.SizeAll;
+                    }
+
+                    return;
+                }
+                // Moving selection
+                else if (_isMovingSelection)
+                {
+                    // Calculate delta (apply view offset)
+                    /*Vector2 viewDelta = _curve.ViewOffset - _movingSelectionViewPos;
+                    _movingSelectionViewPos = _curve.ViewOffset;
+                    Vector2 delta = location - _leftMouseDownPos - viewDelta;
+                    if (delta.LengthSquared > 0.01f)
+                    {
+                        // Move selected keyframes
+                        delta /= _targetScale;
+                        for (auto keyframe : _curve._points)
+                        {
+                            control.Location += delta;
+                        }
+                        _leftMouseDownPos = location;
+                        Cursor = CursorType.SizeAll;
+                        MarkAsEdited(false);
+                    }*/
+
+                    return;
+                }
+                // Selecting
+                else if (_rightMouseDown)
+                {
+                    //UpdateSelectionRectangle();
+
+                    return;
+                }
+
+                base.OnMouseMove(location);
+            }
+
+            /// <inheritdoc />
+            public override void OnLostFocus()
+            {
+                // Clear flags and state
+                if (_leftMouseDown)
+                {
+                    _leftMouseDown = false;
+                }
+                if (_rightMouseDown)
+                {
+                    _rightMouseDown = false;
+                    Cursor = CursorType.Default;
+                }
+                _isMovingSelection = false;
+
+                base.OnLostFocus();
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDown(location, buttons))
+                {
+                    // Clear flags
+                    _isMovingSelection = false;
+                    _rightMouseDown = false;
+                    _leftMouseDown = false;
+                    return true;
+                }
+
+                // Cache data
+                _isMovingSelection = false;
+                _mousePos = location;
+                if (buttons == MouseButton.Left)
+                {
+                    _leftMouseDown = true;
+                    _leftMouseDownPos = location;
+                }
+                if (buttons == MouseButton.Right)
+                {
+                    _rightMouseDown = true;
+                    _rightMouseDownPos = location;
+                }
+                /*
+                // Check if any node is under the mouse
+                var controlUnderMouse = GetControlUnderMouse();
+                Vector2 cLocation = _rootControl.PointFromParent(ref location);
+                if (controlUnderMouse != null)
+                {
+                    // Check if mouse is over header and user is pressing mouse left button
+                    if (_leftMouseDown && controlUnderMouse.CanSelect(ref cLocation))
+                    {
+                        // Check if user is pressing control
+                        if (Root.GetKey(Keys.Control))
+                        {
+                            // Add to selection
+                            AddToSelection(controlUnderMouse);
+                        }
+                        // Check if node isn't selected
+                        else if (!controlUnderMouse.IsSelected)
+                        {
+                            // Select node
+                            Select(controlUnderMouse);
+                        }
+
+                        // Start moving selected nodes
+                        StartMouseCapture();
+                        _isMovingSelection = true;
+                        _movingSelectionViewPos = _curve.ViewOffset;
+                        Focus();
+                        return true;
+                    }
+                }
+                else*/
+                {
+                    if (_leftMouseDown)
+                    {
+                        // Start selecting
+                        StartMouseCapture();
+                        _curve.ClearSelection();
+                        Focus();
+                        return true;
+                    }
+                    if (_rightMouseDown)
+                    {
+                        // Start navigating
+                        StartMouseCapture();
+                        Focus();
+                        return true;
+                    }
+                }
+
+                Focus();
+                return true;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                _mousePos = location;
+
+                // Check if any control is under the mouse
+                //var controlUnderMouse = GetControlUnderMouse();
+
+                // Cache flags and state
+                if (_leftMouseDown && buttons == MouseButton.Left)
+                {
+                    _leftMouseDown = false;
+                    EndMouseCapture();
+                    Cursor = CursorType.Default;
+
+                    // Selecting
+                    if (!_isMovingSelection)
+                    {
+                        //UpdateSelectionRectangle();
+                    }
+                }
+                if (_rightMouseDown && buttons == MouseButton.Right)
+                {
+                    _rightMouseDown = false;
+                    EndMouseCapture();
+                    Cursor = CursorType.Default;
+
+                    // Check if no move has been made at all
+                    if (_mouseMoveAmount < 3.0f)
+                    {
+                        // TODO: select keyframe under mouse if no selection
+                        // TODO: show context menu for selected keyframes
+                    }
+                    _mouseMoveAmount = 0;
+                }
+                if (base.OnMouseUp(location, buttons))
+                {
+                    // Clear flags
+                    _rightMouseDown = false;
+                    _leftMouseDown = false;
+                    return true;
+                }
+
+                return true;
+            }
+
+            /// <inheritdoc />
             public override bool OnMouseWheel(Vector2 location, float delta)
             {
-                //if (Root.GetKey(Keys.Control))
+                if (base.OnMouseWheel(location, delta))
+                    return true;
+
+                // Zoom in/out
+                if (IsMouseOver && !_leftMouseDown)
                 {
-                    // Zoom in/out
+                    // TODO: preserve the view center point for easier zooming
                     _curve.ViewScale += delta * 0.1f;
                     return true;
                 }
 
-                return base.OnMouseWheel(location, delta);
+                return false;
             }
         }
 
@@ -371,6 +587,15 @@ namespace FlaxEditor.GUI
         public IReadOnlyCollection<Keyframe> Keyframes => _keyframes;
 
         /// <summary>
+        /// Gets or sets the view offset (via scroll bars).
+        /// </summary>
+        public Vector2 ViewOffset
+        {
+            get => _mainPanel.ViewOffset;
+            set => _mainPanel.ViewOffset = value;
+        }
+
+        /// <summary>
         /// Gets or sets the view scale.
         /// </summary>
         public Vector2 ViewScale
@@ -397,12 +622,14 @@ namespace FlaxEditor.GUI
             _contents = new Contents(this)
             {
                 ClipChildren = false,
+                AutoFocus = false,
                 BackgroundColor = Color.Red.AlphaMultiplied(0.1f),
                 Parent = _mainPanel
             };
             _background = new Background(this)
             {
                 ClipChildren = false,
+                AutoFocus = false,
                 Size = Vector2.Zero,
                 Parent = _contents
             };
@@ -505,6 +732,32 @@ namespace FlaxEditor.GUI
 
             _mainPanel.IsLayoutLocked = false;
             _mainPanel.PerformLayout();
+        }
+
+        private void ClearSelection()
+        {
+            // TODO: impl this
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            var style = Style.Current;
+            var rect = new Rectangle(Vector2.Zero, Size);
+
+            base.Draw();
+
+            // TODO: draw selection
+            /*if (IsSelecting)
+            {
+                DrawSelection();
+            }*/
+
+            // Draw border
+            if (ContainsFocus)
+            {
+                Render2D.DrawRectangle(rect, style.BackgroundSelected);
+            }
         }
 
         /// <inheritdoc />
