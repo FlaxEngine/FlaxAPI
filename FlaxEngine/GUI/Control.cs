@@ -338,7 +338,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="Control"/> class.
         /// </summary>
-        protected Control()
+        public Control()
         {
             _bounds = new Rectangle(0, 0, 64, 64);
 
@@ -352,7 +352,7 @@ namespace FlaxEngine.GUI
         /// <param name="y">Y coordinate</param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
-        protected Control(float x, float y, float width, float height)
+        public Control(float x, float y, float width, float height)
         {
             _bounds = new Rectangle(x, y, width, height);
 
@@ -364,7 +364,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="location">Upper left corner location.</param>
         /// <param name="size">Bounds size.</param>
-        protected Control(Vector2 location, Vector2 size)
+        public Control(Vector2 location, Vector2 size)
         {
             _bounds = new Rectangle(location, size);
 
@@ -375,7 +375,7 @@ namespace FlaxEngine.GUI
         ///     Init
         /// </summary>
         /// <param name="bounds">Window bounds</param>
-        protected Control(Rectangle bounds)
+        public Control(Rectangle bounds)
         {
             _bounds = bounds;
 
