@@ -86,7 +86,7 @@ namespace FlaxEngine.GUI
         /// <param name="panel2Scroll">The panel2 scroll bars.</param>
         public SplitPanel(Orientation orientation = Orientation.Horizontal, ScrollBars panel1Scroll = ScrollBars.Both, ScrollBars panel2Scroll = ScrollBars.Both)
         {
-            CanFocus = false;
+            AutoFocus = false;
 
             _orientation = orientation;
             _splitterValue = 0.5f;

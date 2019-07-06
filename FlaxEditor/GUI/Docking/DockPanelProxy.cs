@@ -58,7 +58,7 @@ namespace FlaxEditor.GUI.Docking
         internal DockPanelProxy(DockPanel panel)
         : base(0, 0, 64, 64)
         {
-            CanFocus = false;
+            AutoFocus = false;
 
             _panel = panel;
             DockStyle = DockStyle.Fill;

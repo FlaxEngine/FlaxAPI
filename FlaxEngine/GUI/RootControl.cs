@@ -66,7 +66,7 @@ namespace FlaxEngine.GUI
         protected RootControl()
         : base(0, 0, 100, 60)
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <inheritdoc />

@@ -93,7 +93,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     ModuleType = type;
                     Parent = parent;
-                    CanFocus = false;
+                    AutoFocus = false;
 
                     float addButtonWidth = 80.0f;
                     float addButtonHeight = 16.0f;

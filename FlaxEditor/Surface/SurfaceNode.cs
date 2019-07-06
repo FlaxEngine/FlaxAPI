@@ -86,7 +86,7 @@ namespace FlaxEditor.Surface
             ID = id;
             Archetype = nodeArch;
             GroupArchetype = groupArch;
-            CanFocus = false;
+            AutoFocus = false;
             TooltipText = nodeArch.Description;
 
             if (Archetype.DefaultValues != null)

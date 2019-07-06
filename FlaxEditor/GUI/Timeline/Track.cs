@@ -165,7 +165,7 @@ namespace FlaxEditor.GUI.Timeline
         public Track()
         : base(0, 0, 100, 22.0f)
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <summary>

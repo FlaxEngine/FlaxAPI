@@ -198,7 +198,7 @@ namespace FlaxEditor.Surface.Elements
                 var control = new ContainerControl(x, y, 22 * 2 - 2, height)
                 {
                     ClipChildren = false,
-                    CanFocus = false,
+                    AutoFocus = false,
                     Parent = Parent
                 };
                 var floatX = new FloatValueBox(value.X, 0, 0, 20, float.MinValue, float.MaxValue, 0.0f)
@@ -248,7 +248,7 @@ namespace FlaxEditor.Surface.Elements
                 var control = new ContainerControl(x, y, 22 * 3 - 2, height)
                 {
                     ClipChildren = false,
-                    CanFocus = false,
+                    AutoFocus = false,
                     Parent = Parent
                 };
                 var floatX = new FloatValueBox(value.X, 0, 0, 20, float.MinValue, float.MaxValue, 0.0f)
@@ -304,7 +304,7 @@ namespace FlaxEditor.Surface.Elements
                 var control = new ContainerControl(x, y, 22 * 4 - 2, height)
                 {
                     ClipChildren = false,
-                    CanFocus = false,
+                    AutoFocus = false,
                     Parent = Parent
                 };
                 var floatX = new FloatValueBox(value.X, 0, 0, 20, float.MinValue, float.MaxValue, 0.0f)

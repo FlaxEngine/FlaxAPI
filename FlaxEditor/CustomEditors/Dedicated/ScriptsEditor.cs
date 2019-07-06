@@ -34,7 +34,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         public DragAreaControl()
         : base(0, 0, 120, 40)
         {
-            CanFocus = false;
+            AutoFocus = false;
 
             // Add script button
             float addScriptButtonWidth = 60.0f;
@@ -312,7 +312,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         public ScriptArrangeBar()
         : base(0, 0, 120, 6)
         {
-            CanFocus = false;
+            AutoFocus = false;
             Visible = false;
         }
 
@@ -422,7 +422,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
             {
                 TooltipText = "Settings",
-                CanFocus = true,
+                AutoFocus = true,
                 AnchorStyle = AnchorStyle.UpperRight,
                 IsScrollable = false,
                 Color = new Color(0.7f),
@@ -583,7 +583,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 var scriptDrag = new ScriptDragIcon(this, script, scriptToggle.Right, 0.5f, dragIconSize)
                 {
                     TooltipText = "Script reference",
-                    CanFocus = true,
+                    AutoFocus = true,
                     IsScrollable = false,
                     Color = new Color(0.7f),
                     Margin = new Margin(1),
@@ -597,7 +597,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
                 {
                     TooltipText = "Settings",
-                    CanFocus = true,
+                    AutoFocus = true,
                     AnchorStyle = AnchorStyle.UpperRight,
                     IsScrollable = false,
                     Color = new Color(0.7f),

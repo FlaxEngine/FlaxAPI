@@ -48,7 +48,7 @@ namespace FlaxEditor.GUI.ContextMenu
         protected ContextMenuItem(ContextMenu parent, float width, float height)
         : base(0, 0, width, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
             ParentContextMenu = parent;
         }
 

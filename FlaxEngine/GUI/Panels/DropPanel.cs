@@ -208,7 +208,7 @@ namespace FlaxEngine.GUI
         : base(0, 0, 64, 16.0f)
         {
             _performChildrenLayoutFirst = true;
-            CanFocus = false;
+            AutoFocus = false;
 
             var style = Style.Current;
             HeaderColor = style.BackgroundNormal;

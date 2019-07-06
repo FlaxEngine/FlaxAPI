@@ -25,7 +25,7 @@ namespace FlaxEditor.GUI.Timeline
             var colorPickerButton = new Image(Width - settingsButtonSize - 2.0f, 0, settingsButtonSize, settingsButtonSize)
             {
                 TooltipText = "Change folder color",
-                CanFocus = true,
+                AutoFocus = true,
                 AnchorStyle = AnchorStyle.CenterRight,
                 IsScrollable = false,
                 Color = new Color(0.7f),

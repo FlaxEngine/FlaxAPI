@@ -177,7 +177,7 @@ namespace FlaxEngine.GUI
             if (_trackingControl != null)
                 EndTrackingMouse();
 
-            if (control.CanFocus)
+            if (control.AutoFocus)
                 Focus(control);
 
             _trackingControl = control;

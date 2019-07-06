@@ -29,7 +29,7 @@ namespace FlaxEngine.GUI
         : base(0, 0, 300, 24)
         {
             Visible = false;
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <summary>

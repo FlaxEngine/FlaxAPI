@@ -14,7 +14,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public SurfaceRootControl()
         {
-            CanFocus = false;
+            AutoFocus = false;
             ClipChildren = false;
             Pivot = Vector2.Zero;
         }

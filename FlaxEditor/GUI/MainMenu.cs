@@ -20,7 +20,7 @@ namespace FlaxEditor.GUI
         public MainMenu()
         : base(0, 0, 120, 20)
         {
-            CanFocus = false;
+            AutoFocus = false;
             DockStyle = DockStyle.Top;
         }
 

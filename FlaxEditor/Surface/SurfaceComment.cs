@@ -45,7 +45,7 @@ namespace FlaxEditor.Surface
         public SurfaceComment(VisjectSurface surface, ref Rectangle surfaceArea)
         : base(surface, ref surfaceArea)
         {
-            CanFocus = false;
+            AutoFocus = false;
             Title = "Comment";
             Color = new Color(1.0f, 1.0f, 1.0f, 0.2f);
         }

@@ -24,7 +24,7 @@ namespace FlaxEngine.GUI
         public Spacer(float width, float height)
         : base(0, 0, width, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
     }
 }

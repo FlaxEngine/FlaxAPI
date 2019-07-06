@@ -102,7 +102,7 @@ namespace FlaxEditor.GUI.Input
             public Slider(float width, float height)
             : base(0, 0, width, height)
             {
-                CanFocus = false;
+                AutoFocus = false;
             }
 
             private void updateThumb()

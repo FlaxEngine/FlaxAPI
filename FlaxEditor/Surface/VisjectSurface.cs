@@ -275,7 +275,7 @@ namespace FlaxEditor.Surface
         public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, SurfaceStyle style = null, List<GroupArchetype> groups = null)
         {
             DockStyle = DockStyle.Fill;
-            CanFocus = false; // Disable to prevent autofocus and event handling on OnMouseDown event
+            AutoFocus = false; // Disable to prevent autofocus and event handling on OnMouseDown event
 
             Owner = owner;
             Style = style ?? SurfaceStyle.CreateStyleHandler(Editor.Instance);

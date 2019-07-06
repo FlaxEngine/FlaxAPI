@@ -178,7 +178,7 @@ namespace FlaxEditor.Windows
         : base(editor, true, ScrollBars.None)
         {
             Title = "Game";
-            CanFocus = true;
+            AutoFocus = true;
 
             var task = MainRenderTask.Instance;
 
@@ -186,7 +186,7 @@ namespace FlaxEditor.Windows
             _viewport = new RenderOutputControl(task)
             {
                 DockStyle = DockStyle.Fill,
-                CanFocus = false,
+                AutoFocus = false,
                 Parent = this
             };
 
@@ -195,7 +195,7 @@ namespace FlaxEditor.Windows
             {
                 DockStyle = DockStyle.Fill,
                 //Visible = false,
-                CanFocus = false,
+                AutoFocus = false,
                 Parent = _viewport
             };
             RootControl.GameRoot = _guiRoot;

@@ -12,7 +12,7 @@ namespace FlaxEngine.GUI
         internal CanvasContainer()
         {
             DockStyle = DockStyle.Fill;
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <summary>

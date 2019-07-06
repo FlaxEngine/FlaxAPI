@@ -357,7 +357,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     var stop = new GradientStop
                     {
-                        CanFocus = false,
+                        AutoFocus = false,
                         Node = this,
                         Size = new Vector2(16.0f, 16.0f),
                         Parent = this,

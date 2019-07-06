@@ -120,7 +120,7 @@ namespace FlaxEngine.GUI
         public Label()
         : base(0, 0, 100, 20)
         {
-            CanFocus = false;
+            AutoFocus = false;
             var style = Style.Current;
             Font = new FontReference(style.FontMedium);
         }
@@ -129,7 +129,7 @@ namespace FlaxEngine.GUI
         public Label(float x, float y, float width, float height)
         : base(x, y, width, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
             var style = Style.Current;
             Font = new FontReference(style.FontMedium);
         }

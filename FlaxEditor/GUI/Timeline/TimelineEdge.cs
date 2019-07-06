@@ -26,7 +26,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <param name="canEdit">True if can edit the edge.</param>
         public TimelineEdge(Timeline timeline, bool isStart, bool canEdit)
         {
-            CanFocus = false;
+            AutoFocus = false;
             _timeline = timeline;
             _isStart = isStart;
             _canEdit = canEdit;

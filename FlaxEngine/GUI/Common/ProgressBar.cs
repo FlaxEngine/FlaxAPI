@@ -127,7 +127,7 @@ namespace FlaxEngine.GUI
         public ProgressBar(float x, float y, float width, float height = 28)
         : base(x, y, width, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
 
             var style = Style.Current;
             BackgroundColor = style.Background;

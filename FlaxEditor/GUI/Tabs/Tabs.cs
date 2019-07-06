@@ -280,7 +280,7 @@ namespace FlaxEditor.GUI.Tabs
         /// </summary>
         public Tabs()
         {
-            CanFocus = false;
+            AutoFocus = false;
             BackgroundColor = Style.Current.Background;
 
             _selectedIndex = -1;

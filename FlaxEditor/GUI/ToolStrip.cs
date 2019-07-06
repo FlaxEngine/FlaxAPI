@@ -77,7 +77,7 @@ namespace FlaxEditor.GUI
         public ToolStrip(float height = DefaultHeight)
         : base(0, 0, 100, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
             DockStyle = DockStyle.Top;
             BackgroundColor = Style.Current.LightBackground;
         }

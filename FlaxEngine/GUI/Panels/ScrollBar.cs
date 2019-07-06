@@ -174,7 +174,7 @@ namespace FlaxEngine.GUI
         protected ScrollBar(Orientation orientation, float x, float y, float width, float height)
         : base(x, y, width, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
 
             _orientation = orientation;
         }

@@ -183,7 +183,7 @@ namespace FlaxEditor.GUI.Docking
         /// <param name="parentPanel">The parent panel.</param>
         public DockPanel(DockPanel parentPanel)
         {
-            CanFocus = false;
+            AutoFocus = false;
 
             _parentPanel = parentPanel;
             _parentPanel?._childPanels.Add(this);

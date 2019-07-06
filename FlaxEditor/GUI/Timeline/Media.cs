@@ -93,7 +93,7 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public Media()
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <summary>

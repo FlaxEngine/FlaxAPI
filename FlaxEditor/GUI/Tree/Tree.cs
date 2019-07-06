@@ -106,7 +106,7 @@ namespace FlaxEditor.GUI.Tree
         {
             _performChildrenLayoutFirst = true;
             IsScrollable = true;
-            CanFocus = false;
+            AutoFocus = false;
 
             _supportMultiSelect = supportMultiSelect;
             _keyUpdateTime = KeyUpdateTimeout * 10;

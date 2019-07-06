@@ -42,7 +42,7 @@ namespace FlaxEditor.GUI
         public StatusBar()
         : base(0, 0, 100, DefaultHeight)
         {
-            CanFocus = false;
+            AutoFocus = false;
             DockStyle = DockStyle.Bottom;
         }
 

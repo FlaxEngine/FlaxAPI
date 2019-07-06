@@ -61,7 +61,7 @@ namespace FlaxEditor.Windows
             : base(RenderTask.Create<SceneRenderTask>())
             {
                 // Don't steal focus
-                CanFocus = false;
+                AutoFocus = false;
 
                 const float PinSize = 12.0f;
                 const float PinMargin = 2.0f;

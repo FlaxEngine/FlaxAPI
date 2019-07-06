@@ -21,7 +21,7 @@ namespace FlaxEngine.GUI
         private bool _isMouseOver, _isDragOver;
         private bool _isVisible = true;
         private bool _isEnabled = true;
-        private bool _canFocus = true;
+        private bool _autoFocus = true;
         private RootControl.UpdateDelegate _tooltipUpdate;
 
         // Dimensions
@@ -440,13 +440,13 @@ namespace FlaxEngine.GUI
         #region Focus
 
         /// <summary>
-        ///     Gets a value indicating whether the control can receive focus
+        ///     Gets a value indicating whether the control can receive automatic focus on user events (eg. mouse down.
         /// </summary>
         [HideInEditor]
-        public bool CanFocus
+        public bool AutoFocus
         {
-            get => _canFocus;
-            set => _canFocus = value;
+            get => _autoFocus;
+            set => _autoFocus = value;
         }
 
         /// <summary>
@@ -629,7 +629,7 @@ namespace FlaxEngine.GUI
         /// <returns>True if event has been handled, otherwise false</returns>
         public virtual bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            return _canFocus && Focus(this);
+            return _autoFocus && Focus(this);
         }
 
         /// <summary>
