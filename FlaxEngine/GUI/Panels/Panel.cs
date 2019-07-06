@@ -150,11 +150,15 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void SetViewOffset(ref Vector2 value)
         {
+            bool wasLocked = IsLayoutLocked;
+            IsLayoutLocked = true;
+
             if (HScrollBar != null)
                 HScrollBar.Value = -value.X;
             if (VScrollBar != null)
                 VScrollBar.Value = -value.Y;
 
+            IsLayoutLocked = wasLocked;
             base.SetViewOffset(ref value);
         }
 
