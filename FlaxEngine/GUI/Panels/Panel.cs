@@ -139,12 +139,23 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="Panel"/> class.
         /// </summary>
         /// <param name="scrollBars">The scroll bars.</param>
-        /// <param name="canFocus">True if control can accept user focus</param>
-        public Panel(ScrollBars scrollBars, bool canFocus = false)
+        /// <param name="autoFocus">True if control can accept user focus</param>
+        public Panel(ScrollBars scrollBars, bool autoFocus = false)
         {
-            CanFocus = canFocus;
+            AutoFocus = autoFocus;
 
             ScrollBars = scrollBars;
+        }
+
+        /// <inheritdoc />
+        protected override void SetViewOffset(ref Vector2 value)
+        {
+            if (HScrollBar != null)
+                HScrollBar.Value = -value.X;
+            if (VScrollBar != null)
+                VScrollBar.Value = -value.Y;
+
+            base.SetViewOffset(ref value);
         }
 
         /// <summary>
@@ -203,6 +214,7 @@ namespace FlaxEngine.GUI
                 _viewOffset.Y = -value;
             else
                 _viewOffset.X = -value;
+            OnViewOffsetChanged();
             PerformLayout();
         }
 
@@ -355,6 +367,7 @@ namespace FlaxEngine.GUI
                     // Clear scroll state
                     VScrollBar.Reset();
                     _viewOffset.Y = 0;
+                    OnViewOffsetChanged();
 
                     // Get the new bounds after changing scroll
                     ArrangeAndGetBounds();
@@ -379,8 +392,8 @@ namespace FlaxEngine.GUI
 
                     // Clear scroll state
                     HScrollBar.Reset();
-
                     _viewOffset.X = 0;
+                    OnViewOffsetChanged();
 
                     // Get the new bounds after changing scroll
                     ArrangeAndGetBounds();
@@ -476,6 +489,7 @@ namespace FlaxEngine.GUI
             if (viewOffset != _viewOffset)
             {
                 _viewOffset = viewOffset;
+                OnViewOffsetChanged();
                 PerformLayout();
             }
 
