@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -202,77 +203,6 @@ namespace FlaxEditor.GUI
             /// The output tangent (going from this key to next one) of the key.
             /// </summary>
             public T TangentOut;
-        }
-
-        /// <summary>
-        /// The curve background control.
-        /// </summary>
-        /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-        private class Background : ContainerControl
-        {
-            private readonly CurveEditor<T> _curve;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Background"/> class.
-            /// </summary>
-            /// <param name="curve">The curve.</param>
-            public Background(CurveEditor<T> curve)
-            {
-                _curve = curve;
-            }
-
-            /// <inheritdoc />
-            public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
-            {
-                // Pass all events
-                location = PointFromParent(ref locationParent);
-                return true;
-            }
-
-            /// <inheritdoc />
-            public override void Draw()
-            {
-                var style = Style.Current;
-                var mainPanel = _curve._mainPanel;
-                var linesColor = Style.Current.BackgroundNormal;
-                var areaLeft = -X;
-                var areaRight = Parent.Width + mainPanel.ControlsBounds.BottomRight.X;
-                var height = Height;
-                var leftSideMin = PointFromParent(Vector2.Zero);
-                var leftSideMax = BottomLeft;
-                var rightSideMin = UpperRight;
-                var rightSideMax = PointFromParent(Parent.BottomRight) + mainPanel.ControlsBounds.BottomRight;
-                /*
-                // Draw vertical lines for time axis
-                var framesPerSecond = 60.0f;
-                var leftFrame = Mathf.Floor(leftSideMin.X / UnitsPerSecond) * framesPerSecond;
-                var rightFrame = Mathf.Ceil(rightSideMax.X / UnitsPerSecond) * framesPerSecond;
-                var verticalLinesHeaderExtend = IntervalsAreaHeight * 0.5f;
-                for (float frame = leftFrame; frame <= rightFrame; frame += framesPerSecond)
-                {
-                    var time = frame / framesPerSecond;
-                    var x = time * UnitsPerSecond;
-
-                    // Vertical line
-                    Render2D.FillRectangle(new Rectangle(x - 0.5f, 0, 1.0f, height), style.ForegroundDisabled.RGBMultiplied(0.7f));
-                    
-                    // Header line
-                    Render2D.FillRectangle(new Rectangle(x - 0.5f, -verticalLinesHeaderExtend, 1.0f, verticalLinesHeaderExtend), style.Foreground.RGBMultiplied(0.8f));
-
-                    // Time
-                    string label = time.ToString();
-                    var labelRect = new Rectangle(x + 2, -verticalLinesHeaderExtend, 50, verticalLinesHeaderExtend);
-                    Render2D.DrawText(style.FontSmall, label, labelRect, style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.8f);
-                }
-                */
-                DrawChildren();
-                /*
-                // Darken area outside the duration
-                var outsideDurationAreaColor = new Color(0, 0, 0, 100);
-                Render2D.FillRectangle(new Rectangle(leftSideMin, leftSideMax.X - leftSideMin.X, height), outsideDurationAreaColor);
-                Render2D.FillRectangle(new Rectangle(rightSideMin, rightSideMax.X - rightSideMin.X, height), outsideDurationAreaColor);
-                */
-            }
         }
 
         /// <summary>
@@ -559,17 +489,20 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The timeline intervals metric area size (in pixels).
         /// </summary>
-        public static readonly float IntervalsAreaHeight = 20.0f;
+        public static readonly float LabelsSize = 10.0f;
 
         /// <summary>
         /// The timeline units per second (on time axis).
         /// </summary>
         public static readonly float UnitsPerSecond = 100.0f;
 
-        private Background _background;
         private Contents _contents;
         private Panel _mainPanel;
         private readonly List<KeyframePoint> _points = new List<KeyframePoint>();
+        private Color _contentsColor;
+        private Color _linesColor;
+        private Color _labelsColor;
+        private Font _labelsFont;
 
         /// <summary>
         /// The keyframes collection.
@@ -611,11 +544,16 @@ namespace FlaxEditor.GUI
 
         public CurveEditor()
         {
+            var style = Style.Current;
+            _contentsColor = style.Background.RGBMultiplied(0.7f);
+            _linesColor = style.ForegroundDisabled.RGBMultiplied(0.7f);
+            _labelsColor = style.ForegroundDisabled;
+            _labelsFont = style.FontSmall;
+
             _mainPanel = new Panel(ScrollBars.Both)
             {
                 AlwaysShowScrollbars = true,
-                //ScrollMargin = new Margin(50.0f),
-                BackgroundColor = Style.Current.Background.RGBMultiplied(0.7f),
+                ScrollMargin = new Margin(50.0f),
                 DockStyle = DockStyle.Fill,
                 Parent = this
             };
@@ -625,13 +563,6 @@ namespace FlaxEditor.GUI
                 AutoFocus = false,
                 BackgroundColor = Color.Red.AlphaMultiplied(0.1f),
                 Parent = _mainPanel
-            };
-            _background = new Background(this)
-            {
-                ClipChildren = false,
-                AutoFocus = false,
-                Size = Vector2.Zero,
-                Parent = _contents
             };
 
             UpdateKeyframes();
@@ -651,7 +582,7 @@ namespace FlaxEditor.GUI
 
             _keyframes.Clear();
             _keyframes.AddRange(keyframesArray);
-            _keyframes.Sort((a, b) => a.Time < b.Time ? 1 : 0);
+            _keyframes.Sort((a, b) => a.Time > b.Time ? 1 : 0);
 
             OnKeyframesChanged();
         }
@@ -699,18 +630,19 @@ namespace FlaxEditor.GUI
             _mainPanel.IsLayoutLocked = true;
 
             // Place keyframes
+            Rectangle curveContentAreaBounds = _mainPanel.GetClientArea();
             for (int i = 0; i < _keyframes.Count; i++)
             {
                 var p = _points[i];
                 var k = _keyframes[i];
 
-                var x = k.Time;
-                var y = Accessor.GetCurveValue(ref k.Value, 0);
+                var x = k.Time * 2 - 1;
+                var y = Accessor.GetCurveValue(ref k.Value, 0) * 2 - 1;
 
                 p.Location = new Vector2
                 (
                     x * UnitsPerSecond - p.Width * 0.5f,
-                    y * UnitsPerSecond - p.Height * 0.5f
+                    y * -UnitsPerSecond - p.Height * 0.5f + curveContentAreaBounds.Height
                 );
             }
 
@@ -739,11 +671,117 @@ namespace FlaxEditor.GUI
             // TODO: impl this
         }
 
+        /// <summary>
+        /// Converts the input point from curve editor control space into the keyframes time/value coordinates.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns>The result.</returns>
+        private Vector2 PointToKeyframes(Vector2 point)
+        {
+            // Curve Editor -> Main Panel
+            point = _mainPanel.PointFromParent(point);
+
+            // Main Panel -> Contents
+            point = _contents.PointFromParent(point);
+
+            // Contents -> Keyframes
+            Rectangle curveContentAreaBounds = _mainPanel.GetClientArea(); // TODO: make it arg of this method
+            return new Vector2(
+                (point.X + _contents.Location.X) / UnitsPerSecond,
+                (point.Y + _contents.Location.Y - curveContentAreaBounds.Height) / -UnitsPerSecond
+            );
+        }
+
+        /// <summary>
+        /// Converts the input point from the keyframes time/value coordinates into the curve editor control space.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns>The result.</returns>
+        private Vector2 PointFromKeyframes(Vector2 point)
+        {
+            // Keyframes -> Contents
+            Rectangle curveContentAreaBounds = _mainPanel.GetClientArea(); // TODO: make it arg of this method
+            point = new Vector2(
+                point.X * UnitsPerSecond - _contents.Location.X,
+                point.Y * -UnitsPerSecond + curveContentAreaBounds.Height - _contents.Location.Y
+            );
+
+            // Contents -> Main Panel
+            point = _contents.PointToParent(point);
+
+            // Main Panel -> Curve Editor
+            return _mainPanel.PointToParent(point);
+        }
+
+        private void DrawAxisX(ref Rectangle viewRect, float left, float right)
+        {
+            // Project value into the actual curve editor location
+            var leftPoint = PointFromKeyframes(new Vector2(left, 0));
+            var rightPoint = PointFromKeyframes(new Vector2(right, 0));
+
+            // Draw line
+            var intensity = Mathf.IsZero(right) ? 1.0f : 0.8f;
+            Render2D.FillRectangle(new Rectangle(viewRect.X + rightPoint.X - 0.5f, viewRect.Y, 1.0f, viewRect.Height), _linesColor.RGBMultiplied(intensity));
+
+            // Draw label
+            string label = right.ToString();
+            var labelRect = new Rectangle(viewRect.X + rightPoint.X + 4.0f, viewRect.Bottom + -LabelsSize, 50, LabelsSize);
+            Render2D.DrawText(_labelsFont, label, labelRect, _labelsColor.RGBMultiplied(intensity), TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.7f);
+
+            // Subdivide range if can fit it into view
+            if (rightPoint.X - leftPoint.X > 80.0f)
+            {
+                var offset = (right - left) * 0.5f;
+                DrawAxisX(ref viewRect, left, left + offset);
+                DrawAxisX(ref viewRect, left + offset, right);
+            }
+        }
+
+        private void DrawAxisY(ref Rectangle viewRect, float left, float right)
+        {
+            // Project value into the actual curve editor location
+            var leftPoint = PointFromKeyframes(new Vector2(0, left));
+            var rightPoint = PointFromKeyframes(new Vector2(0, right));
+
+            // Draw line
+            var intensity = Mathf.IsZero(right) ? 1.0f : 0.8f;
+            Render2D.FillRectangle(new Rectangle(viewRect.X, viewRect.Y + rightPoint.Y - 0.5f, viewRect.Width, 2.0f), _linesColor.RGBMultiplied(intensity));
+
+            // Draw label
+            string label = right.ToString();
+            var labelRect = new Rectangle(viewRect.X + 4.0f, viewRect.Y + rightPoint.Y - LabelsSize, 50, LabelsSize);
+            Render2D.DrawText(_labelsFont, label, labelRect, _labelsColor.RGBMultiplied(intensity), TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.7f);
+
+            // Subdivide range if can fit it into view
+            if (rightPoint.Y - leftPoint.Y > 80.0f)
+            {
+                var offset = (right - left) * 0.5f;
+                DrawAxisY(ref viewRect, left, left + offset);
+                DrawAxisY(ref viewRect, left + offset, right);
+            }
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {
             var style = Style.Current;
             var rect = new Rectangle(Vector2.Zero, Size);
+            var viewRect = _mainPanel.GetClientArea();
+
+            // Draw background
+            Render2D.FillRectangle(rect, _contentsColor);
+
+            // Draw time and values axes
+            var upperLeft = PointToKeyframes(viewRect.Location);
+            var bottomRight = PointToKeyframes(viewRect.Size);
+            var leftX = Mathf.Floor(upperLeft.X) - 1.0f;
+            var rightX = Mathf.Ceil(bottomRight.X) + 1.0f;
+            var leftY = Mathf.Ceil(upperLeft.Y) + 1.0f;
+            var rightY = Mathf.Floor(bottomRight.Y) - 1.0f;
+            Render2D.PushClip(ref viewRect);
+            DrawAxisX(ref viewRect, leftX, rightX);
+            DrawAxisY(ref viewRect, leftY, rightY);
+            Render2D.PopClip();
 
             base.Draw();
 
@@ -764,8 +802,8 @@ namespace FlaxEditor.GUI
         public override void Dispose()
         {
             // Clear references to the controls
-            _background = null;
             _mainPanel = null;
+            _contents = null;
 
             // Cleanup
             _points.Clear();

@@ -514,12 +514,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Get desire cleint area rectangle for all controls
+        ///     Gets the desire client area rectangle for all the controls.
         /// </summary>
-        /// <param name="rect">Rectangle for controls</param>
+        /// <param name="rect">The client area rectangle for child controls.</param>
         protected virtual void GetDesireClientArea(out Rectangle rect)
         {
-            rect = new Rectangle(0, 0, Size);
+            rect = new Rectangle(Vector2.Zero, Size);
         }
 
         /// <summary>
