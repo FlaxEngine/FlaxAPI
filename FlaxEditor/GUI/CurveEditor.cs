@@ -234,6 +234,20 @@ namespace FlaxEditor.GUI
                 return GetChildAt(location) as KeyframePoint;
             }
 
+            private void UpdateSelectionRectangle()
+            {
+                var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
+
+                // Find controls to select
+                for (int i = 0; i < Children.Count; i++)
+                {
+                    if (Children[i] is KeyframePoint p)
+                    {
+                        p.IsSelected = p.Bounds.Intersects(ref selectionRect);
+                    }
+                }
+            }
+
             /// <inheritdoc />
             public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
             {
@@ -311,10 +325,9 @@ namespace FlaxEditor.GUI
                     return;
                 }
                 // Selecting
-                else if (_rightMouseDown)
+                else if (_leftMouseDown)
                 {
-                    //UpdateSelectionRectangle();
-
+                    UpdateSelectionRectangle();
                     return;
                 }
 
@@ -430,7 +443,7 @@ namespace FlaxEditor.GUI
                     // Selecting
                     if (!_isMovingSelection)
                     {
-                        //UpdateSelectionRectangle();
+                        UpdateSelectionRectangle();
                     }
 
                     _isMovingSelection = false;
@@ -476,6 +489,20 @@ namespace FlaxEditor.GUI
                 }
 
                 return false;
+            }
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                base.Draw();
+
+                // Selection rectangle
+                if (_leftMouseDown && !_isMovingSelection)
+                {
+                    var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
+                    Render2D.FillRectangle(selectionRect, Color.Orange * 0.4f);
+                    Render2D.DrawRectangle(selectionRect, Color.Orange);
+                }
             }
 
             /// <summary>
