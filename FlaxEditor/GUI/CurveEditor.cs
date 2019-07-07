@@ -229,6 +229,11 @@ namespace FlaxEditor.GUI
                 _curve = curve;
             }
 
+            private KeyframePoint GetKeyframe(ref Vector2 location)
+            {
+                return GetChildAt(location) as KeyframePoint;
+            }
+
             /// <inheritdoc />
             public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
             {
@@ -270,21 +275,38 @@ namespace FlaxEditor.GUI
                 else if (_isMovingSelection)
                 {
                     // Calculate delta (apply view offset)
-                    /*Vector2 viewDelta = _curve.ViewOffset - _movingSelectionViewPos;
+                    Vector2 viewDelta = _curve.ViewOffset - _movingSelectionViewPos;
                     _movingSelectionViewPos = _curve.ViewOffset;
-                    Vector2 delta = location - _leftMouseDownPos - viewDelta;
+                    var viewRect = _curve._mainPanel.GetClientArea();
+                    var delta = location - _leftMouseDownPos - viewDelta;
                     if (delta.LengthSquared > 0.01f)
                     {
                         // Move selected keyframes
-                        delta /= _targetScale;
-                        for (auto keyframe : _curve._points)
+                        var keyframeDelta = PointToKeyframes(location, ref viewRect) - PointToKeyframes(_leftMouseDownPos - viewDelta, ref viewRect);
+                        var accessor = _curve.Accessor;
+                        var components = accessor.GetCurveComponents();
+                        for (var i = 0; i < _curve._points.Count; i++)
                         {
-                            control.Location += delta;
+                            var p = _curve._points[i];
+                            if (p.IsSelected)
+                            {
+                                var k = _curve._keyframes[p.Index];
+                                float value = accessor.GetCurveValue(ref k.Value, p.Component);
+
+                                value += keyframeDelta.Y;
+                                if (components != 1)
+                                    throw new NotImplementedException("TODO: moving keyframe from multi-component curve (edit time by only one point)");
+                                k.Time += keyframeDelta.X;
+
+                                accessor.SetCurveValue(value, ref k.Value, p.Component);
+                                _curve._keyframes[p.Index] = k;
+                            }
                         }
+                        _curve.UpdateKeyframes();
+                        _curve._mainPanel.ScrollViewTo(PointToParent(location));
                         _leftMouseDownPos = location;
                         Cursor = CursorType.SizeAll;
-                        MarkAsEdited(false);
-                    }*/
+                    }
 
                     return;
                 }
@@ -342,26 +364,25 @@ namespace FlaxEditor.GUI
                     _rightMouseDown = true;
                     _rightMouseDownPos = location;
                 }
-                /*
+
                 // Check if any node is under the mouse
-                var controlUnderMouse = GetControlUnderMouse();
-                Vector2 cLocation = _rootControl.PointFromParent(ref location);
-                if (controlUnderMouse != null)
+                var keyframeUnderMouse = GetKeyframe(ref location);
+                if (keyframeUnderMouse != null)
                 {
-                    // Check if mouse is over header and user is pressing mouse left button
-                    if (_leftMouseDown && controlUnderMouse.CanSelect(ref cLocation))
+                    if (_leftMouseDown)
                     {
                         // Check if user is pressing control
                         if (Root.GetKey(Keys.Control))
                         {
                             // Add to selection
-                            AddToSelection(controlUnderMouse);
+                            keyframeUnderMouse.Select();
                         }
                         // Check if node isn't selected
-                        else if (!controlUnderMouse.IsSelected)
+                        else if (!keyframeUnderMouse.IsSelected)
                         {
                             // Select node
-                            Select(controlUnderMouse);
+                            _curve.ClearSelection();
+                            keyframeUnderMouse.Select();
                         }
 
                         // Start moving selected nodes
@@ -372,7 +393,7 @@ namespace FlaxEditor.GUI
                         return true;
                     }
                 }
-                else*/
+                else
                 {
                     if (_leftMouseDown)
                     {
@@ -400,10 +421,6 @@ namespace FlaxEditor.GUI
             {
                 _mousePos = location;
 
-                // Check if any control is under the mouse
-                //var controlUnderMouse = GetControlUnderMouse();
-
-                // Cache flags and state
                 if (_leftMouseDown && buttons == MouseButton.Left)
                 {
                     _leftMouseDown = false;
@@ -415,6 +432,8 @@ namespace FlaxEditor.GUI
                     {
                         //UpdateSelectionRectangle();
                     }
+
+                    _isMovingSelection = false;
                 }
                 if (_rightMouseDown && buttons == MouseButton.Right)
                 {
@@ -430,6 +449,7 @@ namespace FlaxEditor.GUI
                     }
                     _mouseMoveAmount = 0;
                 }
+
                 if (base.OnMouseUp(location, buttons))
                 {
                     // Clear flags
@@ -456,6 +476,21 @@ namespace FlaxEditor.GUI
                 }
 
                 return false;
+            }
+
+            /// <summary>
+            /// Converts the input point from curve editor contents control space into the keyframes time/value coordinates.
+            /// </summary>
+            /// <param name="point">The point.</param>
+            /// <param name="point">The curve contents area bounds.</param>
+            /// <returns>The result.</returns>
+            private Vector2 PointToKeyframes(Vector2 point, ref Rectangle curveContentAreaBounds)
+            {
+                // Contents -> Keyframes
+                return new Vector2(
+                    (point.X + Location.X) / UnitsPerSecond,
+                    (point.Y + Location.Y - curveContentAreaBounds.Height) / -UnitsPerSecond
+                );
             }
         }
 
@@ -496,6 +531,16 @@ namespace FlaxEditor.GUI
                     color *= 1.1f;
 
                 Render2D.FillRectangle(rect, color);
+            }
+
+            public void Select()
+            {
+                IsSelected = true;
+            }
+
+            public void Deselect()
+            {
+                IsSelected = false;
             }
         }
 
@@ -627,6 +672,7 @@ namespace FlaxEditor.GUI
             {
                 _points.Add(new KeyframePoint
                 {
+                    AutoFocus = false,
                     Size = new Vector2(4.0f),
                     Curve = this,
                     Index = _points.Count / components,
@@ -689,7 +735,10 @@ namespace FlaxEditor.GUI
 
         private void ClearSelection()
         {
-            // TODO: impl this
+            for (int i = 0; i < _points.Count; i++)
+            {
+                _points[i].Deselect();
+            }
         }
 
         /// <summary>
@@ -808,10 +857,11 @@ namespace FlaxEditor.GUI
                 var upperLeft = PointToKeyframes(viewRect.Location, ref viewRect);
                 var bottomRight = PointToKeyframes(viewRect.Size, ref viewRect);
 
-                var leftX = Mathf.Floor(upperLeft.X) - 1.0f;
-                var rightX = Mathf.Ceil(bottomRight.X) + 1.0f;
-                var leftY = Mathf.Ceil(upperLeft.Y) + 1.0f;
-                var rightY = Mathf.Floor(bottomRight.Y) - 1.0f;
+                var limit = 1000000.0f;
+                var leftX = Math.Max(Mathf.Floor(upperLeft.X) - 1.0f, -limit);
+                var rightX = Math.Min(Mathf.Ceil(bottomRight.X) + 1.0f, limit);
+                var leftY = Math.Min(Mathf.Ceil(upperLeft.Y) + 1.0f, limit);
+                var rightY = Math.Max(Mathf.Floor(bottomRight.Y) - 1.0f, -limit);
 
                 Render2D.PushClip(ref viewRect);
 
