@@ -123,6 +123,7 @@ namespace FlaxEditor.Windows.Assets
             public MaterialWindow Window;
             public bool IsAdd;
             public int Index;
+            public string Name;
             public ParameterType Type;
 
             /// <inheritdoc />
@@ -149,6 +150,7 @@ namespace FlaxEditor.Windows.Assets
             private void Add()
             {
                 var param = SurfaceParameter.Create(Type);
+                param.Name = Name;
                 if (Type == ParameterType.NormalMap)
                 {
                     // Use default normal map texture (don't load asset here, just lookup registry for id at path)
@@ -157,13 +159,15 @@ namespace FlaxEditor.Windows.Assets
                     FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
                     param.Value = id;
                 }
-                Window.Surface.Parameters.Add(param);
+                Window.Surface.Parameters.Insert(Index, param);
                 Window.Surface.OnParamCreated(param);
             }
 
             private void Remove()
             {
                 var param = Window.Surface.Parameters[Index];
+                Name = param.Name;
+                Type = param.Type;
                 Window.Surface.Parameters.RemoveAt(Index);
                 Window.Surface.OnParamDeleted(param);
             }
