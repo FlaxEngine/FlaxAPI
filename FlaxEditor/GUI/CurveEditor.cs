@@ -560,6 +560,15 @@ namespace FlaxEditor.GUI
                 Render2D.FillRectangle(rect, color);
             }
 
+            /// <inheritdoc />
+            protected override void SetLocationInternal(ref Vector2 location)
+            {
+                base.SetLocationInternal(ref location);
+
+                var k = Curve._keyframes[Index];
+                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, Curve.Accessor.GetCurveValue(ref k.Value, Component));
+            }
+
             public void Select()
             {
                 IsSelected = true;
