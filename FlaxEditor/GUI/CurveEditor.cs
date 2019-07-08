@@ -1157,7 +1157,7 @@ namespace FlaxEditor.GUI
                         var startTangent = Accessor.GetCurveValue(ref startK.TangentOut, component);
                         var endTangent = Accessor.GetCurveValue(ref endK.TangentIn, component);
 
-                        var offset = end.X - start.X;
+                        var offset = (end.X - start.X) * 0.5f;
 
                         var p1 = PointFromKeyframes(start, ref viewRect);
                         var p2 = PointFromKeyframes(start + new Vector2(offset, startTangent * offset), ref viewRect);
