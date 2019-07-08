@@ -28,6 +28,58 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Surface.IVisjectSurfaceOwner" />
     public sealed class MaterialWindow : ClonedAssetEditorWindowBase<Material>, IVisjectSurfaceOwner
     {
+        private class EditParamAction : IUndoAction
+        {
+            public MaterialWindow Window;
+            public int Index;
+            public object Before;
+            public object After;
+
+            /// <inheritdoc />
+            public string ActionString => "Edit parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(object value)
+            {
+                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
+                var surfaceParam = value;
+                switch (Window.Asset.Parameters[Index].Type)
+                {
+                case MaterialParameterType.CubeTexture:
+                case MaterialParameterType.Texture:
+                case MaterialParameterType.NormalMap:
+                case MaterialParameterType.RenderTarget:
+                case MaterialParameterType.RenderTargetArray:
+                case MaterialParameterType.RenderTargetCube:
+                case MaterialParameterType.RenderTargetVolume:
+                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
+                    break;
+                }
+
+                Window.Asset.Parameters[Index].Value = value;
+                Window.Surface.Parameters[Index].Value = surfaceParam;
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
@@ -153,26 +205,22 @@ namespace FlaxEditor.Windows.Assets
 
                         var pIndex = i;
                         var pValue = p.Value;
-                        var pGuidType = false;
                         Type pType;
                         object[] attributes = null;
                         switch (p.Type)
                         {
                         case MaterialParameterType.CubeTexture:
                             pType = typeof(CubeTexture);
-                            pGuidType = true;
                             break;
                         case MaterialParameterType.Texture:
                         case MaterialParameterType.NormalMap:
                             pType = typeof(Texture);
-                            pGuidType = true;
                             break;
                         case MaterialParameterType.RenderTarget:
                         case MaterialParameterType.RenderTargetArray:
                         case MaterialParameterType.RenderTargetCube:
                         case MaterialParameterType.RenderTargetVolume:
                             pType = typeof(RenderTarget);
-                            pGuidType = true;
                             break;
                         default:
                             pType = p.Value.GetType();
@@ -194,14 +242,15 @@ namespace FlaxEditor.Windows.Assets
                             {
                                 // Set material parameter and surface parameter
                                 var win = (MaterialWindow)instance;
-
-                                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
-                                var surfaceParam = value;
-                                if (pGuidType)
-                                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
-
-                                win.Asset.Parameters[pIndex].Value = value;
-                                win.Surface.Parameters[pIndex].Value = surfaceParam;
+                                var action = new EditParamAction
+                                {
+                                    Window = win,
+                                    Index = pIndex,
+                                    Before = win.Asset.Parameters[pIndex].Value,
+                                    After = value,
+                                };
+                                win.Surface.Undo.AddAction(action);
+                                action.Do();
                                 win._paramValueChange = true;
                             },
                             attributes
