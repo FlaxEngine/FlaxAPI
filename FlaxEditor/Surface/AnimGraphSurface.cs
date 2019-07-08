@@ -85,8 +85,8 @@ namespace FlaxEditor.Surface
         private bool _isRegisteredForScriptsReload;
 
         /// <inheritdoc />
-        public AnimGraphSurface(IVisjectSurfaceOwner owner, Action onSave)
-        : base(owner, onSave)
+        public AnimGraphSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo)
+        : base(owner, onSave, undo)
         {
             // Find custom nodes for Anim Graph
             var customNodes = Editor.Instance.CodeEditing.AnimGraphNodes.GetArchetypes();

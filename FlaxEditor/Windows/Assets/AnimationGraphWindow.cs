@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -8,6 +9,7 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.History;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
@@ -29,6 +31,152 @@ namespace FlaxEditor.Windows.Assets
     public sealed class AnimationGraphWindow : ClonedAssetEditorWindowBase<AnimationGraph>, IVisjectSurfaceOwner
     {
         internal static Guid BaseModelId = new Guid(1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+        private class EditParamAction : IUndoAction
+        {
+            public AnimationGraphWindow Window;
+            public int Index;
+            public object Before;
+            public object After;
+
+            /// <inheritdoc />
+            public string ActionString => "Edit parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(object value)
+            {
+                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
+                var surfaceParam = value;
+                switch (Window.PreviewActor.Parameters[Index].Type)
+                {
+                case AnimationGraphParameterType.Asset:
+                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
+                    break;
+                }
+
+                Window.PreviewActor.Parameters[Index].Value = value;
+                Window.Surface.Parameters[Index].Value = surfaceParam;
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
+        private class RenameParamAction : IUndoAction
+        {
+            public AnimationGraphWindow Window;
+            public int Index;
+            public string Before;
+            public string After;
+
+            /// <inheritdoc />
+            public string ActionString => "Rename parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(string value)
+            {
+                var param = Window.Surface.Parameters[Index];
+
+                param.Name = value;
+                Window.Surface.OnParamRenamed(param);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
+        private class AddRemoveParamAction : IUndoAction
+        {
+            public AnimationGraphWindow Window;
+            public bool IsAdd;
+            public int Index;
+            public string Name;
+            public ParameterType Type;
+
+            /// <inheritdoc />
+            public string ActionString => IsAdd ? "Add parameter" : "Remove parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                if (IsAdd)
+                    Add();
+                else
+                    Remove();
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                if (IsAdd)
+                    Remove();
+                else
+                    Add();
+            }
+
+            private void Add()
+            {
+                var param = SurfaceParameter.Create(Type);
+                param.Name = Name;
+                if (Type == ParameterType.NormalMap)
+                {
+                    // Use default normal map texture (don't load asset here, just lookup registry for id at path)
+                    string typeName;
+                    Guid id;
+                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
+                    param.Value = id;
+                }
+                Window.Surface.Parameters.Insert(Index, param);
+                Window.Surface.OnParamCreated(param);
+            }
+
+            private void Remove()
+            {
+                var param = Window.Surface.Parameters[Index];
+                Name = param.Name;
+                Type = param.Type;
+                Window.Surface.Parameters.RemoveAt(Index);
+                Window.Surface.OnParamDeleted(param);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+            }
+        }
 
         private sealed class Preview : AnimatedModelPreview
         {
@@ -114,7 +262,7 @@ namespace FlaxEditor.Windows.Assets
                 }
             }
 
-            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
+            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor)), NoSerialize]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public AnimationGraphWindow WindowReference { get; set; }
 
@@ -177,14 +325,12 @@ namespace FlaxEditor.Windows.Assets
 
                         var pIndex = i;
                         var pValue = p.Value;
-                        var pGuidType = false;
                         Type pType;
                         object[] attributes = null;
                         switch (p.Type)
                         {
                         case AnimationGraphParameterType.Asset:
                             pType = typeof(Asset);
-                            pGuidType = true;
                             break;
                         default:
                             pType = p.Value.GetType();
@@ -206,14 +352,15 @@ namespace FlaxEditor.Windows.Assets
                             {
                                 // Set parameter and surface parameter
                                 var win = (AnimationGraphWindow)instance;
-
-                                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
-                                var surfaceParam = value;
-                                if (pGuidType)
-                                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
-
-                                win.PreviewActor.Parameters[pIndex].Value = value;
-                                win.Surface.Parameters[pIndex].Value = surfaceParam;
+                                var action = new EditParamAction
+                                {
+                                    Window = win,
+                                    Index = pIndex,
+                                    Before = win.PreviewActor.Parameters[pIndex].Value,
+                                    After = value,
+                                };
+                                win.Surface.Undo.AddAction(action);
+                                action.Do();
                                 win._paramValueChange = true;
                             },
                             attributes
@@ -270,9 +417,14 @@ namespace FlaxEditor.Windows.Assets
                     if (asset == null || !asset.IsLoaded)
                         return;
 
-                    var param = SurfaceParameter.Create(type);
-                    window.Surface.Parameters.Add(param);
-                    window.Surface.OnParamCreated(param);
+                    var action = new AddRemoveParamAction
+                    {
+                        Window = window,
+                        IsAdd = true,
+                        Type = type,
+                    };
+                    window.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <summary>
@@ -291,15 +443,19 @@ namespace FlaxEditor.Windows.Assets
 
                 private void OnParameterRenamed(RenamePopup renamePopup)
                 {
+                    var win = (AnimationGraphWindow)Values[0];
                     var label = (ClickablePropertyNameLabel)renamePopup.Tag;
                     var index = (int)label.Tag;
-                    var newName = renamePopup.Text;
 
-                    var win = (AnimationGraphWindow)Values[0];
-                    var param = win.Surface.Parameters[index];
-                    param.Name = newName;
-                    label.Text = newName;
-                    win.Surface.OnParamRenamed(param);
+                    var action = new RenameParamAction
+                    {
+                        Window = win,
+                        Index = index,
+                        Before = win.Surface.Parameters[index].Name,
+                        After = renamePopup.Text,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <summary>
@@ -309,9 +465,15 @@ namespace FlaxEditor.Windows.Assets
                 private void DeleteParameter(int index)
                 {
                     var win = (AnimationGraphWindow)Values[0];
-                    var param = win.Surface.Parameters[index];
-                    win.Surface.Parameters.RemoveAt(index);
-                    win.Surface.OnParamDeleted(param);
+
+                    var action = new AddRemoveParamAction
+                    {
+                        Window = win,
+                        IsAdd = false,
+                        Index = index,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <inheritdoc />
@@ -386,10 +548,15 @@ namespace FlaxEditor.Windows.Assets
         private readonly NavigationBar _navigationBar;
 
         private readonly ToolStripButton _saveButton;
+        private readonly ToolStripButton _undoButton;
+        private readonly ToolStripButton _redoButton;
+        private readonly CustomEditorPresenter _propertiesEditor;
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpAssetIsDirty;
         internal bool _paramValueChange;
+
+        private Undo _undo;
 
         /// <summary>
         /// Gets the graph surface.
@@ -405,6 +572,12 @@ namespace FlaxEditor.Windows.Assets
         public AnimationGraphWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            // Undo
+            _undo = new Undo();
+            _undo.UndoDone += OnUndo;
+            _undo.RedoDone += OnUndo;
+            _undo.ActionDone += OnUndo;
+
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
@@ -431,14 +604,14 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Graph properties editor
-            var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.Parent = _split2.Panel2;
+            _propertiesEditor = new CustomEditorPresenter(_undo);
+            _propertiesEditor.Panel.Parent = _split2.Panel2;
             _properties = new PropertiesProxy();
-            propertiesEditor.Select(_properties);
-            propertiesEditor.Modified += OnGraphPropertyEdited;
+            _propertiesEditor.Select(_properties);
+            _propertiesEditor.Modified += OnGraphPropertyEdited;
 
             // Surface
-            _surface = new AnimGraphSurface(this, Save)
+            _surface = new AnimGraphSurface(this, Save, _undo)
             {
                 Parent = _split1.Panel1,
                 Enabled = false
@@ -447,6 +620,9 @@ namespace FlaxEditor.Windows.Assets
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save asset to the file");
+            _toolstrip.AddSeparator();
+            _undoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Undo32, _undo.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
+            _redoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Redo32, _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.PageScale32, _surface.ShowWholeGraph).LinkTooltip("Show the whole graph");
             _toolstrip.AddButton(editor.Icons.Bone32, () => _preview.ShowBones = !_preview.ShowBones).SetAutoCheck(true).LinkTooltip("Show animated model bones debug view");
@@ -458,6 +634,22 @@ namespace FlaxEditor.Windows.Assets
             {
                 Parent = this
             };
+        }
+
+        private void OnUndo(IUndoAction action)
+        {
+            // Hack for material properties proxy object
+            if (action is MultiUndoAction multiUndo && multiUndo.Actions.Length == 1 && multiUndo.Actions[0] is UndoActionObject undoActionObject && undoActionObject.Target == _properties)
+            {
+                OnGraphPropertyEdited();
+                UpdateToolstrip();
+                return;
+            }
+
+            _paramValueChange = false;
+            MarkAsEdited();
+            UpdateToolstrip();
+            _propertiesEditor.BuildLayoutOnUpdate();
         }
 
         private void OnGraphPropertyEdited()
@@ -506,7 +698,7 @@ namespace FlaxEditor.Windows.Assets
         {
             get
             {
-                var mainNode = _surface.FindNode(8, 1) as Surface.Archetypes.Animation.Output;
+                var mainNode = _surface.FindNode(9, 1) as Surface.Archetypes.Animation.Output;
                 if (mainNode == null)
                 {
                     // Error
@@ -564,6 +756,8 @@ namespace FlaxEditor.Windows.Assets
         protected override void UpdateToolstrip()
         {
             _saveButton.Enabled = IsEdited;
+            _undoButton.Enabled = _undo.CanUndo;
+            _redoButton.Enabled = _undo.CanRedo;
 
             base.UpdateToolstrip();
         }
@@ -687,6 +881,7 @@ namespace FlaxEditor.Windows.Assets
                 _properties.OnLoad(this);
 
                 // Setup
+                _undo.Clear();
                 _surface.UpdateNavigationBar(_navigationBar, _toolstrip);
                 _surface.Enabled = true;
                 ClearEditedFlag();
@@ -699,6 +894,29 @@ namespace FlaxEditor.Windows.Assets
             base.PerformLayoutSelf();
 
             _navigationBar?.UpdateBounds(_toolstrip);
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (Root.GetKey(Keys.Control))
+            {
+                switch (key)
+                {
+                case Keys.Z:
+                    _undo.PerformUndo();
+                    return true;
+                case Keys.Y:
+                    _undo.PerformRedo();
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -727,6 +945,18 @@ namespace FlaxEditor.Windows.Assets
         {
             _split1.SplitterValue = 0.7f;
             _split2.SplitterValue = 0.4f;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_undo != null)
+            {
+                _undo.Clear();
+                _undo = null;
+            }
+
+            base.Dispose();
         }
     }
 }
