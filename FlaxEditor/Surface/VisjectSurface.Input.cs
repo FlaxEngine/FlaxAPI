@@ -377,7 +377,8 @@ namespace FlaxEditor.Surface
                 {
                     if (_movingNodes != null && _movingNodes.Count > 0)
                     {
-                        Undo?.AddAction(new MoveNodesAction(Context, _movingNodes.ToArray(), _movingNodesDelta));
+                        if (Undo != null && !_movingNodesDelta.IsZero)
+                            Undo.AddAction(new MoveNodesAction(Context, _movingNodes.ToArray(), _movingNodesDelta));
                         _movingNodes.Clear();
                     }
                     _movingNodesDelta = Vector2.Zero;
