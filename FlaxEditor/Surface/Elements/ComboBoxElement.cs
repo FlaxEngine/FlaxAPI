@@ -57,7 +57,7 @@ namespace FlaxEditor.Surface.Elements
         /// <inheritdoc />
         protected override void OnSelectedIndexChanged()
         {
-            if (_isAutoSelect)
+            if (_isAutoSelect && (int)ParentNode.Values[Archetype.ValueIndex] != SelectedIndex)
             {
                 // Edit value
                 ParentNode.SetValue(Archetype.ValueIndex, SelectedIndex);
