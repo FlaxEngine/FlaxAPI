@@ -14,7 +14,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// TheAnim Graph state machine transition editor (as contextual popup).
         /// </summary>
         /// <seealso cref="ContextMenuBase" />
-        internal class TransitionEditor : ContextMenuBase
+        class TransitionEditor : ContextMenuBase
         {
             private StateMachineTransition _transition;
 

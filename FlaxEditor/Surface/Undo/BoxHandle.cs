@@ -8,7 +8,7 @@ namespace FlaxEditor.Surface.Undo
     /// <summary>
     /// The helper structure for Surface node box handle.
     /// </summary>
-    struct BoxHandle
+    public struct BoxHandle
     {
         private readonly uint _nodeId;
         private readonly int _boxId;

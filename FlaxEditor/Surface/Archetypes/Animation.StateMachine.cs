@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Input;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -20,7 +21,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         /// <seealso cref="FlaxEditor.Surface.ISurfaceContext" />
-        public class StateMachine : SurfaceNode, ISurfaceContext
+        internal class StateMachine : SurfaceNode, ISurfaceContext
         {
             private IntValueBox _maxTransitionsPerUpdate;
             private CheckBox _reinitializeOnBecomingRelevant;
@@ -248,7 +249,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         /// <seealso cref="FlaxEditor.Surface.IConnectionInstigator" />
-        public class StateMachineEntry : SurfaceNode, IConnectionInstigator
+        class StateMachineEntry : SurfaceNode, IConnectionInstigator
         {
             private bool _isMouseDown;
             private Rectangle _textRect;
@@ -453,8 +454,113 @@ namespace FlaxEditor.Surface.Archetypes
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         /// <seealso cref="FlaxEditor.Surface.IConnectionInstigator" />
         /// <seealso cref="FlaxEditor.Surface.ISurfaceContext" />
-        public class StateMachineState : SurfaceNode, ISurfaceContext, IConnectionInstigator
+        internal class StateMachineState : SurfaceNode, ISurfaceContext, IConnectionInstigator
         {
+            public class AddRemoveTransitionAction : IUndoAction
+            {
+                private readonly bool _isAdd;
+                private VisjectSurface _surface;
+                private ContextHandle _context;
+                private readonly uint _srcStateId;
+                private readonly uint _dstStateId;
+                private StateMachineTransition.Data _data;
+
+                public AddRemoveTransitionAction(StateMachineTransition transition)
+                {
+                    _surface = transition.SourceState.Surface;
+                    _context = new ContextHandle(transition.SourceState.Context);
+                    _srcStateId = transition.SourceState.ID;
+                    _dstStateId = transition.DestinationState.ID;
+                    _isAdd = false;
+                    transition.GetData(out _data);
+                }
+
+                public AddRemoveTransitionAction(SurfaceNode src, SurfaceNode dst)
+                {
+                    _surface = src.Surface;
+                    _context = new ContextHandle(src.Context);
+                    _srcStateId = src.ID;
+                    _dstStateId = dst.ID;
+                    _isAdd = true;
+                    _data = new StateMachineTransition.Data
+                    {
+                        Flags = StateMachineTransition.Data.FlagTypes.Enabled,
+                        Order = 0,
+                        BlendDuration = 0.1f,
+                        BlendMode = AlphaBlendMode.HermiteCubic,
+                    };
+                }
+
+                /// <inheritdoc />
+                public string ActionString => _isAdd ? "Add transition" : "Remove transition";
+
+                /// <inheritdoc />
+                public void Do()
+                {
+                    if (_isAdd)
+                        Add();
+                    else
+                        Remove();
+                }
+
+                /// <inheritdoc />
+                public void Undo()
+                {
+                    if (_isAdd)
+                        Remove();
+                    else
+                        Add();
+                }
+
+                private void Add()
+                {
+                    var context = _context.Get(_surface);
+                    var src = context.FindNode(_srcStateId) as StateMachineState;
+                    if (src == null)
+                        throw new Exception("Missing source state.");
+                    var dst = context.FindNode(_dstStateId) as StateMachineState;
+                    if (dst == null)
+                        throw new Exception("Missing destination state.");
+
+                    var transition = new StateMachineTransition(src, dst, ref _data);
+                    src.Transitions.Add(transition);
+
+                    src.UpdateTransitionsOrder();
+                    src.UpdateTransitions();
+                    src.UpdateTransitionsColors();
+
+                    src.SaveData();
+                }
+
+                private void Remove()
+                {
+                    var context = _context.Get(_surface);
+                    var src = context.FindNode(_srcStateId) as StateMachineState;
+                    if (src == null)
+                        throw new Exception("Missing source state.");
+                    var dst = context.FindNode(_dstStateId) as StateMachineState;
+                    if (dst == null)
+                        throw new Exception("Missing destination state.");
+                    var transition = src.Transitions.Find(x => x.DestinationState == dst);
+                    if (transition == null)
+                        throw new Exception("Missing transition.");
+
+                    src.Transitions.Remove(transition);
+
+                    src.UpdateTransitionsOrder();
+                    src.UpdateTransitions();
+                    src.UpdateTransitionsColors();
+
+                    src.SaveData();
+                }
+
+                /// <inheritdoc />
+                public void Dispose()
+                {
+                    _surface = null;
+                }
+            }
+
             private bool _isSavingData;
             private bool _isMouseDown;
             private Rectangle _textRect;
@@ -1148,7 +1254,7 @@ namespace FlaxEditor.Surface.Archetypes
                         wasEnabled = Surface.Undo.Enabled;
                         Surface.Undo.Enabled = false;
                     }
-                    
+
                     entryNode = context.SpawnNode(9, 21, new Vector2(100.0f));
 
                     if (Surface.Undo != null)
@@ -1208,22 +1314,9 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 var state = (StateMachineState)other;
 
-                // Create a new transition
-                var data = new StateMachineTransition.Data
-                {
-                    Flags = StateMachineTransition.Data.FlagTypes.Enabled,
-                    Order = 0,
-                    BlendDuration = 0.1f,
-                    BlendMode = AlphaBlendMode.HermiteCubic,
-                };
-                var transition = new StateMachineTransition(this, state, ref data);
-                Transitions.Add(transition);
-
-                UpdateTransitionsOrder();
-                UpdateTransitions();
-                UpdateTransitionsColors();
-
-                SaveData();
+                var action = new AddRemoveTransitionAction(this, state);
+                Surface?.Undo.AddAction(action);
+                action.Do();
             }
         }
 
@@ -1232,7 +1325,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         /// <seealso cref="StateMachineState"/>
         /// <seealso cref="ISurfaceContext"/>
-        public class StateMachineTransition : ISurfaceContext
+        internal class StateMachineTransition : ISurfaceContext
         {
             /// <summary>
             /// The packed data container for the transition data storage. Helps with serialization and versioning the data.
@@ -1534,13 +1627,9 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             public void Delete()
             {
-                SourceState.Transitions.Remove(this);
-
-                SourceState.UpdateTransitionsOrder();
-                SourceState.UpdateTransitions();
-                SourceState.UpdateTransitionsColors();
-
-                SourceState.SaveData();
+                var action = new StateMachineState.AddRemoveTransitionAction(this);
+                SourceState.Surface?.Undo.AddAction(action);
+                action.Do();
             }
 
             /// <summary>

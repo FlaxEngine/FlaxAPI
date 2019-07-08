@@ -7,7 +7,7 @@ namespace FlaxEditor.Surface.Undo
     /// <summary>
     /// The helper structure for Surface context handle.
     /// </summary>
-    struct ContextHandle
+    public struct ContextHandle
     {
         private readonly string[] _path;
 
