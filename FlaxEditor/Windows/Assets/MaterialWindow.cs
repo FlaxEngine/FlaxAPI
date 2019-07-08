@@ -80,6 +80,44 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
+        private class RenameParamAction : IUndoAction
+        {
+            public MaterialWindow Window;
+            public int Index;
+            public string Before;
+            public string After;
+
+            /// <inheritdoc />
+            public string ActionString => "Rename parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(string value)
+            {
+                var param = Window.Surface.Parameters[Index];
+                param.Name = value;
+                Window.Surface.OnParamRenamed(param);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
@@ -339,12 +377,17 @@ namespace FlaxEditor.Windows.Assets
                 private void OnParameterRenamed(RenamePopup renamePopup)
                 {
                     var index = (int)renamePopup.Tag;
-                    var newName = renamePopup.Text;
-
                     var win = (MaterialWindow)Values[0];
-                    var param = win.Surface.Parameters[index];
-                    param.Name = newName;
-                    win.Surface.OnParamRenamed(param);
+
+                    var action = new RenameParamAction
+                    {
+                        Window = win,
+                        Index = index,
+                        Before = win.Surface.Parameters[index].Name,
+                        After = renamePopup.Text,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <summary>
