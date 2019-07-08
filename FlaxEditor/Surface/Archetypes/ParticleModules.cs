@@ -399,13 +399,11 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value, bool graphEdited = true)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value, graphEdited);
+                base.OnValuesChanged();
 
-                // Update on type change
-                if (index == 3)
-                    UpdateOutputBoxType();
+                UpdateOutputBoxType();
             }
 
             private void UpdateOutputBoxType()
@@ -458,15 +456,13 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value, bool graphEdited = true)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value, graphEdited);
+                base.OnValuesChanged();
 
-                // Update on mode change
-                if (index == 2)
-                    UpdateInputBox();
+                UpdateInputBox();
             }
-
+            
             private void UpdateInputBox()
             {
                 GetBox(0).Enabled = (ParticleSpriteFacingMode)Values[2] == ParticleSpriteFacingMode.CustomFacingVector;
@@ -492,15 +488,13 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateTextBox();
             }
-
+            
             /// <inheritdoc />
-            public override void SetValue(int index, object value, bool graphEdited = true)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value, graphEdited);
+                base.OnValuesChanged();
 
-                // Update on sort mode change
-                if (index == 2)
-                    UpdateTextBox();
+                UpdateTextBox();
             }
 
             private void UpdateTextBox()

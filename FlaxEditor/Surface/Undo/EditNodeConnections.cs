@@ -12,15 +12,16 @@ namespace FlaxEditor.Surface.Undo
     /// <seealso cref="FlaxEditor.IUndoAction" />
     class EditNodeConnections : IUndoAction
     {
-        private VisjectSurfaceContext _context;
+        private VisjectSurface _surface;
+        private ContextHandle _context;
         private readonly uint _nodeId;
         private BoxHandle[][] _before;
         private BoxHandle[][] _after;
 
         public EditNodeConnections(VisjectSurfaceContext context, SurfaceNode node)
         {
-            _context = context;
-
+            _surface = context.Surface;
+            _context = new ContextHandle(context);
             _nodeId = node.ID;
 
             CaptureConnections(node, out _before);
@@ -28,7 +29,8 @@ namespace FlaxEditor.Surface.Undo
 
         public void End()
         {
-            var node = _context.FindNode(_nodeId);
+            var context = _context.Get(_surface);
+            var node = context.FindNode(_nodeId);
             if (node == null)
                 throw new Exception("Missing node");
 
@@ -69,7 +71,8 @@ namespace FlaxEditor.Surface.Undo
 
         private void Execute(BoxHandle[][] boxesConnections)
         {
-            var node = _context.FindNode(_nodeId);
+            var context = _context.Get(_surface);
+            var node = context.FindNode(_nodeId);
             if (node == null)
                 throw new Exception("Missing node");
 
@@ -98,7 +101,7 @@ namespace FlaxEditor.Surface.Undo
 
                 for (int j = 0; j < connections.Length; j++)
                 {
-                    var other = connections[j].GetBox(_context);
+                    var other = connections[j].Get(context);
                     toUpdate.Add(other);
                     box.Connections.Add(other);
                     other.Connections.Add(box);
@@ -111,13 +114,13 @@ namespace FlaxEditor.Surface.Undo
                 box.ConnectionTick();
             }
 
-            _context.MarkAsModified();
+            context.MarkAsModified();
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            _context = null;
+            _surface = null;
             _before = null;
             _after = null;
         }

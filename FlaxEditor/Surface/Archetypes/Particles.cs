@@ -262,15 +262,13 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateOutputBoxType();
             }
-
+            
             /// <inheritdoc />
-            public override void SetValue(int index, object value, bool graphEdited = true)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value, graphEdited);
+                base.OnValuesChanged();
 
-                // Update on type change
-                if (index == 1)
-                    UpdateOutputBoxType();
+                UpdateOutputBoxType();
             }
 
             private void UpdateOutputBoxType()

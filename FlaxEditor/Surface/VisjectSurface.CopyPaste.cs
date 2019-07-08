@@ -476,7 +476,7 @@ namespace FlaxEditor.Surface
                     var actions = new List<IUndoAction>();
                     foreach (var node in nodes)
                     {
-                        var action = new AddRemoveNodeAction(Context, node.Value, true);
+                        var action = new AddRemoveNodeAction(node.Value, true);
                         actions.Add(action);
                     }
                     foreach (var node in nodes)

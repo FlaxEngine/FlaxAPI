@@ -11,13 +11,15 @@ namespace FlaxEditor.Surface.Undo
     /// <seealso cref="FlaxEditor.IUndoAction" />
     class MoveNodesAction : IUndoAction
     {
-        private VisjectSurfaceContext _context;
+        private VisjectSurface _surface;
+        private ContextHandle _context;
         private uint[] _nodeIds;
         private readonly Vector2 _locationDelta;
 
         public MoveNodesAction(VisjectSurfaceContext context, uint[] nodeIds, Vector2 locationDelta)
         {
-            _context = context;
+            _surface = context.Surface;
+            _context = new ContextHandle(context);
             _nodeIds = nodeIds;
             _locationDelta = locationDelta;
         }
@@ -39,22 +41,23 @@ namespace FlaxEditor.Surface.Undo
 
         private void Apply(Vector2 delta)
         {
+            var context = _context.Get(_surface);
             foreach (var nodeId in _nodeIds)
             {
-                var node = _context.FindNode(nodeId);
+                var node = context.FindNode(nodeId);
                 if (node == null)
                     throw new Exception("Missing node.");
 
                 node.Location += delta;
             }
 
-            _context.MarkAsModified(false);
+            context.MarkAsModified(false);
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            _context = null;
+            _surface = null;
             _nodeIds = null;
         }
     }

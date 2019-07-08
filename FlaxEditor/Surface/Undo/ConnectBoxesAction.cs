@@ -12,7 +12,8 @@ namespace FlaxEditor.Surface.Undo
     /// <seealso cref="FlaxEditor.IUndoAction" />
     class ConnectBoxesAction : IUndoAction
     {
-        private VisjectSurfaceContext _context;
+        private VisjectSurface _surface;
+        private ContextHandle _context;
         private bool _connect;
         private BoxHandle _input;
         private BoxHandle _output;
@@ -21,9 +22,10 @@ namespace FlaxEditor.Surface.Undo
         private BoxHandle[] _outputBefore;
         private BoxHandle[] _outputAfter;
 
-        public ConnectBoxesAction(VisjectSurfaceContext context, InputBox iB, OutputBox oB, bool connect)
+        public ConnectBoxesAction(InputBox iB, OutputBox oB, bool connect)
         {
-            _context = context;
+            _surface = iB.Surface;
+            _context = new ContextHandle(iB.ParentNode.Context);
             _connect = connect;
 
             _input = new BoxHandle(iB);
@@ -35,8 +37,9 @@ namespace FlaxEditor.Surface.Undo
 
         public void End()
         {
-            var iB = _input.GetBox(_context);
-            var oB = _output.GetBox(_context);
+            var context = _context.Get(_surface);
+            var iB = _input.Get(context);
+            var oB = _output.Get(context);
 
             CaptureConnections(iB, out _inputAfter);
             CaptureConnections(oB, out _outputAfter);
@@ -69,8 +72,9 @@ namespace FlaxEditor.Surface.Undo
 
         private void Execute(BoxHandle[] input, BoxHandle[] output)
         {
-            var iB = _input.GetBox(_context);
-            var oB = _output.GetBox(_context);
+            var context = _context.Get(_surface);
+            var iB = _input.Get(context);
+            var oB = _output.Get(context);
 
             var toUpdate = new HashSet<Box>();
             toUpdate.Add(iB);
@@ -94,13 +98,13 @@ namespace FlaxEditor.Surface.Undo
 
             for (int i = 0; i < input.Length; i++)
             {
-                var box = input[i].GetBox(_context);
+                var box = input[i].Get(context);
                 iB.Connections.Add(box);
                 box.Connections.Add(iB);
             }
             for (int i = 0; i < output.Length; i++)
             {
-                var box = output[i].GetBox(_context);
+                var box = output[i].Get(context);
                 oB.Connections.Add(box);
                 box.Connections.Add(oB);
             }
@@ -114,13 +118,13 @@ namespace FlaxEditor.Surface.Undo
                 box.ConnectionTick();
             }
 
-            _context.MarkAsModified();
+            context.MarkAsModified();
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            _context = null;
+            _surface = null;
             _inputBefore = null;
             _inputAfter = null;
             _outputBefore = null;

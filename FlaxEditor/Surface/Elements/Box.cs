@@ -535,7 +535,7 @@ namespace FlaxEditor.Surface.Elements
                 // Break link
                 if (Surface.Undo != null)
                 {
-                    var action = new ConnectBoxesAction(Surface.Context, iB, oB, false);
+                    var action = new ConnectBoxesAction(iB, oB, false);
                     start.BreakConnection(end);
                     action.End();
                     Surface.Undo.AddAction(action);
@@ -570,7 +570,7 @@ namespace FlaxEditor.Surface.Elements
                 // Connect directly
                 if (Surface.Undo != null)
                 {
-                    var action = new ConnectBoxesAction(Surface.Context, iB, oB, true);
+                    var action = new ConnectBoxesAction(iB, oB, true);
                     iB.CreateConnection(oB);
                     action.End();
                     Surface.Undo?.AddAction(action);

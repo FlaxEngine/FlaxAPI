@@ -170,9 +170,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value, bool graphEdited = true)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value, graphEdited);
+                base.OnValuesChanged();
 
                 UpdateUI();
             }
@@ -211,7 +211,7 @@ namespace FlaxEditor.Surface.Archetypes
             public byte[] SurfaceData
             {
                 get => (byte[])Values[1];
-                set => SetValue(1, value);
+                set => Values[1] = value;
             }
 
             /// <inheritdoc />
@@ -475,7 +475,7 @@ namespace FlaxEditor.Surface.Archetypes
             public byte[] StateData
             {
                 get => (byte[])Values[2];
-                set => SetValue(2, value);
+                set => Values[2] = value;
             }
 
             /// <summary>
@@ -536,21 +536,13 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value, bool graphEdited = true)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value, graphEdited);
+                base.OnValuesChanged();
 
-                // Check for external state data changes (eg. via undo)
-                if (!_isSavingData && index == 2)
-                {
-                    // Synchronize data
+                if (!_isSavingData)
                     LoadData();
-                }
-                else if (index == 0)
-                {
-                    // Update node title UI on change
-                    UpdateTitle();
-                }
+                UpdateTitle();
             }
 
             private void UpdateTitle()
@@ -1123,7 +1115,7 @@ namespace FlaxEditor.Surface.Archetypes
             public byte[] SurfaceData
             {
                 get => (byte[])Values[1];
-                set => SetValue(1, value);
+                set => Values[1] = value;
             }
 
             /// <inheritdoc />

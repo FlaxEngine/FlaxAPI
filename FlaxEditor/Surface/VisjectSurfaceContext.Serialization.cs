@@ -88,7 +88,7 @@ namespace FlaxEditor.Surface
                             var comment = SpawnComment(ref bounds, title, color);
                             if (comment == null)
                                 throw new InvalidOperationException("Failed to create comment.");
-                            
+
                             OnControlLoaded(comment);
                         }
                     }

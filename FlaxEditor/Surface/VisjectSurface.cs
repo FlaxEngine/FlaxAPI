@@ -680,7 +680,7 @@ namespace FlaxEditor.Surface
                     // Remove all nodes
                     foreach (var node in nodes)
                     {
-                        var action = new AddRemoveNodeAction(Context, node, false);
+                        var action = new AddRemoveNodeAction(node, false);
                         action.Do();
                         actions.Add(action);
                     }

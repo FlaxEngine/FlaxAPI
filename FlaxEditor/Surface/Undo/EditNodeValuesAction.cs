@@ -10,13 +10,14 @@ namespace FlaxEditor.Surface.Undo
     /// <seealso cref="FlaxEditor.IUndoAction" />
     class EditNodeValuesAction : IUndoAction
     {
-        private VisjectSurfaceContext _context;
+        private VisjectSurface _surface;
+        private ContextHandle _context;
         private readonly uint _nodeId;
         private readonly bool _graphEdited;
         private object[] _before;
         private object[] _after;
 
-        public EditNodeValuesAction(VisjectSurfaceContext context, SurfaceNode node, object[] before, bool graphEdited)
+        public EditNodeValuesAction(SurfaceNode node, object[] before, bool graphEdited)
         {
             if (before == null)
                 throw new ArgumentNullException(nameof(before));
@@ -25,7 +26,8 @@ namespace FlaxEditor.Surface.Undo
             if (before.Length != node.Values.Length)
                 throw new ArgumentException(nameof(before));
 
-            _context = context;
+            _surface = node.Surface;
+            _context = new ContextHandle(node.Context);
             _nodeId = node.ID;
             _before = before;
             _after = (object[])node.Values.Clone();
@@ -38,39 +40,41 @@ namespace FlaxEditor.Surface.Undo
         /// <inheritdoc />
         public void Do()
         {
+            var context = _context.Get(_surface);
             if (_after == null)
                 throw new Exception("Missing values.");
-            var node = _context.FindNode(_nodeId);
+            var node = context.FindNode(_nodeId);
             if (node == null)
                 throw new Exception("Missing node.");
 
             node.SetIsDuringValuesEditing(true);
             Array.Copy(_after, node.Values, _after.Length);
             node.OnValuesChanged();
-            _context.MarkAsModified(_graphEdited);
+            context.MarkAsModified(_graphEdited);
             node.SetIsDuringValuesEditing(false);
         }
 
         /// <inheritdoc />
         public void Undo()
         {
+            var context = _context.Get(_surface);
             if (_before == null)
                 throw new Exception("Missing values.");
-            var node = _context.FindNode(_nodeId);
+            var node = context.FindNode(_nodeId);
             if (node == null)
                 throw new Exception("Missing node.");
 
             node.SetIsDuringValuesEditing(true);
             Array.Copy(_before, node.Values, _before.Length);
             node.OnValuesChanged();
-            _context.MarkAsModified(_graphEdited);
+            context.MarkAsModified(_graphEdited);
             node.SetIsDuringValuesEditing(false);
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            _context = null;
+            _surface = null;
             _before = null;
             _after = null;
         }

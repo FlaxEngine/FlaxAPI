@@ -39,7 +39,7 @@ namespace FlaxEditor.Surface.Undo
         /// </summary>
         /// <param name="context">The Surface context.</param>
         /// <returns>The restored box.</returns>
-        public Box GetBox(VisjectSurfaceContext context)
+        public Box Get(VisjectSurfaceContext context)
         {
             var node = context.FindNode(_nodeId);
             if (node == null)
