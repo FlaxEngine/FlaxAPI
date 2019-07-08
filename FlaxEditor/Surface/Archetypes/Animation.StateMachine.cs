@@ -226,7 +226,19 @@ namespace FlaxEditor.Surface.Archetypes
                 var entryNode = context.FindNode(9, 19);
                 if (entryNode == null)
                 {
+                    var wasEnabled = true;
+                    if (Surface.Undo != null)
+                    {
+                        wasEnabled = Surface.Undo.Enabled;
+                        Surface.Undo.Enabled = false;
+                    }
+
                     entryNode = context.SpawnNode(9, 19, new Vector2(100.0f));
+
+                    if (Surface.Undo != null)
+                    {
+                        Surface.Undo.Enabled = wasEnabled;
+                    }
                 }
             }
         }
@@ -1130,7 +1142,19 @@ namespace FlaxEditor.Surface.Archetypes
                 var entryNode = context.FindNode(9, 21);
                 if (entryNode == null)
                 {
+                    var wasEnabled = true;
+                    if (Surface.Undo != null)
+                    {
+                        wasEnabled = Surface.Undo.Enabled;
+                        Surface.Undo.Enabled = false;
+                    }
+                    
                     entryNode = context.SpawnNode(9, 21, new Vector2(100.0f));
+
+                    if (Surface.Undo != null)
+                    {
+                        Surface.Undo.Enabled = wasEnabled;
+                    }
                 }
             }
 
