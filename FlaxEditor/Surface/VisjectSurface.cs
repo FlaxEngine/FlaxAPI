@@ -631,16 +631,16 @@ namespace FlaxEditor.Surface
 
             bool edited = false;
 
+            List<SurfaceNode> nodes = null;
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceNode node)
                 {
                     if (node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
                     {
-                        Nodes.Remove(node);
-
-                        Context.OnControlDeleted(node);
-                        i--;
+                        if (nodes == null)
+                            nodes = new List<SurfaceNode>();
+                        nodes.Add(node);
                         edited = true;
                     }
                 }
@@ -649,6 +649,43 @@ namespace FlaxEditor.Surface
                     i--;
                     Context.OnControlDeleted(control);
                     edited = true;
+                }
+            }
+
+            if (nodes != null)
+            {
+                if (Undo == null)
+                {
+                    // Remove all nodes
+                    foreach (var node in nodes)
+                    {
+                        node.RemoveConnections();
+                        Nodes.Remove(node);
+                        Context.OnControlDeleted(node);
+                    }
+                }
+                else
+                {
+                    var actions = new List<IUndoAction>();
+
+                    // Break connections for all nodes
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node);
+                        node.RemoveConnections();
+                        action.End();
+                        actions.Add(action);
+                    }
+
+                    // Remove all nodes
+                    foreach (var node in nodes)
+                    {
+                        var action = new AddRemoveNodeAction(Context, node, false);
+                        action.Do();
+                        actions.Add(action);
+                    }
+
+                    Undo.AddAction(new MultiUndoAction(actions, nodes.Count == 1 ? "Remove node" : "Remove nodes"));
                 }
             }
 
