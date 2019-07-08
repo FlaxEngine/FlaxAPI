@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FlaxEditor.Surface.Elements;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -467,6 +468,24 @@ namespace FlaxEditor.Surface
                 foreach (var node in nodes)
                 {
                     node.Value.OnSurfaceLoaded();
+                }
+
+                // Add undo action
+                if (Undo != null && nodes.Count > 0)
+                {
+                    var actions = new List<IUndoAction>();
+                    foreach (var node in nodes)
+                    {
+                        var action = new AddRemoveNodeAction(Context, node.Value, true);
+                        actions.Add(action);
+                    }
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node.Value);
+                        action.End();
+                        actions.Add(action);
+                    }
+                    Undo.AddAction(new MultiUndoAction(actions, nodes.Count == 1 ? "Paste node" : "Paste nodes"));
                 }
 
                 // Select those nodes
