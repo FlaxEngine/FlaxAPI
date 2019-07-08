@@ -372,7 +372,7 @@ namespace FlaxEditor.Surface
             OnControlSpawned(node);
 
             // Undo action
-            Surface.Undo?.AddAction(new AddNodeAction(this, node));
+            Surface.Undo?.AddAction(new AddRemoveNodeAction(this, node, true));
 
             MarkAsModified();
 

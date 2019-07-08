@@ -440,7 +440,7 @@
     <Compile Include="Surface\SurfaceRootControl.cs" />
     <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\TransformCoordinateSystem.cs" />
-    <Compile Include="Surface\Undo\AddNodeAction.cs" />
+    <Compile Include="Surface\Undo\AddRemoveNodeAction.cs" />
     <Compile Include="Surface\Undo\BoxHandle.cs" />
     <Compile Include="Surface\Undo\ConnectBoxesAction.cs" />
     <Compile Include="Surface\Undo\EditNodeConnections.cs" />

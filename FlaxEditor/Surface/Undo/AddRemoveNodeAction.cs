@@ -9,8 +9,9 @@ namespace FlaxEditor.Surface.Undo
     /// Add Visject Surface node undo action.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
-    class AddNodeAction : IUndoAction
+    class AddRemoveNodeAction : IUndoAction
     {
+        private bool _isAdd;
         private VisjectSurfaceContext _context;
         private uint _nodeId;
         private ushort _groupId;
@@ -18,17 +19,35 @@ namespace FlaxEditor.Surface.Undo
         private Vector2 _nodeLocation;
         private object[] _nodeValues;
 
-        public AddNodeAction(VisjectSurfaceContext context, SurfaceNode node)
+        public AddRemoveNodeAction(VisjectSurfaceContext context, SurfaceNode node, bool isAdd)
         {
             _context = context;
             _nodeId = node.ID;
+            _isAdd = isAdd;
         }
 
         /// <inheritdoc />
-        public string ActionString => "Add node";
+        public string ActionString => _isAdd ? "Add node" : "Remove node";
 
         /// <inheritdoc />
         public void Do()
+        {
+            if (_isAdd)
+                Add();
+            else
+                Remove();
+        }
+
+        /// <inheritdoc />
+        public void Undo()
+        {
+            if (_isAdd)
+                Remove();
+            else
+                Add();
+        }
+
+        private void Add()
         {
             if (_nodeId == 0)
                 throw new Exception("Node already added.");
@@ -42,7 +61,7 @@ namespace FlaxEditor.Surface.Undo
             // Initialize
             if (node.Values != null && node.Values.Length == _nodeValues.Length)
                 Array.Copy(_nodeValues, node.Values, _nodeValues.Length);
-            else
+            else if (_nodeValues != null && _nodeValues.Length != 0)
                 throw new InvalidOperationException("Invalid node values.");
             _context.OnControlLoaded(node);
             node.OnSurfaceLoaded();
@@ -52,8 +71,7 @@ namespace FlaxEditor.Surface.Undo
             _context.MarkAsModified();
         }
 
-        /// <inheritdoc />
-        public void Undo()
+        private void Remove()
         {
             var node = _context.FindNode(_nodeId);
             if (node == null)
@@ -64,7 +82,7 @@ namespace FlaxEditor.Surface.Undo
             _groupId = node.GroupArchetype.GroupID;
             _typeId = node.Archetype.TypeID;
             _nodeLocation = node.Location;
-            _nodeValues = (object[])node.Values.Clone();
+            _nodeValues = (object[])node.Values?.Clone();
 
             // Remove node
             _context.Nodes.Remove(node);
@@ -76,6 +94,7 @@ namespace FlaxEditor.Surface.Undo
         public void Dispose()
         {
             _context = null;
+            _nodeValues = null;
         }
     }
 }
