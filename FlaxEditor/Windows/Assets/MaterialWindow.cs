@@ -118,6 +118,63 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
+        private class AddRemoveParamAction : IUndoAction
+        {
+            public MaterialWindow Window;
+            public bool IsAdd;
+            public int Index;
+            public ParameterType Type;
+
+            /// <inheritdoc />
+            public string ActionString => IsAdd ? "Add parameter" : "Remove parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                if (IsAdd)
+                    Add();
+                else
+                    Remove();
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                if (IsAdd)
+                    Remove();
+                else
+                    Add();
+            }
+
+            private void Add()
+            {
+                var param = SurfaceParameter.Create(Type);
+                if (Type == ParameterType.NormalMap)
+                {
+                    // Use default normal map texture (don't load asset here, just lookup registry for id at path)
+                    string typeName;
+                    Guid id;
+                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
+                    param.Value = id;
+                }
+                Window.Surface.Parameters.Add(param);
+                Window.Surface.OnParamCreated(param);
+            }
+
+            private void Remove()
+            {
+                var param = Window.Surface.Parameters[Index];
+                Window.Surface.Parameters.RemoveAt(Index);
+                Window.Surface.OnParamDeleted(param);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+            }
+        }
+
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
@@ -346,17 +403,14 @@ namespace FlaxEditor.Windows.Assets
                     if (material == null || !material.IsLoaded)
                         return;
 
-                    var param = SurfaceParameter.Create(type);
-                    if (type == ParameterType.NormalMap)
+                    var action = new AddRemoveParamAction
                     {
-                        // Use default normal map texture (don't load asset here, just lookup registry for id at path)
-                        string typeName;
-                        Guid id;
-                        FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
-                        param.Value = id;
-                    }
-                    win.Surface.Parameters.Add(param);
-                    win.Surface.OnParamCreated(param);
+                        Window = win,
+                        IsAdd = true,
+                        Type = type,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <summary>
@@ -397,9 +451,15 @@ namespace FlaxEditor.Windows.Assets
                 private void DeleteParameter(int index)
                 {
                     var win = (MaterialWindow)Values[0];
-                    var param = win.Surface.Parameters[index];
-                    win.Surface.Parameters.RemoveAt(index);
-                    win.Surface.OnParamDeleted(param);
+
+                    var action = new AddRemoveParamAction
+                    {
+                        Window = win,
+                        IsAdd = false,
+                        Index = index,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <inheritdoc />
