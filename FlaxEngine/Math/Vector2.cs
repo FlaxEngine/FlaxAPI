@@ -854,6 +854,41 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Performs a linear interpolation between two vectors.
+        /// </summary>
+        /// <param name="start">Start vector.</param>
+        /// <param name="end">End vector.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end" />.</param>
+        /// <param name="result">When the method completes, contains the linear interpolation of the two vectors.</param>
+        /// <remarks>
+        /// Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
+        /// will cause <paramref name="end" /> to be returned.
+        /// </remarks>
+        public static void Lerp(ref Vector2 start, ref Vector2 end, ref Vector2 amount, out Vector2 result)
+        {
+            result.X = Mathf.Lerp(start.X, end.X, amount.X);
+            result.Y = Mathf.Lerp(start.Y, end.Y, amount.Y);
+        }
+
+        /// <summary>
+        /// Performs a linear interpolation between two vectors.
+        /// </summary>
+        /// <param name="start">Start vector.</param>
+        /// <param name="end">End vector.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end" />.</param>
+        /// <returns>The linear interpolation of the two vectors.</returns>
+        /// <remarks>
+        /// Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
+        /// will cause <paramref name="end" /> to be returned.
+        /// </remarks>
+        public static Vector2 Lerp(Vector2 start, Vector2 end, Vector2 amount)
+        {
+            Vector2 result;
+            Lerp(ref start, ref end, ref amount, out result);
+            return result;
+        }
+
+        /// <summary>
         /// Performs a cubic interpolation between two vectors.
         /// </summary>
         /// <param name="start">Start vector.</param>
@@ -1600,7 +1635,7 @@ namespace FlaxEngine
         {
             return new Vector2(value.X % scale, value.Y % scale);
         }
-        
+
         /// <summary>
         /// Remainder of value divided by scale.
         /// </summary>
@@ -1611,7 +1646,7 @@ namespace FlaxEngine
         {
             return new Vector2(value % scale.X, value % scale.Y);
         }
-        
+
         /// <summary>
         /// Remainder of value divided by scale.
         /// </summary>
@@ -1622,7 +1657,7 @@ namespace FlaxEngine
         {
             return new Vector2(value.X % scale.X, value.Y % scale.Y);
         }
-        
+
         /// <summary>
         /// Perform a component-wise addition
         /// </summary>

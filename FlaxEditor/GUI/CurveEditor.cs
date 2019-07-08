@@ -592,9 +592,23 @@ namespace FlaxEditor.GUI
             Color.Wheat,
         };
 
+        /// <summary>
+        /// The time/value axes tick steps.
+        /// </summary>
+        private static readonly float[] TickSteps =
+        {
+            0.0000001f, 0.0000005f, 0.000001f, 0.000005f, 0.00001f,
+            0.00005f, 0.0001f, 0.0005f, 0.001f, 0.005f,
+            0.01f, 0.05f, 0.1f, 0.5f, 1,
+            5, 10, 50, 100, 500,
+            1000, 5000, 10000, 50000, 100000,
+            500000, 1000000, 5000000, 10000000, 100000000
+        };
+
         private Contents _contents;
         private Panel _mainPanel;
         private readonly List<KeyframePoint> _points = new List<KeyframePoint>();
+        private readonly float[] _tickStrengths = new float[TickSteps.Length];
         private Color _contentsColor;
         private Color _linesColor;
         private Color _labelsColor;
@@ -630,7 +644,7 @@ namespace FlaxEditor.GUI
         public Vector2 ViewScale
         {
             get => _contents.Scale;
-            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.05f), new Vector2(4.0f));
+            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.02f), new Vector2(8.0f));
         }
 
         /// <summary>
@@ -821,51 +835,74 @@ namespace FlaxEditor.GUI
             return _mainPanel.PointToParent(point);
         }
 
-        private void DrawAxisX(ref Rectangle viewRect, float left, float right)
+        private void DrawAxis(ref Vector2 axis, ref Rectangle viewRect, float min, float max, float pixelRange)
         {
-            // Project value into the actual curve editor location
-            var leftPoint = PointFromKeyframes(new Vector2(left, 0), ref viewRect);
-            var rightPoint = PointFromKeyframes(new Vector2(right, 0), ref viewRect);
+            int minDistanceBetweenTicks = 20;
+            int maxDistanceBetweenTicks = 60;
+            var range = max - min;
 
-            // Draw line
-            var intensity = Mathf.IsZero(right) ? 1.0f : 0.8f;
-            Render2D.FillRectangle(new Rectangle(viewRect.X + rightPoint.X - 0.5f, viewRect.Y, 1.0f, viewRect.Height), _linesColor.RGBMultiplied(intensity));
-
-            // Draw label
-            string label = right.ToString();
-            var labelRect = new Rectangle(viewRect.X + rightPoint.X + 4.0f, viewRect.Bottom + -LabelsSize, 50, LabelsSize);
-            Render2D.DrawText(_labelsFont, label, labelRect, _labelsColor.RGBMultiplied(intensity), TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.7f);
-
-            // Subdivide range if can fit it into view
-            if (rightPoint.X - leftPoint.X > 80.0f)
+            // Find the strength for each modulo number tick marker
+            int smallestTick = 0;
+            int biggestTick = TickSteps.Length - 1;
+            for (int i = TickSteps.Length - 1; i >= 0; i--)
             {
-                var offset = (right - left) * 0.5f;
-                DrawAxisX(ref viewRect, left, left + offset);
-                DrawAxisX(ref viewRect, left + offset, right);
+                // Calculate how far apart these modulo tick steps are spaced
+                float tickSpacing = TickSteps[i] * pixelRange / range;
+
+                // Calculate the strength of the tick markers based on the spacing
+                _tickStrengths[i] = Mathf.Saturate((tickSpacing - minDistanceBetweenTicks) / (maxDistanceBetweenTicks - minDistanceBetweenTicks));
+
+                // Beyond threshold the ticks don't get any bigger or fatter
+                if (_tickStrengths[i] >= 1)
+                    biggestTick = i;
+
+                // Do not show small tick markers
+                if (tickSpacing <= minDistanceBetweenTicks)
+                {
+                    smallestTick = i;
+                    break;
+                }
             }
-        }
 
-        private void DrawAxisY(ref Rectangle viewRect, float left, float right)
-        {
-            // Project value into the actual curve editor location
-            var leftPoint = PointFromKeyframes(new Vector2(0, left), ref viewRect);
-            var rightPoint = PointFromKeyframes(new Vector2(0, right), ref viewRect);
-
-            // Draw line
-            var intensity = Mathf.IsZero(right) ? 1.0f : 0.8f;
-            Render2D.FillRectangle(new Rectangle(viewRect.X, viewRect.Y + rightPoint.Y - 0.5f, viewRect.Width, 2.0f), _linesColor.RGBMultiplied(intensity));
-
-            // Draw label
-            string label = right.ToString();
-            var labelRect = new Rectangle(viewRect.X + 4.0f, viewRect.Y + rightPoint.Y - LabelsSize, 50, LabelsSize);
-            Render2D.DrawText(_labelsFont, label, labelRect, _labelsColor.RGBMultiplied(intensity), TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.7f);
-
-            // Subdivide range if can fit it into view
-            if (rightPoint.Y - leftPoint.Y > 80.0f)
+            // Draw all tick levels
+            int tickLevels = biggestTick - smallestTick + 1;
+            for (int level = 0; level < tickLevels; level++)
             {
-                var offset = (right - left) * 0.5f;
-                DrawAxisY(ref viewRect, left, left + offset);
-                DrawAxisY(ref viewRect, left + offset, right);
+                float strength = _tickStrengths[smallestTick + level];
+                if (strength <= Mathf.Epsilon)
+                    continue;
+
+                // Draw all ticks
+                int l = Mathf.Clamp(smallestTick + level, 0, TickSteps.Length - 1);
+                int startTick = Mathf.FloorToInt(min / TickSteps[l]);
+                int endTick = Mathf.CeilToInt(max / TickSteps[l]);
+                for (int i = startTick; i <= endTick; i++)
+                {
+                    if (l < biggestTick && (i % Mathf.RoundToInt(TickSteps[l + 1] / TickSteps[l]) == 0))
+                        continue;
+
+                    var tick = i * TickSteps[l];
+                    var p = PointFromKeyframes(axis * tick, ref viewRect);
+
+                    // Draw line
+                    var lineRect = new Rectangle
+                    (
+                        viewRect.Location + (p - 0.5f) * axis,
+                        Vector2.Lerp(viewRect.Size, Vector2.One, axis)
+                    );
+                    Render2D.FillRectangle(lineRect, _linesColor.AlphaMultiplied(strength));
+
+                    // Draw label
+                    string label = tick.ToString();
+                    var labelRect = new Rectangle
+                    (
+                        viewRect.X + 4.0f + (p.X * axis.X),
+                        viewRect.Y - LabelsSize + (p.Y * axis.Y) + (viewRect.Size.Y * axis.X),
+                        50,
+                        LabelsSize
+                    );
+                    Render2D.DrawText(_labelsFont, label, labelRect, _labelsColor.AlphaMultiplied(strength), TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.7f);
+                }
             }
         }
 
@@ -884,16 +921,16 @@ namespace FlaxEditor.GUI
                 var upperLeft = PointToKeyframes(viewRect.Location, ref viewRect);
                 var bottomRight = PointToKeyframes(viewRect.Size, ref viewRect);
 
-                var limit = 1000000.0f;
-                var leftX = Math.Max(Mathf.Floor(upperLeft.X) - 1.0f, -limit);
-                var rightX = Math.Min(Mathf.Ceil(bottomRight.X) + 1.0f, limit);
-                var leftY = Math.Min(Mathf.Ceil(upperLeft.Y) + 1.0f, limit);
-                var rightY = Math.Max(Mathf.Floor(bottomRight.Y) - 1.0f, -limit);
+                var min = Vector2.Min(upperLeft, bottomRight);
+                var max = Vector2.Max(upperLeft, bottomRight);
+                var pixelRange = (max - min) * ViewScale * UnitsPerSecond;
 
                 Render2D.PushClip(ref viewRect);
 
-                DrawAxisX(ref viewRect, leftX, rightX);
-                DrawAxisY(ref viewRect, leftY, rightY);
+                var axisX = Vector2.UnitX;
+                var axisY = Vector2.UnitY;
+                DrawAxis(ref axisX, ref viewRect, min.X, max.X, pixelRange.X);
+                DrawAxis(ref axisY, ref viewRect, min.Y, max.Y, pixelRange.Y);
 
                 Render2D.PopClip();
             }
