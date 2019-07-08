@@ -11,15 +11,14 @@ namespace FlaxEditor.GUI
     /// <summary>
     /// The Bezier curve editor control.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The keyframe value type.</typeparam>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class CurveEditor<T> : ContainerControl where T : struct
     {
         /// <summary>
         /// The generic keyframe value accessor object for curve editor.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+        /// <typeparam name="T">The keyframe value type.</typeparam>
         public interface IKeyframeAccess<T> where T : struct
         {
             /// <summary>
@@ -218,6 +217,8 @@ namespace FlaxEditor.GUI
             private Vector2 _mousePos = Vector2.Minimum;
             private float _mouseMoveAmount;
             private bool _isMovingSelection;
+            private bool _isMovingTangent;
+            private TangentPoint _movingTangent;
             private Vector2 _movingSelectionViewPos;
 
             /// <summary>
@@ -227,11 +228,6 @@ namespace FlaxEditor.GUI
             public Contents(CurveEditor<T> curve)
             {
                 _curve = curve;
-            }
-
-            private KeyframePoint GetKeyframe(ref Vector2 location)
-            {
-                return GetChildAt(location) as KeyframePoint;
             }
 
             private void UpdateSelectionRectangle()
@@ -246,6 +242,8 @@ namespace FlaxEditor.GUI
                         p.IsSelected = p.Bounds.Intersects(ref selectionRect);
                     }
                 }
+
+                _curve.UpdateTangents();
             }
 
             /// <inheritdoc />
@@ -324,6 +322,27 @@ namespace FlaxEditor.GUI
 
                     return;
                 }
+                // Moving tangent
+                else if (_isMovingTangent)
+                {
+                    // Calculate delta (apply view offset)
+                    Vector2 viewDelta = _curve.ViewOffset - _movingSelectionViewPos;
+                    _movingSelectionViewPos = _curve.ViewOffset;
+                    var viewRect = _curve._mainPanel.GetClientArea();
+                    var delta = location - _leftMouseDownPos - viewDelta;
+                    if (delta.LengthSquared > 0.01f)
+                    {
+                        // Move selected tangent
+                        var keyframeDelta = PointToKeyframes(location, ref viewRect) - PointToKeyframes(_leftMouseDownPos - viewDelta, ref viewRect);
+                        var direction = _movingTangent.IsIn ? -1.0f : 1.0f;
+                        _movingTangent.TangentValue += direction * keyframeDelta.Y;
+                        _curve.UpdateTangents();
+                        _leftMouseDownPos = location;
+                        Cursor = CursorType.SizeNS;
+                    }
+
+                    return;
+                }
                 // Selecting
                 else if (_leftMouseDown)
                 {
@@ -348,6 +367,7 @@ namespace FlaxEditor.GUI
                     Cursor = CursorType.Default;
                 }
                 _isMovingSelection = false;
+                _isMovingTangent = false;
 
                 base.OnLostFocus();
             }
@@ -359,6 +379,7 @@ namespace FlaxEditor.GUI
                 {
                     // Clear flags
                     _isMovingSelection = false;
+                    _isMovingTangent = false;
                     _rightMouseDown = false;
                     _leftMouseDown = false;
                     return true;
@@ -366,6 +387,7 @@ namespace FlaxEditor.GUI
 
                 // Cache data
                 _isMovingSelection = false;
+                _isMovingTangent = false;
                 _mousePos = location;
                 if (buttons == MouseButton.Left)
                 {
@@ -379,8 +401,8 @@ namespace FlaxEditor.GUI
                 }
 
                 // Check if any node is under the mouse
-                var keyframeUnderMouse = GetKeyframe(ref location);
-                if (keyframeUnderMouse != null)
+                var underMouse = GetChildAt(location);
+                if (underMouse is KeyframePoint keyframe)
                 {
                     if (_leftMouseDown)
                     {
@@ -388,19 +410,34 @@ namespace FlaxEditor.GUI
                         if (Root.GetKey(Keys.Control))
                         {
                             // Add to selection
-                            keyframeUnderMouse.Select();
+                            keyframe.Select();
+                            _curve.UpdateTangents();
                         }
                         // Check if node isn't selected
-                        else if (!keyframeUnderMouse.IsSelected)
+                        else if (!keyframe.IsSelected)
                         {
                             // Select node
                             _curve.ClearSelection();
-                            keyframeUnderMouse.Select();
+                            keyframe.Select();
+                            _curve.UpdateTangents();
                         }
 
                         // Start moving selected nodes
                         StartMouseCapture();
                         _isMovingSelection = true;
+                        _movingSelectionViewPos = _curve.ViewOffset;
+                        Focus();
+                        return true;
+                    }
+                }
+                else if (underMouse is TangentPoint tangent && tangent.Visible)
+                {
+                    if (_leftMouseDown)
+                    {
+                        // Start moving tangent
+                        StartMouseCapture();
+                        _isMovingTangent = true;
+                        _movingTangent = tangent;
                         _movingSelectionViewPos = _curve.ViewOffset;
                         Focus();
                         return true;
@@ -413,6 +450,7 @@ namespace FlaxEditor.GUI
                         // Start selecting
                         StartMouseCapture();
                         _curve.ClearSelection();
+                        _curve.UpdateTangents();
                         Focus();
                         return true;
                     }
@@ -441,12 +479,13 @@ namespace FlaxEditor.GUI
                     Cursor = CursorType.Default;
 
                     // Selecting
-                    if (!_isMovingSelection)
+                    if (!_isMovingSelection && !_isMovingTangent)
                     {
                         UpdateSelectionRectangle();
                     }
 
                     _isMovingSelection = false;
+                    _isMovingTangent = false;
                 }
                 if (_rightMouseDown && buttons == MouseButton.Right)
                 {
@@ -497,7 +536,7 @@ namespace FlaxEditor.GUI
                 base.Draw();
 
                 // Selection rectangle
-                if (_leftMouseDown && !_isMovingSelection)
+                if (_leftMouseDown && !_isMovingSelection && !_isMovingTangent)
                 {
                     var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
                     Render2D.FillRectangle(selectionRect, Color.Orange * 0.4f);
@@ -524,7 +563,6 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The single keyframe control.
         /// </summary>
-        /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
         private class KeyframePoint : Control
         {
             /// <summary>
@@ -556,7 +594,6 @@ namespace FlaxEditor.GUI
                     color = Color.YellowGreen;
                 if (IsMouseOver)
                     color *= 1.1f;
-
                 Render2D.FillRectangle(rect, color);
             }
 
@@ -577,6 +614,80 @@ namespace FlaxEditor.GUI
             public void Deselect()
             {
                 IsSelected = false;
+            }
+        }
+
+        /// <summary>
+        /// The single keyframe tangent control.
+        /// </summary>
+        private class TangentPoint : Control
+        {
+            /// <summary>
+            /// The parent curve editor.
+            /// </summary>
+            public CurveEditor<T> Curve;
+
+            /// <summary>
+            /// The keyframe index.
+            /// </summary>
+            public int Index;
+
+            /// <summary>
+            /// The component index.
+            /// </summary>
+            public int Component;
+
+            /// <summary>
+            /// True if tangent is `In`, otherwise it's `Out`.
+            /// </summary>
+            public bool IsIn;
+
+            /// <summary>
+            /// The keyframe.
+            /// </summary>
+            public KeyframePoint Point;
+
+            /// <summary>
+            /// Gets the tangent value on curve.
+            /// </summary>
+            public float TangentValue
+            {
+                get
+                {
+                    var k = Curve._keyframes[Index];
+                    var value = IsIn ? k.TangentIn : k.TangentOut;
+                    return Curve.Accessor.GetCurveValue(ref value, Component);
+                }
+                set
+                {
+                    var k = Curve._keyframes[Index];
+                    if (IsIn)
+                        Curve.Accessor.SetCurveValue(value, ref k.TangentIn, Component);
+                    else
+                        Curve.Accessor.SetCurveValue(value, ref k.TangentOut, Component);
+                    Curve._keyframes[Index] = k;
+                }
+            }
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                var pointPos = PointFromParent(Point.Center);
+                Render2D.DrawLine(Size * 0.5f, pointPos, Color.Gray);
+
+                var rect = new Rectangle(Vector2.Zero, Size);
+                var color = Color.MediumVioletRed;
+                if (IsMouseOver)
+                    color *= 1.1f;
+                Render2D.FillRectangle(rect, color);
+            }
+
+            /// <inheritdoc />
+            protected override void SetLocationInternal(ref Vector2 location)
+            {
+                base.SetLocationInternal(ref location);
+
+                TooltipText = string.Format("Tangent {0}: {1}", IsIn ? "in" : "out", TangentValue);
             }
         }
 
@@ -617,7 +728,9 @@ namespace FlaxEditor.GUI
         private Contents _contents;
         private Panel _mainPanel;
         private readonly List<KeyframePoint> _points = new List<KeyframePoint>();
+        private readonly TangentPoint[] _tangents = new TangentPoint[2];
         private readonly float[] _tickStrengths = new float[TickSteps.Length];
+
         private Color _contentsColor;
         private Color _linesColor;
         private Color _labelsColor;
@@ -672,7 +785,7 @@ namespace FlaxEditor.GUI
             _mainPanel = new Panel(ScrollBars.Both)
             {
                 AlwaysShowScrollbars = true,
-                ScrollMargin = new Margin(50.0f),
+                ScrollMargin = new Margin(150.0f),
                 DockStyle = DockStyle.Fill,
                 Parent = this
             };
@@ -682,6 +795,24 @@ namespace FlaxEditor.GUI
                 AutoFocus = false,
                 Parent = _mainPanel
             };
+
+            for (int i = 0; i < _tangents.Length; i++)
+            {
+                _tangents[i] = new TangentPoint
+                {
+                    AutoFocus = false,
+                    Size = new Vector2(4.0f),
+                    Curve = this,
+                    Component = i / 2,
+                    Parent = _contents,
+                    Visible = false,
+                    IsIn = false,
+                };
+            }
+            for (int i = 0; i < _tangents.Length; i += 2)
+            {
+                _tangents[i].IsIn = true;
+            }
 
             UpdateKeyframes();
         }
@@ -736,6 +867,68 @@ namespace FlaxEditor.GUI
             KeyframesChanged?.Invoke();
         }
 
+        private void UpdateTangents()
+        {
+            // Find selected keyframe
+            Rectangle curveContentAreaBounds = _mainPanel.GetClientArea();
+            var selectedCount = 0;
+            var selectedIndex = -1;
+            KeyframePoint selectedKeyframe = null;
+            var selectedComponent = -1;
+            for (int i = 0; i < _points.Count; i++)
+            {
+                var p = _points[i];
+                if (p.IsSelected)
+                {
+                    selectedIndex = p.Index;
+                    selectedKeyframe = p;
+                    selectedComponent = p.Component;
+                    selectedCount++;
+                }
+            }
+
+            // Place tangents (only for a single selected keyframe)
+            if (selectedCount == 1)
+            {
+                var k = _keyframes[selectedIndex];
+                for (int i = 0; i < _tangents.Length; i++)
+                {
+                    var t = _tangents[i];
+
+                    t.Index = selectedIndex;
+                    t.Point = selectedKeyframe;
+                    t.Component = selectedComponent;
+
+                    var tangent = t.TangentValue;
+                    var direction = t.IsIn ? -1.0f : 1.0f;
+                    var offset = 30.0f * direction;
+                    var location = GetKeyframePoint(ref k, selectedComponent);
+                    t.Location = new Vector2
+                    (
+                        location.X * UnitsPerSecond - t.Width * 0.5f + offset,
+                        location.Y * -UnitsPerSecond - t.Height * 0.5f + curveContentAreaBounds.Height - offset * tangent
+                    );
+
+                    var isFirst = selectedIndex == 0 && t.IsIn;
+                    var isLast = selectedIndex == _keyframes.Count - 1 && !t.IsIn;
+                    t.Visible = !isFirst && !isLast;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _tangents.Length; i++)
+                {
+                    _tangents[i].Visible = false;
+                }
+            }
+
+            // Offset the tangents (parent container changed its location)
+            for (int i = 0; i < _tangents.Length; i++)
+            {
+                _tangents[i].Location -= _contents.Location;
+            }
+        }
+
         private void UpdateKeyframes()
         {
             if (_points.Count == 0)
@@ -754,8 +947,7 @@ namespace FlaxEditor.GUI
                 var p = _points[i];
                 var k = _keyframes[p.Index];
 
-                Vector2 location = GetKeyframePoint(ref k, 0);
-
+                var location = GetKeyframePoint(ref k, p.Component);
                 p.Location = new Vector2
                 (
                     location.X * UnitsPerSecond - p.Width * 0.5f,
@@ -778,6 +970,8 @@ namespace FlaxEditor.GUI
             {
                 _points[i].Location -= bounds.Location;
             }
+
+            UpdateTangents();
 
             _mainPanel.IsLayoutLocked = false;
             _mainPanel.PerformLayout();
@@ -978,12 +1172,6 @@ namespace FlaxEditor.GUI
             }
 
             base.Draw();
-
-            // TODO: draw selection
-            /*if (IsSelecting)
-            {
-                DrawSelection();
-            }*/
 
             // Draw border
             if (ContainsFocus)
