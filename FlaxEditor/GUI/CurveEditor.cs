@@ -315,6 +315,8 @@ namespace FlaxEditor.GUI
                                     throw new NotImplementedException("TODO: moving keyframe from multi-component curve (edit time by only one point)");
                                 k.Time = Mathf.Clamp(k.Time + keyframeDelta.X, minTime, maxTime);
 
+                                // TODO: snapping keyframes to grid when moving
+
                                 accessor.SetCurveValue(value, ref k.Value, p.Component);
                                 _curve._keyframes[p.Index] = k;
                             }
@@ -944,7 +946,22 @@ namespace FlaxEditor.GUI
 
         private void RemoveKeyframes()
         {
-            throw new NotImplementedException();
+            var keyframes = new Dictionary<int, Keyframe>(_keyframes.Count);
+            for (int i = 0; i < _points.Count; i++)
+            {
+                var p = _points[i];
+                if (p.IsSelected)
+                {
+                    keyframes[p.Index] = _keyframes[p.Index];
+                    p.Deselect();
+                }
+            }
+            UpdateTangents();
+            _keyframes.Clear();
+            _keyframes.AddRange(keyframes.Values);
+
+            OnKeyframesChanged();
+            MarkAsEdited();
         }
 
         private void SetTangentsLinear()
@@ -1069,6 +1086,7 @@ namespace FlaxEditor.GUI
             // Place tangents (only for a single selected keyframe)
             if (selectedCount == 1)
             {
+                var posOffset = _contents.Location;
                 var k = _keyframes[selectedIndex];
                 for (int i = 0; i < _tangents.Length; i++)
                 {
@@ -1092,6 +1110,9 @@ namespace FlaxEditor.GUI
                     var isFirst = selectedIndex == 0 && t.IsIn;
                     var isLast = selectedIndex == _keyframes.Count - 1 && !t.IsIn;
                     t.Visible = !isFirst && !isLast;
+
+                    if (t.Visible)
+                        _tangents[i].Location -= posOffset;
                 }
             }
             else
@@ -1100,13 +1121,6 @@ namespace FlaxEditor.GUI
                 {
                     _tangents[i].Visible = false;
                 }
-            }
-
-            // Offset the tangents (parent container changed its location)
-            var posOffset = _contents.Location;
-            for (int i = 0; i < _tangents.Length; i++)
-            {
-                _tangents[i].Location -= posOffset;
             }
         }
 
