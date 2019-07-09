@@ -45,6 +45,7 @@ namespace FlaxEditor
         private bool _isAfterInit, _areModulesInited, _areModulesAfterInitEnd, _isHeadlessMode;
         private ProjectInfo _projectInfo;
         private string _projectToOpen;
+        private float _lastAutoSaveTimer;
 
         /// <summary>
         /// Gets a value indicating whether Flax Engine is the best in the world.
@@ -179,8 +180,6 @@ namespace FlaxEditor
         /// </summary>
         public event Action InitializationEnd;
 
-        private Timer _autoSaveTimer;
-        
         internal Editor()
         {
             Instance = this;
@@ -214,45 +213,8 @@ namespace FlaxEditor
             ScriptsBuilder.ScriptsReloadBegin += ScriptsBuilder_ScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd += ScriptsBuilder_ScriptsReloadEnd;
             UIControl.FallbackParentGetDelegate += OnUIControlFallbackParentGet;
-            
-            InitAutoSaveTimer();
         }
 
-        private void InitAutoSaveTimer()
-        {
-            if (!Options.Options.General.EnableAutoSaves)
-                return;
-            
-            _autoSaveTimer = new Timer(Options.Options.General.AutoSavesInterval * 60 * 1000);
-            _autoSaveTimer.Elapsed += (obj, timer) =>
-            {
-                if (StateMachine.IsPlayMode)
-                    return;
-                
-                SaveAll();
-            };
-            _autoSaveTimer.Enabled = true;
-            _autoSaveTimer.AutoReset = true;
-        }
-
-        private void UpdateAutoSaveTimer()
-        {
-            if (_autoSaveTimer != null && !Options.Options.General.EnableAutoSaves)
-            {
-                _autoSaveTimer.Stop();
-                _autoSaveTimer.Dispose();
-                _autoSaveTimer = null;
-            }
-            else
-            {
-                if(_autoSaveTimer == null)
-                    InitAutoSaveTimer();
-
-                if (Math.Abs(_autoSaveTimer.Interval - Options.Options.General.AutoSavesInterval * 60 * 1000) > 0.01f) // floating point comparison 
-                    _autoSaveTimer.Interval = Options.Options.General.AutoSavesInterval * 60 * 1000;
-            }
-        }
-        
         private ContainerControl OnUIControlFallbackParentGet(UIControl control)
         {
             // Check if prefab root control is this UIControl
@@ -338,6 +300,7 @@ namespace FlaxEditor
                 }
             }
             _areModulesAfterInitEnd = true;
+            _lastAutoSaveTimer = Time.UnscaledGameTime;
 
             InitializationEnd?.Invoke();
 
@@ -371,11 +334,8 @@ namespace FlaxEditor
             {
                 Profiler.BeginEvent("Editor.Update");
 
-                // Update auto save timer and fire Save all if needed
-                UpdateAutoSaveTimer();
-                
-                // Update state machine
                 StateMachine.Update();
+                UpdateAutoSave();
 
                 // Drop performance if app has no focus (only when game is not running)
                 if (!StateMachine.IsPlayMode)
@@ -405,6 +365,38 @@ namespace FlaxEditor
             }
         }
 
+        private void UpdateAutoSave()
+        {
+            string msg = null;
+            var options = Options.Options.General;
+            var canSave = StateMachine.IsEditMode && options.EnableAutoSave;
+            if (canSave)
+            {
+                var timeSinceLastSave = Time.UnscaledGameTime - _lastAutoSaveTimer;
+                var timeToNextSave = options.AutoSaveFrequency * 60.0f - timeSinceLastSave;
+                var countDownDuration = 4.0f;
+
+                if (timeToNextSave <= 0.0f)
+                {
+                    Log("Auto save");
+                    _lastAutoSaveTimer = Time.UnscaledGameTime;
+                    if (options.AutoSaveScenes)
+                        Scene.SaveScenes();
+                    if (options.AutoSaveContent)
+                        SaveContent();
+                }
+                else if (timeToNextSave < countDownDuration)
+                {
+                    msg = string.Format("Auto save in {0}s...", Mathf.CeilToInt(timeToNextSave));
+                }
+            }
+            if (StateMachine.EditingSceneState.AutoSaveStatus != msg)
+            {
+                StateMachine.EditingSceneState.AutoSaveStatus = msg;
+                UI.UpdateStatusBar();
+            }
+        }
+
         internal void OnPlayBegin()
         {
             for (int i = 0; i < _modules.Count; i++)
@@ -421,10 +413,6 @@ namespace FlaxEditor
         {
             Log("Editor exit");
 
-            // Auto Save 
-            _autoSaveTimer.Stop();
-            _autoSaveTimer.Dispose();
-            
             // Start exit
             StateMachine.GoToState<ClosingState>();
 
@@ -477,13 +465,16 @@ namespace FlaxEditor
         /// </summary>
         public void SaveAll()
         {
-            // Layout
             Windows.SaveCurrentLayout();
-
-            // Scenes
             Scene.SaveScenes();
+            SaveContent();
+        }
 
-            // Assets
+        /// <summary>
+        /// Saves all content (assets, etc.).
+        /// </summary>
+        public void SaveContent()
+        {
             for (int i = 0; i < Windows.Windows.Count; i++)
             {
                 if (Windows.Windows[i] is AssetEditorWindow win)

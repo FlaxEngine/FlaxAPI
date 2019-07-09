@@ -54,24 +54,38 @@ namespace FlaxEditor.Options
         public float AutoRebuildNavMeshTimeoutMs { get; set; } = 100.0f;
 
         /// <summary>
+        /// Gets or sets a value indicating whether enable auto saves.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Auto Save", "Enable Auto Save"), EditorOrder(800), Tooltip("Enables or disables auto saving changes in edited scenes and content")]
+        public bool EnableAutoSave { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating auto saves interval (in minutes).
+        /// </summary>
+        [DefaultValue(5), Limit(1)]
+        [EditorDisplay("Auto Save", "Auto Save Frequency"), EditorOrder(801), Tooltip("The interval between auto saves (in minutes)")]
+        public int AutoSaveFrequency { get; set; } = 5;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether enable auto saves for scenes.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Auto Save", "Auto Save Scenes"), EditorOrder(802), Tooltip("Enables or disables auto saving opened scenes")]
+        public bool AutoSaveScenes { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether enable auto saves for content.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Auto Save", "Auto Save Content"), EditorOrder(803), Tooltip("Enables or disables auto saving content")]
+        public bool AutoSaveContent { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets a value indicating whether enable editor analytics service.
         /// </summary>
         [DefaultValue(true)]
         [EditorDisplay("Analytics"), EditorOrder(1000), Tooltip("Enables or disables anonymous editor analytics service used to improve editor experience and the quality")]
         public bool EnableEditorAnalytics { get; set; } = true;
-        
-        /// <summary>
-        /// Gets or sets a value indicating whether enable auto saves.
-        /// </summary>
-        [DefaultValue(true)]
-        [EditorDisplay("Auto Saves", "Enable Auto Saves"), EditorOrder(1000), Tooltip("Enables or disables auto saves")]
-        public bool EnableAutoSaves { get; set; } = true;
-        
-        /// <summary>
-        /// Gets or sets a value indicating auto saves interval.
-        /// </summary>
-        [DefaultValue(2)]
-        [EditorDisplay("Auto Saves", "Interval In Seconds"), EditorOrder(1000), Tooltip("Set the interval between auto saves in seconds")]
-        public int AutoSavesInterval { get; set; } = 2;
     }
 }
