@@ -129,7 +129,18 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 Surface.Select(this);
                 var dialog = RenamePopup.Show(this, _headerRect, Title, false);
+                dialog.Validate += OnRenameValidate;
                 dialog.Renamed += OnRenamed;
+            }
+
+            private bool OnRenameValidate(RenamePopup popup, string value)
+            {
+                return Context.Nodes.All(node =>
+                {
+                    if (node != this && node is StateMachine stateMachine)
+                        return stateMachine.StateMachineTitle != value;
+                    return true;
+                });
             }
 
             private void OnRenamed(RenamePopup renamePopup)
@@ -167,6 +178,18 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSpawned();
 
+                // Ensure to have unique name
+                var title = StateMachineTitle;
+                var value = title;
+                int count = 1;
+                while (!OnRenameValidate(null, value))
+                {
+                    value = title + " " + count++;
+                }
+                Values[0] = value;
+                Title = value;
+
+                // Let user pick a name
                 StartRenaming();
             }
 
@@ -780,6 +803,18 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSpawned();
 
+                // Ensure to have unique name
+                var title = StateTitle;
+                var value = title;
+                int count = 1;
+                while (!OnRenameValidate(null, value))
+                {
+                    value = title + " " + count++;
+                }
+                Values[0] = value;
+                Title = value;
+
+                // Let user pick a name
                 StartRenaming();
             }
 
@@ -1050,7 +1085,18 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 Surface.Select(this);
                 var dialog = RenamePopup.Show(this, _textRect, Title, false);
+                dialog.Validate += OnRenameValidate;
                 dialog.Renamed += OnRenamed;
+            }
+
+            private bool OnRenameValidate(RenamePopup popup, string value)
+            {
+                return Context.Nodes.All(node =>
+                {
+                    if (node != this && node is StateMachineState state)
+                        return state.StateTitle != value;
+                    return true;
+                });
             }
 
             private void OnRenamed(RenamePopup renamePopup)
