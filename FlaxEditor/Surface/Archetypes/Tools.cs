@@ -444,15 +444,16 @@ namespace FlaxEditor.Surface.Archetypes
 
                 var values = (object[])Values.Clone();
                 var keyframes = _curve.Keyframes;
-                var count = (int)Values[0];
+                var count = keyframes.Count;
+                values[0] = count;
                 for (int i = 0; i < count; i++)
                 {
                     var k = keyframes[i];
 
-                    Values[i * 4 + 1] = k.Time;
-                    Values[i * 4 + 2] = k.Value;
-                    Values[i * 4 + 3] = k.TangentIn;
-                    Values[i * 4 + 4] = k.TangentOut;
+                    values[i * 4 + 1] = k.Time;
+                    values[i * 4 + 2] = k.Value;
+                    values[i * 4 + 3] = k.TangentIn;
+                    values[i * 4 + 4] = k.TangentOut;
                 }
                 SetValues(values);
 
