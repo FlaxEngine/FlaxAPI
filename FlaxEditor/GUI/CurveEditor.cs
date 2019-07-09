@@ -220,6 +220,7 @@ namespace FlaxEditor.GUI
             private bool _isMovingTangent;
             private TangentPoint _movingTangent;
             private Vector2 _movingSelectionViewPos;
+            private Vector2 _cmShowPos;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Contents"/> class.
@@ -496,8 +497,44 @@ namespace FlaxEditor.GUI
                     // Check if no move has been made at all
                     if (_mouseMoveAmount < 3.0f)
                     {
-                        // TODO: select keyframe under mouse if no selection
-                        // TODO: show context menu for selected keyframes
+                        var selectionCount = _curve.SelectionCount;
+                        var underMouse = GetChildAt(location);
+                        if (selectionCount == 0 && underMouse is KeyframePoint point)
+                        {
+                            // Select node
+                            selectionCount = 1;
+                            point.Select();
+                            _curve.UpdateTangents();
+                        }
+
+                        var viewRect = _curve._mainPanel.GetClientArea();
+                        _cmShowPos = PointToKeyframes(_cmShowPos, ref viewRect);
+
+                        var cm = new ContextMenu.ContextMenu();
+                        if (selectionCount == 0)
+                        {
+                            cm.AddButton("Add keyframe", () => _curve.AddKeyframe(_cmShowPos));
+                        }
+                        else if (selectionCount == 1)
+                        {
+                            cm.AddButton("Edit keyframe", _curve.EditKeyframes);
+                            cm.AddButton("Remove keyframe", _curve.RemoveKeyframes);
+                        }
+                        else
+                        {
+                            cm.AddButton("Edit keyframes", _curve.EditKeyframes);
+                            cm.AddButton("Remove keyframes", _curve.RemoveKeyframes);
+                        }
+                        if (selectionCount != 0)
+                        {
+                            cm.AddSeparator();
+                            cm.AddButton("Linear", _curve.SetTangentsLinear);
+                            cm.AddButton("Smooth", _curve.SetTangentsSmooth);
+                        }
+                        cm.AddSeparator();
+                        cm.AddButton("Show whole curve", _curve.ShowWholeCurve);
+                        cm.AddButton("Reset view", _curve.ResetView);
+                        cm.Show(this, location);
                     }
                     _mouseMoveAmount = 0;
                 }
@@ -867,6 +904,50 @@ namespace FlaxEditor.GUI
             KeyframesChanged?.Invoke();
         }
 
+        private void AddKeyframe(Vector2 keyframesPos)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void EditKeyframes()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RemoveKeyframes()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SetTangentsLinear()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SetTangentsSmooth()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Shows the whole curve.
+        /// </summary>
+        public void ShowWholeCurve()
+        {
+            throw new NotImplementedException();
+            //ViewOffset = _contents.Location;
+            //ViewScale = _mainPanel.Size / _contents.Size;
+        }
+
+        /// <summary>
+        /// Resets the view.
+        /// </summary>
+        public void ResetView()
+        {
+            ViewScale = Vector2.One;
+            ViewOffset = Vector2.Zero;
+        }
+
         private void UpdateTangents()
         {
             // Find selected keyframe
@@ -975,6 +1056,18 @@ namespace FlaxEditor.GUI
 
             _mainPanel.IsLayoutLocked = false;
             _mainPanel.PerformLayout();
+        }
+
+        private int SelectionCount
+        {
+            get
+            {
+                int result = 0;
+                for (int i = 0; i < _points.Count; i++)
+                    if (_points[i].IsSelected)
+                        result++;
+                return result;
+            }
         }
 
         private void ClearSelection()
