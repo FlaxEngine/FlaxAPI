@@ -961,7 +961,40 @@ namespace FlaxEditor.GUI
 
         private void SetTangentsSmooth()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < _points.Count; i++)
+            {
+                var p = _points[i];
+                if (!p.IsSelected)
+                    continue;
+
+                var k = _keyframes[p.Index];
+                
+                if (p.Index > 0)
+                {
+                    var o = _keyframes[p.Index - 1];
+                    
+                    var slope = 0.0f;
+                    Accessor.SetCurveValue(slope, ref k.TangentIn, p.Component);
+                    Accessor.SetCurveValue(slope, ref o.TangentOut, p.Component);
+
+                    _keyframes[p.Index - 1] = o;
+                }
+
+                if (p.Index < _keyframes.Count - 1)
+                {
+                    var o = _keyframes[p.Index + 1];
+                    
+                    var slope = 0.0f;
+                    Accessor.SetCurveValue(slope, ref k.TangentOut, p.Component);
+                    Accessor.SetCurveValue(slope, ref o.TangentIn, p.Component);
+
+                    _keyframes[p.Index + 1] = o;
+                }
+
+                _keyframes[p.Index] = k;
+            }
+
+            UpdateTangents();
         }
 
         /// <summary>
