@@ -411,6 +411,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         Window = win,
                         IsAdd = true,
+                        Name = "New parameter",
                         Type = type,
                     };
                     win.Surface.Undo.AddAction(action);
@@ -587,7 +588,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
-        internal bool _paramValueChange;
+        private bool _paramValueChange;
 
         private Undo _undo;
 

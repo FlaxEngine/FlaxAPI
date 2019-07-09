@@ -366,9 +366,9 @@ namespace FlaxEditor.Surface
                 else
                     throw new InvalidOperationException("Invalid node custom values.");
             }
+            node.Location = location;
             OnControlLoaded(node);
             node.OnSurfaceLoaded();
-            node.Location = location;
             OnControlSpawned(node);
 
             // Undo action

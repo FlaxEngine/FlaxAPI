@@ -421,6 +421,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         Window = window,
                         IsAdd = true,
+                        Name = "New parameter",
                         Type = type,
                     };
                     window.Surface.Undo.AddAction(action);

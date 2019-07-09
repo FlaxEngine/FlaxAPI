@@ -318,6 +318,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 if (_arrangeButtonInUse)
                 {
+                    // TODO: add support for undo the particle modules reorder
                     _arrangeButtonInUse = false;
                     EndMouseCapture();
                 }
@@ -345,20 +346,14 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void OnSpawned()
-            {
-                base.OnSpawned();
-
-                ParticleSurface.ArrangeModulesNodes();
-            }
-
-            /// <inheritdoc />
             public override void OnSurfaceLoaded()
             {
                 _enabled.Checked = ModuleEnabled;
                 _enabled.StateChanged += OnEnabledStateChanged;
 
                 base.OnSurfaceLoaded();
+
+                ParticleSurface.ArrangeModulesNodes();
             }
 
             /// <inheritdoc />
@@ -462,7 +457,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateInputBox();
             }
-            
+
             private void UpdateInputBox()
             {
                 GetBox(0).Enabled = (ParticleSpriteFacingMode)Values[2] == ParticleSpriteFacingMode.CustomFacingVector;
@@ -488,7 +483,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateTextBox();
             }
-            
+
             /// <inheritdoc />
             public override void OnValuesChanged()
             {

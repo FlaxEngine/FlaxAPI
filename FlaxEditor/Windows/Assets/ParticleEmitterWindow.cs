@@ -8,6 +8,7 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.History;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -27,12 +28,165 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Surface.IVisjectSurfaceOwner" />
     public sealed class ParticleEmitterWindow : ClonedAssetEditorWindowBase<ParticleEmitter>, IVisjectSurfaceOwner
     {
+        private class EditParamAction : IUndoAction
+        {
+            public ParticleEmitterWindow Window;
+            public int Index;
+            public object Before;
+            public object After;
+
+            /// <inheritdoc />
+            public string ActionString => "Edit parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(object value)
+            {
+                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
+                var surfaceParam = value;
+                switch (Window.Surface.Parameters[Index].Type)
+                {
+                case ParameterType.CubeTexture:
+                case ParameterType.Texture:
+                case ParameterType.NormalMap:
+                case ParameterType.RenderTarget:
+                case ParameterType.RenderTargetArray:
+                case ParameterType.RenderTargetCube:
+                case ParameterType.RenderTargetVolume:
+                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
+                    break;
+                }
+
+                Window.Surface.Parameters[Index].Value = surfaceParam;
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
+        private class RenameParamAction : IUndoAction
+        {
+            public ParticleEmitterWindow Window;
+            public int Index;
+            public string Before;
+            public string After;
+
+            /// <inheritdoc />
+            public string ActionString => "Rename parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(string value)
+            {
+                var param = Window.Surface.Parameters[Index];
+                param.Name = value;
+                Window.Surface.OnParamRenamed(param);
+                Window._propertiesEditor.BuildLayout();
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
+        private class AddRemoveParamAction : IUndoAction
+        {
+            public ParticleEmitterWindow Window;
+            public bool IsAdd;
+            public int Index;
+            public string Name;
+            public ParameterType Type;
+
+            /// <inheritdoc />
+            public string ActionString => IsAdd ? "Add parameter" : "Remove parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                if (IsAdd)
+                    Add();
+                else
+                    Remove();
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                if (IsAdd)
+                    Remove();
+                else
+                    Add();
+            }
+
+            private void Add()
+            {
+                var param = SurfaceParameter.Create(Type);
+                param.Name = Name;
+                if (Type == ParameterType.NormalMap)
+                {
+                    // Use default normal map texture (don't load asset here, just lookup registry for id at path)
+                    string typeName;
+                    Guid id;
+                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
+                    param.Value = id;
+                }
+                Window.Surface.Parameters.Insert(Index, param);
+                Window.Surface.OnParamCreated(param);
+                Window._propertiesEditor.BuildLayout();
+            }
+
+            private void Remove()
+            {
+                var param = Window.Surface.Parameters[Index];
+                Name = param.Name;
+                Type = param.Type;
+                Window.Surface.Parameters.RemoveAt(Index);
+                Window.Surface.OnParamDeleted(param);
+                Window._propertiesEditor.BuildLayout();
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+            }
+        }
+
         /// <summary>
         /// The properties proxy object.
         /// </summary>
         private sealed class PropertiesProxy
         {
-            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
+            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor)), NoSerialize]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public ParticleEmitterWindow ParticleEmitterWinRef { get; set; }
 
@@ -83,26 +237,22 @@ namespace FlaxEditor.Windows.Assets
 
                         var pIndex = i;
                         var pValue = p.Value;
-                        var pGuidType = false;
                         Type pType;
                         object[] attributes = null;
                         switch (p.Type)
                         {
                         case ParameterType.CubeTexture:
                             pType = typeof(CubeTexture);
-                            pGuidType = true;
                             break;
                         case ParameterType.Texture:
                         case ParameterType.NormalMap:
                             pType = typeof(Texture);
-                            pGuidType = true;
                             break;
                         case ParameterType.RenderTarget:
                         case ParameterType.RenderTargetArray:
                         case ParameterType.RenderTargetCube:
                         case ParameterType.RenderTargetVolume:
                             pType = typeof(RenderTarget);
-                            pGuidType = true;
                             break;
                         default:
                             pType = p.Value.GetType();
@@ -121,14 +271,17 @@ namespace FlaxEditor.Windows.Assets
                             },
                             (instance, index, value) =>
                             {
+                                // Set surface parameter
                                 var win = (ParticleEmitterWindow)instance;
-
-                                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
-                                var surfaceParam = value;
-                                if (pGuidType)
-                                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
-
-                                win.Surface.Parameters[pIndex].Value = surfaceParam;
+                                var action = new EditParamAction
+                                {
+                                    Window = win,
+                                    Index = pIndex,
+                                    Before = win.Surface.Parameters[pIndex].Value,
+                                    After = value,
+                                };
+                                win.Surface.Undo.AddAction(action);
+                                action.Do();
                             },
                             attributes
                         );
@@ -186,18 +339,15 @@ namespace FlaxEditor.Windows.Assets
                     if (particleEmitter == null || !particleEmitter.IsLoaded)
                         return;
 
-                    var param = SurfaceParameter.Create(type);
-                    if (type == ParameterType.NormalMap)
+                    var action = new AddRemoveParamAction
                     {
-                        // Use default normal map texture (don't load asset here, just lookup registry for id at path)
-                        string typeName;
-                        Guid id;
-                        FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
-                        param.Value = id;
-                    }
-                    win.Surface.Parameters.Add(param);
-                    win.Surface.OnParamCreated(param);
-                    RebuildLayout();
+                        Window = win,
+                        IsAdd = true,
+                        Name = "New parameter",
+                        Type = type,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <summary>
@@ -217,13 +367,17 @@ namespace FlaxEditor.Windows.Assets
                 private void OnParameterRenamed(RenamePopup renamePopup)
                 {
                     var index = (int)renamePopup.Tag;
-                    var newName = renamePopup.Text;
-
                     var win = (ParticleEmitterWindow)Values[0];
-                    var param = win.Surface.Parameters[index];
-                    param.Name = newName;
-                    win.Surface.OnParamRenamed(param);
-                    RebuildLayout();
+
+                    var action = new RenameParamAction
+                    {
+                        Window = win,
+                        Index = index,
+                        Before = win.Surface.Parameters[index].Name,
+                        After = renamePopup.Text,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <summary>
@@ -233,10 +387,15 @@ namespace FlaxEditor.Windows.Assets
                 private void DeleteParameter(int index)
                 {
                     var win = (ParticleEmitterWindow)Values[0];
-                    var param = win.Surface.Parameters[index];
-                    win.Surface.Parameters.RemoveAt(index);
-                    win.Surface.OnParamDeleted(param);
-                    RebuildLayout();
+
+                    var action = new AddRemoveParamAction
+                    {
+                        Window = win,
+                        IsAdd = false,
+                        Index = index,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
             }
 
@@ -265,11 +424,15 @@ namespace FlaxEditor.Windows.Assets
         private readonly ParticleEmitterPreview _preview;
         private readonly ParticleEmitterSurface _surface;
         private readonly CustomEditorPresenter _propertiesEditor;
+        private readonly PropertiesProxy _properties;
 
         private readonly ToolStripButton _saveButton;
-        private readonly PropertiesProxy _properties;
+        private readonly ToolStripButton _undoButton;
+        private readonly ToolStripButton _redoButton;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpParticleEmitterIsDirty;
+
+        private Undo _undo;
 
         /// <summary>
         /// Gets the Particle Emitter surface.
@@ -280,6 +443,12 @@ namespace FlaxEditor.Windows.Assets
         public ParticleEmitterWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            // Undo
+            _undo = new Undo();
+            _undo.UndoDone += OnUndo;
+            _undo.RedoDone += OnUndo;
+            _undo.ActionDone += OnUndo;
+
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
@@ -304,7 +473,7 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // ParticleEmitter properties editor
-            var propertiesEditor = new CustomEditorPresenter(null);
+            var propertiesEditor = new CustomEditorPresenter(_undo);
             propertiesEditor.Panel.Parent = _split2.Panel2;
             _properties = new PropertiesProxy();
             propertiesEditor.Select(_properties);
@@ -312,7 +481,7 @@ namespace FlaxEditor.Windows.Assets
             _propertiesEditor = propertiesEditor;
 
             // Surface
-            _surface = new ParticleEmitterSurface(this, Save)
+            _surface = new ParticleEmitterSurface(this, Save, _undo)
             {
                 Parent = _split1.Panel1,
                 Enabled = false
@@ -321,10 +490,28 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
             _toolstrip.AddSeparator();
+            _undoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Undo32, _undo.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
+            _redoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Redo32, _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
+            _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.PageScale32, _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.BracketsSlash32, () => ShowSourceCode(_asset)).LinkTooltip("Show generated shader source code");
             _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/particles/index.html")).LinkTooltip("See documentation to learn more");
+        }
+
+        private void OnUndo(IUndoAction action)
+        {
+            // Hack for emitter properties proxy object
+            if (action is MultiUndoAction multiUndo && multiUndo.Actions.Length == 1 && multiUndo.Actions[0] is UndoActionObject undoActionObject && undoActionObject.Target == _properties)
+            {
+                OnParticleEmitterPropertyEdited();
+                UpdateToolstrip();
+                return;
+            }
+
+            MarkAsEdited();
+            UpdateToolstrip();
+            _propertiesEditor.BuildLayoutOnUpdate();
         }
 
         private void OnParticleEmitterPropertyEdited()
@@ -399,6 +586,8 @@ namespace FlaxEditor.Windows.Assets
         protected override void UpdateToolstrip()
         {
             _saveButton.Enabled = IsEdited;
+            _undoButton.Enabled = _undo.CanUndo;
+            _redoButton.Enabled = _undo.CanRedo;
 
             base.UpdateToolstrip();
         }
@@ -511,10 +700,34 @@ namespace FlaxEditor.Windows.Assets
                 }
 
                 // Setup
+                _undo.Clear();
                 _surface.Enabled = true;
                 _propertiesEditor.BuildLayout();
                 ClearEditedFlag();
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (Root.GetKey(Keys.Control))
+            {
+                switch (key)
+                {
+                case Keys.Z:
+                    _undo.PerformUndo();
+                    return true;
+                case Keys.Y:
+                    _undo.PerformRedo();
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -543,6 +756,18 @@ namespace FlaxEditor.Windows.Assets
         {
             _split1.SplitterValue = 0.7f;
             _split2.SplitterValue = 0.4f;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_undo != null)
+            {
+                _undo.Clear();
+                _undo = null;
+            }
+
+            base.Dispose();
         }
     }
 }
