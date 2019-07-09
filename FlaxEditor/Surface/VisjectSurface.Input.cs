@@ -17,7 +17,7 @@ namespace FlaxEditor.Surface
 
         private string _currentInputText = string.Empty;
         private Vector2 _movingNodesDelta;
-        private List<uint> _movingNodes;
+        private HashSet<SurfaceNode> _movingNodes;
 
         private string CurrentInputText
         {
@@ -149,16 +149,9 @@ namespace FlaxEditor.Surface
                     {
                         // Move selected nodes
                         delta /= _targetScale;
-                        for (int i = 0; i < _rootControl.Children.Count; i++)
+                        foreach (var node in _movingNodes)
                         {
-                            if (_rootControl.Children[i] is SurfaceControl control && control.IsSelected)
-                            {
-                                var node = control as SurfaceNode;
-                                if (node != null && (node.Archetype.Flags & NodeFlags.NoMove) == NodeFlags.NoMove)
-                                    continue;
-
-                                control.Location += delta;
-                            }
+                            node.Location += delta;
                         }
                         _leftMouseDownPos = location;
                         _movingNodesDelta += delta;
@@ -310,14 +303,27 @@ namespace FlaxEditor.Surface
                     _movingSelectionViewPos = _rootControl.Location;
                     _movingNodesDelta = Vector2.Zero;
                     if (_movingNodes == null)
-                        _movingNodes = new List<uint>();
+                        _movingNodes = new HashSet<SurfaceNode>();
                     else
                         _movingNodes.Clear();
                     for (int i = 0; i < _rootControl.Children.Count; i++)
                     {
                         if (_rootControl.Children[i] is SurfaceNode node && node.IsSelected && (node.Archetype.Flags & NodeFlags.NoMove) != NodeFlags.NoMove)
                         {
-                            _movingNodes.Add(node.ID);
+                            _movingNodes.Add(node);
+
+                            // Move nodes inside the comment
+                            if (node is SurfaceComment comment)
+                            {
+                                var commentBounds = comment.Bounds;
+                                for (int j = 0; j < _rootControl.Children.Count; j++)
+                                {
+                                    if (_rootControl.Children[j] is SurfaceNode childNode && commentBounds.Contains(childNode.Bounds))
+                                    {
+                                        _movingNodes.Add(childNode);
+                                    }
+                                }
+                            }
                         }
                     }
                     Focus();
@@ -378,7 +384,7 @@ namespace FlaxEditor.Surface
                     if (_movingNodes != null && _movingNodes.Count > 0)
                     {
                         if (Undo != null && !_movingNodesDelta.IsZero)
-                            Undo.AddAction(new MoveNodesAction(Context, _movingNodes.ToArray(), _movingNodesDelta));
+                            Undo.AddAction(new MoveNodesAction(Context, _movingNodes.Select(x => x.ID).ToArray(), _movingNodesDelta));
                         _movingNodes.Clear();
                     }
                     _movingNodesDelta = Vector2.Zero;
