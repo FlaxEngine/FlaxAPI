@@ -292,6 +292,7 @@ namespace FlaxEditor.GUI
                     _movingSelectionViewPos = _curve.ViewOffset;
                     var viewRect = _curve._mainPanel.GetClientArea();
                     var delta = location - _leftMouseDownPos - viewDelta;
+                    _mouseMoveAmount += delta.Length;
                     if (delta.LengthSquared > 0.01f)
                     {
                         // Move selected keyframes
@@ -331,6 +332,7 @@ namespace FlaxEditor.GUI
                     _movingSelectionViewPos = _curve.ViewOffset;
                     var viewRect = _curve._mainPanel.GetClientArea();
                     var delta = location - _leftMouseDownPos - viewDelta;
+                    _mouseMoveAmount += delta.Length;
                     if (delta.LengthSquared > 0.01f)
                     {
                         // Move selected tangent
@@ -425,6 +427,7 @@ namespace FlaxEditor.GUI
 
                         // Start moving selected nodes
                         StartMouseCapture();
+                        _mouseMoveAmount = 0;
                         _isMovingSelection = true;
                         _movingSelectionViewPos = _curve.ViewOffset;
                         Focus();
@@ -437,6 +440,7 @@ namespace FlaxEditor.GUI
                     {
                         // Start moving tangent
                         StartMouseCapture();
+                        _mouseMoveAmount = 0;
                         _isMovingTangent = true;
                         _movingTangent = tangent;
                         _movingSelectionViewPos = _curve.ViewOffset;
@@ -482,12 +486,14 @@ namespace FlaxEditor.GUI
                     // Editing tangent
                     if (_isMovingTangent)
                     {
-                        _curve.MarkAsEdited();
+                        if (_mouseMoveAmount > 3.0f)
+                            _curve.MarkAsEdited();
                     }
                     // Moving keyframes
                     else if (_isMovingSelection)
                     {
-                        _curve.MarkAsEdited();
+                        if (_mouseMoveAmount > 3.0f)
+                            _curve.MarkAsEdited();
                     }
                     // Selecting
                     else

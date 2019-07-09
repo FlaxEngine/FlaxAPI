@@ -454,7 +454,7 @@ namespace FlaxEditor.Surface.Archetypes
                     Values[i * 4 + 3] = k.TangentIn;
                     Values[i * 4 + 4] = k.TangentOut;
                 }
-                // TODO: set values
+                SetValues(values);
 
                 _isSavingCurve = false;
             }
