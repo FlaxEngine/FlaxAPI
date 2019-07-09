@@ -37,7 +37,7 @@ namespace FlaxEngine.Json.JsonCustomSerializers
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             var result = new List<JsonProperty>(fields.Length + properties.Length);
 
@@ -86,6 +86,10 @@ namespace FlaxEngine.Json.JsonCustomSerializers
                     continue;
 
                 var attributes = p.GetCustomAttributes();
+
+                // Serialize non-public properties only with a proper attribute
+                if ((!p.GetMethod.IsPublic || !p.SetMethod.IsPublic) && !attributes.Any(x => x is SerializeAttribute))
+                    continue;
 
                 // Check if has attribute to skip serialization
                 bool noSerialize = false;
