@@ -822,7 +822,6 @@ namespace FlaxEditor.GUI
             _mainPanel = new Panel(ScrollBars.Both)
             {
                 AlwaysShowScrollbars = true,
-                ScrollMargin = new Margin(150.0f),
                 DockStyle = DockStyle.Fill,
                 Parent = this
             };
@@ -934,9 +933,8 @@ namespace FlaxEditor.GUI
         /// </summary>
         public void ShowWholeCurve()
         {
-            throw new NotImplementedException();
-            //ViewOffset = _contents.Location;
-            //ViewScale = _mainPanel.Size / _contents.Size;
+            ViewScale = _mainPanel.Size / _contents.Size;
+            ViewOffset = -_mainPanel.ControlsBounds.Location;
         }
 
         /// <summary>
@@ -1004,9 +1002,10 @@ namespace FlaxEditor.GUI
             }
 
             // Offset the tangents (parent container changed its location)
+            var posOffset = _contents.Location;
             for (int i = 0; i < _tangents.Length; i++)
             {
-                _tangents[i].Location -= _contents.Location;
+                _tangents[i].Location -= posOffset;
             }
         }
 
@@ -1047,9 +1046,10 @@ namespace FlaxEditor.GUI
             _contents.Bounds = bounds;
 
             // Offset the keyframes (parent container changed its location)
+            var posOffset = _contents.Location;
             for (var i = 0; i < _points.Count; i++)
             {
-                _points[i].Location -= bounds.Location;
+                _points[i].Location -= posOffset;
             }
 
             UpdateTangents();
