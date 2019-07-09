@@ -210,14 +210,14 @@ namespace FlaxEditor.GUI
         private class Contents : ContainerControl
         {
             private readonly CurveEditor<T> _curve;
-            private bool _leftMouseDown;
+            internal bool _leftMouseDown;
             private bool _rightMouseDown;
-            private Vector2 _leftMouseDownPos = Vector2.Minimum;
+            internal Vector2 _leftMouseDownPos = Vector2.Minimum;
             private Vector2 _rightMouseDownPos = Vector2.Minimum;
-            private Vector2 _mousePos = Vector2.Minimum;
+            internal Vector2 _mousePos = Vector2.Minimum;
             private float _mouseMoveAmount;
-            private bool _isMovingSelection;
-            private bool _isMovingTangent;
+            internal bool _isMovingSelection;
+            internal bool _isMovingTangent;
             private TangentPoint _movingTangent;
             private Vector2 _movingSelectionViewPos;
             private Vector2 _cmShowPos;
@@ -568,17 +568,11 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override void Draw()
+            protected override void SetScaleInternal(ref Vector2 scale)
             {
-                base.Draw();
+                base.SetScaleInternal(ref scale);
 
-                // Selection rectangle
-                if (_leftMouseDown && !_isMovingSelection && !_isMovingTangent)
-                {
-                    var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
-                    Render2D.FillRectangle(selectionRect, Color.Orange * 0.4f);
-                    Render2D.DrawRectangle(selectionRect, Color.Orange);
-                }
+                _curve.UpdateKeyframes();
             }
 
             /// <summary>
@@ -762,6 +756,11 @@ namespace FlaxEditor.GUI
             500000, 1000000, 5000000, 10000000, 100000000
         };
 
+        /// <summary>
+        /// The keyframes size.
+        /// </summary>
+        private static readonly Vector2 KeyframesSize = new Vector2(5.0f);
+
         private Contents _contents;
         private Panel _mainPanel;
         private readonly List<KeyframePoint> _points = new List<KeyframePoint>();
@@ -821,6 +820,7 @@ namespace FlaxEditor.GUI
 
             _mainPanel = new Panel(ScrollBars.Both)
             {
+                ScrollMargin = new Margin(150.0f),
                 AlwaysShowScrollbars = true,
                 DockStyle = DockStyle.Fill,
                 Parent = this
@@ -837,7 +837,7 @@ namespace FlaxEditor.GUI
                 _tangents[i] = new TangentPoint
                 {
                     AutoFocus = false,
-                    Size = new Vector2(4.0f),
+                    Size = KeyframesSize,
                     Curve = this,
                     Component = i / 2,
                     Parent = _contents,
@@ -890,7 +890,7 @@ namespace FlaxEditor.GUI
                 _points.Add(new KeyframePoint
                 {
                     AutoFocus = false,
-                    Size = new Vector2(4.0f),
+                    Size = KeyframesSize,
                     Curve = this,
                     Index = _points.Count / components,
                     Component = _points.Count % components,
@@ -982,6 +982,7 @@ namespace FlaxEditor.GUI
                     var direction = t.IsIn ? -1.0f : 1.0f;
                     var offset = 30.0f * direction;
                     var location = GetKeyframePoint(ref k, selectedComponent);
+                    t.Size = KeyframesSize / ViewScale;
                     t.Location = new Vector2
                     (
                         location.X * UnitsPerSecond - t.Width * 0.5f + offset,
@@ -1028,6 +1029,7 @@ namespace FlaxEditor.GUI
                 var k = _keyframes[p.Index];
 
                 var location = GetKeyframePoint(ref k, p.Component);
+                p.Size = KeyframesSize / ViewScale;
                 p.Location = new Vector2
                 (
                     location.X * UnitsPerSecond - p.Width * 0.5f,
@@ -1262,6 +1264,14 @@ namespace FlaxEditor.GUI
                 }
 
                 Render2D.PopClip();
+            }
+
+            // Draw selection rectangle
+            if (_contents._leftMouseDown && !_contents._isMovingSelection && !_contents._isMovingTangent)
+            {
+                var selectionRect = Rectangle.FromPoints(_contents.PointToParent(_contents._leftMouseDownPos), _contents.PointToParent(_contents._mousePos));
+                Render2D.FillRectangle(selectionRect, Color.Orange * 0.4f);
+                Render2D.DrawRectangle(selectionRect, Color.Orange);
             }
 
             base.Draw();
