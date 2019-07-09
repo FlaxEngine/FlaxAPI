@@ -479,8 +479,18 @@ namespace FlaxEditor.GUI
                     EndMouseCapture();
                     Cursor = CursorType.Default;
 
+                    // Editing tangent
+                    if (_isMovingTangent)
+                    {
+                        _curve.MarkAsEdited();
+                    }
+                    // Moving keyframes
+                    else if (_isMovingSelection)
+                    {
+                        _curve.MarkAsEdited();
+                    }
                     // Selecting
-                    if (!_isMovingSelection && !_isMovingTangent)
+                    else
                     {
                         UpdateSelectionRectangle();
                     }
@@ -785,7 +795,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets the keyframes collection (read-only).
         /// </summary>
-        public IReadOnlyCollection<Keyframe> Keyframes => _keyframes;
+        public IReadOnlyList<Keyframe> Keyframes => _keyframes;
 
         /// <summary>
         /// Gets or sets the view offset (via scroll bars).
@@ -809,6 +819,11 @@ namespace FlaxEditor.GUI
         /// The keyframes data accessor.
         /// </summary>
         public readonly IKeyframeAccess<T> Accessor = new KeyframeAccess() as IKeyframeAccess<T>;
+
+        /// <summary>
+        /// Occurs when curve gets edited.
+        /// </summary>
+        public event Action Edited;
 
         public CurveEditor()
         {
@@ -851,6 +866,11 @@ namespace FlaxEditor.GUI
             }
 
             UpdateKeyframes();
+        }
+
+        private void MarkAsEdited()
+        {
+            Edited?.Invoke();
         }
 
         /// <summary>
@@ -957,6 +977,7 @@ namespace FlaxEditor.GUI
             }
 
             UpdateTangents();
+            MarkAsEdited();
         }
 
         private void SetTangentsSmooth()
@@ -968,11 +989,11 @@ namespace FlaxEditor.GUI
                     continue;
 
                 var k = _keyframes[p.Index];
-                
+
                 if (p.Index > 0)
                 {
                     var o = _keyframes[p.Index - 1];
-                    
+
                     var slope = 0.0f;
                     Accessor.SetCurveValue(slope, ref k.TangentIn, p.Component);
                     Accessor.SetCurveValue(slope, ref o.TangentOut, p.Component);
@@ -983,7 +1004,7 @@ namespace FlaxEditor.GUI
                 if (p.Index < _keyframes.Count - 1)
                 {
                     var o = _keyframes[p.Index + 1];
-                    
+
                     var slope = 0.0f;
                     Accessor.SetCurveValue(slope, ref k.TangentOut, p.Component);
                     Accessor.SetCurveValue(slope, ref o.TangentIn, p.Component);
@@ -995,6 +1016,7 @@ namespace FlaxEditor.GUI
             }
 
             UpdateTangents();
+            MarkAsEdited();
         }
 
         /// <summary>

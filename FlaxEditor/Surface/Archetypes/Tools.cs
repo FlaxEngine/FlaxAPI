@@ -406,6 +406,7 @@ namespace FlaxEditor.Surface.Archetypes
         {
             private const int MaxKeyframes = 7;
             private CurveEditor<float> _curve;
+            private bool _isSavingCurve;
 
             /// <inheritdoc />
             public CurveNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
@@ -427,10 +428,46 @@ namespace FlaxEditor.Surface.Archetypes
                     Bounds = new Rectangle(upperLeft + new Vector2(curveMargin, 10.0f), upperRight.X - upperLeft.X - curveMargin * 2.0f, 140.0f),
                     Parent = this
                 };
+                _curve.Edited += OnCurveEdited;
                 _curve.UnlockChildrenRecursive();
                 _curve.PerformLayout();
 
                 UpdateCurveKeyframes();
+            }
+
+            private void OnCurveEdited()
+            {
+                if (_isSavingCurve)
+                    return;
+
+                _isSavingCurve = true;
+
+                var values = (object[])Values.Clone();
+                var keyframes = _curve.Keyframes;
+                var count = (int)Values[0];
+                for (int i = 0; i < count; i++)
+                {
+                    var k = keyframes[i];
+
+                    Values[i * 4 + 1] = k.Time;
+                    Values[i * 4 + 2] = k.Value;
+                    Values[i * 4 + 3] = k.TangentIn;
+                    Values[i * 4 + 4] = k.TangentOut;
+                }
+                // TODO: set values
+
+                _isSavingCurve = false;
+            }
+
+            /// <inheritdoc />
+            public override void OnValuesChanged()
+            {
+                base.OnValuesChanged();
+
+                if (!_isSavingCurve)
+                {
+                    UpdateCurveKeyframes();
+                }
             }
 
             private void UpdateCurveKeyframes()
