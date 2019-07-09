@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Timers;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Settings;
@@ -178,6 +179,8 @@ namespace FlaxEditor
         /// </summary>
         public event Action InitializationEnd;
 
+        private Timer _autoSaveTimer;
+        
         internal Editor()
         {
             Instance = this;
@@ -211,8 +214,45 @@ namespace FlaxEditor
             ScriptsBuilder.ScriptsReloadBegin += ScriptsBuilder_ScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd += ScriptsBuilder_ScriptsReloadEnd;
             UIControl.FallbackParentGetDelegate += OnUIControlFallbackParentGet;
+            
+            InitAutoSaveTimer();
         }
 
+        private void InitAutoSaveTimer()
+        {
+            if (!Options.Options.General.EnableAutoSaves)
+                return;
+            
+            _autoSaveTimer = new Timer(Options.Options.General.AutoSavesInterval * 60 * 1000);
+            _autoSaveTimer.Elapsed += (obj, timer) =>
+            {
+                if (StateMachine.IsPlayMode)
+                    return;
+                
+                SaveAll();
+            };
+            _autoSaveTimer.Enabled = true;
+            _autoSaveTimer.AutoReset = true;
+        }
+
+        private void UpdateAutoSaveTimer()
+        {
+            if (_autoSaveTimer != null && !Options.Options.General.EnableAutoSaves)
+            {
+                _autoSaveTimer.Stop();
+                _autoSaveTimer.Dispose();
+                _autoSaveTimer = null;
+            }
+            else
+            {
+                if(_autoSaveTimer == null)
+                    InitAutoSaveTimer();
+
+                if (Math.Abs(_autoSaveTimer.Interval - Options.Options.General.AutoSavesInterval * 60 * 1000) > 0.01f) // floating point comparison 
+                    _autoSaveTimer.Interval = Options.Options.General.AutoSavesInterval * 60 * 1000;
+            }
+        }
+        
         private ContainerControl OnUIControlFallbackParentGet(UIControl control)
         {
             // Check if prefab root control is this UIControl
@@ -331,6 +371,9 @@ namespace FlaxEditor
             {
                 Profiler.BeginEvent("Editor.Update");
 
+                // Update auto save timer and fire Save all if needed
+                UpdateAutoSaveTimer();
+                
                 // Update state machine
                 StateMachine.Update();
 
@@ -378,6 +421,10 @@ namespace FlaxEditor
         {
             Log("Editor exit");
 
+            // Auto Save 
+            _autoSaveTimer.Stop();
+            _autoSaveTimer.Dispose();
+            
             // Start exit
             StateMachine.GoToState<ClosingState>();
 
