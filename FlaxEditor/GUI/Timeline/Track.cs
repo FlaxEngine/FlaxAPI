@@ -508,17 +508,17 @@ namespace FlaxEditor.GUI.Timeline
 
             // Start renaming the track
             var dialog = RenamePopup.Show(this, new Rectangle(0, 0, Width, HeaderHeight), Name, false);
+            dialog.Validate += OnRenameValidate;
             dialog.Renamed += OnRenamed;
+        }
+
+        private bool OnRenameValidate(RenamePopup popup, string value)
+        {
+            return _timeline.IsTrackNameValid(value);
         }
 
         private void OnRenamed(RenamePopup renamePopup)
         {
-            if (!_timeline.IsTrackNameValid(renamePopup.Text))
-            {
-                MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBox.Buttons.OK, MessageBox.Icon.Warning);
-                return;
-            }
-
             OnRename(renamePopup.Text);
         }
 
