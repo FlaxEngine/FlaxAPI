@@ -307,10 +307,13 @@ namespace FlaxEditor.GUI
                                 var k = _curve._keyframes[p.Index];
                                 float value = accessor.GetCurveValue(ref k.Value, p.Component);
 
+                                float minTime = p.Index != 0 ? _curve._keyframes[p.Index - 1].Time : float.MinValue;
+                                float maxTime = p.Index != _curve._keyframes.Count - 1 ? _curve._keyframes[p.Index + 1].Time : float.MaxValue;
+
                                 value += keyframeDelta.Y;
                                 if (components != 1)
                                     throw new NotImplementedException("TODO: moving keyframe from multi-component curve (edit time by only one point)");
-                                k.Time += keyframeDelta.X;
+                                k.Time = Mathf.Clamp(k.Time + keyframeDelta.X, minTime, maxTime);
 
                                 accessor.SetCurveValue(value, ref k.Value, p.Component);
                                 _curve._keyframes[p.Index] = k;

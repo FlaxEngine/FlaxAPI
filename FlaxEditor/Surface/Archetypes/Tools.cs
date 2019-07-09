@@ -698,7 +698,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 12,
                 Title = "Curve",
                 Create = (id, context, arch, groupArch) => new CurveNode(id, context, arch, groupArch),
-                Description = "An animation spline represented by a set of keyframes, each representing an endpoint of a cubic hermite curve.",
+                Description = "An animation spline represented by a set of keyframes, each representing an endpoint of a Bezier curve.",
                 Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(400, 180.0f),
                 DefaultValues = new object[]
