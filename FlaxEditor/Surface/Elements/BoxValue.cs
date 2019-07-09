@@ -36,7 +36,16 @@ namespace FlaxEditor.Surface.Elements
         /// </summary>
         public BoundingBox Value
         {
-            get { return new BoundingBox(new Vector3(_minX.Value, _minY.Value, _minZ.Value), new Vector3(_maxX.Value, _maxY.Value, _maxZ.Value)); }
+            get => new BoundingBox(new Vector3(_minX.Value, _minY.Value, _minZ.Value), new Vector3(_maxX.Value, _maxY.Value, _maxZ.Value));
+            set
+            {
+                _minX.Value = value.Minimum.X;
+                _minY.Value = value.Minimum.Y;
+                _minZ.Value = value.Minimum.Z;
+                _maxX.Value = value.Maximum.X;
+                _maxY.Value = value.Maximum.Y;
+                _maxZ.Value = value.Maximum.Z;
+            }
         }
 
         /// <summary>
@@ -117,6 +126,13 @@ namespace FlaxEditor.Surface.Elements
                 Parent = this
             };
             _maxZ.ValueChanged += OnValueChanged;
+
+            ParentNode.ValuesChanged += OnNodeValuesChanged;
+        }
+
+        private void OnNodeValuesChanged()
+        {
+            Value = Get(ParentNode, Archetype);
         }
 
         private void OnValueChanged()

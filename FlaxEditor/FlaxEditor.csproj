@@ -439,6 +439,13 @@
     <Compile Include="Surface\SurfaceRootControl.cs" />
     <Compile Include="Surface\SurfaceStyle.cs" />
     <Compile Include="Surface\TransformCoordinateSystem.cs" />
+    <Compile Include="Surface\Undo\AddRemoveNodeAction.cs" />
+    <Compile Include="Surface\Undo\BoxHandle.cs" />
+    <Compile Include="Surface\Undo\ConnectBoxesAction.cs" />
+    <Compile Include="Surface\Undo\EditNodeConnections.cs" />
+    <Compile Include="Surface\Undo\EditNodeValuesAction.cs" />
+    <Compile Include="Surface\Undo\MoveNodesAction.cs" />
+    <Compile Include="Surface\Undo\ContextHandle.cs" />
     <Compile Include="Surface\VisjectSurface.Connecting.cs" />
     <Compile Include="Surface\VisjectSurface.Context.cs" />
     <Compile Include="Surface\VisjectSurface.ContextMenu.cs" />

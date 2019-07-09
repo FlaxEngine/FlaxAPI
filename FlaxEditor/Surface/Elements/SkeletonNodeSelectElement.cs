@@ -26,7 +26,15 @@ namespace FlaxEditor.Surface.Elements
                 var selectedIndex = (int)ParentNode.Values[Archetype.ValueIndex];
                 if (selectedIndex > -1 && selectedIndex < _items.Count)
                     SelectedIndex = selectedIndex;
+                ParentNode.ValuesChanged += OnNodeValuesChanged;
             }
+        }
+        
+        private void OnNodeValuesChanged()
+        {
+            _selectedIndices.Clear();
+            _selectedIndices.Add((int)ParentNode.Values[Archetype.ValueIndex]);
+            OnSelectedIndexChanged();
         }
 
         /// <summary>

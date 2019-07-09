@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -514,15 +515,6 @@ namespace FlaxEditor.Surface.Elements
                 return;
             }
 
-            // Check if they are already connected
-            if (areConnected)
-            {
-                // Break link
-                start.BreakConnection(end);
-                Surface.MarkAsEdited();
-                return;
-            }
-
             // Cache Input and Output box (since connection may be made in a different way)
             InputBox iB;
             OutputBox oB;
@@ -535,6 +527,25 @@ namespace FlaxEditor.Surface.Elements
             {
                 iB = (InputBox)start;
                 oB = (OutputBox)end;
+            }
+
+            // Check if they are already connected
+            if (areConnected)
+            {
+                // Break link
+                if (Surface.Undo != null)
+                {
+                    var action = new ConnectBoxesAction(iB, oB, false);
+                    start.BreakConnection(end);
+                    action.End();
+                    Surface.Undo.AddAction(action);
+                }
+                else
+                {
+                    start.BreakConnection(end);
+                }
+                Surface.MarkAsEdited();
+                return;
             }
 
             // Validate connection type (also check if any of boxes parent can manage that connections types)
@@ -557,7 +568,17 @@ namespace FlaxEditor.Surface.Elements
             else
             {
                 // Connect directly
-                iB.CreateConnection(oB);
+                if (Surface.Undo != null)
+                {
+                    var action = new ConnectBoxesAction(iB, oB, true);
+                    iB.CreateConnection(oB);
+                    action.End();
+                    Surface.Undo?.AddAction(action);
+                }
+                else
+                {
+                    iB.CreateConnection(oB);
+                }
                 Surface.MarkAsEdited();
             }
         }

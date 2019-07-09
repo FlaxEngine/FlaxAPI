@@ -40,9 +40,10 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
+
                 UpdateTitle();
             }
 
@@ -178,12 +179,12 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
                 // Check if update amount of blend pose inputs
-                if (index == 2 && _blendPoses.Count != BlendPosesCount)
+                if (_blendPoses.Count != BlendPosesCount)
                 {
                     UpdateBoxes();
                     UpdateHeight();

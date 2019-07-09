@@ -262,15 +262,13 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateOutputBoxType();
             }
-
+            
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
-                // Update on type change
-                if (index == 1)
-                    UpdateOutputBoxType();
+                UpdateOutputBoxType();
             }
 
             private void UpdateOutputBoxType()

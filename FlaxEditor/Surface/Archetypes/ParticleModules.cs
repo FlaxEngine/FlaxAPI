@@ -318,6 +318,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 if (_arrangeButtonInUse)
                 {
+                    // TODO: add support for undo the particle modules reorder
                     _arrangeButtonInUse = false;
                     EndMouseCapture();
                 }
@@ -345,20 +346,14 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void OnSpawned()
-            {
-                base.OnSpawned();
-
-                ParticleSurface.ArrangeModulesNodes();
-            }
-
-            /// <inheritdoc />
             public override void OnSurfaceLoaded()
             {
                 _enabled.Checked = ModuleEnabled;
                 _enabled.StateChanged += OnEnabledStateChanged;
 
                 base.OnSurfaceLoaded();
+
+                ParticleSurface.ArrangeModulesNodes();
             }
 
             /// <inheritdoc />
@@ -399,13 +394,11 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
-                // Update on type change
-                if (index == 3)
-                    UpdateOutputBoxType();
+                UpdateOutputBoxType();
             }
 
             private void UpdateOutputBoxType()
@@ -458,13 +451,11 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
-                // Update on mode change
-                if (index == 2)
-                    UpdateInputBox();
+                UpdateInputBox();
             }
 
             private void UpdateInputBox()
@@ -494,13 +485,11 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
-                // Update on sort mode change
-                if (index == 2)
-                    UpdateTextBox();
+                UpdateTextBox();
             }
 
             private void UpdateTextBox()

@@ -1,7 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.Surface.Elements;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -14,6 +16,8 @@ namespace FlaxEditor.Surface
         public Keys CreateCommentKey = Keys.C;
 
         private string _currentInputText = string.Empty;
+        private Vector2 _movingNodesDelta;
+        private List<uint> _movingNodes;
 
         private string CurrentInputText
         {
@@ -143,19 +147,21 @@ namespace FlaxEditor.Surface
                     Vector2 delta = location - _leftMouseDownPos - viewDelta;
                     if (delta.LengthSquared > 0.01f)
                     {
-                        // Move selected surface control
+                        // Move selected nodes
                         delta /= _targetScale;
                         for (int i = 0; i < _rootControl.Children.Count; i++)
                         {
                             if (_rootControl.Children[i] is SurfaceControl control && control.IsSelected)
                             {
-                                if (control is SurfaceNode node && (node.Archetype.Flags & NodeFlags.NoMove) == NodeFlags.NoMove)
+                                var node = control as SurfaceNode;
+                                if (node != null && (node.Archetype.Flags & NodeFlags.NoMove) == NodeFlags.NoMove)
                                     continue;
 
                                 control.Location += delta;
                             }
                         }
                         _leftMouseDownPos = location;
+                        _movingNodesDelta += delta;
                         Cursor = CursorType.SizeAll;
                         MarkAsEdited(false);
                     }
@@ -302,6 +308,18 @@ namespace FlaxEditor.Surface
                     StartMouseCapture();
                     _isMovingSelection = true;
                     _movingSelectionViewPos = _rootControl.Location;
+                    _movingNodesDelta = Vector2.Zero;
+                    if (_movingNodes == null)
+                        _movingNodes = new List<uint>();
+                    else
+                        _movingNodes.Clear();
+                    for (int i = 0; i < _rootControl.Children.Count; i++)
+                    {
+                        if (_rootControl.Children[i] is SurfaceNode node && node.IsSelected && (node.Archetype.Flags & NodeFlags.NoMove) != NodeFlags.NoMove)
+                        {
+                            _movingNodes.Add(node.ID);
+                        }
+                    }
                     Focus();
                     return true;
                 }
@@ -352,10 +370,25 @@ namespace FlaxEditor.Surface
                     var p1 = _rootControl.PointFromParent(ref _leftMouseDownPos);
                     var p2 = _rootControl.PointFromParent(ref _mousePos);
                     var selectionRect = Rectangle.FromPoints(p1, p2);
-                    Context.CreateComment(ref selectionRect);
+                    Context.CreateComment(ref selectionRect, "Comment", new Color(1.0f, 1.0f, 1.0f, 0.2f));
+                }
+                // Moving nodes
+                else if (_isMovingSelection)
+                {
+                    if (_movingNodes != null && _movingNodes.Count > 0)
+                    {
+                        if (Undo != null && !_movingNodesDelta.IsZero)
+                            Undo.AddAction(new MoveNodesAction(Context, _movingNodes.ToArray(), _movingNodesDelta));
+                        _movingNodes.Clear();
+                    }
+                    _movingNodesDelta = Vector2.Zero;
+                }
+                // Connecting
+                else if (_connectionInstigator != null)
+                {
                 }
                 // Selecting
-                else if (!_isMovingSelection && _connectionInstigator == null)
+                else
                 {
                     UpdateSelectionRectangle();
                 }

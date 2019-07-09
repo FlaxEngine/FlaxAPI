@@ -8,6 +8,7 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.History;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -27,6 +28,157 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Surface.IVisjectSurfaceOwner" />
     public sealed class MaterialWindow : ClonedAssetEditorWindowBase<Material>, IVisjectSurfaceOwner
     {
+        private class EditParamAction : IUndoAction
+        {
+            public MaterialWindow Window;
+            public int Index;
+            public object Before;
+            public object After;
+
+            /// <inheritdoc />
+            public string ActionString => "Edit parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(object value)
+            {
+                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
+                var surfaceParam = value;
+                switch (Window.Asset.Parameters[Index].Type)
+                {
+                case MaterialParameterType.CubeTexture:
+                case MaterialParameterType.Texture:
+                case MaterialParameterType.NormalMap:
+                case MaterialParameterType.RenderTarget:
+                case MaterialParameterType.RenderTargetArray:
+                case MaterialParameterType.RenderTargetCube:
+                case MaterialParameterType.RenderTargetVolume:
+                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
+                    break;
+                }
+
+                Window.Asset.Parameters[Index].Value = value;
+                Window.Surface.Parameters[Index].Value = surfaceParam;
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
+        private class RenameParamAction : IUndoAction
+        {
+            public MaterialWindow Window;
+            public int Index;
+            public string Before;
+            public string After;
+
+            /// <inheritdoc />
+            public string ActionString => "Rename parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(string value)
+            {
+                var param = Window.Surface.Parameters[Index];
+                param.Name = value;
+                Window.Surface.OnParamRenamed(param);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
+        private class AddRemoveParamAction : IUndoAction
+        {
+            public MaterialWindow Window;
+            public bool IsAdd;
+            public int Index;
+            public string Name;
+            public ParameterType Type;
+
+            /// <inheritdoc />
+            public string ActionString => IsAdd ? "Add parameter" : "Remove parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                if (IsAdd)
+                    Add();
+                else
+                    Remove();
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                if (IsAdd)
+                    Remove();
+                else
+                    Add();
+            }
+
+            private void Add()
+            {
+                var param = SurfaceParameter.Create(Type);
+                param.Name = Name;
+                if (Type == ParameterType.NormalMap)
+                {
+                    // Use default normal map texture (don't load asset here, just lookup registry for id at path)
+                    string typeName;
+                    Guid id;
+                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
+                    param.Value = id;
+                }
+                Window.Surface.Parameters.Insert(Index, param);
+                Window.Surface.OnParamCreated(param);
+            }
+
+            private void Remove()
+            {
+                var param = Window.Surface.Parameters[Index];
+                Name = param.Name;
+                Type = param.Type;
+                Window.Surface.Parameters.RemoveAt(Index);
+                Window.Surface.OnParamDeleted(param);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+            }
+        }
+
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
@@ -89,7 +241,7 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(220), EditorDisplay("Misc"), Tooltip("The post fx material rendering location")]
             public MaterialPostFxLocation PostFxLocation { get; set; }
 
-            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor))]
+            [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor)), NoSerialize]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public MaterialWindow MaterialWinRef { get; set; }
 
@@ -152,26 +304,22 @@ namespace FlaxEditor.Windows.Assets
 
                         var pIndex = i;
                         var pValue = p.Value;
-                        var pGuidType = false;
                         Type pType;
                         object[] attributes = null;
                         switch (p.Type)
                         {
                         case MaterialParameterType.CubeTexture:
                             pType = typeof(CubeTexture);
-                            pGuidType = true;
                             break;
                         case MaterialParameterType.Texture:
                         case MaterialParameterType.NormalMap:
                             pType = typeof(Texture);
-                            pGuidType = true;
                             break;
                         case MaterialParameterType.RenderTarget:
                         case MaterialParameterType.RenderTargetArray:
                         case MaterialParameterType.RenderTargetCube:
                         case MaterialParameterType.RenderTargetVolume:
                             pType = typeof(RenderTarget);
-                            pGuidType = true;
                             break;
                         default:
                             pType = p.Value.GetType();
@@ -193,14 +341,15 @@ namespace FlaxEditor.Windows.Assets
                             {
                                 // Set material parameter and surface parameter
                                 var win = (MaterialWindow)instance;
-
-                                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
-                                var surfaceParam = value;
-                                if (pGuidType)
-                                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
-
-                                win.Asset.Parameters[pIndex].Value = value;
-                                win.Surface.Parameters[pIndex].Value = surfaceParam;
+                                var action = new EditParamAction
+                                {
+                                    Window = win,
+                                    Index = pIndex,
+                                    Before = win.Asset.Parameters[pIndex].Value,
+                                    After = value,
+                                };
+                                win.Surface.Undo.AddAction(action);
+                                action.Do();
                                 win._paramValueChange = true;
                             },
                             attributes
@@ -258,17 +407,15 @@ namespace FlaxEditor.Windows.Assets
                     if (material == null || !material.IsLoaded)
                         return;
 
-                    var param = SurfaceParameter.Create(type);
-                    if (type == ParameterType.NormalMap)
+                    var action = new AddRemoveParamAction
                     {
-                        // Use default normal map texture (don't load asset here, just lookup registry for id at path)
-                        string typeName;
-                        Guid id;
-                        FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
-                        param.Value = id;
-                    }
-                    win.Surface.Parameters.Add(param);
-                    win.Surface.OnParamCreated(param);
+                        Window = win,
+                        IsAdd = true,
+                        Name = "New parameter",
+                        Type = type,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <summary>
@@ -289,12 +436,17 @@ namespace FlaxEditor.Windows.Assets
                 private void OnParameterRenamed(RenamePopup renamePopup)
                 {
                     var index = (int)renamePopup.Tag;
-                    var newName = renamePopup.Text;
-
                     var win = (MaterialWindow)Values[0];
-                    var param = win.Surface.Parameters[index];
-                    param.Name = newName;
-                    win.Surface.OnParamRenamed(param);
+
+                    var action = new RenameParamAction
+                    {
+                        Window = win,
+                        Index = index,
+                        Before = win.Surface.Parameters[index].Name,
+                        After = renamePopup.Text,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <summary>
@@ -304,9 +456,15 @@ namespace FlaxEditor.Windows.Assets
                 private void DeleteParameter(int index)
                 {
                     var win = (MaterialWindow)Values[0];
-                    var param = win.Surface.Parameters[index];
-                    win.Surface.Parameters.RemoveAt(index);
-                    win.Surface.OnParamDeleted(param);
+
+                    var action = new AddRemoveParamAction
+                    {
+                        Window = win,
+                        IsAdd = false,
+                        Index = index,
+                    };
+                    win.Surface.Undo.AddAction(action);
+                    action.Do();
                 }
 
                 /// <inheritdoc />
@@ -424,10 +582,15 @@ namespace FlaxEditor.Windows.Assets
         private readonly MaterialSurface _surface;
 
         private readonly ToolStripButton _saveButton;
+        private readonly ToolStripButton _undoButton;
+        private readonly ToolStripButton _redoButton;
+        private readonly CustomEditorPresenter _propertiesEditor;
         private readonly PropertiesProxy _properties;
         private bool _isWaitingForSurfaceLoad;
         private bool _tmpMaterialIsDirty;
-        internal bool _paramValueChange;
+        private bool _paramValueChange;
+
+        private Undo _undo;
 
         /// <summary>
         /// Gets the material surface.
@@ -438,6 +601,12 @@ namespace FlaxEditor.Windows.Assets
         public MaterialWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            // Undo
+            _undo = new Undo();
+            _undo.UndoDone += OnUndo;
+            _undo.RedoDone += OnUndo;
+            _undo.ActionDone += OnUndo;
+
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
@@ -461,14 +630,14 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Material properties editor
-            var propertiesEditor = new CustomEditorPresenter(null);
-            propertiesEditor.Panel.Parent = _split2.Panel2;
+            _propertiesEditor = new CustomEditorPresenter(_undo);
+            _propertiesEditor.Panel.Parent = _split2.Panel2;
             _properties = new PropertiesProxy();
-            propertiesEditor.Select(_properties);
-            propertiesEditor.Modified += OnMaterialPropertyEdited;
+            _propertiesEditor.Select(_properties);
+            _propertiesEditor.Modified += OnMaterialPropertyEdited;
 
             // Surface
-            _surface = new MaterialSurface(this, Save)
+            _surface = new MaterialSurface(this, Save, _undo)
             {
                 Parent = _split1.Panel1,
                 Enabled = false
@@ -477,10 +646,29 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
             _toolstrip.AddSeparator();
+            _undoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Undo32, _undo.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
+            _redoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Redo32, _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
+            _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.PageScale32, _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.BracketsSlash32, () => ShowSourceCode(_asset)).LinkTooltip("Show generated shader source code");
             _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/materials/index.html")).LinkTooltip("See documentation to learn more");
+        }
+
+        private void OnUndo(IUndoAction action)
+        {
+            // Hack for material properties proxy object
+            if (action is MultiUndoAction multiUndo && multiUndo.Actions.Length == 1 && multiUndo.Actions[0] is UndoActionObject undoActionObject && undoActionObject.Target == _properties)
+            {
+                OnMaterialPropertyEdited();
+                UpdateToolstrip();
+                return;
+            }
+
+            _paramValueChange = false;
+            MarkAsEdited();
+            UpdateToolstrip();
+            _propertiesEditor.BuildLayoutOnUpdate();
         }
 
         private void OnMaterialPropertyEdited()
@@ -497,34 +685,7 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(Material material)
         {
             var source = Editor.GetMaterialShaderSourceCode(material);
-            if (string.IsNullOrEmpty(source))
-            {
-                MessageBox.Show("No generated shader source code.", "No source.");
-                return;
-            }
-
-            CreateWindowSettings settings = CreateWindowSettings.Default;
-            settings.ActivateWhenFirstShown = true;
-            settings.AllowMaximize = false;
-            settings.AllowMinimize = false;
-            settings.HasSizingFrame = false;
-            settings.StartPosition = WindowStartPosition.CenterScreen;
-            settings.Size = new Vector2(500, 600);
-            settings.Title = "Material Source";
-            var dialog = Window.Create(settings);
-
-            var copyButton = new Button(4, 4, 100);
-            copyButton.Text = "Copy";
-            copyButton.Clicked += () => Application.ClipboardText = source;
-            copyButton.Parent = dialog.GUI;
-
-            var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);
-            sourceTextBox.Height = settings.Size.Y - sourceTextBox.Top - 2;
-            sourceTextBox.Text = source;
-            sourceTextBox.Parent = dialog.GUI;
-
-            dialog.Show();
-            dialog.Focus();
+            Utilities.Utils.ShowSourceCode(source, "Material Source");
         }
 
         /// <summary>
@@ -643,6 +804,8 @@ namespace FlaxEditor.Windows.Assets
         protected override void UpdateToolstrip()
         {
             _saveButton.Enabled = IsEdited;
+            _undoButton.Enabled = _undo.CanUndo;
+            _redoButton.Enabled = _undo.CanRedo;
 
             base.UpdateToolstrip();
         }
@@ -758,9 +921,33 @@ namespace FlaxEditor.Windows.Assets
                 }
 
                 // Setup
+                _undo.Clear();
                 _surface.Enabled = true;
                 ClearEditedFlag();
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (Root.GetKey(Keys.Control))
+            {
+                switch (key)
+                {
+                case Keys.Z:
+                    _undo.PerformUndo();
+                    return true;
+                case Keys.Y:
+                    _undo.PerformRedo();
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -789,6 +976,18 @@ namespace FlaxEditor.Windows.Assets
         {
             _split1.SplitterValue = 0.7f;
             _split2.SplitterValue = 0.4f;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (_undo != null)
+            {
+                _undo.Clear();
+                _undo = null;
+            }
+
+            base.Dispose();
         }
     }
 }

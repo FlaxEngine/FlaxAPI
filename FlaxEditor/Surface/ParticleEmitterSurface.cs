@@ -23,8 +23,8 @@ namespace FlaxEditor.Surface
         public Particles.ParticleEmitterNode RootNode => _rootNode;
 
         /// <inheritdoc />
-        public ParticleEmitterSurface(IVisjectSurfaceOwner owner, Action onSave)
-        : base(owner, onSave)
+        public ParticleEmitterSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo)
+        : base(owner, onSave, undo)
         {
         }
 

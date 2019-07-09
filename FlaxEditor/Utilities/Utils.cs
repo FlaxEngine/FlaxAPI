@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
+using FlaxEngine.GUI;
 using Newtonsoft.Json;
 using Object = System.Object;
 
@@ -862,6 +863,42 @@ namespace FlaxEditor.Utilities
             {
                 throw new NotSupportedException(string.Format("Invalid Common Value type {0}", value != null ? value.GetType().ToString() : "null"));
             }
+        }
+
+        /// <summary>
+        /// Shows the source code window.
+        /// </summary>
+        /// <param name="material">The material asset.</param>
+        public static void ShowSourceCode(string source, string title)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                MessageBox.Show("No generated shader source code.", "No source.");
+                return;
+            }
+
+            CreateWindowSettings settings = CreateWindowSettings.Default;
+            settings.ActivateWhenFirstShown = true;
+            settings.AllowMaximize = false;
+            settings.AllowMinimize = false;
+            settings.HasSizingFrame = false;
+            settings.StartPosition = WindowStartPosition.CenterScreen;
+            settings.Size = new Vector2(500, 600);
+            settings.Title = title;
+            var dialog = Window.Create(settings);
+
+            var copyButton = new Button(4, 4, 100);
+            copyButton.Text = "Copy";
+            copyButton.Clicked += () => Application.ClipboardText = source;
+            copyButton.Parent = dialog.GUI;
+
+            var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);
+            sourceTextBox.Height = settings.Size.Y - sourceTextBox.Top - 2;
+            sourceTextBox.Text = source;
+            sourceTextBox.Parent = dialog.GUI;
+
+            dialog.Show();
+            dialog.Focus();
         }
     }
 }

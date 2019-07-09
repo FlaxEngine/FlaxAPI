@@ -33,9 +33,15 @@ namespace FlaxEditor.Surface.Elements
             Size = archetype.Size;
             if (archetype.ValueIndex >= 0)
             {
-                Text = (string)parentNode.Values[archetype.ValueIndex];
+                OnNodeValuesChanged();
                 EditEnd += () => ParentNode.SetValue(Archetype.ValueIndex, Text);
+                ParentNode.ValuesChanged += OnNodeValuesChanged;
             }
+        }
+
+        private void OnNodeValuesChanged()
+        {
+            Text = (string)ParentNode.Values[Archetype.ValueIndex];
         }
 
         /// <inheritdoc />

@@ -207,7 +207,7 @@ namespace FlaxEditor.Surface
                             else
                             {
                                 // The first one is already connected => skip this one!
-                                if (outputBox.ParentNode.GetBox(0).HasAnyConnection)
+                                if (outputBox.ParentNode.Get(0).HasAnyConnection)
                                 {
                                     continue;
                                 }

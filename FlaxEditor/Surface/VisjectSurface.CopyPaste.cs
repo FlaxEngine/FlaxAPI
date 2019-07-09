@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FlaxEditor.Surface.Elements;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -247,11 +248,6 @@ namespace FlaxEditor.Surface
             /// The nodes.
             /// </summary>
             public NodeDataModel[] Nodes;
-
-            /// <summary>
-            /// The comments.
-            /// </summary>
-            public CommentDataModel[] Comments;
         }
 
         /// <summary>
@@ -267,7 +263,7 @@ namespace FlaxEditor.Surface
             try
             {
                 var model = JsonConvert.DeserializeObject<DataModel>(data);
-                return model != null && ((model.Nodes != null && model.Nodes.Length != 0) || (model.Comments != null && model.Comments.Length != 0));
+                return model != null && (model.Nodes != null && model.Nodes.Length != 0);
             }
             catch (Exception)
             {
@@ -290,8 +286,6 @@ namespace FlaxEditor.Surface
                 var model = JsonConvert.DeserializeObject<DataModel>(data);
                 if (model.Nodes == null)
                     model.Nodes = new NodeDataModel[0];
-                if (model.Comments == null)
-                    model.Comments = new CommentDataModel[0];
 
                 // Build the nodes IDs mapping (need to generate new IDs for the pasted nodes and preserve the internal connections)
                 var idsMapping = new Dictionary<uint, uint>();
@@ -327,27 +321,11 @@ namespace FlaxEditor.Surface
                 }
 
                 // Find controls upper left location
-                Vector2 upperLeft;
-                if (model.Nodes.Length > 0)
+                Vector2 upperLeft = new Vector2(model.Nodes[0].X, model.Nodes[0].Y);
+                for (int i = 1; i < model.Nodes.Length; i++)
                 {
-                    upperLeft = new Vector2(model.Nodes[0].X, model.Nodes[0].Y);
-                    for (int i = 1; i < model.Nodes.Length; i++)
-                    {
-                        upperLeft.X = Mathf.Min(upperLeft.X, model.Nodes[i].X);
-                        upperLeft.Y = Mathf.Min(upperLeft.Y, model.Nodes[i].Y);
-                    }
-                    for (int i = 0; i < model.Comments.Length; i++)
-                    {
-                        upperLeft = Vector2.Min(upperLeft, model.Comments[i].Bounds.Location);
-                    }
-                }
-                else
-                {
-                    upperLeft = model.Comments[0].Bounds.Location;
-                    for (int i = 1; i < model.Comments.Length; i++)
-                    {
-                        upperLeft = Vector2.Min(upperLeft, model.Comments[i].Bounds.Location);
-                    }
+                    upperLeft.X = Mathf.Min(upperLeft.X, model.Nodes[i].X);
+                    upperLeft.Y = Mathf.Min(upperLeft.Y, model.Nodes[i].Y);
                 }
 
                 // Create nodes
@@ -457,39 +435,24 @@ namespace FlaxEditor.Surface
                 {
                     var node = e.Value;
                     var nodeData = nodesData[e.Key];
-                    foreach (var boxData in nodeData.Boxes)
+                    if (nodeData.Boxes != null)
                     {
-                        var box = node.GetBox(boxData.ID);
-                        if (box == null || boxData.BoxIDs == null || boxData.NodeIDs == null || boxData.BoxIDs.Length != boxData.NodeIDs.Length)
-                            continue;
-
-                        for (int i = 0; i < boxData.NodeIDs.Length; i++)
+                        foreach (var boxData in nodeData.Boxes)
                         {
-                            if (nodes.TryGetValue(boxData.NodeIDs[i], out var targetNode)
-                                && targetNode.TryGetBox(boxData.BoxIDs[i], out var targetBox))
+                            var box = node.GetBox(boxData.ID);
+                            if (box == null || boxData.BoxIDs == null || boxData.NodeIDs == null || boxData.BoxIDs.Length != boxData.NodeIDs.Length)
+                                continue;
+
+                            for (int i = 0; i < boxData.NodeIDs.Length; i++)
                             {
-                                box.Connections.Add(targetBox);
+                                if (nodes.TryGetValue(boxData.NodeIDs[i], out var targetNode)
+                                    && targetNode.TryGetBox(boxData.BoxIDs[i], out var targetBox))
+                                {
+                                    box.Connections.Add(targetBox);
+                                }
                             }
                         }
                     }
-                }
-
-                // Create comments
-                var comments = new List<SurfaceComment>();
-                for (int i = 0; i < model.Comments.Length; i++)
-                {
-                    var commentData = model.Comments[i];
-
-                    // Create
-                    var comment = Context.SpawnComment(ref commentData.Bounds);
-                    if (comment == null)
-                        throw new InvalidOperationException("Failed to create comment.");
-                    comments.Add(comment);
-
-                    comment.Title = commentData.Title;
-                    comment.Color = commentData.Color;
-
-                    Context.OnControlLoaded(comment);
                 }
 
                 // Arrange controls
@@ -500,35 +463,33 @@ namespace FlaxEditor.Surface
                     var pos = new Vector2(nodeData.X, nodeData.Y) - upperLeft;
                     node.Location = ViewPosition + pos + _mousePos / ViewScale;
                 }
-                foreach (var comment in comments)
-                {
-                    var pos = comment.Location - upperLeft;
-                    comment.Location = ViewPosition + pos + _mousePos / ViewScale;
-                }
 
                 // Post load
                 foreach (var node in nodes)
                 {
                     node.Value.OnSurfaceLoaded();
                 }
-                foreach (var comment in comments)
+
+                // Add undo action
+                if (Undo != null && nodes.Count > 0)
                 {
-                    comment.OnSurfaceLoaded();
+                    var actions = new List<IUndoAction>();
+                    foreach (var node in nodes)
+                    {
+                        var action = new AddRemoveNodeAction(node.Value, true);
+                        actions.Add(action);
+                    }
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node.Value);
+                        action.End();
+                        actions.Add(action);
+                    }
+                    Undo.AddAction(new MultiUndoAction(actions, nodes.Count == 1 ? "Paste node" : "Paste nodes"));
                 }
 
-                // Select those nodes and comments
-                if (comments.Count == 0)
-                {
-                    Select(nodes.Values);
-                }
-                else if (nodes.Count == 0)
-                {
-                    Select(comments);
-                }
-                else
-                {
-                    Select(nodes.Values.Cast<SurfaceControl>().Union(comments));
-                }
+                // Select those nodes
+                Select(nodes.Values);
 
                 MarkAsEdited();
             }

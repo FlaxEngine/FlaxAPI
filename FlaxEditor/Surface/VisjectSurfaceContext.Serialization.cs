@@ -70,7 +70,7 @@ namespace FlaxEditor.Surface
                     CachedSurfaceMeta.Scale = 1.0f;
                 }
 
-                // Load surface comments
+                // [Deprecated on 04.07.2019] Load surface comments
                 var commentsData = _meta.GetEntry(666);
                 if (commentsData.Data != null)
                 {
@@ -85,12 +85,9 @@ namespace FlaxEditor.Surface
                             var color = new Color(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                             var bounds = new Rectangle(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
-                            var comment = SpawnComment(ref bounds);
+                            var comment = SpawnComment(ref bounds, title, color);
                             if (comment == null)
                                 throw new InvalidOperationException("Failed to create comment.");
-
-                            comment.Title = title;
-                            comment.Color = color;
 
                             OnControlLoaded(comment);
                         }
@@ -161,34 +158,6 @@ namespace FlaxEditor.Surface
 
             // Save surface meta
             _meta.AddEntry(10, Utils.StructureToByteArray(ref CachedSurfaceMeta));
-
-            // Save surface comments (in surface meta container)
-            var comments = Comments;
-            if (comments.Count > 0)
-            {
-                using (var stream = new MemoryStream())
-                using (var writer = new BinaryWriter(stream))
-                {
-                    writer.Write(comments.Count);
-
-                    for (int i = 0; i < comments.Count; i++)
-                    {
-                        var comment = comments[i];
-
-                        Utils.WriteStr(writer, comment.Title, 71);
-                        writer.Write(comment.Color.R);
-                        writer.Write(comment.Color.G);
-                        writer.Write(comment.Color.B);
-                        writer.Write(comment.Color.A);
-                        writer.Write(comment.X);
-                        writer.Write(comment.Y);
-                        writer.Write(comment.Width);
-                        writer.Write(comment.Height);
-                    }
-
-                    _meta.AddEntry(666, stream.ToArray());
-                }
-            }
 
             // Save all nodes meta
             VisjectSurface.Meta11 meta11;

@@ -8,6 +8,7 @@ using FlaxEditor.Surface.Archetypes;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Surface.GUI;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -114,6 +115,11 @@ namespace FlaxEditor.Surface
         /// The style used by the surface.
         /// </summary>
         public readonly SurfaceStyle Style;
+
+        /// <summary>
+        /// The undo system to use for the history actions recording (optional, can be null).
+        /// </summary>
+        public readonly FlaxEditor.Undo Undo;
 
         /// <summary>
         /// Gets a value indicating whether surface is edited.
@@ -270,9 +276,10 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="onSave">The save action called when user wants to save the surface.</param>
+        /// <param name="onSave">The undo/redo to use for the history actions recording. Optional, can be null to disable undo support.</param>
         /// <param name="style">The custom surface style. Use null to create the default style.</param>
         /// <param name="groups">The custom surface node types. Pass null to use the default nodes set.</param>
-        public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, SurfaceStyle style = null, List<GroupArchetype> groups = null)
+        public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo = null, SurfaceStyle style = null, List<GroupArchetype> groups = null)
         {
             DockStyle = DockStyle.Fill;
             AutoFocus = false; // Disable to prevent autofocus and event handling on OnMouseDown event
@@ -282,6 +289,7 @@ namespace FlaxEditor.Surface
             if (Style == null)
                 throw new InvalidOperationException("Missing visject surface style.");
             NodeArchetypes = groups ?? NodeFactory.DefaultGroups;
+            Undo = undo;
 
             // Initialize with the root context
             OpenContext(owner);
@@ -300,16 +308,45 @@ namespace FlaxEditor.Surface
             _cmRemoveNodeConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that node(s)", () =>
             {
                 var nodes = ((List<SurfaceNode>)_cmSecondaryMenu.Tag);
-                foreach (var node in nodes)
+
+                if (Undo != null)
                 {
-                    node.RemoveConnections();
+                    var actions = new List<IUndoAction>(nodes.Count);
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node);
+                        node.RemoveConnections();
+                        action.End();
+                        actions.Add(action);
+                    }
+                    Undo.AddAction(new MultiUndoAction(actions, actions[0].ActionString));
                 }
+                else
+                {
+                    foreach (var node in nodes)
+                    {
+                        node.RemoveConnections();
+                    }
+                }
+
                 MarkAsEdited();
             });
             _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
             {
                 var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
-                boxUnderMouse.RemoveConnections();
+
+                if (Undo != null)
+                {
+                    var action = new EditNodeConnections(Context, boxUnderMouse.ParentNode);
+                    boxUnderMouse.RemoveConnections();
+                    action.End();
+                    Undo.AddAction(action);
+                }
+                else
+                {
+                    boxUnderMouse.RemoveConnections();
+                }
+
                 MarkAsEdited();
             });
 
@@ -548,7 +585,7 @@ namespace FlaxEditor.Surface
                 surfaceArea = Rectangle.Union(surfaceArea, selection[i].Bounds.MakeExpanded(80.0f));
             }
 
-            _context.CreateComment(ref surfaceArea);
+            _context.CreateComment(ref surfaceArea, "Comment", new Color(1.0f, 1.0f, 1.0f, 0.2f));
         }
 
         /// <summary>
@@ -594,16 +631,16 @@ namespace FlaxEditor.Surface
 
             bool edited = false;
 
+            List<SurfaceNode> nodes = null;
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceNode node)
                 {
                     if (node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
                     {
-                        Nodes.Remove(node);
-
-                        Context.OnControlDeleted(node);
-                        i--;
+                        if (nodes == null)
+                            nodes = new List<SurfaceNode>();
+                        nodes.Add(node);
                         edited = true;
                     }
                 }
@@ -612,6 +649,43 @@ namespace FlaxEditor.Surface
                     i--;
                     Context.OnControlDeleted(control);
                     edited = true;
+                }
+            }
+
+            if (nodes != null)
+            {
+                if (Undo == null)
+                {
+                    // Remove all nodes
+                    foreach (var node in nodes)
+                    {
+                        node.RemoveConnections();
+                        Nodes.Remove(node);
+                        Context.OnControlDeleted(node);
+                    }
+                }
+                else
+                {
+                    var actions = new List<IUndoAction>();
+
+                    // Break connections for all nodes
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node);
+                        node.RemoveConnections();
+                        action.End();
+                        actions.Add(action);
+                    }
+
+                    // Remove all nodes
+                    foreach (var node in nodes)
+                    {
+                        var action = new AddRemoveNodeAction(node, false);
+                        action.Do();
+                        actions.Add(action);
+                    }
+
+                    Undo.AddAction(new MultiUndoAction(actions, nodes.Count == 1 ? "Remove node" : "Remove nodes"));
                 }
             }
 

@@ -537,9 +537,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
                 UpdateUI();
             }

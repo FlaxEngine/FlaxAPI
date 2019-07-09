@@ -156,6 +156,7 @@ namespace FlaxEditor.Windows
             // Show rename popup
             var popup = RenamePopup.Show(item, item.TextRectangle, item.ShortName, true);
             popup.Tag = item;
+            popup.Validate += OnRenameValidate;
             popup.Renamed += renamePopup => Rename((ContentItem)renamePopup.Tag, renamePopup.Text);
             popup.Closed += renamePopup =>
             {
@@ -174,6 +175,12 @@ namespace FlaxEditor.Windows
             {
                 popup.InitialValue = "?";
             }
+        }
+
+        private bool OnRenameValidate(RenamePopup popup, string value)
+        {
+            string hint;
+            return Editor.ContentEditing.IsValidAssetName((ContentItem)popup.Tag, value, out hint);
         }
 
         /// <summary>
