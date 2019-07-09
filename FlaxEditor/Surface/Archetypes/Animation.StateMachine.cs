@@ -199,8 +199,11 @@ namespace FlaxEditor.Surface.Archetypes
                 if (IsDisposing)
                     return;
 
-                // Remove from cache
                 Surface.RemoveContext(this);
+
+                _maxTransitionsPerUpdate = null;
+                _reinitializeOnBecomingRelevant = null;
+                _skipFirstUpdateTransition = null;
 
                 base.Dispose();
             }
@@ -545,6 +548,7 @@ namespace FlaxEditor.Surface.Archetypes
                     if (transition == null)
                         throw new Exception("Missing transition.");
 
+                    _surface.RemoveContext(transition);
                     src.Transitions.Remove(transition);
 
                     src.UpdateTransitionsOrder();
@@ -848,15 +852,17 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// Saves the state data to the node value (writes transitions and related information).
             /// </summary>
-            public void SaveData()
+            /// <param name="withUndo">True if save data via node parameter editing via undo or without undo action.</param>
+            public void SaveData(bool withUndo = false)
             {
                 try
                 {
                     _isSavingData = true;
 
+                    byte[] value;
                     if (Transitions.Count == 0)
                     {
-                        StateData = Enumerable.Empty<byte>() as byte[];
+                        value = Enumerable.Empty<byte>() as byte[];
                     }
                     else
                     {
@@ -866,6 +872,7 @@ namespace FlaxEditor.Surface.Archetypes
                         {
                             writer.Write(1);
                             writer.Write(Transitions.Count);
+
                             for (int i = 0; i < Transitions.Count; i++)
                             {
                                 var t = Transitions[i];
@@ -892,9 +899,14 @@ namespace FlaxEditor.Surface.Archetypes
                                 }
                             }
 
-                            StateData = stream.ToArray();
+                            value = stream.ToArray();
                         }
                     }
+
+                    if (withUndo)
+                        SetValue(2, value);
+                    else
+                        Values[2] = value;
                 }
                 finally
                 {
@@ -1183,9 +1195,12 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.RemoveConnections();
 
-                Transitions.Clear();
-                UpdateTransitions();
-                SaveData();
+                if (Transitions.Count != 0)
+                {
+                    Transitions.Clear();
+                    UpdateTransitions();
+                    SaveData(true);
+                }
 
                 for (int i = 0; i < Surface.Nodes.Count; i++)
                 {
@@ -1209,7 +1224,7 @@ namespace FlaxEditor.Surface.Archetypes
                         if (modified)
                         {
                             state.UpdateTransitions();
-                            state.SaveData();
+                            state.SaveData(true);
                         }
                     }
                 }
@@ -1220,6 +1235,8 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 if (IsDisposing)
                     return;
+
+                Surface.RemoveContext(this);
 
                 ClearData();
 
@@ -1453,7 +1470,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _data.SetFlag(Data.FlagTypes.Enabled, value);
                     SourceState.UpdateTransitionsColors();
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1468,7 +1485,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _data.SetFlag(Data.FlagTypes.Solo, value);
                     SourceState.UpdateTransitionsColors();
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1482,7 +1499,7 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.SetFlag(Data.FlagTypes.UseDefaultRule, value);
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1498,7 +1515,7 @@ namespace FlaxEditor.Surface.Archetypes
                     _data.Order = value;
                     SourceState.UpdateTransitionsOrder();
                     SourceState.UpdateTransitionsColors();
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1512,7 +1529,7 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.BlendDuration = value;
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1526,7 +1543,7 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.BlendMode = value;
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1616,9 +1633,22 @@ namespace FlaxEditor.Surface.Archetypes
                 var ruleOutputNode = context.FindNode(9, 22);
                 if (ruleOutputNode == null)
                 {
+                    var wasEnabled = true;
+                    var undo = SourceState.Surface.Undo;
+                    if (undo != null)
+                    {
+                        wasEnabled = undo.Enabled;
+                        undo.Enabled = false;
+                    }
+
                     ruleOutputNode = context.SpawnNode(9, 22, new Vector2(100.0f));
 
                     // TODO: add default rule nodes for easier usage
+
+                    if (undo != null)
+                    {
+                        undo.Enabled = wasEnabled;
+                    }
                 }
             }
 
