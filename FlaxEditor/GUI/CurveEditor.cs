@@ -920,7 +920,43 @@ namespace FlaxEditor.GUI
 
         private void SetTangentsLinear()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < _points.Count; i++)
+            {
+                var p = _points[i];
+                if (!p.IsSelected)
+                    continue;
+
+                var k = _keyframes[p.Index];
+                var value = Accessor.GetCurveValue(ref k.Value, p.Component);
+
+                if (p.Index > 0)
+                {
+                    var o = _keyframes[p.Index - 1];
+                    var oValue = Accessor.GetCurveValue(ref o.Value, p.Component);
+
+                    var slope = (value - oValue) / (k.Time - o.Time);
+                    Accessor.SetCurveValue(slope, ref k.TangentIn, p.Component);
+                    Accessor.SetCurveValue(slope, ref o.TangentOut, p.Component);
+
+                    _keyframes[p.Index - 1] = o;
+                }
+
+                if (p.Index < _keyframes.Count - 1)
+                {
+                    var o = _keyframes[p.Index + 1];
+                    var oValue = Accessor.GetCurveValue(ref o.Value, p.Component);
+
+                    var slope = (oValue - value) / (o.Time - k.Time);
+                    Accessor.SetCurveValue(slope, ref k.TangentOut, p.Component);
+                    Accessor.SetCurveValue(slope, ref o.TangentIn, p.Component);
+
+                    _keyframes[p.Index + 1] = o;
+                }
+
+                _keyframes[p.Index] = k;
+            }
+
+            UpdateTangents();
         }
 
         private void SetTangentsSmooth()
@@ -1269,7 +1305,11 @@ namespace FlaxEditor.GUI
             // Draw selection rectangle
             if (_contents._leftMouseDown && !_contents._isMovingSelection && !_contents._isMovingTangent)
             {
-                var selectionRect = Rectangle.FromPoints(_contents.PointToParent(_contents._leftMouseDownPos), _contents.PointToParent(_contents._mousePos));
+                var selectionRect = Rectangle.FromPoints
+                (
+                    _mainPanel.PointToParent(_contents.PointToParent(_contents._leftMouseDownPos)),
+                    _mainPanel.PointToParent(_contents.PointToParent(_contents._mousePos))
+                );
                 Render2D.FillRectangle(selectionRect, Color.Orange * 0.4f);
                 Render2D.DrawRectangle(selectionRect, Color.Orange);
             }
