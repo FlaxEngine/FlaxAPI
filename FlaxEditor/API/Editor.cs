@@ -956,6 +956,7 @@ namespace FlaxEditor
         internal struct InternalOptions
         {
             public byte AutoReloadScriptsOnMainWindowFocus;
+            public byte ForceScriptCompilationOnStartup;
             public byte AutoRebuildCSG;
             public float AutoRebuildCSGTimeoutMs;
             public byte AutoRebuildNavMesh;
