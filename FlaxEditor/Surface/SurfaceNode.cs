@@ -392,12 +392,12 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Implementation of Depth-First traversal over the graph of surface nodes. Throws exception if cycle is detected.
+        /// Implementation of Depth-First traversal over the graph of surface nodes.
         /// </summary>
         /// <returns>The list of nodes as a result of depth-first traversal algorithm execution.</returns>
         public IEnumerable<SurfaceNode> DepthFirstTraversal()
         {
-            var visited = new HashSet<SurfaceNode>();
+            var visited = new List<SurfaceNode>();
             var stack = new Stack<SurfaceNode>();
 
             stack.Push(this);
@@ -406,8 +406,9 @@ namespace FlaxEditor.Surface
             {
                 var node = stack.Pop();
 
-                if (!visited.Add(node))
+                if (visited.Contains(node))
                     continue;
+                visited.Add(node);
 
                 // For all children, push them onto the stack if they haven't been visited yet
                 for (int i = 0; i < node.Elements.Count; i++)
@@ -420,10 +421,6 @@ namespace FlaxEditor.Surface
                             if (!visited.Contains(neighbor))
                             {
                                 stack.Push(neighbor);
-                            }
-                            else
-                            {
-                                throw new Exception("Cycle in graph detected.");
                             }
                         }
                         else
