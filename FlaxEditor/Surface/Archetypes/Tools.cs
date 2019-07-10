@@ -729,7 +729,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Time", true, ConnectionType.Float, 0),
-                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 1),
+                    NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.Float, 1),
                 }
             },
         };

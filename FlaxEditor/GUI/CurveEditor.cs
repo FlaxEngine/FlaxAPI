@@ -529,7 +529,7 @@ namespace FlaxEditor.GUI
                         }
 
                         var viewRect = _curve._mainPanel.GetClientArea();
-                        _cmShowPos = PointToKeyframes(_cmShowPos, ref viewRect);
+                        _cmShowPos = PointToKeyframes(location, ref viewRect);
 
                         var cm = new ContextMenu.ContextMenu();
                         if (selectionCount == 0)
@@ -936,7 +936,24 @@ namespace FlaxEditor.GUI
 
         private void AddKeyframe(Vector2 keyframesPos)
         {
-            throw new NotImplementedException();
+            int pos = 0;
+            while (pos < _keyframes.Count && _keyframes[pos].Time < keyframesPos.X)
+                pos++;
+            var k = new Keyframe
+            {
+                Time = keyframesPos.X,
+            };
+            var components = Accessor.GetCurveComponents();
+            for (int component = 0; component < components; component++)
+            {
+                Accessor.SetCurveValue(keyframesPos.Y, ref k.Value, component);
+                Accessor.SetCurveValue(0.0f, ref k.TangentIn, component);
+                Accessor.SetCurveValue(0.0f, ref k.TangentOut, component);
+            }
+            _keyframes.Insert(pos, k);
+
+            OnKeyframesChanged();
+            MarkAsEdited();
         }
 
         private void EditKeyframes()
