@@ -50,7 +50,7 @@ namespace FlaxEditor.States
                     OnCompilationEnd(true);
                 }
             }
-            else
+            else if (Editor.Options.Options.General.ForceScriptCompilationOnStartup)
             {
                 // Compile scripts before loading any scenes
                 ScriptsBuilder.Compile();
@@ -59,6 +59,11 @@ namespace FlaxEditor.States
                 // Here we wait for scripts compilation end
                 // Later we want to load scripts
                 // Finally enter normal state and load last opened scene
+            }
+            else
+            {
+                // Skip compilation on startup
+                OnCompilationEnd(true);
             }
         }
 

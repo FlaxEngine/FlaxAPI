@@ -26,6 +26,13 @@ namespace FlaxEditor.Options
         public bool AutoReloadScriptsOnMainWindowFocus { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether automatically compile game scripts before starting the editor.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Scripting", "Force Script Compilation On Startup"), EditorOrder(501), Tooltip("Determines whether automatically compile game scripts before starting the editor.")]
+        public bool ForceScriptCompilationOnStartup { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets a value indicating whether perform automatic CSG rebuild on brush change.
         /// </summary>
         [DefaultValue(true)]
