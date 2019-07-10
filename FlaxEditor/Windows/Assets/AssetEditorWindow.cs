@@ -454,7 +454,7 @@ namespace FlaxEditor.Windows.Assets
             }
 
             // Copy temporary material to the final destination (and restore ID)
-            if (Editor.ContentEditing.CloneAssetFile(destinationPath, sourcePath, id))
+            if (Editor.ContentEditing.CloneAssetFile(sourcePath, destinationPath, id))
             {
                 // Error
                 Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, destinationPath));

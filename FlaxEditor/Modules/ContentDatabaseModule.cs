@@ -578,7 +578,7 @@ namespace FlaxEditor.Modules
                     {
                         // Rename asset
                         // Note: we use content backend because file may be in use or sth, it's safe
-                        if (Editor.ContentEditing.CloneAssetFile(targetPath, sourcePath, Guid.NewGuid()))
+                        if (Editor.ContentEditing.CloneAssetFile(sourcePath, targetPath, Guid.NewGuid()))
                         {
                             // Error
                             Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, targetPath));
