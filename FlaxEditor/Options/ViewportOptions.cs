@@ -43,7 +43,7 @@ namespace FlaxEditor.Options
         /// Gets or sets the default field of view angle (in degrees) for the viewport camera.
         /// </summary>
         [DefaultValue(60.0f), Limit(35.0f, 160.0f, 0.1f)]
-        [EditorDisplay("Defaults"), EditorOrder(140), Tooltip("The default field of view angle (in degrees) for the viewport camera.")]
+        [EditorDisplay("Defaults", "Default Field Of View"), EditorOrder(140), Tooltip("The default field of view angle (in degrees) for the viewport camera.")]
         public float DefaultFieldOfView { get; set; } = 60.0f;
     }
 }

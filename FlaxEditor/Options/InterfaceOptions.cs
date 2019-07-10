@@ -12,6 +12,32 @@ namespace FlaxEditor.Options
     public class InterfaceOptions
     {
         /// <summary>
+        /// The debug log window timestamp modes.
+        /// </summary>
+        public enum DebugLogTimestampsFormats
+        {
+            /// <summary>
+            /// No prefix.
+            /// </summary>
+            None,
+
+            /// <summary>
+            /// The UTC time format.
+            /// </summary>
+            Utc,
+
+            /// <summary>
+            /// The local time format.
+            /// </summary>
+            LocalTime,
+
+            /// <summary>
+            /// The time since startup (in seconds).
+            /// </summary>
+            TimeSinceStartup,
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether show selected camera preview in the editor window.
         /// </summary>
         [DefaultValue(true)]
@@ -24,6 +50,13 @@ namespace FlaxEditor.Options
         [DefaultValue(false)]
         [EditorDisplay("Interface", "Center Mouse On Game Window Focus"), EditorOrder(100), Tooltip("Determines whether center mouse position on window focus in play mode. Helps when working with games that lock mouse cursor.")]
         public bool CenterMouseOnGameWinFocus { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets the timestamps prefix mode for debug log messages.
+        /// </summary>
+        [DefaultValue(DebugLogTimestampsFormats.None)]
+        [EditorDisplay("Interface"), EditorOrder(210), Tooltip("The timestamps prefix mode for debug log messages.")]
+        public DebugLogTimestampsFormats DebugLogTimestampsFormat { get; set; } = DebugLogTimestampsFormats.None;
 
         /// <summary>
         /// Gets or sets a value indicating whether auto-focus game window on play mode start.

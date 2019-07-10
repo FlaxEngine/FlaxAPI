@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.Options;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -263,6 +264,7 @@ namespace FlaxEditor.Windows
         private LogEntry _selected;
         private readonly int[] _logCountPerGroup = new int[(int)LogGroup.Max];
         private readonly Regex _logRegex = new Regex("at(.*) in (.*):(\\d*)");
+        private InterfaceOptions.DebugLogTimestampsFormats _timestampsFormats;
 
         private readonly object _locker = new object();
         private bool _hasCompilationStarted;
@@ -284,6 +286,7 @@ namespace FlaxEditor.Windows
         : base(editor, true, ScrollBars.None)
         {
             Title = "Debug";
+            OnEditorOptionsChanged(Editor.Options.Options);
 
             // Toolstrip
             var toolstrip = new ToolStrip(22);
@@ -318,12 +321,18 @@ namespace FlaxEditor.Windows
             _entriesPanel = _split.Panel1;
 
             // Bind events
+            Editor.Options.OptionsChanged += OnEditorOptionsChanged;
             Debug.Logger.LogHandler.SendLog += LogHandlerOnSendLog;
             Debug.Logger.LogHandler.SendExceptionLog += LogHandlerOnSendExceptionLog;
             ScriptsBuilder.CompilationBegin += OnCompilationBegin;
             ScriptsBuilder.CompilationError += OnCompilationError;
             ScriptsBuilder.CompilationWarning += OnCompilationWarning;
             GameCooker.Event += OnGameCookerEvent;
+        }
+
+        private void OnEditorOptionsChanged(EditorOptions options)
+        {
+            _timestampsFormats = options.Interface.DebugLogTimestampsFormat;
         }
 
         private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
@@ -354,6 +363,18 @@ namespace FlaxEditor.Windows
                 return;
 
             // Create new entry
+            switch (_timestampsFormats)
+            {
+            case InterfaceOptions.DebugLogTimestampsFormats.Utc:
+                desc.Title = string.Format("[{0}] ", DateTime.UtcNow) + desc.Title;
+                break;
+            case InterfaceOptions.DebugLogTimestampsFormats.LocalTime:
+                desc.Title = string.Format("[{0}] ", DateTime.Now) + desc.Title;
+                break;
+            case InterfaceOptions.DebugLogTimestampsFormats.TimeSinceStartup:
+                desc.Title = string.Format("[{0:g}] ", TimeSpan.FromSeconds(Time.TimeSinceStartup)) + desc.Title;
+                break;
+            }
             var newEntry = new LogEntry(this, ref desc);
 
             // Enqueue
@@ -610,7 +631,11 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            if (IsDisposing)
+                return;
+
             // Unbind events
+            Editor.Options.OptionsChanged -= OnEditorOptionsChanged;
             Debug.Logger.LogHandler.SendLog -= LogHandlerOnSendLog;
             Debug.Logger.LogHandler.SendExceptionLog -= LogHandlerOnSendExceptionLog;
             ScriptsBuilder.CompilationBegin -= OnCompilationBegin;
