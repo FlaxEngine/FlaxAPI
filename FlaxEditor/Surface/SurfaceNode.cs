@@ -392,6 +392,52 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Implementation of Depth-First traversal over the graph of surface nodes. Throws exception if cycle is detected.
+        /// </summary>
+        /// <returns>The list of nodes as a result of depth-first traversal algorithm execution.</returns>
+        public IEnumerable<SurfaceNode> DepthFirstTraversal()
+        {
+            var visited = new HashSet<SurfaceNode>();
+            var stack = new Stack<SurfaceNode>();
+
+            stack.Push(this);
+
+            while (stack.Count > 0)
+            {
+                var node = stack.Pop();
+
+                if (!visited.Add(node))
+                    continue;
+
+                // For all children, push them onto the stack if they haven't been visited yet
+                for (int i = 0; i < node.Elements.Count; i++)
+                {
+                    if (node.Elements[i] is InputBox box && box.HasAnyConnection)
+                    {
+                        if (box.HasSingleConnection)
+                        {
+                            var neighbor = box.Connections[0].ParentNode;
+                            if (!visited.Contains(neighbor))
+                            {
+                                stack.Push(neighbor);
+                            }
+                            else
+                            {
+                                throw new Exception("Cycle in graph detected.");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Input box has more than one connection.");
+                        }
+                    }
+                }
+            }
+
+            return visited;
+        }
+
+        /// <summary>
         /// Draws all the connections between surface objects related to this node.
         /// </summary>
         /// <param name="mousePosition">The current mouse position (in surface-space).</param>
