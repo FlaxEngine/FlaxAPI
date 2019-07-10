@@ -70,7 +70,7 @@ namespace FlaxEditor.Windows.Assets
             var pasteAction = CustomPasteActorsAction.CustomPaste(this, data, pasteTargetActor?.ID ?? Guid.Empty);
             if (pasteAction != null)
             {
-                OnPasteAcction(pasteAction);
+                OnPasteAction(pasteAction);
             }
         }
 
@@ -97,11 +97,11 @@ namespace FlaxEditor.Windows.Assets
             var pasteAction = CustomPasteActorsAction.CustomDuplicate(this, data, Guid.Empty);
             if (pasteAction != null)
             {
-                OnPasteAcction(pasteAction);
+                OnPasteAction(pasteAction);
             }
         }
 
-        private void OnPasteAcction(PasteActorsAction pasteAction)
+        private void OnPasteAction(PasteActorsAction pasteAction)
         {
             pasteAction.Do(out _, out var nodeParents);
 
@@ -199,6 +199,14 @@ namespace FlaxEditor.Windows.Assets
                 }
 
                 _nodeParents.Clear();
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                base.Dispose();
+
+                _window = null;
             }
         }
 

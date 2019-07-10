@@ -425,7 +425,7 @@ namespace FlaxEditor.Windows.Assets
         /// Saves the copy of the asset to the original location. This action cannot be undone!
         /// </summary>
         /// <returns>True if failed, otherwise false.</returns>
-        protected bool SaveToOriginal()
+        protected virtual bool SaveToOriginal()
         {
             // Wait until temporary asset file be fully loaded
             if (_asset.WaitForLoaded())

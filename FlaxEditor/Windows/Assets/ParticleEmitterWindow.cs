@@ -1,14 +1,12 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
-using FlaxEditor.History;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -21,12 +19,11 @@ namespace FlaxEditor.Windows.Assets
 {
     /// <summary>
     /// Particle Emitter window allows to view and edit <see cref="ParticleEmitter"/> asset.
-    /// Note: it uses ClonedAssetEditorWindowBase which is creating cloned asset to edit/preview.
     /// </summary>
     /// <seealso cref="ParticleEmitter" />
-    /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
-    /// <seealso cref="FlaxEditor.Surface.IVisjectSurfaceOwner" />
-    public sealed class ParticleEmitterWindow : ClonedAssetEditorWindowBase<ParticleEmitter>, IVisjectSurfaceOwner
+    /// <seealso cref="ParticleEmitterSurface" />
+    /// <seealso cref="ParticleEmitterPreview" />
+    public sealed class ParticleEmitterWindow : VisjectSurfaceWindow<ParticleEmitter, ParticleEmitterSurface, ParticleEmitterPreview>
     {
         private class EditParamAction : IUndoAction
         {
@@ -419,66 +416,22 @@ namespace FlaxEditor.Windows.Assets
             }
         }
 
-        private readonly SplitPanel _split1;
-        private readonly SplitPanel _split2;
-        private readonly ParticleEmitterPreview _preview;
-        private readonly ParticleEmitterSurface _surface;
-        private readonly CustomEditorPresenter _propertiesEditor;
         private readonly PropertiesProxy _properties;
-
-        private readonly ToolStripButton _saveButton;
-        private readonly ToolStripButton _undoButton;
-        private readonly ToolStripButton _redoButton;
-        private bool _isWaitingForSurfaceLoad;
-        private bool _tmpParticleEmitterIsDirty;
-
-        private Undo _undo;
-
-        /// <summary>
-        /// Gets the Particle Emitter surface.
-        /// </summary>
-        public ParticleEmitterSurface Surface => _surface;
 
         /// <inheritdoc />
         public ParticleEmitterWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
-            // Undo
-            _undo = new Undo();
-            _undo.UndoDone += OnUndo;
-            _undo.RedoDone += OnUndo;
-            _undo.ActionDone += OnUndo;
-
-            // Split Panel 1
-            _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
-            {
-                DockStyle = DockStyle.Fill,
-                SplitterValue = 0.7f,
-                Parent = this
-            };
-
-            // Split Panel 2
-            _split2 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.Vertical)
-            {
-                DockStyle = DockStyle.Fill,
-                SplitterValue = 0.4f,
-                Parent = _split1.Panel2
-            };
-
-            // ParticleEmitter preview
+            // Asset preview
             _preview = new ParticleEmitterPreview(true)
             {
                 PlaySimulation = true,
                 Parent = _split2.Panel1
             };
 
-            // ParticleEmitter properties editor
-            var propertiesEditor = new CustomEditorPresenter(_undo);
-            propertiesEditor.Panel.Parent = _split2.Panel2;
+            // Asset properties proxy
             _properties = new PropertiesProxy();
-            propertiesEditor.Select(_properties);
-            propertiesEditor.Modified += OnParticleEmitterPropertyEdited;
-            _propertiesEditor = propertiesEditor;
+            _propertiesEditor.Select(_properties);
 
             // Surface
             _surface = new ParticleEmitterSurface(this, Save, _undo)
@@ -488,35 +441,9 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // Toolstrip
-            _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
-            _toolstrip.AddSeparator();
-            _undoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Undo32, _undo.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
-            _redoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Redo32, _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
-            _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.PageScale32, _surface.ShowWholeGraph).LinkTooltip("Show whole graph");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.BracketsSlash32, () => ShowSourceCode(_asset)).LinkTooltip("Show generated shader source code");
             _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/particles/index.html")).LinkTooltip("See documentation to learn more");
-        }
-
-        private void OnUndo(IUndoAction action)
-        {
-            // Hack for emitter properties proxy object
-            if (action is MultiUndoAction multiUndo && multiUndo.Actions.Length == 1 && multiUndo.Actions[0] is UndoActionObject undoActionObject && undoActionObject.Target == _properties)
-            {
-                OnParticleEmitterPropertyEdited();
-                UpdateToolstrip();
-                return;
-            }
-
-            MarkAsEdited();
-            UpdateToolstrip();
-            _propertiesEditor.BuildLayoutOnUpdate();
-        }
-
-        private void OnParticleEmitterPropertyEdited()
-        {
-            _surface.MarkAsEdited();
         }
 
         /// <summary>
@@ -529,75 +456,11 @@ namespace FlaxEditor.Windows.Assets
             Utilities.Utils.ShowSourceCode(source, "Particle Emitter GPU Simulation Source");
         }
 
-        /// <summary>
-        /// Refreshes temporary asset to see changes live when editing the surface.
-        /// </summary>
-        /// <returns>True if cannot refresh it, otherwise false.</returns>
-        public bool RefreshTempAsset()
-        {
-            // Early check
-            if (_asset == null || _isWaitingForSurfaceLoad)
-                return true;
-
-            // Check if surface has been edited
-            if (_surface.IsEdited)
-            {
-                _surface.Save();
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc />
-        public override void Save()
-        {
-            // Check if don't need to push any new changes to the original asset
-            if (!IsEdited)
-                return;
-
-            // Just in case refresh data
-            if (RefreshTempAsset())
-            {
-                // Error
-                return;
-            }
-
-            // Copy shader cache from the temporary Particle Emitter (will skip compilation on Reload - faster)
-            Guid dstId = _item.ID;
-            Guid srcId = _asset.ID;
-            Editor.Internal_CopyCache(ref dstId, ref srcId);
-
-            // Update original Particle Emitter so user can see changes in the scene
-            if (SaveToOriginal())
-            {
-                // Error
-                return;
-            }
-
-            // Clear flag
-            ClearEditedFlag();
-
-            // Update
-            OnSurfaceEditedChanged();
-            _item.RefreshThumbnail();
-        }
-
-        /// <inheritdoc />
-        protected override void UpdateToolstrip()
-        {
-            _saveButton.Enabled = IsEdited;
-            _undoButton.Enabled = _undo.CanUndo;
-            _redoButton.Enabled = _undo.CanRedo;
-
-            base.UpdateToolstrip();
-        }
-
         /// <inheritdoc />
         protected override void UnlinkItem()
         {
             _properties.OnClean();
             _preview.Emitter = null;
-            _isWaitingForSurfaceLoad = false;
 
             base.UnlinkItem();
         }
@@ -606,16 +469,15 @@ namespace FlaxEditor.Windows.Assets
         protected override void OnAssetLinked()
         {
             _preview.Emitter = _asset;
-            _isWaitingForSurfaceLoad = true;
 
             base.OnAssetLinked();
         }
 
         /// <inheritdoc />
-        public string SurfaceName => "Particle Emitter";
+        public override string SurfaceName => "Particle Emitter";
 
         /// <inheritdoc />
-        public byte[] SurfaceData
+        public override byte[] SurfaceData
         {
             get => _asset.LoadSurface(true);
             set
@@ -632,142 +494,47 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public void OnContextCreated(VisjectSurfaceContext context)
+        protected override bool LoadSurface()
         {
-        }
+            // Init asset properties and parameters proxy
+            _properties.OnLoad(this);
 
-        /// <inheritdoc />
-        public void OnSurfaceEditedChanged()
-        {
-            if (_surface.IsEdited)
-                MarkAsEdited();
-        }
-
-        /// <inheritdoc />
-        public void OnSurfaceGraphEdited()
-        {
-            // Mark as dirty
-            _tmpParticleEmitterIsDirty = true;
-        }
-
-        /// <inheritdoc />
-        public void OnSurfaceClose()
-        {
-            Close();
-        }
-
-        /// <inheritdoc />
-        public override void Update(float deltaTime)
-        {
-            base.Update(deltaTime);
-
-            // Check if temporary asset need to be updated
-            if (_tmpParticleEmitterIsDirty)
+            // Load surface data from the asset
+            byte[] data = _asset.LoadSurface(true);
+            if (data == null)
             {
-                // Clear flag
-                _tmpParticleEmitterIsDirty = false;
-
-                // Update
-                RefreshTempAsset();
-            }
-
-            // Check if need to load surface
-            if (_isWaitingForSurfaceLoad && _asset.IsLoaded)
-            {
-                // Clear flag
-                _isWaitingForSurfaceLoad = false;
-
-                // Init asset properties and parameters proxy
-                _properties.OnLoad(this);
-
-                // Load surface data from the asset
-                byte[] data = _asset.LoadSurface(true);
-                if (data == null)
-                {
-                    // Error
-                    Editor.LogError("Failed to load Particle Emitter surface data.");
-                    Close();
-                    return;
-                }
-
-                // Load surface graph
-                if (_surface.Load(data))
-                {
-                    // Error
-                    Editor.LogError("Failed to load Particle Emitter surface.");
-                    Close();
-                    return;
-                }
-
-                // Setup
-                _undo.Clear();
-                _surface.Enabled = true;
-                _propertiesEditor.BuildLayout();
-                ClearEditedFlag();
-            }
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            // Base
-            if (base.OnKeyDown(key))
+                // Error
+                Editor.LogError("Failed to load Particle Emitter surface data.");
                 return true;
+            }
 
-            if (Root.GetKey(Keys.Control))
+            // Load surface graph
+            if (_surface.Load(data))
             {
-                switch (key)
-                {
-                case Keys.Z:
-                    _undo.PerformUndo();
-                    return true;
-                case Keys.Y:
-                    _undo.PerformRedo();
-                    return true;
-                }
+                // Error
+                Editor.LogError("Failed to load Particle Emitter surface.");
+                return true;
             }
 
             return false;
         }
 
         /// <inheritdoc />
-        public override bool UseLayoutData => true;
-
-        /// <inheritdoc />
-        public override void OnLayoutSerialize(XmlWriter writer)
+        protected override bool SaveSurface()
         {
-            writer.WriteAttributeString("Split1", _split1.SplitterValue.ToString());
-            writer.WriteAttributeString("Split2", _split2.SplitterValue.ToString());
+            _surface.Save();
+            return false;
         }
 
         /// <inheritdoc />
-        public override void OnLayoutDeserialize(XmlElement node)
+        protected override bool SaveToOriginal()
         {
-            float value1;
+            // Copy shader cache from the temporary Particle Emitter (will skip compilation on Reload - faster)
+            Guid dstId = _item.ID;
+            Guid srcId = _asset.ID;
+            Editor.Internal_CopyCache(ref dstId, ref srcId);
 
-            if (float.TryParse(node.GetAttribute("Split1"), out value1))
-                _split1.SplitterValue = value1;
-            if (float.TryParse(node.GetAttribute("Split2"), out value1))
-                _split2.SplitterValue = value1;
-        }
-
-        /// <inheritdoc />
-        public override void OnLayoutDeserialize()
-        {
-            _split1.SplitterValue = 0.7f;
-            _split2.SplitterValue = 0.4f;
-        }
-
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            if (_undo != null)
-            {
-                _undo.Clear();
-                _undo = null;
-            }
-
-            base.Dispose();
+            return base.SaveToOriginal();
         }
     }
 }

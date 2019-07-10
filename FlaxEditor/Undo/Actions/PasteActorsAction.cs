@@ -178,7 +178,7 @@ namespace FlaxEditor.Actions
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public virtual void Dispose()
         {
             _nodeParents?.Clear();
             _idsMapping?.Clear();
