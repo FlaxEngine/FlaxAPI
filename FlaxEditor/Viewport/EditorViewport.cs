@@ -175,9 +175,9 @@ namespace FlaxEditor.Viewport
         private ViewportCamera _camera;
         private float _yaw;
         private float _pitch;
-        private float _fieldOfView = 60.0f;
-        private float _nearPlane = 8.0f;
-        private float _farPlane = 10000.0f;
+        private float _fieldOfView;
+        private float _nearPlane;
+        private float _farPlane;
         private float _orthoSize = 1.0f;
         private bool _isOrtho = false;
 
@@ -404,7 +404,6 @@ namespace FlaxEditor.Viewport
         public EditorViewport(SceneRenderTask task, ViewportCamera camera, bool useWidgets)
         : base(task)
         {
-            _movementSpeed = 1;
             _mouseAccelerationScale = 0.1f;
             _useMouseFiltering = false;
             _useMouseAcceleration = false;
@@ -414,15 +413,24 @@ namespace FlaxEditor.Viewport
 
             DockStyle = DockStyle.Fill;
 
-            Editor.Instance.Options.OptionsChanged += OnEditorOptionsChanged;
-            OnEditorOptionsChanged(Editor.Instance.Options.Options);
+            // Setup options
+            {
+                var options = Editor.Instance.Options.Options;
+                _movementSpeed = options.Viewport.DefaultMovementSpeed;
+                _nearPlane = options.Viewport.DefaultNearPlane;
+                _farPlane = options.Viewport.DefaultFarPlane;
+                _fieldOfView = options.Viewport.DefaultFieldOfView;
+
+                Editor.Instance.Options.OptionsChanged += OnEditorOptionsChanged;
+                OnEditorOptionsChanged(options);
+            }
 
             if (useWidgets)
             {
                 // Camera speed widget
                 var camSpeed = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperRight);
                 var camSpeedCM = new ContextMenu();
-                var camSpeedButton = new ViewportWidgetButton("1", Editor.Instance.Icons.ArrowRightBorder16, camSpeedCM);
+                var camSpeedButton = new ViewportWidgetButton(_movementSpeed.ToString(), Editor.Instance.Icons.ArrowRightBorder16, camSpeedCM);
                 camSpeedButton.Tag = this;
                 camSpeedButton.TooltipText = "Camera speed scale";
                 _speedWidget = camSpeedButton;
