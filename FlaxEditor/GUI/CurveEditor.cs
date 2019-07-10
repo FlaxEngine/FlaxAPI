@@ -963,16 +963,23 @@ namespace FlaxEditor.GUI
 
         private void RemoveKeyframes()
         {
+            bool edited = false;
             var keyframes = new Dictionary<int, Keyframe>(_keyframes.Count);
             for (int i = 0; i < _points.Count; i++)
             {
                 var p = _points[i];
-                if (p.IsSelected)
+                if (!p.IsSelected)
                 {
                     keyframes[p.Index] = _keyframes[p.Index];
+                }
+                else
+                {
                     p.Deselect();
+                    edited = true;
                 }
             }
+            if (!edited)
+                return;
             UpdateTangents();
             _keyframes.Clear();
             _keyframes.AddRange(keyframes.Values);
@@ -983,11 +990,13 @@ namespace FlaxEditor.GUI
 
         private void SetTangentsLinear()
         {
+            bool edited = false;
             for (int i = 0; i < _points.Count; i++)
             {
                 var p = _points[i];
                 if (!p.IsSelected)
                     continue;
+                edited = true;
 
                 var k = _keyframes[p.Index];
                 var value = Accessor.GetCurveValue(ref k.Value, p.Component);
@@ -1018,6 +1027,8 @@ namespace FlaxEditor.GUI
 
                 _keyframes[p.Index] = k;
             }
+            if (!edited)
+                return;
 
             UpdateTangents();
             MarkAsEdited();
@@ -1025,11 +1036,13 @@ namespace FlaxEditor.GUI
 
         private void SetTangentsSmooth()
         {
+            bool edited = false;
             for (int i = 0; i < _points.Count; i++)
             {
                 var p = _points[i];
                 if (!p.IsSelected)
                     continue;
+                edited = true;
 
                 var k = _keyframes[p.Index];
 
@@ -1057,6 +1070,8 @@ namespace FlaxEditor.GUI
 
                 _keyframes[p.Index] = k;
             }
+            if (!edited)
+                return;
 
             UpdateTangents();
             MarkAsEdited();
@@ -1208,6 +1223,14 @@ namespace FlaxEditor.GUI
             for (int i = 0; i < _points.Count; i++)
             {
                 _points[i].Deselect();
+            }
+        }
+
+        private void SelectAll()
+        {
+            for (int i = 0; i < _points.Count; i++)
+            {
+                _points[i].Select();
             }
         }
 
@@ -1416,6 +1439,32 @@ namespace FlaxEditor.GUI
             {
                 Render2D.DrawRectangle(rect, style.BackgroundSelected);
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (key == Keys.Delete)
+            {
+                RemoveKeyframes();
+                return true;
+            }
+
+            if (Root.GetKey(Keys.Control))
+            {
+                switch (key)
+                {
+                case Keys.A:
+                    SelectAll();
+                    UpdateTangents();
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
