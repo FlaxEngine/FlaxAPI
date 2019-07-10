@@ -3,6 +3,7 @@
 using System;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Input;
+using FlaxEditor.Options;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
@@ -129,6 +130,7 @@ namespace FlaxEditor.Viewport
         /// </summary>
         protected ViewportWidgetButton _speedWidget;
 
+        private float _mouseSensitivity;
         private float _movementSpeed;
         private float _mouseAccelerationScale;
         private bool _useMouseFiltering;
@@ -412,6 +414,9 @@ namespace FlaxEditor.Viewport
 
             DockStyle = DockStyle.Fill;
 
+            Editor.Instance.Options.OptionsChanged += OnEditorOptionsChanged;
+            OnEditorOptionsChanged(Editor.Instance.Options.Options);
+
             if (useWidgets)
             {
                 // Camera speed widget
@@ -551,6 +556,11 @@ namespace FlaxEditor.Viewport
 
             // Link for task event
             task.Begin += OnRenderBegin;
+        }
+
+        private void OnEditorOptionsChanged(EditorOptions options)
+        {
+            _mouseSensitivity = options.Viewport.MouseSensitivity;
         }
 
         private void OnRenderBegin(SceneRenderTask task, GPUContext context)
@@ -926,7 +936,7 @@ namespace FlaxEditor.Viewport
 
                 // Update
                 moveDelta *= dt * (60.0f * 4.0f);
-                mouseDelta *= 200.0f * MouseSpeed;
+                mouseDelta *= 200.0f * MouseSpeed * _mouseSensitivity;
                 bool centerMouse;
                 UpdateView(dt, ref moveDelta, ref mouseDelta, out centerMouse);
 
@@ -1023,6 +1033,17 @@ namespace FlaxEditor.Viewport
         {
             base.PerformLayoutSelf();
             ViewportWidgetsContainer.ArrangeWidgets(this);
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (IsDisposing)
+                return;
+
+            Editor.Instance.Options.OptionsChanged -= OnEditorOptionsChanged;
+
+            base.Dispose();
         }
 
         private float[] EditorViewportCameraSpeedValues =

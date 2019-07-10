@@ -320,6 +320,7 @@
     <Compile Include="Options\InterfaceOptions.cs" />
     <Compile Include="Options\OptionsModule.cs" />
     <Compile Include="Options\SourceCodeOptions.cs" />
+    <Compile Include="Options\ViewportOptions.cs" />
     <Compile Include="Options\VisualOptions.cs" />
     <Compile Include="Plugins\EditorPlugin.cs" />
     <Compile Include="Plugins\PluginUtils.cs" />

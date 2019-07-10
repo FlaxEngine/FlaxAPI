@@ -51,6 +51,7 @@ namespace FlaxEditor.Windows
 
             CreateTab("General", () => _options.General);
             CreateTab("Interface", () => _options.Interface);
+            CreateTab("Viewport", () => _options.Viewport);
             CreateTab("Visual", () => _options.Visual);
             CreateTab("Source Code", () => _options.SourceCode);
 
