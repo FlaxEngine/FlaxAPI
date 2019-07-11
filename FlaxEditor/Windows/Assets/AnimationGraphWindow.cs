@@ -273,6 +273,7 @@ namespace FlaxEditor.Windows.Assets
                         IsAdd = true,
                         Name = "New parameter",
                         Type = type,
+                        Index = window.Surface.Parameters.Count,
                     };
                     window.Surface.Undo.AddAction(action);
                     action.Do();

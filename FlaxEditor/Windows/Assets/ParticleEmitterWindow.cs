@@ -178,19 +178,20 @@ namespace FlaxEditor.Windows.Assets
                 /// <param name="type">The type.</param>
                 private void AddParameter(ParameterType type)
                 {
-                    var win = Values[0] as ParticleEmitterWindow;
-                    var particleEmitter = win?.Asset;
+                    var window = Values[0] as ParticleEmitterWindow;
+                    var particleEmitter = window?.Asset;
                     if (particleEmitter == null || !particleEmitter.IsLoaded)
                         return;
 
                     var action = new AddRemoveParamAction
                     {
-                        Window = win,
+                        Window = window,
                         IsAdd = true,
                         Name = "New parameter",
                         Type = type,
+                        Index = window.Surface.Parameters.Count,
                     };
-                    win.Surface.Undo.AddAction(action);
+                    window.Surface.Undo.AddAction(action);
                     action.Do();
                 }
 
