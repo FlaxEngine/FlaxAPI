@@ -31,7 +31,7 @@ namespace FlaxEditor.Options
         public event Action CustomSettingsChanged;
 
         /// <summary>
-        /// The custom settings factory delegate. It should return the default settings object for a given options contenxt.
+        /// The custom settings factory delegate. It should return the default settings object for a given options content.
         /// </summary>
         /// <returns>The custom settings object.</returns>
         public delegate object CreateCustomSettingsDelegate();
@@ -183,6 +183,8 @@ namespace FlaxEditor.Options
             internalOptions.AutoRebuildNavMeshTimeoutMs = Options.General.AutoRebuildNavMeshTimeoutMs;
             Editor.Internal_SetOptions(ref internalOptions);
 #endif
+
+            EditorAssets.Cache.OnEditorOptionsChanged(Options);
 
             // Send event
             OptionsChanged?.Invoke(Options);

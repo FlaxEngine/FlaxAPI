@@ -30,7 +30,7 @@ namespace FlaxEditor
         {
             _actors = new List<IntPtr>(actorsCapacity);
             _highlights = new List<HighlightData>(actorsCapacity);
-            _highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
+            _highlightMaterial = EditorAssets.Cache.HighlightMaterialInstance;
             _highlightTrianglesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
         }
 

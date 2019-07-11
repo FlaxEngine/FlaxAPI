@@ -465,7 +465,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 _highlightActor.IsActive = true;
 
-                var highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
+                var highlightMaterial = EditorAssets.Cache.HighlightMaterialInstance;
                 entries = _highlightActor.Entries;
                 if (entries != null)
                 {

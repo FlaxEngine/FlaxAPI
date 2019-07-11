@@ -43,7 +43,7 @@ namespace FlaxEditor.Tools.Terrain
 
             _planeModel = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/Plane");
             _highlightTerrainMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightTerrainMaterial);
-            _highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
+            _highlightMaterial = EditorAssets.Cache.HighlightMaterialInstance;
         }
 
         private FlaxEngine.Terrain SelectedTerrain

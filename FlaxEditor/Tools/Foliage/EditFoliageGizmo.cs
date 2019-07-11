@@ -202,7 +202,7 @@ namespace FlaxEditor.Tools.Foliage
         {
             base.OnActivated();
 
-            _highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
+            _highlightMaterial = EditorAssets.Cache.HighlightMaterialInstance;
 
             if (_needSync)
             {

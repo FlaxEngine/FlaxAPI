@@ -33,6 +33,13 @@ namespace FlaxEditor.Options
         public Color SelectionOutlineColor1 { get; set; } = new Color(0.019f, 0.615f, 0.101f);
 
         /// <summary>
+        /// Gets or sets the color used to highlight selected meshes and CSG surfaces.
+        /// </summary>
+        [DefaultValue(typeof(Color), "0.0,0.533,1.0,1.0")]
+        [EditorDisplay("Gizmo"), EditorOrder(200), Tooltip("The color used to highlight selected meshes and CSG surfaces.")]
+        public Color HighlightColor { get; set; } = new Color(0.0f, 0.533f, 1.0f, 1.0f);
+
+        /// <summary>
         /// Gets or sets a value indicating whether enable MSAA for DebugDraw primitives rendering. Helps with pixel aliasing but reduces performance.
         /// </summary>
         [DefaultValue(true)]
