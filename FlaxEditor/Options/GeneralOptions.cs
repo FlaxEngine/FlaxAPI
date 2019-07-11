@@ -12,6 +12,34 @@ namespace FlaxEditor.Options
     public sealed class GeneralOptions
     {
         /// <summary>
+        /// The editor startup scene modes.
+        /// </summary>
+        public enum StartupSceneModes
+        {
+            /// <summary>
+            /// Don't open scene on startup.
+            /// </summary>
+            None,
+
+            /// <summary>
+            /// The project default scene.
+            /// </summary>
+            ProjectDefault,
+
+            /// <summary>
+            /// The last opened scene in the editor.
+            /// </summary>
+            LastOpened,
+        }
+
+        /// <summary>
+        /// Gets or sets the scene to load on editor startup.
+        /// </summary>
+        [DefaultValue(StartupSceneModes.ProjectDefault)]
+        [EditorDisplay("General"), EditorOrder(10), Tooltip("The scene to load on editor startup")]
+        public StartupSceneModes StartupSceneMode { get; set; } = StartupSceneModes.ProjectDefault;
+
+        /// <summary>
         /// Gets or sets a limit for the editor undo actions. Higher values may increase memory usage but also improve changes rollback history length.
         /// </summary>
         [DefaultValue(500)]

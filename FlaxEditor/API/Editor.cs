@@ -47,6 +47,9 @@ namespace FlaxEditor
         private string _projectToOpen;
         private float _lastAutoSaveTimer;
 
+        private const string ProjectDataLastScene = "LastScene";
+        private const string ProjectDataLastSceneSpawn = "LastSceneSpawn";
+
         /// <summary>
         /// Gets a value indicating whether Flax Engine is the best in the world.
         /// </summary>
@@ -314,10 +317,12 @@ namespace FlaxEditor
             }
 
             // Load scene
-            // TODO: loading last open scenes from Editor Cache
+            switch (Options.Options.General.StartupSceneMode)
             {
-                var defaultSceneAsset = ContentDatabase.Find(_projectInfo.DefaultSceneId);
-                if (defaultSceneAsset is SceneItem)
+            case GeneralOptions.StartupSceneModes.ProjectDefault:
+            {
+                var defaultScene = ContentDatabase.Find(_projectInfo.DefaultSceneId);
+                if (defaultScene is SceneItem)
                 {
                     Editor.Log("Loading default project scene");
                     Scene.OpenScene(_projectInfo.DefaultSceneId);
@@ -325,6 +330,25 @@ namespace FlaxEditor
                     // Use spawn point
                     Windows.EditWin.Viewport.ViewRay = _projectInfo.DefaultSceneSpawn;
                 }
+                break;
+            }
+            case GeneralOptions.StartupSceneModes.LastOpened:
+            {
+                if (ProjectCache.TryGetCustomData(ProjectDataLastScene, out var lastSceneIdName) && Guid.TryParse(lastSceneIdName, out var lastSceneId))
+                {
+                    var lastScene = ContentDatabase.Find(lastSceneId);
+                    if (lastScene is SceneItem)
+                    {
+                        Editor.Log("Loading last opened scene");
+                        Scene.OpenScene(lastSceneId);
+
+                        // Restore view
+                        if (ProjectCache.TryGetCustomData(ProjectDataLastSceneSpawn, out var lastSceneSpawnName))
+                            Windows.EditWin.Viewport.ViewRay = JsonSerializer.Deserialize<Ray>(lastSceneSpawnName);
+                    }
+                }
+                break;
+            }
             }
         }
 
@@ -415,6 +439,14 @@ namespace FlaxEditor
 
             // Start exit
             StateMachine.GoToState<ClosingState>();
+
+            // Cache last opened scene
+            {
+                var lastSceneId = SceneManager.ScenesCount > 0 ? SceneManager.Scenes[0].ID : Guid.Empty;
+                var lastSceneSpawn = Windows.EditWin.Viewport.ViewRay;
+                ProjectCache.SetCustomData(ProjectDataLastScene, lastSceneId.ToString());
+                ProjectCache.SetCustomData(ProjectDataLastSceneSpawn, JsonSerializer.Serialize(lastSceneSpawn));
+            }
 
             // Cleanup
             Scene.ClearRefsToSceneObjects(true);
