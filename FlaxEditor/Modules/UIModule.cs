@@ -15,7 +15,6 @@ using FlaxEditor.Utilities;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Windows;
 using FlaxEngine;
-using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 using DockHintWindow = FlaxEditor.GUI.Docking.DockHintWindow;
@@ -43,7 +42,7 @@ namespace FlaxEditor.Modules
         private ContextMenuButton _menuEditSelectAll;
         private ContextMenuButton _menuSceneMoveActorToViewport;
         private ContextMenuButton _menuSceneAlignActorWithViewport;
-        private ContextMenuButton _menuSceneAlignViewportWtihActor;
+        private ContextMenuButton _menuSceneAlignViewportWithActor;
         private ContextMenuButton _menuSceneCreateTerrain;
         private ContextMenuButton _menuGamePlay;
         private ContextMenuButton _menuGamePause;
@@ -129,8 +128,6 @@ namespace FlaxEditor.Modules
         : base(editor)
         {
             InitOrder = -90;
-
-            CreateStyle();
         }
 
         /// <summary>
@@ -295,11 +292,9 @@ namespace FlaxEditor.Modules
             DockHintWindow.Proxy.Dispose();
         }
 
-        private void CreateStyle()
+        internal void CreateStyle()
         {
             var style = new Style();
-
-            // Note: we pre-create editor style in constructor and load icons/fonts during editor init.
 
             // Metro Style colors
             style.Background = Color.FromBgra(0xFF1C1C1C);
@@ -320,27 +315,12 @@ namespace FlaxEditor.Modules
             // Color picking
             ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
 
-            // Font
-            var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
-            if (primaryFont)
-            {
-                primaryFont.WaitForLoaded();
-
-                // Create fonts
-                style.FontTitle = primaryFont.CreateFont(18);
-                style.FontLarge = primaryFont.CreateFont(14);
-                style.FontMedium = primaryFont.CreateFont(9);
-                style.FontSmall = primaryFont.CreateFont(9);
-
-                Assert.IsNotNull(style.FontTitle, "Missing Title font.");
-                Assert.IsNotNull(style.FontLarge, "Missing Large font.");
-                Assert.IsNotNull(style.FontMedium, "Missing Medium font.");
-                Assert.IsNotNull(style.FontSmall, "Missing Small font.");
-            }
-            else
-            {
-                Editor.LogError("Cannot load primary GUI Style font " + EditorAssets.PrimaryFont);
-            }
+            // Fonts
+            var options = Editor.Options.Options;
+            style.FontTitle = options.Interface.TitleFont.GetFont();
+            style.FontLarge = options.Interface.LargeFont.GetFont();
+            style.FontMedium = options.Interface.MediumFont.GetFont();
+            style.FontSmall = options.Interface.SmallFont.GetFont();
 
             // Icons
             style.ArrowDown = Editor.Icons.ArrowDown12;
@@ -420,7 +400,7 @@ namespace FlaxEditor.Modules
             cm.VisibleChanged += OnMenuSceneShowHide;
             _menuSceneMoveActorToViewport = cm.AddButton("Move actor to viewport", MoveActorToViewport);
             _menuSceneAlignActorWithViewport = cm.AddButton("Align actor with viewport", AlignActorWithViewport);
-            _menuSceneAlignViewportWtihActor = cm.AddButton("Align viewport with actor", AlignViewportWithActor);
+            _menuSceneAlignViewportWithActor = cm.AddButton("Align viewport with actor", AlignViewportWithActor);
             cm.AddSeparator();
             _menuSceneCreateTerrain = cm.AddButton("Create terrain", CreateTerrain);
 
@@ -612,7 +592,7 @@ namespace FlaxEditor.Modules
 
             _menuSceneMoveActorToViewport.Enabled = hasActorSelected;
             _menuSceneAlignActorWithViewport.Enabled = hasActorSelected;
-            _menuSceneAlignViewportWtihActor.Enabled = hasActorSelected;
+            _menuSceneAlignViewportWithActor.Enabled = hasActorSelected;
             _menuSceneCreateTerrain.Enabled = SceneManager.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
 
             control.PerformLayout();

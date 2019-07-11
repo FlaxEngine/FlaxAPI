@@ -64,5 +64,31 @@ namespace FlaxEditor.Options
         [DefaultValue(true)]
         [EditorDisplay("Play In-Editor", "Focus Game Window On Play"), EditorOrder(200), Tooltip("Determines whether auto-focus game window on play mode start.")]
         public bool FocusGameWinOnPlay { get; set; } = true;
+
+        private static FontAsset DefaultFont => FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
+
+        /// <summary>
+        /// Gets or sets the title font for editor UI.
+        /// </summary>
+        [EditorDisplay("Fonts"), EditorOrder(500), Tooltip("The title font for editor UI.")]
+        public FontReference TitleFont { get; set; } = new FontReference(DefaultFont, 18);
+
+        /// <summary>
+        /// Gets or sets the large font for editor UI.
+        /// </summary>
+        [EditorDisplay("Fonts"), EditorOrder(510), Tooltip("The large font for editor UI.")]
+        public FontReference LargeFont { get; set; } = new FontReference(DefaultFont, 14);
+
+        /// <summary>
+        /// Gets or sets the medium font for editor UI.
+        /// </summary>
+        [EditorDisplay("Fonts"), EditorOrder(520), Tooltip("The medium font for editor UI.")]
+        public FontReference MediumFont { get; set; } = new FontReference(DefaultFont, 9);
+
+        /// <summary>
+        /// Gets or sets the small font for editor UI.
+        /// </summary>
+        [EditorDisplay("Fonts"), EditorOrder(530), Tooltip("The small font for editor UI.")]
+        public FontReference SmallFont { get; set; } = new FontReference(DefaultFont, 9);
     }
 }
