@@ -24,6 +24,161 @@ namespace FlaxEditor.Windows.Assets
     where TSurface : VisjectSurface
     where TPreview : AssetPreview
     {
+        protected class EditParamAction : IUndoAction
+        {
+            public VisjectSurfaceWindow<TAsset, TSurface, TPreview> Window;
+            public int Index;
+            public object Before;
+            public object After;
+
+            /// <inheritdoc />
+            public string ActionString => "Edit parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(object value)
+            {
+                var param = Window.Surface.Parameters[Index];
+                var valueToSet = value;
+
+                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
+                switch (param.Type)
+                {
+                case ParameterType.Asset:
+                case ParameterType.Actor:
+                case ParameterType.CubeTexture:
+                case ParameterType.Texture:
+                case ParameterType.NormalMap:
+                case ParameterType.RenderTarget:
+                case ParameterType.RenderTargetArray:
+                case ParameterType.RenderTargetCube:
+                case ParameterType.RenderTargetVolume:
+                    valueToSet = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
+                    break;
+                }
+
+                param.Value = valueToSet;
+                Window.OnParamEditUndo(this, value);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
+        protected class RenameParamAction : IUndoAction
+        {
+            public VisjectSurfaceWindow<TAsset, TSurface, TPreview> Window;
+            public int Index;
+            public string Before;
+            public string After;
+
+            /// <inheritdoc />
+            public string ActionString => "Rename parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            private void Set(string value)
+            {
+                var param = Window.Surface.Parameters[Index];
+                param.Name = value;
+                Window.Surface.OnParamRenamed(param);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+                Before = null;
+                After = null;
+            }
+        }
+
+        protected class AddRemoveParamAction : IUndoAction
+        {
+            public VisjectSurfaceWindow<TAsset, TSurface, TPreview> Window;
+            public bool IsAdd;
+            public int Index;
+            public string Name;
+            public ParameterType Type;
+
+            /// <inheritdoc />
+            public string ActionString => IsAdd ? "Add parameter" : "Remove parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                if (IsAdd)
+                    Add();
+                else
+                    Remove();
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                if (IsAdd)
+                    Remove();
+                else
+                    Add();
+            }
+
+            private void Add()
+            {
+                var param = SurfaceParameter.Create(Type);
+                param.Name = Name;
+                if (Type == ParameterType.NormalMap)
+                {
+                    // Use default normal map texture (don't load asset here, just lookup registry for id at path)
+                    string typeName;
+                    Guid id;
+                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
+                    param.Value = id;
+                }
+                Window.Surface.Parameters.Insert(Index, param);
+                Window.Surface.OnParamCreated(param);
+            }
+
+            private void Remove()
+            {
+                var param = Window.Surface.Parameters[Index];
+                Name = param.Name;
+                Type = param.Type;
+                Window.Surface.Parameters.RemoveAt(Index);
+                Window.Surface.OnParamDeleted(param);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+            }
+        }
+
         /// <summary>
         /// The primary split panel.
         /// </summary>
@@ -260,6 +415,39 @@ namespace FlaxEditor.Windows.Assets
         public void OnSurfaceClose()
         {
             Close();
+        }
+
+        /// <summary>
+        /// Called when parameter edit undo action is performed.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <param name="value">The new parameter value.</param>
+        protected virtual void OnParamEditUndo(EditParamAction action, object value)
+        {
+        }
+
+        /// <summary>
+        /// Called when parameter rename undo action is performed.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        protected virtual void OnParamRenameUndo(RenameParamAction action)
+        {
+        }
+
+        /// <summary>
+        /// Called when parameter add undo action is performed.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        protected virtual void OnParamAddUndo(AddRemoveParamAction action)
+        {
+        }
+
+        /// <summary>
+        /// Called when parameter remove undo action is performed.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        protected virtual void OnParamRemoveUndo(AddRemoveParamAction action)
+        {
         }
 
         /// <summary>

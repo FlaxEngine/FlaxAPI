@@ -25,159 +25,6 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="ParticleEmitterPreview" />
     public sealed class ParticleEmitterWindow : VisjectSurfaceWindow<ParticleEmitter, ParticleEmitterSurface, ParticleEmitterPreview>
     {
-        private class EditParamAction : IUndoAction
-        {
-            public ParticleEmitterWindow Window;
-            public int Index;
-            public object Before;
-            public object After;
-
-            /// <inheritdoc />
-            public string ActionString => "Edit parameter";
-
-            /// <inheritdoc />
-            public void Do()
-            {
-                Set(After);
-            }
-
-            /// <inheritdoc />
-            public void Undo()
-            {
-                Set(Before);
-            }
-
-            private void Set(object value)
-            {
-                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
-                var surfaceParam = value;
-                switch (Window.Surface.Parameters[Index].Type)
-                {
-                case ParameterType.CubeTexture:
-                case ParameterType.Texture:
-                case ParameterType.NormalMap:
-                case ParameterType.RenderTarget:
-                case ParameterType.RenderTargetArray:
-                case ParameterType.RenderTargetCube:
-                case ParameterType.RenderTargetVolume:
-                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
-                    break;
-                }
-
-                Window.Surface.Parameters[Index].Value = surfaceParam;
-            }
-
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                Window = null;
-                Before = null;
-                After = null;
-            }
-        }
-
-        private class RenameParamAction : IUndoAction
-        {
-            public ParticleEmitterWindow Window;
-            public int Index;
-            public string Before;
-            public string After;
-
-            /// <inheritdoc />
-            public string ActionString => "Rename parameter";
-
-            /// <inheritdoc />
-            public void Do()
-            {
-                Set(After);
-            }
-
-            /// <inheritdoc />
-            public void Undo()
-            {
-                Set(Before);
-            }
-
-            private void Set(string value)
-            {
-                var param = Window.Surface.Parameters[Index];
-                param.Name = value;
-                Window.Surface.OnParamRenamed(param);
-                Window._propertiesEditor.BuildLayout();
-            }
-
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                Window = null;
-                Before = null;
-                After = null;
-            }
-        }
-
-        private class AddRemoveParamAction : IUndoAction
-        {
-            public ParticleEmitterWindow Window;
-            public bool IsAdd;
-            public int Index;
-            public string Name;
-            public ParameterType Type;
-
-            /// <inheritdoc />
-            public string ActionString => IsAdd ? "Add parameter" : "Remove parameter";
-
-            /// <inheritdoc />
-            public void Do()
-            {
-                if (IsAdd)
-                    Add();
-                else
-                    Remove();
-            }
-
-            /// <inheritdoc />
-            public void Undo()
-            {
-                if (IsAdd)
-                    Remove();
-                else
-                    Add();
-            }
-
-            private void Add()
-            {
-                var param = SurfaceParameter.Create(Type);
-                param.Name = Name;
-                if (Type == ParameterType.NormalMap)
-                {
-                    // Use default normal map texture (don't load asset here, just lookup registry for id at path)
-                    string typeName;
-                    Guid id;
-                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
-                    param.Value = id;
-                }
-                Window.Surface.Parameters.Insert(Index, param);
-                Window.Surface.OnParamCreated(param);
-                Window._propertiesEditor.BuildLayout();
-            }
-
-            private void Remove()
-            {
-                var param = Window.Surface.Parameters[Index];
-                Name = param.Name;
-                Type = param.Type;
-                Window.Surface.Parameters.RemoveAt(Index);
-                Window.Surface.OnParamDeleted(param);
-                Window._propertiesEditor.BuildLayout();
-            }
-
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                Window = null;
-            }
-        }
-
         /// <summary>
         /// The properties proxy object.
         /// </summary>
@@ -454,6 +301,30 @@ namespace FlaxEditor.Windows.Assets
         {
             var source = Editor.GetParticleEmitterShaderSourceCode(particleEmitter);
             Utilities.Utils.ShowSourceCode(source, "Particle Emitter GPU Simulation Source");
+        }
+
+        /// <inheritdoc />
+        protected override void OnParamRenameUndo(RenameParamAction action)
+        {
+            base.OnParamRenameUndo(action);
+
+            _propertiesEditor.BuildLayout();
+        }
+
+        /// <inheritdoc />
+        protected override void OnParamAddUndo(AddRemoveParamAction action)
+        {
+            base.OnParamAddUndo(action);
+
+            _propertiesEditor.BuildLayout();
+        }
+
+        /// <inheritdoc />
+        protected override void OnParamRemoveUndo(AddRemoveParamAction action)
+        {
+            base.OnParamRemoveUndo(action);
+
+            _propertiesEditor.BuildLayout();
         }
 
         /// <inheritdoc />

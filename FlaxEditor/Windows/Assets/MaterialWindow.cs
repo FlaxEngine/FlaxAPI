@@ -27,157 +27,6 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="MaterialPreview" />
     public sealed class MaterialWindow : VisjectSurfaceWindow<Material, MaterialSurface, MaterialPreview>
     {
-        private class EditParamAction : IUndoAction
-        {
-            public MaterialWindow Window;
-            public int Index;
-            public object Before;
-            public object After;
-
-            /// <inheritdoc />
-            public string ActionString => "Edit parameter";
-
-            /// <inheritdoc />
-            public void Do()
-            {
-                Set(After);
-            }
-
-            /// <inheritdoc />
-            public void Undo()
-            {
-                Set(Before);
-            }
-
-            private void Set(object value)
-            {
-                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
-                var surfaceParam = value;
-                switch (Window.Asset.Parameters[Index].Type)
-                {
-                case MaterialParameterType.CubeTexture:
-                case MaterialParameterType.Texture:
-                case MaterialParameterType.NormalMap:
-                case MaterialParameterType.RenderTarget:
-                case MaterialParameterType.RenderTargetArray:
-                case MaterialParameterType.RenderTargetCube:
-                case MaterialParameterType.RenderTargetVolume:
-                    surfaceParam = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
-                    break;
-                }
-
-                Window.Asset.Parameters[Index].Value = value;
-                Window.Surface.Parameters[Index].Value = surfaceParam;
-            }
-
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                Window = null;
-                Before = null;
-                After = null;
-            }
-        }
-
-        private class RenameParamAction : IUndoAction
-        {
-            public MaterialWindow Window;
-            public int Index;
-            public string Before;
-            public string After;
-
-            /// <inheritdoc />
-            public string ActionString => "Rename parameter";
-
-            /// <inheritdoc />
-            public void Do()
-            {
-                Set(After);
-            }
-
-            /// <inheritdoc />
-            public void Undo()
-            {
-                Set(Before);
-            }
-
-            private void Set(string value)
-            {
-                var param = Window.Surface.Parameters[Index];
-                param.Name = value;
-                Window.Surface.OnParamRenamed(param);
-            }
-
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                Window = null;
-                Before = null;
-                After = null;
-            }
-        }
-
-        private class AddRemoveParamAction : IUndoAction
-        {
-            public MaterialWindow Window;
-            public bool IsAdd;
-            public int Index;
-            public string Name;
-            public ParameterType Type;
-
-            /// <inheritdoc />
-            public string ActionString => IsAdd ? "Add parameter" : "Remove parameter";
-
-            /// <inheritdoc />
-            public void Do()
-            {
-                if (IsAdd)
-                    Add();
-                else
-                    Remove();
-            }
-
-            /// <inheritdoc />
-            public void Undo()
-            {
-                if (IsAdd)
-                    Remove();
-                else
-                    Add();
-            }
-
-            private void Add()
-            {
-                var param = SurfaceParameter.Create(Type);
-                param.Name = Name;
-                if (Type == ParameterType.NormalMap)
-                {
-                    // Use default normal map texture (don't load asset here, just lookup registry for id at path)
-                    string typeName;
-                    Guid id;
-                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
-                    param.Value = id;
-                }
-                Window.Surface.Parameters.Insert(Index, param);
-                Window.Surface.OnParamCreated(param);
-            }
-
-            private void Remove()
-            {
-                var param = Window.Surface.Parameters[Index];
-                Name = param.Name;
-                Type = param.Type;
-                Window.Surface.Parameters.RemoveAt(Index);
-                Window.Surface.OnParamDeleted(param);
-            }
-
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                Window = null;
-            }
-        }
-
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
@@ -639,6 +488,15 @@ namespace FlaxEditor.Windows.Assets
                 }
                 return mainNode;
             }
+        }
+
+        /// <inheritdoc />
+        protected override void OnParamEditUndo(EditParamAction action, object value)
+        {
+            base.OnParamEditUndo(action, value);
+
+            // Update the asset value to have nice live preview
+            Asset.Parameters[action.Index].Value = value;
         }
 
         /// <inheritdoc />
