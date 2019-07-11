@@ -162,6 +162,8 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            OnExit();
+
             // Unregister
             Editor.Windows.Windows.Remove(this);
 

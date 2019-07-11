@@ -200,6 +200,9 @@ namespace FlaxEditor.Modules
         {
             Assert.IsFalse(_isDuringFastSetup);
 
+            if (string.IsNullOrEmpty(path))
+                return null;
+
             // Ensure path is normalized to the Flax format
             path = StringUtils.NormalizePath(path);
 

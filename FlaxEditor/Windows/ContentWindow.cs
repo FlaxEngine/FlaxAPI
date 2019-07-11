@@ -21,6 +21,7 @@ namespace FlaxEditor.Windows
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public sealed partial class ContentWindow : EditorWindow
     {
+        private const string ProjectDataLastViewedFolder = "LastViewedFolder";
         private bool _isWorkspaceDirty;
         private SplitPanel _split;
         private ContentView _view;
@@ -688,7 +689,12 @@ namespace FlaxEditor.Windows
             UnlockChildrenRecursive();
             PerformLayout();
 
-            // TODO: load last viewed folder
+            // Load last viewed folder
+            if (Editor.ProjectCache.TryGetCustomData(ProjectDataLastViewedFolder, out var lastViewedFolder))
+            {
+                if (Editor.ContentDatabase.Find(lastViewedFolder) is ContentFolder folder)
+                    _tree.Select(folder.Node);
+            }
         }
 
         /// <inheritdoc />
@@ -707,7 +713,9 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnExit()
         {
-            // TODO: save last viewed folder
+            // Save last viewed folder
+            var lastViewedFolder = _tree.Selection.Count == 1 ? _tree.SelectedNode as ContentTreeNode : null;
+            Editor.ProjectCache.SetCustomData(ProjectDataLastViewedFolder, lastViewedFolder?.Path ?? string.Empty);
 
             // Clear view
             _view.ClearItems();

@@ -904,10 +904,6 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnExit()
         {
-            // Shutdown windows
-            for (int i = 0; i < Windows.Count; i++)
-                Windows[i].OnExit();
-
             // Unbind events
             SceneManager.SceneSaveError -= OnSceneSaveError;
             SceneManager.SceneLoaded -= OnSceneLoaded;
