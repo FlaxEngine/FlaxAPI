@@ -121,7 +121,6 @@ namespace FlaxEditor.Modules
         internal WindowsModule(Editor editor)
         : base(editor)
         {
-            // Init windows module first
             InitOrder = -100;
         }
 

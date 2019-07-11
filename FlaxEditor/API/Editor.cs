@@ -197,11 +197,11 @@ namespace FlaxEditor
             // Create common editor modules
             RegisterModule(Options = new OptionsModule(this));
             RegisterModule(ProjectCache = new ProjectCacheModule(this));
+            RegisterModule(Scene = new SceneModule(this));
             RegisterModule(Windows = new WindowsModule(this));
             RegisterModule(UI = new UIModule(this));
             RegisterModule(Thumbnails = new ThumbnailsModule(this));
             RegisterModule(Simulation = new SimulationModule(this));
-            RegisterModule(Scene = new SceneModule(this));
             RegisterModule(Prefabs = new PrefabsModule(this));
             RegisterModule(SceneEditing = new SceneEditingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
