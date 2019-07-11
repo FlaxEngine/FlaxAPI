@@ -33,6 +33,13 @@ namespace FlaxEditor.Options
         public Color SelectionOutlineColor1 { get; set; } = new Color(0.019f, 0.615f, 0.101f);
 
         /// <summary>
+        /// Gets or sets the transform gizmo size.
+        /// </summary>
+        [DefaultValue(1.0f), Limit(0.01f, 100.0f, 0.01f)]
+        [EditorDisplay("Gizmo"), EditorOrder(110), Tooltip("The transform gizmo size.")]
+        public float GizmoSize { get; set; } = 1.0f;
+
+        /// <summary>
         /// Gets or sets the color used to highlight selected meshes and CSG surfaces.
         /// </summary>
         [DefaultValue(typeof(Color), "0.0,0.533,1.0,1.0")]
