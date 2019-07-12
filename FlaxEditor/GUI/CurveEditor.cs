@@ -20,8 +20,8 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The generic keyframe value accessor object for curve editor.
         /// </summary>
-        /// <typeparam name="T">The keyframe value type.</typeparam>
-        public interface IKeyframeAccess<T> where T : struct
+        /// <typeparam name="TT">The keyframe value type.</typeparam>
+        public interface IKeyframeAccess<TT> where TT : struct
         {
             /// <summary>
             /// Gets the curve components count. Vector types should return amount of component to use for value editing.
@@ -35,7 +35,7 @@ namespace FlaxEditor.GUI
             /// <param name="value">The keyframe value.</param>
             /// <param name="component">The component index.</param>
             /// <returns>The curve value.</returns>
-            float GetCurveValue(ref T value, int component);
+            float GetCurveValue(ref TT value, int component);
 
             /// <summary>
             /// Sets the curve value of the component.
@@ -43,7 +43,7 @@ namespace FlaxEditor.GUI
             /// <param name="curve">The curve value to assign.</param>
             /// <param name="value">The keyframe value.</param>
             /// <param name="component">The component index.</param>
-            void SetCurveValue(float curve, ref T value, int component);
+            void SetCurveValue(float curve, ref TT value, int component);
         }
 
         private class KeyframeAccess :
