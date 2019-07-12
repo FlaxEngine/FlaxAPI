@@ -33,7 +33,10 @@ namespace FlaxEngine.GUI
 
         // TODO: support password protected text box
 
-        private string _text = string.Empty;
+        /// <summary>
+        /// The current text value.
+        /// </summary>
+        protected string _text = string.Empty;
 
         // State
         private string _onStartEditValue;
