@@ -21,6 +21,11 @@ namespace FlaxEditor.Options
         public InterfaceOptions Interface = new InterfaceOptions();
 
         /// <summary>
+        /// The input options.
+        /// </summary>
+        public InputOptions Input = new InputOptions();
+
+        /// <summary>
         /// The viewport options.
         /// </summary>
         public ViewportOptions Viewport = new ViewportOptions();
