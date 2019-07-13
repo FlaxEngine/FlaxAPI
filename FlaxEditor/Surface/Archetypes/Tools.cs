@@ -402,10 +402,52 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
-        private class CurveNode : SurfaceNode
+        private class CurveNode<T> : SurfaceNode where T : struct
         {
-            private CurveEditor<float> _curve;
+            private CurveEditor<T> _curve;
             private bool _isSavingCurve;
+
+            public static NodeArchetype GetArchetype(ushort typeId, string title, ConnectionType valueType, T zero, T one)
+            {
+                return new NodeArchetype
+                {
+                    TypeID = typeId,
+                    Title = title,
+                    Create = (id, context, arch, groupArch) => new CurveNode<T>(id, context, arch, groupArch),
+                    Description = "An animation spline represented by a set of keyframes, each representing an endpoint of a Bezier curve.",
+                    Flags = NodeFlags.AllGraphs,
+                    Size = new Vector2(400, 180.0f),
+                    DefaultValues = new object[]
+                    {
+                        // Keyframes count
+                        2,
+
+                        // Key 0
+                        0.0f, // Time
+                        zero, // Value
+                        zero, // Tangent In
+                        zero, // Tangent Out
+
+                        // Key 1
+                        1.0f, // Time
+                        one, // Value
+                        zero, // Tangent In
+                        zero, // Tangent Out
+
+                        // Empty keys zero-6
+                        0.0f, zero, zero, zero,
+                        0.0f, zero, zero, zero,
+                        0.0f, zero, zero, zero,
+                        0.0f, zero, zero, zero,
+                        0.0f, zero, zero, zero,
+                    },
+                    Elements = new[]
+                    {
+                        NodeElementArchetype.Factory.Input(0, "Time", true, ConnectionType.Float, 0),
+                        NodeElementArchetype.Factory.Output(0, "Value", valueType, 1),
+                    }
+                };
+            }
 
             /// <inheritdoc />
             public CurveNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
@@ -422,7 +464,7 @@ namespace FlaxEditor.Surface.Archetypes
                 var upperRight = GetBox(1).BottomRight;
                 float curveMargin = 20.0f;
 
-                _curve = new CurveEditor<float>
+                _curve = new CurveEditor<T>
                 {
                     MaxKeyframes = 7,
                     Bounds = new Rectangle(upperLeft + new Vector2(curveMargin, 10.0f), upperRight.X - upperLeft.X - curveMargin * 2.0f, 140.0f),
@@ -474,15 +516,15 @@ namespace FlaxEditor.Surface.Archetypes
             private void UpdateCurveKeyframes()
             {
                 var count = (int)Values[0];
-                var keyframes = new CurveEditor<float>.Keyframe[count];
+                var keyframes = new CurveEditor<T>.Keyframe[count];
                 for (int i = 0; i < count; i++)
                 {
-                    keyframes[i] = new CurveEditor<float>.Keyframe
+                    keyframes[i] = new CurveEditor<T>.Keyframe
                     {
                         Time = (float)Values[i * 4 + 1],
-                        Value = (float)Values[i * 4 + 2],
-                        TangentIn = (float)Values[i * 4 + 3],
-                        TangentOut = (float)Values[i * 4 + 4],
+                        Value = (T)Values[i * 4 + 2],
+                        TangentIn = (T)Values[i * 4 + 3],
+                        TangentOut = (T)Values[i * 4 + 4],
                     };
                 }
                 _curve.SetKeyframes(keyframes);
@@ -694,44 +736,10 @@ namespace FlaxEditor.Surface.Archetypes
                     new Vector2(400.0f, 400.0f), // Size
                 },
             },
-            new NodeArchetype
-            {
-                TypeID = 12,
-                Title = "Curve",
-                Create = (id, context, arch, groupArch) => new CurveNode(id, context, arch, groupArch),
-                Description = "An animation spline represented by a set of keyframes, each representing an endpoint of a Bezier curve.",
-                Flags = NodeFlags.AllGraphs,
-                Size = new Vector2(400, 180.0f),
-                DefaultValues = new object[]
-                {
-                    // Keyframes count
-                    2,
-
-                    // Key 0
-                    0.0f, // Time
-                    0.0f, // Value
-                    0.0f, // Tangent In
-                    0.0f, // Tangent Out
-
-                    // Key 1
-                    1.0f, // Time
-                    1.0f, // Value
-                    0.0f, // Tangent In
-                    0.0f, // Tangent Out
-
-                    // Empty keys 2-6
-                    0.0f, 0.0f, 0.0f, 0.0f,
-                    0.0f, 0.0f, 0.0f, 0.0f,
-                    0.0f, 0.0f, 0.0f, 0.0f,
-                    0.0f, 0.0f, 0.0f, 0.0f,
-                    0.0f, 0.0f, 0.0f, 0.0f,
-                },
-                Elements = new[]
-                {
-                    NodeElementArchetype.Factory.Input(0, "Time", true, ConnectionType.Float, 0),
-                    NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.Float, 1),
-                }
-            },
+            CurveNode<float>.GetArchetype(12, "Curve", ConnectionType.Float, 0.0f, 1.0f),
+            CurveNode<Vector2>.GetArchetype(13, "Curve Vector2", ConnectionType.Vector2, Vector2.Zero, Vector2.One),
+            CurveNode<Vector3>.GetArchetype(14, "Curve Vector3", ConnectionType.Vector3, Vector3.Zero, Vector3.One),
+            CurveNode<Vector4>.GetArchetype(15, "Curve Vector4", ConnectionType.Vector4, Vector4.Zero, Vector4.One),
         };
     }
 }
