@@ -397,41 +397,75 @@ namespace FlaxEditor.Surface
         /// <returns>The list of nodes as a result of depth-first traversal algorithm execution.</returns>
         public IEnumerable<SurfaceNode> DepthFirstTraversal()
         {
-            var visited = new List<SurfaceNode>();
-            var stack = new Stack<SurfaceNode>();
+            // Reference: https://github.com/stefnotch/flax-custom-visject-plugin/blob/a26a98b40f909a0b10c2259b858e058290003dce/Source/Editor/ExpressionGraphSurface.cs#L231
 
-            stack.Push(this);
+            // The states of a node are 
+            // null  Nothing   (unvisited and not on the stack)
+            // false Processing(  visited and     on the stack)
+            // true  Completed (  visited and not on the stack)
+            Dictionary<SurfaceNode, bool> nodeState = new Dictionary<SurfaceNode, bool>();
+            Stack<SurfaceNode> toProcess = new Stack<SurfaceNode>();
+            List<SurfaceNode> output = new List<SurfaceNode>();
 
-            while (stack.Count > 0)
+            // Start processing the nodes (backwards)
+            toProcess.Push(this);
+            while (toProcess.Count > 0)
             {
-                var node = stack.Pop();
+                var node = toProcess.Peek();
 
-                if (visited.Contains(node))
-                    continue;
-                visited.Add(node);
+                // We have never seen this node before
+                if (!nodeState.ContainsKey(node))
+                {
+                    // We are now processing it
+                    nodeState.Add(node, false);
+                }
+                else
+                {
+                    // Otherwise, we are done processing it
+                    nodeState[node] = true;
 
-                // For all children, push them onto the stack if they haven't been visited yet
-                for (int i = 0; i < node.Elements.Count; i++)
+                    // Remove it from the stack
+                    toProcess.Pop();
+
+                    // And add it to the output
+                    output.Add(node);
+                }
+
+                // For all parents, push them onto the stack if they haven't been visited yet
+                var elements = node.Elements;
+                for (int i = 0; i < elements.Count; i++)
                 {
                     if (node.Elements[i] is InputBox box && box.HasAnyConnection)
                     {
                         if (box.HasSingleConnection)
                         {
-                            var neighbor = box.Connections[0].ParentNode;
-                            if (!visited.Contains(neighbor))
+                            // Get the parent node
+                            var parentNode = box.Connections[0].ParentNode;
+
+                            // It has been visited previously
+                            if (nodeState.TryGetValue(parentNode, out bool state))
                             {
-                                stack.Push(neighbor);
+                                if (state == false)
+                                {
+                                    // It's still processing, so there must be a cycle!
+                                    throw new Exception("Cycle detected!");
+                                }
+                            }
+                            else
+                            {
+                                // It hasn't been visited, add it to the stack
+                                toProcess.Push(parentNode);
                             }
                         }
                         else
                         {
-                            throw new Exception("Input box has more than one connection.");
+                            throw new Exception("Input box has more than one connection");
                         }
                     }
                 }
             }
 
-            return visited;
+            return output;
         }
 
         /// <summary>
