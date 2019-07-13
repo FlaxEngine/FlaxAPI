@@ -178,11 +178,11 @@ namespace FlaxEditor.CustomEditors
             get => Editor.OverrideEditor;
             set => Editor.OverrideEditor = value;
         }
-        
+
         /// <summary>
-        /// The root editor.
+        /// Gets the root editor.
         /// </summary>
-        public CustomEditor Root;
+        public CustomEditor Root => Editor;
 
         /// <summary>
         /// Gets a value indicating whether build on update flag is set and layout will be updated during presenter update.
