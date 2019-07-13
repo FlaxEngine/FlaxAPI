@@ -538,7 +538,7 @@ namespace FlaxEditor.GUI
                         _cmShowPos = PointToKeyframes(location, ref viewRect);
 
                         var cm = new ContextMenu.ContextMenu();
-                        cm.AddButton("Add keyframe", () => _curve.AddKeyframe(_cmShowPos));
+                        cm.AddButton("Add keyframe", () => _curve.AddKeyframe(_cmShowPos)).Enabled = _curve.Keyframes.Count < _curve.MaxKeyframes;
                         if (selectionCount == 0)
                         {
                         }
@@ -842,6 +842,11 @@ namespace FlaxEditor.GUI
         /// </summary>
         public event Action Edited;
 
+        /// <summary>
+        /// The maximum amount of keyframes to use in a single curve.
+        /// </summary>
+        public int MaxKeyframes = ushort.MaxValue;
+
         public CurveEditor()
         {
             var style = Style.Current;
@@ -901,6 +906,12 @@ namespace FlaxEditor.GUI
             var keyframesArray = keyframes as Keyframe[] ?? keyframes.ToArray();
             if (_keyframes.SequenceEqual(keyframesArray))
                 return;
+            if (keyframesArray.Length > MaxKeyframes)
+            {
+                var tmp = keyframesArray;
+                keyframesArray = new Keyframe[MaxKeyframes];
+                Array.Copy(tmp, keyframesArray, MaxKeyframes);
+            }
 
             _keyframes.Clear();
             _keyframes.AddRange(keyframesArray);

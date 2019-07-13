@@ -404,7 +404,6 @@ namespace FlaxEditor.Surface.Archetypes
 
         private class CurveNode : SurfaceNode
         {
-            private const int MaxKeyframes = 7;
             private CurveEditor<float> _curve;
             private bool _isSavingCurve;
 
@@ -425,6 +424,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 _curve = new CurveEditor<float>
                 {
+                    MaxKeyframes = 7,
                     Bounds = new Rectangle(upperLeft + new Vector2(curveMargin, 10.0f), upperRight.X - upperLeft.X - curveMargin * 2.0f, 140.0f),
                     Parent = this
                 };
