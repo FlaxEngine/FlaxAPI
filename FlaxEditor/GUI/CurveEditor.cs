@@ -317,9 +317,22 @@ namespace FlaxEditor.GUI
                                 float maxTime = p.Index != _curve._keyframes.Count - 1 ? _curve._keyframes[p.Index + 1].Time : float.MaxValue;
 
                                 value += keyframeDelta.Y;
-                                if (components != 1)
-                                    throw new NotImplementedException("TODO: moving keyframe from multi-component curve (edit time by only one point)");
-                                k.Time = Mathf.Clamp(k.Time + keyframeDelta.X, minTime, maxTime);
+
+                                // Let the first selected point of this keyframe to edit time
+                                bool isFirstSelected = false;
+                                for (var j = 0; j < components; j++)
+                                {
+                                    var idx = p.Index * components + j;
+                                    if (idx == i)
+                                    {
+                                        isFirstSelected = true;
+                                        break;
+                                    }
+                                    if (_curve._points[idx].IsSelected)
+                                        break;
+                                }
+                                if (isFirstSelected)
+                                    k.Time = Mathf.Clamp(k.Time + keyframeDelta.X, minTime, maxTime);
 
                                 // TODO: snapping keyframes to grid when moving
 
@@ -766,8 +779,8 @@ namespace FlaxEditor.GUI
         {
             Color.OrangeRed,
             Color.ForestGreen,
-            Color.AliceBlue,
-            Color.Wheat,
+            Color.CornflowerBlue,
+            Color.White,
         };
 
         /// <summary>
