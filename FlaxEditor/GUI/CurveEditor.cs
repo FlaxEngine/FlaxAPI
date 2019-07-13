@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.CustomEditors;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -185,21 +187,25 @@ namespace FlaxEditor.GUI
             /// <summary>
             /// The time of the keyframe.
             /// </summary>
+            [EditorOrder(0), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The time of the keyframe.")]
             public float Time;
 
             /// <summary>
             /// The value of the curve at keyframe.
             /// </summary>
+            [EditorOrder(1), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The value of the curve at keyframe.")]
             public T Value;
 
             /// <summary>
             /// The input tangent (going from the previous key to this one) of the key.
             /// </summary>
+            [EditorOrder(2), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The input tangent (going from the previous key to this one) of the key."), EditorDisplay(null, "Tangent In")]
             public T TangentIn;
 
             /// <summary>
             /// The output tangent (going from this key to next one) of the key.
             /// </summary>
+            [EditorOrder(3), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The output tangent (going from this key to next one) of the key.")]
             public T TangentOut;
         }
 
@@ -532,18 +538,18 @@ namespace FlaxEditor.GUI
                         _cmShowPos = PointToKeyframes(location, ref viewRect);
 
                         var cm = new ContextMenu.ContextMenu();
+                        cm.AddButton("Add keyframe", () => _curve.AddKeyframe(_cmShowPos));
                         if (selectionCount == 0)
                         {
-                            cm.AddButton("Add keyframe", () => _curve.AddKeyframe(_cmShowPos));
                         }
                         else if (selectionCount == 1)
                         {
-                            cm.AddButton("Edit keyframe", _curve.EditKeyframes);
+                            cm.AddButton("Edit keyframe", () => _curve.EditKeyframes(this, location));
                             cm.AddButton("Remove keyframe", _curve.RemoveKeyframes);
                         }
                         else
                         {
-                            cm.AddButton("Edit keyframes", _curve.EditKeyframes);
+                            cm.AddButton("Edit keyframes", () => _curve.EditKeyframes(this, location));
                             cm.AddButton("Remove keyframes", _curve.RemoveKeyframes);
                         }
                         if (selectionCount != 0)
@@ -956,9 +962,111 @@ namespace FlaxEditor.GUI
             MarkAsEdited();
         }
 
-        private void EditKeyframes()
+        class KeyframesEditor : ContextMenuBase
         {
-            throw new NotImplementedException();
+            private CustomEditorPresenter _editor;
+            public CurveEditor<T> Curve;
+            public List<int> KeyframeIndices;
+            public bool IsDirty;
+
+            public KeyframesEditor(List<Keyframe> keyframes)
+            {
+                const float width = 280.0f;
+                const float height = 120.0f;
+                Size = new Vector2(width, height);
+
+                var panel1 = new Panel(ScrollBars.Vertical)
+                {
+                    Bounds = new Rectangle(0, 0.0f, width, height),
+                    Parent = this
+                };
+                var editor = new CustomEditorPresenter(null);
+                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.IsScrollable = true;
+                editor.Panel.Parent = panel1;
+                editor.Modified += OnModified;
+
+                var selection = new object[keyframes.Count];
+                for (int i = 0; i < keyframes.Count; i++)
+                    selection[i] = keyframes[i];
+                editor.Select(selection);
+
+                _editor = editor;
+            }
+
+            private void OnModified()
+            {
+                IsDirty = true;
+
+                for (int i = 0; i < _editor.SelectionCount; i++)
+                {
+                    var keyframe = (Keyframe)_editor.Selection[i];
+                    var index = KeyframeIndices[i];
+                    Curve._keyframes[index] = keyframe;
+                }
+
+                Curve.UpdateKeyframes();
+            }
+
+            /// <inheritdoc />
+            protected override void OnShow()
+            {
+                Focus();
+
+                base.OnShow();
+            }
+
+            /// <inheritdoc />
+            public override void Hide()
+            {
+                if (!Visible)
+                    return;
+
+                Focus(null);
+
+                if (IsDirty)
+                {
+                    Curve.MarkAsEdited();
+                }
+
+                _editor = null;
+
+                base.Hide();
+            }
+
+            /// <inheritdoc />
+            public override bool OnKeyDown(Keys key)
+            {
+                if (key == Keys.Escape)
+                {
+                    Hide();
+                    return true;
+                }
+
+                return base.OnKeyDown(key);
+            }
+        }
+
+        private void EditKeyframes(Control control, Vector2 pos)
+        {
+            var keyframes = new List<Keyframe>();
+            var indices = new List<int>();
+            for (int i = 0; i < _points.Count; i++)
+            {
+                var p = _points[i];
+                if (!p.IsSelected || indices.Contains(p.Index))
+                    continue;
+
+                indices.Add(p.Index);
+                keyframes.Add(_keyframes[p.Index]);
+            }
+
+            var cm = new KeyframesEditor(keyframes)
+            {
+                Curve = this,
+                KeyframeIndices = indices,
+            };
+            cm.Show(control, pos);
         }
 
         private void RemoveKeyframes()
