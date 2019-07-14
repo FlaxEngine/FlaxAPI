@@ -624,6 +624,18 @@ namespace FlaxEditor.SceneGraph.GUI
                             // Spawn
                             ActorNode.Root.Spawn(actor, Actor);
                         }
+                        else if (item.TypeName == typeof(ParticleSystem).FullName)
+                        {
+                            // Create actor
+                            var actor = ParticleEffect.New();
+                            actor.StaticFlags = Actor.StaticFlags;
+                            actor.Name = item.ShortName;
+                            actor.ParticleSystem = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
+                            actor.Transform = Actor.Transform;
+
+                            // Spawn
+                            ActorNode.Root.Spawn(actor, Actor);
+                        }
 
                         break;
                     }
@@ -725,6 +737,8 @@ namespace FlaxEditor.SceneGraph.GUI
             case ContentDomain.Other:
             {
                 if (item.TypeName == typeof(CollisionData).FullName)
+                    return true;
+                if (item.TypeName == typeof(ParticleSystem).FullName)
                     return true;
                 return false;
             }
