@@ -65,7 +65,7 @@ namespace FlaxEngine
         /// This can be used only for virtual assets.
         /// </remarks>
         /// <param name="emitter">The emitter to playback.</param>
-        /// <param name="duration">the timeline animation duration in seconds.</param>
+        /// <param name="duration">The timeline animation duration in seconds.</param>
         /// <param name="fps">The amount of frames per second of the timeline animation.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
