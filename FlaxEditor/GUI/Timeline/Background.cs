@@ -51,7 +51,6 @@ namespace FlaxEditor.GUI.Timeline
             for (int i = 0; i < tracks.Count; i++)
             {
                 var track = tracks[i];
-
                 if (track.Visible)
                 {
                     var top = track.Bottom + 0.5f;
@@ -63,7 +62,6 @@ namespace FlaxEditor.GUI.Timeline
             for (int i = 0; i < tracks.Count; i++)
             {
                 var track = tracks[i];
-
                 if (track.Visible && _timeline.SelectedTracks.Contains(track) && _timeline.ContainsFocus)
                 {
                     Render2D.FillRectangle(new Rectangle(areaLeft, track.Top, areaRight, track.Height), style.BackgroundSelected);
@@ -106,6 +104,16 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             DrawChildren();
+
+            // Disabled overlay
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                var track = tracks[i];
+                if (track.DrawDisabled)
+                {
+                    Render2D.FillRectangle(new Rectangle(areaLeft, track.Top, areaRight, track.Height), new Color(0, 0, 0, 100));
+                }
+            }
 
             // Darken area outside the duration
             var outsideDurationAreaColor = new Color(0, 0, 0, 100);

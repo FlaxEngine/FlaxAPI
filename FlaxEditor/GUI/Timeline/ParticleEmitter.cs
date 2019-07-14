@@ -68,10 +68,12 @@ namespace FlaxEditor.GUI.Timeline
         /// Initializes a new instance of the <see cref="ParticleEmitterTrack"/> class.
         /// </summary>
         /// <param name="archetype">The archetype.</param>
-        public ParticleEmitterTrack(Timeline.TrackArchetype archetype)
+        /// <param name="mute">The mute flag.</param>
+        public ParticleEmitterTrack(Timeline.TrackArchetype archetype, bool mute)
         {
             Name = archetype.Name;
             Icon = archetype.Icon;
+            Mute = mute;
 
             _picker = new AssetPicker(typeof(ParticleEmitter), Vector2.Zero)
             {
@@ -82,6 +84,23 @@ namespace FlaxEditor.GUI.Timeline
             _picker.Location = new Vector2(Width - _picker.Width - 2, 2);
             _picker.SelectedItemChanged += OnPickerSelectedItemChanged;
             Height = 4 + _picker.Height;
+
+            const float buttonSize = 14;
+            var muteButton = new CheckBox(_picker.Left - buttonSize - 2.0f, 0, !Mute, buttonSize)
+            {
+                TooltipText = "Mute track",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Parent = this
+            };
+            muteButton.StateChanged += OnMuteButtonStateChanged;
+        }
+
+        private void OnMuteButtonStateChanged(CheckBox checkBox)
+        {
+            Mute = !checkBox.Checked;
+            Timeline.MarkAsEdited();
         }
 
         private void OnPickerSelectedItemChanged()

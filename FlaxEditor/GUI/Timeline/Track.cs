@@ -130,6 +130,13 @@ namespace FlaxEditor.GUI.Timeline
         public Color IconColor = Color.White;
 
         /// <summary>
+        /// The mute flag. Muted tracks are disabled.
+        /// </summary>
+        public bool Mute;
+
+        internal bool DrawDisabled;
+
+        /// <summary>
         /// Gets or sets a value indicating whether this track is expanded.
         /// </summary>
         public bool IsExpanded
@@ -655,6 +662,13 @@ namespace FlaxEditor.GUI.Timeline
 
             // Draw text
             Render2D.DrawText(TextFont.GetFont(), Name, textRect, TextColor, TextAlignment.Near, TextAlignment.Center);
+
+            // Disabled overlay
+            DrawDisabled = Mute || (ParentTrack != null && ParentTrack.DrawDisabled);
+            if (DrawDisabled)
+            {
+                Render2D.FillRectangle(bounds, new Color(0, 0, 0, 100));
+            }
 
             // Draw drag and drop effect
             if (IsDragOver)

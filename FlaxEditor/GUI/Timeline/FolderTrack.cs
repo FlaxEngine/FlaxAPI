@@ -16,13 +16,15 @@ namespace FlaxEditor.GUI.Timeline
         /// Initializes a new instance of the <see cref="FolderTrack"/> class.
         /// </summary>
         /// <param name="archetype">The archetype.</param>
-        public FolderTrack(Timeline.TrackArchetype archetype)
+        /// <param name="mute">The mute flag.</param>
+        public FolderTrack(Timeline.TrackArchetype archetype, bool mute)
         {
             Name = archetype.Name;
             Icon = archetype.Icon;
+            Mute = mute;
 
-            const float settingsButtonSize = 14;
-            var colorPickerButton = new Image(Width - settingsButtonSize - 2.0f, 0, settingsButtonSize, settingsButtonSize)
+            const float buttonSize = 14;
+            var colorPickerButton = new Image(Width - buttonSize - 2.0f, 0, buttonSize, buttonSize)
             {
                 TooltipText = "Change folder color",
                 AutoFocus = true,
@@ -34,6 +36,22 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = this
             };
             colorPickerButton.Clicked += OnColorPickerButtonClicked;
+
+            var muteButton = new CheckBox(colorPickerButton.Left - buttonSize - 2.0f, 0, !Mute, buttonSize)
+            {
+                TooltipText = "Mute track",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Parent = this
+            };
+            muteButton.StateChanged += OnMuteButtonStateChanged;
+        }
+
+        private void OnMuteButtonStateChanged(CheckBox checkBox)
+        {
+            Mute = !checkBox.Checked;
+            Timeline.MarkAsEdited();
         }
 
         private void OnColorPickerButtonClicked(Image image, MouseButton button)

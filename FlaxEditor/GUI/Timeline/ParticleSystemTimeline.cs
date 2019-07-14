@@ -31,12 +31,12 @@ namespace FlaxEditor.GUI.Timeline
             {
                 Name = "Folder",
                 Icon = icons.Folder64,
-                Create = (archetype) => new FolderTrack(archetype),
+                Create = archetype => new FolderTrack(archetype, false),
             });
             TrackArchetypes.Add(new TrackArchetype
             {
                 Name = "Emitter",
-                Create = (archetype) => new ParticleEmitterTrack(archetype),
+                Create = archetype => new ParticleEmitterTrack(archetype, false),
             });
         }
 
@@ -96,7 +96,9 @@ namespace FlaxEditor.GUI.Timeline
             using (var stream = new BinaryReader(memory))
             {
                 // Load properties
-                int engineBuild = stream.ReadInt32();
+                int version = stream.ReadInt32();
+                if (version != 1)
+                    throw new Exception("Unknown particle timeline version " + version);
                 FramesPerSecond = stream.ReadSingle();
                 DurationFrames = stream.ReadInt32();
 
@@ -109,19 +111,21 @@ namespace FlaxEditor.GUI.Timeline
                 for (int i = 0; i < tracksCount; i++)
                 {
                     var type = stream.ReadByte();
+                    var flag = stream.ReadByte();
                     Track track;
+                    var mute = (flag & 1) == 1;
                     switch (type)
                     {
                     // Emitter
                     case 0:
                     {
-                        track = new ParticleEmitterTrack(TrackArchetypes[1]);
+                        track = new ParticleEmitterTrack(TrackArchetypes[1], mute);
                         break;
                     }
                     // Folder
                     case 1:
                     {
-                        track = new FolderTrack(TrackArchetypes[0]);
+                        track = new FolderTrack(TrackArchetypes[0], mute);
                         break;
                     }
                     default: throw new Exception("Unknown Particle System track type " + type);
@@ -185,7 +189,7 @@ namespace FlaxEditor.GUI.Timeline
             using (var stream = new BinaryWriter(memory))
             {
                 // Save properties
-                stream.Write(Globals.BuildNumber);
+                stream.Write(1);
                 stream.Write(FramesPerSecond);
                 stream.Write(DurationFrames);
 
@@ -209,6 +213,10 @@ namespace FlaxEditor.GUI.Timeline
                     else
                         throw new NotSupportedException("Unknown Particle System track type.");
                     stream.Write(type);
+                    byte flag = 0;
+                    if (track.Mute)
+                        flag |= 1;
+                    stream.Write(flag);
                     stream.Write(_tracks.IndexOf(track.ParentTrack));
                     stream.Write(track.SubTracks.Count);
                     Utilities.Utils.WriteStr(stream, track.Name, -13);
@@ -265,6 +273,17 @@ namespace FlaxEditor.GUI.Timeline
         {
             var data = Save();
             asset.SaveTimeline(data);
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (IsDisposing)
+                return;
+
+            _preview = null;
+
+            base.Dispose();
         }
     }
 }
