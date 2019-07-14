@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.Content.Create;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
@@ -47,8 +48,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void Create(string outputPath, object arg)
         {
-            if (Editor.CreateAsset(Editor.NewAssetType.ParticleEmitter, outputPath))
-                throw new Exception("Failed to create new asset.");
+            Editor.Instance.ContentImporting.Create(new ParticleEmitterCreateEntry(outputPath));
         }
 
         /// <inheritdoc />
