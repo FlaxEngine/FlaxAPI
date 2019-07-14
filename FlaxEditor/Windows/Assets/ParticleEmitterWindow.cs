@@ -309,7 +309,7 @@ namespace FlaxEditor.Windows.Assets
         {
             base.OnParamRenameUndo(action);
 
-            _propertiesEditor.BuildLayout();
+            _refreshPropertiesOnLoad = true;
         }
 
         /// <inheritdoc />
@@ -317,7 +317,7 @@ namespace FlaxEditor.Windows.Assets
         {
             base.OnParamAddUndo(action);
 
-            _propertiesEditor.BuildLayout();
+            _refreshPropertiesOnLoad = true;
         }
 
         /// <inheritdoc />
@@ -325,7 +325,15 @@ namespace FlaxEditor.Windows.Assets
         {
             base.OnParamRemoveUndo(action);
 
-            _propertiesEditor.BuildLayout();
+            _refreshPropertiesOnLoad = true;
+        }
+
+        /// <inheritdoc />
+        protected override void OnParamEditUndo(EditParamAction action, object value)
+        {
+            base.OnParamEditUndo(action, value);
+
+            _refreshPropertiesOnLoad = true;
         }
 
         /// <inheritdoc />

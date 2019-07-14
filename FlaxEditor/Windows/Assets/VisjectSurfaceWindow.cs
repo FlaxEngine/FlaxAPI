@@ -219,6 +219,11 @@ namespace FlaxEditor.Windows.Assets
         protected bool _isWaitingForSurfaceLoad;
 
         /// <summary>
+        /// True if window is waiting for asset load to refresh properties editor.
+        /// </summary>
+        protected bool _refreshPropertiesOnLoad;
+
+        /// <summary>
         /// True if parameter value has been changed (special path for handling modifying surface parameters in properties editor).
         /// </summary>
         protected bool _paramValueChange;
@@ -382,6 +387,7 @@ namespace FlaxEditor.Windows.Assets
         protected override void OnAssetLinked()
         {
             _isWaitingForSurfaceLoad = true;
+            _refreshPropertiesOnLoad = false;
 
             base.OnAssetLinked();
         }
@@ -467,16 +473,13 @@ namespace FlaxEditor.Windows.Assets
         {
             base.Update(deltaTime);
 
-            // Check if temporary asset need to be updated
             if (_tmpAssetIsDirty)
             {
                 _tmpAssetIsDirty = false;
 
-                // Update
                 RefreshTempAsset();
             }
 
-            // Check if need to load surface
             if (_isWaitingForSurfaceLoad && _asset.IsLoaded)
             {
                 _isWaitingForSurfaceLoad = false;
@@ -492,6 +495,12 @@ namespace FlaxEditor.Windows.Assets
                 _surface.Enabled = true;
                 _propertiesEditor.BuildLayout();
                 ClearEditedFlag();
+            }
+            else if (_refreshPropertiesOnLoad && _asset.IsLoaded)
+            {
+                _refreshPropertiesOnLoad = false;
+
+                _propertiesEditor.BuildLayout();
             }
         }
 

@@ -95,6 +95,7 @@ namespace FlaxEditor.Surface.Archetypes
                     var color = Color;
                     if (IsMouseOver)
                         color *= 1.3f;
+                    color.A = 1.0f;
                     var icons = Editor.Instance.Icons;
                     var icon = isSelected ? icons.VisjectArrowClose : icons.VisjectArrowOpen;
 
