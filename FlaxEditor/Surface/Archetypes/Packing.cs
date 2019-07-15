@@ -49,7 +49,7 @@ namespace FlaxEditor.Surface.Archetypes
                 case ConnectionType.Vector2: return 2;
                 case ConnectionType.Vector3: return 3;
                 case ConnectionType.Vector4: return 4;
-                default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                default: return 0;
                 }
             }
 
