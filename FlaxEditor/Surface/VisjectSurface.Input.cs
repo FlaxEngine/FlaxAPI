@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.Options;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Surface.Undo;
 using FlaxEngine;
@@ -14,6 +15,11 @@ namespace FlaxEditor.Surface
         /// The create comment key shortcut.
         /// </summary>
         public Keys CreateCommentKey = Keys.C;
+
+        /// <summary>
+        /// The input actions collection to processed during user input.
+        /// </summary>
+        public readonly InputActionsContainer InputActions;
 
         private string _currentInputText = string.Empty;
         private Vector2 _movingNodesDelta;
@@ -545,37 +551,8 @@ namespace FlaxEditor.Surface
             if (base.OnKeyDown(key))
                 return true;
 
-            if (key == Keys.Delete)
-            {
-                Delete();
+            if (InputActions.Process(Editor.Instance, this, key))
                 return true;
-            }
-
-            if (Root.GetKey(Keys.Control))
-            {
-                switch (key)
-                {
-                case Keys.A:
-                    SelectAll();
-                    return true;
-
-                case Keys.C:
-                    Copy();
-                    return true;
-
-                case Keys.V:
-                    Paste();
-                    return true;
-
-                case Keys.X:
-                    Cut();
-                    return true;
-
-                case Keys.D:
-                    Duplicate();
-                    return true;
-                }
-            }
 
             if (key == CreateCommentKey)
             {

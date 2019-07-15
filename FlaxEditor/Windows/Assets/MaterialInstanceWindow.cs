@@ -363,6 +363,10 @@ namespace FlaxEditor.Windows.Assets
             _properties = new PropertiesProxy();
             _editor.Select(_properties);
             _editor.Modified += OnMaterialPropertyEdited;
+
+            // Setup input actions
+            InputActions.Add(options => options.Undo, _undo.PerformUndo);
+            InputActions.Add(options => options.Redo, _undo.PerformRedo);
         }
 
         private void OnUndo(IUndoAction action)
@@ -459,30 +463,6 @@ namespace FlaxEditor.Windows.Assets
                 ClearEditedFlag();
                 _undo.Clear();
             }
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            // Base
-            bool result = base.OnKeyDown(key);
-            if (!result)
-            {
-                if (Root.GetKey(Keys.Control))
-                {
-                    switch (key)
-                    {
-                    case Keys.Z:
-                        _undo.PerformUndo();
-                        return true;
-                    case Keys.Y:
-                        _undo.PerformRedo();
-                        return true;
-                    }
-                }
-            }
-
-            return result;
         }
 
         /// <inheritdoc />

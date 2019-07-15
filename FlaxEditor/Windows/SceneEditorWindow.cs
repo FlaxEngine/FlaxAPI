@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows
@@ -20,80 +19,28 @@ namespace FlaxEditor.Windows
         protected SceneEditorWindow(Editor editor, bool hideOnClose, ScrollBars scrollBars)
         : base(editor, hideOnClose, scrollBars)
         {
-        }
-
-        /// <summary>
-        /// Saves all changes.
-        /// </summary>
-        public void SaveAll()
-        {
-            Editor.SaveAll();
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            // Base
-            bool result = base.OnKeyDown(key);
-            if (!result)
+            // Setup input actions
+            InputActions.Add(options => options.Save, Editor.SaveAll);
+            InputActions.Add(options => options.Undo, () =>
             {
-                var parentWin = Root;
-                if (parentWin.GetKey(Keys.Control))
-                {
-                    switch (key)
-                    {
-                    case Keys.S:
-                        Editor.SaveAll();
-                        return true;
-                    case Keys.Z:
-                        Editor.PerformUndo();
-                        Focus();
-                        return true;
-                    case Keys.Y:
-                        Editor.PerformRedo();
-                        Focus();
-                        return true;
-                    case Keys.X:
-                        Editor.SceneEditing.Cut();
-                        break;
-                    case Keys.C:
-                        Editor.SceneEditing.Copy();
-                        break;
-                    case Keys.V:
-                        Editor.SceneEditing.Paste();
-                        break;
-                    case Keys.D:
-                        Editor.SceneEditing.Duplicate();
-                        break;
-                    case Keys.A:
-                        Editor.SceneEditing.SelectAllScenes();
-                        break;
-                    case Keys.F:
-                        Editor.Windows.SceneWin.Search();
-                        break;
-                    }
-                }
-                else
-                {
-                    switch (key)
-                    {
-                    case Keys.Delete:
-                        Editor.SceneEditing.Delete();
-                        break;
-                    case Keys.F5:
-                        Editor.Simulation.RequestStartPlay();
-                        break;
-                    case Keys.F6:
-                        Editor.Simulation.RequestResumeOrPause();
-                        break;
-                    case Keys.F11:
-                        Editor.Simulation.RequestPlayOneFrame();
-                        break;
-                    }
-                }
-            }
-
-            return result;
+                Editor.PerformUndo();
+                Focus();
+            });
+            InputActions.Add(options => options.Redo, () =>
+            {
+                Editor.PerformRedo();
+                Focus();
+            });
+            InputActions.Add(options => options.Cut, Editor.SceneEditing.Cut);
+            InputActions.Add(options => options.Copy, Editor.SceneEditing.Copy);
+            InputActions.Add(options => options.Paste, Editor.SceneEditing.Paste);
+            InputActions.Add(options => options.Duplicate, Editor.SceneEditing.Duplicate);
+            InputActions.Add(options => options.SelectAll, Editor.SceneEditing.SelectAllScenes);
+            InputActions.Add(options => options.Delete, Editor.SceneEditing.Delete);
+            InputActions.Add(options => options.Search, () => Editor.Windows.SceneWin.Search());
+            InputActions.Add(options => options.Play, Editor.Simulation.RequestStartPlay);
+            InputActions.Add(options => options.Pause, Editor.Simulation.RequestResumeOrPause);
+            InputActions.Add(options => options.StepFrame, Editor.Simulation.RequestPlayOneFrame);
         }
     }
 }

@@ -56,6 +56,12 @@ namespace FlaxEditor.Windows
             _tree.SelectedChanged += Tree_OnSelectedChanged;
             _tree.RightClick += Tree_OnRightClick;
             _tree.Parent = this;
+
+            // Setup input actions
+            InputActions.Add(options => options.TranslateMode, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate);
+            InputActions.Add(options => options.RotateMode, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate);
+            InputActions.Add(options => options.ScaleMode, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale);
+            InputActions.Add(options => options.FocusSelection, () => Editor.Windows.EditWin.ShowSelectedActors());
         }
 
         private void OnSearchBoxTextChanged()
@@ -254,33 +260,6 @@ namespace FlaxEditor.Windows
             }
 
             return false;
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            if (key == Keys.Alpha1)
-            {
-                Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate;
-                return true;
-            }
-            if (key == Keys.Alpha2)
-            {
-                Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate;
-                return true;
-            }
-            if (key == Keys.Alpha3)
-            {
-                Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale;
-                return true;
-            }
-            if (key == Keys.F)
-            {
-                Editor.Windows.EditWin.ShowSelectedActors();
-                return true;
-            }
-
-            return base.OnKeyDown(key);
         }
 
         /// <inheritdoc />

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.Options;
 using FlaxEditor.Surface.Archetypes;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
@@ -348,6 +349,17 @@ namespace FlaxEditor.Surface
                 }
 
                 MarkAsEdited();
+            });
+
+            // Setup input actions
+            InputActions = new InputActionsContainer(new[]
+            {
+                new InputActionsContainer.Binding(options => options.Delete, Delete),
+                new InputActionsContainer.Binding(options => options.SelectAll, SelectAll),
+                new InputActionsContainer.Binding(options => options.Copy, Copy),
+                new InputActionsContainer.Binding(options => options.Paste, Paste),
+                new InputActionsContainer.Binding(options => options.Cut, Cut),
+                new InputActionsContainer.Binding(options => options.Duplicate, Duplicate),
             });
 
             // Init drag handlers

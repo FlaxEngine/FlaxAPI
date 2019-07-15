@@ -48,6 +48,8 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddButton(editor.Icons.Find32, () => Editor.Windows.ContentWin.Select(_item)).LinkTooltip("Show and select in Content Window");
             _toolstrip.Parent = this;
 
+            InputActions.Add(options => options.Save, Save);
+
             UpdateTitle();
         }
 
@@ -97,27 +99,6 @@ namespace FlaxEditor.Windows.Assets
         public override bool IsEditingItem(ContentItem item)
         {
             return item == _item;
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            // Base
-            bool result = base.OnKeyDown(key);
-            if (!result)
-            {
-                if (Root.GetKey(Keys.Control))
-                {
-                    switch (key)
-                    {
-                    case Keys.S:
-                        Save();
-                        return true;
-                    }
-                }
-            }
-
-            return result;
         }
 
         /// <inheritdoc />

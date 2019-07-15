@@ -196,6 +196,12 @@ namespace FlaxEditor.Viewport
 
             _dragHandlers.Add(_dragActorType);
             _dragHandlers.Add(_dragAssets);
+
+            // Setup input actions
+            InputActions.Add(options => options.TranslateMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate);
+            InputActions.Add(options => options.RotateMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate);
+            InputActions.Add(options => options.ScaleMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale);
+            InputActions.Add(options => options.FocusSelection, ShowSelectedActors);
         }
 
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
@@ -536,33 +542,6 @@ namespace FlaxEditor.Viewport
             Focus();
 
             base.OnLeftMouseButtonUp();
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            if (key == Keys.Alpha1)
-            {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate;
-                return true;
-            }
-            if (key == Keys.Alpha2)
-            {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate;
-                return true;
-            }
-            if (key == Keys.Alpha3)
-            {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale;
-                return true;
-            }
-            if (key == Keys.F)
-            {
-                ShowSelectedActors();
-                return true;
-            }
-
-            return base.OnKeyDown(key);
         }
 
         /// <inheritdoc />

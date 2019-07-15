@@ -66,8 +66,8 @@ namespace FlaxEditor.Options
         #region Scene
 
         [DefaultValue(typeof(InputBinding), "End")]
-        [EditorDisplay("Scene"), EditorOrder(500)]
-        public InputBinding SnapToFloor = new InputBinding(Keys.End);
+        [EditorDisplay("Scene", "Snap To Ground"), EditorOrder(500)]
+        public InputBinding SnapToGround = new InputBinding(Keys.End);
 
         [DefaultValue(typeof(InputBinding), "F5")]
         [EditorDisplay("Scene"), EditorOrder(510)]

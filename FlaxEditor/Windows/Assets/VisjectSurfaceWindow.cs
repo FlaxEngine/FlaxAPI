@@ -286,6 +286,10 @@ namespace FlaxEditor.Windows.Assets
             _redoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Redo32, _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.PageScale32, ShowWholeGraph).LinkTooltip("Show whole graph");
+
+            // Setup input actions
+            InputActions.Add(options => options.Undo, _undo.PerformUndo);
+            InputActions.Add(options => options.Redo, _undo.PerformRedo);
         }
 
         private void OnUndo(IUndoAction action)
@@ -502,29 +506,6 @@ namespace FlaxEditor.Windows.Assets
 
                 _propertiesEditor.BuildLayout();
             }
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            // Base
-            if (base.OnKeyDown(key))
-                return true;
-
-            if (Root.GetKey(Keys.Control))
-            {
-                switch (key)
-                {
-                case Keys.Z:
-                    _undo.PerformUndo();
-                    return true;
-                case Keys.Y:
-                    _undo.PerformRedo();
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /// <inheritdoc />

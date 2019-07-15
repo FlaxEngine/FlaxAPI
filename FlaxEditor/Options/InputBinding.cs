@@ -134,6 +134,29 @@ namespace FlaxEditor.Options
             return false;
         }
 
+        /// <summary>
+        /// Processes this input binding to check if state matches.
+        /// </summary>
+        /// <param name="control">The input providing control.</param>
+        /// <returns>True if input has been processed, otherwise false.</returns>
+        public bool Process(Control control)
+        {
+            var root = control.Root;
+
+            if (root.GetKeyDown(Key))
+            {
+                if (Modifier1 == Keys.None || root.GetKey(Modifier1))
+                {
+                    if (Modifier2 == Keys.None || root.GetKey(Modifier2))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         /// <inheritdoc />
         public override string ToString()
         {

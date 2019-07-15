@@ -298,6 +298,7 @@
     <Compile Include="History\IHistoryAction.cs" />
     <Compile Include="History\UndoActionObject.cs" />
     <Compile Include="IEditable.cs" />
+    <Compile Include="Options\InputBinding.cs" />
     <Compile Include="Modules\ContentDatabaseModule.cs" />
     <Compile Include="Modules\ContentEditingModule.cs" />
     <Compile Include="Modules\ContentImportingModule.cs" />
@@ -318,6 +319,7 @@
     <Compile Include="Options\Editor.cs" />
     <Compile Include="Options\EditorOptions.cs" />
     <Compile Include="Options\GeneralOptions.cs" />
+    <Compile Include="Options\InputOptions.cs" />
     <Compile Include="Options\InterfaceOptions.cs" />
     <Compile Include="Options\OptionsModule.cs" />
     <Compile Include="Options\SourceCodeOptions.cs" />

@@ -396,6 +396,11 @@ namespace FlaxEditor.Viewport
         }
 
         /// <summary>
+        /// The input actions collection to processed during user input.
+        /// </summary>
+        public InputActionsContainer InputActions = new InputActionsContainer();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorViewport"/> class.
         /// </summary>
         /// <param name="task">The task.</param>
@@ -854,6 +859,7 @@ namespace FlaxEditor.Viewport
 
             // Check if update mouse
             Vector2 size = Size;
+            var options = Editor.Instance.Options.Options.Input;
             if (_isControllingMouse)
             {
                 // Gather input
@@ -874,27 +880,27 @@ namespace FlaxEditor.Viewport
 
                 // Get input movement
                 Vector3 moveDelta = Vector3.Zero;
-                if (win.GetKey(Keys.W))
+                if (win.GetKey(options.Forward.Key))
                 {
                     moveDelta += Vector3.Forward;
                 }
-                if (win.GetKey(Keys.S))
+                if (win.GetKey(options.Backward.Key))
                 {
                     moveDelta += Vector3.Backward;
                 }
-                if (win.GetKey(Keys.D))
+                if (win.GetKey(options.Right.Key))
                 {
                     moveDelta += Vector3.Right;
                 }
-                if (win.GetKey(Keys.A))
+                if (win.GetKey(options.Left.Key))
                 {
                     moveDelta += Vector3.Left;
                 }
-                if (win.GetKey(Keys.E))
+                if (win.GetKey(options.Up.Key))
                 {
                     moveDelta += Vector3.Up;
                 }
-                if (win.GetKey(Keys.Q))
+                if (win.GetKey(options.Down.Key))
                 {
                     moveDelta += Vector3.Down;
                 }
@@ -1034,6 +1040,17 @@ namespace FlaxEditor.Viewport
             base.OnChildResized(control);
 
             PerformLayout();
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            if (base.OnKeyDown(key))
+                return true;
+
+            // Custom input events
+            return InputActions.Process(Editor.Instance, this, key);
         }
 
         /// <inheritdoc />

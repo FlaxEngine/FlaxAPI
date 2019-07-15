@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.Content;
+using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using DockWindow = FlaxEditor.GUI.Docking.DockWindow;
@@ -18,6 +19,11 @@ namespace FlaxEditor.Windows
         /// Gets the editor object.
         /// </summary>
         public readonly Editor Editor;
+
+        /// <summary>
+        /// The input actions collection to processed during user input.
+        /// </summary>
+        public InputActionsContainer InputActions = new InputActionsContainer();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorWindow"/> class.
@@ -158,6 +164,17 @@ namespace FlaxEditor.Windows
         }
 
         #endregion
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            if (base.OnKeyDown(key))
+                return true;
+
+            // Custom input events
+            return InputActions.Process(Editor, this, key);
+        }
 
         /// <inheritdoc />
         public override void OnDestroy()
