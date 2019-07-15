@@ -130,7 +130,7 @@ namespace FlaxEngine
             get
             {
                 if (Internal_GetScriptsCount(unmanagedPtr) == 0)
-                    return Enumerable.Empty<Script>() as Script[];
+                    return Utils.GetEmptyArray<Script>();
                 return Internal_GetScripts(unmanagedPtr);
             }
             internal set { }

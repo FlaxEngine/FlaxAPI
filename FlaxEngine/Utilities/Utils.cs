@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -52,6 +53,16 @@ namespace FlaxEngine
         public static float RoundTo3DecimalPlaces(float value)
         {
             return (float)Math.Round(value * 1000) / 1000;
+        }
+
+        /// <summary>
+        /// Gets the empty array of the given type (shared one).
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <returns>The empty array object.</returns>
+        public static T[] GetEmptyArray<T>()
+        {
+            return Enumerable.Empty<T>() as T[];
         }
 
         /// <summary>

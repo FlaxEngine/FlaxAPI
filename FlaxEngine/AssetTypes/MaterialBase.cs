@@ -121,7 +121,7 @@ namespace FlaxEngine
                 else
                 {
                     // No parameters at all
-                    _parameters = Enumerable.Empty<MaterialParameter>() as MaterialParameter[];
+                    _parameters = Utils.GetEmptyArray<MaterialParameter>();
                 }
 
                 return _parameters;

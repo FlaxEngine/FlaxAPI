@@ -37,8 +37,8 @@ namespace FlaxEditor.Surface
                         DefaultValues = new object[]
                         {
                             "State",
-                            Enumerable.Empty<byte>() as byte[],
-                            Enumerable.Empty<byte>() as byte[],
+                            Utils.GetEmptyArray<byte>(),
+                            Utils.GetEmptyArray<byte>(),
                         },
                         Size = new Vector2(100, 0),
                     },

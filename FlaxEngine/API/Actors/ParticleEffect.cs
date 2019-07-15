@@ -419,7 +419,7 @@ namespace FlaxEngine
                 else
                 {
                     // No parameters at all
-                    _parameters = Enumerable.Empty<Parameter>() as Parameter[];
+                    _parameters = Utils.GetEmptyArray<Parameter>();
                 }
 
                 return _parameters;
