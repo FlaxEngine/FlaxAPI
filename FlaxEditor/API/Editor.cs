@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Timers;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Import;
 using FlaxEditor.Content.Settings;
