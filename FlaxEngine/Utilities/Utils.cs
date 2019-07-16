@@ -100,7 +100,7 @@ namespace FlaxEngine
         /// <param name="a1">The first array.</param>
         /// <param name="a2">The second array.</param>
         /// <returns><c>true</c> if the two source sequences are of equal length and their corresponding elements are equal according to the default equality comparer for their type; otherwise, <c>false</c>.</returns>
-        public static bool ArraysEqual<T>(T[] a1, List<T> a2)
+        public static bool ArraysEqual<T>(T[] a1, IReadOnlyList<T> a2)
         {
             if (a1 == null || a2 == null)
                 return false;

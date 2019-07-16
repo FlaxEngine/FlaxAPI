@@ -776,6 +776,8 @@ namespace FlaxEditor.GUI
         private readonly List<KeyframePoint> _points = new List<KeyframePoint>();
         private readonly TangentPoint[] _tangents = new TangentPoint[2];
         private readonly float[] _tickStrengths = new float[TickSteps.Length];
+        private bool _refreshAfterEdit;
+        private KeyframesEditor _keyframesEditor;
 
         private Color _contentsColor;
         private Color _linesColor;
@@ -829,6 +831,11 @@ namespace FlaxEditor.GUI
         /// The maximum amount of keyframes to use in a single curve.
         /// </summary>
         public int MaxKeyframes = ushort.MaxValue;
+
+        /// <summary>
+        /// Gets a value indicating whether user is editing the curve.
+        /// </summary>
+        public bool IsUserEditing => _keyframesEditor != null || _contents._leftMouseDown;
 
         public CurveEditor()
         {
@@ -927,6 +934,8 @@ namespace FlaxEditor.GUI
                     Component = _points.Count % components,
                     Parent = _contents,
                 });
+
+                _refreshAfterEdit = true;
             }
 
             UpdateKeyframes();
@@ -1023,6 +1032,8 @@ namespace FlaxEditor.GUI
                     Curve.MarkAsEdited();
                 }
 
+                if (Curve._keyframesEditor == this)
+                    Curve._keyframesEditor = null;
                 _editor = null;
 
                 base.Hide();
@@ -1038,6 +1049,14 @@ namespace FlaxEditor.GUI
                 }
 
                 return base.OnKeyDown(key);
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                Curve = null;
+
+                base.Dispose();
             }
         }
 
@@ -1055,12 +1074,12 @@ namespace FlaxEditor.GUI
                 keyframes.Add(_keyframes[p.Index]);
             }
 
-            var cm = new KeyframesEditor(keyframes)
+            _keyframesEditor = new KeyframesEditor(keyframes)
             {
                 Curve = this,
                 KeyframeIndices = indices,
             };
-            cm.Show(control, pos);
+            _keyframesEditor.Show(control, pos);
         }
 
         private void RemoveKeyframes()
@@ -1267,6 +1286,7 @@ namespace FlaxEditor.GUI
                 return;
             }
 
+            var wasLocked = _mainPanel.IsLayoutLocked;
             _mainPanel.IsLayoutLocked = true;
 
             // Place keyframes
@@ -1304,7 +1324,7 @@ namespace FlaxEditor.GUI
 
             UpdateTangents();
 
-            _mainPanel.IsLayoutLocked = false;
+            _mainPanel.IsLayoutLocked = wasLocked;
             _mainPanel.PerformLayout();
         }
 
@@ -1463,6 +1483,13 @@ namespace FlaxEditor.GUI
         /// <inheritdoc />
         public override void Draw()
         {
+            // Hack to refresh UI after keyframes edit
+            if (_refreshAfterEdit)
+            {
+                _refreshAfterEdit = false;
+                UpdateKeyframes();
+            }
+
             var style = Style.Current;
             var rect = new Rectangle(Vector2.Zero, Size);
             var viewRect = _mainPanel.GetClientArea();
@@ -1575,6 +1602,7 @@ namespace FlaxEditor.GUI
             // Clear references to the controls
             _mainPanel = null;
             _contents = null;
+            _keyframesEditor = null;
 
             // Cleanup
             _points.Clear();
