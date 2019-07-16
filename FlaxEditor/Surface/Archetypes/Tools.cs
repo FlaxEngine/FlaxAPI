@@ -517,10 +517,10 @@ namespace FlaxEditor.Surface.Archetypes
             private void UpdateCurveKeyframes()
             {
                 var count = (int)Values[0];
-                var keyframes = new CurveEditor<T>.Keyframe[count];
+                var keyframes = new Curve<T>.Keyframe[count];
                 for (int i = 0; i < count; i++)
                 {
-                    keyframes[i] = new CurveEditor<T>.Keyframe
+                    keyframes[i] = new Curve<T>.Keyframe
                     {
                         Time = (float)Values[i * 4 + 1],
                         Value = (T)Values[i * 4 + 2],

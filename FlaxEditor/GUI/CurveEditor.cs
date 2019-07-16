@@ -180,36 +180,6 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
-        /// A single keyframe that can be injected into Bezier curve.
-        /// </summary>
-        public struct Keyframe
-        {
-            /// <summary>
-            /// The time of the keyframe.
-            /// </summary>
-            [EditorOrder(0), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The time of the keyframe.")]
-            public float Time;
-
-            /// <summary>
-            /// The value of the curve at keyframe.
-            /// </summary>
-            [EditorOrder(1), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The value of the curve at keyframe.")]
-            public T Value;
-
-            /// <summary>
-            /// The input tangent (going from the previous key to this one) of the key.
-            /// </summary>
-            [EditorOrder(2), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The input tangent (going from the previous key to this one) of the key."), EditorDisplay(null, "Tangent In")]
-            public T TangentIn;
-
-            /// <summary>
-            /// The output tangent (going from this key to next one) of the key.
-            /// </summary>
-            [EditorOrder(3), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The output tangent (going from this key to next one) of the key.")]
-            public T TangentOut;
-        }
-
-        /// <summary>
         /// The curve contents container control.
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
@@ -815,7 +785,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The keyframes collection.
         /// </summary>
-        protected readonly List<Keyframe> _keyframes = new List<Keyframe>();
+        protected readonly List<Curve<T>.Keyframe> _keyframes = new List<Curve<T>.Keyframe>();
 
         /// <summary>
         /// Occurs when keyframes collection gets changed (keyframe added or removed).
@@ -825,7 +795,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets the keyframes collection (read-only).
         /// </summary>
-        public IReadOnlyList<Keyframe> Keyframes => _keyframes;
+        public IReadOnlyList<Curve<T>.Keyframe> Keyframes => _keyframes;
 
         /// <summary>
         /// Gets or sets the view offset (via scroll bars).
@@ -912,17 +882,17 @@ namespace FlaxEditor.GUI
         /// Sets the keyframes collection.
         /// </summary>
         /// <param name="keyframes">The keyframes.</param>
-        public void SetKeyframes(IEnumerable<Keyframe> keyframes)
+        public void SetKeyframes(IEnumerable<Curve<T>.Keyframe> keyframes)
         {
             if (keyframes == null)
                 throw new ArgumentNullException(nameof(keyframes));
-            var keyframesArray = keyframes as Keyframe[] ?? keyframes.ToArray();
+            var keyframesArray = keyframes as Curve<T>.Keyframe[] ?? keyframes.ToArray();
             if (_keyframes.SequenceEqual(keyframesArray))
                 return;
             if (keyframesArray.Length > MaxKeyframes)
             {
                 var tmp = keyframesArray;
-                keyframesArray = new Keyframe[MaxKeyframes];
+                keyframesArray = new Curve<T>.Keyframe[MaxKeyframes];
                 Array.Copy(tmp, keyframesArray, MaxKeyframes);
             }
 
@@ -969,7 +939,7 @@ namespace FlaxEditor.GUI
             int pos = 0;
             while (pos < _keyframes.Count && _keyframes[pos].Time < keyframesPos.X)
                 pos++;
-            var k = new Keyframe
+            var k = new Curve<T>.Keyframe
             {
                 Time = keyframesPos.X,
             };
@@ -993,7 +963,7 @@ namespace FlaxEditor.GUI
             public List<int> KeyframeIndices;
             public bool IsDirty;
 
-            public KeyframesEditor(List<Keyframe> keyframes)
+            public KeyframesEditor(List<Curve<T>.Keyframe> keyframes)
             {
                 const float width = 280.0f;
                 const float height = 120.0f;
@@ -1024,7 +994,7 @@ namespace FlaxEditor.GUI
 
                 for (int i = 0; i < _editor.SelectionCount; i++)
                 {
-                    var keyframe = (Keyframe)_editor.Selection[i];
+                    var keyframe = (Curve<T>.Keyframe)_editor.Selection[i];
                     var index = KeyframeIndices[i];
                     Curve._keyframes[index] = keyframe;
                 }
@@ -1073,7 +1043,7 @@ namespace FlaxEditor.GUI
 
         private void EditKeyframes(Control control, Vector2 pos)
         {
-            var keyframes = new List<Keyframe>();
+            var keyframes = new List<Curve<T>.Keyframe>();
             var indices = new List<int>();
             for (int i = 0; i < _points.Count; i++)
             {
@@ -1096,7 +1066,7 @@ namespace FlaxEditor.GUI
         private void RemoveKeyframes()
         {
             bool edited = false;
-            var keyframes = new Dictionary<int, Keyframe>(_keyframes.Count);
+            var keyframes = new Dictionary<int, Curve<T>.Keyframe>(_keyframes.Count);
             for (int i = 0; i < _points.Count; i++)
             {
                 var p = _points[i];
@@ -1372,7 +1342,7 @@ namespace FlaxEditor.GUI
         /// <param name="k">The keyframe.</param>
         /// <param name="component">The keyframe value component index.</param>
         /// <returns>The point in time/value space.</returns>
-        private Vector2 GetKeyframePoint(ref Keyframe k, int component)
+        private Vector2 GetKeyframePoint(ref Curve<T>.Keyframe k, int component)
         {
             return new Vector2(k.Time, Accessor.GetCurveValue(ref k.Value, component));
         }
