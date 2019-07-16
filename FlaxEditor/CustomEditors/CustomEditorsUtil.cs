@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -122,13 +121,17 @@ namespace FlaxEditor.CustomEditors
             }
             if (targetType.IsGenericType)
             {
-                if (targetType.GetGenericTypeDefinition() == typeof(List<>))
-                {
-                    return new ListEditor();
-                }
                 if (DictionaryEditor.CanEditType(targetType))
                 {
                     return new DictionaryEditor();
+                }
+
+                // Use custom editor
+                var genericTypeDefinition = targetType.GetGenericTypeDefinition();
+                var type = Internal_GetCustomEditor(genericTypeDefinition);
+                if (type != null)
+                {
+                    return (CustomEditor)Activator.CreateInstance(type);
                 }
             }
 
