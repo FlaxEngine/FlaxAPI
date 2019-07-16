@@ -284,6 +284,7 @@
     <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />
+    <Compile Include="Engine\Curve.cs" />
     <Compile Include="Engine\FontReference.cs" />
     <Compile Include="Engine\Gamepad.cs" />
     <Compile Include="Engine\GamepadLayout.cs" />
