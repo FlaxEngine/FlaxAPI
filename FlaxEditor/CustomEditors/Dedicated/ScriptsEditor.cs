@@ -393,6 +393,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
     /// <seealso cref="CustomEditor" />
     public sealed class ScriptsEditor : SyncPointEditor
     {
+        private CheckBox[] _scriptToggles;
+
         /// <summary>
         /// Delegate for script drag start and event events.
         /// </summary>
@@ -540,6 +542,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var scripts = (Script[])Values[0];
             _scripts.AddRange(scripts);
             var elementType = typeof(Script);
+            _scriptToggles = new CheckBox[scripts.Length];
             for (int i = 0; i < scripts.Length; i++)
             {
                 var script = scripts[i];
@@ -577,6 +580,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     Parent = group.Panel
                 };
                 scriptToggle.StateChanged += ScriptToggleOnCheckChanged;
+                _scriptToggles[i] = scriptToggle;
 
                 // Add drag button to the group
                 const float dragIconSize = 14;
@@ -648,7 +652,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void ScriptToggleOnCheckChanged(CheckBox box)
         {
             var script = (Script)box.Tag;
-            script.Enabled = box.Checked;
+            if (script.Enabled == box.Checked)
+                return;
+
+            var action = ChangeScriptAction.ChangeEnabled(script, box.Checked);
+            action.Do();
+            Presenter?.Undo.AddAction(action);
         }
 
         private void SettingsButtonOnClicked(Image image, MouseButton mouseButton)
@@ -733,9 +742,23 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     ParentEditor.RebuildLayout();
                     return;
                 }
+
+                for (int i = 0; i < _scriptToggles.Length; i++)
+                {
+                    if (_scriptToggles[i] != null)
+                        _scriptToggles[i].Checked = scripts[i].Enabled;
+                }
             }
 
             base.Refresh();
+        }
+
+        /// <inheritdoc />
+        protected override void Deinitialize()
+        {
+            _scriptToggles = null;
+
+            base.Deinitialize();
         }
     }
 }
