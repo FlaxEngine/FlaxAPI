@@ -73,6 +73,7 @@
     <Compile Include="Content\Import\Request.cs" />
     <Compile Include="Content\Proxy\ParticleEmitterProxy.cs" />
     <Compile Include="Content\Proxy\ParticleSystemProxy.cs" />
+    <Compile Include="Content\Proxy\SceneAnimationProxy.cs" />
     <Compile Include="Content\Settings\LinuxPlatformSettings.cs" />
     <Compile Include="Content\Settings\NavigationSettings.cs" />
     <Compile Include="CustomEditors\Dedicated\CurveObjectEditor.cs" />
@@ -289,6 +290,7 @@
     <Compile Include="GUI\Timeline\ParticleEmitter.cs" />
     <Compile Include="GUI\Timeline\ParticleSystemTimeline.cs" />
     <Compile Include="GUI\Timeline\PositionHandle.cs" />
+    <Compile Include="GUI\Timeline\SceneAnimationTimeline.cs" />
     <Compile Include="GUI\Timeline\TimelineEdge.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
@@ -571,6 +573,7 @@
     <Compile Include="Windows\Assets\PrefabWindow.Hierarchy.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.Selection.cs" />
     <Compile Include="Windows\Assets\PreviewsCacheWindow.cs" />
+    <Compile Include="Windows\Assets\SceneAnimationWindow.cs" />
     <Compile Include="Windows\Assets\SkeletonMaskWindow.cs" />
     <Compile Include="Windows\Assets\SkinnedModelWindow.cs" />
     <Compile Include="Windows\Assets\SpriteAtlasWindow.cs" />
