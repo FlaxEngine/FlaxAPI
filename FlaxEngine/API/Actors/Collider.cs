@@ -32,11 +32,19 @@ namespace FlaxEngine
         internal void OnCollisionEnter(Collision collision)
         {
             CollisionEnter?.Invoke(collision);
+
+            var rigidbody = AttachedRigidBody;
+            if (rigidbody)
+                rigidbody.OnCollisionEnter(collision);
         }
 
         internal void OnCollisionExit(Collision collision)
         {
             CollisionExit?.Invoke(collision);
+
+            var rigidbody = AttachedRigidBody;
+            if (rigidbody)
+                rigidbody.OnCollisionExit(collision);
         }
 
         /// <summary>
@@ -52,11 +60,19 @@ namespace FlaxEngine
         internal void OnTriggerEnter(Collider collider)
         {
             TriggerEnter?.Invoke(collider);
+
+            var rigidbody = AttachedRigidBody;
+            if (rigidbody)
+                rigidbody.OnTriggerEnter(collider);
         }
 
         internal void OnTriggerExit(Collider collider)
         {
             TriggerExit?.Invoke(collider);
+
+            var rigidbody = AttachedRigidBody;
+            if (rigidbody)
+                rigidbody.OnTriggerExit(collider);
         }
 
         /// <summary>

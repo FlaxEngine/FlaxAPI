@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FlaxEngine.Assertions;
 
@@ -12,7 +13,7 @@ using FlaxEngine.Assertions;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Contains a collision information passed to the OnCollisionEnter/OnCollisionStay/OnCollisionExit events.
+    /// Contains a collision information passed to the OnCollisionEnter and OnCollisionExit events.
     /// </summary>
     public sealed class Collision : IEnumerable
     {
@@ -114,7 +115,7 @@ namespace FlaxEngine
             return new Collision(contactsCount);
         }
 
-        internal static unsafe Collision[] Internal_ExtractCollisions(byte[] data)
+        internal static unsafe void Internal_ExtractCollisions(byte[] data)
         {
             fixed (byte* dataPtr = data)
             {
@@ -122,8 +123,8 @@ namespace FlaxEngine
                 using (var stream = new BinaryReader(memoryStream))
                 {
                     int version = stream.ReadInt32();
-                    if (version != 1)
-                        return null;
+                    if (version != 2)
+                        return;
                     int collisionsCount = stream.ReadInt32();
 
                     if (_data == null || _data.Length < collisionsCount * 2)
@@ -148,21 +149,11 @@ namespace FlaxEngine
                     }
                 }
             }
-
-            return _data;
         }
 
         internal static void Internal_SendCollisions(int newStart, int newCount, int removedStart, int removedCount)
         {
             Collision c;
-
-            for (int i = 0; i < newCount;)
-            {
-                c = _data[newStart + i++];
-                c.ThisCollider?.OnCollisionEnter(c);
-                c = _data[newStart + i++];
-                c.ThisCollider?.OnCollisionEnter(c);
-            }
 
             for (int i = 0; i < removedCount;)
             {
@@ -172,12 +163,21 @@ namespace FlaxEngine
                 c.ThisCollider?.OnCollisionExit(c);
             }
 
+            for (int i = 0; i < newCount;)
+            {
+                c = _data[newStart + i++];
+                c.ThisCollider?.OnCollisionEnter(c);
+                c = _data[newStart + i++];
+                c.ThisCollider?.OnCollisionEnter(c);
+            }
+
             for (int i = 0; i < _dataUsed; i++)
                 _pool.Add(_data[i]);
             Array.Clear(_data, 0, _dataUsed);
             _dataUsed = 0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal unsafe void CopyFrom(CollisionData* data)
         {
             _impulse = data->Impulse;
@@ -191,10 +191,11 @@ namespace FlaxEngine
             ContactPointData* ptr = &data->Contacts0;
             for (int i = 0; i < data->ContactsCount; i++)
             {
-                _contacts[i] = new ContactPoint(ref ptr[i], ref data->ActorA, ref data->ActorB);
+                _contacts[i] = new ContactPoint(ref ptr[i]);
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void CopyFrom(Collision data)
         {
             _impulse = data._impulse;
@@ -207,6 +208,7 @@ namespace FlaxEngine
                 _contacts[i] = data._contacts[i];
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void SwapObjects()
         {
             var tmp1 = _velocityA;
@@ -216,9 +218,6 @@ namespace FlaxEngine
             var tmp2 = _actorA;
             _actorA = _actorB;
             _actorB = tmp2;
-
-            for (int i = 0; i < _contacts.Length; i++)
-                _contacts[i].SwapObjects();
         }
 
         [StructLayout(LayoutKind.Sequential)]

@@ -630,6 +630,11 @@ namespace FlaxEditor
             /// The particle emitter. See <see cref="FlaxEngine.ParticleSystem"/>.
             /// </summary>
             ParticleSystem = 6,
+
+            /// <summary>
+            /// The particle emitter. See <see cref="FlaxEngine.SceneAnimation"/>.
+            /// </summary>
+            SceneAnimation = 7,
         }
 
         /// <summary>

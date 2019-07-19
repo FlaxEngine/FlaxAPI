@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Runtime.InteropServices;
 
 // ReSharper disable ConvertToAutoProperty
@@ -16,8 +15,6 @@ namespace FlaxEngine
         private Vector3 _point;
         private float _separation;
         private Vector3 _normal;
-        private Guid _thisCollider;
-        private Guid _otherCollider;
 
         /// <summary>
         /// Gets the contact point location in the world space.
@@ -34,30 +31,11 @@ namespace FlaxEngine
         /// </summary>
         public Vector3 Normal => _normal;
 
-        /// <summary>
-        /// Gets the first collider in the contact point (this instance).
-        /// </summary>
-        public Collider ThisCollider => Object.Find<Collider>(ref _thisCollider);
-
-        /// <summary>
-        /// Gets the other collider in the contact point (other instance).
-        /// </summary>
-        public Collider OtherCollider => Object.Find<Collider>(ref _otherCollider);
-
-        internal ContactPoint(ref Collision.ContactPointData data, ref Guid colliderA, ref Guid colliderB)
+        internal ContactPoint(ref Collision.ContactPointData data)
         {
             _point = data.Point;
             _separation = data.Separation;
             _normal = data.Normal;
-            _thisCollider = colliderA;
-            _otherCollider = colliderB;
-        }
-
-        internal void SwapObjects()
-        {
-            var tmp = _thisCollider;
-            _thisCollider = _otherCollider;
-            _otherCollider = tmp;
         }
     }
 }

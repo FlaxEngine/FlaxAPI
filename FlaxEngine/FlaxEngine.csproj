@@ -134,6 +134,8 @@
     <Compile Include="API\BinaryAssets\ParticleSystem.Gen.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.cs" />
     <Compile Include="API\BinaryAssets\RawDataAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\SceneAnimation.cs" />
+    <Compile Include="API\BinaryAssets\SceneAnimation.Gen.cs" />
     <Compile Include="API\BinaryAssets\SkeletonMask.cs" />
     <Compile Include="API\BinaryAssets\SkeletonMask.Gen.cs" />
     <Compile Include="API\BinaryAssets\SkinnedModel.cs" />

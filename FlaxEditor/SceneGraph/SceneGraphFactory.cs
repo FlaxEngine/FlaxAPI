@@ -136,6 +136,9 @@ namespace FlaxEditor.SceneGraph
             for (int i = 0; i < childrenCount; i++)
             {
                 var child = node.Actor.GetChild(i);
+                if (child == null)
+                    continue;
+
                 var childNode = BuildActorNode(child);
                 if (childNode != null)
                     childNode.ParentNode = node;

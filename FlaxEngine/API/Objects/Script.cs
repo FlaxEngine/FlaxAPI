@@ -62,6 +62,76 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Called after the object is loaded.
+        /// </summary>
+        public virtual void OnAwake()
+        {
+        }
+
+        /// <summary>
+        /// Called when object becomes enabled and active.
+        /// </summary>
+        public virtual void OnEnable()
+        {
+        }
+
+        /// <summary>
+        /// Called when object becomes disabled and inactive.
+        /// </summary>
+        public virtual void OnDisable()
+        {
+        }
+
+        /// <summary>
+        /// Called before the object will be destroyed..
+        /// </summary>
+        public virtual void OnDestroy()
+        {
+        }
+
+        /// <summary>
+        /// Called when a script is enabled just before any of the Update methods is called for the first time.
+        /// </summary>
+        public virtual void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Called every frame if object is enabled.
+        /// </summary>
+        public virtual void OnUpdate()
+        {
+        }
+
+        /// <summary>
+        /// Called every frame (after gameplay Update) if object is enabled.
+        /// </summary>
+        public virtual void OnLateUpdate()
+        {
+        }
+
+        /// <summary>
+        /// Called every fixed framerate frame if object is enabled.
+        /// </summary>
+        public virtual void OnFixedUpdate()
+        {
+        }
+
+        /// <summary>
+        /// Called during drawing debug shapes in editor. Use <see cref="DebugDraw"/> to draw debug shapes and other visualization.
+        /// </summary>
+        public virtual void OnDebugDraw()
+        {
+        }
+
+        /// <summary>
+        /// Called during drawing debug shapes in editor when object is selected. Use <see cref="DebugDraw"/> to draw debug shapes and other visualization.
+        /// </summary>
+        public virtual void OnDebugDrawSelected()
+        {
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
