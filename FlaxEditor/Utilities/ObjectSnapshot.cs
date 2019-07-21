@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -55,7 +56,7 @@ namespace FlaxEditor.Utilities
 
             // Check if record object sub members (skip flax objects)
             // It's used for ref types bu not null types and with checking cyclic references
-            if ((memberType.IsClass || memberType.IsArray)
+            if ((memberType.IsClass || memberType.IsArray || typeof(IList).IsAssignableFrom(memberType))
                 && memberValue != null
                 && !refStack.Contains(memberValue))
             {
@@ -69,6 +70,20 @@ namespace FlaxEditor.Utilities
                     for (int i = 0; i < length; i++)
                     {
                         var elementValue = array.GetValue(i);
+                        GetEntries(new MemberInfoPath.Entry(member.Member, i), membersPath, type, result, values, refStack, elementType, elementValue);
+                    }
+                    refStack.Pop();
+                }
+                else if (typeof(IList).IsAssignableFrom(memberType))
+                {
+                    var list = (IList)memberValue;
+                    var elementType = memberType.GetGenericArguments()[0];
+                    var count = list.Count;
+
+                    refStack.Push(memberValue);
+                    for (int i = 0; i < count; i++)
+                    {
+                        var elementValue = list[i];
                         GetEntries(new MemberInfoPath.Entry(member.Member, i), membersPath, type, result, values, refStack, elementType, elementValue);
                     }
                     refStack.Pop();
@@ -92,7 +107,7 @@ namespace FlaxEditor.Utilities
             // Note: this should match Flax serialization rules and attributes (see ExtendedDefaultContractResolver)
 
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             for (int i = 0; i < fields.Length; i++)
             {
@@ -130,6 +145,10 @@ namespace FlaxEditor.Utilities
                     continue;
 
                 var attributes = p.GetCustomAttributes();
+
+                // Serialize non-public properties only with a proper attribute
+                if ((!p.GetMethod.IsPublic || !p.SetMethod.IsPublic) && !attributes.Any(x => x is SerializeAttribute))
+                    continue;
 
                 // Check if has attribute to skip serialization
                 bool noSerialize = false;
@@ -179,7 +198,7 @@ namespace FlaxEditor.Utilities
 
             //Debug.Log("-------------- CaptureSnapshot:  " + obj.GetType() + "  --------------");
             //for (int i = 0; i < values.Count; i++)
-            //    Debug.Log(members[i].Path.Path + " =  " + (values[i] ?? "<null>"));
+            //    Debug.Log(members[i].Path.Path + " = " + (values[i] ?? "<null>"));
 
             return new ObjectSnapshot(type, values, members);
         }
