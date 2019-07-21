@@ -117,11 +117,10 @@ namespace FlaxEditor.Surface.Archetypes
                     {
                         NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector2, 0, -1),
                         NodeElementArchetype.Factory.Output(1, "", ConnectionType.Object, 6),
-                        NodeElementArchetype.Factory.Output(2, "Color", ConnectionType.Vector4, 1),
-                        NodeElementArchetype.Factory.Output(3, "R", ConnectionType.Float, 2),
-                        NodeElementArchetype.Factory.Output(4, "G", ConnectionType.Float, 3),
-                        NodeElementArchetype.Factory.Output(5, "B", ConnectionType.Float, 4),
-                        NodeElementArchetype.Factory.Output(6, "A", ConnectionType.Float, 5),
+                        NodeElementArchetype.Factory.Output(2, "Vector", ConnectionType.Vector3, 1),
+                        NodeElementArchetype.Factory.Output(3, "X", ConnectionType.Float, 2),
+                        NodeElementArchetype.Factory.Output(4, "Y", ConnectionType.Float, 3),
+                        NodeElementArchetype.Factory.Output(5, "Z", ConnectionType.Float, 4),
                     }
                 },
                 {
