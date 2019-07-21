@@ -84,10 +84,10 @@ namespace FlaxEditor.Content.Create
                 return Editor.CreateAsset(Editor.NewAssetType.ParticleEmitter, ResultUrl);
                 break;
             case Templates.ConstantBurst:
-                templateName = "ConstantBurst";
+                templateName = "Constant Burst";
                 break;
             case Templates.PeriodicBurst:
-                templateName = "PeriodicBurst";
+                templateName = "Periodic Burst";
                 break;
             case Templates.Smoke:
                 templateName = "Smoke";
@@ -96,7 +96,7 @@ namespace FlaxEditor.Content.Create
                 templateName = "Sparks";
                 break;
             case Templates.RibbonSpiral:
-                templateName = "RibbonSpiral";
+                templateName = "Ribbon Spiral";
                 break;
             default: throw new ArgumentOutOfRangeException();
             }
