@@ -489,14 +489,14 @@ namespace FlaxEditor.Surface
 
         private void CurrentInputTextChanged(string currentInputText)
         {
-            var selection = SelectedNodes;
-            if (selection.Count != 1)
-                return;
             if (string.IsNullOrEmpty(currentInputText))
                 return;
             if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey))
                 return;
             if (_activeVisjectCM == null || _activeVisjectCM.Visible)
+                return;
+            var selection = SelectedNodes;
+            if (selection.Count != 1)
                 return;
 
             // # => color
@@ -506,7 +506,7 @@ namespace FlaxEditor.Surface
             // Multiple nodes selected?
 
             var node = selection[0];
-            var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(box => box.IsOutput);
+            var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(box => box != null && box.IsOutput);
             if (firstOutputBox == null)
                 return;
 
