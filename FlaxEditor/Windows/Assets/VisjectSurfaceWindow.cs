@@ -4,12 +4,16 @@ using System;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.GUI.Drag;
 using FlaxEditor.History;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -24,62 +28,6 @@ namespace FlaxEditor.Windows.Assets
     where TSurface : VisjectSurface
     where TPreview : AssetPreview
     {
-        protected class EditParamAction : IUndoAction
-        {
-            public VisjectSurfaceWindow<TAsset, TSurface, TPreview> Window;
-            public int Index;
-            public object Before;
-            public object After;
-
-            /// <inheritdoc />
-            public string ActionString => "Edit parameter";
-
-            /// <inheritdoc />
-            public void Do()
-            {
-                Set(After);
-            }
-
-            /// <inheritdoc />
-            public void Undo()
-            {
-                Set(Before);
-            }
-
-            private void Set(object value)
-            {
-                var param = Window.Surface.Parameters[Index];
-                var valueToSet = value;
-
-                // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
-                switch (param.Type)
-                {
-                case ParameterType.Asset:
-                case ParameterType.Actor:
-                case ParameterType.CubeTexture:
-                case ParameterType.Texture:
-                case ParameterType.NormalMap:
-                case ParameterType.RenderTarget:
-                case ParameterType.RenderTargetArray:
-                case ParameterType.RenderTargetCube:
-                case ParameterType.RenderTargetVolume:
-                    valueToSet = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
-                    break;
-                }
-
-                param.Value = valueToSet;
-                Window.OnParamEditUndo(this, value);
-            }
-
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                Window = null;
-                Before = null;
-                After = null;
-            }
-        }
-
         protected class RenameParamAction : IUndoAction
         {
             public VisjectSurfaceWindow<TAsset, TSurface, TPreview> Window;
@@ -107,6 +55,7 @@ namespace FlaxEditor.Windows.Assets
                 var param = Window.Surface.Parameters[Index];
                 param.Name = value;
                 Window.Surface.OnParamRenamed(param);
+                Window.OnParamRenameUndo(this);
             }
 
             /// <inheritdoc />
@@ -154,13 +103,12 @@ namespace FlaxEditor.Windows.Assets
                 if (Type == ParameterType.NormalMap)
                 {
                     // Use default normal map texture (don't load asset here, just lookup registry for id at path)
-                    string typeName;
-                    Guid id;
-                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out typeName, out id);
+                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out _, out var id);
                     param.Value = id;
                 }
                 Window.Surface.Parameters.Insert(Index, param);
                 Window.Surface.OnParamCreated(param);
+                Window.OnParamAddUndo(this);
             }
 
             private void Remove()
@@ -170,12 +118,197 @@ namespace FlaxEditor.Windows.Assets
                 Type = param.Type;
                 Window.Surface.Parameters.RemoveAt(Index);
                 Window.Surface.OnParamDeleted(param);
+                Window.OnParamRemoveUndo(this);
             }
 
             /// <inheritdoc />
             public void Dispose()
             {
                 Window = null;
+            }
+        }
+
+        /// <summary>
+        /// Custom editor for editing material parameters collection.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
+        protected class ParametersEditor : CustomEditor
+        {
+            private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
+
+            /// <inheritdoc />
+            public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
+
+            /// <inheritdoc />
+            public override void Initialize(LayoutElementsContainer layout)
+            {
+                var window = Values[0] as VisjectSurfaceWindow<TAsset, TSurface, TPreview>;
+                var asset = window?.Asset;
+                if (asset == null)
+                {
+                    layout.Label("No parameters");
+                    return;
+                }
+                if (!asset.IsLoaded)
+                {
+                    layout.Label("Loading...");
+                    return;
+                }
+                var parameters = window.Surface.Parameters;
+
+                for (int i = 0; i < parameters.Count; i++)
+                {
+                    var p = parameters[i];
+                    if (!p.IsPublic)
+                        continue;
+
+                    var pIndex = i;
+                    var pValue = p.Value;
+                    Type pType;
+                    object[] attributes = null;
+                    switch (p.Type)
+                    {
+                    case ParameterType.CubeTexture:
+                        pType = typeof(CubeTexture);
+                        break;
+                    case ParameterType.Texture:
+                    case ParameterType.NormalMap:
+                        pType = typeof(Texture);
+                        break;
+                    case ParameterType.RenderTarget:
+                    case ParameterType.RenderTargetArray:
+                    case ParameterType.RenderTargetCube:
+                    case ParameterType.RenderTargetVolume:
+                        pType = typeof(RenderTarget);
+                        break;
+                    default:
+                        pType = p.Value.GetType();
+                        // TODO: support custom attributes with defined value range for parameter (min, max)
+                        attributes = DefaultAttributes;
+                        break;
+                    }
+
+                    var propertyValue = new CustomValueContainer
+                    (
+                        pType,
+                        pValue,
+                        (instance, index) => ((VisjectSurfaceWindow<TAsset, TSurface, TPreview>)instance).GetParameter(pIndex),
+                        (instance, index, value) => ((VisjectSurfaceWindow<TAsset, TSurface, TPreview>)instance).SetParameter(pIndex, value),
+                        attributes
+                    );
+
+                    var propertyLabel = new DragablePropertyNameLabel(p.Name)
+                    {
+                        Tag = pIndex,
+                        Drag = DragParameter
+                    };
+                    propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(pIndex, label);
+                    propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
+                    var property = layout.AddPropertyItem(propertyLabel);
+                    property.Object(propertyValue);
+                }
+
+                // Parameters creating
+                var newParameterTypes = window.NewParameterTypes;
+                if (newParameterTypes != null)
+                {
+                    if (parameters.Count > 0)
+                        layout.Space(10);
+
+                    var paramType = layout.Enum(newParameterTypes);
+                    paramType.Value = (int)ParameterType.Float;
+                    var newParam = layout.Button("Add parameter");
+                    newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
+                }
+            }
+
+            private DragData DragParameter(DragablePropertyNameLabel label)
+            {
+                var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
+                var parameter = window.Surface.Parameters[(int)label.Tag];
+                return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
+            }
+
+            /// <summary>
+            /// Shows the parameter context menu.
+            /// </summary>
+            /// <param name="index">The index.</param>
+            /// <param name="label">The label control.</param>
+            /// <param name="targetLocation">The target location.</param>
+            private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
+            {
+                var contextMenu = new ContextMenu();
+                contextMenu.AddButton("Rename", () => StartParameterRenaming(index, label));
+                contextMenu.AddButton("Delete", () => DeleteParameter(index));
+                contextMenu.Show(label, targetLocation);
+            }
+
+            /// <summary>
+            /// Adds the parameter.
+            /// </summary>
+            /// <param name="type">The type.</param>
+            private void AddParameter(ParameterType type)
+            {
+                var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
+                var material = window?.Asset;
+                if (material == null || !material.IsLoaded)
+                    return;
+                var action = new AddRemoveParamAction
+                {
+                    Window = window,
+                    IsAdd = true,
+                    Name = "New parameter",
+                    Type = type,
+                    Index = window.Surface.Parameters.Count,
+                };
+                window.Surface.Undo.AddAction(action);
+                action.Do();
+            }
+
+            /// <summary>
+            /// Starts renaming parameter.
+            /// </summary>
+            /// <param name="index">The index.</param>
+            /// <param name="label">The label control.</param>
+            private void StartParameterRenaming(int index, Control label)
+            {
+                var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
+                var parameter = window.Surface.Parameters[(int)label.Tag];
+                var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
+                dialog.Tag = index;
+                dialog.Renamed += OnParameterRenamed;
+            }
+
+            private void OnParameterRenamed(RenamePopup renamePopup)
+            {
+                var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
+                var index = (int)renamePopup.Tag;
+                var action = new RenameParamAction
+                {
+                    Window = window,
+                    Index = index,
+                    Before = window.Surface.Parameters[index].Name,
+                    After = renamePopup.Text,
+                };
+                window.Surface.Undo.AddAction(action);
+                action.Do();
+            }
+
+            /// <summary>
+            /// Removes the parameter.
+            /// </summary>
+            /// <param name="index">The index.</param>
+            private void DeleteParameter(int index)
+            {
+                var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
+                var action = new AddRemoveParamAction
+                {
+                    Window = window,
+                    IsAdd = false,
+                    Index = index,
+                };
+                window.Surface.Undo.AddAction(action);
+                action.Do();
             }
         }
 
@@ -232,6 +365,11 @@ namespace FlaxEditor.Windows.Assets
         /// The undo.
         /// </summary>
         protected Undo _undo;
+
+        /// <summary>
+        /// The new parameter types enum type to use. Null to disable adding new parameters. Enum items must have values matching the <see cref="ParameterType"/> enum.
+        /// </summary>
+        protected Type NewParameterTypes;
 
         /// <summary>
         /// Gets the Visject Surface.
@@ -295,7 +433,10 @@ namespace FlaxEditor.Windows.Assets
         private void OnUndo(IUndoAction action)
         {
             // Hack for emitter properties proxy object
-            if (action is MultiUndoAction multiUndo && multiUndo.Actions.Length == 1 && multiUndo.Actions[0] is UndoActionObject undoActionObject && undoActionObject.Target == _propertiesEditor.Selection[0])
+            if (action is MultiUndoAction multiUndo &&
+                multiUndo.Actions.Length == 1 &&
+                multiUndo.Actions[0] is UndoActionObject undoActionObject &&
+                undoActionObject.Target == _propertiesEditor.Selection[0])
             {
                 OnPropertyEdited();
                 UpdateToolstrip();
@@ -306,6 +447,47 @@ namespace FlaxEditor.Windows.Assets
             MarkAsEdited();
             UpdateToolstrip();
             _propertiesEditor.BuildLayoutOnUpdate();
+        }
+
+        /// <summary>
+        /// Gets the asset parameter.
+        /// </summary>
+        /// <param name="index">The zero-based parameter index.</param>
+        /// <returns>The value.</returns>
+        protected virtual object GetParameter(int index)
+        {
+            var param = Surface.Parameters[index];
+            return param.Value;
+        }
+
+        /// <summary>
+        /// Sets the asset parameter.
+        /// </summary>
+        /// <param name="index">The zero-based parameter index.</param>
+        /// <param name="value">The value to set.</param>
+        protected virtual void SetParameter(int index, object value)
+        {
+            var param = Surface.Parameters[index];
+            var valueToSet = value;
+
+            // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
+            switch (param.Type)
+            {
+            case ParameterType.Asset:
+            case ParameterType.Actor:
+            case ParameterType.CubeTexture:
+            case ParameterType.Texture:
+            case ParameterType.NormalMap:
+            case ParameterType.RenderTarget:
+            case ParameterType.RenderTargetArray:
+            case ParameterType.RenderTargetCube:
+            case ParameterType.RenderTargetVolume:
+                valueToSet = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
+                break;
+            }
+
+            param.Value = valueToSet;
+            _paramValueChange = true;
         }
 
         /// <summary>
@@ -428,15 +610,6 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
-        /// Called when parameter edit undo action is performed.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        /// <param name="value">The new parameter value.</param>
-        protected virtual void OnParamEditUndo(EditParamAction action, object value)
-        {
-        }
-
-        /// <summary>
         /// Called when parameter rename undo action is performed.
         /// </summary>
         /// <param name="action">The action.</param>
@@ -450,6 +623,7 @@ namespace FlaxEditor.Windows.Assets
         /// <param name="action">The action.</param>
         protected virtual void OnParamAddUndo(AddRemoveParamAction action)
         {
+            _refreshPropertiesOnLoad = true;
         }
 
         /// <summary>
@@ -458,6 +632,9 @@ namespace FlaxEditor.Windows.Assets
         /// <param name="action">The action.</param>
         protected virtual void OnParamRemoveUndo(AddRemoveParamAction action)
         {
+            _refreshPropertiesOnLoad = true;
+            //_propertiesEditor.BuildLayoutOnUpdate();
+            _propertiesEditor.BuildLayout();
         }
 
         /// <summary>

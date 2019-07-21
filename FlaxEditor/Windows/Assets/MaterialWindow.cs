@@ -1,20 +1,15 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Xml;
+using System.Collections.Generic;
 using FlaxEditor.Content;
-using FlaxEditor.CustomEditors;
-using FlaxEditor.CustomEditors.GUI;
-using FlaxEditor.GUI;
-using FlaxEditor.GUI.ContextMenu;
-using FlaxEditor.GUI.Drag;
-using FlaxEditor.History;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
-using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Local
 
 namespace FlaxEditor.Windows.Assets
@@ -27,6 +22,25 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="MaterialPreview" />
     public sealed class MaterialWindow : VisjectSurfaceWindow<Material, MaterialSurface, MaterialPreview>
     {
+        private enum NewParameterType
+        {
+            Float = ParameterType.Float,
+            Bool = ParameterType.Bool,
+            Integer = ParameterType.Integer,
+            Vector2 = ParameterType.Vector2,
+            Vector3 = ParameterType.Vector3,
+            Vector4 = ParameterType.Vector4,
+            Color = ParameterType.Color,
+            Texture = ParameterType.Texture,
+            CubeTexture = ParameterType.CubeTexture,
+            NormalMap = ParameterType.NormalMap,
+            RenderTarget = ParameterType.RenderTarget,
+            RenderTargetArray = ParameterType.RenderTargetArray,
+            RenderTargetCube = ParameterType.RenderTargetCube,
+            RenderTargetVolume = ParameterType.RenderTargetVolume,
+            Matrix = ParameterType.Matrix,
+        }
+
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
@@ -91,268 +105,24 @@ namespace FlaxEditor.Windows.Assets
 
             [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor)), NoSerialize]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
-            public MaterialWindow MaterialWinRef { get; set; }
+            public MaterialWindow Window { get; set; }
 
-            /// <summary>
-            /// Custom editor for editing material parameters collection.
-            /// </summary>
-            /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
-            public class ParametersEditor : CustomEditor
+            [HideInEditor, Serialize]
+            // ReSharper disable once UnusedMember.Local
+            public List<SurfaceParameter> Parameters
             {
-                private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
-                private int _parametersHash;
-
-                private enum NewParameterType
-                {
-                    Bool = (int)ParameterType.Bool,
-                    Integer = (int)ParameterType.Integer,
-                    Float = (int)ParameterType.Float,
-                    Vector2 = (int)ParameterType.Vector2,
-                    Vector3 = (int)ParameterType.Vector3,
-                    Vector4 = (int)ParameterType.Vector4,
-                    Color = (int)ParameterType.Color,
-                    Texture = (int)ParameterType.Texture,
-                    CubeTexture = (int)ParameterType.CubeTexture,
-                    NormalMap = (int)ParameterType.NormalMap,
-                    RenderTarget = (int)ParameterType.RenderTarget,
-                    RenderTargetArray = (int)ParameterType.RenderTargetArray,
-                    RenderTargetCube = (int)ParameterType.RenderTargetCube,
-                    RenderTargetVolume = (int)ParameterType.RenderTargetVolume,
-                    Matrix = (int)ParameterType.Matrix,
-                }
-
-                /// <inheritdoc />
-                public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
-
-                /// <inheritdoc />
-                public override void Initialize(LayoutElementsContainer layout)
-                {
-                    var materialWin = Values[0] as MaterialWindow;
-                    var material = materialWin?.Asset;
-                    if (material == null)
-                    {
-                        _parametersHash = -1;
-                        layout.Label("No parameters");
-                        return;
-                    }
-                    if (!material.IsLoaded)
-                    {
-                        _parametersHash = -2;
-                        layout.Label("Loading...");
-                        return;
-                    }
-                    _parametersHash = material._parametersHash;
-                    var parameters = material.Parameters;
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        var p = parameters[i];
-                        if (!p.IsPublic)
-                            continue;
-
-                        var pIndex = i;
-                        var pValue = p.Value;
-                        Type pType;
-                        object[] attributes = null;
-                        switch (p.Type)
-                        {
-                        case MaterialParameterType.CubeTexture:
-                            pType = typeof(CubeTexture);
-                            break;
-                        case MaterialParameterType.Texture:
-                        case MaterialParameterType.NormalMap:
-                            pType = typeof(Texture);
-                            break;
-                        case MaterialParameterType.RenderTarget:
-                        case MaterialParameterType.RenderTargetArray:
-                        case MaterialParameterType.RenderTargetCube:
-                        case MaterialParameterType.RenderTargetVolume:
-                            pType = typeof(RenderTarget);
-                            break;
-                        default:
-                            pType = p.Value.GetType();
-                            // TODO: support custom attributes with defined value range for parameter (min, max)
-                            attributes = DefaultAttributes;
-                            break;
-                        }
-
-                        var propertyValue = new CustomValueContainer(
-                            pType,
-                            pValue,
-                            (instance, index) =>
-                            {
-                                // Get material parameter
-                                var win = (MaterialWindow)instance;
-                                return win.Asset.Parameters[pIndex].Value;
-                            },
-                            (instance, index, value) =>
-                            {
-                                // Set material parameter and surface parameter
-                                var win = (MaterialWindow)instance;
-                                var action = new EditParamAction
-                                {
-                                    Window = win,
-                                    Index = pIndex,
-                                    Before = win.Asset.Parameters[pIndex].Value,
-                                    After = value,
-                                };
-                                win.Surface.Undo.AddAction(action);
-                                action.Do();
-                                win._paramValueChange = true;
-                            },
-                            attributes
-                        );
-
-                        var propertyLabel = new DragablePropertyNameLabel(p.Name);
-                        propertyLabel.Tag = pIndex;
-                        propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(pIndex, label);
-                        propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
-                        propertyLabel.Drag = DragParameter;
-                        var property = layout.AddPropertyItem(propertyLabel);
-                        property.Object(propertyValue);
-                    }
-
-                    if (parameters.Length > 0)
-                        layout.Space(10);
-
-                    // Parameters creating
-                    var paramType = layout.Enum(typeof(NewParameterType));
-                    paramType.Value = (int)NewParameterType.Float;
-                    var newParam = layout.Button("Add parameter");
-                    newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
-                }
-
-                private DragData DragParameter(DragablePropertyNameLabel label)
-                {
-                    var win = (MaterialWindow)Values[0];
-                    var material = win.Asset;
-                    var parameter = material.Parameters[(int)label.Tag];
-                    return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
-                }
-
-                /// <summary>
-                /// Shows the parameter context menu.
-                /// </summary>
-                /// <param name="index">The index.</param>
-                /// <param name="label">The label control.</param>
-                /// <param name="targetLocation">The target location.</param>
-                private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
-                {
-                    var contextMenu = new ContextMenu();
-                    contextMenu.AddButton("Rename", () => StartParameterRenaming(index, label));
-                    contextMenu.AddButton("Delete", () => DeleteParameter(index));
-                    contextMenu.Show(label, targetLocation);
-                }
-
-                /// <summary>
-                /// Adds the parameter.
-                /// </summary>
-                /// <param name="type">The type.</param>
-                private void AddParameter(ParameterType type)
-                {
-                    var window = Values[0] as MaterialWindow;
-                    var material = window?.Asset;
-                    if (material == null || !material.IsLoaded)
-                        return;
-
-                    var action = new AddRemoveParamAction
-                    {
-                        Window = window,
-                        IsAdd = true,
-                        Name = "New parameter",
-                        Type = type,
-                        Index = window.Surface.Parameters.Count,
-                    };
-                    window.Surface.Undo.AddAction(action);
-                    action.Do();
-                }
-
-                /// <summary>
-                /// Starts renaming parameter.
-                /// </summary>
-                /// <param name="index">The index.</param>
-                /// <param name="label">The label control.</param>
-                private void StartParameterRenaming(int index, Control label)
-                {
-                    var win = (MaterialWindow)Values[0];
-                    var material = win.Asset;
-                    var parameter = material.Parameters[index];
-                    var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
-                    dialog.Tag = index;
-                    dialog.Renamed += OnParameterRenamed;
-                }
-
-                private void OnParameterRenamed(RenamePopup renamePopup)
-                {
-                    var index = (int)renamePopup.Tag;
-                    var win = (MaterialWindow)Values[0];
-
-                    var action = new RenameParamAction
-                    {
-                        Window = win,
-                        Index = index,
-                        Before = win.Surface.Parameters[index].Name,
-                        After = renamePopup.Text,
-                    };
-                    win.Surface.Undo.AddAction(action);
-                    action.Do();
-                }
-
-                /// <summary>
-                /// Removes the parameter.
-                /// </summary>
-                /// <param name="index">The index.</param>
-                private void DeleteParameter(int index)
-                {
-                    var win = (MaterialWindow)Values[0];
-
-                    var action = new AddRemoveParamAction
-                    {
-                        Window = win,
-                        IsAdd = false,
-                        Index = index,
-                    };
-                    win.Surface.Undo.AddAction(action);
-                    action.Do();
-                }
-
-                /// <inheritdoc />
-                public override void Refresh()
-                {
-                    base.Refresh();
-
-                    var materialWin = Values[0] as MaterialWindow;
-                    var material = materialWin?.Asset;
-                    int parametersHash = -1;
-                    if (material)
-                    {
-                        if (material.IsLoaded)
-                        {
-                            var parameters = material.Parameters; // need to ask for params here to sync valid hash   
-                            parametersHash = material._parametersHash;
-                        }
-                        else
-                        {
-                            parametersHash = -2;
-                        }
-                    }
-
-                    if (parametersHash != _parametersHash)
-                    {
-                        // Parameters has been modified (loaded/unloaded/edited)
-                        RebuildLayout();
-                    }
-                }
+                get => Window.Surface.Parameters;
+                set => throw new Exception("No setter.");
             }
 
             /// <summary>
             /// Gathers parameters from the specified material.
             /// </summary>
-            /// <param name="materialWin">The material window.</param>
-            public void OnLoad(MaterialWindow materialWin)
+            /// <param name="window">The window.</param>
+            public void OnLoad(MaterialWindow window)
             {
                 // Update cache
-                var material = materialWin.Asset;
+                var material = window.Asset;
                 var info = material.Info;
                 Wireframe = (info.Flags & MaterialFlags.Wireframe) != 0;
                 TwoSided = (info.Flags & MaterialFlags.TwoSided) != 0;
@@ -375,7 +145,7 @@ namespace FlaxEditor.Windows.Assets
                 Domain = info.Domain;
 
                 // Link
-                MaterialWinRef = materialWin;
+                Window = window;
             }
 
             /// <summary>
@@ -421,7 +191,7 @@ namespace FlaxEditor.Windows.Assets
             public void OnClean()
             {
                 // Unlink
-                MaterialWinRef = null;
+                Window = null;
             }
         }
 
@@ -431,6 +201,8 @@ namespace FlaxEditor.Windows.Assets
         public MaterialWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            NewParameterTypes = typeof(NewParameterType);
+
             // Asset preview
             _preview = new MaterialPreview(true)
             {
@@ -492,12 +264,11 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        protected override void OnParamEditUndo(EditParamAction action, object value)
+        protected override void SetParameter(int index, object value)
         {
-            base.OnParamEditUndo(action, value);
+            Asset.Parameters[index].Value = value;
 
-            // Update the asset value to have nice live preview
-            Asset.Parameters[action.Index].Value = value;
+            base.SetParameter(index, value);
         }
 
         /// <inheritdoc />

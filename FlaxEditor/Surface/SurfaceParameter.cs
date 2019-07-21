@@ -58,6 +58,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The metadata.
         /// </summary>
+        [NoSerialize, HideInEditor]
         public readonly SurfaceMeta Meta = new SurfaceMeta();
 
         /// <summary>

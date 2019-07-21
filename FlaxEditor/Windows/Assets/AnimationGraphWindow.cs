@@ -1,12 +1,10 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.Content;
-using FlaxEditor.CustomEditors;
-using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
-using FlaxEditor.GUI.Drag;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
@@ -14,6 +12,8 @@ using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Local
 
 namespace FlaxEditor.Windows.Assets
@@ -27,6 +27,19 @@ namespace FlaxEditor.Windows.Assets
     public sealed class AnimationGraphWindow : VisjectSurfaceWindow<AnimationGraph, AnimGraphSurface, AnimatedModelPreview>
     {
         internal static Guid BaseModelId = new Guid(1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+        private enum NewParameterType
+        {
+            Float = ParameterType.Float,
+            Bool = ParameterType.Bool,
+            Integer = ParameterType.Integer,
+            Vector2 = ParameterType.Vector2,
+            Vector3 = ParameterType.Vector3,
+            Vector4 = ParameterType.Vector4,
+            Color = ParameterType.Color,
+            Rotation = ParameterType.Rotation,
+            Transform = ParameterType.Transform,
+        }
 
         private sealed class AnimationGraphPreview : AnimatedModelPreview
         {
@@ -97,7 +110,7 @@ namespace FlaxEditor.Windows.Assets
         {
             private SkinnedModel _baseModel;
 
-            [EditorOrder(10), EditorDisplay("General"), Tooltip("The base model used to preview the animation and prepare the graph (skeleton bones sstructure must match in instanced AnimationModel actors)")]
+            [EditorOrder(10), EditorDisplay("General"), Tooltip("The base model used to preview the animation and prepare the graph (skeleton bones structure must match in instanced AnimationModel actors)")]
             public SkinnedModel BaseModel
             {
                 get => _baseModel;
@@ -106,253 +119,22 @@ namespace FlaxEditor.Windows.Assets
                     if (_baseModel != value)
                     {
                         _baseModel = value;
-                        if (WindowReference != null)
-                            WindowReference.PreviewActor.SkinnedModel = _baseModel;
+                        if (Window != null)
+                            Window.PreviewActor.SkinnedModel = _baseModel;
                     }
                 }
             }
 
             [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor)), NoSerialize]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
-            public AnimationGraphWindow WindowReference { get; set; }
+            public AnimationGraphWindow Window { get; set; }
 
-            /// <summary>
-            /// Custom editor for editing graph parameters collection.
-            /// </summary>
-            /// <seealso cref="FlaxEditor.CustomEditors.CustomEditor" />
-            public class ParametersEditor : CustomEditor
+            [HideInEditor, Serialize]
+            // ReSharper disable once UnusedMember.Local
+            public List<SurfaceParameter> Parameters
             {
-                private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
-                private int _parametersHash;
-
-                private enum NewParameterType
-                {
-                    Bool = (int)ParameterType.Bool,
-                    Integer = (int)ParameterType.Integer,
-                    Float = (int)ParameterType.Float,
-                    Vector2 = (int)ParameterType.Vector2,
-                    Vector3 = (int)ParameterType.Vector3,
-                    Vector4 = (int)ParameterType.Vector4,
-                    Color = (int)ParameterType.Color,
-                    Rotation = (int)ParameterType.Rotation,
-                    Transform = (int)ParameterType.Transform,
-                }
-
-                /// <inheritdoc />
-                public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
-
-                /// <inheritdoc />
-                public override void Initialize(LayoutElementsContainer layout)
-                {
-                    var window = Values[0] as AnimationGraphWindow;
-                    var asset = window?.Asset;
-                    if (asset == null)
-                    {
-                        _parametersHash = -1;
-                        layout.Label("No parameters");
-                        return;
-                    }
-                    if (!asset.IsLoaded)
-                    {
-                        _parametersHash = -2;
-                        layout.Label("Loading...");
-                        return;
-                    }
-                    var parameters = window.PreviewActor.Parameters;
-                    if (parameters == null || parameters.Length == 0)
-                    {
-                        _parametersHash = -1;
-                        layout.Label("No parameters");
-                        return;
-                    }
-                    _parametersHash = window.PreviewActor._parametersHash;
-
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        var p = parameters[i];
-                        if (!p.IsPublic)
-                            continue;
-
-                        var pIndex = i;
-                        var pValue = p.Value;
-                        Type pType;
-                        object[] attributes = null;
-                        switch (p.Type)
-                        {
-                        case AnimationGraphParameterType.Asset:
-                            pType = typeof(Asset);
-                            break;
-                        default:
-                            pType = p.Value.GetType();
-                            // TODO: support custom attributes with defined value range for parameter (min, max)
-                            attributes = DefaultAttributes;
-                            break;
-                        }
-
-                        var propertyValue = new CustomValueContainer(
-                            pType,
-                            pValue,
-                            (instance, index) =>
-                            {
-                                // Get parameter
-                                var win = (AnimationGraphWindow)instance;
-                                return win.PreviewActor.Parameters[pIndex].Value;
-                            },
-                            (instance, index, value) =>
-                            {
-                                // Set parameter and surface parameter
-                                var win = (AnimationGraphWindow)instance;
-                                var action = new EditParamAction
-                                {
-                                    Window = win,
-                                    Index = pIndex,
-                                    Before = win.PreviewActor.Parameters[pIndex].Value,
-                                    After = value,
-                                };
-                                win.Surface.Undo.AddAction(action);
-                                action.Do();
-                                win._paramValueChange = true;
-                            },
-                            attributes
-                        );
-
-                        var propertyLabel = new DragablePropertyNameLabel(p.Name);
-                        propertyLabel.Tag = pIndex;
-                        propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(label);
-                        propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(label, ref location);
-                        propertyLabel.Drag = DragParameter;
-                        var property = layout.AddPropertyItem(propertyLabel);
-                        property.Object(propertyValue);
-                    }
-
-                    if (parameters.Length > 0)
-                        layout.Space(10);
-
-                    // Parameters creating
-                    var paramType = layout.Enum(typeof(NewParameterType));
-                    paramType.Value = (int)NewParameterType.Float;
-                    var newParam = layout.Button("Add parameter");
-                    newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
-                }
-
-                private DragData DragParameter(DragablePropertyNameLabel label)
-                {
-                    var win = (AnimationGraphWindow)Values[0];
-                    var animatedModel = win.PreviewActor;
-                    var parameter = animatedModel.Parameters[(int)label.Tag];
-                    return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
-                }
-
-                /// <summary>
-                /// Shows the parameter context menu.
-                /// </summary>
-                /// <param name="label">The label control.</param>
-                /// <param name="targetLocation">The target location.</param>
-                private void ShowParameterMenu(ClickablePropertyNameLabel label, ref Vector2 targetLocation)
-                {
-                    var contextMenu = new ContextMenu();
-                    contextMenu.AddButton("Rename", () => StartParameterRenaming(label));
-                    contextMenu.AddButton("Delete", () => DeleteParameter((int)label.Tag));
-                    contextMenu.Show(label, targetLocation);
-                }
-
-                /// <summary>
-                /// Adds the parameter.
-                /// </summary>
-                /// <param name="type">The type.</param>
-                private void AddParameter(ParameterType type)
-                {
-                    var window = Values[0] as AnimationGraphWindow;
-                    var asset = window?.Asset;
-                    if (asset == null || !asset.IsLoaded)
-                        return;
-
-                    var action = new AddRemoveParamAction
-                    {
-                        Window = window,
-                        IsAdd = true,
-                        Name = "New parameter",
-                        Type = type,
-                        Index = window.Surface.Parameters.Count,
-                    };
-                    window.Surface.Undo.AddAction(action);
-                    action.Do();
-                }
-
-                /// <summary>
-                /// Starts renaming parameter.
-                /// </summary>
-                /// <param name="label">The label control.</param>
-                private void StartParameterRenaming(ClickablePropertyNameLabel label)
-                {
-                    var win = (AnimationGraphWindow)Values[0];
-                    var animatedModel = win.PreviewActor;
-                    var parameter = animatedModel.Parameters[(int)label.Tag];
-                    var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
-                    dialog.Tag = label;
-                    dialog.Renamed += OnParameterRenamed;
-                }
-
-                private void OnParameterRenamed(RenamePopup renamePopup)
-                {
-                    var win = (AnimationGraphWindow)Values[0];
-                    var label = (ClickablePropertyNameLabel)renamePopup.Tag;
-                    var index = (int)label.Tag;
-
-                    var action = new RenameParamAction
-                    {
-                        Window = win,
-                        Index = index,
-                        Before = win.Surface.Parameters[index].Name,
-                        After = renamePopup.Text,
-                    };
-                    win.Surface.Undo.AddAction(action);
-                    action.Do();
-                }
-
-                /// <summary>
-                /// Removes the parameter.
-                /// </summary>
-                /// <param name="index">The index.</param>
-                private void DeleteParameter(int index)
-                {
-                    var win = (AnimationGraphWindow)Values[0];
-
-                    var action = new AddRemoveParamAction
-                    {
-                        Window = win,
-                        IsAdd = false,
-                        Index = index,
-                    };
-                    win.Surface.Undo.AddAction(action);
-                    action.Do();
-                }
-
-                /// <inheritdoc />
-                public override void Refresh()
-                {
-                    var window = Values[0] as AnimationGraphWindow;
-                    var asset = window?.Asset;
-                    int parametersHash = -1;
-                    if (asset)
-                    {
-                        if (asset.IsLoaded)
-                        {
-                            var parameters = window.PreviewActor.Parameters; // need to ask for params here to sync valid hash   
-                            parametersHash = window.PreviewActor._parametersHash;
-                        }
-                        else
-                        {
-                            parametersHash = -2;
-                        }
-                    }
-
-                    if (parametersHash != _parametersHash)
-                    {
-                        // Parameters has been modified (loaded/unloaded/edited)
-                        RebuildLayout();
-                    }
-                }
+                get => Window.Surface.Parameters;
+                set => throw new Exception("No setter.");
             }
 
             /// <summary>
@@ -361,7 +143,8 @@ namespace FlaxEditor.Windows.Assets
             /// <param name="window">The graph window.</param>
             public void OnLoad(AnimationGraphWindow window)
             {
-                WindowReference = window;
+                // Link
+                Window = window;
 
                 var model = window.PreviewActor;
                 var param = model.GetParam(BaseModelId);
@@ -389,7 +172,7 @@ namespace FlaxEditor.Windows.Assets
             public void OnClean()
             {
                 // Unlink
-                WindowReference = null;
+                Window = null;
             }
         }
 
@@ -405,6 +188,8 @@ namespace FlaxEditor.Windows.Assets
         public AnimationGraphWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            NewParameterTypes = typeof(NewParameterType);
+
             // Asset preview
             _preview = new AnimationGraphPreview(this)
             {
@@ -444,11 +229,11 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        protected override void OnParamEditUndo(EditParamAction action, object value)
+        protected override void SetParameter(int index, object value)
         {
-            base.OnParamEditUndo(action, value);
+            PreviewActor.Parameters[index].Value = value;
 
-            PreviewActor.Parameters[action.Index].Value = value;
+            base.SetParameter(index, value);
         }
 
         /// <inheritdoc />
