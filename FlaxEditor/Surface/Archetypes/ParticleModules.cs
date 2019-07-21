@@ -1234,6 +1234,28 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
+                TypeID = 310,
+                Create = CreateParticleModuleNode,
+                Title = "Linear Drag",
+                Description = "Applies the linear drag force to particle velocity",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 2 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    0.2f, // Drag
+                    false, // Use Sprite Size
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f, "Drag", true, ConnectionType.Float, 0, 2),
+                    NodeElementArchetype.Factory.Bool(0.0f, 0.5f * Surface.Constants.LayoutOffsetY, 3),
+                    NodeElementArchetype.Factory.Text(20.0f, 0.5f * Surface.Constants.LayoutOffsetY, "Use Sprite Size"),
+                },
+            },
+            new NodeArchetype
+            {
                 TypeID = 331,
                 Create = CreateParticleModuleNode,
                 Title = "Collision (sphere)",
