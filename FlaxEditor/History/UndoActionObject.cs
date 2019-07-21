@@ -36,10 +36,15 @@ namespace FlaxEditor.History
             public SceneGraph.SceneGraphNode EditorNode;
 
             /// <summary>
+            /// The id.
+            /// </summary>
+            public Guid? Id;
+
+            /// <summary>
             /// Gets the proper value.
             /// </summary>
             [NoSerialize]
-            public object Value => EditorNode ?? FlaxObject ?? Generic;
+            public object Value => EditorNode ?? FlaxObject ?? Generic ?? Id;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="DataValue"/> struct.
@@ -47,23 +52,26 @@ namespace FlaxEditor.History
             /// <param name="value">The value.</param>
             public DataValue(object value)
             {
+                Generic = null;
+                FlaxObject = null;
+                EditorNode = null;
+                Id = null;
+
                 if (value is SceneGraph.SceneGraphNode editorNode)
                 {
-                    Generic = null;
-                    FlaxObject = null;
                     EditorNode = editorNode;
                 }
                 else if (value is FlaxEngine.Object flaxObject)
                 {
-                    Generic = null;
                     FlaxObject = flaxObject;
-                    EditorNode = null;
+                }
+                else if (value is Guid guid)
+                {
+                    Id = guid;
                 }
                 else
                 {
                     Generic = value;
-                    FlaxObject = null;
-                    EditorNode = null;
                 }
             }
         }
