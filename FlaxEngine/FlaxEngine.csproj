@@ -86,6 +86,8 @@
     <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
     <Compile Include="API\Actors\ParticleEffect.cs" />
     <Compile Include="API\Actors\ParticleEffect.Gen.cs" />
+    <Compile Include="API\Actors\SceneAnimationPlayer.cs" />
+    <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
     <Compile Include="API\Actors\StaticModel.cs" />
     <Compile Include="API\Actors\PostFxVolume.cs" />
     <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
