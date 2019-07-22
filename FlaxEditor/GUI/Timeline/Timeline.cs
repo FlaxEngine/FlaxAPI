@@ -61,6 +61,11 @@ namespace FlaxEditor.GUI.Timeline
         public enum PlaybackButtons
         {
             /// <summary>
+            /// No buttons.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
             /// The play/pause button.
             /// </summary>
             Play = 1,
@@ -620,10 +625,16 @@ namespace FlaxEditor.GUI.Timeline
 
             // Update buttons UI
             var icons = Editor.Instance.Icons;
-            _playbackStop.Enabled = false;
-            _playbackPlay.Enabled = true;
-            _playbackPlay.Brush = new SpriteBrush(icons.Play32);
-            _playbackPlay.Tag = false;
+            if (_playbackStop != null)
+            {
+                _playbackStop.Enabled = false;
+            }
+            if (_playbackPlay != null)
+            {
+                _playbackPlay.Enabled = true;
+                _playbackPlay.Brush = new SpriteBrush(icons.Play32);
+                _playbackPlay.Tag = false;
+            }
         }
 
         /// <summary>
@@ -635,10 +646,16 @@ namespace FlaxEditor.GUI.Timeline
 
             // Update buttons UI
             var icons = Editor.Instance.Icons;
-            _playbackStop.Enabled = true;
-            _playbackPlay.Enabled = true;
-            _playbackPlay.Brush = new SpriteBrush(icons.Pause32);
-            _playbackPlay.Tag = true;
+            if (_playbackStop != null)
+            {
+                _playbackStop.Enabled = true;
+            }
+            if (_playbackPlay != null)
+            {
+                _playbackPlay.Enabled = true;
+                _playbackPlay.Brush = new SpriteBrush(icons.Pause32);
+                _playbackPlay.Tag = true;
+            }
         }
 
         /// <summary>
@@ -650,10 +667,16 @@ namespace FlaxEditor.GUI.Timeline
 
             // Update buttons UI
             var icons = Editor.Instance.Icons;
-            _playbackStop.Enabled = true;
-            _playbackPlay.Enabled = true;
-            _playbackPlay.Brush = new SpriteBrush(icons.Play32);
-            _playbackPlay.Tag = false;
+            if (_playbackStop != null)
+            {
+                _playbackStop.Enabled = true;
+            }
+            if (_playbackPlay != null)
+            {
+                _playbackPlay.Enabled = true;
+                _playbackPlay.Brush = new SpriteBrush(icons.Play32);
+                _playbackPlay.Tag = false;
+            }
         }
 
         /// <summary>
