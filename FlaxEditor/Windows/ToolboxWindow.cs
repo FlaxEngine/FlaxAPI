@@ -123,6 +123,7 @@ namespace FlaxEditor.Windows
             groupOther.AddChild(CreateActorItem("Audio Source", typeof(AudioSource)));
             groupOther.AddChild(CreateActorItem("Audio Listener", typeof(AudioListener)));
             groupOther.AddChild(CreateActorItem("Empty Actor", typeof(EmptyActor)));
+            groupOther.AddChild(CreateActorItem("Scene Animation", typeof(SceneAnimationPlayer)));
             groupOther.AddChild(CreateActorItem("Nav Mesh Bounds Volume", typeof(NavMeshBoundsVolume)));
             groupOther.AddChild(CreateActorItem("Nav Mesh Link", typeof(NavLink)));
 
