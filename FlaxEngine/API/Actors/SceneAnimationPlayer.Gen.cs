@@ -42,7 +42,7 @@ namespace FlaxEngine
         /// </summary>
         [UnmanagedCall]
         [EditorDisplay("Scene Animation"), EditorOrder(0), Tooltip("The scene animation to play.")]
-        public ParticleSystem ParticleSystem
+        public SceneAnimation Animation
         {
 #if UNIT_TEST_COMPILANT
             get; set;
@@ -83,7 +83,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the scene animation should take into account the global game time scale for simulation updates.
+        /// Gets or sets the value that determinates whether the scene animation should take into account the global game time scale for simulation updates.
         /// </summary>
         [UnmanagedCall]
         [EditorDisplay("Scene Animation"), EditorOrder(30), Tooltip("Determines whether the scene animation should take into account the global game time scale for simulation updates.")]
@@ -98,7 +98,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the scene animation should loop when it finishes playing.
+        /// Gets or sets the value that determinates whether the scene animation should loop when it finishes playing.
         /// </summary>
         [UnmanagedCall]
         [EditorDisplay("Scene Animation"), EditorOrder(40), Tooltip("Determines whether the scene animation should loop when it finishes playing.")]
@@ -113,7 +113,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the scene animation should start playing on play begin.
+        /// Gets or sets the value that determinates whether the scene animation should start playing on play begin.
         /// </summary>
         [UnmanagedCall]
         [EditorDisplay("Scene Animation"), EditorOrder(50), Tooltip("Determines whether the scene animation should start playing on play begin.")]
@@ -128,7 +128,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the scene animation should randomize the start time on play begin.
+        /// Gets or sets the value that determinates whether the scene animation should randomize the start time on play begin.
         /// </summary>
         [UnmanagedCall]
         [EditorDisplay("Scene Animation"), EditorOrder(60), Tooltip("Determines whether the scene animation should randomize the start time on play begin.")]
@@ -143,10 +143,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the scene animation should restore initial state on playback stop.
+        /// Gets or sets the value that determinates whether the scene animation should restore initial state on playback stop.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation"), EditorOrder(70), Tooltip("Determines whether the scene animation should restore initial state on playback stop.")]
+        [EditorDisplay("Scene Animation", "Restore State On Stop"), EditorOrder(70), Tooltip("Determines whether the scene animation should restore initial state on playback stop.")]
         public bool RestoreStateOnStop
         {
 #if UNIT_TEST_COMPILANT
@@ -154,6 +154,45 @@ namespace FlaxEngine
 #else
             get { return Internal_GetRestoreStateOnStop(unmanagedPtr); }
             set { Internal_SetRestoreStateOnStop(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the value that determinates whether the scene animation is playing.
+        /// </summary>
+        [UnmanagedCall]
+        public bool IsPlaying
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetIsPlaying(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the value that determinates whether the scene animation is paused.
+        /// </summary>
+        [UnmanagedCall]
+        public bool IsPaused
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetIsPaused(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets the value that determinates whether the scene animation is stopped.
+        /// </summary>
+        [UnmanagedCall]
+        public bool IsStopped
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetIsStopped(unmanagedPtr); }
 #endif
         }
 
@@ -224,7 +263,7 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ParticleSystem Internal_GetAnimation(IntPtr obj);
+        internal static extern SceneAnimation Internal_GetAnimation(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetAnimation(IntPtr obj, IntPtr val);
@@ -270,6 +309,15 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetRestoreStateOnStop(IntPtr obj, bool val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsPlaying(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsPaused(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsStopped(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetTime(IntPtr obj);

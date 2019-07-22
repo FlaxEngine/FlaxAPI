@@ -23,6 +23,8 @@ namespace FlaxEditor.GUI.Timeline
         public ParticleSystemTimeline(ParticleSystemPreview preview)
         : base(PlaybackButtons.Play | PlaybackButtons.Stop)
         {
+            PlaybackState = PlaybackStates.Playing;
+
             _preview = preview;
 
             // Setup track types

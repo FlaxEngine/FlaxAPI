@@ -2,6 +2,7 @@
 
 using System.Xml;
 using FlaxEditor.Content;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Timeline;
 using FlaxEngine;
@@ -17,11 +18,11 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class SceneAnimationWindow : ClonedAssetEditorWindowBase<SceneAnimation>
     {
-        private readonly SceneAnimationTimeline _timeline;
-        private readonly ToolStripButton _saveButton;
+        private SceneAnimationTimeline _timeline;
+        private ToolStripButton _saveButton;
+        private FlaxObjectRefPickerControl _previewPlayerPicker;
         private bool _tmpSceneAnimationIsDirty;
         private bool _isWaitingForTimelineLoad;
-        private bool _isEditingInstancedParameterValue;
 
         /// <summary>
         /// Gets the timeline editor.
@@ -33,16 +34,49 @@ namespace FlaxEditor.Windows.Assets
         : base(editor, item)
         {
             // Timeline
-            _timeline = new SceneAnimationTimeline()
+            _timeline = new SceneAnimationTimeline
             {
                 DockStyle = DockStyle.Fill,
                 Parent = this,
                 Enabled = false
             };
             _timeline.Modified += OnTimelineModified;
+            _timeline.PlayerChanged += OnTimelinePlayerChanged;
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
+
+            // Preview player picker
+            var previewPlayerPickerContainer = new ContainerControl();
+            var previewPlayerPickerLabel = new Label
+            {
+                DockStyle = DockStyle.Left,
+                VerticalAlignment = TextAlignment.Center,
+                HorizontalAlignment = TextAlignment.Far,
+                Width = 60.0f,
+                Text = "Player:",
+                Parent = previewPlayerPickerContainer,
+            };
+            _previewPlayerPicker = new FlaxObjectRefPickerControl
+            {
+                Location = new Vector2(previewPlayerPickerLabel.Right + 4.0f, 8.0f),
+                Width = 140.0f,
+                Type = typeof(SceneAnimationPlayer),
+                Parent = previewPlayerPickerContainer,
+            };
+            previewPlayerPickerContainer.Width = _previewPlayerPicker.Right + 2.0f;
+            previewPlayerPickerContainer.Parent = _toolstrip;
+            _previewPlayerPicker.ValueChanged += OnPreviewPlayerPickerChanged;
+        }
+
+        private void OnTimelinePlayerChanged()
+        {
+            _previewPlayerPicker.Value = _timeline.Player;
+        }
+
+        private void OnPreviewPlayerPickerChanged()
+        {
+            _timeline.Player = _previewPlayerPicker.Value as SceneAnimationPlayer;
         }
 
         private void OnTimelineModified()
@@ -148,9 +182,6 @@ namespace FlaxEditor.Windows.Assets
                 _timeline.Enabled = true;
                 ClearEditedFlag();
             }
-
-            // Clear flag
-            _isEditingInstancedParameterValue = false;
         }
 
         /// <inheritdoc />
@@ -175,6 +206,16 @@ namespace FlaxEditor.Windows.Assets
         public override void OnLayoutDeserialize()
         {
             _timeline.Splitter.SplitterValue = 0.2f;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            _timeline = null;
+            _saveButton = null;
+            _previewPlayerPicker = null;
+
+            base.Dispose();
         }
     }
 }

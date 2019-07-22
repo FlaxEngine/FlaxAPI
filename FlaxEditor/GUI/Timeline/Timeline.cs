@@ -55,6 +55,32 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// The timeline animation playback states.
+        /// </summary>
+        public enum PlaybackStates
+        {
+            /// <summary>
+            /// The timeline animation feature is disabled.
+            /// </summary>
+            Disabled,
+
+            /// <summary>
+            /// The timeline animation is stopped.
+            /// </summary>
+            Stopped,
+
+            /// <summary>
+            /// The timeline animation is playing.
+            /// </summary>
+            Playing,
+
+            /// <summary>
+            /// The timeline animation is paused.
+            /// </summary>
+            Paused,
+        }
+
+        /// <summary>
         /// The timeline playback buttons types.
         /// </summary>
         [Flags]
@@ -125,6 +151,7 @@ namespace FlaxEditor.GUI.Timeline
         private int _durationFrames = 30 * 5;
         private int _currentFrame;
         private TimeShowModes _timeShowMode = TimeShowModes.Frames;
+        private PlaybackStates _state = PlaybackStates.Disabled;
 
         /// <summary>
         /// The tracks collection.
@@ -352,6 +379,80 @@ namespace FlaxEditor.GUI.Timeline
         public Background MediaPanel => _background;
 
         /// <summary>
+        /// Gets the state of the timeline animation playback.
+        /// </summary>
+        public PlaybackStates PlaybackState
+        {
+            get => _state;
+            protected set
+            {
+                if (_state == value)
+                    return;
+
+                _state = value;
+
+                // Update buttons UI
+                var icons = Editor.Instance.Icons;
+                switch (value)
+                {
+                case PlaybackStates.Disabled:
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = false;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = false;
+                    }
+                    break;
+                case PlaybackStates.Stopped:
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = true;
+                        _playbackStop.Enabled = false;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = true;
+                        _playbackPlay.Enabled = true;
+                        _playbackPlay.Brush = new SpriteBrush(icons.Play32);
+                        _playbackPlay.Tag = false;
+                    }
+                    break;
+                case PlaybackStates.Playing:
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = true;
+                        _playbackStop.Enabled = true;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = true;
+                        _playbackPlay.Enabled = true;
+                        _playbackPlay.Brush = new SpriteBrush(icons.Pause32);
+                        _playbackPlay.Tag = true;
+                    }
+                    break;
+                case PlaybackStates.Paused:
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = true;
+                        _playbackStop.Enabled = true;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = true;
+                        _playbackPlay.Enabled = true;
+                        _playbackPlay.Brush = new SpriteBrush(icons.Play32);
+                        _playbackPlay.Tag = false;
+                    }
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
@@ -427,6 +528,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     TooltipText = "Stop playback",
                     Brush = new SpriteBrush(icons.Stop32),
+                    Visible = false,
                     Enabled = false,
                     Parent = playbackButtonsPanel
                 };
@@ -439,6 +541,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     TooltipText = "Play/pause playback",
                     Brush = new SpriteBrush(icons.Play32),
+                    Visible = false,
                     Tag = false, // Set to true if image is set to Pause, false if Play
                     Parent = playbackButtonsPanel
                 };
@@ -510,6 +613,7 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = _backgroundArea,
             };
             UpdatePositionHandle();
+            PlaybackState = PlaybackStates.Disabled;
         }
 
         private void UpdatePositionHandle()
@@ -622,19 +726,7 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnStop()
         {
             Stop?.Invoke();
-
-            // Update buttons UI
-            var icons = Editor.Instance.Icons;
-            if (_playbackStop != null)
-            {
-                _playbackStop.Enabled = false;
-            }
-            if (_playbackPlay != null)
-            {
-                _playbackPlay.Enabled = true;
-                _playbackPlay.Brush = new SpriteBrush(icons.Play32);
-                _playbackPlay.Tag = false;
-            }
+            PlaybackState = PlaybackStates.Stopped;
         }
 
         /// <summary>
@@ -643,19 +735,7 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnPlay()
         {
             Play?.Invoke();
-
-            // Update buttons UI
-            var icons = Editor.Instance.Icons;
-            if (_playbackStop != null)
-            {
-                _playbackStop.Enabled = true;
-            }
-            if (_playbackPlay != null)
-            {
-                _playbackPlay.Enabled = true;
-                _playbackPlay.Brush = new SpriteBrush(icons.Pause32);
-                _playbackPlay.Tag = true;
-            }
+            PlaybackState = PlaybackStates.Playing;
         }
 
         /// <summary>
@@ -664,19 +744,7 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnPause()
         {
             Pause?.Invoke();
-
-            // Update buttons UI
-            var icons = Editor.Instance.Icons;
-            if (_playbackStop != null)
-            {
-                _playbackStop.Enabled = true;
-            }
-            if (_playbackPlay != null)
-            {
-                _playbackPlay.Enabled = true;
-                _playbackPlay.Brush = new SpriteBrush(icons.Play32);
-                _playbackPlay.Tag = false;
-            }
+            PlaybackState = PlaybackStates.Paused;
         }
 
         /// <summary>
