@@ -130,6 +130,11 @@ namespace FlaxEditor.GUI.Timeline
         public Color IconColor = Color.White;
 
         /// <summary>
+        /// The track color.
+        /// </summary>
+        public Color Color = Color.White;
+
+        /// <summary>
         /// The mute flag. Muted tracks are disabled.
         /// </summary>
         public bool Mute;

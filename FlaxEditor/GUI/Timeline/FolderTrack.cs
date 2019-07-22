@@ -58,13 +58,13 @@ namespace FlaxEditor.GUI.Timeline
         {
             if (button == MouseButton.Left)
             {
-                ColorValueBox.ShowPickColorDialog?.Invoke(IconColor, OnColorChanged);
+                ColorValueBox.ShowPickColorDialog?.Invoke(Color, OnColorChanged);
             }
         }
 
         private void OnColorChanged(Color color, bool sliding)
         {
-            IconColor = color;
+            Color = IconColor = color;
             Timeline.MarkAsEdited();
         }
 

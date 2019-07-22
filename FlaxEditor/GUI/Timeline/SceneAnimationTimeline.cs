@@ -79,7 +79,7 @@ namespace FlaxEditor.GUI.Timeline
                     int childrenCount = stream.ReadInt32();
                     track.Name = Utilities.Utils.ReadStr(stream, -13);
                     track.Tag = parentIndex;
-                    track.IconColor = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+                    track.Color = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
 
                     switch (type)
                     {
@@ -87,6 +87,7 @@ namespace FlaxEditor.GUI.Timeline
                     case 0:
                     {
                         var e = (FolderTrack)track;
+                        track.IconColor = e.Color;
                         break;
                     }
                     }
@@ -147,7 +148,7 @@ namespace FlaxEditor.GUI.Timeline
                     stream.Write(track.SubTracks.Count);
                     Utilities.Utils.WriteStr(stream, track.Name, -13);
                     {
-                        var color = (Color32)track.IconColor;
+                        var color = (Color32)track.Color;
                         stream.Write(color.R);
                         stream.Write(color.G);
                         stream.Write(color.B);
