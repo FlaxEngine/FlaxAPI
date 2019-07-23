@@ -62,8 +62,17 @@ namespace FlaxEditor.GUI.Timeline
                 state = PlaybackStates.Stopped;
             else
                 state = PlaybackStates.Disabled;
+
             PlaybackState = state;
-            CurrentFrame = _player ? (int)(_player.Time * _player.Animation.DurationFrames) : 0;
+
+            if (_player && _player.Animation && _player.Animation.IsLoaded)
+            {
+                CurrentFrame = (int)(_player.Time * _player.Animation.FramesPerSecond);
+            }
+            else
+            {
+                CurrentFrame = 0;
+            }
         }
 
         /// <inheritdoc />
