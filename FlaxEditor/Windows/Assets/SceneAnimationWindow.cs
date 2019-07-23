@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors.Editors;
@@ -7,6 +8,7 @@ using FlaxEditor.GUI;
 using FlaxEditor.GUI.Timeline;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -23,6 +25,7 @@ namespace FlaxEditor.Windows.Assets
         private FlaxObjectRefPickerControl _previewPlayerPicker;
         private bool _tmpSceneAnimationIsDirty;
         private bool _isWaitingForTimelineLoad;
+        private Guid _cachedPlayerId;
 
         /// <summary>
         /// Gets the timeline editor.
@@ -33,6 +36,8 @@ namespace FlaxEditor.Windows.Assets
         public SceneAnimationWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            SceneManager.ActorDeleted += OnActorDeleted;
+
             // Timeline
             _timeline = new SceneAnimationTimeline
             {
@@ -69,9 +74,33 @@ namespace FlaxEditor.Windows.Assets
             _previewPlayerPicker.ValueChanged += OnPreviewPlayerPickerChanged;
         }
 
+        /// <inheritdoc />
+        public override void OnSceneUnloading(Scene scene, Guid sceneId)
+        {
+            base.OnSceneUnloading(scene, sceneId);
+
+            if (scene == _timeline.Player?.Scene)
+            {
+                var id = _timeline.Player.ID;
+                _timeline.Player = null;
+                _cachedPlayerId = id;
+            }
+        }
+
+        private void OnActorDeleted(Actor actor)
+        {
+            if (actor == _timeline.Player)
+            {
+                var id = actor.ID;
+                _timeline.Player = null;
+                _cachedPlayerId = id;
+            }
+        }
+
         private void OnTimelinePlayerChanged()
         {
             _previewPlayerPicker.Value = _timeline.Player;
+            _cachedPlayerId = _timeline.Player?.ID ?? Guid.Empty;
         }
 
         private void OnPreviewPlayerPickerChanged()
@@ -182,6 +211,17 @@ namespace FlaxEditor.Windows.Assets
                 _timeline.Enabled = true;
                 ClearEditedFlag();
             }
+
+            // Try to reassign the player
+            if (_timeline.Player == null && _cachedPlayerId != Guid.Empty)
+            {
+                var obj = Object.Find<SceneAnimationPlayer>(ref _cachedPlayerId);
+                if (obj)
+                {
+                    _cachedPlayerId = Guid.Empty;
+                    _timeline.Player = obj;
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -211,6 +251,11 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Dispose()
         {
+            if (IsDisposing)
+                return;
+
+            SceneManager.ActorDeleted -= OnActorDeleted;
+
             _timeline = null;
             _saveButton = null;
             _previewPlayerPicker = null;
