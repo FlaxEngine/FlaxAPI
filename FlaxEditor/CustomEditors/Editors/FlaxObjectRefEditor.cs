@@ -3,6 +3,7 @@
 using System;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
@@ -20,6 +21,7 @@ namespace FlaxEditor.CustomEditors.Editors
         private Type _type;
         private Object _value;
         private string _valueName;
+        private bool _supportsPickDropDown;
 
         private bool _isMouseDown;
         private Vector2 _mouseDownPos;
@@ -49,6 +51,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     throw new ArgumentException(string.Format("Invalid type for FlaxObjectRefEditor. Input type: {0}", value != null ? value.FullName : "null"));
 
                 _type = value;
+                _supportsPickDropDown = typeof(Actor).IsAssignableFrom(value);
 
                 // Deselect value if it's not valid now
                 if (!IsValid(_value))
@@ -128,6 +131,12 @@ namespace FlaxEditor.CustomEditors.Editors
             return obj == null || _type.IsAssignableFrom(obj.GetType());
         }
 
+        private void ShowDropDownMenu()
+        {
+            Focus();
+            ActorSearchPopup.Show(this, BottomLeft, IsValid, actor => Value = actor);
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {
@@ -136,12 +145,17 @@ namespace FlaxEditor.CustomEditors.Editors
             // Cache data
             var style = Style.Current;
             bool isSelected = _value != null;
-            var frameRect = new Rectangle(0, 0, Width - (isSelected ? 16 : 0), 16);
-            var nameRect = new Rectangle(2, 1, Width - (isSelected ? 20 : 4), 14);
-            var buttonRect = new Rectangle(nameRect.Right + 3, 1, 14, 14);
+            var frameRect = new Rectangle(0, 0, Width, 16);
+            if (isSelected)
+                frameRect.Width -= 16;
+            if (_supportsPickDropDown)
+                frameRect.Width -= 16;
+            var nameRect = new Rectangle(2, 1, frameRect.Width - 4, 14);
+            var button1Rect = new Rectangle(nameRect.Right + 2, 1, 14, 14);
+            var button2Rect = new Rectangle(button1Rect.Right + 2, 1, 14, 14);
 
             // Draw frame
-            Render2D.DrawRectangle(frameRect, style.BorderNormal);
+            Render2D.DrawRectangle(frameRect, IsMouseOver ? style.BorderHighlighted : style.BorderNormal);
 
             // Check if has item selected
             if (isSelected)
@@ -151,13 +165,20 @@ namespace FlaxEditor.CustomEditors.Editors
                 Render2D.DrawText(style.FontMedium, _valueName, nameRect, style.Foreground, TextAlignment.Near, TextAlignment.Center);
                 Render2D.PopClip();
 
-                // Draw button
-                Render2D.DrawSprite(style.Cross, buttonRect, new Color(buttonRect.Contains(_mousePos) ? 1.0f : 0.7f));
+                // Draw deselect button
+                Render2D.DrawSprite(style.Cross, button1Rect, new Color(button1Rect.Contains(_mousePos) ? 1.0f : 0.7f));
             }
             else
             {
                 // Draw info
                 Render2D.DrawText(style.FontMedium, "-", nameRect, Color.OrangeRed, TextAlignment.Near, TextAlignment.Center);
+            }
+
+            // Draw picker button
+            if (_supportsPickDropDown)
+            {
+                var pickerRect = isSelected ? button2Rect : button1Rect;
+                Render2D.DrawSprite(style.ArrowDown, pickerRect, new Color(pickerRect.Contains(_mousePos) ? 1.0f : 0.7f));
             }
 
             // Check if drag is over
@@ -219,22 +240,24 @@ namespace FlaxEditor.CustomEditors.Editors
                 _isMouseDown = false;
             }
 
-            // Buttons logic
-            if (_value != null)
-            {
-                // Cache data
-                var nameRect = new Rectangle(2, 1, Width - 20, 14);
-                var buttonRect = new Rectangle(nameRect.Right + 3, 1, 14, 14);
-                if (buttonRect.Contains(location))
-                {
-                    // Deselect
-                    Value = null;
-                }
-                else
-                {
-                    // TODO: Highlight actor in scene graph
-                }
-            }
+            // Cache data
+            bool isSelected = _value != null;
+            var frameRect = new Rectangle(0, 0, Width, 16);
+            if (isSelected)
+                frameRect.Width -= 16;
+            if (_supportsPickDropDown)
+                frameRect.Width -= 16;
+            var nameRect = new Rectangle(2, 1, frameRect.Width - 4, 14);
+            var button1Rect = new Rectangle(nameRect.Right + 2, 1, 14, 14);
+            var button2Rect = new Rectangle(button1Rect.Right + 2, 1, 14, 14);
+
+            // Deselect
+            if (_value != null && button1Rect.Contains(ref location))
+                Value = null;
+
+            // Picker dropdown menu
+            if (_supportsPickDropDown && (isSelected ? button2Rect : button1Rect).Contains(ref location))
+                ShowDropDownMenu();
 
             return base.OnMouseUp(location, buttons);
         }
