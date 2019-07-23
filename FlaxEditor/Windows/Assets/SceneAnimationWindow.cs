@@ -21,7 +21,6 @@ namespace FlaxEditor.Windows.Assets
         private readonly ToolStripButton _saveButton;
         private bool _tmpSceneAnimationIsDirty;
         private bool _isWaitingForTimelineLoad;
-        private bool _isEditingInstancedParameterValue;
 
         /// <summary>
         /// Gets the timeline editor.
@@ -148,9 +147,6 @@ namespace FlaxEditor.Windows.Assets
                 _timeline.Enabled = true;
                 ClearEditedFlag();
             }
-
-            // Clear flag
-            _isEditingInstancedParameterValue = false;
         }
 
         /// <inheritdoc />
