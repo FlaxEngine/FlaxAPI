@@ -58,8 +58,7 @@ namespace FlaxEditor.GUI.Timeline
         private static void SaveTrack(Track track, BinaryWriter stream)
         {
             var e = (ParticleEmitterTrack)track;
-            var emitter = e.Emitter;
-            var emitterId = emitter?.ID ?? Guid.Empty;
+            var emitterId = e.Emitter?.ID ?? Guid.Empty;
 
             stream.Write(emitterId.ToByteArray());
             stream.Write(((ParticleSystemTimeline)track.Timeline).Emitters.IndexOf(e));

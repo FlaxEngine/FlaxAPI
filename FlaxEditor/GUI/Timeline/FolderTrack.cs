@@ -34,17 +34,18 @@ namespace FlaxEditor.GUI.Timeline
         private static void LoadTrack(int version, Track track, BinaryReader stream)
         {
             var e = (FolderTrack)track;
-            e.IconColor = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+            switch (version)
+            {
+            case 1:
+                e.Color = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+                break;
+            }
+            e.IconColor = e.Color;
         }
 
         private static void SaveTrack(Track track, BinaryWriter stream)
         {
             var e = (FolderTrack)track;
-            var color = (Color32)e.IconColor;
-            stream.Write(color.R);
-            stream.Write(color.G);
-            stream.Write(color.B);
-            stream.Write(color.A);
         }
 
         /// <summary>

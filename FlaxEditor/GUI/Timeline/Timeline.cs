@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Input;
@@ -742,6 +743,189 @@ namespace FlaxEditor.GUI.Timeline
                 }
 
                 AddTrack(track);
+            }
+        }
+
+        /// <summary>
+        /// Loads the timeline data.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <param name="stream">The input stream.</param>
+        protected virtual void LoadTimelineData(int version, BinaryReader stream)
+        {
+        }
+
+        /// <summary>
+        /// Saves the timeline data.
+        /// </summary>
+        /// <param name="stream">The output stream.</param>
+        protected virtual void SaveTimelineData(BinaryWriter stream)
+        {
+        }
+
+        /// <summary>
+        /// Loads the timeline from the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        public virtual void Load(byte[] data)
+        {
+            Clear();
+
+            using (var memory = new MemoryStream(data))
+            using (var stream = new BinaryReader(memory))
+            {
+                int version = stream.ReadInt32();
+                switch (version)
+                {
+                case 1:
+                {
+                    // [Deprecated on 23.07.2019, expires on 27.04.2020]
+
+                    // Load properties
+                    FramesPerSecond = stream.ReadSingle();
+                    DurationFrames = stream.ReadInt32();
+                    LoadTimelineData(version, stream);
+
+                    // Load tracks
+                    int tracksCount = stream.ReadInt32();
+                    _tracks.Capacity = Math.Max(_tracks.Capacity, tracksCount);
+                    for (int i = 0; i < tracksCount; i++)
+                    {
+                        var type = stream.ReadByte();
+                        var flag = stream.ReadByte();
+                        Track track = null;
+                        var mute = (flag & 1) == 1;
+                        for (int j = 0; j < TrackArchetypes.Count; j++)
+                        {
+                            if (TrackArchetypes[j].TypeId == type)
+                            {
+                                var options = new TrackCreateOptions
+                                {
+                                    Archetype = TrackArchetypes[j],
+                                    Mute = mute,
+                                };
+                                track = TrackArchetypes[j].Create(options);
+                                break;
+                            }
+                        }
+                        if (track == null)
+                            throw new Exception("Unknown timeline track type " + type);
+                        int parentIndex = stream.ReadInt32();
+                        int childrenCount = stream.ReadInt32();
+                        track.Name = Utilities.Utils.ReadStr(stream, -13);
+                        track.Tag = parentIndex;
+
+                        track.Archetype.Load(version, track, stream);
+
+                        AddLoadedTrack(track);
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    // Load properties
+                    FramesPerSecond = stream.ReadSingle();
+                    DurationFrames = stream.ReadInt32();
+                    LoadTimelineData(version, stream);
+
+                    // Load tracks
+                    int tracksCount = stream.ReadInt32();
+                    _tracks.Capacity = Math.Max(_tracks.Capacity, tracksCount);
+                    for (int i = 0; i < tracksCount; i++)
+                    {
+                        var type = stream.ReadByte();
+                        var flag = stream.ReadByte();
+                        Track track = null;
+                        var mute = (flag & 1) == 1;
+                        for (int j = 0; j < TrackArchetypes.Count; j++)
+                        {
+                            if (TrackArchetypes[j].TypeId == type)
+                            {
+                                var options = new TrackCreateOptions
+                                {
+                                    Archetype = TrackArchetypes[j],
+                                    Mute = mute,
+                                };
+                                track = TrackArchetypes[j].Create(options);
+                                break;
+                            }
+                        }
+                        if (track == null)
+                            throw new Exception("Unknown timeline track type " + type);
+                        int parentIndex = stream.ReadInt32();
+                        int childrenCount = stream.ReadInt32();
+                        track.Name = Utilities.Utils.ReadStr(stream, -13);
+                        track.Tag = parentIndex;
+                        track.Color = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+
+                        track.Archetype.Load(version, track, stream);
+
+                        AddLoadedTrack(track);
+                    }
+                    break;
+                }
+                default: throw new Exception("Unknown timeline version " + version);
+                }
+
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    var parentIndex = (int)_tracks[i].Tag;
+                    _tracks[i].Tag = null;
+                    if (parentIndex != -1)
+                        _tracks[i].ParentTrack = _tracks[parentIndex];
+                }
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    _tracks[i].OnLoaded();
+                }
+            }
+
+            ArrangeTracks();
+            ClearEditedFlag();
+        }
+
+        /// <summary>
+        /// Saves the timeline data.
+        /// </summary>
+        /// <returns>The saved timeline data.</returns>
+        public virtual byte[] Save()
+        {
+            // Serialize timeline to stream
+            using (var memory = new MemoryStream(512))
+            using (var stream = new BinaryWriter(memory))
+            {
+                // Save properties
+                stream.Write(2);
+                stream.Write(FramesPerSecond);
+                stream.Write(DurationFrames);
+                SaveTimelineData(stream);
+
+                // Save tracks
+                int tracksCount = Tracks.Count;
+                stream.Write(tracksCount);
+                for (int i = 0; i < tracksCount; i++)
+                {
+                    var track = Tracks[i];
+
+                    stream.Write((byte)track.Archetype.TypeId);
+                    byte flag = 0;
+                    if (track.Mute)
+                        flag |= 1;
+                    stream.Write(flag);
+                    stream.Write(_tracks.IndexOf(track.ParentTrack));
+                    stream.Write(track.SubTracks.Count);
+                    Utilities.Utils.WriteStr(stream, track.Name, -13);
+                    {
+                        var color = (Color32)track.Color;
+                        stream.Write(color.R);
+                        stream.Write(color.G);
+                        stream.Write(color.B);
+                        stream.Write(color.A);
+                    }
+                    track.Archetype.Save(track, stream);
+                }
+
+                return memory.ToArray();
             }
         }
 
