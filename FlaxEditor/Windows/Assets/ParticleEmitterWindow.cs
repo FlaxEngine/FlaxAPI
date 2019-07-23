@@ -143,7 +143,14 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void SetParameter(int index, object value)
         {
-            Preview.PreviewActor.Parameters[index].Value = value;
+            try
+            {
+                Preview.PreviewActor.Parameters[index].Value = value;
+            }
+            catch
+            {
+                // Ignored
+            }
 
             base.SetParameter(index, value);
         }

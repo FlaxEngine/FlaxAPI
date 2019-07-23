@@ -266,7 +266,14 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void SetParameter(int index, object value)
         {
-            Asset.Parameters[index].Value = value;
+            try
+            {
+                Asset.Parameters[index].Value = value;
+            }
+            catch
+            {
+                // Ignored
+            }
 
             base.SetParameter(index, value);
         }

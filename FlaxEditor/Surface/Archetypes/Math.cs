@@ -209,8 +209,8 @@ namespace FlaxEditor.Surface.Archetypes
                 Size = new Vector2(170, 30),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "In XY", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Vector3, 1)
+                    NodeElementArchetype.Factory.Input(0, "XY", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(0, "XYZ", ConnectionType.Vector3, 1)
                 }
             },
             new NodeArchetype
