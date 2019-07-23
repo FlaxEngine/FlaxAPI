@@ -72,24 +72,24 @@ namespace FlaxEditor.Windows.Assets
             [EditorDisplay("Particle Emitter"), EditorOrder(100), Tooltip("The particle emitter to use for the track media event playback.")]
             public ParticleEmitter Emitter
             {
-                get => _track.Emitter;
-                set => _track.Emitter = value;
+                get => _track.Asset;
+                set => _track.Asset = value;
             }
 
-            private bool HasEmitter => _track.Emitter != null;
+            private bool HasEmitter => _track.Asset != null;
 
             [EditorDisplay("Particle Emitter"), VisibleIf("HasEmitter"), EditorOrder(200), Tooltip("The start frame of the media event.")]
             public int StartFrame
             {
-                get => _track.Media.Count > 0 ? _track.EmitterMedia.StartFrame : 0;
-                set => _track.EmitterMedia.StartFrame = value;
+                get => _track.Media.Count > 0 ? _track.TrackMedia.StartFrame : 0;
+                set => _track.TrackMedia.StartFrame = value;
             }
 
             [EditorDisplay("Particle Emitter"), Limit(1), VisibleIf("HasEmitter"), EditorOrder(300), Tooltip("The total duration of the media event in the timeline sequence frames amount.")]
             public int DurationFrames
             {
-                get => _track.Media.Count > 0 ? _track.EmitterMedia.DurationFrames : 0;
-                set => _track.EmitterMedia.DurationFrames = value;
+                get => _track.Media.Count > 0 ? _track.TrackMedia.DurationFrames : 0;
+                set => _track.TrackMedia.DurationFrames = value;
             }
 
             public EmitterTrackProxy(ParticleSystemWindow window, ParticleEffect effect, ParticleEmitterTrack track)
