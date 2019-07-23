@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.IO;
 using FlaxEditor.Content;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -26,6 +27,55 @@ namespace FlaxEditor.GUI.Timeline
     public class ParticleEmitterTrack : Track
     {
         private readonly AssetPicker _picker;
+
+        /// <summary>
+        /// Gets the archetype.
+        /// </summary>
+        /// <returns>The archetype.</returns>
+        public static TrackArchetype GetArchetype()
+        {
+            return new TrackArchetype
+            {
+                TypeId = 0,
+                Name = "Particle Emitter",
+                Create = options => new ParticleEmitterTrack(ref options),
+                Load = LoadTrack,
+                Save = SaveTrack,
+            };
+        }
+
+        private static void LoadTrack(int version, Track track, BinaryReader stream)
+        {
+            var e = (ParticleEmitterTrack)track;
+            Guid id = new Guid(stream.ReadBytes(16));
+            e.Emitter = FlaxEngine.Content.LoadAsync<ParticleEmitter>(ref id);
+            var emitterIndex = stream.ReadInt32();
+            var m = e.Media[0];
+            m.StartFrame = stream.ReadInt32();
+            m.DurationFrames = stream.ReadInt32();
+        }
+
+        private static void SaveTrack(Track track, BinaryWriter stream)
+        {
+            var e = (ParticleEmitterTrack)track;
+            var emitter = e.Emitter;
+            var emitterId = emitter?.ID ?? Guid.Empty;
+
+            stream.Write(emitterId.ToByteArray());
+            stream.Write(((ParticleSystemTimeline)track.Timeline).Emitters.IndexOf(e));
+
+            if (e.Media.Count != 0)
+            {
+                var m = e.Media[0];
+                stream.Write(m.StartFrame);
+                stream.Write(m.DurationFrames);
+            }
+            else
+            {
+                stream.Write(0);
+                stream.Write(track.Timeline.DurationFrames);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the emitter asset.
@@ -67,14 +117,10 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// Initializes a new instance of the <see cref="ParticleEmitterTrack"/> class.
         /// </summary>
-        /// <param name="archetype">The archetype.</param>
-        /// <param name="mute">The mute flag.</param>
-        public ParticleEmitterTrack(Timeline.TrackArchetype archetype, bool mute)
+        /// <param name="options">The options.</param>
+        public ParticleEmitterTrack(ref TrackCreateOptions options)
+        : base(ref options)
         {
-            Name = archetype.Name;
-            Icon = archetype.Icon;
-            Mute = mute;
-
             _picker = new AssetPicker(typeof(ParticleEmitter), Vector2.Zero)
             {
                 Size = new Vector2(50.0f, 36.0f),

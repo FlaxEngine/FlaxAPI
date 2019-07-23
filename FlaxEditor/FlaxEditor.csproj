@@ -288,11 +288,14 @@
     <Compile Include="GUI\Timeline\Background.cs" />
     <Compile Include="GUI\Timeline\FolderTrack.cs" />
     <Compile Include="GUI\Timeline\Media.cs" />
-    <Compile Include="GUI\Timeline\ParticleEmitter.cs" />
+    <Compile Include="GUI\Timeline\ParticleEmitterTrack.cs" />
     <Compile Include="GUI\Timeline\ParticleSystemTimeline.cs" />
     <Compile Include="GUI\Timeline\PositionHandle.cs" />
+    <Compile Include="GUI\Timeline\PostProcessMaterialTrack.cs" />
     <Compile Include="GUI\Timeline\SceneAnimationTimeline.cs" />
     <Compile Include="GUI\Timeline\TimelineEdge.cs" />
+    <Compile Include="GUI\Timeline\TrackArchetype.cs" />
+    <Compile Include="GUI\Timeline\TrackCreateOptions.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />

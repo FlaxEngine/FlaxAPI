@@ -139,6 +139,11 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public bool Mute;
 
+        /// <summary>
+        /// The track archetype.
+        /// </summary>
+        public TrackArchetype Archetype;
+
         internal bool DrawDisabled;
 
         /// <summary>
@@ -174,10 +179,16 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// Initializes a new instance of the <see cref="Track"/> class.
         /// </summary>
-        public Track()
+        /// <param name="options">The track initial options.</param>
+        public Track(ref TrackCreateOptions options)
         : base(0, 0, 100, 22.0f)
         {
             AutoFocus = false;
+
+            Archetype = options.Archetype;
+            Name = options.Archetype.Name;
+            Icon = options.Archetype.Icon;
+            Mute = options.Mute;
         }
 
         /// <summary>
@@ -971,6 +982,19 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             return base.OnKeyDown(key);
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (IsDisposing)
+                return;
+
+            Archetype = new TrackArchetype();
+            MediaChanged = null;
+            _timeline = null;
+
+            base.Dispose();
         }
     }
 }

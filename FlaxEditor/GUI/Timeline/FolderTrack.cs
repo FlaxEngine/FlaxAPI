@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
+using System.IO;
 using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -13,16 +15,45 @@ namespace FlaxEditor.GUI.Timeline
     public class FolderTrack : Track
     {
         /// <summary>
+        /// Gets the archetype.
+        /// </summary>
+        /// <returns>The archetype.</returns>
+        public static TrackArchetype GetArchetype()
+        {
+            return new TrackArchetype
+            {
+                TypeId = 1,
+                Name = "Folder",
+                Icon = Editor.Instance.Icons.Folder64,
+                Create = options => new FolderTrack(ref options),
+                Load = LoadTrack,
+                Save = SaveTrack,
+            };
+        }
+
+        private static void LoadTrack(int version, Track track, BinaryReader stream)
+        {
+            var e = (FolderTrack)track;
+            e.IconColor = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+        }
+
+        private static void SaveTrack(Track track, BinaryWriter stream)
+        {
+            var e = (FolderTrack)track;
+            var color = (Color32)e.IconColor;
+            stream.Write(color.R);
+            stream.Write(color.G);
+            stream.Write(color.B);
+            stream.Write(color.A);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FolderTrack"/> class.
         /// </summary>
-        /// <param name="archetype">The archetype.</param>
-        /// <param name="mute">The mute flag.</param>
-        public FolderTrack(Timeline.TrackArchetype archetype, bool mute)
+        /// <param name="options">The options.</param>
+        public FolderTrack(ref TrackCreateOptions options)
+        : base(ref options)
         {
-            Name = archetype.Name;
-            Icon = archetype.Icon;
-            Mute = mute;
-
             const float buttonSize = 14;
             var colorPickerButton = new Image(Width - buttonSize - 2.0f, 0, buttonSize, buttonSize)
             {

@@ -46,13 +46,8 @@ namespace FlaxEditor.GUI.Timeline
             PlaybackState = PlaybackStates.Disabled;
 
             // Setup track types
-            var icons = Editor.Instance.Icons;
-            TrackArchetypes.Add(new TrackArchetype
-            {
-                Name = "Folder",
-                Icon = icons.Folder64,
-                Create = archetype => new FolderTrack(archetype, false),
-            });
+            TrackArchetypes.Add(FolderTrack.GetArchetype());
+            TrackArchetypes.Add(PostProcessMaterialTrack.GetArchetype());
         }
 
         private void UpdatePlaybackState()
@@ -128,7 +123,7 @@ namespace FlaxEditor.GUI.Timeline
                 // Load properties
                 int version = stream.ReadInt32();
                 if (version != 1)
-                    throw new Exception("Unknown scene animation timeline version " + version);
+                    throw new Exception("Unknown timeline version " + version);
                 FramesPerSecond = stream.ReadSingle();
                 DurationFrames = stream.ReadInt32();
 
@@ -139,23 +134,29 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     var type = stream.ReadByte();
                     var flag = stream.ReadByte();
-                    Track track;
+                    Track track = null;
                     var mute = (flag & 1) == 1;
-                    switch (type)
+                    for (int j = 0; j < TrackArchetypes.Count; j++)
                     {
-                    // Folder
-                    case 0:
-                    {
-                        track = new FolderTrack(TrackArchetypes[0], mute);
-                        break;
+                        if (TrackArchetypes[j].TypeId == type)
+                        {
+                            var options = new TrackCreateOptions
+                            {
+                                Archetype = TrackArchetypes[j],
+                                Mute = mute,
+                            };
+                            track = TrackArchetypes[j].Create(options);
+                            break;
+                        }
                     }
-                    default: throw new Exception("Unknown Scene Animation track type " + type);
-                    }
+                    if (track == null)
+                        throw new Exception("Unknown timeline track type " + type);
                     int parentIndex = stream.ReadInt32();
                     int childrenCount = stream.ReadInt32();
                     track.Name = Utilities.Utils.ReadStr(stream, -13);
                     track.Tag = parentIndex;
                     track.Color = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+                    track.Archetype.Load(version, track, stream);
 
                     switch (type)
                     {
@@ -164,6 +165,17 @@ namespace FlaxEditor.GUI.Timeline
                     {
                         var e = (FolderTrack)track;
                         track.IconColor = e.Color;
+                        break;
+                    }
+                    // Post Process Material
+                    case 1:
+                    {
+                        var e = (PostProcessMaterialTrack)track;
+                        Guid id = new Guid(stream.ReadBytes(16));
+                        e.Material = FlaxEngine.Content.LoadAsync<MaterialBase>(ref id);
+                        var m = e.Media[0];
+                        m.StartFrame = stream.ReadInt32();
+                        m.DurationFrames = stream.ReadInt32();
                         break;
                     }
                     }
@@ -209,12 +221,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     var track = Tracks[i];
 
-                    byte type;
-                    if (track is FolderTrack)
-                        type = 0;
-                    else
-                        throw new NotSupportedException("Unknown Scene Animation track type.");
-                    stream.Write(type);
+                    stream.Write((byte)track.Archetype.TypeId);
                     byte flag = 0;
                     if (track.Mute)
                         flag |= 1;
@@ -229,16 +236,7 @@ namespace FlaxEditor.GUI.Timeline
                         stream.Write(color.B);
                         stream.Write(color.A);
                     }
-
-                    switch (type)
-                    {
-                    // Folder
-                    case 0:
-                    {
-                        var e = (FolderTrack)track;
-                        break;
-                    }
-                    }
+                    track.Archetype.Save(track, stream);
                 }
 
                 return memory.ToArray();

@@ -103,34 +103,6 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
-        /// Create a new track object.
-        /// </summary>
-        /// <param name="archetype">The archetype.</param>
-        /// <returns>The created track object.</returns>
-        public delegate Track CreateTrackDelegate(TrackArchetype archetype);
-
-        /// <summary>
-        /// Defines the track type.
-        /// </summary>
-        public class TrackArchetype
-        {
-            /// <summary>
-            /// The name of the track type (for UI).
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The icon of the track type (for UI).
-            /// </summary>
-            public Sprite Icon;
-
-            /// <summary>
-            /// The track create factory callback.
-            /// </summary>
-            public CreateTrackDelegate Create;
-        }
-
-        /// <summary>
         /// The header top area height (in pixels).
         /// </summary>
         public static readonly float HeaderTopAreaHeight = 22.0f;
@@ -753,7 +725,12 @@ namespace FlaxEditor.GUI.Timeline
         /// <param name="archetype">The archetype.</param>
         public void AddTrack(TrackArchetype archetype)
         {
-            var track = archetype.Create(archetype);
+            var options = new TrackCreateOptions
+            {
+                Archetype = archetype,
+                Mute = false,
+            };
+            var track = archetype.Create(options);
             if (track != null)
             {
                 // Ensure name is unique
