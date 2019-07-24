@@ -41,7 +41,7 @@ namespace FlaxEditor.GUI.Timeline
             var e = (PostProcessMaterialTrack)track;
             Guid id = new Guid(stream.ReadBytes(16));
             e.Asset = FlaxEngine.Content.LoadAsync<MaterialBase>(ref id);
-            var m = e.Media[0];
+            var m = e.TrackMedia;
             m.StartFrame = stream.ReadInt32();
             m.DurationFrames = stream.ReadInt32();
         }
@@ -55,7 +55,7 @@ namespace FlaxEditor.GUI.Timeline
 
             if (e.Media.Count != 0)
             {
-                var m = e.Media[0];
+                var m = e.TrackMedia;
                 stream.Write(m.StartFrame);
                 stream.Write(m.DurationFrames);
             }

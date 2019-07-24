@@ -47,6 +47,7 @@ namespace FlaxEditor.GUI.Timeline
             // Setup track types
             TrackArchetypes.Add(FolderTrack.GetArchetype());
             TrackArchetypes.Add(PostProcessMaterialTrack.GetArchetype());
+            TrackArchetypes.Add(NestedSceneAnimationTrack.GetArchetype());
         }
 
         private void UpdatePlaybackState()

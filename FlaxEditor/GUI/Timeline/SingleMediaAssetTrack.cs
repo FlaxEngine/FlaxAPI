@@ -74,7 +74,7 @@ namespace FlaxEditor.GUI.Timeline
         protected SingleMediaAssetTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
-            _picker = new AssetPicker(typeof(SceneAnimation), Vector2.Zero)
+            _picker = new AssetPicker(typeof(TAsset), Vector2.Zero)
             {
                 Size = new Vector2(50.0f, 36.0f),
                 AnchorStyle = AnchorStyle.UpperRight,
