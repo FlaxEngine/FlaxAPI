@@ -56,7 +56,7 @@ namespace FlaxEditor.GUI.Timeline
         : base(ref options)
         {
             const float buttonSize = 14;
-            var colorPickerButton = new Image(Width - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            var colorPickerButton = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
             {
                 TooltipText = "Change folder color",
                 AutoFocus = true,
@@ -68,22 +68,6 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = this
             };
             colorPickerButton.Clicked += OnColorPickerButtonClicked;
-
-            var muteButton = new CheckBox(colorPickerButton.Left - buttonSize - 2.0f, 0, !Mute, buttonSize)
-            {
-                TooltipText = "Mute track",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Parent = this
-            };
-            muteButton.StateChanged += OnMuteButtonStateChanged;
-        }
-
-        private void OnMuteButtonStateChanged(CheckBox checkBox)
-        {
-            Mute = !checkBox.Checked;
-            Timeline.MarkAsEdited();
         }
 
         private void OnColorPickerButtonClicked(Image image, MouseButton button)

@@ -22,11 +22,11 @@ namespace FlaxEditor.GUI.Timeline
     /// The base class for timeline tracks that use single media with an asset reference.
     /// </summary>
     /// <typeparam name="TAsset">The type of the asset.</typeparam>
-    /// <typeparam name="TMediaEvent">The type of the media event.</typeparam>
+    /// <typeparam name="TMedia">The type of the media event.</typeparam>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public abstract class SingleMediaAssetTrack<TAsset, TMediaEvent> : Track
+    public abstract class SingleMediaAssetTrack<TAsset, TMedia> : SingleMediaTrack<TMedia>
     where TAsset : Asset
-    where TMediaEvent : SingleMediaAssetMedia, new()
+    where TMedia : SingleMediaAssetMedia, new()
     {
         /// <summary>
         /// The asset reference picker control.
@@ -41,38 +41,13 @@ namespace FlaxEditor.GUI.Timeline
             get => FlaxEngine.Content.LoadAsync<TAsset>(TrackMedia.Asset);
             set
             {
-                TMediaEvent media = TrackMedia;
+                TMedia media = TrackMedia;
                 if (media.Asset == value?.ID)
                     return;
 
                 media.Asset = value?.ID ?? Guid.Empty;
                 _picker.SelectedAsset = value;
                 Timeline?.MarkAsEdited();
-            }
-        }
-
-        /// <summary>
-        /// Gets the track media.
-        /// </summary>
-        public TMediaEvent TrackMedia
-        {
-            get
-            {
-                TMediaEvent media;
-                if (Media.Count == 0)
-                {
-                    media = new TMediaEvent
-                    {
-                        StartFrame = 0,
-                        DurationFrames = Timeline?.DurationFrames ?? 60,
-                    };
-                    AddMedia(media);
-                }
-                else
-                {
-                    media = (TMediaEvent)Media[0];
-                }
-                return media;
             }
         }
 
@@ -86,26 +61,9 @@ namespace FlaxEditor.GUI.Timeline
                 AnchorStyle = AnchorStyle.UpperRight,
                 Parent = this
             };
-            _picker.Location = new Vector2(Width - _picker.Width - 2, 2);
+            _picker.Location = new Vector2(_muteCheckbox.Left - _picker.Width - 2, 2);
             _picker.SelectedItemChanged += OnPickerSelectedItemChanged;
             Height = 4 + _picker.Height;
-
-            const float buttonSize = 14;
-            var muteButton = new CheckBox(_picker.Left - buttonSize - 2.0f, 0, !Mute, buttonSize)
-            {
-                TooltipText = "Mute track",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Parent = this
-            };
-            muteButton.StateChanged += OnMuteButtonStateChanged;
-        }
-
-        private void OnMuteButtonStateChanged(CheckBox checkBox)
-        {
-            Mute = !checkBox.Checked;
-            Timeline.MarkAsEdited();
         }
 
         private void OnPickerSelectedItemChanged()

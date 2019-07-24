@@ -294,7 +294,9 @@
     <Compile Include="GUI\Timeline\PositionHandle.cs" />
     <Compile Include="GUI\Timeline\PostProcessMaterialTrack.cs" />
     <Compile Include="GUI\Timeline\SceneAnimationTimeline.cs" />
+    <Compile Include="GUI\Timeline\ScreenFadeTrack.cs" />
     <Compile Include="GUI\Timeline\SingleMediaAssetTrack.cs" />
+    <Compile Include="GUI\Timeline\SingleMediaTrack.cs" />
     <Compile Include="GUI\Timeline\TimelineEdge.cs" />
     <Compile Include="GUI\Timeline\TrackArchetype.cs" />
     <Compile Include="GUI\Timeline\TrackCreateOptions.cs" />

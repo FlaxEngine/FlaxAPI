@@ -47,6 +47,8 @@ namespace FlaxEditor.GUI.Timeline
         private bool _mouseOverArrow;
         private Vector2 _mouseDownPos;
 
+        protected CheckBox _muteCheckbox;
+
         private DragNames _dragTracks;
         private DragHandlers _dragHandlers;
         private DragItemPositioning _dragOverMode;
@@ -189,6 +191,24 @@ namespace FlaxEditor.GUI.Timeline
             Name = options.Archetype.Name;
             Icon = options.Archetype.Icon;
             Mute = options.Mute;
+
+            // Mute checkbox
+            const float buttonSize = 14;
+            _muteCheckbox = new CheckBox(Width - buttonSize - 2.0f, 0, !Mute, buttonSize)
+            {
+                TooltipText = "Mute track",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Parent = this
+            };
+            _muteCheckbox.StateChanged += OnMuteButtonStateChanged;
+        }
+
+        private void OnMuteButtonStateChanged(CheckBox checkBox)
+        {
+            Mute = !checkBox.Checked;
+            Timeline.MarkAsEdited();
         }
 
         /// <summary>
@@ -993,6 +1013,7 @@ namespace FlaxEditor.GUI.Timeline
             Archetype = new TrackArchetype();
             MediaChanged = null;
             _timeline = null;
+            _muteCheckbox = null;
 
             base.Dispose();
         }
