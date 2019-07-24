@@ -128,6 +128,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// If true, the particle simulation will be updated even when an actor cannot be seen by any camera. Otherwise, the simulation will stop running when the actor is off-screen.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("Particle Effect"), EditorOrder(60), Tooltip("If true, the particle simulation will be updated even when an actor cannot be seen by any camera. Otherwise, the simulation will stop running when the actor is off-screen.")]
+        public bool UpdateWhenOffscreen
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetUpdateWhenOffscreen(unmanagedPtr); }
+            set { Internal_SetUpdateWhenOffscreen(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the current time position of the particle system timeline animation playback (in seconds).
         /// </summary>
         /// <remarks>
@@ -258,6 +273,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetIsLooping(IntPtr obj, bool val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetUpdateWhenOffscreen(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetUpdateWhenOffscreen(IntPtr obj, bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetTime(IntPtr obj);

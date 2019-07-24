@@ -17,7 +17,7 @@ namespace FlaxEngine
         /// Gets or sets the 'IsTrigger' flag.
         /// </summary>
         /// <remarks>
-        /// A trigger doesn't register a collision with an incoming Rigidbody. Instead, it sends OnTriggerEnter and OnTriggerExit events when a rigidbody enters or exits the trigger volume.
+        /// A trigger doesn't register a collision with an incoming Rigidbody. Instead, it sends OnTriggerEnter, OnTriggerExit and OnTriggerStay message when a rigidbody enters or exits the trigger volume.
         /// </remarks>
         [UnmanagedCall]
         [EditorOrder(0), EditorDisplay("Collider"), Tooltip("Check if use collider shape to detect objects or turn if off to collide with others")]
