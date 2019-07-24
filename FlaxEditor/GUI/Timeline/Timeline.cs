@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Input;
 using FlaxEngine;
@@ -33,6 +34,36 @@ namespace FlaxEditor.GUI.Timeline
             new KeyValuePair<float, string>(240f, "240 fps"),
             new KeyValuePair<float, string>(0, "Custom"),
         };
+
+        /// <summary>
+        /// The base class for timeline properties proxy objects.
+        /// </summary>
+        /// <typeparam name="TTimeline">The type of the timeline.</typeparam>
+        public abstract class ProxyBase<TTimeline>
+        where TTimeline : Timeline
+        {
+            [HideInEditor, NoSerialize]
+            public TTimeline Timeline;
+
+            /// <summary>
+            /// Gets or sets the total duration of the timeline in the frames amount.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(10), Limit(1), Tooltip("Total duration of the timeline event the frames amount.")]
+            public int DurationFrames
+            {
+                get => Timeline.DurationFrames;
+                set => Timeline.DurationFrames = value;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ProxyBase{TTimeline}"/> class.
+            /// </summary>
+            /// <param name="track">The timeline.</param>
+            protected ProxyBase(TTimeline timeline)
+            {
+                Timeline = timeline ?? throw new ArgumentNullException(nameof(timeline));
+            }
+        }
 
         /// <summary>
         /// The time axis value formatting modes.
@@ -148,6 +179,8 @@ namespace FlaxEditor.GUI.Timeline
         private Image _playbackPlay;
         private Label _noTracksLabel;
         private PositionHandle _positionHandle;
+        private bool _isRightMouseButtonDown;
+        private Vector2 _rightMouseButtonDownPos;
 
         /// <summary>
         /// Gets or sets the current time showing mode.
@@ -183,14 +216,14 @@ namespace FlaxEditor.GUI.Timeline
 
                 _currentFrame = value;
                 UpdatePositionHandle();
-                CurrentFrameChangeed?.Invoke();
+                CurrentFrameChanged?.Invoke();
             }
         }
 
         /// <summary>
         /// Occurs when current playback animation frame gets changed.
         /// </summary>
-        public event Action CurrentFrameChangeed;
+        public event Action CurrentFrameChanged;
 
         /// <summary>
         /// Gets or sets the amount of frames per second of the timeline animation.
@@ -426,12 +459,18 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// The timeline properties editing proxy object. Assign it to add timeline properties editing support.
+        /// </summary>
+        public object PropertiesEditObject;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
         /// <param name="canChangeFps">True if user can modify the timeline FPS, otherwise it will be fixed or controlled from the code.</param>
         public Timeline(PlaybackButtons playbackButtons, bool canChangeFps = true)
         {
+            AutoFocus = false;
             _splitter = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
                 SplitterValue = 0.2f,
@@ -441,6 +480,7 @@ namespace FlaxEditor.GUI.Timeline
 
             var headerTopArea = new ContainerControl(0, 0, _splitter.Panel1.Width, HeaderTopAreaHeight)
             {
+                AutoFocus = false,
                 BackgroundColor = Style.Current.LightBackground,
                 DockStyle = DockStyle.Top,
                 Parent = _splitter.Panel1
@@ -545,6 +585,7 @@ namespace FlaxEditor.GUI.Timeline
 
             _timeIntervalsHeader = new ContainerControl
             {
+                AutoFocus = false,
                 BackgroundColor = Style.Current.Background.RGBMultiplied(0.9f),
                 Height = HeaderTopAreaHeight,
                 DockStyle = DockStyle.Top,
@@ -559,6 +600,7 @@ namespace FlaxEditor.GUI.Timeline
             };
             _backgroundScroll = new ContainerControl
             {
+                AutoFocus = false,
                 ClipChildren = false,
                 Height = 0,
                 Parent = _backgroundArea
@@ -1296,8 +1338,156 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
+            if (buttons == MouseButton.Right)
+            {
+                _isRightMouseButtonDown = true;
+                _rightMouseButtonDownPos = location;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Right && _isRightMouseButtonDown)
+            {
+                _isRightMouseButtonDown = false;
+
+                if (Vector2.Distance(ref location, ref _rightMouseButtonDownPos) < 4.0f)
+                {
+                    if (!ContainsFocus)
+                        Focus();
+
+                    var controlUnderMouse = GetChildAtRecursive(location);
+
+                    var menu = new ContextMenu.ContextMenu();
+                    if (controlUnderMouse is Media media && media.PropertiesEditObject != null)
+                    {
+                        menu.AddButton("Edit media", () => ShowEditPopup(media.PropertiesEditObject, ref location));
+                    }
+                    if (PropertiesEditObject != null)
+                    {
+                        menu.AddButton("Edit timeline", () => ShowEditPopup(PropertiesEditObject, ref location));
+                    }
+                    // TODO: add Show Whole Timeline button
+                    OnShowContextMenu(menu);
+                    menu.Show(this, location);
+                }
+            }
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        class PropertiesEditPopup : ContextMenuBase
+        {
+            private Timeline _timeline;
+            private bool _isDirty;
+
+            public PropertiesEditPopup(Timeline timeline, object obj)
+            {
+                const float width = 280.0f;
+                const float height = 160.0f;
+                Size = new Vector2(width, height);
+
+                var panel1 = new Panel(ScrollBars.Vertical)
+                {
+                    Bounds = new Rectangle(0, 0.0f, width, height),
+                    Parent = this
+                };
+                var editor = new CustomEditorPresenter(null);
+                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.IsScrollable = true;
+                editor.Panel.Parent = panel1;
+                editor.Modified += OnModified;
+
+                editor.Select(obj);
+
+                _timeline = timeline;
+            }
+
+            private void OnModified()
+            {
+                _isDirty = true;
+            }
+
+            /// <inheritdoc />
+            protected override void OnShow()
+            {
+                Focus();
+
+                base.OnShow();
+            }
+
+            /// <inheritdoc />
+            public override void Hide()
+            {
+                if (!Visible)
+                    return;
+
+                Focus(null);
+
+                if (_isDirty)
+                {
+                    _timeline.MarkAsEdited();
+                }
+
+                base.Hide();
+            }
+
+            /// <inheritdoc />
+            public override bool OnKeyDown(Keys key)
+            {
+                if (key == Keys.Escape)
+                {
+                    Hide();
+                    return true;
+                }
+
+                return base.OnKeyDown(key);
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                _timeline = null;
+
+                base.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Shows the timeline object editing popup.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="location">The show location (in timeline space).</param>
+        protected virtual void ShowEditPopup(object obj, ref Vector2 location)
+        {
+            var popup = new PropertiesEditPopup(this, obj);
+            popup.Show(this, location);
+        }
+
+        /// <summary>
+        /// Called when showing context menu to the user. Can be used to add custom buttons.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        protected virtual void OnShowContextMenu(ContextMenu.ContextMenu menu)
+        {
+        }
+
+        /// <inheritdoc />
         public override void Dispose()
         {
+            if (IsDisposing)
+                return;
+
             // Clear references to the controls
             _splitter = null;
             _timeIntervalsHeader = null;

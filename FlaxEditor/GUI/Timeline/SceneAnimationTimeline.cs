@@ -11,6 +11,15 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEditor.GUI.Timeline.Timeline" />
     public sealed class SceneAnimationTimeline : Timeline
     {
+        private sealed class Proxy : ProxyBase<SceneAnimationTimeline>
+        {
+            /// <inheritdoc />
+            public Proxy(SceneAnimationTimeline timeline)
+            : base(timeline)
+            {
+            }
+        }
+
         private SceneAnimationPlayer _player;
 
         /// <summary>
@@ -43,6 +52,7 @@ namespace FlaxEditor.GUI.Timeline
         : base(PlaybackButtons.Play | PlaybackButtons.Stop)
         {
             PlaybackState = PlaybackStates.Disabled;
+            PropertiesEditObject = new Proxy(this);
 
             // Setup track types
             TrackArchetypes.Add(FolderTrack.GetArchetype());

@@ -10,15 +10,41 @@ namespace FlaxEditor.GUI.Timeline
     /// The timeline media that represents a post-process material media event.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    public class PostProcessMaterialTrackMedia : SingleMediaAssetTrackMedia
+    public class PostProcessMaterialMedia : SingleMediaAssetMedia
     {
+        private sealed class Proxy : ProxyBase<PostProcessMaterialTrack, PostProcessMaterialMedia>
+        {
+            /// <summary>
+            /// Gets or sets the post process material to show.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(10), Tooltip("The post process material to show.")]
+            public MaterialBase PostProcessMaterial
+            {
+                get => Track.Asset;
+                set => Track.Asset = value;
+            }
+
+            /// <inheritdoc />
+            public Proxy(PostProcessMaterialTrack track, PostProcessMaterialMedia media)
+            : base(track, media)
+            {
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineChanged(Track track)
+        {
+            base.OnTimelineChanged(track);
+
+            PropertiesEditObject = new Proxy(Track as PostProcessMaterialTrack, this);
+        }
     }
 
     /// <summary>
     /// The timeline track that represents a post-process material playback.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public class PostProcessMaterialTrack : SingleMediaAssetTrack<MaterialBase, PostProcessMaterialTrackMedia>
+    public class PostProcessMaterialTrack : SingleMediaAssetTrack<MaterialBase, PostProcessMaterialMedia>
     {
         /// <summary>
         /// Gets the archetype.
@@ -65,7 +91,7 @@ namespace FlaxEditor.GUI.Timeline
                 stream.Write(track.Timeline.DurationFrames);
             }
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PostProcessMaterialTrack"/> class.
         /// </summary>

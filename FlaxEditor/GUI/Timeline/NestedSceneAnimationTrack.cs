@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using FlaxEditor.Content.Thumbnails;
 using FlaxEngine;
 
 namespace FlaxEditor.GUI.Timeline
@@ -11,19 +10,56 @@ namespace FlaxEditor.GUI.Timeline
     /// The timeline media that represents a nested scene animation media event.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    public class NestedSceneAnimationTrackMedia : SingleMediaAssetTrackMedia
+    public class NestedSceneAnimationMedia : SingleMediaAssetMedia
     {
         /// <summary>
         /// True if loop track, otherwise animation will stop on the end.
         /// </summary>
         public bool Loop;
+
+        private sealed class Proxy : ProxyBase<NestedSceneAnimationTrack, NestedSceneAnimationMedia>
+        {
+            /// <summary>
+            /// Gets or sets the nested scene animation to play.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(10), Tooltip("The nested scene animation to play.")]
+            public SceneAnimation NestedSceneAnimation
+            {
+                get => Track.Asset;
+                set => Track.Asset = value;
+            }
+
+            /// <summary>
+            /// Gets or sets the nested animation looping mode.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(20), Tooltip("If checked, the nested animation will loop when playback exceeds its duration. Otherwise it will stop play.")]
+            public bool Loop
+            {
+                get => Track.Loop;
+                set => Track.Loop = value;
+            }
+
+            /// <inheritdoc />
+            public Proxy(NestedSceneAnimationTrack track, NestedSceneAnimationMedia media)
+            : base(track, media)
+            {
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineChanged(Track track)
+        {
+            base.OnTimelineChanged(track);
+
+            PropertiesEditObject = new Proxy(Track as NestedSceneAnimationTrack, this);
+        }
     }
 
     /// <summary>
     /// The timeline track that represents a nested scene animation playback.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public class NestedSceneAnimationTrack : SingleMediaAssetTrack<SceneAnimation, NestedSceneAnimationTrackMedia>
+    public class NestedSceneAnimationTrack : SingleMediaAssetTrack<SceneAnimation, NestedSceneAnimationMedia>
     {
         /// <summary>
         /// Gets the archetype.
@@ -86,7 +122,7 @@ namespace FlaxEditor.GUI.Timeline
             get => TrackMedia.Loop;
             set
             {
-                NestedSceneAnimationTrackMedia media = TrackMedia;
+                NestedSceneAnimationMedia media = TrackMedia;
                 if (media.Loop == value)
                     return;
 

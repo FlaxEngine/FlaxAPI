@@ -14,6 +14,15 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEditor.GUI.Timeline.Timeline" />
     public sealed class ParticleSystemTimeline : Timeline
     {
+        private sealed class Proxy : ProxyBase<ParticleSystemTimeline>
+        {
+            /// <inheritdoc />
+            public Proxy(ParticleSystemTimeline timeline)
+            : base(timeline)
+            {
+            }
+        }
+
         private ParticleSystemPreview _preview;
 
         /// <summary>
@@ -24,6 +33,7 @@ namespace FlaxEditor.GUI.Timeline
         : base(PlaybackButtons.Play | PlaybackButtons.Stop)
         {
             PlaybackState = PlaybackStates.Playing;
+            PropertiesEditObject = new Proxy(this);
 
             _preview = preview;
 

@@ -12,6 +12,53 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public abstract class Media : ContainerControl
     {
+        /// <summary>
+        /// The base class for media properties proxy objects.
+        /// </summary>
+        /// <typeparam name="TTrack">The type of the track.</typeparam>
+        /// <typeparam name="TMedia">The type of the media.</typeparam>
+        public abstract class ProxyBase<TTrack, TMedia>
+        where TTrack : Track
+        where TMedia : Media
+        {
+            [HideInEditor, NoSerialize]
+            public TTrack Track;
+
+            [HideInEditor, NoSerialize]
+            public TMedia Media;
+
+            /// <summary>
+            /// Gets or sets the start frame of the media event.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(-10010), Tooltip("Start frame of the media event.")]
+            public int StartFrame
+            {
+                get => Media.StartFrame;
+                set => Media.StartFrame = value;
+            }
+
+            /// <summary>
+            /// Gets or sets the total duration of the media event in the timeline sequence frames amount.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(-1000), Limit(1), Tooltip("Total duration of the media event in the timeline sequence frames amount.")]
+            public int DurationFrames
+            {
+                get => Media.DurationFrames;
+                set => Media.DurationFrames = value;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ProxyBase{TTrack,TMedia}"/> class.
+            /// </summary>
+            /// <param name="track">The track.</param>
+            /// <param name="media">The media.</param>
+            protected ProxyBase(TTrack track, TMedia media)
+            {
+                Track = track ?? throw new ArgumentNullException(nameof(track));
+                Media = media ?? throw new ArgumentNullException(nameof(media));
+            }
+        }
+
         private Timeline _timeline;
         private Track _tack;
         private int _startFrame, _durationFrames;
@@ -87,6 +134,11 @@ namespace FlaxEditor.GUI.Timeline
         private Rectangle MoveLeftEdgeRect => new Rectangle(-5, -5, 10, Height + 10);
 
         private Rectangle MoveRightEdgeRect => new Rectangle(Width - 5, -5, 10, Height + 10);
+
+        /// <summary>
+        /// The track properties editing proxy object. Assign it to add media properties editing support.
+        /// </summary>
+        public object PropertiesEditObject;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Media"/> class.
@@ -284,6 +336,18 @@ namespace FlaxEditor.GUI.Timeline
             _startMoveRightEdge = false;
 
             EndMouseCapture();
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (IsDisposing)
+                return;
+
+            _timeline = null;
+            _tack = null;
+
+            base.Dispose();
         }
     }
 }

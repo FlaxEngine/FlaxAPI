@@ -10,7 +10,7 @@ namespace FlaxEditor.GUI.Timeline
     /// The timeline media that represents a media event with an asset reference.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    public class SingleMediaAssetTrackMedia : Media
+    public class SingleMediaAssetMedia : Media
     {
         /// <summary>
         /// The asset id.
@@ -18,9 +18,15 @@ namespace FlaxEditor.GUI.Timeline
         public Guid Asset;
     }
 
+    /// <summary>
+    /// The base class for timeline tracks that use single media with an asset reference.
+    /// </summary>
+    /// <typeparam name="TAsset">The type of the asset.</typeparam>
+    /// <typeparam name="TMediaEvent">The type of the media event.</typeparam>
+    /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
     public abstract class SingleMediaAssetTrack<TAsset, TMediaEvent> : Track
     where TAsset : Asset
-    where TMediaEvent : SingleMediaAssetTrackMedia, new()
+    where TMediaEvent : SingleMediaAssetMedia, new()
     {
         /// <summary>
         /// The asset reference picker control.
@@ -44,7 +50,7 @@ namespace FlaxEditor.GUI.Timeline
                 Timeline?.MarkAsEdited();
             }
         }
-        
+
         /// <summary>
         /// Gets the track media.
         /// </summary>
@@ -69,7 +75,7 @@ namespace FlaxEditor.GUI.Timeline
                 return media;
             }
         }
-        
+
         /// <inheritdoc />
         protected SingleMediaAssetTrack(ref TrackCreateOptions options)
         : base(ref options)

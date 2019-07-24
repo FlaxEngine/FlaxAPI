@@ -20,6 +20,8 @@ namespace FlaxEditor.GUI.Timeline
         /// <param name="timeline">The timeline.</param>
         public Background(Timeline timeline)
         {
+            AutoFocus = false;
+
             _timeline = timeline;
         }
 

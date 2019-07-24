@@ -11,8 +11,34 @@ namespace FlaxEditor.GUI.Timeline
     /// The timeline media that represents a particle miter playback media event.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    public class ParticleEmitterMedia : SingleMediaAssetTrackMedia
+    public class ParticleEmitterMedia : SingleMediaAssetMedia
     {
+        private sealed class Proxy : ProxyBase<ParticleEmitterTrack, ParticleEmitterMedia>
+        {
+            /// <summary>
+            /// Gets or sets the particle emitter to simulate.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(10), Tooltip("The particle emitter to simulate.")]
+            public ParticleEmitter ParticleEmitter
+            {
+                get => Track.Asset;
+                set => Track.Asset = value;
+            }
+
+            /// <inheritdoc />
+            public Proxy(ParticleEmitterTrack track, ParticleEmitterMedia media)
+            : base(track, media)
+            {
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineChanged(Track track)
+        {
+            base.OnTimelineChanged(track);
+
+            PropertiesEditObject = new Proxy(Track as ParticleEmitterTrack, this);
+        }
     }
 
     /// <summary>
