@@ -1406,13 +1406,24 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     menu.AddSeparator();
                     menu.AddButton("Reset zoom", () => Zoom = 1.0f);
-                    // TODO: add Show Whole Timeline button
+                    menu.AddButton("Show whole timeline", ShowWholeTimeline);
                     OnShowContextMenu(menu);
                     menu.Show(this, location);
                 }
             }
 
             return base.OnMouseUp(location, buttons);
+        }
+
+        /// <summary>
+        /// Shows the whole timeline.
+        /// </summary>
+        public void ShowWholeTimeline()
+        {
+            var viewWidth = Width;
+            var timelineWidth = Duration * UnitsPerSecond * Zoom + 8 * StartOffset;
+            _backgroundArea.ViewOffset = Vector2.Zero;
+            Zoom = viewWidth / timelineWidth;
         }
 
         class PropertiesEditPopup : ContextMenuBase
