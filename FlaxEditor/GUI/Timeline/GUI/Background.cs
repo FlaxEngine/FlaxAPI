@@ -4,7 +4,7 @@ using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.GUI
 {
     /// <summary>
     /// The timeline background control.

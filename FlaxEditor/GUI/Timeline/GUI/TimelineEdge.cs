@@ -3,7 +3,7 @@
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.GUI
 {
     /// <summary>
     /// Timeline ending edge control that can be used to modify timeline duration with a mouse.

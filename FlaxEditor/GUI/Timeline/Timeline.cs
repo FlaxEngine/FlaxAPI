@@ -7,6 +7,7 @@ using System.Linq;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Input;
+using FlaxEditor.GUI.Timeline.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
