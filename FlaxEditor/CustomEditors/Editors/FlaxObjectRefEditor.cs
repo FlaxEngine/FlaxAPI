@@ -117,6 +117,11 @@ namespace FlaxEditor.CustomEditors.Editors
         public event Action ValueChanged;
 
         /// <summary>
+        /// The custom callback for objects validation. Cane be used to implement a rule for objects to pick.
+        /// </summary>
+        public Func<Object, bool> CheckValid;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FlaxObjectRefPickerControl"/> class.
         /// </summary>
         public FlaxObjectRefPickerControl()
@@ -125,10 +130,10 @@ namespace FlaxEditor.CustomEditors.Editors
             _type = typeof(Object);
         }
 
-        private bool IsValid(object obj)
+        private bool IsValid(Object obj)
         {
             // ReSharper disable once UseMethodIsInstanceOfType
-            return obj == null || _type.IsAssignableFrom(obj.GetType());
+            return obj == null || (_type.IsAssignableFrom(obj.GetType()) && (CheckValid == null || CheckValid(obj)));
         }
 
         private void ShowDropDownMenu()
