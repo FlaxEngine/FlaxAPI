@@ -5,7 +5,7 @@ using System.IO;
 using FlaxEditor.Content;
 using FlaxEngine;
 
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
     /// The timeline media that represents a particle miter playback media event.

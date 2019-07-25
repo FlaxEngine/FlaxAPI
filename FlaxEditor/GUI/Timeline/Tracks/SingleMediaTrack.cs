@@ -1,9 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using FlaxEngine;
-using FlaxEngine.GUI;
-
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
     /// The base class for timeline tracks that use single media.

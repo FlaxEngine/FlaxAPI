@@ -2,7 +2,7 @@
 
 using System.IO;
 
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
     /// The timeline media that represents a screen fade animation event.

@@ -1,12 +1,11 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using System;
 using System.IO;
 using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
     /// The timeline track that represents a folder used to group and organize tracks.

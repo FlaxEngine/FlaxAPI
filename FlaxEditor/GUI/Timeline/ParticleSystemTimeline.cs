@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FlaxEditor.GUI.Timeline.Tracks;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 

@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using FlaxEngine;
 
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
     /// The timeline media that represents a post-process material media event.

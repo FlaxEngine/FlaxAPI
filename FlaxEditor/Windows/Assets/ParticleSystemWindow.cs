@@ -8,6 +8,7 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Timeline;
+using FlaxEditor.GUI.Timeline.Tracks;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;

@@ -4,7 +4,7 @@ using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
     /// The timeline media that represents a media event with an asset reference.
