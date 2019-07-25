@@ -192,6 +192,15 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
+        protected override void GetDesireClientArea(out Rectangle rect)
+        {
+            base.GetDesireClientArea(out rect);
+
+            // Add some margin to allow to drag media edges
+            rect = rect.MakeExpanded(-6.0f);
+        }
+
+        /// <inheritdoc />
         public override void Draw()
         {
             var style = Style.Current;

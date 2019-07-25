@@ -40,5 +40,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         : base(ref options)
         {
         }
+
+        /// <inheritdoc />
+        public override void OnSpawned()
+        {
+            // Ensure to have valid media added
+            // ReSharper disable once UnusedVariable
+            var media = TrackMedia;
+
+            base.OnSpawned();
+        }
     }
 }
