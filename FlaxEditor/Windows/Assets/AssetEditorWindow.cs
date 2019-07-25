@@ -394,7 +394,12 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public abstract class ClonedAssetEditorWindowBase<T> : AssetEditorWindowBase<T> where T : Asset
     {
-        // TODO: maybe delete cloned asset on usage end?
+        // TODO: delete cloned asset on usage end?
+
+        /// <summary>
+        /// Gets the original asset. Note: <see cref="AssetEditorWindowBase{T}.Asset"/> is the cloned asset for local editing. Use <see cref="SaveToOriginal"/> to apply changes to the original asset.
+        /// </summary>
+        public T OriginalAsset => FlaxEngine.Content.GetAsset<T>(_item.ID);
 
         /// <inheritdoc />
         protected ClonedAssetEditorWindowBase(Editor editor, AssetItem item)
