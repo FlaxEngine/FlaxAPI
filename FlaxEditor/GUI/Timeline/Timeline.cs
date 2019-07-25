@@ -181,6 +181,7 @@ namespace FlaxEditor.GUI.Timeline
         private PositionHandle _positionHandle;
         private bool _isRightMouseButtonDown;
         private Vector2 _rightMouseButtonDownPos;
+        private float _zoom = 1.0f;
 
         /// <summary>
         /// Gets or sets the current time showing mode.
@@ -464,6 +465,32 @@ namespace FlaxEditor.GUI.Timeline
         public object PropertiesEditObject;
 
         /// <summary>
+        /// Gets or sets the timeline view zoom.
+        /// </summary>
+        public float Zoom
+        {
+            get => _zoom;
+            set
+            {
+                value = Mathf.Clamp(value, 0.02f, 10.0f);
+                if (Mathf.NearEqual(_zoom, value))
+                    return;
+
+                _zoom = value;
+
+                foreach (var track in _tracks)
+                {
+                    foreach (var media in track.Media)
+                    {
+                        media.OnTimelineZoomChanged();
+                    }
+                }
+                ArrangeTracks();
+                UpdatePositionHandle();
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
@@ -635,7 +662,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             var handleWidth = 12.0f;
             _positionHandle.Bounds = new Rectangle(
-                StartOffset * 2.0f - handleWidth * 0.5f + _currentFrame / _framesPerSecond * UnitsPerSecond,
+                StartOffset * 2.0f - handleWidth * 0.5f + _currentFrame / _framesPerSecond * UnitsPerSecond * Zoom,
                 HeaderTopAreaHeight * -0.5f,
                 handleWidth,
                 HeaderTopAreaHeight * 0.5f);
@@ -1305,7 +1332,7 @@ namespace FlaxEditor.GUI.Timeline
                 float height = _tracksPanel.Height;
 
                 _background.Visible = _tracks.Count > 0;
-                _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond, height);
+                _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond * Zoom, height);
 
                 var edgeWidth = 6.0f;
                 _leftEdge.Bounds = new Rectangle(_background.Left - edgeWidth * 0.5f + StartOffset, HeaderTopAreaHeight * -0.5f, edgeWidth, height + HeaderTopAreaHeight * 0.5f);
@@ -1377,6 +1404,8 @@ namespace FlaxEditor.GUI.Timeline
                     {
                         menu.AddButton("Edit timeline", () => ShowEditPopup(PropertiesEditObject, ref location));
                     }
+                    menu.AddSeparator();
+                    menu.AddButton("Reset zoom", () => Zoom = 1.0f);
                     // TODO: add Show Whole Timeline button
                     OnShowContextMenu(menu);
                     menu.Show(this, location);

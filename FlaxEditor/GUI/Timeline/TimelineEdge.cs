@@ -70,7 +70,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 var moveLocation = Root.MousePosition;
                 var moveLocationDelta = moveLocation - _startMoveLocation;
-                var moveDelta = (int)(moveLocationDelta.X / Timeline.UnitsPerSecond * _timeline.FramesPerSecond);
+                var moveDelta = (int)(moveLocationDelta.X / (Timeline.UnitsPerSecond * _timeline.Zoom) * _timeline.FramesPerSecond);
                 var durationFrames = _timeline.DurationFrames;
 
                 if (_isStart)

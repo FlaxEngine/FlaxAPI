@@ -814,7 +814,7 @@ namespace FlaxEditor.GUI
         public Vector2 ViewScale
         {
             get => _contents.Scale;
-            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.02f), new Vector2(8.0f));
+            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.02f), new Vector2(10.0f));
         }
 
         /// <summary>

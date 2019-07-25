@@ -71,14 +71,15 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Draw vertical lines for time axis
-            var leftFrame = Mathf.Floor((leftSideMin.X - Timeline.StartOffset) / Timeline.UnitsPerSecond) * _timeline.FramesPerSecond;
-            var rightFrame = Mathf.Ceil((rightSideMax.X - Timeline.StartOffset) / Timeline.UnitsPerSecond) * _timeline.FramesPerSecond;
+            var zoom = Timeline.UnitsPerSecond * _timeline.Zoom;
+            var leftFrame = Mathf.Floor((leftSideMin.X - Timeline.StartOffset) / zoom) * _timeline.FramesPerSecond;
+            var rightFrame = Mathf.Ceil((rightSideMax.X - Timeline.StartOffset) / zoom) * _timeline.FramesPerSecond;
             var verticalLinesHeaderExtend = Timeline.HeaderTopAreaHeight * 0.5f;
             var timeShowMode = _timeline.TimeShowMode;
             for (float frame = leftFrame; frame <= rightFrame; frame += _timeline.FramesPerSecond)
             {
                 var time = frame / _timeline.FramesPerSecond;
-                var x = time * Timeline.UnitsPerSecond + Timeline.StartOffset;
+                var x = time * zoom + Timeline.StartOffset;
 
                 // Vertical line
                 Render2D.FillRectangle(new Rectangle(x - 0.5f, 0, 1.0f, height), style.ForegroundDisabled.RGBMultiplied(0.7f));
@@ -121,6 +122,23 @@ namespace FlaxEditor.GUI.Timeline
             var outsideDurationAreaColor = new Color(0, 0, 0, 100);
             Render2D.FillRectangle(new Rectangle(leftSideMin, leftSideMax.X - leftSideMin.X, height), outsideDurationAreaColor);
             Render2D.FillRectangle(new Rectangle(rightSideMin, rightSideMax.X - rightSideMin.X, height), outsideDurationAreaColor);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseWheel(Vector2 location, float delta)
+        {
+            if (base.OnMouseWheel(location, delta))
+                return true;
+
+            // Zoom in/out
+            if (IsMouseOver && Root.GetKey(Keys.Control))
+            {
+                // TODO: preserve the view center point for easier zooming
+                _timeline.Zoom += delta * 0.1f;
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -84,7 +84,7 @@ namespace FlaxEditor.GUI.Timeline
                 _startFrame = value;
                 if (_timeline != null)
                 {
-                    X = Start * Timeline.UnitsPerSecond + Timeline.StartOffset;
+                    OnTimelineZoomChanged();
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace FlaxEditor.GUI.Timeline
                 _durationFrames = value;
                 if (_timeline != null)
                 {
-                    Width = Duration * Timeline.UnitsPerSecond;
+                    OnTimelineZoomChanged();
                 }
             }
         }
@@ -159,8 +159,7 @@ namespace FlaxEditor.GUI.Timeline
             Parent = _timeline?.MediaPanel;
             if (_timeline != null)
             {
-                X = Start * Timeline.UnitsPerSecond + Timeline.StartOffset;
-                Width = Duration * Timeline.UnitsPerSecond;
+                OnTimelineZoomChanged();
             }
         }
 
@@ -181,6 +180,15 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnDeleted()
         {
             Dispose();
+        }
+
+        /// <summary>
+        /// Called when timeline zoom gets changed.
+        /// </summary>
+        public virtual void OnTimelineZoomChanged()
+        {
+            X = Start * Timeline.UnitsPerSecond * _timeline.Zoom + Timeline.StartOffset;
+            Width = Duration * Timeline.UnitsPerSecond * _timeline.Zoom;
         }
 
         /// <inheritdoc />
@@ -250,7 +258,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 var moveLocation = Root.MousePosition;
                 var moveLocationDelta = moveLocation - _startMoveLocation;
-                var moveDelta = (int)(moveLocationDelta.X / Timeline.UnitsPerSecond * _timeline.FramesPerSecond);
+                var moveDelta = (int)(moveLocationDelta.X / (Timeline.UnitsPerSecond * _timeline.Zoom) * _timeline.FramesPerSecond);
                 var startFrame = StartFrame;
                 var durationFrames = DurationFrames;
 
