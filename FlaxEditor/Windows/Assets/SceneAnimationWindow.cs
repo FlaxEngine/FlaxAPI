@@ -71,7 +71,13 @@ namespace FlaxEditor.Windows.Assets
             };
             previewPlayerPickerContainer.Width = _previewPlayerPicker.Right + 2.0f;
             previewPlayerPickerContainer.Parent = _toolstrip;
+            _previewPlayerPicker.CheckValid = OnCheckValid;
             _previewPlayerPicker.ValueChanged += OnPreviewPlayerPickerChanged;
+        }
+
+        private bool OnCheckValid(Object obj)
+        {
+            return obj is SceneAnimationPlayer player && player.Animation == OriginalAsset;
         }
 
         /// <inheritdoc />
@@ -219,7 +225,8 @@ namespace FlaxEditor.Windows.Assets
                 if (obj)
                 {
                     _cachedPlayerId = Guid.Empty;
-                    _timeline.Player = obj;
+                    if (obj.Animation == OriginalAsset)
+                        _timeline.Player = obj;
                 }
             }
         }
