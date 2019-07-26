@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.GUI.Timeline.GUI;
 using FlaxEngine;
@@ -13,6 +14,25 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
     public class ScreenFadeMedia : Media
     {
+        private sealed class Proxy : ProxyBase<ScreenFadeTrack, ScreenFadeMedia>
+        {
+            /// <summary>
+            /// Gets or sets the color gradient stops collection.
+            /// </summary>
+            [EditorDisplay("Gradient", EditorDisplayAttribute.InlineStyle), EditorOrder(10), Tooltip("The color gradient stops list.")]
+            public List<GradientEditor.Stop> Gradient
+            {
+                get => Media.Gradient.Stops;
+                set => Media.Gradient.Stops = value;
+            }
+
+            /// <inheritdoc />
+            public Proxy(ScreenFadeTrack track, ScreenFadeMedia media)
+            : base(track, media)
+            {
+            }
+        }
+
         /// <summary>
         /// The gradient.
         /// </summary>
@@ -25,10 +45,17 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             Gradient = new GradientEditor
             {
-                BackgroundColor = Color.Red,
                 DockStyle = DockStyle.Fill,
                 Parent = this,
             };
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineChanged(Track track)
+        {
+            base.OnTimelineChanged(track);
+
+            PropertiesEditObject = new Proxy(Track as ScreenFadeTrack, this);
         }
     }
 
@@ -61,13 +88,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             m.StartFrame = stream.ReadInt32();
             m.DurationFrames = stream.ReadInt32();
             var stopsCount = stream.ReadInt32();
-            var stops = new GradientEditor.Stop[stopsCount];
+            var stops = new List<GradientEditor.Stop>(stopsCount);
             for (int i = 0; i < stopsCount; i++)
             {
-                var stop = stops[i];
-                stop.Time = stream.ReadSingle();
+                GradientEditor.Stop stop;
+                stop.Frame = stream.ReadInt32();
                 stop.Value = stream.ReadColor();
-                stops[i] = stop;
+                stops.Add(stop);
             }
             m.Gradient.Stops = stops;
         }
@@ -86,7 +113,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 for (int i = 0; i < stops.Count; i++)
                 {
                     var stop = stops[i];
-                    stream.Write(stop.Time);
+                    stream.Write(stop.Frame);
                     stream.Write(stop.Value);
                 }
             }
