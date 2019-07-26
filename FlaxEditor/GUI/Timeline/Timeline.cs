@@ -926,7 +926,7 @@ namespace FlaxEditor.GUI.Timeline
                         int childrenCount = stream.ReadInt32();
                         track.Name = Utilities.Utils.ReadStr(stream, -13);
                         track.Tag = parentIndex;
-                        track.Color = new Color(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+                        track.Color = stream.ReadColor32();
 
                         track.Archetype.Load(version, track, stream);
 
@@ -985,13 +985,7 @@ namespace FlaxEditor.GUI.Timeline
                     stream.Write(_tracks.IndexOf(track.ParentTrack));
                     stream.Write(track.SubTracks.Count);
                     Utilities.Utils.WriteStr(stream, track.Name, -13);
-                    {
-                        var color = (Color32)track.Color;
-                        stream.Write(color.R);
-                        stream.Write(color.G);
-                        stream.Write(color.B);
-                        stream.Write(color.A);
-                    }
+                    stream.Write((Color32)track.Color);
                     track.Archetype.Save(track, stream);
                 }
 
