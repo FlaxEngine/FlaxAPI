@@ -1,6 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System.IO;
+using FlaxEditor.GUI.Timeline.GUI;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
@@ -10,6 +13,23 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
     public class ScreenFadeMedia : Media
     {
+        /// <summary>
+        /// The gradient.
+        /// </summary>
+        public GradientEditor Gradient;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScreenFadeMedia"/> class.
+        /// </summary>
+        public ScreenFadeMedia()
+        {
+            Gradient = new GradientEditor
+            {
+                BackgroundColor = Color.Red,
+                DockStyle = DockStyle.Fill,
+                Parent = this,
+            };
+        }
     }
 
     /// <summary>
@@ -40,6 +60,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             var m = e.TrackMedia;
             m.StartFrame = stream.ReadInt32();
             m.DurationFrames = stream.ReadInt32();
+            var stopsCount = stream.ReadInt32();
+            var stops = new GradientEditor.Stop[stopsCount];
+            for (int i = 0; i < stopsCount; i++)
+            {
+                var stop = stops[i];
+                stop.Time = stream.ReadSingle();
+                stop.Value = stream.ReadColor();
+                stops[i] = stop;
+            }
+            m.Gradient.Stops = stops;
         }
 
         private static void SaveTrack(Track track, BinaryWriter stream)
@@ -51,11 +81,20 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 var m = e.TrackMedia;
                 stream.Write(m.StartFrame);
                 stream.Write(m.DurationFrames);
+                var stops = m.Gradient.Stops;
+                stream.Write(stops.Count);
+                for (int i = 0; i < stops.Count; i++)
+                {
+                    var stop = stops[i];
+                    stream.Write(stop.Time);
+                    stream.Write(stop.Value);
+                }
             }
             else
             {
                 stream.Write(0);
                 stream.Write(track.Timeline.DurationFrames);
+                stream.Write(0);
             }
         }
 
