@@ -1389,9 +1389,14 @@ namespace FlaxEditor.GUI.Timeline
                         Focus();
 
                     var controlUnderMouse = GetChildAtRecursive(location);
+                    var mediaUnderMouse = controlUnderMouse;
+                    while (mediaUnderMouse != null && !(mediaUnderMouse is Media))
+                    {
+                        mediaUnderMouse = mediaUnderMouse.Parent;
+                    }
 
                     var menu = new ContextMenu.ContextMenu();
-                    if (controlUnderMouse is Media media && media.PropertiesEditObject != null)
+                    if (mediaUnderMouse is Media media && media.PropertiesEditObject != null)
                     {
                         menu.AddButton("Edit media", () => ShowEditPopup(media.PropertiesEditObject, ref location));
                     }
