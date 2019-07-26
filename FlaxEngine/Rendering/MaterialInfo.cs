@@ -89,115 +89,6 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
-    /// Material transparent lighting modes.
-    /// </summary>
-    public enum MaterialTransparentLighting : byte
-    {
-        /// <summary>
-        /// Shading is disabled.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// Shading is performed per pixel for single directional light.
-        /// </summary>
-        SingleDirectionalPerPixel = 1
-    }
-
-    /// <summary>
-    /// Material usage flags.
-    /// </summary>
-    [Flags]
-    public enum MaterialFlags : uint
-    {
-        /// <summary>
-        /// The none.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// Material is using mask to discard some pixels.
-        /// Masked materials are using full vertex buffer during shadow maps and depth pass rendering (need UVs).
-        /// </summary>
-        UseMask = 1 << 0,
-
-        /// <summary>
-        /// The two sided material. No triangle normal culling is performed.
-        /// </summary>
-        TwoSided = 1 << 1,
-
-        /// <summary>
-        /// The wireframe material.
-        /// </summary>
-        Wireframe = 1 << 2,
-
-        /// <summary>
-        /// The material is using emissive light.
-        /// </summary>
-        UseEmissive = 1 << 3,
-
-        /// <summary>
-        /// The transparent materials option. Disable depth test (material ignores depth).
-        /// </summary>
-        TransparentDisableDepthTest = 1 << 4,
-
-        /// <summary>
-        /// The transparent materials option. Disable fog.
-        /// </summary>
-        TransparentDisableFog = 1 << 5,
-
-        /// <summary>
-        /// The transparent materials option. Disable reflections.
-        /// </summary>
-        TransparentDisableReflections = 1 << 6,
-
-        /// <summary>
-        /// The transparent materials option. Disable depth buffer write (won't modify depth buffer value after rendering).
-        /// </summary>
-        DisableDepthWrite = 1 << 7,
-
-        /// <summary>
-        /// The transparent materials option. Disable distortion.
-        /// </summary>
-        TransparentDisableDistortion = 1 << 8,
-
-        /// <summary>
-        /// The material is using world position offset (it may be animated inside a shader).
-        /// </summary>
-        UsePositionOffset = 1 << 9,
-
-        /// <summary>
-        /// The material is using vertex colors. The render will try to feed the pipeline with a proper buffer so material can gather valid data.
-        /// </summary>
-        UseVertexColor = 1 << 10,
-
-        /// <summary>
-        /// The material is using per-pixel normal mapping.
-        /// </summary>
-        UseNormal = 1 << 11,
-
-        /// <summary>
-        /// The material is using position displacement (in domain shader).
-        /// </summary>
-        UseDisplacement = 1 << 12,
-
-        /// <summary>
-        /// The flag used to indicate that material input normal vector is defined in the world space rather than tangent space.
-        /// </summary>
-        InputWorldSpaceNormal = 1 << 13,
-
-        /// <summary>
-        /// The flag used to indicate that material uses dithered model LOD transition for smoother LODs switching.
-        /// </summary>
-        UseDitheredLODTransition = 1 << 14,
-
-        /// <summary>
-        /// The flag used to indicate that material uses refraction feature.
-        /// </summary>
-        UseRefraction = 1 << 15,
-    }
-
-    /// <summary>
     /// Post Fx material rendering locations.
     /// </summary>
     public enum MaterialPostFxLocation : byte
@@ -321,6 +212,104 @@ namespace FlaxEngine.Rendering
     }
 
     /// <summary>
+    /// Material features flags.
+    /// </summary>
+    public enum MaterialFeaturesFlags : uint
+    {
+        /// <summary>
+        /// No flags.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// The wireframe material.
+        /// </summary>
+        Wireframe = 1 << 1,
+
+        /// <summary>
+        /// The depth test is disabled (material ignores depth).
+        /// </summary>
+        DisableDepthTest = 1 << 2,
+
+        /// <summary>
+        /// Disable depth buffer write (won't modify depth buffer value during rendering).
+        /// </summary>
+        DisableDepthWrite = 1 << 3,
+
+        /// <summary>
+        /// The flag used to indicate that material input normal vector is defined in the world space rather than tangent space.
+        /// </summary>
+        InputWorldSpaceNormal = 1 << 4,
+
+        /// <summary>
+        /// The flag used to indicate that material uses dithered model LOD transition for smoother LODs switching.
+        /// </summary>
+        DitheredLODTransition = 1 << 5,
+
+        /// <summary>
+        /// The flag used to disable fog. The Forward Pass materials option.
+        /// </summary>
+        DisableFog = 1 << 6,
+
+        /// <summary>
+        /// The flag used to disable reflections. The Forward Pass materials option.
+        /// </summary>
+        DisableReflections = 1 << 7,
+
+        /// <summary>
+        /// The flag used to disable distortion effect (light refraction). The Forward Pass materials option.
+        /// </summary>
+        DisableDistortion = 1 << 8,
+    }
+
+    /// <summary>
+    /// Material features usage flags. Detected by the material generator to help graphics pipeline optimize rendering of material shaders.
+    /// </summary>
+    [Flags]
+    public enum MaterialUsageFlags : uint
+    {
+        /// <summary>
+        /// No flags.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Material is using mask to discard some pixels. Masked materials are using full vertex buffer during shadow maps and depth pass rendering (need UVs).
+        /// </summary>
+        UseMask = 1 << 0,
+
+        /// <summary>
+        /// The material is using emissive light.
+        /// </summary>
+        UseEmissive = 1 << 1,
+
+        /// <summary>
+        /// The material is using world position offset (it may be animated inside a shader).
+        /// </summary>
+        UsePositionOffset = 1 << 2,
+
+        /// <summary>
+        /// The material is using vertex colors. The render will try to feed the pipeline with a proper buffer so material can gather valid data.
+        /// </summary>
+        UseVertexColor = 1 << 3,
+
+        /// <summary>
+        /// The material is using per-pixel normal mapping.
+        /// </summary>
+        UseNormal = 1 << 4,
+
+        /// <summary>
+        /// The material is using position displacement (in domain shader).
+        /// </summary>
+        UseDisplacement = 1 << 5,
+
+        /// <summary>
+        /// The flag used to indicate that material uses refraction feature.
+        /// </summary>
+        UseRefraction = 1 << 6,
+    }
+
+    /// <summary>
     /// Structure with basic information about the material surface.
     /// It describes how material is reacting on light and which graphical features of it requires to render.
     /// </summary>
@@ -343,14 +332,14 @@ namespace FlaxEngine.Rendering
         public MaterialShadingModel ShadingModel;
 
         /// <summary>
-        /// The flags.
+        /// The usage flags.
         /// </summary>
-        public MaterialFlags Flags;
+        public MaterialUsageFlags UsageFlags;
 
         /// <summary>
-        /// The transparent lighting mode.
+        /// The features flags.
         /// </summary>
-        public MaterialTransparentLighting TransparentLighting;
+        public MaterialFeaturesFlags FeaturesFlags;
 
         /// <summary>
         /// The decal material blending mode.
@@ -361,6 +350,11 @@ namespace FlaxEngine.Rendering
         /// The post fx material rendering location.
         /// </summary>
         public MaterialPostFxLocation PostFxLocation;
+        
+        /// <summary>
+        /// The primitives culling mode.
+        /// </summary>
+        public CullMode CullMode;
 
         /// <summary>
         /// The mask threshold.
@@ -393,8 +387,8 @@ namespace FlaxEngine.Rendering
                 Domain = MaterialDomain.Surface,
                 BlendMode = MaterialBlendMode.Opaque,
                 ShadingModel = MaterialShadingModel.Lit,
-                Flags = MaterialFlags.None,
-                TransparentLighting = MaterialTransparentLighting.None,
+                UsageFlags = MaterialUsageFlags.None,
+                FeaturesFlags = MaterialFeaturesFlags.None,
                 DecalBlendingMode = MaterialDecalBlendingMode.Translucent,
                 PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
                 MaskThreshold = 0.3f,
@@ -440,8 +434,8 @@ namespace FlaxEngine.Rendering
             return Domain == other.Domain
                    && BlendMode == other.BlendMode
                    && ShadingModel == other.ShadingModel
-                   && Flags == other.Flags
-                   && TransparentLighting == other.TransparentLighting
+                   && UsageFlags == other.UsageFlags
+                   && FeaturesFlags == other.FeaturesFlags
                    && DecalBlendingMode == other.DecalBlendingMode
                    && PostFxLocation == other.PostFxLocation
                    && Mathf.NearEqual(MaskThreshold, other.MaskThreshold)
@@ -464,8 +458,8 @@ namespace FlaxEngine.Rendering
                 var hashCode = (int)Domain;
                 hashCode = (hashCode * 397) ^ (int)BlendMode;
                 hashCode = (hashCode * 397) ^ (int)ShadingModel;
-                hashCode = (hashCode * 397) ^ (int)Flags;
-                hashCode = (hashCode * 397) ^ (int)TransparentLighting;
+                hashCode = (hashCode * 397) ^ (int)UsageFlags;
+                hashCode = (hashCode * 397) ^ (int)FeaturesFlags;
                 hashCode = (hashCode * 397) ^ (int)PostFxLocation;
                 hashCode = (hashCode * 397) ^ (int)DecalBlendingMode;
                 hashCode = (hashCode * 397) ^ (int)(MaskThreshold * 1000.0f);

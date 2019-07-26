@@ -46,62 +46,71 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("General"), Tooltip("Material domain type")]
-            public MaterialDomain Domain { get; set; }
+            // General
 
-            [EditorOrder(20), EditorDisplay("General"), Tooltip("Determinates how materials' color should be blended with the background colors")]
-            public MaterialBlendMode BlendMode { get; set; }
+            [EditorOrder(10), EditorDisplay("General"), Tooltip("Material domain type.")]
+            public MaterialDomain Domain;
 
-            [EditorOrder(25), EditorDisplay("General"), Tooltip("Defines how material inputs and properties are combined to result the final surface color.")]
-            public MaterialShadingModel ShadingModel { get; set; }
+            [EditorOrder(20), EditorDisplay("General"), Tooltip("Defines how material inputs and properties are combined to result the final surface color.")]
+            public MaterialShadingModel ShadingModel;
 
-            [EditorOrder(30), EditorDisplay("General"), Tooltip("Indicates that material should be rendered without backface culling and normals should be fliped for the backfaces")]
-            public bool TwoSided { get; set; }
+            [EditorOrder(30), EditorDisplay("General"), Tooltip("Determinates how materials' color should be blended with the background colors.")]
+            public MaterialBlendMode BlendMode;
 
-            [EditorOrder(40), EditorDisplay("General"), Tooltip("True if render in wireframe mode")]
-            public bool Wireframe { get; set; }
+            // Rendering
 
-            [EditorOrder(100), EditorDisplay("Transparency"), Tooltip("Transparent materials lighting mode")]
-            public MaterialTransparentLighting Lighting { get; set; }
+            [EditorOrder(100), EditorDisplay("Rendering"), Tooltip("Defines the primitives culling mode used during geometry rendering.")]
+            public CullMode CullMode;
 
-            [EditorOrder(110), EditorDisplay("Transparency"), Tooltip("True if disable depth test when rendering material")]
-            public bool DisableDepthTest { get; set; }
+            [EditorOrder(110), EditorDisplay("Rendering"), Tooltip("If checked, geometry will be rendered in wireframe mode.")]
+            public bool Wireframe;
 
-            [EditorOrder(120), EditorDisplay("Transparency"), Tooltip("True if disable reflections when rendering material")]
-            public bool DisableReflections { get; set; }
+            [EditorOrder(120), EditorDisplay("Rendering"), Tooltip("Enables performing depth test during material rendering.")]
+            public bool DepthTest;
 
-            [HideInEditor, EditorOrder(130), EditorDisplay("Transparency"), Tooltip("True if disable atmosphere fog when rendering material")]
-            public bool DisableFog { get; set; }
+            [EditorOrder(130), EditorDisplay("Rendering"), Tooltip("Enable writing to the depth buffer during material rendering.")]
+            public bool DepthWrite;
 
-            [EditorOrder(140), EditorDisplay("Transparency"), Tooltip("True if disable distortion effect when rendering material")]
-            public bool DisableDistortion { get; set; }
+            // Transparency
 
-            [EditorOrder(150), EditorDisplay("Transparency"), Tooltip("Controls opacity values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
-            public float OpacityThreshold { get; set; }
+            [EditorOrder(200), EditorDisplay("Transparency"), Tooltip("Enables reflections when rendering material.")]
+            public bool EnableReflections;
 
-            [EditorOrder(170), EditorDisplay("Tessellation"), Tooltip("Mesh tessellation method")]
-            public TessellationMethod TessellationMode { get; set; }
+            [EditorOrder(210), EditorDisplay("Transparency"), Tooltip("Enables fog effects when rendering material.")]
+            public bool EnableFog;
 
-            [EditorOrder(175), EditorDisplay("Tessellation"), Tooltip("Maximum triangle tessellation factor"), Limit(1, 60, 0.01f)]
-            public int MaxTessellationFactor { get; set; }
+            [EditorOrder(220), EditorDisplay("Transparency"), Tooltip("Enables distortion effect when rendering material.")]
+            public bool EnableDistortion;
 
-            [EditorOrder(200), EditorDisplay("Misc"), Tooltip("True if disable depth buffer write when rendering material")]
-            public bool DisableDepthWrite { get; set; }
+            [EditorOrder(230), EditorDisplay("Transparency"), Tooltip("Controls opacity values clipping point."), Limit(0.0f, 1.0f, 0.01f)]
+            public float OpacityThreshold;
 
-            [EditorOrder(205), EditorDisplay("Misc"), Tooltip("If checked, material input normal will be assumed as world-space rather than tangent-space.")]
-            public bool UseInputWorldSpaceNormal { get; set; }
+            // Tessellation
 
-            [EditorOrder(206), EditorDisplay("Misc", "Use Dithered LOD Transition"), Tooltip("If checked, material uses dithered model LOD transition for smoother LODs switching.")]
-            public bool UseDitheredLODTransition { get; set; }
+            [EditorOrder(300), EditorDisplay("Tessellation"), Tooltip("Mesh tessellation method.")]
+            public TessellationMethod TessellationMode;
 
-            [EditorOrder(210), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point"), Limit(0.0f, 1.0f, 0.01f)]
-            public float MaskThreshold { get; set; }
+            [EditorOrder(310), EditorDisplay("Tessellation"), Tooltip("Maximum triangle tessellation factor."), Limit(1, 60, 0.01f)]
+            public int MaxTessellationFactor;
 
-            [EditorOrder(215), EditorDisplay("Misc"), Tooltip("The decal material blending mode")]
-            public MaterialDecalBlendingMode DecalBlendingMode { get; set; }
+            // Misc
 
-            [EditorOrder(220), EditorDisplay("Misc"), Tooltip("The post fx material rendering location")]
-            public MaterialPostFxLocation PostFxLocation { get; set; }
+            [EditorOrder(400), EditorDisplay("Misc"), Tooltip("If checked, material input normal will be assumed as world-space rather than tangent-space.")]
+            public bool InputWorldSpaceNormal;
+
+            [EditorOrder(410), EditorDisplay("Misc", "Dithered LOD Transition"), Tooltip("If checked, material uses dithered model LOD transition for smoother LODs switching.")]
+            public bool DitheredLODTransition;
+
+            [EditorOrder(420), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point."), Limit(0.0f, 1.0f, 0.01f)]
+            public float MaskThreshold;
+
+            [EditorOrder(430), EditorDisplay("Misc"), Tooltip("The decal material blending mode.")]
+            public MaterialDecalBlendingMode DecalBlendingMode;
+
+            [EditorOrder(440), EditorDisplay("Misc"), Tooltip("The post fx material rendering location.")]
+            public MaterialPostFxLocation PostFxLocation;
+
+            // Parameters
 
             [EditorOrder(1000), EditorDisplay("Parameters"), CustomEditor(typeof(ParametersEditor)), NoSerialize]
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
@@ -124,15 +133,15 @@ namespace FlaxEditor.Windows.Assets
                 // Update cache
                 var material = window.Asset;
                 var info = material.Info;
-                Wireframe = (info.Flags & MaterialFlags.Wireframe) != 0;
-                TwoSided = (info.Flags & MaterialFlags.TwoSided) != 0;
-                DisableDepthTest = (info.Flags & MaterialFlags.TransparentDisableDepthTest) != 0;
-                DisableReflections = (info.Flags & MaterialFlags.TransparentDisableReflections) != 0;
-                DisableFog = (info.Flags & MaterialFlags.TransparentDisableFog) != 0;
-                DisableDepthWrite = (info.Flags & MaterialFlags.DisableDepthWrite) != 0;
-                DisableDistortion = (info.Flags & MaterialFlags.TransparentDisableDistortion) != 0;
-                UseInputWorldSpaceNormal = (info.Flags & MaterialFlags.InputWorldSpaceNormal) != 0;
-                UseDitheredLODTransition = (info.Flags & MaterialFlags.UseDitheredLODTransition) != 0;
+                Wireframe = (info.FeaturesFlags & MaterialFeaturesFlags.Wireframe) != 0;
+                CullMode = info.CullMode;
+                DepthTest = (info.FeaturesFlags & MaterialFeaturesFlags.DisableDepthTest) == 0;
+                DepthWrite = (info.FeaturesFlags & MaterialFeaturesFlags.DisableDepthWrite) == 0;
+                EnableReflections = (info.FeaturesFlags & MaterialFeaturesFlags.DisableReflections) == 0;
+                EnableFog = (info.FeaturesFlags & MaterialFeaturesFlags.DisableFog) == 0;
+                EnableDistortion = (info.FeaturesFlags & MaterialFeaturesFlags.DisableDistortion) == 0;
+                InputWorldSpaceNormal = (info.FeaturesFlags & MaterialFeaturesFlags.InputWorldSpaceNormal) != 0;
+                DitheredLODTransition = (info.FeaturesFlags & MaterialFeaturesFlags.DitheredLODTransition) != 0;
                 OpacityThreshold = info.OpacityThreshold;
                 TessellationMode = info.TessellationMode;
                 MaxTessellationFactor = info.MaxTessellationFactor;
@@ -141,7 +150,6 @@ namespace FlaxEditor.Windows.Assets
                 PostFxLocation = info.PostFxLocation;
                 BlendMode = info.BlendMode;
                 ShadingModel = info.ShadingModel;
-                Lighting = info.TransparentLighting;
                 Domain = info.Domain;
 
                 // Link
@@ -155,24 +163,23 @@ namespace FlaxEditor.Windows.Assets
             public void OnSave(ref MaterialInfo info)
             {
                 // Update flags
+                info.CullMode = CullMode;
                 if (Wireframe)
-                    info.Flags |= MaterialFlags.Wireframe;
-                if (TwoSided)
-                    info.Flags |= MaterialFlags.TwoSided;
-                if (DisableDepthTest)
-                    info.Flags |= MaterialFlags.TransparentDisableDepthTest;
-                if (DisableReflections)
-                    info.Flags |= MaterialFlags.TransparentDisableReflections;
-                if (DisableFog)
-                    info.Flags |= MaterialFlags.TransparentDisableFog;
-                if (DisableDepthWrite)
-                    info.Flags |= MaterialFlags.DisableDepthWrite;
-                if (DisableDistortion)
-                    info.Flags |= MaterialFlags.TransparentDisableDistortion;
-                if (UseInputWorldSpaceNormal)
-                    info.Flags |= MaterialFlags.InputWorldSpaceNormal;
-                if (UseDitheredLODTransition)
-                    info.Flags |= MaterialFlags.UseDitheredLODTransition;
+                    info.FeaturesFlags |= MaterialFeaturesFlags.Wireframe;
+                if (!DepthTest)
+                    info.FeaturesFlags |= MaterialFeaturesFlags.DisableDepthTest;
+                if (!DepthWrite)
+                    info.FeaturesFlags |= MaterialFeaturesFlags.DisableDepthWrite;
+                if (!EnableReflections)
+                    info.FeaturesFlags |= MaterialFeaturesFlags.DisableReflections;
+                if (!EnableFog)
+                    info.FeaturesFlags |= MaterialFeaturesFlags.DisableFog;
+                if (!EnableDistortion)
+                    info.FeaturesFlags |= MaterialFeaturesFlags.DisableDistortion;
+                if (InputWorldSpaceNormal)
+                    info.FeaturesFlags |= MaterialFeaturesFlags.InputWorldSpaceNormal;
+                if (DitheredLODTransition)
+                    info.FeaturesFlags |= MaterialFeaturesFlags.DitheredLODTransition;
                 info.OpacityThreshold = OpacityThreshold;
                 info.TessellationMode = TessellationMode;
                 info.MaxTessellationFactor = MaxTessellationFactor;
@@ -181,7 +188,6 @@ namespace FlaxEditor.Windows.Assets
                 info.PostFxLocation = PostFxLocation;
                 info.BlendMode = BlendMode;
                 info.ShadingModel = ShadingModel;
-                info.TransparentLighting = Lighting;
                 info.Domain = Domain;
             }
 
