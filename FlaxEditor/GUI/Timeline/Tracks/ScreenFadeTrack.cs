@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Timeline.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -48,6 +50,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 DockStyle = DockStyle.Fill,
                 Parent = this,
             };
+            Gradient.Edited += OnGradientEdited;
+        }
+
+        private void OnGradientEdited()
+        {
+            Timeline?.MarkAsEdited();
         }
 
         /// <inheritdoc />
@@ -56,6 +64,41 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             base.OnTimelineChanged(track);
 
             PropertiesEditObject = new Proxy(Track as ScreenFadeTrack, this);
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineZoomChanged()
+        {
+            base.OnTimelineZoomChanged();
+
+            Gradient.SetScale(Timeline.Zoom * Timeline.UnitsPerSecond / Timeline.FramesPerSecond);
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineFpsChanged(float before, float after)
+        {
+            base.OnTimelineFpsChanged(before, after);
+
+            Gradient.OnTimelineFpsChanged(before, after);
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineShowContextMenu(ContextMenu.ContextMenu menu, Control controlUnderMouse)
+        {
+            base.OnTimelineShowContextMenu(menu, controlUnderMouse);
+
+            if (controlUnderMouse is GradientEditor.StopControl stop)
+            {
+                menu.AddButton("Remove gradient stop", OnRemoveGradientStop).Tag = stop.Index;
+                menu.AddSeparator();
+            }
+        }
+
+        private void OnRemoveGradientStop(ContextMenuButton button)
+        {
+            var stops = new List<GradientEditor.Stop>(Gradient.Stops);
+            stops.RemoveAt((int)button.Tag);
+            Gradient.Stops = stops;
         }
     }
 

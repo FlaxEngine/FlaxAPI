@@ -1396,9 +1396,13 @@ namespace FlaxEditor.GUI.Timeline
                     }
 
                     var menu = new ContextMenu.ContextMenu();
-                    if (mediaUnderMouse is Media media && media.PropertiesEditObject != null)
+                    if (mediaUnderMouse is Media media)
                     {
-                        menu.AddButton("Edit media", () => ShowEditPopup(media.PropertiesEditObject, ref location));
+                        media.OnTimelineShowContextMenu(menu, controlUnderMouse);
+                        if (media.PropertiesEditObject != null)
+                        {
+                            menu.AddButton("Edit media", () => ShowEditPopup(media.PropertiesEditObject, ref location));
+                        }
                     }
                     if (PropertiesEditObject != null)
                     {

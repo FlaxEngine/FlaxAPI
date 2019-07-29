@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.GUI.Dialogs;
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -33,10 +35,15 @@ namespace FlaxEditor.GUI.Timeline.GUI
             public Color Value;
         }
 
-        private class StopControl : Control
+        /// <summary>
+        /// The stop control type.
+        /// </summary>
+        /// <seealso cref="FlaxEngine.GUI.Control" />
+        public class StopControl : Control
         {
             private bool _isMoving;
             private Vector2 _startMovePos;
+            private IColorPickerDialog _currentDialog;
 
             public GradientEditor Gradient;
             public int Index;
@@ -46,19 +53,13 @@ namespace FlaxEditor.GUI.Timeline.GUI
             {
                 base.Draw();
 
-                var isSelected = Gradient._selected == this;
-                var arrowRect = new Rectangle(0, 0, 16.0f, 16.0f);
-                var arrowTransform = Matrix3x3.Translation2D(new Vector2(-16.0f, -8.0f)) * Matrix3x3.RotationZ(-Mathf.PiOverTwo) * Matrix3x3.Translation2D(new Vector2(8.0f, 0));
+                var isMouseOver = IsMouseOver;
                 var color = Gradient._data[Index].Value;
-                if (IsMouseOver)
-                    color *= 1.3f;
-                color.A = 1.0f;
                 var icons = Editor.Instance.Icons;
-                var icon = isSelected ? icons.VisjectArrowClose : icons.VisjectArrowOpen;
+                var icon = icons.VisjectBoxClose;
 
-                Render2D.PushTransform(ref arrowTransform);
-                Render2D.DrawSprite(icon, arrowRect, color);
-                Render2D.PopTransform();
+                Render2D.DrawSprite(icon, new Rectangle(0.0f, 0.0f, 10.0f, 10.0f), isMouseOver ? Color.Gray : Color.Black);
+                Render2D.DrawSprite(icon, new Rectangle(1.0f, 1.0f, 8.0f, 8.0f), color);
             }
 
             /// <inheritdoc />
@@ -108,13 +109,33 @@ namespace FlaxEditor.GUI.Timeline.GUI
                 if (_isMoving && Vector2.DistanceSquared(ref location, ref _startMovePos) > 25.0f)
                 {
                     _startMovePos = Vector2.Minimum;
-                    var index = Gradient._stops.IndexOf(this);
-                    var time = (PointToParent(location).X - Gradient.BottomLeft.X) / Gradient.Width;
-                    // TODO: finish moving stops
-                    //Gradient.SetStopTime(index, time);
+                    var x = PointToParent(location).X;
+                    var frame = (int)((x - Width * 0.5f) / Gradient._scale);
+                    Gradient.SetStopFrame(Index, frame);
                 }
 
                 base.OnMouseMove(location);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDoubleClick(location, buttons))
+                    return true;
+
+                if (buttons == MouseButton.Left)
+                {
+                    // Show color picker dialog
+                    _currentDialog = ColorValueBox.ShowPickColorDialog?.Invoke(Gradient._data[Index].Value, OnColorChanged);
+                    return true;
+                }
+
+                return false;
+            }
+
+            private void OnColorChanged(Color color, bool sliding)
+            {
+                Gradient.SetStopColor(Index, color);
             }
 
             /// <inheritdoc />
@@ -124,11 +145,25 @@ namespace FlaxEditor.GUI.Timeline.GUI
 
                 base.OnEndMouseCapture();
             }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                if (_currentDialog != null)
+                {
+                    _currentDialog.ClosePicker();
+                    _currentDialog = null;
+                }
+
+                base.Dispose();
+            }
         }
 
         private List<Stop> _data = new List<Stop>();
         private List<StopControl> _stops = new List<StopControl>();
         private StopControl _selected;
+        private float _scale;
+        private UpdateDelegate _update;
 
         /// <summary>
         /// Gets or sets the list of gradient stops.
@@ -146,6 +181,7 @@ namespace FlaxEditor.GUI.Timeline.GUI
                 _data.Clear();
                 _data.AddRange(value);
                 _data.Sort((a, b) => a.Frame > b.Frame ? 1 : 0);
+                OnStopsChanged();
                 UpdateControls();
             }
         }
@@ -166,6 +202,40 @@ namespace FlaxEditor.GUI.Timeline.GUI
         public GradientEditor()
         {
             AutoFocus = false;
+            SetUpdate(ref _update, OnUpdate);
+        }
+
+        private void OnUpdate(float deltaTime)
+        {
+            // Required to synchronize controls with Stops array edited via property edit context menu
+            _data.Sort((a, b) => a.Frame > b.Frame ? 1 : 0);
+            UpdateControls();
+        }
+
+        /// <summary>
+        /// Sets the scale factor (used to convert the gradient stops frame into control pixels).
+        /// </summary>
+        /// <param name="scale">The scale.</param>
+        public void SetScale(float scale)
+        {
+            _scale = scale;
+            UpdateControls();
+        }
+
+        /// <summary>
+        /// Called when timeline FPS gets changed.
+        /// </summary>
+        /// <param name="before">The before value.</param>
+        /// <param name="after">The after value.</param>
+        public void OnTimelineFpsChanged(float before, float after)
+        {
+            for (int i = 0; i < _data.Count; i++)
+            {
+                var stop = _data[i];
+                stop.Frame = (int)((stop.Frame / before) * after);
+                _data[i] = stop;
+            }
+            UpdateControls();
         }
 
         /// <summary>
@@ -189,31 +259,36 @@ namespace FlaxEditor.GUI.Timeline.GUI
             _selected = stop;
             UpdateControls();
         }
-        /*
+
         private void SetStopFrame(int index, int frame)
         {
-            time = Mathf.Saturate(time);
             if (index != 0)
             {
-                time = Mathf.Max(time, _data[index - 1].Time);
+                frame = Mathf.Max(frame, _data[index - 1].Frame);
             }
             if (index != _stops.Count - 1)
             {
-                time = Mathf.Min(time, _data[index + 1].Time);
+                frame = Mathf.Min(frame, _data[index + 1].Frame);
             }
 
             var stop = _data[index];
-            stop.Time = time;
+            if (stop.Frame == frame)
+                return;
+            stop.Frame = frame;
             _data[index] = stop;
+            OnEdited();
         }
 
         private void SetStopColor(int index, Color color)
         {
             var stop = _data[index];
+            if (stop.Value == color)
+                return;
             stop.Value = color;
             _data[index] = stop;
+            OnEdited();
         }
-        */
+
         private void UpdateControls()
         {
             var count = _data.Count;
@@ -235,27 +310,47 @@ namespace FlaxEditor.GUI.Timeline.GUI
                 {
                     AutoFocus = false,
                     Gradient = this,
-                    Size = new Vector2(16.0f, 16.0f),
+                    Size = new Vector2(10.0f, 10.0f),
                     Parent = this,
                 };
                 _stops.Add(stop);
             }
 
             // Update stops
+            var scale = _scale;
+            var height = Height;
             for (var i = 0; i < count; i++)
             {
                 var control = _stops[i];
                 var stop = _data[i];
-                control.Location = new Vector2(stop.Frame * Width - control.Width * 0.5f, 0.0f);
+                control.Location = new Vector2(stop.Frame * scale - control.Width * 0.5f, (height - control.Height) * 0.5f);
                 control.Index = i;
-                control.TooltipText = stop.Value + " at " + stop.Frame;
+                control.TooltipText = stop.Value + " at frame " + stop.Frame;
             }
+        }
+
+        /// <inheritdoc />
+        protected override void AddUpdateCallbacks(RootControl root)
+        {
+            base.AddUpdateCallbacks(root);
+
+            root.UpdateCallbacksToAdd.Add(_update);
+        }
+
+        /// <inheritdoc />
+        protected override void RemoveUpdateCallbacks(RootControl root)
+        {
+            base.RemoveUpdateCallbacks(root);
+
+            root.UpdateCallbacksToRemove.Add(_update);
         }
 
         /// <inheritdoc />
         public override void Draw()
         {
-            base.Draw();
+            // Push clipping mask
+            GetDesireClientArea(out var clientArea);
+            Render2D.PushClip(ref clientArea);
 
             var style = Style.Current;
             var bounds = new Rectangle(Vector2.Zero, Size);
@@ -271,30 +366,82 @@ namespace FlaxEditor.GUI.Timeline.GUI
             else
             {
                 var prevStop = _data[0];
+                var scale = _scale;
                 var width = Width;
                 var height = Height;
 
-                // TODO: finish drawing gradient stops
-                /*if (prevStop.Time > 0.0f)
+                if (prevStop.Frame > 0.0f)
                 {
-                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, prevStop.Time * width, height), prevStop.Value);
+                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, prevStop.Frame * scale, height), prevStop.Value);
                 }
 
                 for (int i = 1; i < count; i++)
                 {
                     var curStop = _data[i];
 
-                    Render2D.FillRectangle(new Rectangle(prevStop.Time * width, 0, (curStop.Time - prevStop.Time) * width, height), prevStop.Value, curStop.Value, curStop.Value, prevStop.Value);
+                    Render2D.FillRectangle(new Rectangle(prevStop.Frame * scale, 0, (curStop.Frame - prevStop.Frame) * scale, height), prevStop.Value, curStop.Value, curStop.Value, prevStop.Value);
 
                     prevStop = curStop;
                 }
 
-                if (prevStop.Time < 1.0f)
+                if (prevStop.Frame * scale < width)
                 {
-                    Render2D.FillRectangle(new Rectangle(prevStop.Time * width, 0, (1.0f - prevStop.Time) * width, height), prevStop.Value);
-                }*/
+                    Render2D.FillRectangle(new Rectangle(prevStop.Frame * scale, 0, width - prevStop.Frame * scale, height), prevStop.Value);
+                }
             }
             Render2D.DrawRectangle(bounds, IsMouseOver ? style.BackgroundHighlighted : style.Background);
+
+            DrawChildren();
+
+            // Pop clipping mask
+            Render2D.PopClip();
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        {
+            if (base.OnMouseDoubleClick(location, buttons))
+                return true;
+
+            if (buttons == MouseButton.Left)
+            {
+                // Add stop
+                var frame = (int)(location.X / _scale);
+                var stops = new List<Stop>(Stops);
+                var leftIdx = stops.FindLastIndex(x => x.Frame < frame);
+                var rightIdx = stops.FindIndex(x => x.Frame > frame);
+                var stop = new Stop
+                {
+                    Frame = frame,
+                    Value = Color.White,
+                };
+                if (leftIdx != -1 && rightIdx != -1)
+                {
+                    var left = stops[leftIdx];
+                    var right = stops[rightIdx];
+                    float alpha = (float)(frame - left.Frame) / (right.Frame - left.Frame);
+                    stop.Value = Color.Lerp(left.Value, right.Value, alpha);
+                    stops.Insert(leftIdx + 1, stop);
+                }
+                else if (leftIdx != -1)
+                {
+                    stop.Value = stops[leftIdx].Value;
+                    stops.Insert(leftIdx + 1, stop);
+                }
+                else if (rightIdx != -1)
+                {
+                    stop.Value = stops[rightIdx].Value;
+                    stops.Insert(rightIdx, stop);
+                }
+                else
+                {
+                    stops.Add(stop);
+                }
+                Stops = stops;
+                return true;
+            }
+
+            return false;
         }
 
         /// <inheritdoc />

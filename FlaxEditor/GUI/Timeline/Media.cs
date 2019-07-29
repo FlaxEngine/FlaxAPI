@@ -143,9 +143,18 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// Initializes a new instance of the <see cref="Media"/> class.
         /// </summary>
-        public Media()
+        protected Media()
         {
             AutoFocus = false;
+        }
+
+        /// <summary>
+        /// Called when showing timeline context menu to the user. Can be used to add custom buttons.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        /// <param name="controlUnderMouse">The found control under the mouse cursor.</param>
+        public virtual void OnTimelineShowContextMenu(ContextMenu.ContextMenu menu, Control controlUnderMouse)
+        {
         }
 
         /// <summary>
