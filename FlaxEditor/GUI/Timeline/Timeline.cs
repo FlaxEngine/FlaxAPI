@@ -36,6 +36,89 @@ namespace FlaxEditor.GUI.Timeline
             new KeyValuePair<float, string>(0, "Custom"),
         };
 
+        private sealed class TimeIntervalsHeader : ContainerControl
+        {
+            private Timeline _timeline;
+            private bool _isLeftMouseButtonDown;
+
+            public TimeIntervalsHeader(Timeline timeline)
+            {
+                _timeline = timeline;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDown(location, buttons))
+                    return true;
+
+                if (buttons == MouseButton.Left)
+                {
+                    _isLeftMouseButtonDown = true;
+                    _timeline._isMovingPositionHandle = true;
+                    StartMouseCapture();
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseMove(Vector2 location)
+            {
+                base.OnMouseMove(location);
+
+                if (_isLeftMouseButtonDown)
+                {
+                    Seek(ref location);
+                }
+            }
+
+            private void Seek(ref Vector2 location)
+            {
+                if (_timeline.PlaybackState == PlaybackStates.Disabled)
+                    return;
+
+                var locationTimeline = PointToParent(_timeline, location);
+                var locationTime = _timeline._backgroundArea.PointFromParent(_timeline, locationTimeline);
+                var frame = (locationTime.X - StartOffset * 2.0f) / _timeline.Zoom / UnitsPerSecond * _timeline.FramesPerSecond;
+                _timeline.OnSeek((int)frame);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseUp(location, buttons))
+                    return true;
+
+                if (buttons == MouseButton.Left && _isLeftMouseButtonDown)
+                {
+                    Seek(ref location);
+                    EndMouseCapture();
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnEndMouseCapture()
+            {
+                _isLeftMouseButtonDown = false;
+                _timeline._isMovingPositionHandle = false;
+
+                base.OnEndMouseCapture();
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                _timeline = null;
+
+                base.Dispose();
+            }
+        }
+
         /// <summary>
         /// The base class for timeline properties proxy objects.
         /// </summary>
@@ -164,7 +247,7 @@ namespace FlaxEditor.GUI.Timeline
         protected readonly List<Track> _tracks = new List<Track>();
 
         private SplitPanel _splitter;
-        private ContainerControl _timeIntervalsHeader;
+        private TimeIntervalsHeader _timeIntervalsHeader;
         private ContainerControl _backgroundScroll;
         private Background _background;
         private Panel _backgroundArea;
@@ -183,6 +266,7 @@ namespace FlaxEditor.GUI.Timeline
         private bool _isRightMouseButtonDown;
         private Vector2 _rightMouseButtonDownPos;
         private float _zoom = 1.0f;
+        private bool _isMovingPositionHandle;
 
         /// <summary>
         /// Gets or sets the current time showing mode.
@@ -508,6 +592,11 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Gets a value indicating whether user is moving position handle (seeking).
+        /// </summary>
+        public bool IsMovingPositionHandle => _isMovingPositionHandle;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
@@ -627,7 +716,7 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = _tracksPanelArea
             };
 
-            _timeIntervalsHeader = new ContainerControl
+            _timeIntervalsHeader = new TimeIntervalsHeader(this)
             {
                 AutoFocus = false,
                 BackgroundColor = Style.Current.Background.RGBMultiplied(0.9f),
@@ -665,7 +754,6 @@ namespace FlaxEditor.GUI.Timeline
                 Height = 0,
                 Parent = _backgroundArea
             };
-
             _positionHandle = new PositionHandle(this)
             {
                 ClipChildren = false,
@@ -805,6 +893,14 @@ namespace FlaxEditor.GUI.Timeline
         {
             Pause?.Invoke();
             PlaybackState = PlaybackStates.Paused;
+        }
+
+        /// <summary>
+        /// Called when animation playback position should be changed.
+        /// </summary>
+        /// <param name="frame">The frame.</param>
+        public virtual void OnSeek(int frame)
+        {
         }
 
         /// <summary>

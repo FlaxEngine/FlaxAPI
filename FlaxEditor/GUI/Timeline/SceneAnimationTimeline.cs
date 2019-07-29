@@ -113,6 +113,14 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
+        public override void OnSeek(int frame)
+        {
+            _player.Time = frame / _player.Animation.FramesPerSecond;
+
+            base.OnSeek(frame);
+        }
+
+        /// <inheritdoc />
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
