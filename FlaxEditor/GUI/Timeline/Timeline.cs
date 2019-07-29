@@ -412,6 +412,10 @@ namespace FlaxEditor.GUI.Timeline
                     {
                         _playbackPlay.Visible = false;
                     }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = false;
+                    }
                     break;
                 case PlaybackStates.Stopped:
                     if (_playbackStop != null)
@@ -425,6 +429,10 @@ namespace FlaxEditor.GUI.Timeline
                         _playbackPlay.Enabled = true;
                         _playbackPlay.Brush = new SpriteBrush(icons.Play32);
                         _playbackPlay.Tag = false;
+                    }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = true;
                     }
                     break;
                 case PlaybackStates.Playing:
@@ -440,6 +448,10 @@ namespace FlaxEditor.GUI.Timeline
                         _playbackPlay.Brush = new SpriteBrush(icons.Pause32);
                         _playbackPlay.Tag = true;
                     }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = true;
+                    }
                     break;
                 case PlaybackStates.Paused:
                     if (_playbackStop != null)
@@ -453,6 +465,10 @@ namespace FlaxEditor.GUI.Timeline
                         _playbackPlay.Enabled = true;
                         _playbackPlay.Brush = new SpriteBrush(icons.Play32);
                         _playbackPlay.Tag = false;
+                    }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = true;
                     }
                     break;
                 default: throw new ArgumentOutOfRangeException(nameof(value), value, null);
@@ -653,6 +669,7 @@ namespace FlaxEditor.GUI.Timeline
             _positionHandle = new PositionHandle(this)
             {
                 ClipChildren = false,
+                Visible = false,
                 Parent = _backgroundArea,
             };
             UpdatePositionHandle();
