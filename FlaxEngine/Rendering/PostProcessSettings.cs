@@ -224,7 +224,7 @@ namespace FlaxEngine.Rendering
             public float Cam_GrainParticleSize;
             public float Cam_GrainSpeed;
             public float Cam_ChromaticDistortion;
-            public float Cam_ScreenFadeColor;
+            public Color Cam_ScreenFadeColor;
 
             // Lens Flares
 
@@ -884,7 +884,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         [DefaultValue(typeof(Color), "0,0,0,0")]
         [NoSerialize, EditorOrder(507), EditorDisplay("Camera Artifacts", "Screen Fade Color"), Tooltip("Screen fade color (alpha channel defines the blending factor)")]
-        public float Cam_ScreenFadeColor
+        public Color Cam_ScreenFadeColor
         {
             get => data.Cam_ScreenFadeColor;
             set
