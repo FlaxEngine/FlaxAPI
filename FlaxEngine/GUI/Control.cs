@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using FlaxEngine.Rendering;
 
 namespace FlaxEngine.GUI
@@ -931,6 +932,33 @@ namespace FlaxEngine.GUI
             Vector2 result;
             Matrix3x3.Transform2D(ref locationParent, ref _cachedTransformInv, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Converts point in one of the parent control coordinates into local control's space.
+        /// </summary>
+        /// <param name="parent">This control parent of any other parent.</param>
+        /// <param name="location">Input location of the point to convert</param>
+        /// <returns>The converted point location in control's space.</returns>
+        public Vector2 PointFromParent(ContainerControl parent, Vector2 location)
+        {
+            if (parent == null)
+                throw new ArgumentNullException();
+
+            var path = new List<Control>();
+            Control c = this;
+            while (c != null && c != parent)
+            {
+                path.Add(c);
+                c = c.Parent;
+            }
+
+            for (int i = path.Count - 1; i >= 0; i--)
+            {
+                location = path[i].PointFromParent(ref location);
+            }
+
+            return location;
         }
 
         /// <summary>
