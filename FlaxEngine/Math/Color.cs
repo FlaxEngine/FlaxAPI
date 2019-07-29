@@ -584,17 +584,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Linearly interpolates between colors a and b by t.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static Color LerpUnclamped(Color a, Color b, float t)
-        {
-            return new Color(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t, a.A + (b.A - a.A) * t);
-        }
-
-        /// <summary>
         /// Adds two colors.
         /// </summary>
         /// <param name="a">The first color.</param>

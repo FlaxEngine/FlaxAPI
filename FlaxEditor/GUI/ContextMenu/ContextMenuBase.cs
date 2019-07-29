@@ -330,7 +330,7 @@ namespace FlaxEditor.GUI.ContextMenu
             // Draw background
             var style = Style.Current;
             Render2D.FillRectangle(new Rectangle(0, 0, Width, Height), style.Background);
-            Render2D.DrawRectangle(new Rectangle(0, 0, Width - 1f, Height - 1f), Color.LerpUnclamped(style.BackgroundSelected, style.Background, 0.6f));
+            Render2D.DrawRectangle(new Rectangle(0, 0, Width - 1f, Height - 1f), Color.Lerp(style.BackgroundSelected, style.Background, 0.6f));
 
             base.Draw();
         }
