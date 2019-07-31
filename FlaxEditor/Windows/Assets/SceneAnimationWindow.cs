@@ -238,15 +238,20 @@ namespace FlaxEditor.Windows.Assets
         public override void OnLayoutSerialize(XmlWriter writer)
         {
             writer.WriteAttributeString("TimelineSplitter", _timeline.Splitter.SplitterValue.ToString());
+            var id = _timeline.Player?.ID ?? _cachedPlayerId;
+            writer.WriteAttributeString("SelectedPlayer", id.ToString());
         }
 
         /// <inheritdoc />
         public override void OnLayoutDeserialize(XmlElement node)
         {
             float value1;
+            Guid value2;
 
             if (float.TryParse(node.GetAttribute("TimelineSplitter"), out value1))
                 _timeline.Splitter.SplitterValue = value1;
+            if (Guid.TryParse(node.GetAttribute("SelectedPlayer"), out value2))
+                _cachedPlayerId = value2;
         }
 
         /// <inheritdoc />
