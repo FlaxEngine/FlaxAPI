@@ -287,6 +287,7 @@
     <Compile Include="GUI\Tabs\Tabs.cs" />
     <Compile Include="GUI\Timeline\GUI\Background.cs" />
     <Compile Include="GUI\Timeline\GUI\GradientEditor.cs" />
+    <Compile Include="GUI\Timeline\Tracks\AudioTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\FolderTrack.cs" />
     <Compile Include="GUI\Timeline\Media.cs" />
     <Compile Include="GUI\Timeline\Tracks\NestedSceneAnimationTrack.cs" />
