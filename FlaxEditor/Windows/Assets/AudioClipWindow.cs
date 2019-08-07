@@ -133,8 +133,10 @@ namespace FlaxEditor.Windows.Assets
             };
 
             // AudioClip preview
-            _preview = new AudioClipPreview()
+            _preview = new AudioClipPreview
             {
+                DrawMode = AudioClipPreview.DrawModes.Fill,
+                DockStyle = DockStyle.Fill,
                 Parent = _split.Panel1
             };
 
