@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
@@ -12,10 +13,23 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
     public class AudioMedia : SingleMediaAssetMedia
     {
+        private bool _loop;
+
         /// <summary>
         /// True if loop track, otherwise audio clip will stop on the end.
         /// </summary>
-        public bool Loop;
+        public bool Loop
+        {
+            get => _loop;
+            set
+            {
+                if (_loop != value)
+                {
+                    _loop = value;
+                    Preview.DrawMode = value ? AudioClipPreview.DrawModes.Looped : AudioClipPreview.DrawModes.Single;
+                }
+            }
+        }
 
         private sealed class Proxy : ProxyBase<AudioTrack, AudioMedia>
         {
@@ -46,12 +60,36 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
+        /// <summary>
+        /// The audio clip preview.
+        /// </summary>
+        public AudioClipPreview Preview;
+
+        /// <inheritdoc />
+        public AudioMedia()
+        {
+            Preview = new AudioClipPreview
+            {
+                DockStyle = FlaxEngine.GUI.DockStyle.Fill,
+                DrawMode = AudioClipPreview.DrawModes.Single,
+                Parent = this,
+            };
+        }
+
         /// <inheritdoc />
         public override void OnTimelineChanged(Track track)
         {
             base.OnTimelineChanged(track);
 
             PropertiesEditObject = new Proxy(Track as AudioTrack, this);
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineZoomChanged()
+        {
+            base.OnTimelineZoomChanged();
+
+            Preview.ViewScale = Timeline.UnitsPerSecond / AudioClipPreview.UnitsPerSecond * Timeline.Zoom;
         }
     }
 
@@ -135,6 +173,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         public AudioTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
+        }
+
+        /// <inheritdoc />
+        protected override void OnAssetChanged()
+        {
+            base.OnAssetChanged();
+
+            TrackMedia.Preview.Asset = Asset;
         }
     }
 }

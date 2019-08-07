@@ -47,6 +47,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
                 media.Asset = value?.ID ?? Guid.Empty;
                 _picker.SelectedAsset = value;
+                OnAssetChanged();
                 Timeline?.MarkAsEdited();
             }
         }
@@ -69,6 +70,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         private void OnPickerSelectedItemChanged()
         {
             Asset = (TAsset)_picker.SelectedAsset;
+        }
+
+        /// <summary>
+        /// Called when selected asset gets changed.
+        /// </summary>
+        protected virtual void OnAssetChanged()
+        {
         }
     }
 }
