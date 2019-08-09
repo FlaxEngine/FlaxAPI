@@ -238,6 +238,7 @@ namespace FlaxEditor.Windows.Assets
         public override void OnLayoutSerialize(XmlWriter writer)
         {
             writer.WriteAttributeString("TimelineSplitter", _timeline.Splitter.SplitterValue.ToString());
+            writer.WriteAttributeString("TimeShowMode", _timeline.TimeShowMode.ToString());
             var id = _timeline.Player?.ID ?? _cachedPlayerId;
             writer.WriteAttributeString("SelectedPlayer", id.ToString());
         }
@@ -247,11 +248,14 @@ namespace FlaxEditor.Windows.Assets
         {
             float value1;
             Guid value2;
+            Timeline.TimeShowModes value3;
 
             if (float.TryParse(node.GetAttribute("TimelineSplitter"), out value1))
                 _timeline.Splitter.SplitterValue = value1;
             if (Guid.TryParse(node.GetAttribute("SelectedPlayer"), out value2))
                 _cachedPlayerId = value2;
+            if (Enum.TryParse(node.GetAttribute("TimeShowMode"), out value3))
+                _timeline.TimeShowMode = value3;
         }
 
         /// <inheritdoc />
