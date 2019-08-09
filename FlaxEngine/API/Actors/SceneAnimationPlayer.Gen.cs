@@ -113,17 +113,17 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the value that determinates whether the scene animation should start playing on play begin.
+        /// Gets or sets the value that determinates whether the scene animation should auto play on game start.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation"), EditorOrder(50), Tooltip("Determines whether the scene animation should start playing on play begin.")]
-        public bool AutoPlay
+        [EditorDisplay("Scene Animation", "Play On Start"), EditorOrder(50), Tooltip("Determines whether the scene animation should auto play on game start.")]
+        public bool PlayOnStart
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
-            get { return Internal_GetAutoPlay(unmanagedPtr); }
-            set { Internal_SetAutoPlay(unmanagedPtr, value); }
+            get { return Internal_GetPlayOnStart(unmanagedPtr); }
+            set { Internal_SetPlayOnStart(unmanagedPtr, value); }
 #endif
         }
 
@@ -293,10 +293,10 @@ namespace FlaxEngine
         internal static extern void Internal_SetLoop(IntPtr obj, bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetAutoPlay(IntPtr obj);
+        internal static extern bool Internal_GetPlayOnStart(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetAutoPlay(IntPtr obj, bool val);
+        internal static extern void Internal_SetPlayOnStart(IntPtr obj, bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetRandomStartTime(IntPtr obj);
