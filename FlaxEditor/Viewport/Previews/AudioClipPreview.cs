@@ -105,35 +105,33 @@ namespace FlaxEditor.Viewport.Previews
                     return;
                 var height = Height;
                 var width = Width;
-                var length = info.NumSamples / (float)Math.Max(1U, info.SampleRate * info.NumChannels);
+                uint numSamplesPerChannel = info.NumSamples / info.NumChannels;
+                var length = (float)numSamplesPerChannel / info.SampleRate;
 
                 // Compute the scaled y-value used to render the channel data
                 float sampleYScale = height / info.NumChannels;
 
                 // Compute amount of samples that are contained in the view
-                float clipDefaultWidth = length * UnitsPerSecond * ViewScale;
+                float unitsPerSecond = UnitsPerSecond * ViewScale;
+                float clipDefaultWidth = length * unitsPerSecond;
                 float clipsInView = width / clipDefaultWidth;
-                uint numSamplesPerChannel = info.NumSamples / info.NumChannels;
                 float clipWidth;
-                uint totalSamplesInView, samplesPerIndex;
+                uint samplesPerIndex;
                 switch (DrawMode)
                 {
                 case DrawModes.Fill:
                     clipsInView = 1.0f;
                     clipWidth = width;
-                    totalSamplesInView = numSamplesPerChannel;
-                    samplesPerIndex = (uint)(totalSamplesInView / width);
+                    samplesPerIndex = (uint)(numSamplesPerChannel / width);
                     break;
                 case DrawModes.Single:
                     clipsInView = Mathf.Min(clipsInView, 1.0f);
                     clipWidth = clipDefaultWidth;
-                    totalSamplesInView = (uint)(numSamplesPerChannel * clipsInView);
-                    samplesPerIndex = (uint)(numSamplesPerChannel / clipDefaultWidth);
+                    samplesPerIndex = (uint)(info.SampleRate * info.NumChannels / unitsPerSecond);
                     break;
                 case DrawModes.Looped:
                     clipWidth = width / clipsInView;
-                    totalSamplesInView = (uint)(numSamplesPerChannel * clipsInView);
-                    samplesPerIndex = (uint)(totalSamplesInView / width);
+                    samplesPerIndex = (uint)(info.SampleRate * info.NumChannels / unitsPerSecond);
                     break;
                 default: throw new ArgumentOutOfRangeException();
                 }
