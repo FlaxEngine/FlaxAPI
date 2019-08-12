@@ -255,7 +255,7 @@ namespace FlaxEditor
                 module.OnEndInit();
         }
 
-        internal void Init(bool isHeadless)
+        internal void Init(bool isHeadless, bool skipCompile)
         {
             EnsureState<LoadingState>();
             _isHeadlessMode = isHeadless;
@@ -275,7 +275,7 @@ namespace FlaxEditor
             _areModulesInited = true;
 
             // Start Editor initialization ending phrase (will wait for scripts compilation result)
-            StateMachine.LoadingState.StartInitEnding();
+            StateMachine.LoadingState.StartInitEnding(skipCompile);
 
             InitializationStart?.Invoke();
         }
