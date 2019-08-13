@@ -10,6 +10,12 @@ namespace FlaxEditor.Content.Settings
     public sealed class AudioSettings : SettingsBase
     {
         /// <summary>
+        /// If checked, audio playback will be disabled in build game. Can be used if game uses custom audio playback engine.
+        /// </summary>
+        [EditorOrder(0), EditorDisplay("General"), Tooltip("If checked, audio playback will be disabled in build game. Can be used if game uses custom audio playback engine.")]
+        public bool DisableAudio;
+
+        /// <summary>
         /// The doppler doppler effect factor. Scale for source and listener velocities. Default is 1.
         /// </summary>
         [EditorOrder(100), EditorDisplay("General"), Limit(0, 10.0f, 0.01f), Tooltip("The doppler doppler effect factor. Scale for source and listener velocities. Default is 1.")]
