@@ -249,7 +249,7 @@ namespace FlaxEditor.GUI
                 {
                     // Calculate delta
                     Vector2 delta = location - _rightMouseDownPos;
-                    if (delta.LengthSquared > 0.01f)
+                    if (delta.LengthSquared > 0.01f && _curve.EnablePanning)
                     {
                         // Move view
                         _mouseMoveAmount += delta.Length;
@@ -311,7 +311,8 @@ namespace FlaxEditor.GUI
                             }
                         }
                         _curve.UpdateKeyframes();
-                        _curve._mainPanel.ScrollViewTo(PointToParent(location));
+                        if (_curve.EnablePanning)
+                            _curve._mainPanel.ScrollViewTo(PointToParent(location));
                         _leftMouseDownPos = location;
                         Cursor = CursorType.SizeAll;
                     }
@@ -541,9 +542,12 @@ namespace FlaxEditor.GUI
                             cm.AddButton("Linear", _curve.SetTangentsLinear);
                             cm.AddButton("Smooth", _curve.SetTangentsSmooth);
                         }
-                        cm.AddSeparator();
-                        cm.AddButton("Show whole curve", _curve.ShowWholeCurve);
-                        cm.AddButton("Reset view", _curve.ResetView);
+                        if (_curve.EnableZoom && _curve.EnablePanning)
+                        {
+                            cm.AddSeparator();
+                            cm.AddButton("Show whole curve", _curve.ShowWholeCurve);
+                            cm.AddButton("Reset view", _curve.ResetView);
+                        }
                         cm.Show(this, location);
                     }
                     _mouseMoveAmount = 0;
@@ -567,7 +571,7 @@ namespace FlaxEditor.GUI
                     return true;
 
                 // Zoom in/out
-                if (IsMouseOver && !_leftMouseDown)
+                if (_curve.EnableZoom && IsMouseOver && !_leftMouseDown)
                 {
                     // TODO: preserve the view center point for easier zooming
                     _curve.ViewScale += delta * 0.1f;
@@ -740,7 +744,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The timeline units per second (on time axis).
         /// </summary>
-        private static readonly float UnitsPerSecond = 100.0f;
+        public static readonly float UnitsPerSecond = 100.0f;
 
         /// <summary>
         /// The colors for the keyframes,
@@ -833,10 +837,32 @@ namespace FlaxEditor.GUI
         public int MaxKeyframes = ushort.MaxValue;
 
         /// <summary>
+        /// True if enable view zooming. Otherwise user won't be able to zoom in or out.
+        /// </summary>
+        public bool EnableZoom = true;
+
+        /// <summary>
+        /// True if enable view panning. Otherwise user won't be able to move the view area.
+        /// </summary>
+        public bool EnablePanning = true;
+
+        /// <summary>
         /// Gets a value indicating whether user is editing the curve.
         /// </summary>
         public bool IsUserEditing => _keyframesEditor != null || _contents._leftMouseDown;
 
+        /// <summary>
+        /// Gets or sets the scroll bars usage.
+        /// </summary>
+        public ScrollBars ScrollBars
+        {
+            get => _mainPanel.ScrollBars;
+            set => _mainPanel.ScrollBars = value;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CurveEditor{T}"/> class.
+        /// </summary>
         public CurveEditor()
         {
             var style = Style.Current;
@@ -1313,7 +1339,8 @@ namespace FlaxEditor.GUI
             }
 
             // Adjust contents bounds to fill the curve area
-            _contents.Bounds = bounds;
+            if (EnablePanning)
+                _contents.Bounds = bounds;
 
             // Offset the keyframes (parent container changed its location)
             var posOffset = _contents.Location;

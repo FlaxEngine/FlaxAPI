@@ -236,6 +236,17 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Called when timeline zoom gets changed.
+        /// </summary>
+        public virtual void OnTimelineZoomChanged()
+        {
+            for (var i = 0; i < _media.Count; i++)
+            {
+                _media[i].OnTimelineZoomChanged();
+            }
+        }
+
+        /// <summary>
         /// Called when timeline FPS gets changed.
         /// </summary>
         /// <param name="before">The before value.</param>

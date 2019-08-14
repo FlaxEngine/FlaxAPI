@@ -296,7 +296,30 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             Title = "Volume";
             Height = 64.0f;
-            Curve = new CurveEditor<float>();
+            Curve = new CurveEditor<float>
+            {
+                EnableZoom = false,
+                EnablePanning = false,
+                ScrollBars = ScrollBars.None,
+            };
+            Curve.Edited += OnCurveEdited;
+            Curve.UnlockChildrenRecursive();
+        }
+
+        private void UpdateCurveBounds()
+        {
+            if (_audioMedia != null && Curve != null)
+            {
+                Curve.Bounds = new Rectangle(_audioMedia.X, Y + 2.0f, _audioMedia.Width, Height - 4);
+                //Curve.ViewScale = new Vector2(1.0f, CurveEditor<float>.UnitsPerSecond / Curve.Height);
+                Curve.ViewScale = new Vector2(Timeline.Zoom, 0.4f);
+                Curve.ViewOffset = new Vector2(0.0f, 30.0f);
+            }
+        }
+
+        private void OnCurveEdited()
+        {
+            Timeline.MarkAsEdited();
         }
 
         /// <inheritdoc />
@@ -310,6 +333,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnParentTrackChanged(parent);
 
+            if (_audioMedia != null)
+            {
+                _audioMedia.StartFrameChanged -= UpdateCurveBounds;
+                _audioMedia.DurationFramesChanged -= UpdateCurveBounds;
+                _audioMedia = null;
+            }
+
             if (parent is AudioTrack audioTrack)
             {
                 var media = audioTrack.TrackMedia;
@@ -317,7 +347,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 media.DurationFramesChanged += UpdateCurveBounds;
                 _audioMedia = media;
                 UpdateCurveBounds();
+                Curve.Visible = Visible;
             }
+        }
+
+        /// <inheritdoc />
+        protected override void OnVisibleChanged()
+        {
+            base.OnVisibleChanged();
+
+            Curve.Visible = Visible;
         }
 
         /// <inheritdoc />
@@ -329,12 +368,24 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             UpdateCurveBounds();
         }
 
-        private void UpdateCurveBounds()
+        /// <inheritdoc />
+        public override void OnTimelineZoomChanged()
         {
-            if (_audioMedia != null)
+            base.OnTimelineZoomChanged();
+
+            UpdateCurveBounds();
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (Curve != null)
             {
-                Curve.Bounds = new Rectangle(_audioMedia.X, Y + 2.0f, _audioMedia.Width, Height - 4);
+                Curve.Dispose();
+                Curve = null;
             }
+
+            base.Dispose();
         }
     }
 }

@@ -581,11 +581,9 @@ namespace FlaxEditor.GUI.Timeline
 
                 foreach (var track in _tracks)
                 {
-                    foreach (var media in track.Media)
-                    {
-                        media.OnTimelineZoomChanged();
-                    }
+                    track.OnTimelineZoomChanged();
                 }
+
                 ArrangeTracks();
                 UpdatePositionHandle();
             }
