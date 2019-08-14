@@ -62,7 +62,7 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(100), EditorDisplay("Rendering"), Tooltip("Defines the primitives culling mode used during geometry rendering.")]
             public CullMode CullMode;
 
-            [EditorOrder(110), EditorDisplay("Rendering"), Tooltip("If checked, geometry will be rendered in wireframe mode.")]
+            [EditorOrder(110), EditorDisplay("Rendering"), Tooltip("If checked, geometry will be rendered in wireframe mode without solid triangles fill.")]
             public bool Wireframe;
 
             [EditorOrder(120), EditorDisplay("Rendering"), Tooltip("Enables performing depth test during material rendering.")]
