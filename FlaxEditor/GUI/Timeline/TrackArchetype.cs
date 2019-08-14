@@ -43,6 +43,11 @@ namespace FlaxEditor.GUI.Timeline
         public string Name;
 
         /// <summary>
+        /// True if hide track archetype from spawning via GUI.
+        /// </summary>
+        public bool DisableSpawnViaGUI;
+
+        /// <summary>
         /// The icon of the track type (for UI).
         /// </summary>
         public Sprite Icon;

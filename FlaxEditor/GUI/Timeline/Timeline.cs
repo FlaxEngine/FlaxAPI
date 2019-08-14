@@ -820,6 +820,8 @@ namespace FlaxEditor.GUI.Timeline
             for (int i = 0; i < TrackArchetypes.Count; i++)
             {
                 var archetype = TrackArchetypes[i];
+                if (archetype.DisableSpawnViaGUI)
+                    continue;
 
                 var button = menu.AddButton(archetype.Name, OnAddTrackOptionClicked);
                 button.Tag = archetype;
