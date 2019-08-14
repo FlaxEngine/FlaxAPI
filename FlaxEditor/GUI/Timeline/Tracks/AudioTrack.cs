@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
@@ -169,10 +170,51 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
+        private Button _addButton;
+
         /// <inheritdoc />
         public AudioTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
+            // Add button
+            const float buttonSize = 14;
+            _addButton = new Button(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                Text = "+",
+                TooltipText = "Add sub-tracks",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Parent = this
+            };
+            _addButton.Clicked += OnAddButtonClicked;
+            _picker.Location = new Vector2(_addButton.Left - _picker.Width - 2, 2);
+        }
+
+        private void OnAddButtonClicked()
+        {
+            var cm = new ContextMenu.ContextMenu();
+            cm.AddButton("Volume", OnAddVolumeTrack);
+            cm.Show(_addButton.Parent, _addButton.BottomLeft);
+        }
+
+        private void OnAddVolumeTrack()
+        {
+            var track = Timeline.AddTrack(AudioVolumeTrack.GetArchetype());
+            track.ParentTrack = this;
+            track.TrackIndex = TrackIndex + 1;
+            track.Name = Guid.NewGuid().ToString();
+            Timeline.OnTracksOrderChanged();
+            Timeline.MarkAsEdited();
+            Expand();
+        }
+
+        /// <inheritdoc />
+        protected override void OnSubTracksChanged()
+        {
+            base.OnSubTracksChanged();
+
+            _addButton.Enabled = SubTracks.Count == 0;
         }
 
         /// <inheritdoc />
@@ -181,6 +223,118 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             base.OnAssetChanged();
 
             TrackMedia.Preview.Asset = Asset;
+        }
+    }
+
+    /// <summary>
+    /// The child volume track for audio track. Used to animate audio volume over time.
+    /// </summary>
+    /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
+    public class AudioVolumeTrack : Track
+    {
+        /// <summary>
+        /// Gets the archetype.
+        /// </summary>
+        /// <returns>The archetype.</returns>
+        public static TrackArchetype GetArchetype()
+        {
+            return new TrackArchetype
+            {
+                TypeId = 6,
+                Name = "Audio Volume",
+                DisableSpawnViaGUI = true,
+                Create = options => new AudioVolumeTrack(ref options),
+                Load = LoadTrack,
+                Save = SaveTrack,
+            };
+        }
+
+        private static void LoadTrack(int version, Track track, BinaryReader stream)
+        {
+            var e = (AudioVolumeTrack)track;
+            int count = stream.ReadInt32();
+            var keyframes = new Curve<float>.Keyframe[count];
+            for (int i = 0; i < count; i++)
+            {
+                keyframes[i] = new Curve<float>.Keyframe
+                {
+                    Time = stream.ReadSingle(),
+                    Value = stream.ReadSingle(),
+                    TangentIn = stream.ReadSingle(),
+                    TangentOut = stream.ReadSingle(),
+                };
+            }
+            e.Curve.SetKeyframes(keyframes);
+        }
+
+        private static void SaveTrack(Track track, BinaryWriter stream)
+        {
+            var e = (AudioVolumeTrack)track;
+            var keyframes = e.Curve.Keyframes;
+            int count = keyframes.Count;
+            stream.Write(count);
+            for (int i = 0; i < count; i++)
+            {
+                var keyframe = keyframes[i];
+                stream.Write(keyframe.Time);
+                stream.Write(keyframe.Value);
+                stream.Write(keyframe.TangentIn);
+                stream.Write(keyframe.TangentOut);
+            }
+        }
+
+        /// <summary>
+        /// The volume curve. Values can be in range 0-1 to animate volume intensity and the track playback starts at the parent audio track media beginning. This curve does not loop.
+        /// </summary>
+        public CurveEditor<float> Curve;
+
+        private AudioMedia _audioMedia;
+
+        /// <inheritdoc />
+        public AudioVolumeTrack(ref TrackCreateOptions options)
+        : base(ref options)
+        {
+            Title = "Volume";
+            Height = 64.0f;
+            Curve = new CurveEditor<float>();
+        }
+
+        /// <inheritdoc />
+        protected override bool CanDrag => false;
+
+        /// <inheritdoc />
+        protected override bool CanRename => false;
+
+        /// <inheritdoc />
+        public override void OnParentTrackChanged(Track parent)
+        {
+            base.OnParentTrackChanged(parent);
+
+            if (parent is AudioTrack audioTrack)
+            {
+                var media = audioTrack.TrackMedia;
+                media.StartFrameChanged += UpdateCurveBounds;
+                media.DurationFramesChanged += UpdateCurveBounds;
+                _audioMedia = media;
+                UpdateCurveBounds();
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineChanged(Timeline timeline)
+        {
+            base.OnTimelineChanged(timeline);
+
+            Curve.Parent = timeline?.MediaPanel;
+            UpdateCurveBounds();
+        }
+
+        private void UpdateCurveBounds()
+        {
+            if (_audioMedia != null)
+            {
+                Curve.Bounds = new Rectangle(_audioMedia.X, Y + 2.0f, _audioMedia.Width, Height - 4);
+            }
         }
     }
 }

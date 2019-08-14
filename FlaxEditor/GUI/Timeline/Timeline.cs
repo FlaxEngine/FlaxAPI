@@ -909,7 +909,8 @@ namespace FlaxEditor.GUI.Timeline
         /// Adds the track.
         /// </summary>
         /// <param name="archetype">The archetype.</param>
-        public void AddTrack(TrackArchetype archetype)
+        /// <returns>The created track object.</returns>
+        public Track AddTrack(TrackArchetype archetype)
         {
             var options = new TrackCreateOptions
             {
@@ -929,6 +930,7 @@ namespace FlaxEditor.GUI.Timeline
 
                 AddTrack(track);
             }
+            return track;
         }
 
         /// <summary>

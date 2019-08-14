@@ -122,6 +122,11 @@ namespace FlaxEditor.GUI.Timeline
         public string Name;
 
         /// <summary>
+        /// The track custom title text (name is used if title is null).
+        /// </summary>
+        public string Title;
+
+        /// <summary>
         /// The track icon.
         /// </summary>
         public Sprite Icon;
@@ -507,9 +512,14 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
-        /// Gets a value indicating whether can drag this track.
+        /// Gets a value indicating whether user can drag this track.
         /// </summary>
         protected virtual bool CanDrag => true;
+
+        /// <summary>
+        /// Gets a value indicating whether user can rename this track.
+        /// </summary>
+        protected virtual bool CanRename => true;
 
         /// <summary>
         /// Determines whether this track can get the child track.
@@ -700,7 +710,7 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Draw text
-            Render2D.DrawText(TextFont.GetFont(), Name, textRect, TextColor, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(TextFont.GetFont(), Title ?? Name, textRect, TextColor, TextAlignment.Near, TextAlignment.Center);
 
             // Disabled overlay
             DrawDisabled = Mute || (ParentTrack != null && ParentTrack.DrawDisabled);
@@ -783,7 +793,8 @@ namespace FlaxEditor.GUI.Timeline
             {
                 // Show context menu
                 var menu = new ContextMenu.ContextMenu();
-                menu.AddButton("Rename", StartRenaming);
+                if (CanRename)
+                    menu.AddButton("Rename", StartRenaming);
                 menu.AddButton("Delete", Delete);
                 OnContextMenu(menu);
                 menu.Show(this, location);
@@ -978,7 +989,7 @@ namespace FlaxEditor.GUI.Timeline
             if (base.OnMouseDoubleClick(location, buttons))
                 return true;
 
-            if (TestHeaderHit(ref location))
+            if (CanRename && TestHeaderHit(ref location))
             {
                 StartRenaming();
                 return true;
@@ -995,7 +1006,8 @@ namespace FlaxEditor.GUI.Timeline
                 switch (key)
                 {
                 case Keys.F2:
-                    StartRenaming();
+                    if (CanRename)
+                        StartRenaming();
                     return true;
                 case Keys.Delete:
                     _timeline.DeleteSelection();

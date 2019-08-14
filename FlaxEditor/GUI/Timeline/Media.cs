@@ -86,8 +86,14 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     OnTimelineZoomChanged();
                 }
+                StartFrameChanged?.Invoke();
             }
         }
+
+        /// <summary>
+        /// Occurs when start frame gets changed.
+        /// </summary>
+        public event Action StartFrameChanged;
 
         /// <summary>
         /// Gets or sets the total duration of the media event in the timeline sequence frames amount.
@@ -106,8 +112,14 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     OnTimelineZoomChanged();
                 }
+                DurationFramesChanged?.Invoke();
             }
         }
+
+        /// <summary>
+        /// Occurs when media duration gets changed.
+        /// </summary>
+        public event Action DurationFramesChanged;
 
         /// <summary>
         /// Gets the media start time in seconds.
