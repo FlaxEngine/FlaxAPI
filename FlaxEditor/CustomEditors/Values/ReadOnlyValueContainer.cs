@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
+
 namespace FlaxEditor.CustomEditors
 {
     /// <summary>
@@ -14,6 +16,17 @@ namespace FlaxEditor.CustomEditors
         /// <param name="value">The initial value.</param>
         public ReadOnlyValueContainer(object value)
         : base(null, typeof(object))
+        {
+            Add(value);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadOnlyValueContainer"/> class.
+        /// </summary>
+        /// <param name="type">The values type.</param>
+        /// <param name="value">The initial value.</param>
+        public ReadOnlyValueContainer(Type type, object value)
+        : base(null, type)
         {
             Add(value);
         }
