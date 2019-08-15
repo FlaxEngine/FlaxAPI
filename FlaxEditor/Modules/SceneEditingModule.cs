@@ -424,8 +424,24 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
-            // Deselect actors on remove
+            // Deselect actors on remove (and actor child nodes)
             Editor.Scene.ActorRemoved += Deselect;
+            Editor.Scene.Root.ActorChildNodesDispose += OnActorChildNodesDispose;
+        }
+
+        private void OnActorChildNodesDispose(ActorNode node)
+        {
+            // TODO: cache if selection contains any actor child node and skip this loop if no need to iterate
+
+            // Deselect child nodes
+            for (int i = 0; i < node.ChildNodes.Count; i++)
+            {
+                if (Selection.Contains(node.ChildNodes[i]))
+                {
+                    Deselect();
+                    return;
+                }
+            }
         }
     }
 }
