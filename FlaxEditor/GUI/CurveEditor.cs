@@ -1742,6 +1742,14 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
+        protected override void SetSizeInternal(ref Vector2 size)
+        {
+            base.SetSizeInternal(ref size);
+
+            UpdateKeyframes();
+        }
+
+        /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
             if (base.OnKeyDown(key))
