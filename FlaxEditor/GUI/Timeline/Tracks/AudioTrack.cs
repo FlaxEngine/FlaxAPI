@@ -289,15 +289,17 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         public CurveEditor<float> Curve;
 
         private AudioMedia _audioMedia;
+        private const float ExpandedHeight = 64.0f;
 
         /// <inheritdoc />
         public AudioVolumeTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
             Title = "Volume";
-            Height = 64.0f;
             Curve = new CurveEditor<float>
             {
+                Height = ExpandedHeight - 4.0f,
+                Visible = false,
                 EnableZoom = false,
                 EnablePanning = false,
                 ScrollBars = ScrollBars.None,
@@ -312,10 +314,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             if (_audioMedia != null && Curve != null)
             {
-                Curve.Bounds = new Rectangle(_audioMedia.X, Y + 2.0f, _audioMedia.Width, Height - 4);
+                Curve.Bounds = new Rectangle(_audioMedia.X, Y + 2.0f, _audioMedia.Width, Curve.Height);
                 //Curve.ViewScale = new Vector2(1.0f, CurveEditor<float>.UnitsPerSecond / Curve.Height);
                 Curve.ViewScale = new Vector2(Timeline.Zoom, 0.4f);
                 Curve.ViewOffset = new Vector2(0.0f, 30.0f);
+                Curve.Visible = IsExpanded;
             }
         }
 
@@ -329,6 +332,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         /// <inheritdoc />
         protected override bool CanRename => false;
+
+        /// <inheritdoc />
+        protected override bool CanExpand => true;
 
         /// <inheritdoc />
         public override void OnParentTrackChanged(Track parent)
@@ -351,6 +357,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 UpdateCurveBounds();
                 Curve.Visible = Visible;
             }
+        }
+
+        /// <inheritdoc />
+        protected override void OnExpandedChanged()
+        {
+            Height = IsExpanded ? 64.0f : HeaderHeight;
+            Curve.Visible = IsExpanded;
+
+            base.OnExpandedChanged();
         }
 
         /// <inheritdoc />
