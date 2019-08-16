@@ -379,6 +379,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
+        public override void OnTimelineArrange()
+        {
+            base.OnTimelineArrange();
+
+            UpdateCurveBounds();
+        }
+
+        /// <inheritdoc />
         public override void Dispose()
         {
             if (Curve != null)

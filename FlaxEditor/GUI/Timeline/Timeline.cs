@@ -1416,25 +1416,7 @@ namespace FlaxEditor.GUI.Timeline
 
             for (int i = 0; i < _tracks.Count; i++)
             {
-                var track = _tracks[i];
-                if (track.ParentTrack == null)
-                {
-                    track._xOffset = 0;
-                    track.Visible = true;
-                }
-                else
-                {
-                    track._xOffset = track.ParentTrack._xOffset + 12.0f;
-                    track.Visible = track.ParentTrack.Visible && track.ParentTrack.IsExpanded;
-                }
-
-                for (int j = 0; j < track.Media.Count; j++)
-                {
-                    var media = track.Media[j];
-
-                    media.Visible = track.Visible;
-                    media.Bounds = new Rectangle(media.X, track.Y + 2, media.Width, track.Height - 4);
-                }
+                _tracks[i].OnTimelineArrange();
             }
 
             if (_background != null)

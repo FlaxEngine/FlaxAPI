@@ -306,6 +306,31 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Arranges the track and all its media. Called when timeline performs layout for the contents.
+        /// </summary>
+        public virtual void OnTimelineArrange()
+        {
+            if (ParentTrack == null)
+            {
+                _xOffset = 0;
+                Visible = true;
+            }
+            else
+            {
+                _xOffset = ParentTrack._xOffset + 12.0f;
+                Visible = ParentTrack.Visible && ParentTrack.IsExpanded;
+            }
+
+            for (int j = 0; j < Media.Count; j++)
+            {
+                var media = Media[j];
+
+                media.Visible = Visible;
+                media.Bounds = new Rectangle(media.X, Y + 2, media.Width, Height - 4);
+            }
+        }
+
+        /// <summary>
         /// Adds the media.
         /// </summary>
         /// <param name="media">The media.</param>
