@@ -301,6 +301,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 EnableZoom = false,
                 EnablePanning = false,
                 ScrollBars = ScrollBars.None,
+                DefaultValue = 1.0f,
+                ShowStartEndLines = true,
             };
             Curve.Edited += OnCurveEdited;
             Curve.UnlockChildrenRecursive();

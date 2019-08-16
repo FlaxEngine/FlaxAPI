@@ -24,6 +24,12 @@ namespace FlaxEditor.GUI
         public interface IKeyframeAccess<TT> where TT : struct
         {
             /// <summary>
+            /// Gets the default value.
+            /// </summary>
+            /// <param name="value">The value.</param>
+            void GetDefaultValue(out TT value);
+
+            /// <summary>
             /// Gets the curve components count. Vector types should return amount of component to use for value editing.
             /// </summary>
             /// <returns>The components count.</returns>
@@ -56,6 +62,11 @@ namespace FlaxEditor.GUI
         IKeyframeAccess<Quaternion>,
         IKeyframeAccess<Color>
         {
+            public void GetDefaultValue(out int value)
+            {
+                value = 0;
+            }
+
             int IKeyframeAccess<int>.GetCurveComponents()
             {
                 return 1;
@@ -69,6 +80,11 @@ namespace FlaxEditor.GUI
             void IKeyframeAccess<int>.SetCurveValue(float curve, ref int value, int component)
             {
                 value = (int)curve;
+            }
+
+            public void GetDefaultValue(out double value)
+            {
+                value = 0.0;
             }
 
             int IKeyframeAccess<double>.GetCurveComponents()
@@ -86,6 +102,11 @@ namespace FlaxEditor.GUI
                 value = curve;
             }
 
+            public void GetDefaultValue(out float value)
+            {
+                value = 0.0f;
+            }
+
             int IKeyframeAccess<float>.GetCurveComponents()
             {
                 return 1;
@@ -99,6 +120,11 @@ namespace FlaxEditor.GUI
             void IKeyframeAccess<float>.SetCurveValue(float curve, ref float value, int component)
             {
                 value = curve;
+            }
+
+            public void GetDefaultValue(out Vector2 value)
+            {
+                value = Vector2.Zero;
             }
 
             int IKeyframeAccess<Vector2>.GetCurveComponents()
@@ -116,6 +142,11 @@ namespace FlaxEditor.GUI
                 value[component] = curve;
             }
 
+            public void GetDefaultValue(out Vector3 value)
+            {
+                value = Vector3.Zero;
+            }
+
             int IKeyframeAccess<Vector3>.GetCurveComponents()
             {
                 return 3;
@@ -129,6 +160,11 @@ namespace FlaxEditor.GUI
             void IKeyframeAccess<Vector3>.SetCurveValue(float curve, ref Vector3 value, int component)
             {
                 value[component] = curve;
+            }
+
+            public void GetDefaultValue(out Vector4 value)
+            {
+                value = Vector4.Zero;
             }
 
             int IKeyframeAccess<Vector4>.GetCurveComponents()
@@ -146,6 +182,11 @@ namespace FlaxEditor.GUI
                 value[component] = curve;
             }
 
+            public void GetDefaultValue(out Quaternion value)
+            {
+                value = Quaternion.Identity;
+            }
+
             int IKeyframeAccess<Quaternion>.GetCurveComponents()
             {
                 return 3;
@@ -161,6 +202,11 @@ namespace FlaxEditor.GUI
                 var euler = value.EulerAngles;
                 euler[component] = curve;
                 Quaternion.Euler(euler.X, euler.Y, euler.Z, out value);
+            }
+
+            public void GetDefaultValue(out Color value)
+            {
+                value = Color.Black;
             }
 
             int IKeyframeAccess<Color>.GetCurveComponents()
@@ -861,10 +907,22 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
+        /// The default value.
+        /// </summary>
+        public T DefaultValue;
+
+        /// <summary>
+        /// Enables drawing start/end values continuous lines.
+        /// </summary>
+        public bool ShowStartEndLines;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CurveEditor{T}"/> class.
         /// </summary>
         public CurveEditor()
         {
+            Accessor.GetDefaultValue(out DefaultValue);
+
             var style = Style.Current;
             _contentsColor = style.Background.RGBMultiplied(0.7f);
             _linesColor = style.ForegroundDisabled.RGBMultiplied(0.7f);
@@ -1507,6 +1565,18 @@ namespace FlaxEditor.GUI
             }
         }
 
+        private void DrawLine(Curve<T>.Keyframe startK, Curve<T>.Keyframe endK, int component, ref Rectangle viewRect)
+        {
+            var start = GetKeyframePoint(ref startK, component);
+            var end = GetKeyframePoint(ref endK, component);
+
+            var p1 = PointFromKeyframes(start, ref viewRect);
+            var p2 = PointFromKeyframes(end, ref viewRect);
+
+            var color = Colors[component].RGBMultiplied(0.6f);
+            Render2D.DrawLine(p1, p2, color, 1.6f);
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {
@@ -1550,6 +1620,30 @@ namespace FlaxEditor.GUI
                 var components = Accessor.GetCurveComponents();
                 for (int component = 0; component < components; component++)
                 {
+                    if (ShowStartEndLines)
+                    {
+                        var start = new Curve<T>.Keyframe
+                        {
+                            Value = DefaultValue,
+                            Time = -10000000.0f,
+                        };
+                        var end = new Curve<T>.Keyframe
+                        {
+                            Value = DefaultValue,
+                            Time = 10000000.0f,
+                        };
+
+                        if (_keyframes.Count == 0)
+                        {
+                            DrawLine(start, end, component, ref viewRect);
+                        }
+                        else
+                        {
+                            DrawLine(start, _keyframes[0], component, ref viewRect);
+                            DrawLine(_keyframes[_keyframes.Count - 1], end, component, ref viewRect);
+                        }
+                    }
+
                     var color = Colors[component];
                     for (int i = 1; i < _keyframes.Count; i++)
                     {
