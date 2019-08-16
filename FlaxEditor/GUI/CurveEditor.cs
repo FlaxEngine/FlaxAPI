@@ -348,7 +348,15 @@ namespace FlaxEditor.GUI
                                         break;
                                 }
                                 if (isFirstSelected)
+                                {
                                     k.Time = Mathf.Clamp(k.Time + keyframeDelta.X, minTime, maxTime);
+
+                                    if (_curve.FPS.HasValue)
+                                    {
+                                        float fps = _curve.FPS.Value;
+                                        k.Time = Mathf.Floor(k.Time * fps) / fps;
+                                    }
+                                }
 
                                 // TODO: snapping keyframes to grid when moving
 
@@ -828,6 +836,7 @@ namespace FlaxEditor.GUI
         private readonly float[] _tickStrengths = new float[TickSteps.Length];
         private bool _refreshAfterEdit;
         private KeyframesEditor _keyframesEditor;
+        private float? _fps;
 
         private Color _contentsColor;
         private Color _linesColor;
@@ -917,6 +926,23 @@ namespace FlaxEditor.GUI
         public bool ShowStartEndLines;
 
         /// <summary>
+        /// The amount of frames per second of the curve animation (optional). Can be sued to restrict the keyframes time values to the given time quantization rate.
+        /// </summary>
+        public float? FPS
+        {
+            get => _fps;
+            set
+            {
+                if (_fps.HasValue == value.HasValue && (!value.HasValue || Mathf.NearEqual(_fps.Value, value.Value)))
+                    return;
+
+                _fps = value;
+
+                UpdateFPS();
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CurveEditor{T}"/> class.
         /// </summary>
         public CurveEditor()
@@ -991,7 +1017,23 @@ namespace FlaxEditor.GUI
             _keyframes.AddRange(keyframesArray);
             _keyframes.Sort((a, b) => a.Time > b.Time ? 1 : 0);
 
+            UpdateFPS();
+
             OnKeyframesChanged();
+        }
+
+        private void UpdateFPS()
+        {
+            if (FPS.HasValue)
+            {
+                float fps = FPS.Value;
+                for (int i = 0; i < _keyframes.Count; i++)
+                {
+                    var k = _keyframes[i];
+                    k.Time = Mathf.Floor(k.Time * fps) / fps;
+                    _keyframes[i] = k;
+                }
+            }
         }
 
         /// <summary>
@@ -1029,6 +1071,11 @@ namespace FlaxEditor.GUI
 
         private void AddKeyframe(Vector2 keyframesPos)
         {
+            if (FPS.HasValue)
+            {
+                float fps = FPS.Value;
+                keyframesPos.X = Mathf.Floor(keyframesPos.X * fps) / fps;
+            }
             int pos = 0;
             while (pos < _keyframes.Count && _keyframes[pos].Time < keyframesPos.X)
                 pos++;
@@ -1092,6 +1139,7 @@ namespace FlaxEditor.GUI
                     Curve._keyframes[index] = keyframe;
                 }
 
+                Curve.UpdateFPS();
                 Curve.UpdateKeyframes();
             }
 
