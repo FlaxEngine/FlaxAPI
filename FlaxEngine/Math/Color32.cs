@@ -53,6 +53,70 @@ namespace FlaxEngine
         public byte A;
 
         /// <summary>
+        /// Gets or sets the component at the specified index.
+        /// </summary>
+        /// <value>The value of the red, green, blue, and alpha components, depending on the index.</value>
+        /// <param name="index">The index of the component to access. Use 0 for the alpha component, 1 for the red component, 2 for the green component, and 3 for the blue component.</param>
+        /// <returns>The value of the component at the specified index.</returns>
+        /// <exception cref="System.IndexOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 3].</exception>
+        public byte this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+                case 0:
+                {
+                    return R;
+                }
+                case 1:
+                {
+                    return G;
+                }
+                case 2:
+                {
+                    return B;
+                }
+                case 3:
+                {
+                    return A;
+                }
+                }
+                throw new IndexOutOfRangeException("Invalid Color32 index!");
+            }
+            set
+            {
+                switch (index)
+                {
+                case 0:
+                {
+                    R = value;
+                    break;
+                }
+                case 1:
+                {
+                    G = value;
+                    break;
+                }
+                case 2:
+                {
+                    B = value;
+                    break;
+                }
+                case 3:
+                {
+                    A = value;
+                    break;
+                }
+                default:
+                {
+                    throw new IndexOutOfRangeException("Invalid Color32 index!");
+                }
+                }
+            }
+        }
+
+        /// <summary>
         /// Constructs a new Color32 with given r, g, b, a components.
         /// </summary>
         /// <param name="r">The red component value.</param>

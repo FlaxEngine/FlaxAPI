@@ -61,29 +61,30 @@ namespace FlaxEditor.GUI
         IKeyframeAccess<Vector3>,
         IKeyframeAccess<Vector4>,
         IKeyframeAccess<Quaternion>,
+        IKeyframeAccess<Color32>,
         IKeyframeAccess<Color>
         {
-            public void GetDefaultValue(out bool value)
+            void IKeyframeAccess<bool>.GetDefaultValue(out bool value)
             {
                 value = false;
             }
 
-            public int GetCurveComponents()
+            int IKeyframeAccess<bool>.GetCurveComponents()
             {
                 return 1;
             }
 
-            public float GetCurveValue(ref bool value, int component)
+            float IKeyframeAccess<bool>.GetCurveValue(ref bool value, int component)
             {
                 return value ? 1 : 0;
             }
 
-            public void SetCurveValue(float curve, ref bool value, int component)
+            void IKeyframeAccess<bool>.SetCurveValue(float curve, ref bool value, int component)
             {
                 value = curve >= 0.5f;
             }
 
-            public void GetDefaultValue(out int value)
+            void IKeyframeAccess<int>.GetDefaultValue(out int value)
             {
                 value = 0;
             }
@@ -103,7 +104,7 @@ namespace FlaxEditor.GUI
                 value = (int)curve;
             }
 
-            public void GetDefaultValue(out double value)
+            void IKeyframeAccess<double>.GetDefaultValue(out double value)
             {
                 value = 0.0;
             }
@@ -123,7 +124,7 @@ namespace FlaxEditor.GUI
                 value = curve;
             }
 
-            public void GetDefaultValue(out float value)
+            void IKeyframeAccess<float>.GetDefaultValue(out float value)
             {
                 value = 0.0f;
             }
@@ -143,7 +144,7 @@ namespace FlaxEditor.GUI
                 value = curve;
             }
 
-            public void GetDefaultValue(out Vector2 value)
+            void IKeyframeAccess<Vector2>.GetDefaultValue(out Vector2 value)
             {
                 value = Vector2.Zero;
             }
@@ -163,7 +164,7 @@ namespace FlaxEditor.GUI
                 value[component] = curve;
             }
 
-            public void GetDefaultValue(out Vector3 value)
+            void IKeyframeAccess<Vector3>.GetDefaultValue(out Vector3 value)
             {
                 value = Vector3.Zero;
             }
@@ -183,7 +184,7 @@ namespace FlaxEditor.GUI
                 value[component] = curve;
             }
 
-            public void GetDefaultValue(out Vector4 value)
+            void IKeyframeAccess<Vector4>.GetDefaultValue(out Vector4 value)
             {
                 value = Vector4.Zero;
             }
@@ -225,7 +226,7 @@ namespace FlaxEditor.GUI
                 Quaternion.Euler(euler.X, euler.Y, euler.Z, out value);
             }
 
-            public void GetDefaultValue(out Color value)
+            void IKeyframeAccess<Color>.GetDefaultValue(out Color value)
             {
                 value = Color.Black;
             }
@@ -243,6 +244,26 @@ namespace FlaxEditor.GUI
             void IKeyframeAccess<Color>.SetCurveValue(float curve, ref Color value, int component)
             {
                 value[component] = curve;
+            }
+
+            void IKeyframeAccess<Color32>.GetDefaultValue(out Color32 value)
+            {
+                value = Color32.Black;
+            }
+
+            int IKeyframeAccess<Color32>.GetCurveComponents()
+            {
+                return 4;
+            }
+
+            float IKeyframeAccess<Color32>.GetCurveValue(ref Color32 value, int component)
+            {
+                return (float)value[component];
+            }
+
+            void IKeyframeAccess<Color32>.SetCurveValue(float curve, ref Color32 value, int component)
+            {
+                value[component] = (byte)Mathf.Clamp(curve, 0, 255);
             }
         }
 
