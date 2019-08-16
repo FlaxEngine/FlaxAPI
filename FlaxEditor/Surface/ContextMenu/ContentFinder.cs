@@ -1,54 +1,57 @@
-using System.Collections.Concurrent;
+// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using FlaxEditor.Content;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Modules;
-using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface.ContextMenu
 {
+    /// <summary>
+    /// The content finder popup. Allows to search for project items and quickly navigate to.
+    /// </summary>
+    /// <seealso cref="FlaxEditor.GUI.ContextMenu.ContextMenuBase" />
     public class ContentFinder : ContextMenuBase
     {
-        private bool _ctrlKey;
-        private bool _fKey;
+        private bool _ctrlDown;
+        private bool _keyDown;
         private Panel _resultPanel;
         private TextBox _searchBox;
         private Match _match;
         private SearchItem _selectedItem;
-        
+        private Vector2 _firstPos;
+
         /// <summary>
         /// Gets or sets the height per item.
         /// </summary>
         public float ItemHeight { get; set; } = 20;
-        
+
         /// <summary>
         /// Gets or sets the logo size.
         /// </summary>
         public float ItemLogoSize { get; set; } = 15;
-        
+
         /// <summary>
         /// Gets or sets the number of item to show.
         /// </summary>
-        public int VisibleItemCount { get; set; } = 6;
-        
+        public int VisibleItemCount { get; set; } = 12;
+
         /// <summary>
         /// Gets or sets the selected item.
         /// </summary>
-        public SearchItem SelectedItem {
-            get { return _selectedItem; }
-
+        public SearchItem SelectedItem
+        {
+            get => _selectedItem;
             set
             {
-                if (value == null && !MatchedItems.Contains(value))
+                if (value == null || !MatchedItems.Contains(value))
                     return;
-                
-                if(_selectedItem != null)
+
+                if (_selectedItem != null)
                     _selectedItem.BackgroundColor = Color.Transparent;
-                
+
                 value.BackgroundColor = Style.Current.BackgroundSelected;
                 _selectedItem = value;
 
@@ -60,43 +63,48 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets actual matched item list.
         /// </summary>
         public List<SearchItem> MatchedItems { get; } = new List<SearchItem>();
-        
+
         internal bool Hand { get; set; }
-        
-        private Vector2 firstPos;
-        
-        public ContentFinder(float width = 280)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentFinder"/> class.
+        /// </summary>
+        /// <param name="width">The finder width.</param>
+        public ContentFinder(float width = 440.0f)
         {
-            Width = width;
-            
-            _searchBox = AddChild<TextBox>();
-            _searchBox.X = 1;
-            _searchBox.Y = 1;
-            _searchBox.Width = 278;
+            Size = new Vector2(width, TextBox.DefaultHeight + 2.0f);
+
+            _searchBox = new TextBox
+            {
+                X = 1,
+                Y = 1,
+                Width = width - 2.0f,
+                WatermarkText = "Type to search...",
+                Parent = this
+            };
             _searchBox.TextChanged += OnTextChanged;
 
-            _resultPanel = AddChild<Panel>();
-            _resultPanel.Y = _searchBox.Height + 1;
-            _resultPanel.X = 1;
-            _resultPanel.Height = Height - (_searchBox.Height + 1 + 1);
-            _resultPanel.Width = 278;
+            _resultPanel = new Panel
+            {
+                Location = new Vector2(1, _searchBox.Height + 1),
+                Size = new Vector2(width - 2.0f, Height - (_searchBox.Height + 1 + 1)),
+                Parent = this
+            };
 
-            Height = _searchBox.Height+1;
-            
             Editor.Instance.Windows.MainWindow.KeyDown += OnGlobalKeyDown;
         }
-        
+
         private void OnTextChanged()
         {
             MatchedItems.Clear();
 
             List<SearchResult> results = Editor.Instance.ContentFinding.Search(_searchBox.Text);
-            
+
             BuildList(results);
         }
 
@@ -106,7 +114,7 @@ namespace FlaxEditor.Surface.ContextMenu
 
             if (items.Count == 0)
             {
-                Height = _searchBox.Height+1;
+                Height = _searchBox.Height + 1;
                 _resultPanel.ScrollBars = ScrollBars.None;
                 RootWindow.Window.ClientSize = new Vector2(RootWindow.Window.ClientSize.X, Height);
                 return;
@@ -124,42 +132,53 @@ namespace FlaxEditor.Surface.ContextMenu
             }
 
             _resultPanel.Height = ItemHeight * VisibleItemCount;
+            var itemsWidth = _resultPanel.GetClientArea().Width;
+            var itemHeight = ItemHeight;
 
-            int count = 0;
-            items.ForEach((item) =>
+            for (var i = 0; i < items.Count; i++)
             {
-                var i = new SearchItem(count, item.Name, item.Type, item.Item, this);
-                MatchedItems.Add(i);
-                _resultPanel.AddChild(i);
-                i.Build(ItemHeight, ItemLogoSize);
-                count++;
-            });
-            
+                var item = items[i];
+                var searchItem = new SearchItem(item.Name, item.Type, item.Item, this)
+                {
+                    Y = i * itemHeight,
+                    Width = itemsWidth,
+                    Height = itemHeight,
+                    Parent = _resultPanel,
+                };
+                searchItem.Build(ItemHeight, ItemLogoSize);
+                MatchedItems.Add(searchItem);
+            }
+
             RootWindow.Window.ClientSize = new Vector2(RootWindow.Window.ClientSize.X, Height);
-            
+
             PerformLayout();
         }
 
+        /// <inheritdoc />
         public override void Show(Control parent, Vector2 location)
         {
             base.Show(parent, location);
-            _searchBox.Text = "";
+
+            _searchBox.Text = string.Empty;
             _searchBox.Focus();
         }
 
+        /// <inheritdoc />
         public override void Update(float delta)
         {
             Hand = false;
+
             base.Update(delta);
         }
 
+        /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
             if (key == Keys.ArrowDown)
             {
                 if (MatchedItems.Count == 0)
                     return true;
-                
+
                 int currentPos;
 
                 if (_selectedItem != null)
@@ -172,14 +191,14 @@ namespace FlaxEditor.Surface.ContextMenu
                     currentPos = 0;
 
                 SelectedItem = MatchedItems[currentPos];
-                
+
                 return true;
             }
             else if (key == Keys.ArrowUp)
             {
                 if (MatchedItems.Count == 0)
                     return true;
-                
+
                 int currentPos;
 
                 if (_selectedItem != null)
@@ -192,12 +211,12 @@ namespace FlaxEditor.Surface.ContextMenu
                     currentPos = 0;
 
                 SelectedItem = MatchedItems[currentPos];
-                
+
                 return true;
             }
             else if (key == Keys.Return)
             {
-                if(_selectedItem != null)
+                if (_selectedItem != null)
                 {
                     Hide();
                     Editor.Instance.ContentFinding.Open(_selectedItem.Item);
@@ -220,34 +239,38 @@ namespace FlaxEditor.Surface.ContextMenu
         {
             if (key == Keys.Control)
             {
-                _ctrlKey = true;
+                _ctrlDown = true;
             }
-            else if (key == Keys.F && _ctrlKey)
+            else if (key == Keys.O && _ctrlDown)
             {
-                _fKey = true;
+                _keyDown = true;
             }
             else
             {
-                _fKey = false;
-                _ctrlKey = false;
+                _keyDown = false;
+                _ctrlDown = false;
             }
 
-            if (_ctrlKey && _fKey)
+            if (_ctrlDown && _keyDown)
             {
-                firstPos = Editor.Instance.Windows.MainWindow.MousePosition;
-                Show(Editor.Instance.Windows.MainWindow.GUI, firstPos);
-                _searchBox.Text = "";
-                _resultPanel.ScrollViewTo(new Vector2(0,0));
-                _fKey = false;
-                _ctrlKey = false;
+                _firstPos = Editor.Instance.Windows.MainWindow.MousePosition;
+                Show(Editor.Instance.Windows.MainWindow.GUI, _firstPos);
+                _searchBox.Text = string.Empty;
+                _resultPanel.ScrollViewTo(new Vector2(0, 0));
+                _keyDown = false;
+                _ctrlDown = false;
             }
         }
 
-        
-
+        /// <inheritdoc />
         public override void Dispose()
         {
-            Editor.Instance.Windows.MainWindow.KeyDown -= OnGlobalKeyDown;
+            if (IsDisposing)
+                return;
+
+            if (Editor.Instance.Windows.MainWindow != null)
+                Editor.Instance.Windows.MainWindow.KeyDown -= OnGlobalKeyDown;
+
             base.Dispose();
         }
     }
