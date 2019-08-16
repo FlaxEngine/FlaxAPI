@@ -53,6 +53,7 @@ namespace FlaxEditor.GUI
         }
 
         private class KeyframeAccess :
+        IKeyframeAccess<bool>,
         IKeyframeAccess<int>,
         IKeyframeAccess<double>,
         IKeyframeAccess<float>,
@@ -62,6 +63,26 @@ namespace FlaxEditor.GUI
         IKeyframeAccess<Quaternion>,
         IKeyframeAccess<Color>
         {
+            public void GetDefaultValue(out bool value)
+            {
+                value = false;
+            }
+
+            public int GetCurveComponents()
+            {
+                return 1;
+            }
+
+            public float GetCurveValue(ref bool value, int component)
+            {
+                return value ? 1 : 0;
+            }
+
+            public void SetCurveValue(float curve, ref bool value, int component)
+            {
+                value = curve >= 0.5f;
+            }
+
             public void GetDefaultValue(out int value)
             {
                 value = 0;
