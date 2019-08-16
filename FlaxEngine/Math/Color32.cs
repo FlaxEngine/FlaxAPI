@@ -134,24 +134,90 @@ namespace FlaxEngine
         /// <summary>
         /// Linearly interpolates between colors a and b by t.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
+        /// <param name="a">Color a</param>
+        /// <param name="b">Color b</param>
+        /// <param name="t">Float for combining a and b</param>
         public static Color32 Lerp(Color32 a, Color32 b, float t)
         {
-            t = Mathf.Saturate(t);
             return new Color32((byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t), (byte)(a.A + (b.A - a.A) * t));
         }
 
         /// <summary>
         /// Linearly interpolates between colors a and b by t.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static Color32 LerpUnclamped(Color32 a, Color32 b, float t)
+        /// <param name="a">Color a</param>
+        /// <param name="b">Color b</param>
+        /// <param name="t">Float for combining a and b</param>
+        /// <param name="result">Result</param>
+        public static void Lerp(ref Color32 a, ref Color32 b, float t, out Color32 result)
         {
-            return new Color32((byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t), (byte)(a.A + (b.A - a.A) * t));
+            result = new Color32((byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t), (byte)(a.A + (b.A - a.A) * t));
+        }
+
+        /// <summary>
+        /// Adds two colors.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator +(Color32 a, Color32 b)
+        {
+            return new Color32((byte)(a.R + b.R), (byte)(a.G + b.G), (byte)(a.B + b.B), (byte)(a.A + b.A));
+        }
+
+        /// <summary>
+        /// Divides color by the scale factor.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The division factor.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator /(Color32 a, float b)
+        {
+            return new Color32((byte)(a.R / b), (byte)(a.G / b), (byte)(a.B / b), (byte)(a.A / b));
+        }
+
+        /// <summary>
+        /// Multiplies color components by the other color components.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator *(Color32 a, Color32 b)
+        {
+            return new Color32((byte)(a.R * b.R), (byte)(a.G * b.G), (byte)(a.B * b.B), (byte)(a.A * b.A));
+        }
+
+        /// <summary>
+        /// Multiplies color components by the scale factor.
+        /// </summary>
+        /// <param name="a">The color.</param>
+        /// <param name="b">The scale.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator *(Color32 a, float b)
+        {
+            return new Color32((byte)(a.R * b), (byte)(a.G * b), (byte)(a.B * b), (byte)(a.A * b));
+        }
+
+        /// <summary>
+        /// Multiplies color components by the scale factor.
+        /// </summary>
+        /// <param name="b">The scale.</param>
+        /// <param name="a">The color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator *(float b, Color32 a)
+        {
+            return new Color32((byte)(a.R * b), (byte)(a.G * b), (byte)(a.B * b), (byte)(a.A * b));
+        }
+
+        /// <summary>
+        /// Subtracts one color from the another.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator -(Color32 a, Color32 b)
+        {
+            return new Color32((byte)(a.R - b.R), (byte)(a.G - b.G), (byte)(a.B - b.B), (byte)(a.A - b.A));
         }
 
         /// <summary>

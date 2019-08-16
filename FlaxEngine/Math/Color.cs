@@ -577,7 +577,7 @@ namespace FlaxEngine
         /// <param name="a">Color a</param>
         /// <param name="b">Color b</param>
         /// <param name="t">Float for combining a and b</param>
-        /// <param name="t">Result</param>
+        /// <param name="result">Result</param>
         public static void Lerp(ref Color a, ref Color b, float t, out Color result)
         {
             result = new Color(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t, a.A + (b.A - a.A) * t);
