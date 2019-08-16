@@ -260,6 +260,14 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Called when timeline current frame gets changed.
+        /// </summary>
+        /// <param name="frame">The frame.</param>
+        public virtual void OnTimelineCurrentFrameChanged(int frame)
+        {
+        }
+
+        /// <summary>
         /// Called when parent track gets changed.
         /// </summary>
         /// <param name="parent">The parent track.</param>

@@ -302,6 +302,10 @@ namespace FlaxEditor.GUI.Timeline
 
                 _currentFrame = value;
                 UpdatePositionHandle();
+                for (var i = 0; i < _tracks.Count; i++)
+                {
+                    _tracks[i].OnTimelineCurrentFrameChanged(_currentFrame);
+                }
                 CurrentFrameChanged?.Invoke();
             }
         }
