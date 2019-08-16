@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FlaxEditor.Content;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
