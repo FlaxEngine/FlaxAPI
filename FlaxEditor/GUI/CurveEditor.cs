@@ -349,13 +349,15 @@ namespace FlaxEditor.GUI
                                 }
                                 if (isFirstSelected)
                                 {
-                                    k.Time = Mathf.Clamp(k.Time + keyframeDelta.X, minTime, maxTime);
+                                    k.Time += keyframeDelta.X;
 
                                     if (_curve.FPS.HasValue)
                                     {
                                         float fps = _curve.FPS.Value;
                                         k.Time = Mathf.Floor(k.Time * fps) / fps;
                                     }
+
+                                    k.Time = Mathf.Clamp(k.Time, minTime, maxTime);
                                 }
 
                                 // TODO: snapping keyframes to grid when moving

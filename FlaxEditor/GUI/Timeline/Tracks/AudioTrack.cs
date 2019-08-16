@@ -367,6 +367,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             base.OnTimelineChanged(timeline);
 
             Curve.Parent = timeline?.MediaPanel;
+            Curve.FPS = timeline?.FramesPerSecond;
             UpdateCurveBounds();
         }
 
@@ -384,6 +385,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             base.OnTimelineArrange();
 
             UpdateCurveBounds();
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineFpsChanged(float before, float after)
+        {
+            base.OnTimelineFpsChanged(before, after);
+
+            Curve.FPS = after;
         }
 
         /// <inheritdoc />
