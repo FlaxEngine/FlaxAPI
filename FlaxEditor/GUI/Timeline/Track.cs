@@ -188,7 +188,7 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         /// <param name="options">The track initial options.</param>
         public Track(ref TrackCreateOptions options)
-        : base(0, 0, 100, 22.0f)
+        : base(0, 0, 100, HeaderHeight)
         {
             AutoFocus = false;
 
@@ -558,6 +558,11 @@ namespace FlaxEditor.GUI.Timeline
         protected virtual bool CanRename => true;
 
         /// <summary>
+        /// Gets a value indicating whether user can expand the track contents of the inner hierarchy.
+        /// </summary>
+        protected virtual bool CanExpand => SubTracks.Count > 0;
+
+        /// <summary>
         /// Determines whether this track can get the child track.
         /// </summary>
         /// <param name="track">The track.</param>
@@ -732,7 +737,7 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Draw arrow
-            if (SubTracks.Count > 0)
+            if (CanExpand)
             {
                 Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, isMouseOver ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
             }
@@ -861,7 +866,7 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Check if mouse hits arrow
-            if (SubTracks.Count > 0 && _mouseOverArrow)
+            if (CanExpand && _mouseOverArrow)
             {
                 // Toggle open state
                 if (_opened)
@@ -881,7 +886,7 @@ namespace FlaxEditor.GUI.Timeline
             base.OnMouseMove(location);
 
             // Cache flag
-            _mouseOverArrow = SubTracks.Count > 0 && ArrowRect.Contains(location);
+            _mouseOverArrow = CanExpand && ArrowRect.Contains(location);
 
             // Check if start drag and drop
             if (_isMouseDown && Vector2.Distance(_mouseDownPos, location) > 10.0f)
