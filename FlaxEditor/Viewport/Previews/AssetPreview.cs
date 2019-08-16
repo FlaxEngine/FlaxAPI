@@ -66,16 +66,30 @@ namespace FlaxEditor.Viewport.Previews
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetPreview"/> class.
         /// </summary>
-        /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
-        protected AssetPreview(bool useWidgets)
-        : base(RenderTask.Create<SceneRenderTask>(), new ArcBallCamera(Vector3.Zero, 50), useWidgets)
+        /// <param name="useWidgets">If set to <c>true</c> use widgets for viewport, otherwise hide them.</param>
+        /// <param name="orbitRadius">The initial orbit radius.</param>
+        protected AssetPreview(bool useWidgets, float orbitRadius = 50.0f)
+        : this(useWidgets, new ArcBallCamera(Vector3.Zero, orbitRadius))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssetPreview"/> class.
+        /// </summary>
+        /// <param name="useWidgets">If set to <c>true</c> use widgets for viewport, otherwise hide them.</param>
+        /// <param name="camera">The camera controller.</param>
+        protected AssetPreview(bool useWidgets, ViewportCamera camera)
+        : base(RenderTask.Create<SceneRenderTask>(), camera, useWidgets)
         {
             DockStyle = DockStyle.Fill;
 
             Task.Flags = ViewFlags.DefaultAssetPreview;
             Task.AllowGlobalCustomPostFx = false;
 
-            ((ArcBallCamera)ViewportCamera).SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
+            var orbitRadius = 200.0f;
+            if (camera is ArcBallCamera arcBallCamera)
+                orbitRadius = arcBallCamera.OrbitRadius;
+            camera.SerArcBallView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f), Vector3.Zero, orbitRadius);
 
             if (useWidgets)
             {

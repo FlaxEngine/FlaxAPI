@@ -98,7 +98,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// If true, the animation will be updated even when an actor cannot be seen by any camera. Otherwise, the animations themselves will also stop running when the actor is off - screen.
+        /// If true, the animation will be updated even when an actor cannot be seen by any camera. Otherwise, the animations themselves will also stop running when the actor is off-screen.
         /// </summary>
         [UnmanagedCall]
         [EditorOrder(40), EditorDisplay("Skinned Model"), Tooltip(" If true, the animation will be updated even when an actor cannot be seen by any camera. Otherwise, the animations themselves will also stop running when the actor is off-screen.")]

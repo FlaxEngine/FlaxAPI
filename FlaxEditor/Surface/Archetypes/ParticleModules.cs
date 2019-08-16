@@ -1256,6 +1256,35 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
+                TypeID = 311,
+                Create = CreateParticleModuleNode,
+                Title = "Turbulence",
+                Description = "Applies the noise-based turbulence force field to particle velocity",
+                Flags = DefaultModuleFlags,
+                Size = new Vector2(200, 7 * Surface.Constants.LayoutOffsetY),
+                DefaultValues = new object[]
+                {
+                    true,
+                    (int)ModuleType.Update,
+                    Vector3.Zero, // Force Field Position
+                    Vector3.Zero, // Force Field Rotation
+                    Vector3.One, // Force Field Scale
+                    0.4f, // Roughness
+                    10.0f, // Intensity
+                    3, // Octaves Count
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(-0.5f + 0, "Force Field Position", true, ConnectionType.Vector3, 0, 2),
+                    NodeElementArchetype.Factory.Input(-0.5f + 1, "Force Field Rotation", true, ConnectionType.Vector3, 1, 3),
+                    NodeElementArchetype.Factory.Input(-0.5f + 2, "Force Field Scale", true, ConnectionType.Vector3, 2, 4),
+                    NodeElementArchetype.Factory.Input(-0.5f + 3, "Roughness", true, ConnectionType.Float, 3, 5),
+                    NodeElementArchetype.Factory.Input(-0.5f + 4, "Intensity", true, ConnectionType.Float, 4, 6),
+                    NodeElementArchetype.Factory.Input(-0.5f + 5, "Octaves Count", true, ConnectionType.Integer, 5, 7),
+                },
+            },
+            new NodeArchetype
+            {
                 TypeID = 331,
                 Create = CreateParticleModuleNode,
                 Title = "Collision (sphere)",

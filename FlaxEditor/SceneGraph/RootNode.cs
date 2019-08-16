@@ -24,9 +24,23 @@ namespace FlaxEditor.SceneGraph
         /// Initializes a new instance of the <see cref="RootNode"/> class.
         /// </summary>
         /// <param name="id">The node id.</param>
-        public RootNode(Guid id)
+        protected RootNode(Guid id)
         : base(null, id)
         {
+        }
+
+        /// <summary>
+        /// Called when actor child nodes get released.
+        /// </summary>
+        public event Action<ActorNode> ActorChildNodesDispose;
+
+        /// <summary>
+        /// Called when actor child nodes get released.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public virtual void OnActorChildNodesDispose(ActorNode node)
+        {
+            ActorChildNodesDispose?.Invoke(node);
         }
 
         /// <inheritdoc />
@@ -92,7 +106,7 @@ namespace FlaxEditor.SceneGraph
 
             return RayCast(ref data, out distance, out normal);
         }
-        
+
         /// <inheritdoc />
         public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
         {

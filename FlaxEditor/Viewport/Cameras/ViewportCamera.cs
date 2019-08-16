@@ -21,6 +21,22 @@ namespace FlaxEditor.Viewport.Cameras
             internal set => _viewport = value;
         }
 
+        /// <summary>
+        /// Sets view orientation and position to match the arc ball camera style view.
+        /// </summary>
+        /// <param name="orientation">The view rotation.</param>
+        /// <param name="orbitCenter">The orbit center location.</param>
+        /// <param name="orbitRadius">The orbit radius.</param>
+        public void SerArcBallView(Quaternion orientation, Vector3 orbitCenter, float orbitRadius)
+        {
+            // Rotate
+            Viewport.ViewOrientation = orientation;
+
+            // Move camera to look at orbit center point
+            Vector3 localPosition = Viewport.ViewDirection * (-1 * orbitRadius);
+            Viewport.ViewPosition = orbitCenter + localPosition;
+        }
+
         /// <inheritdoc />
         public virtual void Update(float deltaTime)
         {

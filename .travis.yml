@@ -5,8 +5,8 @@ install:
   - nuget install NUnit.ConsoleRunner -Version 3.7.0 -OutputDirectory packages
 script:
   - xbuild /p:Configuration=Debug FlaxAPI.sln
-  - mono ./packages/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./FlaxEngine.Tests/bin/Debug/FlaxEngine.Tests.dll
-  - mono ./packages/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./FlaxEditor.Tests/bin/Debug/FlaxEditor.Tests.dll
+  - mono ./packages/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./FlaxEngine.Tests/bin/FlaxEngine.Tests.dll
+  - mono ./packages/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./FlaxEditor.Tests/bin/FlaxEditor.Tests.dll
 notifications:
   email:
     on_success: never

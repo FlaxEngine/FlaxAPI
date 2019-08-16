@@ -144,10 +144,8 @@ namespace FlaxEditor.Viewport.Previews
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
         public ParticleSystemPreview(bool useWidgets)
-        : base(useWidgets)
+        : base(useWidgets, new FPSCamera())
         {
-            ((ArcBallCamera)ViewportCamera).OrbitRadius = 200.0f;
-
             // Setup preview scene
             _previewEffect = ParticleEffect.New();
             _previewEffect.UseTimeScale = false;

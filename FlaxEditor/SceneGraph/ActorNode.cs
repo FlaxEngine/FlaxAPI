@@ -117,6 +117,13 @@ namespace FlaxEditor.SceneGraph
         /// </summary>
         public void DisposeChildNodes()
         {
+            // Send event to root so if any of this child nodes is selected we can handle it
+            var root = Root;
+            if (root != null)
+            {
+                root.OnActorChildNodesDispose(this);
+            }
+
             for (int i = 0; i < ActorChildNodes.Count; i++)
                 ActorChildNodes[i].Dispose();
             ActorChildNodes.Clear();

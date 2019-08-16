@@ -123,6 +123,11 @@ namespace FlaxEditor
         public readonly ContentImportingModule ContentImporting;
 
         /// <summary>
+        /// The content finder module.
+        /// </summary>
+        public readonly ContentFindingModule ContentFinding;
+        
+        /// <summary>
         /// The content editing
         /// </summary>
         public readonly CodeEditingModule CodeEditing;
@@ -208,6 +213,7 @@ namespace FlaxEditor
             RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
             RegisterModule(ProgressReporting = new ProgressReportingModule(this));
+            RegisterModule(ContentFinding = new ContentFindingModule(this));
 
             StateMachine = new EditorStateMachine(this);
             Undo = new EditorUndo(this);
@@ -255,7 +261,7 @@ namespace FlaxEditor
                 module.OnEndInit();
         }
 
-        internal void Init(bool isHeadless)
+        internal void Init(bool isHeadless, bool skipCompile)
         {
             EnsureState<LoadingState>();
             _isHeadlessMode = isHeadless;
@@ -275,7 +281,7 @@ namespace FlaxEditor
             _areModulesInited = true;
 
             // Start Editor initialization ending phrase (will wait for scripts compilation result)
-            StateMachine.LoadingState.StartInitEnding();
+            StateMachine.LoadingState.StartInitEnding(skipCompile);
 
             InitializationStart?.Invoke();
         }

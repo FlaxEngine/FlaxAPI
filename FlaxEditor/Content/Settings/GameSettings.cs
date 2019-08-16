@@ -45,8 +45,7 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// Reference to the first scene to load on a game startup.
         /// </summary>
-        [EditorOrder(900), EditorDisplay("Startup"), Tooltip("Reference to the first scene to load on a game startup")]
-        //[EditorOrder(900), EditorDisplay("Startup"), AssetReference(Scene.EditorPickerTypename), Tooltip("Reference to the first scene to load on a game startup")]
+        [EditorOrder(900), EditorDisplay("Startup"), AssetReference(Scene.EditorPickerTypename), Tooltip("Reference to the first scene to load on a game startup")]
         public SceneReference FirstScene;
 
         /// <summary>

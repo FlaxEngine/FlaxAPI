@@ -26,6 +26,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the command line for the application.
+        /// </summary>
+        [UnmanagedCall]
+        public static string CommandLine
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetCommandLine(); }
+#endif
+        }
+
+        /// <summary>
         /// Gets the name of the current user.
         /// </summary>
         [UnmanagedCall]
@@ -256,6 +269,9 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetComputerName();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetCommandLine();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetUserName();
