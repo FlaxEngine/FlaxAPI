@@ -26,6 +26,11 @@ namespace FlaxEditor.Windows
         public InputActionsContainer InputActions = new InputActionsContainer();
 
         /// <summary>
+        /// Gets a value indicating whether this window can open content finder popup.
+        /// </summary>
+        protected virtual bool CanOpenContentFinder => true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorWindow"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
@@ -35,6 +40,14 @@ namespace FlaxEditor.Windows
         : base(editor.UI.MasterPanel, hideOnClose, scrollBars)
         {
             Editor = editor;
+
+            InputActions.Add(options => options.ContentFinder, () =>
+            {
+                if (CanOpenContentFinder)
+                {
+                    Editor.ContentFinding.ShowFinder(RootWindow);
+                }
+            });
 
             // Register
             Editor.Windows.Windows.Add(this);

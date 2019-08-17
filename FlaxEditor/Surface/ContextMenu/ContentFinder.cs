@@ -16,13 +16,10 @@ namespace FlaxEditor.Surface.ContextMenu
     /// <seealso cref="FlaxEditor.GUI.ContextMenu.ContextMenuBase" />
     public class ContentFinder : ContextMenuBase
     {
-        private bool _ctrlDown;
-        private bool _keyDown;
         private Panel _resultPanel;
         private TextBox _searchBox;
         private Match _match;
         private SearchItem _selectedItem;
-        private Vector2 _firstPos;
 
         /// <summary>
         /// Gets or sets the height per item.
@@ -65,7 +62,7 @@ namespace FlaxEditor.Surface.ContextMenu
         /// </summary>
         public List<SearchItem> MatchedItems { get; } = new List<SearchItem>();
 
-        internal bool Hand { get; set; }
+        internal bool Hand;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentFinder"/> class.
@@ -91,9 +88,6 @@ namespace FlaxEditor.Surface.ContextMenu
                 Size = new Vector2(width - 2.0f, Height - (_searchBox.Height + 1 + 1)),
                 Parent = this
             };
-
-            if (Editor.Instance.Windows.MainWindow != null)
-                Editor.Instance.Windows.MainWindow.KeyDown += OnGlobalKeyDown;
         }
 
         private void OnTextChanged()
@@ -117,6 +111,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 return;
             }
 
+            // Setup items container
             if (items.Count <= VisibleItemCount)
             {
                 Height = 1 + _searchBox.Height + 1 + ItemHeight * items.Count;
@@ -132,6 +127,7 @@ namespace FlaxEditor.Surface.ContextMenu
             var itemsWidth = _resultPanel.GetClientArea().Width;
             var itemHeight = ItemHeight;
 
+            // Spawn items
             for (var i = 0; i < items.Count; i++)
             {
                 var item = items[i];
@@ -155,6 +151,8 @@ namespace FlaxEditor.Surface.ContextMenu
         {
             base.Show(parent, location);
 
+            // Setup
+            _resultPanel.ScrollViewTo(Vector2.Zero);
             _searchBox.Text = string.Empty;
             _searchBox.Focus();
         }
@@ -229,45 +227,6 @@ namespace FlaxEditor.Surface.ContextMenu
             {
                 return base.OnKeyDown(key);
             }
-        }
-
-        private void OnGlobalKeyDown(Keys key)
-        {
-            if (key == Keys.Control)
-            {
-                _ctrlDown = true;
-            }
-            else if (key == Keys.O && _ctrlDown)
-            {
-                _keyDown = true;
-            }
-            else
-            {
-                _keyDown = false;
-                _ctrlDown = false;
-            }
-
-            if (_ctrlDown && _keyDown)
-            {
-                _firstPos = Editor.Instance.Windows.MainWindow.MousePosition;
-                Show(Editor.Instance.Windows.MainWindow.GUI, _firstPos);
-                _searchBox.Text = string.Empty;
-                _resultPanel.ScrollViewTo(new Vector2(0, 0));
-                _keyDown = false;
-                _ctrlDown = false;
-            }
-        }
-
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            if (IsDisposing)
-                return;
-
-            if (Editor.Instance.Windows.MainWindow != null)
-                Editor.Instance.Windows.MainWindow.KeyDown -= OnGlobalKeyDown;
-
-            base.Dispose();
         }
     }
 }

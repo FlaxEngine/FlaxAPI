@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using FlaxEditor.Content;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.Surface.ContextMenu;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Modules
 {
@@ -63,6 +65,16 @@ namespace FlaxEditor.Modules
             Finder = null;
 
             base.OnExit();
+        }
+
+        /// <summary>
+        /// Shows the finder.
+        /// </summary>
+        /// <param name="control">The target control to show finder over it.</param>
+        public void ShowFinder(Control control)
+        {
+            var position = (control.Size - new Vector2(Finder.Width, 300.0f)) * 0.5f;
+            Finder.Show(control, position);
         }
 
         /// <summary>
