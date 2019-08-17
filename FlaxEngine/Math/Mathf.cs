@@ -8,7 +8,7 @@ namespace FlaxEngine
     /// <summary>
     /// A collection of common math functions.
     /// </summary>
-    public struct Mathf
+    public static class Mathf
     {
         /// <summary>
         /// The value for which all absolute numbers smaller than are considered equal to zero.
