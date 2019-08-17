@@ -61,6 +61,10 @@ namespace FlaxEditor.Options
         [EditorDisplay("Common"), EditorOrder(210)]
         public InputBinding Search = new InputBinding(Keys.F, Keys.Control);
 
+        [DefaultValue(typeof(InputBinding), "Ctrl+O")]
+        [EditorDisplay("Common"), EditorOrder(220)]
+        public InputBinding ContentFinder = new InputBinding(Keys.O, Keys.Control);
+
         #endregion
 
         #region Scene
