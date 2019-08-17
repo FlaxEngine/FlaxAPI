@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using FlaxEditor.Content;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Modules;
 using FlaxEngine;
@@ -27,11 +28,6 @@ namespace FlaxEditor.Surface.ContextMenu
         /// Gets or sets the height per item.
         /// </summary>
         public float ItemHeight { get; set; } = 20;
-
-        /// <summary>
-        /// Gets or sets the logo size.
-        /// </summary>
-        public float ItemLogoSize { get; set; } = 15;
 
         /// <summary>
         /// Gets or sets the number of item to show.
@@ -96,7 +92,8 @@ namespace FlaxEditor.Surface.ContextMenu
                 Parent = this
             };
 
-            Editor.Instance.Windows.MainWindow.KeyDown += OnGlobalKeyDown;
+            if (Editor.Instance.Windows.MainWindow != null)
+                Editor.Instance.Windows.MainWindow.KeyDown += OnGlobalKeyDown;
         }
 
         private void OnTextChanged()
@@ -138,14 +135,13 @@ namespace FlaxEditor.Surface.ContextMenu
             for (var i = 0; i < items.Count; i++)
             {
                 var item = items[i];
-                var searchItem = new SearchItem(item.Name, item.Type, item.Item, this)
-                {
-                    Y = i * itemHeight,
-                    Width = itemsWidth,
-                    Height = itemHeight,
-                    Parent = _resultPanel,
-                };
-                searchItem.Build(ItemHeight, ItemLogoSize);
+                SearchItem searchItem;
+                if (item.Item is AssetItem assetItem)
+                    searchItem = new AssetSearchItem(item.Name, item.Type, assetItem, this, itemsWidth, itemHeight);
+                else
+                    searchItem = new SearchItem(item.Name, item.Type, item.Item, this, itemsWidth, itemHeight);
+                searchItem.Y = i * itemHeight;
+                searchItem.Parent = _resultPanel;
                 MatchedItems.Add(searchItem);
             }
 
