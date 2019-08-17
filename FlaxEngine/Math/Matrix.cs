@@ -553,38 +553,22 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                case 0:
-                    return M11;
-                case 1:
-                    return M12;
-                case 2:
-                    return M13;
-                case 3:
-                    return M14;
-                case 4:
-                    return M21;
-                case 5:
-                    return M22;
-                case 6:
-                    return M23;
-                case 7:
-                    return M24;
-                case 8:
-                    return M31;
-                case 9:
-                    return M32;
-                case 10:
-                    return M33;
-                case 11:
-                    return M34;
-                case 12:
-                    return M41;
-                case 13:
-                    return M42;
-                case 14:
-                    return M43;
-                case 15:
-                    return M44;
+                case 0: return M11;
+                case 1: return M12;
+                case 2: return M13;
+                case 3: return M14;
+                case 4: return M21;
+                case 5: return M22;
+                case 6: return M23;
+                case 7: return M24;
+                case 8: return M31;
+                case 9: return M32;
+                case 10: return M33;
+                case 11: return M34;
+                case 12: return M41;
+                case 13: return M42;
+                case 14: return M43;
+                case 15: return M44;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
@@ -642,8 +626,7 @@ namespace FlaxEngine
                 case 15:
                     M44 = value;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
+                default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
                 }
             }
         }
@@ -886,23 +869,24 @@ namespace FlaxEngine
         /// </remarks>
         public bool DecomposeUniformScale(out float scale, out Quaternion rotation, out Vector3 translation)
         {
-            //Get the translation.
+            // Get the translation
             translation.X = M41;
             translation.Y = M42;
             translation.Z = M43;
 
-            //Scaling is the length of the rows. ( just take one row since this is a uniform matrix)
+            // Scaling is the length of the rows. ( just take one row since this is a uniform matrix)
             scale = (float)Math.Sqrt(M11 * M11 + M12 * M12 + M13 * M13);
-            float invScale = 1f / scale;
 
-            //If any of the scaling factors are zero, then the rotation matrix can not exist.
-            if (Math.Abs(scale) < Mathf.Epsilon)
+            // If any of the scaling factors are zero, then the rotation matrix can not exist
+            if (Math.Abs(scale) < 1e-12f)
             {
                 rotation = Quaternion.Identity;
                 return false;
             }
 
-            //The rotation is the left over matrix after dividing out the scaling.
+            float invScale = 1f / scale;
+
+            // The rotation is the left over matrix after dividing out the scaling
             Matrix rotationmatrix = new Matrix();
             rotationmatrix.M11 = M11 * invScale;
             rotationmatrix.M12 = M12 * invScale;
@@ -1515,7 +1499,7 @@ namespace FlaxEngine
             float d14 = value.M21 * b3 + value.M22 * -b1 + value.M23 * b0;
 
             float det = value.M11 * d11 - value.M12 * d12 + value.M13 * d13 - value.M14 * d14;
-            if (Math.Abs(det) < Mathf.Epsilon)
+            if (Math.Abs(det) < 1e-12f)
             {
                 result = Zero;
                 return;
