@@ -263,6 +263,8 @@ namespace FlaxEditor.CustomEditors
                     obj.Values.Set(obj._parent.Values, obj.Values);
                     obj = obj._parent;
                 }
+
+                OnUnDirty();
             }
             else
             {
@@ -714,6 +716,13 @@ namespace FlaxEditor.CustomEditors
         {
             ParentEditor.OnDirty(editor, value, token);
             return true;
+        }
+
+        /// <summary>
+        /// Called when custom editor sets the value to the object and resets the dirty state. Can be sued to perform custom work after editing the target object.
+        /// </summary>
+        protected virtual void OnUnDirty()
+        {
         }
 
         /// <summary>
