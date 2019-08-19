@@ -404,7 +404,9 @@ namespace FlaxEditor.GUI
 
                                 // TODO: snapping keyframes to grid when moving
 
-                                accessor.SetCurveValue(value, ref k.Value, p.Component);
+                                if (!_curve.ShowCollapsed)
+                                    accessor.SetCurveValue(value, ref k.Value, p.Component);
+
                                 _curve._keyframes[p.Index] = k;
                             }
                         }
@@ -732,7 +734,7 @@ namespace FlaxEditor.GUI
             public override void Draw()
             {
                 var rect = new Rectangle(Vector2.Zero, Size);
-                var color = Colors[Component];
+                var color = Curve.ShowCollapsed ? Color.Gray : Colors[Component];
                 if (IsSelected)
                     color = Color.YellowGreen;
                 if (IsMouseOver)
@@ -879,6 +881,7 @@ namespace FlaxEditor.GUI
         private readonly TangentPoint[] _tangents = new TangentPoint[2];
         private readonly float[] _tickStrengths = new float[TickSteps.Length];
         private bool _refreshAfterEdit;
+        private bool _showCollapsed;
         private KeyframesEditor _keyframesEditor;
         private float? _fps;
 
@@ -970,6 +973,16 @@ namespace FlaxEditor.GUI
         public bool ShowStartEndLines;
 
         /// <summary>
+        /// Enables drawing background.
+        /// </summary>
+        public bool ShowBackground = true;
+
+        /// <summary>
+        /// Enables drawing time and values axes (lines and labels).
+        /// </summary>
+        public bool ShowAxes = true;
+
+        /// <summary>
         /// The amount of frames per second of the curve animation (optional). Can be sued to restrict the keyframes time values to the given time quantization rate.
         /// </summary>
         public float? FPS
@@ -983,6 +996,23 @@ namespace FlaxEditor.GUI
                 _fps = value;
 
                 UpdateFPS();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show curve collapsed as a list of keyframe points rather than a full curve.
+        /// </summary>
+        public bool ShowCollapsed
+        {
+            get => _showCollapsed;
+            set
+            {
+                if (_showCollapsed == value)
+                    return;
+
+                _showCollapsed = value;
+                UpdateKeyframes();
+                UpdateTangents();
             }
         }
 
@@ -1413,7 +1443,7 @@ namespace FlaxEditor.GUI
             }
 
             // Place tangents (only for a single selected keyframe)
-            if (selectedCount == 1)
+            if (selectedCount == 1 && !_showCollapsed)
             {
                 var posOffset = _contents.Location;
                 var k = _keyframes[selectedIndex];
@@ -1453,7 +1483,10 @@ namespace FlaxEditor.GUI
             }
         }
 
-        private void UpdateKeyframes()
+        /// <summary>
+        /// Updates the keyframes positioning.
+        /// </summary>
+        public virtual void UpdateKeyframes()
         {
             if (_points.Count == 0)
             {
@@ -1473,12 +1506,24 @@ namespace FlaxEditor.GUI
                 var k = _keyframes[p.Index];
 
                 var location = GetKeyframePoint(ref k, p.Component);
-                p.Size = KeyframesSize / ViewScale;
-                p.Location = new Vector2
+                var point = new Vector2
                 (
                     location.X * UnitsPerSecond - p.Width * 0.5f,
                     location.Y * -UnitsPerSecond - p.Height * 0.5f + curveContentAreaBounds.Height
                 );
+
+                if (_showCollapsed)
+                {
+                    point.Y = 1.0f;
+                    p.Size = new Vector2(4.0f, Height - 2.0f);
+                    p.Visible = p.Component == 0;
+                }
+                else
+                {
+                    p.Size = KeyframesSize / ViewScale;
+                    p.Visible = true;
+                }
+                p.Location = point;
             }
 
             // Calculate bounds
@@ -1684,9 +1729,13 @@ namespace FlaxEditor.GUI
             var viewRect = _mainPanel.GetClientArea();
 
             // Draw background
-            Render2D.FillRectangle(rect, _contentsColor);
+            if (ShowBackground)
+            {
+                Render2D.FillRectangle(rect, _contentsColor);
+            }
 
             // Draw time and values axes
+            if (ShowAxes)
             {
                 var upperLeft = PointToKeyframes(viewRect.Location, ref viewRect);
                 var bottomRight = PointToKeyframes(viewRect.Size, ref viewRect);
@@ -1706,6 +1755,7 @@ namespace FlaxEditor.GUI
             }
 
             // Draw curve
+            if (!_showCollapsed)
             {
                 Render2D.PushClip(ref rect);
 
