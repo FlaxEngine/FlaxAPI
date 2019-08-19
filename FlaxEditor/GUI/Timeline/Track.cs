@@ -283,7 +283,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <returns><c>true</c> if this track contains the specified track; otherwise, <c>false</c>.</returns>
         public bool ContainsTrack(Track track)
         {
-            return _subTracks.Any(x => x == track || ContainsTrack(x));
+            return _subTracks.Any(x => x == track || x.ContainsTrack(track));
         }
 
         /// <summary>
