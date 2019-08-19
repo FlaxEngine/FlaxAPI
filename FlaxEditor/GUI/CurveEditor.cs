@@ -1144,6 +1144,21 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
+        /// Evaluates the animation curve value at the specified time.
+        /// </summary>
+        /// <param name="result">The interpolated value from the curve at provided time.</param>
+        /// <param name="time">The time to evaluate the curve at.</param>
+        /// <param name="loop">If true the curve will loop when it goes past the end or beginning. Otherwise the curve value will be clamped.</param>
+        public void Evaluate(out T result, float time, bool loop = true)
+        {
+            var curve = new Curve<T>
+            {
+                Keyframes = _keyframes.ToArray()
+            };
+            curve.Evaluate(out result, time, loop);
+        }
+
+        /// <summary>
         /// Adds the new keyframe.
         /// </summary>
         /// <param name="k">The keyframe to add.</param>
