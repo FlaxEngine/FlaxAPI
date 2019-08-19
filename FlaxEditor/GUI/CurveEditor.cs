@@ -1143,16 +1143,28 @@ namespace FlaxEditor.GUI
             KeyframesChanged?.Invoke();
         }
 
-        private void AddKeyframe(Vector2 keyframesPos)
+        /// <summary>
+        /// Adds the new keyframe.
+        /// </summary>
+        /// <param name="k">The keyframe to add.</param>
+        public void AddKeyframe(Curve<T>.Keyframe k)
         {
             if (FPS.HasValue)
             {
                 float fps = FPS.Value;
-                keyframesPos.X = Mathf.Floor(keyframesPos.X * fps) / fps;
+                k.Time = Mathf.Floor(k.Time * fps) / fps;
             }
             int pos = 0;
-            while (pos < _keyframes.Count && _keyframes[pos].Time < keyframesPos.X)
+            while (pos < _keyframes.Count && _keyframes[pos].Time < k.Time)
                 pos++;
+            _keyframes.Insert(pos, k);
+
+            OnKeyframesChanged();
+            MarkAsEdited();
+        }
+
+        private void AddKeyframe(Vector2 keyframesPos)
+        {
             var k = new Curve<T>.Keyframe
             {
                 Time = keyframesPos.X,
@@ -1164,10 +1176,7 @@ namespace FlaxEditor.GUI
                 Accessor.SetCurveValue(0.0f, ref k.TangentIn, component);
                 Accessor.SetCurveValue(0.0f, ref k.TangentOut, component);
             }
-            _keyframes.Insert(pos, k);
-
-            OnKeyframesChanged();
-            MarkAsEdited();
+            AddKeyframe(k);
         }
 
         class KeyframesEditor : ContextMenuBase

@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using FlaxEditor.GUI.Timeline.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -289,6 +290,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         public CurveEditor<float> Curve;
 
         private AudioMedia _audioMedia;
+        private const float CollapsedHeight = 20.0f;
         private const float ExpandedHeight = 64.0f;
 
         /// <inheritdoc />
@@ -296,9 +298,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         : base(ref options)
         {
             Title = "Volume";
+
             Curve = new CurveEditor<float>
             {
-                Height = ExpandedHeight - 4.0f,
                 Visible = false,
                 EnableZoom = false,
                 EnablePanning = false,
@@ -308,18 +310,126 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             };
             Curve.Edited += OnCurveEdited;
             Curve.UnlockChildrenRecursive();
+
+            const float buttonSize = 14;
+            var icons = Editor.Instance.Icons;
+            var rightKey = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Sets the time to the next key",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(1),
+                Brush = new SpriteBrush(icons.ArrowRight32),
+                Parent = this
+            };
+            rightKey.Clicked += OnRightKeyClicked;
+            var addKey = new Image(rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Adds a new key at the current time",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(3),
+                Brush = new SpriteBrush(icons.Add48),
+                Parent = this
+            };
+            addKey.Clicked += OnAddKeyClicked;
+            var leftKey = new Image(addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Sets the time to the previous key",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(1),
+                Brush = new SpriteBrush(icons.ArrowLeft32),
+                Parent = this
+            };
+            leftKey.Clicked += OnLeftKeyClicked;
         }
 
-        private void UpdateCurveBounds()
+        private void OnRightKeyClicked(Image image, MouseButton button)
         {
-            if (_audioMedia != null && Curve != null)
+            if (button == MouseButton.Left && _audioMedia != null)
             {
-                Curve.Bounds = new Rectangle(_audioMedia.X, Y + 2.0f, _audioMedia.Width, Curve.Height);
+                var time = (Timeline.CurrentFrame - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
+                for (int i = 0; i < Curve.Keyframes.Count; i++)
+                {
+                    var k = Curve.Keyframes[i];
+                    if (k.Time > time)
+                    {
+                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond) + _audioMedia.StartFrame);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void OnAddKeyClicked(Image image, MouseButton button)
+        {
+            var currentFrame = Timeline.CurrentFrame;
+            if (button == MouseButton.Left && _audioMedia != null && currentFrame >= _audioMedia.StartFrame && currentFrame < _audioMedia.StartFrame + _audioMedia.DurationFrames)
+            {
+                var time = (currentFrame - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
+                for (int i = Curve.Keyframes.Count - 1; i >= 0; i--)
+                {
+                    var k = Curve.Keyframes[i];
+                    var frame = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond) + _audioMedia.StartFrame;
+                    if (frame == Timeline.CurrentFrame)
+                    {
+                        // Already added
+                        return;
+                    }
+                }
+
+                Curve.AddKeyframe(new Curve<float>.Keyframe(time, 1.0f));
+            }
+        }
+
+        private void OnLeftKeyClicked(Image image, MouseButton button)
+        {
+            if (button == MouseButton.Left && _audioMedia != null)
+            {
+                var time = (Timeline.CurrentFrame - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
+                for (int i = Curve.Keyframes.Count - 1; i >= 0; i--)
+                {
+                    var k = Curve.Keyframes[i];
+                    if (k.Time < time)
+                    {
+                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond) + _audioMedia.StartFrame);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void UpdateCurve()
+        {
+            if (_audioMedia == null || Curve == null)
+                return;
+
+            Curve.Bounds = new Rectangle(_audioMedia.X, Y + 1.0f, _audioMedia.Width, Height - 2.0f);
+
+            var expanded = IsExpanded;
+            if (expanded)
+            {
                 //Curve.ViewScale = new Vector2(1.0f, CurveEditor<float>.UnitsPerSecond / Curve.Height);
                 Curve.ViewScale = new Vector2(Timeline.Zoom, 0.4f);
                 Curve.ViewOffset = new Vector2(0.0f, 30.0f);
-                Curve.Visible = IsExpanded;
             }
+            else
+            {
+                Curve.ViewScale = Vector2.One;
+                Curve.ViewOffset = Vector2.Zero;
+            }
+            Curve.ShowCollapsed = !expanded;
+            Curve.ShowBackground = expanded;
+            Curve.ShowAxes = expanded;
+            Curve.Visible = Visible;
+            Curve.UpdateKeyframes();
         }
 
         private void OnCurveEdited()
@@ -343,27 +453,26 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             if (_audioMedia != null)
             {
-                _audioMedia.StartFrameChanged -= UpdateCurveBounds;
-                _audioMedia.DurationFramesChanged -= UpdateCurveBounds;
+                _audioMedia.StartFrameChanged -= UpdateCurve;
+                _audioMedia.DurationFramesChanged -= UpdateCurve;
                 _audioMedia = null;
             }
 
             if (parent is AudioTrack audioTrack)
             {
                 var media = audioTrack.TrackMedia;
-                media.StartFrameChanged += UpdateCurveBounds;
-                media.DurationFramesChanged += UpdateCurveBounds;
+                media.StartFrameChanged += UpdateCurve;
+                media.DurationFramesChanged += UpdateCurve;
                 _audioMedia = media;
-                UpdateCurveBounds();
-                Curve.Visible = Visible;
+                UpdateCurve();
             }
         }
 
         /// <inheritdoc />
         protected override void OnExpandedChanged()
         {
-            Height = IsExpanded ? 64.0f : HeaderHeight;
-            Curve.Visible = IsExpanded;
+            Height = IsExpanded ? ExpandedHeight : CollapsedHeight;
+            UpdateCurve();
 
             base.OnExpandedChanged();
         }
@@ -383,7 +492,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             Curve.Parent = timeline?.MediaPanel;
             Curve.FPS = timeline?.FramesPerSecond;
-            UpdateCurveBounds();
+            UpdateCurve();
         }
 
         /// <inheritdoc />
@@ -391,7 +500,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnTimelineZoomChanged();
 
-            UpdateCurveBounds();
+            UpdateCurve();
         }
 
         /// <inheritdoc />
@@ -399,7 +508,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnTimelineArrange();
 
-            UpdateCurveBounds();
+            UpdateCurve();
         }
 
         /// <inheritdoc />
