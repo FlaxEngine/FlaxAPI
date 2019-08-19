@@ -292,13 +292,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         private AudioMedia _audioMedia;
         private const float CollapsedHeight = 20.0f;
         private const float ExpandedHeight = 64.0f;
+        private Label _previewValue;
 
         /// <inheritdoc />
         public AudioVolumeTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
             Title = "Volume";
+            Height = CollapsedHeight;
 
+            // Curve editor
             Curve = new CurveEditor<float>
             {
                 Visible = false,
@@ -311,6 +314,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Curve.Edited += OnCurveEdited;
             Curve.UnlockChildrenRecursive();
 
+            // Navigation buttons
             const float buttonSize = 14;
             var icons = Editor.Instance.Icons;
             var rightKey = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
@@ -349,6 +353,19 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 Parent = this
             };
             leftKey.Clicked += OnLeftKeyClicked;
+
+            // Value preview
+            var previewWidth = 50.0f;
+            _previewValue = new Label(leftKey.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
+            {
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                HorizontalAlignment = TextAlignment.Near,
+                TextColor = new Color(0.8f),
+                Margin = new Margin(1),
+                Parent = this
+            };
         }
 
         private void OnRightKeyClicked(Image image, MouseButton button)
@@ -406,6 +423,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
+        private void UpdateCurvePreviewValue()
+        {
+            if (_audioMedia == null || Curve == null)
+                return;
+
+            var time = (Timeline.CurrentFrame - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
+            Curve.Evaluate(out var value, time, false);
+            _previewValue.Text = Utils.RoundTo2DecimalPlaces(Mathf.Saturate(value)).ToString("0.00");
+        }
+
         private void UpdateCurve()
         {
             if (_audioMedia == null || Curve == null)
@@ -434,6 +461,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnCurveEdited()
         {
+            UpdateCurvePreviewValue();
             Timeline.MarkAsEdited();
         }
 
@@ -465,6 +493,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 media.DurationFramesChanged += UpdateCurve;
                 _audioMedia = media;
                 UpdateCurve();
+                UpdateCurvePreviewValue();
             }
         }
 
@@ -493,6 +522,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Curve.Parent = timeline?.MediaPanel;
             Curve.FPS = timeline?.FramesPerSecond;
             UpdateCurve();
+            UpdateCurvePreviewValue();
         }
 
         /// <inheritdoc />
@@ -517,6 +547,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             base.OnTimelineFpsChanged(before, after);
 
             Curve.FPS = after;
+            UpdateCurvePreviewValue();
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineCurrentFrameChanged(int frame)
+        {
+            base.OnTimelineCurrentFrameChanged(frame);
+
+            UpdateCurvePreviewValue();
         }
 
         /// <inheritdoc />
