@@ -1374,6 +1374,17 @@ namespace FlaxEditor.GUI.Timeline
             }
         }
 
+        private void CollectTracks(Track track)
+        {
+            track.Parent = _tracksPanel;
+            _tracks.Add(track);
+
+            for (int i = 0; i < track.SubTracks.Count; i++)
+            {
+                CollectTracks(track.SubTracks[i]);
+            }
+        }
+
         /// <summary>
         /// Called when tracks order gets changed.
         /// </summary>
@@ -1386,9 +1397,16 @@ namespace FlaxEditor.GUI.Timeline
                 _tracks[i].Parent = null;
             }
 
-            for (int i = 0; i < _tracks.Count; i++)
+            var rootTracks = new List<Track>();
+            foreach (var track in _tracks)
             {
-                _tracks[i].Parent = _tracksPanel;
+                if (track.ParentTrack == null)
+                    rootTracks.Add(track);
+            }
+            _tracks.Clear();
+            foreach (var track in rootTracks)
+            {
+                CollectTracks(track);
             }
 
             ArrangeTracks();
