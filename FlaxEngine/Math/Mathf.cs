@@ -8,7 +8,7 @@ namespace FlaxEngine
     /// <summary>
     /// A collection of common math functions.
     /// </summary>
-    public struct Mathf
+    public static class Mathf
     {
         /// <summary>
         /// The value for which all absolute numbers smaller than are considered equal to zero.
@@ -234,17 +234,6 @@ namespace FlaxEngine
             if (single > 180f)
                 single = single - 360f;
             return a + single * Saturate(t);
-        }
-
-        /// <summary>
-        /// Linearly interpolates between a and b by t.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static float LerpUnclamped(float a, float b, float t)
-        {
-            return a + (b - a) * t;
         }
 
         /// <summary>
@@ -1178,7 +1167,8 @@ namespace FlaxEngine
         /// <returns>The result of linear interpolation of values based on the amount.</returns>
         public static float Lerp(float from, float to, float amount)
         {
-            return (1 - amount) * from + amount * to;
+            return from + (to - from) * amount;
+            //return (1 - amount) * from + amount * to;
         }
 
         /// <summary>

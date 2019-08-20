@@ -335,6 +335,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly ToolStripButton _saveButton;
         private readonly ToolStripButton _undoButton;
         private readonly ToolStripButton _redoButton;
+        private bool _showWholeGraphOnLoad = true;
 
         /// <summary>
         /// The properties editor.
@@ -676,6 +677,11 @@ namespace FlaxEditor.Windows.Assets
                 _surface.Enabled = true;
                 _propertiesEditor.BuildLayout();
                 ClearEditedFlag();
+                if (_showWholeGraphOnLoad)
+                {
+                    _showWholeGraphOnLoad = false;
+                    _surface.ShowWholeGraph();
+                }
             }
             else if (_refreshPropertiesOnLoad && _asset.IsLoaded)
             {

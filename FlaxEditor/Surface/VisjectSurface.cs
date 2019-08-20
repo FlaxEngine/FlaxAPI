@@ -277,7 +277,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="onSave">The save action called when user wants to save the surface.</param>
-        /// <param name="onSave">The undo/redo to use for the history actions recording. Optional, can be null to disable undo support.</param>
+        /// <param name="undo">The undo/redo to use for the history actions recording. Optional, can be null to disable undo support.</param>
         /// <param name="style">The custom surface style. Use null to create the default style.</param>
         /// <param name="groups">The custom surface node types. Pass null to use the default nodes set.</param>
         public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo = null, SurfaceStyle style = null, List<GroupArchetype> groups = null)

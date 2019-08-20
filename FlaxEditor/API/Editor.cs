@@ -126,7 +126,7 @@ namespace FlaxEditor
         /// The content finder module.
         /// </summary>
         public readonly ContentFindingModule ContentFinding;
-        
+
         /// <summary>
         /// The content editing
         /// </summary>

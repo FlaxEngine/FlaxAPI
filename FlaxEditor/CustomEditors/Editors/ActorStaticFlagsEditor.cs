@@ -41,7 +41,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     // But it's the easiest way to set value for selected actor and its children with one undo action
                     List<Actor> actors = new List<Actor>(32);
                     GetActorsTree(actors, actor);
-                    if (Presenter.Undo != null)
+                    if (Presenter.Undo != null && Presenter.Undo.Enabled)
                     {
                         using (new UndoMultiBlock(Presenter.Undo, actors.ToArray(), "Change static flags"))
                         {
@@ -59,6 +59,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         }
                     }
 
+                    OnUnDirty();
                     return;
                 }
             }

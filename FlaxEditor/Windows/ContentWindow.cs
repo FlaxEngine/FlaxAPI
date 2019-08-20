@@ -30,7 +30,7 @@ namespace FlaxEditor.Windows
         private readonly ToolStripButton _importButton;
         private readonly ToolStripButton _navigateBackwardButton;
         private readonly ToolStripButton _navigateForwardButton;
-        private readonly ToolStripButton _nnavigateUpButton;
+        private readonly ToolStripButton _navigateUpButton;
 
         private NavigationBar _navigationBar;
         private Tree _tree;
@@ -75,7 +75,7 @@ namespace FlaxEditor.Windows
             _toolStrip.AddSeparator();
             _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowLeft32, NavigateBackward).LinkTooltip("Navigate backward");
             _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowRight32, NavigateForward).LinkTooltip("Navigate forward");
-            _nnavigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowUp32, NavigateUp).LinkTooltip("Navigate up");
+            _navigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowUp32, NavigateUp).LinkTooltip("Navigate up");
             _toolStrip.Parent = this;
 
             // Navigation bar
@@ -646,7 +646,7 @@ namespace FlaxEditor.Windows
             _importButton.Enabled = folder != null && folder.CanHaveAssets;
             _navigateBackwardButton.Enabled = _navigationUndo.Count > 0;
             _navigateForwardButton.Enabled = _navigationRedo.Count > 0;
-            _nnavigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
+            _navigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
         }
 
         private void AddFolder2Root(MainContentTreeNode node)

@@ -603,30 +603,6 @@ namespace FlaxEngine
         Scroll = 0x91,
 
         /// <summary>
-        /// Left SHIFT key
-        /// </summary>
-        /// <seealso cref="Shift" />
-        LeftShift = 0xA0,
-
-        /// <summary>
-        /// Right SHIFT key
-        /// </summary>
-        /// <seealso cref="Shift" />
-        RightShift = 0xA1,
-
-        /// <summary>
-        /// Left CONTROL key
-        /// </summary>
-        /// <seealso cref="Control" />
-        LeftControl = 0xA2,
-
-        /// <summary>
-        /// Right CONTROL key
-        /// </summary>
-        /// <seealso cref="Control" />
-        RightControl = 0xA3,
-
-        /// <summary>
         /// Left MENU key
         /// </summary>
         LeftMenu = 0xA4,

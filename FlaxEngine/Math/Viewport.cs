@@ -288,16 +288,16 @@ namespace FlaxEngine
         public void Project(ref Vector3 source, ref Matrix matrix, out Vector3 vector)
         {
             Vector3.Transform(ref source, ref matrix, out vector);
-            float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
+            float w = source.X * matrix.M14 + source.Y * matrix.M24 + source.Z * matrix.M34 + matrix.M44;
 
-            if (!Mathf.IsOne(a))
+            if (!Mathf.IsZero(w))
             {
-                vector = (vector / a);
+                vector /= w;
             }
 
-            vector.X = (((vector.X + 1f) * 0.5f) * Width) + X;
-            vector.Y = (((-vector.Y + 1f) * 0.5f) * Height) + Y;
-            vector.Z = (vector.Z * (MaxDepth - MinDepth)) + MinDepth;
+            vector.X = (vector.X + 1f) * 0.5f * Width + X;
+            vector.Y = (-vector.Y + 1f) * 0.5f * Height + Y;
+            vector.Z = vector.Z * (MaxDepth - MinDepth) + MinDepth;
         }
 
         /// <summary>
@@ -328,16 +328,16 @@ namespace FlaxEngine
         /// <param name="vector">The unprojected vector.</param>
         public void Unproject(ref Vector3 source, ref Matrix matrix, out Vector3 vector)
         {
-            vector.X = (((source.X - X) / (Width)) * 2f) - 1f;
-            vector.Y = -((((source.Y - Y) / (Height)) * 2f) - 1f);
+            vector.X = (source.X - X) / Width * 2f - 1f;
+            vector.Y = -((source.Y - Y) / Height * 2f - 1f);
             vector.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
 
-            float a = (((vector.X * matrix.M14) + (vector.Y * matrix.M24)) + (vector.Z * matrix.M34)) + matrix.M44;
+            float w = vector.X * matrix.M14 + vector.Y * matrix.M24 + vector.Z * matrix.M34 + matrix.M44;
             Vector3.Transform(ref vector, ref matrix, out vector);
 
-            if (!Mathf.IsOne(a))
+            if (!Mathf.IsZero(w))
             {
-                vector = (vector / a);
+                vector /= w;
             }
         }
 

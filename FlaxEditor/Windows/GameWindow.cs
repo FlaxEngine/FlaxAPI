@@ -245,6 +245,9 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
+        protected override bool CanOpenContentFinder => false;
+
+        /// <inheritdoc />
         public override void OnPlayBegin()
         {
             _gameStartTime = Time.UnscaledGameTime;

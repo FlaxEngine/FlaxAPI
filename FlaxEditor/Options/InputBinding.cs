@@ -253,11 +253,7 @@ namespace FlaxEditor.Options
                 switch (key)
                 {
                 // Skip
-                case Keys.Spacebar:
-                case Keys.LeftControl:
-                case Keys.RightControl:
-                case Keys.LeftShift:
-                case Keys.RightShift: break;
+                case Keys.Spacebar: break;
 
                 // Modifiers
                 case Keys.Control:
