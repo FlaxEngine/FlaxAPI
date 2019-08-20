@@ -577,21 +577,10 @@ namespace FlaxEngine
         /// <param name="a">Color a</param>
         /// <param name="b">Color b</param>
         /// <param name="t">Float for combining a and b</param>
-        /// <param name="t">Result</param>
+        /// <param name="result">The result.</param>
         public static void Lerp(ref Color a, ref Color b, float t, out Color result)
         {
             result = new Color(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t, a.A + (b.A - a.A) * t);
-        }
-
-        /// <summary>
-        /// Linearly interpolates between colors a and b by t.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static Color LerpUnclamped(Color a, Color b, float t)
-        {
-            return new Color(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t, a.A + (b.A - a.A) * t);
         }
 
         /// <summary>

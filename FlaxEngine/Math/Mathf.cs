@@ -237,17 +237,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Linearly interpolates between a and b by t.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static float LerpUnclamped(float a, float b, float t)
-        {
-            return a + (b - a) * t;
-        }
-
-        /// <summary>
         /// Returns the logarithm of a specified number in a specified base.
         /// </summary>
         /// <param name="f"></param>
@@ -1178,7 +1167,8 @@ namespace FlaxEngine
         /// <returns>The result of linear interpolation of values based on the amount.</returns>
         public static float Lerp(float from, float to, float amount)
         {
-            return (1 - amount) * from + amount * to;
+            return from + (to - from) * amount;
+            //return (1 - amount) * from + amount * to;
         }
 
         /// <summary>

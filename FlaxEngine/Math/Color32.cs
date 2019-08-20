@@ -80,17 +80,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Linearly interpolates between colors a and b by t.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static Color32 LerpUnclamped(Color32 a, Color32 b, float t)
-        {
-            return new Color32((byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t), (byte)(a.A + (b.A - a.A) * t));
-        }
-
-        /// <summary>
         /// Performs an implicit conversion from <see cref="Color"/> to <see cref="Color32"/>.
         /// </summary>
         /// <param name="c">The color.</param>
