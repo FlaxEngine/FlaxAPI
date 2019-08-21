@@ -565,6 +565,15 @@ namespace FlaxEditor.Viewport
                     brightnessValue.ValueChanged += () => Brightness = brightnessValue.Value;
                     ViewWidgetButtonMenu.VisibleChanged += control => brightnessValue.Value = Brightness;
                 }
+
+                // Resolution
+                {
+                    var resolution = ViewWidgetButtonMenu.AddButton("Resolution");
+                    var resolutionValue = new FloatValueBox(1.0f, 75, 2, 50.0f, 0.1f, 4.0f, 0.001f);
+                    resolutionValue.Parent = resolution;
+                    resolutionValue.ValueChanged += () => ResolutionScale = resolutionValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => resolutionValue.Value = ResolutionScale;
+                }
             }
 
             // Link for task event
