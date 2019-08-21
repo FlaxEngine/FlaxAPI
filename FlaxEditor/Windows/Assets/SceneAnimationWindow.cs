@@ -1,11 +1,14 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Xml;
 using FlaxEditor.Content;
+using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Timeline;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -17,10 +20,12 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class SceneAnimationWindow : ClonedAssetEditorWindowBase<SceneAnimation>
     {
-        private readonly SceneAnimationTimeline _timeline;
-        private readonly ToolStripButton _saveButton;
+        private SceneAnimationTimeline _timeline;
+        private ToolStripButton _saveButton;
+        private FlaxObjectRefPickerControl _previewPlayerPicker;
         private bool _tmpSceneAnimationIsDirty;
         private bool _isWaitingForTimelineLoad;
+        private Guid _cachedPlayerId;
 
         /// <summary>
         /// Gets the timeline editor.
@@ -31,17 +36,82 @@ namespace FlaxEditor.Windows.Assets
         public SceneAnimationWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
+            SceneManager.ActorDeleted += OnActorDeleted;
+
             // Timeline
-            _timeline = new SceneAnimationTimeline()
+            _timeline = new SceneAnimationTimeline
             {
                 DockStyle = DockStyle.Fill,
                 Parent = this,
                 Enabled = false
             };
             _timeline.Modified += OnTimelineModified;
+            _timeline.PlayerChanged += OnTimelinePlayerChanged;
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
+
+            // Preview player picker
+            var previewPlayerPickerContainer = new ContainerControl();
+            var previewPlayerPickerLabel = new Label
+            {
+                DockStyle = DockStyle.Left,
+                VerticalAlignment = TextAlignment.Center,
+                HorizontalAlignment = TextAlignment.Far,
+                Width = 60.0f,
+                Text = "Player:",
+                Parent = previewPlayerPickerContainer,
+            };
+            _previewPlayerPicker = new FlaxObjectRefPickerControl
+            {
+                Location = new Vector2(previewPlayerPickerLabel.Right + 4.0f, 8.0f),
+                Width = 140.0f,
+                Type = typeof(SceneAnimationPlayer),
+                Parent = previewPlayerPickerContainer,
+            };
+            previewPlayerPickerContainer.Width = _previewPlayerPicker.Right + 2.0f;
+            previewPlayerPickerContainer.Parent = _toolstrip;
+            _previewPlayerPicker.CheckValid = OnCheckValid;
+            _previewPlayerPicker.ValueChanged += OnPreviewPlayerPickerChanged;
+        }
+
+        private bool OnCheckValid(Object obj)
+        {
+            return obj is SceneAnimationPlayer player && player.Animation == OriginalAsset;
+        }
+
+        /// <inheritdoc />
+        public override void OnSceneUnloading(Scene scene, Guid sceneId)
+        {
+            base.OnSceneUnloading(scene, sceneId);
+
+            if (scene == _timeline.Player?.Scene)
+            {
+                var id = _timeline.Player.ID;
+                _timeline.Player = null;
+                _cachedPlayerId = id;
+            }
+        }
+
+        private void OnActorDeleted(Actor actor)
+        {
+            if (actor == _timeline.Player)
+            {
+                var id = actor.ID;
+                _timeline.Player = null;
+                _cachedPlayerId = id;
+            }
+        }
+
+        private void OnTimelinePlayerChanged()
+        {
+            _previewPlayerPicker.Value = _timeline.Player;
+            _cachedPlayerId = _timeline.Player?.ID ?? Guid.Empty;
+        }
+
+        private void OnPreviewPlayerPickerChanged()
+        {
+            _timeline.Player = _previewPlayerPicker.Value as SceneAnimationPlayer;
         }
 
         private void OnTimelineModified()
@@ -147,6 +217,18 @@ namespace FlaxEditor.Windows.Assets
                 _timeline.Enabled = true;
                 ClearEditedFlag();
             }
+
+            // Try to reassign the player
+            if (_timeline.Player == null && _cachedPlayerId != Guid.Empty)
+            {
+                var obj = Object.Find<SceneAnimationPlayer>(ref _cachedPlayerId);
+                if (obj)
+                {
+                    _cachedPlayerId = Guid.Empty;
+                    if (obj.Animation == OriginalAsset)
+                        _timeline.Player = obj;
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -156,21 +238,45 @@ namespace FlaxEditor.Windows.Assets
         public override void OnLayoutSerialize(XmlWriter writer)
         {
             writer.WriteAttributeString("TimelineSplitter", _timeline.Splitter.SplitterValue.ToString());
+            writer.WriteAttributeString("TimeShowMode", _timeline.TimeShowMode.ToString());
+            var id = _timeline.Player?.ID ?? _cachedPlayerId;
+            writer.WriteAttributeString("SelectedPlayer", id.ToString());
         }
 
         /// <inheritdoc />
         public override void OnLayoutDeserialize(XmlElement node)
         {
             float value1;
+            Guid value2;
+            Timeline.TimeShowModes value3;
 
             if (float.TryParse(node.GetAttribute("TimelineSplitter"), out value1))
                 _timeline.Splitter.SplitterValue = value1;
+            if (Guid.TryParse(node.GetAttribute("SelectedPlayer"), out value2))
+                _cachedPlayerId = value2;
+            if (Enum.TryParse(node.GetAttribute("TimeShowMode"), out value3))
+                _timeline.TimeShowMode = value3;
         }
 
         /// <inheritdoc />
         public override void OnLayoutDeserialize()
         {
             _timeline.Splitter.SplitterValue = 0.2f;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (IsDisposing)
+                return;
+
+            SceneManager.ActorDeleted -= OnActorDeleted;
+
+            _timeline = null;
+            _saveButton = null;
+            _previewPlayerPicker = null;
+
+            base.Dispose();
         }
     }
 }

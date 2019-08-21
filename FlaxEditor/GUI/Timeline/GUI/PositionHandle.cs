@@ -3,7 +3,7 @@
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI.Timeline
+namespace FlaxEditor.GUI.Timeline.GUI
 {
     /// <summary>
     /// The timeline current position tracking control.
@@ -30,10 +30,10 @@ namespace FlaxEditor.GUI.Timeline
 
             Matrix3x3.RotationZ(Mathf.PiOverTwo, out var t);
             Render2D.PushTransform(ref t);
-            Render2D.DrawSprite(icon, new Rectangle(new Vector2(4, -Width), Size));
+            Render2D.DrawSprite(icon, new Rectangle(new Vector2(4, -Width), Size), _timeline.IsMovingPositionHandle ? style.ProgressNormal : Color.White);
             Render2D.PopTransform();
 
-            Render2D.FillRectangle(new Rectangle(Width * 0.5f, Height, 1, _timeline.MediaPanel.Height), style.Foreground.RGBMultiplied(0.8f));
+            Render2D.FillRectangle(new Rectangle(Width * 0.5f, Height, 1, _timeline.MediaPanel.Height), _timeline.IsMovingPositionHandle ? style.ProgressNormal : style.Foreground.RGBMultiplied(0.8f));
 
             base.Draw();
         }

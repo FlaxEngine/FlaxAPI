@@ -47,6 +47,8 @@ namespace FlaxEditor.GUI.Timeline
         private bool _mouseOverArrow;
         private Vector2 _mouseDownPos;
 
+        protected CheckBox _muteCheckbox;
+
         private DragNames _dragTracks;
         private DragHandlers _dragHandlers;
         private DragItemPositioning _dragOverMode;
@@ -120,6 +122,11 @@ namespace FlaxEditor.GUI.Timeline
         public string Name;
 
         /// <summary>
+        /// The track custom title text (name is used if title is null).
+        /// </summary>
+        public string Title;
+
+        /// <summary>
         /// The track icon.
         /// </summary>
         public Sprite Icon;
@@ -130,9 +137,19 @@ namespace FlaxEditor.GUI.Timeline
         public Color IconColor = Color.White;
 
         /// <summary>
+        /// The track color.
+        /// </summary>
+        public Color Color = Color.White;
+
+        /// <summary>
         /// The mute flag. Muted tracks are disabled.
         /// </summary>
         public bool Mute;
+
+        /// <summary>
+        /// The track archetype.
+        /// </summary>
+        public TrackArchetype Archetype;
 
         internal bool DrawDisabled;
 
@@ -169,10 +186,34 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// Initializes a new instance of the <see cref="Track"/> class.
         /// </summary>
-        public Track()
-        : base(0, 0, 100, 22.0f)
+        /// <param name="options">The track initial options.</param>
+        public Track(ref TrackCreateOptions options)
+        : base(0, 0, 100, HeaderHeight)
         {
             AutoFocus = false;
+
+            Archetype = options.Archetype;
+            Name = options.Archetype.Name;
+            Icon = options.Archetype.Icon;
+            Mute = options.Mute;
+
+            // Mute checkbox
+            const float buttonSize = 14;
+            _muteCheckbox = new CheckBox(Width - buttonSize - 2.0f, 0, !Mute, buttonSize)
+            {
+                TooltipText = "Mute track",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Parent = this
+            };
+            _muteCheckbox.StateChanged += OnMuteButtonStateChanged;
+        }
+
+        private void OnMuteButtonStateChanged(CheckBox checkBox)
+        {
+            Mute = !checkBox.Checked;
+            Timeline.MarkAsEdited();
         }
 
         /// <summary>
@@ -195,6 +236,17 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Called when timeline zoom gets changed.
+        /// </summary>
+        public virtual void OnTimelineZoomChanged()
+        {
+            for (var i = 0; i < _media.Count; i++)
+            {
+                _media[i].OnTimelineZoomChanged();
+            }
+        }
+
+        /// <summary>
         /// Called when timeline FPS gets changed.
         /// </summary>
         /// <param name="before">The before value.</param>
@@ -205,6 +257,14 @@ namespace FlaxEditor.GUI.Timeline
             {
                 _media[i].OnTimelineFpsChanged(before, after);
             }
+        }
+
+        /// <summary>
+        /// Called when timeline current frame gets changed.
+        /// </summary>
+        /// <param name="frame">The frame.</param>
+        public virtual void OnTimelineCurrentFrameChanged(int frame)
+        {
         }
 
         /// <summary>
@@ -223,7 +283,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <returns><c>true</c> if this track contains the specified track; otherwise, <c>false</c>.</returns>
         public bool ContainsTrack(Track track)
         {
-            return _subTracks.Any(x => x == track || ContainsTrack(x));
+            return _subTracks.Any(x => x == track || x.ContainsTrack(track));
         }
 
         /// <summary>
@@ -254,6 +314,31 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Arranges the track and all its media. Called when timeline performs layout for the contents.
+        /// </summary>
+        public virtual void OnTimelineArrange()
+        {
+            if (ParentTrack == null)
+            {
+                _xOffset = 0;
+                Visible = true;
+            }
+            else
+            {
+                _xOffset = ParentTrack._xOffset + 12.0f;
+                Visible = ParentTrack.Visible && ParentTrack.IsExpanded;
+            }
+
+            for (int j = 0; j < Media.Count; j++)
+            {
+                var media = Media[j];
+
+                media.Visible = Visible;
+                media.Bounds = new Rectangle(media.X, Y + 2, media.Width, Height - 4);
+            }
+        }
+
+        /// <summary>
         /// Adds the media.
         /// </summary>
         /// <param name="media">The media.</param>
@@ -263,6 +348,9 @@ namespace FlaxEditor.GUI.Timeline
             media.OnTimelineChanged(this);
 
             OnMediaChanged();
+
+            media.UnlockChildrenRecursive();
+            media.PerformLayout();
         }
 
         /// <summary>
@@ -468,9 +556,19 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
-        /// Gets a value indicating whether can drag this track.
+        /// Gets a value indicating whether user can drag this track.
         /// </summary>
         protected virtual bool CanDrag => true;
+
+        /// <summary>
+        /// Gets a value indicating whether user can rename this track.
+        /// </summary>
+        protected virtual bool CanRename => true;
+
+        /// <summary>
+        /// Gets a value indicating whether user can expand the track contents of the inner hierarchy.
+        /// </summary>
+        protected virtual bool CanExpand => SubTracks.Count > 0;
 
         /// <summary>
         /// Determines whether this track can get the child track.
@@ -647,7 +745,7 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Draw arrow
-            if (SubTracks.Count > 0)
+            if (CanExpand)
             {
                 Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, isMouseOver ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
             }
@@ -661,7 +759,7 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Draw text
-            Render2D.DrawText(TextFont.GetFont(), Name, textRect, TextColor, TextAlignment.Near, TextAlignment.Center);
+            Render2D.DrawText(TextFont.GetFont(), Title ?? Name, textRect, TextColor, TextAlignment.Near, TextAlignment.Center);
 
             // Disabled overlay
             DrawDisabled = Mute || (ParentTrack != null && ParentTrack.DrawDisabled);
@@ -744,7 +842,8 @@ namespace FlaxEditor.GUI.Timeline
             {
                 // Show context menu
                 var menu = new ContextMenu.ContextMenu();
-                menu.AddButton("Rename", StartRenaming);
+                if (CanRename)
+                    menu.AddButton("Rename", StartRenaming);
                 menu.AddButton("Delete", Delete);
                 OnContextMenu(menu);
                 menu.Show(this, location);
@@ -775,7 +874,7 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Check if mouse hits arrow
-            if (SubTracks.Count > 0 && _mouseOverArrow)
+            if (CanExpand && _mouseOverArrow)
             {
                 // Toggle open state
                 if (_opened)
@@ -795,7 +894,7 @@ namespace FlaxEditor.GUI.Timeline
             base.OnMouseMove(location);
 
             // Cache flag
-            _mouseOverArrow = SubTracks.Count > 0 && ArrowRect.Contains(location);
+            _mouseOverArrow = CanExpand && ArrowRect.Contains(location);
 
             // Check if start drag and drop
             if (_isMouseDown && Vector2.Distance(_mouseDownPos, location) > 10.0f)
@@ -939,7 +1038,7 @@ namespace FlaxEditor.GUI.Timeline
             if (base.OnMouseDoubleClick(location, buttons))
                 return true;
 
-            if (TestHeaderHit(ref location))
+            if (CanRename && TestHeaderHit(ref location))
             {
                 StartRenaming();
                 return true;
@@ -956,7 +1055,8 @@ namespace FlaxEditor.GUI.Timeline
                 switch (key)
                 {
                 case Keys.F2:
-                    StartRenaming();
+                    if (CanRename)
+                        StartRenaming();
                     return true;
                 case Keys.Delete:
                     _timeline.DeleteSelection();
@@ -966,6 +1066,20 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             return base.OnKeyDown(key);
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (IsDisposing)
+                return;
+
+            Archetype = new TrackArchetype();
+            MediaChanged = null;
+            _timeline = null;
+            _muteCheckbox = null;
+
+            base.Dispose();
         }
     }
 }

@@ -24,6 +24,12 @@ namespace FlaxEditor.GUI
         public interface IKeyframeAccess<TT> where TT : struct
         {
             /// <summary>
+            /// Gets the default value.
+            /// </summary>
+            /// <param name="value">The value.</param>
+            void GetDefaultValue(out TT value);
+
+            /// <summary>
             /// Gets the curve components count. Vector types should return amount of component to use for value editing.
             /// </summary>
             /// <returns>The components count.</returns>
@@ -47,6 +53,7 @@ namespace FlaxEditor.GUI
         }
 
         private class KeyframeAccess :
+        IKeyframeAccess<bool>,
         IKeyframeAccess<int>,
         IKeyframeAccess<double>,
         IKeyframeAccess<float>,
@@ -54,8 +61,34 @@ namespace FlaxEditor.GUI
         IKeyframeAccess<Vector3>,
         IKeyframeAccess<Vector4>,
         IKeyframeAccess<Quaternion>,
+        IKeyframeAccess<Color32>,
         IKeyframeAccess<Color>
         {
+            void IKeyframeAccess<bool>.GetDefaultValue(out bool value)
+            {
+                value = false;
+            }
+
+            int IKeyframeAccess<bool>.GetCurveComponents()
+            {
+                return 1;
+            }
+
+            float IKeyframeAccess<bool>.GetCurveValue(ref bool value, int component)
+            {
+                return value ? 1 : 0;
+            }
+
+            void IKeyframeAccess<bool>.SetCurveValue(float curve, ref bool value, int component)
+            {
+                value = curve >= 0.5f;
+            }
+
+            void IKeyframeAccess<int>.GetDefaultValue(out int value)
+            {
+                value = 0;
+            }
+
             int IKeyframeAccess<int>.GetCurveComponents()
             {
                 return 1;
@@ -69,6 +102,11 @@ namespace FlaxEditor.GUI
             void IKeyframeAccess<int>.SetCurveValue(float curve, ref int value, int component)
             {
                 value = (int)curve;
+            }
+
+            void IKeyframeAccess<double>.GetDefaultValue(out double value)
+            {
+                value = 0.0;
             }
 
             int IKeyframeAccess<double>.GetCurveComponents()
@@ -86,6 +124,11 @@ namespace FlaxEditor.GUI
                 value = curve;
             }
 
+            void IKeyframeAccess<float>.GetDefaultValue(out float value)
+            {
+                value = 0.0f;
+            }
+
             int IKeyframeAccess<float>.GetCurveComponents()
             {
                 return 1;
@@ -99,6 +142,11 @@ namespace FlaxEditor.GUI
             void IKeyframeAccess<float>.SetCurveValue(float curve, ref float value, int component)
             {
                 value = curve;
+            }
+
+            void IKeyframeAccess<Vector2>.GetDefaultValue(out Vector2 value)
+            {
+                value = Vector2.Zero;
             }
 
             int IKeyframeAccess<Vector2>.GetCurveComponents()
@@ -116,6 +164,11 @@ namespace FlaxEditor.GUI
                 value[component] = curve;
             }
 
+            void IKeyframeAccess<Vector3>.GetDefaultValue(out Vector3 value)
+            {
+                value = Vector3.Zero;
+            }
+
             int IKeyframeAccess<Vector3>.GetCurveComponents()
             {
                 return 3;
@@ -131,6 +184,11 @@ namespace FlaxEditor.GUI
                 value[component] = curve;
             }
 
+            void IKeyframeAccess<Vector4>.GetDefaultValue(out Vector4 value)
+            {
+                value = Vector4.Zero;
+            }
+
             int IKeyframeAccess<Vector4>.GetCurveComponents()
             {
                 return 4;
@@ -144,6 +202,11 @@ namespace FlaxEditor.GUI
             void IKeyframeAccess<Vector4>.SetCurveValue(float curve, ref Vector4 value, int component)
             {
                 value[component] = curve;
+            }
+
+            public void GetDefaultValue(out Quaternion value)
+            {
+                value = Quaternion.Identity;
             }
 
             int IKeyframeAccess<Quaternion>.GetCurveComponents()
@@ -163,6 +226,11 @@ namespace FlaxEditor.GUI
                 Quaternion.Euler(euler.X, euler.Y, euler.Z, out value);
             }
 
+            void IKeyframeAccess<Color>.GetDefaultValue(out Color value)
+            {
+                value = Color.Black;
+            }
+
             int IKeyframeAccess<Color>.GetCurveComponents()
             {
                 return 4;
@@ -176,6 +244,26 @@ namespace FlaxEditor.GUI
             void IKeyframeAccess<Color>.SetCurveValue(float curve, ref Color value, int component)
             {
                 value[component] = curve;
+            }
+
+            void IKeyframeAccess<Color32>.GetDefaultValue(out Color32 value)
+            {
+                value = Color32.Black;
+            }
+
+            int IKeyframeAccess<Color32>.GetCurveComponents()
+            {
+                return 4;
+            }
+
+            float IKeyframeAccess<Color32>.GetCurveValue(ref Color32 value, int component)
+            {
+                return (float)value[component];
+            }
+
+            void IKeyframeAccess<Color32>.SetCurveValue(float curve, ref Color32 value, int component)
+            {
+                value[component] = (byte)Mathf.Clamp(curve, 0, 255);
             }
         }
 
@@ -249,7 +337,7 @@ namespace FlaxEditor.GUI
                 {
                     // Calculate delta
                     Vector2 delta = location - _rightMouseDownPos;
-                    if (delta.LengthSquared > 0.01f)
+                    if (delta.LengthSquared > 0.01f && _curve.EnablePanning)
                     {
                         // Move view
                         _mouseMoveAmount += delta.Length;
@@ -302,16 +390,29 @@ namespace FlaxEditor.GUI
                                         break;
                                 }
                                 if (isFirstSelected)
-                                    k.Time = Mathf.Clamp(k.Time + keyframeDelta.X, minTime, maxTime);
+                                {
+                                    k.Time += keyframeDelta.X;
+
+                                    if (_curve.FPS.HasValue)
+                                    {
+                                        float fps = _curve.FPS.Value;
+                                        k.Time = Mathf.Floor(k.Time * fps) / fps;
+                                    }
+
+                                    k.Time = Mathf.Clamp(k.Time, minTime, maxTime);
+                                }
 
                                 // TODO: snapping keyframes to grid when moving
 
-                                accessor.SetCurveValue(value, ref k.Value, p.Component);
+                                if (!_curve.ShowCollapsed)
+                                    accessor.SetCurveValue(value, ref k.Value, p.Component);
+
                                 _curve._keyframes[p.Index] = k;
                             }
                         }
                         _curve.UpdateKeyframes();
-                        _curve._mainPanel.ScrollViewTo(PointToParent(location));
+                        if (_curve.EnablePanning)
+                            _curve._mainPanel.ScrollViewTo(PointToParent(location));
                         _leftMouseDownPos = location;
                         Cursor = CursorType.SizeAll;
                     }
@@ -541,9 +642,12 @@ namespace FlaxEditor.GUI
                             cm.AddButton("Linear", _curve.SetTangentsLinear);
                             cm.AddButton("Smooth", _curve.SetTangentsSmooth);
                         }
-                        cm.AddSeparator();
-                        cm.AddButton("Show whole curve", _curve.ShowWholeCurve);
-                        cm.AddButton("Reset view", _curve.ResetView);
+                        if (_curve.EnableZoom && _curve.EnablePanning)
+                        {
+                            cm.AddSeparator();
+                            cm.AddButton("Show whole curve", _curve.ShowWholeCurve);
+                            cm.AddButton("Reset view", _curve.ResetView);
+                        }
                         cm.Show(this, location);
                     }
                     _mouseMoveAmount = 0;
@@ -567,7 +671,7 @@ namespace FlaxEditor.GUI
                     return true;
 
                 // Zoom in/out
-                if (IsMouseOver && !_leftMouseDown)
+                if (_curve.EnableZoom && IsMouseOver && !_leftMouseDown)
                 {
                     // TODO: preserve the view center point for easier zooming
                     _curve.ViewScale += delta * 0.1f;
@@ -630,7 +734,7 @@ namespace FlaxEditor.GUI
             public override void Draw()
             {
                 var rect = new Rectangle(Vector2.Zero, Size);
-                var color = Colors[Component];
+                var color = Curve.ShowCollapsed ? Color.Gray : Colors[Component];
                 if (IsSelected)
                     color = Color.YellowGreen;
                 if (IsMouseOver)
@@ -740,7 +844,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The timeline units per second (on time axis).
         /// </summary>
-        private static readonly float UnitsPerSecond = 100.0f;
+        public static readonly float UnitsPerSecond = 100.0f;
 
         /// <summary>
         /// The colors for the keyframes,
@@ -777,7 +881,9 @@ namespace FlaxEditor.GUI
         private readonly TangentPoint[] _tangents = new TangentPoint[2];
         private readonly float[] _tickStrengths = new float[TickSteps.Length];
         private bool _refreshAfterEdit;
+        private bool _showCollapsed;
         private KeyframesEditor _keyframesEditor;
+        private float? _fps;
 
         private Color _contentsColor;
         private Color _linesColor;
@@ -814,7 +920,7 @@ namespace FlaxEditor.GUI
         public Vector2 ViewScale
         {
             get => _contents.Scale;
-            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.02f), new Vector2(8.0f));
+            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.02f), new Vector2(10.0f));
         }
 
         /// <summary>
@@ -833,12 +939,90 @@ namespace FlaxEditor.GUI
         public int MaxKeyframes = ushort.MaxValue;
 
         /// <summary>
+        /// True if enable view zooming. Otherwise user won't be able to zoom in or out.
+        /// </summary>
+        public bool EnableZoom = true;
+
+        /// <summary>
+        /// True if enable view panning. Otherwise user won't be able to move the view area.
+        /// </summary>
+        public bool EnablePanning = true;
+
+        /// <summary>
         /// Gets a value indicating whether user is editing the curve.
         /// </summary>
         public bool IsUserEditing => _keyframesEditor != null || _contents._leftMouseDown;
 
+        /// <summary>
+        /// Gets or sets the scroll bars usage.
+        /// </summary>
+        public ScrollBars ScrollBars
+        {
+            get => _mainPanel.ScrollBars;
+            set => _mainPanel.ScrollBars = value;
+        }
+
+        /// <summary>
+        /// The default value.
+        /// </summary>
+        public T DefaultValue;
+
+        /// <summary>
+        /// Enables drawing start/end values continuous lines.
+        /// </summary>
+        public bool ShowStartEndLines;
+
+        /// <summary>
+        /// Enables drawing background.
+        /// </summary>
+        public bool ShowBackground = true;
+
+        /// <summary>
+        /// Enables drawing time and values axes (lines and labels).
+        /// </summary>
+        public bool ShowAxes = true;
+
+        /// <summary>
+        /// The amount of frames per second of the curve animation (optional). Can be sued to restrict the keyframes time values to the given time quantization rate.
+        /// </summary>
+        public float? FPS
+        {
+            get => _fps;
+            set
+            {
+                if (_fps.HasValue == value.HasValue && (!value.HasValue || Mathf.NearEqual(_fps.Value, value.Value)))
+                    return;
+
+                _fps = value;
+
+                UpdateFPS();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show curve collapsed as a list of keyframe points rather than a full curve.
+        /// </summary>
+        public bool ShowCollapsed
+        {
+            get => _showCollapsed;
+            set
+            {
+                if (_showCollapsed == value)
+                    return;
+
+                _showCollapsed = value;
+                UpdateKeyframes();
+                UpdateTangents();
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CurveEditor{T}"/> class.
+        /// </summary>
         public CurveEditor()
         {
+            Accessor.GetDefaultValue(out DefaultValue);
+
             var style = Style.Current;
             _contentsColor = style.Background.RGBMultiplied(0.7f);
             _linesColor = style.ForegroundDisabled.RGBMultiplied(0.7f);
@@ -907,7 +1091,23 @@ namespace FlaxEditor.GUI
             _keyframes.AddRange(keyframesArray);
             _keyframes.Sort((a, b) => a.Time > b.Time ? 1 : 0);
 
+            UpdateFPS();
+
             OnKeyframesChanged();
+        }
+
+        private void UpdateFPS()
+        {
+            if (FPS.HasValue)
+            {
+                float fps = FPS.Value;
+                for (int i = 0; i < _keyframes.Count; i++)
+                {
+                    var k = _keyframes[i];
+                    k.Time = Mathf.Floor(k.Time * fps) / fps;
+                    _keyframes[i] = k;
+                }
+            }
         }
 
         /// <summary>
@@ -943,11 +1143,43 @@ namespace FlaxEditor.GUI
             KeyframesChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Evaluates the animation curve value at the specified time.
+        /// </summary>
+        /// <param name="result">The interpolated value from the curve at provided time.</param>
+        /// <param name="time">The time to evaluate the curve at.</param>
+        /// <param name="loop">If true the curve will loop when it goes past the end or beginning. Otherwise the curve value will be clamped.</param>
+        public void Evaluate(out T result, float time, bool loop = true)
+        {
+            var curve = new Curve<T>
+            {
+                Keyframes = _keyframes.ToArray()
+            };
+            curve.Evaluate(out result, time, loop);
+        }
+
+        /// <summary>
+        /// Adds the new keyframe.
+        /// </summary>
+        /// <param name="k">The keyframe to add.</param>
+        public void AddKeyframe(Curve<T>.Keyframe k)
+        {
+            if (FPS.HasValue)
+            {
+                float fps = FPS.Value;
+                k.Time = Mathf.Floor(k.Time * fps) / fps;
+            }
+            int pos = 0;
+            while (pos < _keyframes.Count && _keyframes[pos].Time < k.Time)
+                pos++;
+            _keyframes.Insert(pos, k);
+
+            OnKeyframesChanged();
+            MarkAsEdited();
+        }
+
         private void AddKeyframe(Vector2 keyframesPos)
         {
-            int pos = 0;
-            while (pos < _keyframes.Count && _keyframes[pos].Time < keyframesPos.X)
-                pos++;
             var k = new Curve<T>.Keyframe
             {
                 Time = keyframesPos.X,
@@ -959,10 +1191,7 @@ namespace FlaxEditor.GUI
                 Accessor.SetCurveValue(0.0f, ref k.TangentIn, component);
                 Accessor.SetCurveValue(0.0f, ref k.TangentOut, component);
             }
-            _keyframes.Insert(pos, k);
-
-            OnKeyframesChanged();
-            MarkAsEdited();
+            AddKeyframe(k);
         }
 
         class KeyframesEditor : ContextMenuBase
@@ -1008,6 +1237,7 @@ namespace FlaxEditor.GUI
                     Curve._keyframes[index] = keyframe;
                 }
 
+                Curve.UpdateFPS();
                 Curve.UpdateKeyframes();
             }
 
@@ -1237,7 +1467,7 @@ namespace FlaxEditor.GUI
             }
 
             // Place tangents (only for a single selected keyframe)
-            if (selectedCount == 1)
+            if (selectedCount == 1 && !_showCollapsed)
             {
                 var posOffset = _contents.Location;
                 var k = _keyframes[selectedIndex];
@@ -1277,7 +1507,10 @@ namespace FlaxEditor.GUI
             }
         }
 
-        private void UpdateKeyframes()
+        /// <summary>
+        /// Updates the keyframes positioning.
+        /// </summary>
+        public virtual void UpdateKeyframes()
         {
             if (_points.Count == 0)
             {
@@ -1297,12 +1530,24 @@ namespace FlaxEditor.GUI
                 var k = _keyframes[p.Index];
 
                 var location = GetKeyframePoint(ref k, p.Component);
-                p.Size = KeyframesSize / ViewScale;
-                p.Location = new Vector2
+                var point = new Vector2
                 (
                     location.X * UnitsPerSecond - p.Width * 0.5f,
                     location.Y * -UnitsPerSecond - p.Height * 0.5f + curveContentAreaBounds.Height
                 );
+
+                if (_showCollapsed)
+                {
+                    point.Y = 1.0f;
+                    p.Size = new Vector2(4.0f, Height - 2.0f);
+                    p.Visible = p.Component == 0;
+                }
+                else
+                {
+                    p.Size = KeyframesSize / ViewScale;
+                    p.Visible = true;
+                }
+                p.Location = point;
             }
 
             // Calculate bounds
@@ -1313,7 +1558,8 @@ namespace FlaxEditor.GUI
             }
 
             // Adjust contents bounds to fill the curve area
-            _contents.Bounds = bounds;
+            if (EnablePanning)
+                _contents.Bounds = bounds;
 
             // Offset the keyframes (parent container changed its location)
             var posOffset = _contents.Location;
@@ -1480,6 +1726,18 @@ namespace FlaxEditor.GUI
             }
         }
 
+        private void DrawLine(Curve<T>.Keyframe startK, Curve<T>.Keyframe endK, int component, ref Rectangle viewRect)
+        {
+            var start = GetKeyframePoint(ref startK, component);
+            var end = GetKeyframePoint(ref endK, component);
+
+            var p1 = PointFromKeyframes(start, ref viewRect);
+            var p2 = PointFromKeyframes(end, ref viewRect);
+
+            var color = Colors[component].RGBMultiplied(0.6f);
+            Render2D.DrawLine(p1, p2, color, 1.6f);
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {
@@ -1495,9 +1753,13 @@ namespace FlaxEditor.GUI
             var viewRect = _mainPanel.GetClientArea();
 
             // Draw background
-            Render2D.FillRectangle(rect, _contentsColor);
+            if (ShowBackground)
+            {
+                Render2D.FillRectangle(rect, _contentsColor);
+            }
 
             // Draw time and values axes
+            if (ShowAxes)
             {
                 var upperLeft = PointToKeyframes(viewRect.Location, ref viewRect);
                 var bottomRight = PointToKeyframes(viewRect.Size, ref viewRect);
@@ -1517,12 +1779,37 @@ namespace FlaxEditor.GUI
             }
 
             // Draw curve
+            if (!_showCollapsed)
             {
                 Render2D.PushClip(ref rect);
 
                 var components = Accessor.GetCurveComponents();
                 for (int component = 0; component < components; component++)
                 {
+                    if (ShowStartEndLines)
+                    {
+                        var start = new Curve<T>.Keyframe
+                        {
+                            Value = DefaultValue,
+                            Time = -10000000.0f,
+                        };
+                        var end = new Curve<T>.Keyframe
+                        {
+                            Value = DefaultValue,
+                            Time = 10000000.0f,
+                        };
+
+                        if (_keyframes.Count == 0)
+                        {
+                            DrawLine(start, end, component, ref viewRect);
+                        }
+                        else
+                        {
+                            DrawLine(start, _keyframes[0], component, ref viewRect);
+                            DrawLine(_keyframes[_keyframes.Count - 1], end, component, ref viewRect);
+                        }
+                    }
+
                     var color = Colors[component];
                     for (int i = 1; i < _keyframes.Count; i++)
                     {
@@ -1568,6 +1855,14 @@ namespace FlaxEditor.GUI
             {
                 Render2D.DrawRectangle(rect, style.BackgroundSelected);
             }
+        }
+
+        /// <inheritdoc />
+        protected override void SetSizeInternal(ref Vector2 size)
+        {
+            base.SetSizeInternal(ref size);
+
+            UpdateKeyframes();
         }
 
         /// <inheritdoc />

@@ -503,22 +503,22 @@ namespace FlaxEditor.Utilities
                 break;
             case 3: // CommonType::Vector2:
             {
-                value = new Vector2(stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadVector2();
             }
                 break;
             case 4: // CommonType::Vector3:
             {
-                value = new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadVector3();
             }
                 break;
             case 5: // CommonType::Vector4:
             {
-                value = new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadVector4();
             }
                 break;
             case 6: // CommonType::Color:
             {
-                value = new Color(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadColor();
             }
                 break;
             case 7: // CommonType::Guid:
@@ -553,7 +553,7 @@ namespace FlaxEditor.Utilities
                 break;
             case 10: // CommonType::Rotation:
             {
-                value = new Quaternion(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadQuaternion();
             }
                 break;
             case 11: // CommonType::Transform:

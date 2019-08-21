@@ -635,6 +635,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Calculates the distance between two vectors.
+        /// </summary>
+        /// <param name="value1">The first vector.</param>
+        /// <param name="value2">The second vector.</param>
+        /// <returns>The distance between the two vectors.</returns>
+        /// <remarks>
+        /// <see cref="Vector2.DistanceSquared(ref Vector2, ref Vector2, out float)" /> may be preferred when only the relative
+        /// distance is needed
+        /// and speed is of the essence.
+        /// </remarks>
+        public static float Distance(ref Vector2 value1, ref Vector2 value2)
+        {
+            float x = value1.X - value2.X;
+            float y = value1.Y - value2.Y;
+
+            return (float)Math.Sqrt(x * x + y * y);
+        }
+
+        /// <summary>
         /// Calculates the squared distance between two vectors.
         /// </summary>
         /// <param name="value1">The first vector.</param>

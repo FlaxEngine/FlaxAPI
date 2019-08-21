@@ -2,9 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Input;
+using FlaxEditor.GUI.Timeline.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -33,6 +36,119 @@ namespace FlaxEditor.GUI.Timeline
             new KeyValuePair<float, string>(0, "Custom"),
         };
 
+        private sealed class TimeIntervalsHeader : ContainerControl
+        {
+            private Timeline _timeline;
+            private bool _isLeftMouseButtonDown;
+
+            public TimeIntervalsHeader(Timeline timeline)
+            {
+                _timeline = timeline;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDown(location, buttons))
+                    return true;
+
+                if (buttons == MouseButton.Left)
+                {
+                    _isLeftMouseButtonDown = true;
+                    _timeline._isMovingPositionHandle = true;
+                    StartMouseCapture();
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseMove(Vector2 location)
+            {
+                base.OnMouseMove(location);
+
+                if (_isLeftMouseButtonDown)
+                {
+                    Seek(ref location);
+                }
+            }
+
+            private void Seek(ref Vector2 location)
+            {
+                if (_timeline.PlaybackState == PlaybackStates.Disabled)
+                    return;
+
+                var locationTimeline = PointToParent(_timeline, location);
+                var locationTime = _timeline._backgroundArea.PointFromParent(_timeline, locationTimeline);
+                var frame = (locationTime.X - StartOffset * 2.0f) / _timeline.Zoom / UnitsPerSecond * _timeline.FramesPerSecond;
+                _timeline.OnSeek((int)frame);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseUp(location, buttons))
+                    return true;
+
+                if (buttons == MouseButton.Left && _isLeftMouseButtonDown)
+                {
+                    Seek(ref location);
+                    EndMouseCapture();
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnEndMouseCapture()
+            {
+                _isLeftMouseButtonDown = false;
+                _timeline._isMovingPositionHandle = false;
+
+                base.OnEndMouseCapture();
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                _timeline = null;
+
+                base.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// The base class for timeline properties proxy objects.
+        /// </summary>
+        /// <typeparam name="TTimeline">The type of the timeline.</typeparam>
+        public abstract class ProxyBase<TTimeline>
+        where TTimeline : Timeline
+        {
+            [HideInEditor, NoSerialize]
+            public TTimeline Timeline;
+
+            /// <summary>
+            /// Gets or sets the total duration of the timeline in the frames amount.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(10), Limit(1), Tooltip("Total duration of the timeline event the frames amount.")]
+            public int DurationFrames
+            {
+                get => Timeline.DurationFrames;
+                set => Timeline.DurationFrames = value;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ProxyBase{TTimeline}"/> class.
+            /// </summary>
+            /// <param name="track">The timeline.</param>
+            protected ProxyBase(TTimeline timeline)
+            {
+                Timeline = timeline ?? throw new ArgumentNullException(nameof(timeline));
+            }
+        }
+
         /// <summary>
         /// The time axis value formatting modes.
         /// </summary>
@@ -55,11 +171,42 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// The timeline animation playback states.
+        /// </summary>
+        public enum PlaybackStates
+        {
+            /// <summary>
+            /// The timeline animation feature is disabled.
+            /// </summary>
+            Disabled,
+
+            /// <summary>
+            /// The timeline animation is stopped.
+            /// </summary>
+            Stopped,
+
+            /// <summary>
+            /// The timeline animation is playing.
+            /// </summary>
+            Playing,
+
+            /// <summary>
+            /// The timeline animation is paused.
+            /// </summary>
+            Paused,
+        }
+
+        /// <summary>
         /// The timeline playback buttons types.
         /// </summary>
         [Flags]
         public enum PlaybackButtons
         {
+            /// <summary>
+            /// No buttons.
+            /// </summary>
+            None = 0,
+
             /// <summary>
             /// The play/pause button.
             /// </summary>
@@ -69,34 +216,6 @@ namespace FlaxEditor.GUI.Timeline
             /// The stop button.
             /// </summary>
             Stop = 2,
-        }
-
-        /// <summary>
-        /// Create a new track object.
-        /// </summary>
-        /// <param name="archetype">The archetype.</param>
-        /// <returns>The created track object.</returns>
-        public delegate Track CreateTrackDelegate(TrackArchetype archetype);
-
-        /// <summary>
-        /// Defines the track type.
-        /// </summary>
-        public class TrackArchetype
-        {
-            /// <summary>
-            /// The name of the track type (for UI).
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The icon of the track type (for UI).
-            /// </summary>
-            public Sprite Icon;
-
-            /// <summary>
-            /// The track create factory callback.
-            /// </summary>
-            public CreateTrackDelegate Create;
         }
 
         /// <summary>
@@ -120,6 +239,7 @@ namespace FlaxEditor.GUI.Timeline
         private int _durationFrames = 30 * 5;
         private int _currentFrame;
         private TimeShowModes _timeShowMode = TimeShowModes.Frames;
+        private PlaybackStates _state = PlaybackStates.Disabled;
 
         /// <summary>
         /// The tracks collection.
@@ -127,7 +247,7 @@ namespace FlaxEditor.GUI.Timeline
         protected readonly List<Track> _tracks = new List<Track>();
 
         private SplitPanel _splitter;
-        private ContainerControl _timeIntervalsHeader;
+        private TimeIntervalsHeader _timeIntervalsHeader;
         private ContainerControl _backgroundScroll;
         private Background _background;
         private Panel _backgroundArea;
@@ -143,6 +263,10 @@ namespace FlaxEditor.GUI.Timeline
         private Image _playbackPlay;
         private Label _noTracksLabel;
         private PositionHandle _positionHandle;
+        private bool _isRightMouseButtonDown;
+        private Vector2 _rightMouseButtonDownPos;
+        private float _zoom = 1.0f;
+        private bool _isMovingPositionHandle;
 
         /// <summary>
         /// Gets or sets the current time showing mode.
@@ -178,14 +302,18 @@ namespace FlaxEditor.GUI.Timeline
 
                 _currentFrame = value;
                 UpdatePositionHandle();
-                CurrentFrameChangeed?.Invoke();
+                for (var i = 0; i < _tracks.Count; i++)
+                {
+                    _tracks[i].OnTimelineCurrentFrameChanged(_currentFrame);
+                }
+                CurrentFrameChanged?.Invoke();
             }
         }
 
         /// <summary>
         /// Occurs when current playback animation frame gets changed.
         /// </summary>
-        public event Action CurrentFrameChangeed;
+        public event Action CurrentFrameChanged;
 
         /// <summary>
         /// Gets or sets the amount of frames per second of the timeline animation.
@@ -347,12 +475,137 @@ namespace FlaxEditor.GUI.Timeline
         public Background MediaPanel => _background;
 
         /// <summary>
+        /// Gets the state of the timeline animation playback.
+        /// </summary>
+        public PlaybackStates PlaybackState
+        {
+            get => _state;
+            protected set
+            {
+                if (_state == value)
+                    return;
+
+                _state = value;
+
+                // Update buttons UI
+                var icons = Editor.Instance.Icons;
+                switch (value)
+                {
+                case PlaybackStates.Disabled:
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = false;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = false;
+                    }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = false;
+                    }
+                    break;
+                case PlaybackStates.Stopped:
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = true;
+                        _playbackStop.Enabled = false;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = true;
+                        _playbackPlay.Enabled = true;
+                        _playbackPlay.Brush = new SpriteBrush(icons.Play32);
+                        _playbackPlay.Tag = false;
+                    }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = true;
+                    }
+                    break;
+                case PlaybackStates.Playing:
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = true;
+                        _playbackStop.Enabled = true;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = true;
+                        _playbackPlay.Enabled = true;
+                        _playbackPlay.Brush = new SpriteBrush(icons.Pause32);
+                        _playbackPlay.Tag = true;
+                    }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = true;
+                    }
+                    break;
+                case PlaybackStates.Paused:
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = true;
+                        _playbackStop.Enabled = true;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = true;
+                        _playbackPlay.Enabled = true;
+                        _playbackPlay.Brush = new SpriteBrush(icons.Play32);
+                        _playbackPlay.Tag = false;
+                    }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = true;
+                    }
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The timeline properties editing proxy object. Assign it to add timeline properties editing support.
+        /// </summary>
+        public object PropertiesEditObject;
+
+        /// <summary>
+        /// Gets or sets the timeline view zoom.
+        /// </summary>
+        public float Zoom
+        {
+            get => _zoom;
+            set
+            {
+                value = Mathf.Clamp(value, 0.02f, 10.0f);
+                if (Mathf.NearEqual(_zoom, value))
+                    return;
+
+                _zoom = value;
+
+                foreach (var track in _tracks)
+                {
+                    track.OnTimelineZoomChanged();
+                }
+
+                ArrangeTracks();
+                UpdatePositionHandle();
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether user is moving position handle (seeking).
+        /// </summary>
+        public bool IsMovingPositionHandle => _isMovingPositionHandle;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
         /// <param name="canChangeFps">True if user can modify the timeline FPS, otherwise it will be fixed or controlled from the code.</param>
         public Timeline(PlaybackButtons playbackButtons, bool canChangeFps = true)
         {
+            AutoFocus = false;
             _splitter = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
                 SplitterValue = 0.2f,
@@ -362,6 +615,7 @@ namespace FlaxEditor.GUI.Timeline
 
             var headerTopArea = new ContainerControl(0, 0, _splitter.Panel1.Width, HeaderTopAreaHeight)
             {
+                AutoFocus = false,
                 BackgroundColor = Style.Current.LightBackground,
                 DockStyle = DockStyle.Top,
                 Parent = _splitter.Panel1
@@ -422,6 +676,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     TooltipText = "Stop playback",
                     Brush = new SpriteBrush(icons.Stop32),
+                    Visible = false,
                     Enabled = false,
                     Parent = playbackButtonsPanel
                 };
@@ -434,6 +689,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     TooltipText = "Play/pause playback",
                     Brush = new SpriteBrush(icons.Play32),
+                    Visible = false,
                     Tag = false, // Set to true if image is set to Pause, false if Play
                     Parent = playbackButtonsPanel
                 };
@@ -462,8 +718,9 @@ namespace FlaxEditor.GUI.Timeline
                 Parent = _tracksPanelArea
             };
 
-            _timeIntervalsHeader = new ContainerControl
+            _timeIntervalsHeader = new TimeIntervalsHeader(this)
             {
+                AutoFocus = false,
                 BackgroundColor = Style.Current.Background.RGBMultiplied(0.9f),
                 Height = HeaderTopAreaHeight,
                 DockStyle = DockStyle.Top,
@@ -478,6 +735,7 @@ namespace FlaxEditor.GUI.Timeline
             };
             _backgroundScroll = new ContainerControl
             {
+                AutoFocus = false,
                 ClipChildren = false,
                 Height = 0,
                 Parent = _backgroundArea
@@ -498,20 +756,21 @@ namespace FlaxEditor.GUI.Timeline
                 Height = 0,
                 Parent = _backgroundArea
             };
-
             _positionHandle = new PositionHandle(this)
             {
                 ClipChildren = false,
+                Visible = false,
                 Parent = _backgroundArea,
             };
             UpdatePositionHandle();
+            PlaybackState = PlaybackStates.Disabled;
         }
 
         private void UpdatePositionHandle()
         {
             var handleWidth = 12.0f;
             _positionHandle.Bounds = new Rectangle(
-                StartOffset * 2.0f - handleWidth * 0.5f + _currentFrame / _framesPerSecond * UnitsPerSecond,
+                StartOffset * 2.0f - handleWidth * 0.5f + _currentFrame / _framesPerSecond * UnitsPerSecond * Zoom,
                 HeaderTopAreaHeight * -0.5f,
                 handleWidth,
                 HeaderTopAreaHeight * 0.5f);
@@ -563,6 +822,8 @@ namespace FlaxEditor.GUI.Timeline
             for (int i = 0; i < TrackArchetypes.Count; i++)
             {
                 var archetype = TrackArchetypes[i];
+                if (archetype.DisableSpawnViaGUI)
+                    continue;
 
                 var button = menu.AddButton(archetype.Name, OnAddTrackOptionClicked);
                 button.Tag = archetype;
@@ -617,13 +878,7 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnStop()
         {
             Stop?.Invoke();
-
-            // Update buttons UI
-            var icons = Editor.Instance.Icons;
-            _playbackStop.Enabled = false;
-            _playbackPlay.Enabled = true;
-            _playbackPlay.Brush = new SpriteBrush(icons.Play32);
-            _playbackPlay.Tag = false;
+            PlaybackState = PlaybackStates.Stopped;
         }
 
         /// <summary>
@@ -632,13 +887,7 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnPlay()
         {
             Play?.Invoke();
-
-            // Update buttons UI
-            var icons = Editor.Instance.Icons;
-            _playbackStop.Enabled = true;
-            _playbackPlay.Enabled = true;
-            _playbackPlay.Brush = new SpriteBrush(icons.Pause32);
-            _playbackPlay.Tag = true;
+            PlaybackState = PlaybackStates.Playing;
         }
 
         /// <summary>
@@ -647,22 +896,30 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnPause()
         {
             Pause?.Invoke();
+            PlaybackState = PlaybackStates.Paused;
+        }
 
-            // Update buttons UI
-            var icons = Editor.Instance.Icons;
-            _playbackStop.Enabled = true;
-            _playbackPlay.Enabled = true;
-            _playbackPlay.Brush = new SpriteBrush(icons.Play32);
-            _playbackPlay.Tag = false;
+        /// <summary>
+        /// Called when animation playback position should be changed.
+        /// </summary>
+        /// <param name="frame">The frame.</param>
+        public virtual void OnSeek(int frame)
+        {
         }
 
         /// <summary>
         /// Adds the track.
         /// </summary>
         /// <param name="archetype">The archetype.</param>
-        public void AddTrack(TrackArchetype archetype)
+        /// <returns>The created track object.</returns>
+        public Track AddTrack(TrackArchetype archetype)
         {
-            var track = archetype.Create(archetype);
+            var options = new TrackCreateOptions
+            {
+                Archetype = archetype,
+                Mute = false,
+            };
+            var track = archetype.Create(options);
             if (track != null)
             {
                 // Ensure name is unique
@@ -674,6 +931,184 @@ namespace FlaxEditor.GUI.Timeline
                 }
 
                 AddTrack(track);
+            }
+            return track;
+        }
+
+        /// <summary>
+        /// Loads the timeline data.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <param name="stream">The input stream.</param>
+        protected virtual void LoadTimelineData(int version, BinaryReader stream)
+        {
+        }
+
+        /// <summary>
+        /// Saves the timeline data.
+        /// </summary>
+        /// <param name="stream">The output stream.</param>
+        protected virtual void SaveTimelineData(BinaryWriter stream)
+        {
+        }
+
+        /// <summary>
+        /// Loads the timeline from the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        public virtual void Load(byte[] data)
+        {
+            Clear();
+
+            using (var memory = new MemoryStream(data))
+            using (var stream = new BinaryReader(memory))
+            {
+                int version = stream.ReadInt32();
+                switch (version)
+                {
+                case 1:
+                {
+                    // [Deprecated on 23.07.2019, expires on 27.04.2020]
+
+                    // Load properties
+                    FramesPerSecond = stream.ReadSingle();
+                    DurationFrames = stream.ReadInt32();
+                    LoadTimelineData(version, stream);
+
+                    // Load tracks
+                    int tracksCount = stream.ReadInt32();
+                    _tracks.Capacity = Math.Max(_tracks.Capacity, tracksCount);
+                    for (int i = 0; i < tracksCount; i++)
+                    {
+                        var type = stream.ReadByte();
+                        var flag = stream.ReadByte();
+                        Track track = null;
+                        var mute = (flag & 1) == 1;
+                        for (int j = 0; j < TrackArchetypes.Count; j++)
+                        {
+                            if (TrackArchetypes[j].TypeId == type)
+                            {
+                                var options = new TrackCreateOptions
+                                {
+                                    Archetype = TrackArchetypes[j],
+                                    Mute = mute,
+                                };
+                                track = TrackArchetypes[j].Create(options);
+                                break;
+                            }
+                        }
+                        if (track == null)
+                            throw new Exception("Unknown timeline track type " + type);
+                        int parentIndex = stream.ReadInt32();
+                        int childrenCount = stream.ReadInt32();
+                        track.Name = Utilities.Utils.ReadStr(stream, -13);
+                        track.Tag = parentIndex;
+
+                        track.Archetype.Load(version, track, stream);
+
+                        AddLoadedTrack(track);
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    // Load properties
+                    FramesPerSecond = stream.ReadSingle();
+                    DurationFrames = stream.ReadInt32();
+                    LoadTimelineData(version, stream);
+
+                    // Load tracks
+                    int tracksCount = stream.ReadInt32();
+                    _tracks.Capacity = Math.Max(_tracks.Capacity, tracksCount);
+                    for (int i = 0; i < tracksCount; i++)
+                    {
+                        var type = stream.ReadByte();
+                        var flag = stream.ReadByte();
+                        Track track = null;
+                        var mute = (flag & 1) == 1;
+                        for (int j = 0; j < TrackArchetypes.Count; j++)
+                        {
+                            if (TrackArchetypes[j].TypeId == type)
+                            {
+                                var options = new TrackCreateOptions
+                                {
+                                    Archetype = TrackArchetypes[j],
+                                    Mute = mute,
+                                };
+                                track = TrackArchetypes[j].Create(options);
+                                break;
+                            }
+                        }
+                        if (track == null)
+                            throw new Exception("Unknown timeline track type " + type);
+                        int parentIndex = stream.ReadInt32();
+                        int childrenCount = stream.ReadInt32();
+                        track.Name = Utilities.Utils.ReadStr(stream, -13);
+                        track.Tag = parentIndex;
+                        track.Color = stream.ReadColor32();
+
+                        track.Archetype.Load(version, track, stream);
+
+                        AddLoadedTrack(track);
+                    }
+                    break;
+                }
+                default: throw new Exception("Unknown timeline version " + version);
+                }
+
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    var parentIndex = (int)_tracks[i].Tag;
+                    _tracks[i].Tag = null;
+                    if (parentIndex != -1)
+                        _tracks[i].ParentTrack = _tracks[parentIndex];
+                }
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    _tracks[i].OnLoaded();
+                }
+            }
+
+            ArrangeTracks();
+            ClearEditedFlag();
+        }
+
+        /// <summary>
+        /// Saves the timeline data.
+        /// </summary>
+        /// <returns>The saved timeline data.</returns>
+        public virtual byte[] Save()
+        {
+            // Serialize timeline to stream
+            using (var memory = new MemoryStream(512))
+            using (var stream = new BinaryWriter(memory))
+            {
+                // Save properties
+                stream.Write(2);
+                stream.Write(FramesPerSecond);
+                stream.Write(DurationFrames);
+                SaveTimelineData(stream);
+
+                // Save tracks
+                int tracksCount = Tracks.Count;
+                stream.Write(tracksCount);
+                for (int i = 0; i < tracksCount; i++)
+                {
+                    var track = Tracks[i];
+
+                    stream.Write((byte)track.Archetype.TypeId);
+                    byte flag = 0;
+                    if (track.Mute)
+                        flag |= 1;
+                    stream.Write(flag);
+                    stream.Write(_tracks.IndexOf(track.ParentTrack));
+                    stream.Write(track.SubTracks.Count);
+                    Utilities.Utils.WriteStr(stream, track.Name, -13);
+                    stream.Write((Color32)track.Color);
+                    track.Archetype.Save(track, stream);
+                }
+
+                return memory.ToArray();
             }
         }
 
@@ -939,6 +1374,17 @@ namespace FlaxEditor.GUI.Timeline
             }
         }
 
+        private void CollectTracks(Track track)
+        {
+            track.Parent = _tracksPanel;
+            _tracks.Add(track);
+
+            for (int i = 0; i < track.SubTracks.Count; i++)
+            {
+                CollectTracks(track.SubTracks[i]);
+            }
+        }
+
         /// <summary>
         /// Called when tracks order gets changed.
         /// </summary>
@@ -951,9 +1397,16 @@ namespace FlaxEditor.GUI.Timeline
                 _tracks[i].Parent = null;
             }
 
-            for (int i = 0; i < _tracks.Count; i++)
+            var rootTracks = new List<Track>();
+            foreach (var track in _tracks)
             {
-                _tracks[i].Parent = _tracksPanel;
+                if (track.ParentTrack == null)
+                    rootTracks.Add(track);
+            }
+            _tracks.Clear();
+            foreach (var track in rootTracks)
+            {
+                CollectTracks(track);
             }
 
             ArrangeTracks();
@@ -985,25 +1438,7 @@ namespace FlaxEditor.GUI.Timeline
 
             for (int i = 0; i < _tracks.Count; i++)
             {
-                var track = _tracks[i];
-                if (track.ParentTrack == null)
-                {
-                    track._xOffset = 0;
-                    track.Visible = true;
-                }
-                else
-                {
-                    track._xOffset = track.ParentTrack._xOffset + 12.0f;
-                    track.Visible = track.ParentTrack.Visible && track.ParentTrack.IsExpanded;
-                }
-
-                for (int j = 0; j < track.Media.Count; j++)
-                {
-                    var media = track.Media[j];
-
-                    media.Visible = track.Visible;
-                    media.Bounds = new Rectangle(media.X, track.Y + 2, media.Width, track.Height - 4);
-                }
+                _tracks[i].OnTimelineArrange();
             }
 
             if (_background != null)
@@ -1011,7 +1446,7 @@ namespace FlaxEditor.GUI.Timeline
                 float height = _tracksPanel.Height;
 
                 _background.Visible = _tracks.Count > 0;
-                _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond, height);
+                _background.Bounds = new Rectangle(StartOffset, 0, Duration * UnitsPerSecond * Zoom, height);
 
                 var edgeWidth = 6.0f;
                 _leftEdge.Bounds = new Rectangle(_background.Left - edgeWidth * 0.5f + StartOffset, HeaderTopAreaHeight * -0.5f, edgeWidth, height + HeaderTopAreaHeight * 0.5f);
@@ -1044,8 +1479,178 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
+        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        {
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
+            if (buttons == MouseButton.Right)
+            {
+                _isRightMouseButtonDown = true;
+                _rightMouseButtonDownPos = location;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Right && _isRightMouseButtonDown)
+            {
+                _isRightMouseButtonDown = false;
+
+                if (Vector2.Distance(ref location, ref _rightMouseButtonDownPos) < 4.0f)
+                {
+                    if (!ContainsFocus)
+                        Focus();
+
+                    var controlUnderMouse = GetChildAtRecursive(location);
+                    var mediaUnderMouse = controlUnderMouse;
+                    while (mediaUnderMouse != null && !(mediaUnderMouse is Media))
+                    {
+                        mediaUnderMouse = mediaUnderMouse.Parent;
+                    }
+
+                    var menu = new ContextMenu.ContextMenu();
+                    if (mediaUnderMouse is Media media)
+                    {
+                        media.OnTimelineShowContextMenu(menu, controlUnderMouse);
+                        if (media.PropertiesEditObject != null)
+                        {
+                            menu.AddButton("Edit media", () => ShowEditPopup(media.PropertiesEditObject, ref location));
+                        }
+                    }
+                    if (PropertiesEditObject != null)
+                    {
+                        menu.AddButton("Edit timeline", () => ShowEditPopup(PropertiesEditObject, ref location));
+                    }
+                    menu.AddSeparator();
+                    menu.AddButton("Reset zoom", () => Zoom = 1.0f);
+                    menu.AddButton("Show whole timeline", ShowWholeTimeline);
+                    OnShowContextMenu(menu);
+                    menu.Show(this, location);
+                }
+            }
+
+            return base.OnMouseUp(location, buttons);
+        }
+
+        /// <summary>
+        /// Shows the whole timeline.
+        /// </summary>
+        public void ShowWholeTimeline()
+        {
+            var viewWidth = Width;
+            var timelineWidth = Duration * UnitsPerSecond * Zoom + 8 * StartOffset;
+            _backgroundArea.ViewOffset = Vector2.Zero;
+            Zoom = viewWidth / timelineWidth;
+        }
+
+        class PropertiesEditPopup : ContextMenuBase
+        {
+            private Timeline _timeline;
+            private bool _isDirty;
+
+            public PropertiesEditPopup(Timeline timeline, object obj)
+            {
+                const float width = 280.0f;
+                const float height = 160.0f;
+                Size = new Vector2(width, height);
+
+                var panel1 = new Panel(ScrollBars.Vertical)
+                {
+                    Bounds = new Rectangle(0, 0.0f, width, height),
+                    Parent = this
+                };
+                var editor = new CustomEditorPresenter(null);
+                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.IsScrollable = true;
+                editor.Panel.Parent = panel1;
+                editor.Modified += OnModified;
+
+                editor.Select(obj);
+
+                _timeline = timeline;
+            }
+
+            private void OnModified()
+            {
+                _isDirty = true;
+            }
+
+            /// <inheritdoc />
+            protected override void OnShow()
+            {
+                Focus();
+
+                base.OnShow();
+            }
+
+            /// <inheritdoc />
+            public override void Hide()
+            {
+                if (!Visible)
+                    return;
+
+                Focus(null);
+
+                if (_isDirty)
+                {
+                    _timeline.MarkAsEdited();
+                }
+
+                base.Hide();
+            }
+
+            /// <inheritdoc />
+            public override bool OnKeyDown(Keys key)
+            {
+                if (key == Keys.Escape)
+                {
+                    Hide();
+                    return true;
+                }
+
+                return base.OnKeyDown(key);
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                _timeline = null;
+
+                base.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Shows the timeline object editing popup.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="location">The show location (in timeline space).</param>
+        protected virtual void ShowEditPopup(object obj, ref Vector2 location)
+        {
+            var popup = new PropertiesEditPopup(this, obj);
+            popup.Show(this, location);
+        }
+
+        /// <summary>
+        /// Called when showing context menu to the user. Can be used to add custom buttons.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        protected virtual void OnShowContextMenu(ContextMenu.ContextMenu menu)
+        {
+        }
+
+        /// <inheritdoc />
         public override void Dispose()
         {
+            if (IsDisposing)
+                return;
+
             // Clear references to the controls
             _splitter = null;
             _timeIntervalsHeader = null;

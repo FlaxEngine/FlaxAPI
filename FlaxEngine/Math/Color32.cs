@@ -53,6 +53,70 @@ namespace FlaxEngine
         public byte A;
 
         /// <summary>
+        /// Gets or sets the component at the specified index.
+        /// </summary>
+        /// <value>The value of the red, green, blue, and alpha components, depending on the index.</value>
+        /// <param name="index">The index of the component to access. Use 0 for the alpha component, 1 for the red component, 2 for the green component, and 3 for the blue component.</param>
+        /// <returns>The value of the component at the specified index.</returns>
+        /// <exception cref="System.IndexOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 3].</exception>
+        public byte this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+                case 0:
+                {
+                    return R;
+                }
+                case 1:
+                {
+                    return G;
+                }
+                case 2:
+                {
+                    return B;
+                }
+                case 3:
+                {
+                    return A;
+                }
+                }
+                throw new IndexOutOfRangeException("Invalid Color32 index!");
+            }
+            set
+            {
+                switch (index)
+                {
+                case 0:
+                {
+                    R = value;
+                    break;
+                }
+                case 1:
+                {
+                    G = value;
+                    break;
+                }
+                case 2:
+                {
+                    B = value;
+                    break;
+                }
+                case 3:
+                {
+                    A = value;
+                    break;
+                }
+                default:
+                {
+                    throw new IndexOutOfRangeException("Invalid Color32 index!");
+                }
+                }
+            }
+        }
+
+        /// <summary>
         /// Constructs a new Color32 with given r, g, b, a components.
         /// </summary>
         /// <param name="r">The red component value.</param>
@@ -70,13 +134,90 @@ namespace FlaxEngine
         /// <summary>
         /// Linearly interpolates between colors a and b by t.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
+        /// <param name="a">Color a</param>
+        /// <param name="b">Color b</param>
+        /// <param name="t">Float for combining a and b</param>
         public static Color32 Lerp(Color32 a, Color32 b, float t)
         {
-            t = Mathf.Saturate(t);
             return new Color32((byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t), (byte)(a.A + (b.A - a.A) * t));
+        }
+
+        /// <summary>
+        /// Linearly interpolates between colors a and b by t.
+        /// </summary>
+        /// <param name="a">Color a</param>
+        /// <param name="b">Color b</param>
+        /// <param name="t">Float for combining a and b</param>
+        /// <param name="result">Result</param>
+        public static void Lerp(ref Color32 a, ref Color32 b, float t, out Color32 result)
+        {
+            result = new Color32((byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t), (byte)(a.A + (b.A - a.A) * t));
+        }
+
+        /// <summary>
+        /// Adds two colors.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator +(Color32 a, Color32 b)
+        {
+            return new Color32((byte)(a.R + b.R), (byte)(a.G + b.G), (byte)(a.B + b.B), (byte)(a.A + b.A));
+        }
+
+        /// <summary>
+        /// Divides color by the scale factor.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The division factor.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator /(Color32 a, float b)
+        {
+            return new Color32((byte)(a.R / b), (byte)(a.G / b), (byte)(a.B / b), (byte)(a.A / b));
+        }
+
+        /// <summary>
+        /// Multiplies color components by the other color components.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator *(Color32 a, Color32 b)
+        {
+            return new Color32((byte)(a.R * b.R), (byte)(a.G * b.G), (byte)(a.B * b.B), (byte)(a.A * b.A));
+        }
+
+        /// <summary>
+        /// Multiplies color components by the scale factor.
+        /// </summary>
+        /// <param name="a">The color.</param>
+        /// <param name="b">The scale.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator *(Color32 a, float b)
+        {
+            return new Color32((byte)(a.R * b), (byte)(a.G * b), (byte)(a.B * b), (byte)(a.A * b));
+        }
+
+        /// <summary>
+        /// Multiplies color components by the scale factor.
+        /// </summary>
+        /// <param name="b">The scale.</param>
+        /// <param name="a">The color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator *(float b, Color32 a)
+        {
+            return new Color32((byte)(a.R * b), (byte)(a.G * b), (byte)(a.B * b), (byte)(a.A * b));
+        }
+
+        /// <summary>
+        /// Subtracts one color from the another.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        /// <returns>The result of the operator.</returns>
+        public static Color32 operator -(Color32 a, Color32 b)
+        {
+            return new Color32((byte)(a.R - b.R), (byte)(a.G - b.G), (byte)(a.B - b.B), (byte)(a.A - b.A));
         }
 
         /// <summary>

@@ -54,11 +54,13 @@ namespace FlaxEditor.SceneGraph.GUI
         internal virtual void LinkNode(ActorNode node)
         {
             _actorNode = node;
-            if (node.Actor != null)
+            var actor = node.Actor;
+            if (actor != null)
             {
-                _orderInParent = node.Actor.OrderInParent;
+                _orderInParent = actor.OrderInParent;
+                Visible = (actor.HideFlags & HideFlags.HideInHierarchy) == 0;
 
-                var id = node.Actor.ID;
+                var id = actor.ID;
                 if (Editor.Instance.ProjectCache.IsExpandedActor(ref id))
                 {
                     Expand(true);

@@ -246,7 +246,7 @@ namespace FlaxEngine.GUI
 
             // Change parent panel view offset
             if (Parent is Panel panel)
-                panel.SetViewOffset(_orientation, _value);
+                panel.SetViewOffset(_orientation, Mathf.FloorToInt(_value));
         }
 
         private void OnUpdate(float deltaTime)

@@ -98,7 +98,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the global time scale usage for particle simulation. Determines whether the particle effect should take into account the global game time scale for simulation updates..
+        /// Gets or sets the global time scale usage for particle simulation. Determines whether the particle effect should take into account the global game time scale for simulation updates.
         /// </summary>
         [UnmanagedCall]
         [EditorDisplay("Particle Effect"), EditorOrder(40), Tooltip("Determines whether the particle effect should take into account the global game time scale for simulation updates.")]
@@ -149,7 +149,7 @@ namespace FlaxEngine
         /// Please not that setting time value does not perform proper reving operation but changes the current animation position (editing value might result in flickered update).
         /// </remarks>
         [UnmanagedCall]
-        [HideInEditor]
+        [NoSerialize, HideInEditor]
         public float Time
         {
 #if UNIT_TEST_COMPILANT
@@ -164,7 +164,7 @@ namespace FlaxEngine
         /// Gets or sets the custom render task used as a view information source (effect will use its render buffers and rendering resolution information for particles simulation).
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [NoSerialize, HideInEditor]
         public FlaxEngine.Rendering.RenderTask CustomViewRenderTask
         {
 #if UNIT_TEST_COMPILANT
@@ -179,7 +179,7 @@ namespace FlaxEngine
         /// Gets or sets the last game time when particle system was updated. Value 01 indicates no previous updates.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [NoSerialize, HideInEditor]
         public float LastUpdateTime
         {
 #if UNIT_TEST_COMPILANT

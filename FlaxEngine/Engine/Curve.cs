@@ -20,6 +20,7 @@ namespace FlaxEngine
         }
 
         private class KeyframeAccess :
+        IKeyframeAccess<bool>,
         IKeyframeAccess<int>,
         IKeyframeAccess<double>,
         IKeyframeAccess<float>,
@@ -27,8 +28,21 @@ namespace FlaxEngine
         IKeyframeAccess<Vector3>,
         IKeyframeAccess<Vector4>,
         IKeyframeAccess<Quaternion>,
+        IKeyframeAccess<Color32>,
         IKeyframeAccess<Color>
         {
+            /// <inheritdoc />
+            public void GetTangent(ref bool value, ref bool tangent, float lengthThird, out bool result)
+            {
+                result = value;
+            }
+
+            /// <inheritdoc />
+            public void Interpolate(ref bool a, ref bool b, float alpha, out bool result)
+            {
+                result = a;
+            }
+
             /// <inheritdoc />
             public void GetTangent(ref int value, ref int tangent, float lengthThird, out int result)
             {
@@ -111,6 +125,18 @@ namespace FlaxEngine
             public void Interpolate(ref Quaternion a, ref Quaternion b, float alpha, out Quaternion result)
             {
                 Quaternion.Slerp(ref a, ref b, alpha, out result);
+            }
+
+            /// <inheritdoc />
+            public void GetTangent(ref Color32 value, ref Color32 tangent, float lengthThird, out Color32 result)
+            {
+                result = value + tangent * lengthThird;
+            }
+
+            /// <inheritdoc />
+            public void Interpolate(ref Color32 a, ref Color32 b, float alpha, out Color32 result)
+            {
+                Color32.Lerp(ref a, ref b, alpha, out result);
             }
 
             /// <inheritdoc />

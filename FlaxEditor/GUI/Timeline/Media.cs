@@ -12,6 +12,53 @@ namespace FlaxEditor.GUI.Timeline
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public abstract class Media : ContainerControl
     {
+        /// <summary>
+        /// The base class for media properties proxy objects.
+        /// </summary>
+        /// <typeparam name="TTrack">The type of the track.</typeparam>
+        /// <typeparam name="TMedia">The type of the media.</typeparam>
+        public abstract class ProxyBase<TTrack, TMedia>
+        where TTrack : Track
+        where TMedia : Media
+        {
+            [HideInEditor, NoSerialize]
+            public TTrack Track;
+
+            [HideInEditor, NoSerialize]
+            public TMedia Media;
+
+            /// <summary>
+            /// Gets or sets the start frame of the media event.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(-10010), Tooltip("Start frame of the media event.")]
+            public int StartFrame
+            {
+                get => Media.StartFrame;
+                set => Media.StartFrame = value;
+            }
+
+            /// <summary>
+            /// Gets or sets the total duration of the media event in the timeline sequence frames amount.
+            /// </summary>
+            [EditorDisplay("General"), EditorOrder(-1000), Limit(1), Tooltip("Total duration of the media event in the timeline sequence frames amount.")]
+            public int DurationFrames
+            {
+                get => Media.DurationFrames;
+                set => Media.DurationFrames = value;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ProxyBase{TTrack,TMedia}"/> class.
+            /// </summary>
+            /// <param name="track">The track.</param>
+            /// <param name="media">The media.</param>
+            protected ProxyBase(TTrack track, TMedia media)
+            {
+                Track = track ?? throw new ArgumentNullException(nameof(track));
+                Media = media ?? throw new ArgumentNullException(nameof(media));
+            }
+        }
+
         private Timeline _timeline;
         private Track _tack;
         private int _startFrame, _durationFrames;
@@ -37,10 +84,16 @@ namespace FlaxEditor.GUI.Timeline
                 _startFrame = value;
                 if (_timeline != null)
                 {
-                    X = Start * Timeline.UnitsPerSecond + Timeline.StartOffset;
+                    OnTimelineZoomChanged();
                 }
+                StartFrameChanged?.Invoke();
             }
         }
+
+        /// <summary>
+        /// Occurs when start frame gets changed.
+        /// </summary>
+        public event Action StartFrameChanged;
 
         /// <summary>
         /// Gets or sets the total duration of the media event in the timeline sequence frames amount.
@@ -57,10 +110,16 @@ namespace FlaxEditor.GUI.Timeline
                 _durationFrames = value;
                 if (_timeline != null)
                 {
-                    Width = Duration * Timeline.UnitsPerSecond;
+                    OnTimelineZoomChanged();
                 }
+                DurationFramesChanged?.Invoke();
             }
         }
+
+        /// <summary>
+        /// Occurs when media duration gets changed.
+        /// </summary>
+        public event Action DurationFramesChanged;
 
         /// <summary>
         /// Gets the media start time in seconds.
@@ -89,11 +148,25 @@ namespace FlaxEditor.GUI.Timeline
         private Rectangle MoveRightEdgeRect => new Rectangle(Width - 5, -5, 10, Height + 10);
 
         /// <summary>
+        /// The track properties editing proxy object. Assign it to add media properties editing support.
+        /// </summary>
+        public object PropertiesEditObject;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Media"/> class.
         /// </summary>
-        public Media()
+        protected Media()
         {
             AutoFocus = false;
+        }
+
+        /// <summary>
+        /// Called when showing timeline context menu to the user. Can be used to add custom buttons.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        /// <param name="controlUnderMouse">The found control under the mouse cursor.</param>
+        public virtual void OnTimelineShowContextMenu(ContextMenu.ContextMenu menu, Control controlUnderMouse)
+        {
         }
 
         /// <summary>
@@ -107,8 +180,7 @@ namespace FlaxEditor.GUI.Timeline
             Parent = _timeline?.MediaPanel;
             if (_timeline != null)
             {
-                X = Start * Timeline.UnitsPerSecond + Timeline.StartOffset;
-                Width = Duration * Timeline.UnitsPerSecond;
+                OnTimelineZoomChanged();
             }
         }
 
@@ -129,6 +201,24 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnDeleted()
         {
             Dispose();
+        }
+
+        /// <summary>
+        /// Called when timeline zoom gets changed.
+        /// </summary>
+        public virtual void OnTimelineZoomChanged()
+        {
+            X = Start * Timeline.UnitsPerSecond * _timeline.Zoom + Timeline.StartOffset;
+            Width = Duration * Timeline.UnitsPerSecond * _timeline.Zoom;
+        }
+
+        /// <inheritdoc />
+        protected override void GetDesireClientArea(out Rectangle rect)
+        {
+            base.GetDesireClientArea(out rect);
+
+            // Add some margin to allow to drag media edges
+            rect = rect.MakeExpanded(-6.0f);
         }
 
         /// <inheritdoc />
@@ -198,7 +288,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 var moveLocation = Root.MousePosition;
                 var moveLocationDelta = moveLocation - _startMoveLocation;
-                var moveDelta = (int)(moveLocationDelta.X / Timeline.UnitsPerSecond * _timeline.FramesPerSecond);
+                var moveDelta = (int)(moveLocationDelta.X / (Timeline.UnitsPerSecond * _timeline.Zoom) * _timeline.FramesPerSecond);
                 var startFrame = StartFrame;
                 var durationFrames = DurationFrames;
 
@@ -284,6 +374,18 @@ namespace FlaxEditor.GUI.Timeline
             _startMoveRightEdge = false;
 
             EndMouseCapture();
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            if (IsDisposing)
+                return;
+
+            _timeline = null;
+            _tack = null;
+
+            base.Dispose();
         }
     }
 }
