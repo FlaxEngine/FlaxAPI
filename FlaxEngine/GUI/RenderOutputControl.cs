@@ -15,7 +15,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The default back buffer format used by the GUI controls presenting rendered frames.
         /// </summary>
-        public const PixelFormat DefaultBackBufferFormat = PixelFormat.R8G8B8A8_UNorm;
+        public static PixelFormat BackBufferFormat = PixelFormat.R8G8B8A8_UNorm;
 
         /// <summary>
         /// The resize check timeout (in seconds).
@@ -55,6 +55,11 @@ namespace FlaxEngine.GUI
         /// Gets or sets the brightness of the output.
         /// </summary>
         public float Brightness { get; set; } = 1.0f;
+
+        /// <summary>
+        /// Gets or sets the rendering resolution scale. Can be sued to upscale image or to downscale the rendering to save the performance.
+        /// </summary>
+        public float ResolutionScale { get; set; } = 1.0f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderOutputControl"/> class.
@@ -179,8 +184,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void SyncBackbufferSize()
         {
-            int width = Mathf.CeilToInt(Width);
-            int height = Mathf.CeilToInt(Height);
+            float scale = ResolutionScale * Application.DpiScale;
+            int width = Mathf.CeilToInt(Width * scale);
+            int height = Mathf.CeilToInt(Height * scale);
             if (_backBuffer == null || _backBuffer.Width == width && _backBuffer.Height == height)
                 return;
             if (width < 1 || height < 1)
@@ -201,7 +207,7 @@ namespace FlaxEngine.GUI
             _oldBackbufferLiveTimeLeft = 3;
 
             // Resize backbuffer
-            _backBuffer.Init(DefaultBackBufferFormat, width, height);
+            _backBuffer.Init(BackBufferFormat, width, height);
             _task.Output = _backBuffer;
         }
 

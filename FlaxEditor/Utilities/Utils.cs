@@ -883,7 +883,7 @@ namespace FlaxEditor.Utilities
             settings.AllowMinimize = false;
             settings.HasSizingFrame = false;
             settings.StartPosition = WindowStartPosition.CenterScreen;
-            settings.Size = new Vector2(500, 600);
+            settings.Size = new Vector2(500, 600) * Application.DpiScale;
             settings.Title = title;
             var dialog = Window.Create(settings);
 

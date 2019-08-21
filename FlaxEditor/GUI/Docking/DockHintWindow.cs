@@ -217,7 +217,9 @@ namespace FlaxEditor.GUI.Docking
             _mouse = Application.MousePosition;
 
             // Check intersection with any dock panel
-            _toDock = _toMove.MasterPanel.HitTest(ref _mouse, _toMove);
+            var dpiScale = Application.DpiScale;
+            var uiMouse = _mouse / dpiScale;
+            _toDock = _toMove.MasterPanel.HitTest(ref uiMouse, _toMove);
 
             // Check dock state to use
             bool showProxyHints = _toDock != null;
@@ -225,19 +227,13 @@ namespace FlaxEditor.GUI.Docking
             bool showCenterHint = showProxyHints;
             if (showProxyHints)
             {
-                // For master panel disable docking at sides
-                //if (_toDock->IsMaster())
-                //	showBorderHints = false;
-
                 // If moved window has not only tabs but also child panels disable docking as tab
                 if (_toMove.ChildPanelsCount > 0)
                     showCenterHint = false;
 
-                /////
-                // disable docking windows with one or more dock panels inside
+                // Disable docking windows with one or more dock panels inside
                 if (_toMove.ChildPanelsCount > 0)
                     showBorderHints = false;
-                /////
 
                 // Get dock area
                 _rectDock = _toDock.DockAreaBounds;

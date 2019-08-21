@@ -921,17 +921,17 @@ namespace FlaxEditor.Viewport
                 _mouseDeltaRight.Y *= size.Y / size.X;
 
                 Vector2 mouseDelta = Vector2.Zero;
-                if (_useMouseFiltering) // mouse filtering
+                if (_useMouseFiltering)
                 {
-                    // update delta filtering buffer
+                    // Update delta filtering buffer
                     _deltaFilteringBuffer[_deltaFilteringStep] = _mouseDeltaRight;
                     _deltaFilteringStep++;
 
-                    // if the step is too far, zero
+                    // If the step is too far, zero
                     if (_deltaFilteringStep == FpsCameraFilteringFrames)
                         _deltaFilteringStep = 0;
 
-                    // calculate filtered delta(avg)
+                    // Calculate filtered delta (avg)
                     for (int i = 0; i < FpsCameraFilteringFrames; i++)
                         mouseDelta += _deltaFilteringBuffer[i];
 
@@ -940,9 +940,9 @@ namespace FlaxEditor.Viewport
                 else
                     mouseDelta = _mouseDeltaRight;
 
-                if (_useMouseAcceleration) // mouse acceleration
+                if (_useMouseAcceleration)
                 {
-                    // accelerate the delta
+                    // Accelerate the delta
                     var currentDelta = mouseDelta;
                     mouseDelta = mouseDelta + _mouseDeltaRightLast * _mouseAccelerationScale;
                     _mouseDeltaRightLast = currentDelta;
@@ -951,8 +951,7 @@ namespace FlaxEditor.Viewport
                 // Update
                 moveDelta *= dt * (60.0f * 4.0f);
                 mouseDelta *= 200.0f * MouseSpeed * _mouseSensitivity;
-                bool centerMouse;
-                UpdateView(dt, ref moveDelta, ref mouseDelta, out centerMouse);
+                UpdateView(dt, ref moveDelta, ref mouseDelta, out var centerMouse);
 
                 // Move mouse back to the root position
                 if (centerMouse && (_input.IsMouseRightDown || _input.IsMouseLeftDown))
@@ -991,7 +990,7 @@ namespace FlaxEditor.Viewport
                     {
                         moveDelta += Vector3.Down;
                     }
-                    moveDelta.Normalize(); // normalize direction
+                    moveDelta.Normalize();
                     moveDelta *= _movementSpeed;
 
                     // Update
