@@ -20,8 +20,6 @@ namespace FlaxEngine.Rendering
         /// </summary>
         public static MainRenderTask Instance { get; internal set; }
 
-        // TODO: add API to override main camera
-
         internal MainRenderTask()
         {
         }

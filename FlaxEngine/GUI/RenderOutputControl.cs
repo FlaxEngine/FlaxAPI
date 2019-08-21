@@ -173,7 +173,7 @@ namespace FlaxEngine.GUI
         {
             // Draw backbuffer texture
             var buffer = _backBufferOld ? _backBufferOld : _backBuffer;
-            var color = TintColor * Brightness;
+            var color = TintColor.RGBMultiplied(Brightness);
             Render2D.DrawRenderTarget(buffer, new Rectangle(Vector2.Zero, Size), color);
 
             base.Draw();
