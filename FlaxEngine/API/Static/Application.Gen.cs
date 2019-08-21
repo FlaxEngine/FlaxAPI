@@ -138,6 +138,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the DPI setting.
+        /// </summary>
+        [UnmanagedCall]
+        public static int Dpi
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDpi(); }
+#endif
+        }
+
+        /// <summary>
         /// True if app has focus.
         /// </summary>
         [UnmanagedCall]
@@ -296,6 +309,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetMousePosition(ref Vector2 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetDpi();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetHasFocus();
