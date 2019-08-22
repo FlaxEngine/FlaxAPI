@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -16,8 +17,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <summary>
     /// The timeline track for animating <see cref="FlaxEngine.Actor"/> objects.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Timeline.Tracks.SceneObjectTrack" />
-    public sealed class ActorTrack : SceneObjectTrack
+    /// <seealso cref="ObjectTrack" />
+    public sealed class ActorTrack : ObjectTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -92,6 +93,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
+        public override Object Object => Actor;
+
+        /// <inheritdoc />
         protected override void OnShowAddContextMenu(ContextMenu.ContextMenu menu)
         {
             base.OnShowAddContextMenu(menu);
@@ -157,15 +161,20 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 }
                 else if (valueType.IsValueType)
                 {
-                    // Structure or Enum
+                    // Enum or Structure
                     name = valueType.Name;
                 }
                 else
                 {
+                    // Animating subobjects properties is not supported
                     continue;
                 }
 
-                menu.AddButton(name + " " + p.Name, OnAddPropertyTrack);
+                // Prevent from adding the same property twice
+                if (SubTracks.Any(x => x is ObjectPropertyTrack y && y.PropertyName == name))
+                    continue;
+
+                menu.AddButton(name + " " + p.Name, OnAddObjectPropertyTrack).Tag = p;
             }
         }
 
@@ -196,12 +205,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
-        private void OnAddPropertyTrack()
+        private void OnAddObjectPropertyTrack(ContextMenuButton button)
         {
-            var track = Timeline.AddTrack(AudioVolumeTrack.GetArchetype());
+            var p = (PropertyInfo)button.Tag;
+            var track = (ObjectPropertyTrack)Timeline.AddTrack(ObjectPropertyTrack.GetArchetype());
             track.ParentTrack = this;
             track.TrackIndex = TrackIndex + 1;
             track.Name = Guid.NewGuid().ToString();
+            track.Property = p;
             Timeline.OnTracksOrderChanged();
             Timeline.MarkAsEdited();
             Expand();

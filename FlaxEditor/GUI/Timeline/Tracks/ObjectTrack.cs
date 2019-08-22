@@ -1,23 +1,27 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using FlaxEngine;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
-    /// The timeline track for animating scene objects.
+    /// The timeline track for animating managed objects.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public abstract class SceneObjectTrack : Track
+    public abstract class ObjectTrack : Track
     {
         /// <summary>
         /// The add button.
         /// </summary>
         protected Button _addButton;
 
+        /// <summary>
+        /// Gets the object instance (may be null if reference is invalid or data is missing).
+        /// </summary>
+        public abstract FlaxEngine.Object Object { get; }
+
         /// <inheritdoc />
-        protected SceneObjectTrack(ref TrackCreateOptions options)
+        protected ObjectTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
             // Add button
