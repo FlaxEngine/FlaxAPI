@@ -1,0 +1,1046 @@
+// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using FlaxEditor.CustomEditors;
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEngine;
+using FlaxEngine.GUI;
+
+namespace FlaxEditor.GUI
+{
+    /// <summary>
+    /// The generic keyframes animation editor control.
+    /// </summary>
+    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+    public class KeyframesEditor : ContainerControl
+    {
+        /// <summary>
+        /// A single keyframe.
+        /// </summary>
+        public struct Keyframe : IComparable, IComparable<Keyframe>
+        {
+            /// <summary>
+            /// The time of the keyframe.
+            /// </summary>
+            [EditorOrder(0), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The time of the keyframe.")]
+            public float Time;
+
+            /// <summary>
+            /// The value of the curve at keyframe.
+            /// </summary>
+            [EditorOrder(1), Limit(float.MinValue, float.MaxValue, 0.01f), Tooltip("The value of the curve at keyframe.")]
+            public object Value;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Keyframe"/> struct.
+            /// </summary>
+            /// <param name="time">The time.</param>
+            /// <param name="value">The value.</param>
+            public Keyframe(float time, object value)
+            {
+                Time = time;
+                Value = value;
+            }
+
+            /// <inheritdoc />
+            public int CompareTo(object obj)
+            {
+                if (obj is Keyframe other)
+                    return Time > other.Time ? 1 : 0;
+                return 1;
+            }
+
+            /// <inheritdoc />
+            public int CompareTo(Keyframe other)
+            {
+                return Time > other.Time ? 1 : 0;
+            }
+        }
+
+        /// <summary>
+        /// The keyframes contents container control.
+        /// </summary>
+        /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
+        private class Contents : ContainerControl
+        {
+            private readonly KeyframesEditor _curve;
+            internal bool _leftMouseDown;
+            private bool _rightMouseDown;
+            internal Vector2 _leftMouseDownPos = Vector2.Minimum;
+            private Vector2 _rightMouseDownPos = Vector2.Minimum;
+            internal Vector2 _mousePos = Vector2.Minimum;
+            private float _mouseMoveAmount;
+            internal bool _isMovingSelection;
+            private Vector2 _movingSelectionViewPos;
+            private Vector2 _cmShowPos;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Contents"/> class.
+            /// </summary>
+            /// <param name="curve">The curve.</param>
+            public Contents(KeyframesEditor curve)
+            {
+                _curve = curve;
+            }
+
+            private void UpdateSelectionRectangle()
+            {
+                var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
+
+                // Find controls to select
+                for (int i = 0; i < Children.Count; i++)
+                {
+                    if (Children[i] is KeyframePoint p)
+                    {
+                        p.IsSelected = p.Bounds.Intersects(ref selectionRect);
+                    }
+                }
+            }
+
+            /// <inheritdoc />
+            public override bool IntersectsContent(ref Vector2 locationParent, out Vector2 location)
+            {
+                // Pass all events
+                location = PointFromParent(ref locationParent);
+                return true;
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseEnter(Vector2 location)
+            {
+                _mousePos = location;
+
+                base.OnMouseEnter(location);
+            }
+
+            /// <inheritdoc />
+            public override void OnMouseMove(Vector2 location)
+            {
+                _mousePos = location;
+
+                // Moving view
+                if (_rightMouseDown)
+                {
+                    // Calculate delta
+                    Vector2 delta = location - _rightMouseDownPos;
+                    if (delta.LengthSquared > 0.01f && _curve.EnablePanning)
+                    {
+                        // Move view
+                        _mouseMoveAmount += delta.Length;
+                        _curve.ViewOffset += delta * _curve.ViewScale;
+                        _rightMouseDownPos = location;
+                        Cursor = CursorType.SizeAll;
+                    }
+
+                    return;
+                }
+                // Moving selection
+                else if (_isMovingSelection)
+                {
+                    // Calculate delta (apply view offset)
+                    Vector2 viewDelta = _curve.ViewOffset - _movingSelectionViewPos;
+                    _movingSelectionViewPos = _curve.ViewOffset;
+                    var viewRect = _curve._mainPanel.GetClientArea();
+                    var delta = location - _leftMouseDownPos - viewDelta;
+                    _mouseMoveAmount += delta.Length;
+                    if (delta.LengthSquared > 0.01f)
+                    {
+                        // Move selected keyframes
+                        var keyframeDelta = PointToKeyframes(location, ref viewRect) - PointToKeyframes(_leftMouseDownPos - viewDelta, ref viewRect);
+                        for (var i = 0; i < _curve._points.Count; i++)
+                        {
+                            var p = _curve._points[i];
+                            if (p.IsSelected)
+                            {
+                                var k = _curve._keyframes[p.Index];
+
+                                float minTime = p.Index != 0 ? _curve._keyframes[p.Index - 1].Time : float.MinValue;
+                                float maxTime = p.Index != _curve._keyframes.Count - 1 ? _curve._keyframes[p.Index + 1].Time : float.MaxValue;
+
+                                k.Time += keyframeDelta.X;
+                                if (_curve.FPS.HasValue)
+                                {
+                                    float fps = _curve.FPS.Value;
+                                    k.Time = Mathf.Floor(k.Time * fps) / fps;
+                                }
+                                k.Time = Mathf.Clamp(k.Time, minTime, maxTime);
+
+                                // TODO: snapping keyframes to grid when moving
+
+                                _curve._keyframes[p.Index] = k;
+                            }
+                        }
+                        _curve.UpdateKeyframes();
+                        if (_curve.EnablePanning)
+                            _curve._mainPanel.ScrollViewTo(PointToParent(location));
+                        _leftMouseDownPos = location;
+                        Cursor = CursorType.SizeAll;
+                    }
+
+                    return;
+                }
+                // Selecting
+                else if (_leftMouseDown)
+                {
+                    UpdateSelectionRectangle();
+                    return;
+                }
+
+                base.OnMouseMove(location);
+            }
+
+            /// <inheritdoc />
+            public override void OnLostFocus()
+            {
+                // Clear flags and state
+                if (_leftMouseDown)
+                {
+                    _leftMouseDown = false;
+                }
+                if (_rightMouseDown)
+                {
+                    _rightMouseDown = false;
+                    Cursor = CursorType.Default;
+                }
+                _isMovingSelection = false;
+
+                base.OnLostFocus();
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDown(location, buttons))
+                {
+                    // Clear flags
+                    _isMovingSelection = false;
+                    _rightMouseDown = false;
+                    _leftMouseDown = false;
+                    return true;
+                }
+
+                // Cache data
+                _isMovingSelection = false;
+                _mousePos = location;
+                if (buttons == MouseButton.Left)
+                {
+                    _leftMouseDown = true;
+                    _leftMouseDownPos = location;
+                }
+                if (buttons == MouseButton.Right)
+                {
+                    _rightMouseDown = true;
+                    _rightMouseDownPos = location;
+                }
+
+                // Check if any node is under the mouse
+                var underMouse = GetChildAt(location);
+                if (underMouse is KeyframePoint keyframe)
+                {
+                    if (_leftMouseDown)
+                    {
+                        // Check if user is pressing control
+                        if (Root.GetKey(Keys.Control))
+                        {
+                            // Add to selection
+                            keyframe.Select();
+                        }
+                        // Check if node isn't selected
+                        else if (!keyframe.IsSelected)
+                        {
+                            // Select node
+                            _curve.ClearSelection();
+                            keyframe.Select();
+                        }
+
+                        // Start moving selected nodes
+                        StartMouseCapture();
+                        _mouseMoveAmount = 0;
+                        _isMovingSelection = true;
+                        _movingSelectionViewPos = _curve.ViewOffset;
+                        Focus();
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (_leftMouseDown)
+                    {
+                        // Start selecting
+                        StartMouseCapture();
+                        _curve.ClearSelection();
+                        Focus();
+                        return true;
+                    }
+                    if (_rightMouseDown)
+                    {
+                        // Start navigating
+                        StartMouseCapture();
+                        Focus();
+                        return true;
+                    }
+                }
+
+                Focus();
+                return true;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                _mousePos = location;
+
+                if (_leftMouseDown && buttons == MouseButton.Left)
+                {
+                    _leftMouseDown = false;
+                    EndMouseCapture();
+                    Cursor = CursorType.Default;
+
+                    // Moving keyframes
+                    if (_isMovingSelection)
+                    {
+                        if (_mouseMoveAmount > 3.0f)
+                            _curve.MarkAsEdited();
+                    }
+                    // Selecting
+                    else
+                    {
+                        UpdateSelectionRectangle();
+                    }
+
+                    _isMovingSelection = false;
+                }
+                if (_rightMouseDown && buttons == MouseButton.Right)
+                {
+                    _rightMouseDown = false;
+                    EndMouseCapture();
+                    Cursor = CursorType.Default;
+
+                    // Check if no move has been made at all
+                    if (_mouseMoveAmount < 3.0f)
+                    {
+                        var selectionCount = _curve.SelectionCount;
+                        var underMouse = GetChildAt(location);
+                        if (selectionCount == 0 && underMouse is KeyframePoint point)
+                        {
+                            // Select node
+                            selectionCount = 1;
+                            point.Select();
+                        }
+
+                        var viewRect = _curve._mainPanel.GetClientArea();
+                        _cmShowPos = PointToKeyframes(location, ref viewRect);
+
+                        var cm = new ContextMenu.ContextMenu();
+                        cm.AddButton("Add keyframe", () => _curve.AddKeyframe(_cmShowPos)).Enabled = _curve.Keyframes.Count < _curve.MaxKeyframes;
+                        if (selectionCount == 0)
+                        {
+                        }
+                        else if (selectionCount == 1)
+                        {
+                            cm.AddButton("Edit keyframe", () => _curve.EditKeyframes(this, location));
+                            cm.AddButton("Remove keyframe", _curve.RemoveKeyframes);
+                        }
+                        else
+                        {
+                            cm.AddButton("Edit keyframes", () => _curve.EditKeyframes(this, location));
+                            cm.AddButton("Remove keyframes", _curve.RemoveKeyframes);
+                        }
+                        if (_curve.EnableZoom && _curve.EnablePanning)
+                        {
+                            cm.AddSeparator();
+                            cm.AddButton("Show whole curve", _curve.ShowWholeCurve);
+                            cm.AddButton("Reset view", _curve.ResetView);
+                        }
+                        cm.Show(this, location);
+                    }
+                    _mouseMoveAmount = 0;
+                }
+
+                if (base.OnMouseUp(location, buttons))
+                {
+                    // Clear flags
+                    _rightMouseDown = false;
+                    _leftMouseDown = false;
+                    return true;
+                }
+
+                return true;
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseWheel(Vector2 location, float delta)
+            {
+                if (base.OnMouseWheel(location, delta))
+                    return true;
+
+                // Zoom in/out
+                if (_curve.EnableZoom && IsMouseOver && !_leftMouseDown)
+                {
+                    // TODO: preserve the view center point for easier zooming
+                    _curve.ViewScale += delta * 0.1f;
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            protected override void SetScaleInternal(ref Vector2 scale)
+            {
+                base.SetScaleInternal(ref scale);
+
+                _curve.UpdateKeyframes();
+            }
+
+            /// <summary>
+            /// Converts the input point from curve editor contents control space into the keyframes time/value coordinates.
+            /// </summary>
+            /// <param name="point">The point.</param>
+            /// <param name="point">The curve contents area bounds.</param>
+            /// <returns>The result.</returns>
+            private Vector2 PointToKeyframes(Vector2 point, ref Rectangle curveContentAreaBounds)
+            {
+                // Contents -> Keyframes
+                return new Vector2(
+                    (point.X + Location.X) / UnitsPerSecond,
+                    (point.Y + Location.Y - curveContentAreaBounds.Height) / -UnitsPerSecond
+                );
+            }
+        }
+
+        /// <summary>
+        /// The single keyframe control.
+        /// </summary>
+        private class KeyframePoint : Control
+        {
+            /// <summary>
+            /// The parent keyframes editor.
+            /// </summary>
+            public KeyframesEditor Editor;
+
+            /// <summary>
+            /// The keyframe index.
+            /// </summary>
+            public int Index;
+
+            /// <summary>
+            /// Flag for selected keyframes.
+            /// </summary>
+            public bool IsSelected;
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                var rect = new Rectangle(Vector2.Zero, Size);
+                var color = Color.Gray;
+                if (IsSelected)
+                    color = Color.YellowGreen;
+                if (IsMouseOver)
+                    color *= 1.1f;
+                Render2D.FillRectangle(rect, color);
+            }
+
+            /// <inheritdoc />
+            protected override void SetLocationInternal(ref Vector2 location)
+            {
+                base.SetLocationInternal(ref location);
+
+                var k = Editor._keyframes[Index];
+                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, k.Value);
+            }
+
+            public void Select()
+            {
+                IsSelected = true;
+            }
+
+            public void Deselect()
+            {
+                IsSelected = false;
+            }
+        }
+
+        /// <summary>
+        /// The timeline units per second (on time axis).
+        /// </summary>
+        public static readonly float UnitsPerSecond = 100.0f;
+
+        /// <summary>
+        /// The colors for the keyframes,
+        /// </summary>
+        private static readonly Color[] Colors =
+        {
+            Color.OrangeRed,
+            Color.ForestGreen,
+            Color.CornflowerBlue,
+            Color.White,
+        };
+
+        /// <summary>
+        /// The keyframes size.
+        /// </summary>
+        private static readonly Vector2 KeyframesSize = new Vector2(5.0f);
+
+        private Contents _contents;
+        private Panel _mainPanel;
+        private readonly List<KeyframePoint> _points = new List<KeyframePoint>();
+        private bool _refreshAfterEdit;
+        private Popup _popup;
+        private float? _fps;
+
+        /// <summary>
+        /// The keyframes collection.
+        /// </summary>
+        protected readonly List<Keyframe> _keyframes = new List<Keyframe>();
+
+        /// <summary>
+        /// Occurs when keyframes collection gets changed (keyframe added or removed).
+        /// </summary>
+        public event Action KeyframesChanged;
+
+        /// <summary>
+        /// Gets the keyframes collection (read-only).
+        /// </summary>
+        public IReadOnlyList<Keyframe> Keyframes => _keyframes;
+
+        /// <summary>
+        /// Gets or sets the view offset (via scroll bars).
+        /// </summary>
+        public Vector2 ViewOffset
+        {
+            get => _mainPanel.ViewOffset;
+            set => _mainPanel.ViewOffset = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the view scale.
+        /// </summary>
+        public Vector2 ViewScale
+        {
+            get => _contents.Scale;
+            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.02f), new Vector2(10.0f));
+        }
+
+        /// <summary>
+        /// Occurs when curve gets edited.
+        /// </summary>
+        public event Action Edited;
+
+        /// <summary>
+        /// The maximum amount of keyframes to use in a single curve.
+        /// </summary>
+        public int MaxKeyframes = ushort.MaxValue;
+
+        /// <summary>
+        /// True if enable view zooming. Otherwise user won't be able to zoom in or out.
+        /// </summary>
+        public bool EnableZoom = true;
+
+        /// <summary>
+        /// True if enable view panning. Otherwise user won't be able to move the view area.
+        /// </summary>
+        public bool EnablePanning = true;
+
+        /// <summary>
+        /// Gets a value indicating whether user is editing the curve.
+        /// </summary>
+        public bool IsUserEditing => _popup != null || _contents._leftMouseDown;
+
+        /// <summary>
+        /// Gets or sets the scroll bars usage.
+        /// </summary>
+        public ScrollBars ScrollBars
+        {
+            get => _mainPanel.ScrollBars;
+            set => _mainPanel.ScrollBars = value;
+        }
+
+        /// <summary>
+        /// The default value.
+        /// </summary>
+        public object DefaultValue;
+
+        /// <summary>
+        /// The amount of frames per second of the curve animation (optional). Can be sued to restrict the keyframes time values to the given time quantization rate.
+        /// </summary>
+        public float? FPS
+        {
+            get => _fps;
+            set
+            {
+                if (_fps.HasValue == value.HasValue && (!value.HasValue || Mathf.NearEqual(_fps.Value, value.Value)))
+                    return;
+
+                _fps = value;
+
+                UpdateFPS();
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyframesEditor{T}"/> class.
+        /// </summary>
+        public KeyframesEditor()
+        {
+            _mainPanel = new Panel(ScrollBars.Both)
+            {
+                ScrollMargin = new Margin(150.0f),
+                AlwaysShowScrollbars = true,
+                DockStyle = DockStyle.Fill,
+                Parent = this
+            };
+            _contents = new Contents(this)
+            {
+                ClipChildren = false,
+                AutoFocus = false,
+                Parent = _mainPanel
+            };
+
+            UpdateKeyframes();
+        }
+
+        private void MarkAsEdited()
+        {
+            Edited?.Invoke();
+        }
+
+        /// <summary>
+        /// Resets the keyframes collection.
+        /// </summary>
+        public void ResetKeyframes()
+        {
+            if (_keyframes.Count == 0)
+                return;
+
+            _keyframes.Clear();
+
+            UpdateFPS();
+
+            OnKeyframesChanged();
+        }
+
+        /// <summary>
+        /// Sets the keyframes collection.
+        /// </summary>
+        /// <param name="keyframes">The keyframes.</param>
+        public void SetKeyframes(IEnumerable<Keyframe> keyframes)
+        {
+            if (keyframes == null)
+                throw new ArgumentNullException(nameof(keyframes));
+            var keyframesArray = keyframes as Keyframe[] ?? keyframes.ToArray();
+            if (_keyframes.SequenceEqual(keyframesArray))
+                return;
+            if (keyframesArray.Length > MaxKeyframes)
+            {
+                var tmp = keyframesArray;
+                keyframesArray = new Keyframe[MaxKeyframes];
+                Array.Copy(tmp, keyframesArray, MaxKeyframes);
+            }
+
+            _keyframes.Clear();
+            _keyframes.AddRange(keyframesArray);
+            _keyframes.Sort((a, b) => a.Time > b.Time ? 1 : 0);
+
+            UpdateFPS();
+
+            OnKeyframesChanged();
+        }
+
+        private void UpdateFPS()
+        {
+            if (FPS.HasValue)
+            {
+                float fps = FPS.Value;
+                for (int i = 0; i < _keyframes.Count; i++)
+                {
+                    var k = _keyframes[i];
+                    k.Time = Mathf.Floor(k.Time * fps) / fps;
+                    _keyframes[i] = k;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when keyframes collection gets changed (keyframe added or removed).
+        /// </summary>
+        protected virtual void OnKeyframesChanged()
+        {
+            while (_points.Count > _keyframes.Count)
+            {
+                var last = _points.Count - 1;
+                _points[last].Dispose();
+                _points.RemoveAt(last);
+            }
+
+            while (_points.Count < _keyframes.Count)
+            {
+                _points.Add(new KeyframePoint
+                {
+                    AutoFocus = false,
+                    Size = KeyframesSize,
+                    Editor = this,
+                    Index = _points.Count,
+                    Parent = _contents,
+                });
+
+                _refreshAfterEdit = true;
+            }
+
+            UpdateKeyframes();
+
+            KeyframesChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Adds the new keyframe.
+        /// </summary>
+        /// <param name="k">The keyframe to add.</param>
+        public void AddKeyframe(Keyframe k)
+        {
+            if (FPS.HasValue)
+            {
+                float fps = FPS.Value;
+                k.Time = Mathf.Floor(k.Time * fps) / fps;
+            }
+            int pos = 0;
+            while (pos < _keyframes.Count && _keyframes[pos].Time < k.Time)
+                pos++;
+            _keyframes.Insert(pos, k);
+
+            OnKeyframesChanged();
+            MarkAsEdited();
+        }
+
+        private void AddKeyframe(Vector2 keyframesPos)
+        {
+            var k = new Keyframe
+            {
+                Time = keyframesPos.X,
+                Value = DefaultValue,
+            };
+            AddKeyframe(k);
+        }
+
+        class Popup : ContextMenuBase
+        {
+            private CustomEditorPresenter _editor;
+            public KeyframesEditor Editor;
+            public List<int> KeyframeIndices;
+            public bool IsDirty;
+
+            public Popup(List<Keyframe> keyframes)
+            {
+                const float width = 280.0f;
+                const float height = 120.0f;
+                Size = new Vector2(width, height);
+
+                var panel1 = new Panel(ScrollBars.Vertical)
+                {
+                    Bounds = new Rectangle(0, 0.0f, width, height),
+                    Parent = this
+                };
+                var editor = new CustomEditorPresenter(null);
+                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.IsScrollable = true;
+                editor.Panel.Parent = panel1;
+                editor.Modified += OnModified;
+
+                var selection = new object[keyframes.Count];
+                for (int i = 0; i < keyframes.Count; i++)
+                    selection[i] = keyframes[i];
+                editor.Select(selection);
+
+                _editor = editor;
+            }
+
+            private void OnModified()
+            {
+                IsDirty = true;
+
+                for (int i = 0; i < _editor.SelectionCount; i++)
+                {
+                    var keyframe = (Keyframe)_editor.Selection[i];
+                    var index = KeyframeIndices[i];
+                    Editor._keyframes[index] = keyframe;
+                }
+
+                Editor.UpdateFPS();
+                Editor.UpdateKeyframes();
+            }
+
+            /// <inheritdoc />
+            protected override void OnShow()
+            {
+                Focus();
+
+                base.OnShow();
+            }
+
+            /// <inheritdoc />
+            public override void Hide()
+            {
+                if (!Visible)
+                    return;
+
+                Focus(null);
+
+                if (IsDirty)
+                {
+                    Editor.MarkAsEdited();
+                }
+
+                if (Editor._popup == this)
+                    Editor._popup = null;
+                _editor = null;
+
+                base.Hide();
+            }
+
+            /// <inheritdoc />
+            public override bool OnKeyDown(Keys key)
+            {
+                if (key == Keys.Escape)
+                {
+                    Hide();
+                    return true;
+                }
+
+                return base.OnKeyDown(key);
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                Editor = null;
+
+                base.Dispose();
+            }
+        }
+
+        private void EditKeyframes(Control control, Vector2 pos)
+        {
+            var keyframes = new List<Keyframe>();
+            var indices = new List<int>();
+            for (int i = 0; i < _points.Count; i++)
+            {
+                var p = _points[i];
+                if (!p.IsSelected || indices.Contains(p.Index))
+                    continue;
+
+                indices.Add(p.Index);
+                keyframes.Add(_keyframes[p.Index]);
+            }
+
+            _popup = new Popup(keyframes)
+            {
+                Editor = this,
+                KeyframeIndices = indices,
+            };
+            _popup.Show(control, pos);
+        }
+
+        private void RemoveKeyframes()
+        {
+            bool edited = false;
+            var keyframes = new Dictionary<int, Keyframe>(_keyframes.Count);
+            for (int i = 0; i < _points.Count; i++)
+            {
+                var p = _points[i];
+                if (!p.IsSelected)
+                {
+                    keyframes[p.Index] = _keyframes[p.Index];
+                }
+                else
+                {
+                    p.Deselect();
+                    edited = true;
+                }
+            }
+            if (!edited)
+                return;
+            _keyframes.Clear();
+            _keyframes.AddRange(keyframes.Values);
+
+            OnKeyframesChanged();
+            MarkAsEdited();
+        }
+
+        /// <summary>
+        /// Shows the whole curve.
+        /// </summary>
+        public void ShowWholeCurve()
+        {
+            ViewScale = _mainPanel.Size / _contents.Size;
+            ViewOffset = -_mainPanel.ControlsBounds.Location;
+        }
+
+        /// <summary>
+        /// Resets the view.
+        /// </summary>
+        public void ResetView()
+        {
+            ViewScale = Vector2.One;
+            ViewOffset = Vector2.Zero;
+        }
+
+        /// <summary>
+        /// Updates the keyframes positioning.
+        /// </summary>
+        public virtual void UpdateKeyframes()
+        {
+            if (_points.Count == 0)
+            {
+                // No keyframes
+                _contents.Bounds = Rectangle.Empty;
+                return;
+            }
+
+            var wasLocked = _mainPanel.IsLayoutLocked;
+            _mainPanel.IsLayoutLocked = true;
+
+            // Place keyframes
+            for (int i = 0; i < _points.Count; i++)
+            {
+                var p = _points[i];
+                var k = _keyframes[p.Index];
+
+                p.Size = new Vector2(4.0f, Height - 2.0f);
+                p.Location = new Vector2(k.Time * UnitsPerSecond - p.Width * 0.5f, 1.0f);
+            }
+
+            // Calculate bounds
+            var bounds = _points[0].Bounds;
+            for (var i = 1; i < _points.Count; i++)
+            {
+                bounds = Rectangle.Union(bounds, _points[i].Bounds);
+            }
+
+            // Adjust contents bounds to fill the curve area
+            if (EnablePanning)
+                _contents.Bounds = bounds;
+
+            // Offset the keyframes (parent container changed its location)
+            var posOffset = _contents.Location;
+            for (var i = 0; i < _points.Count; i++)
+            {
+                _points[i].Location -= posOffset;
+            }
+
+            _mainPanel.IsLayoutLocked = wasLocked;
+            _mainPanel.PerformLayout();
+        }
+
+        private int SelectionCount
+        {
+            get
+            {
+                int result = 0;
+                for (int i = 0; i < _points.Count; i++)
+                    if (_points[i].IsSelected)
+                        result++;
+                return result;
+            }
+        }
+
+        private void ClearSelection()
+        {
+            for (int i = 0; i < _points.Count; i++)
+            {
+                _points[i].Deselect();
+            }
+        }
+
+        private void SelectAll()
+        {
+            for (int i = 0; i < _points.Count; i++)
+            {
+                _points[i].Select();
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Draw()
+        {
+            // Hack to refresh UI after keyframes edit
+            if (_refreshAfterEdit)
+            {
+                _refreshAfterEdit = false;
+                UpdateKeyframes();
+            }
+
+            var style = Style.Current;
+            var rect = new Rectangle(Vector2.Zero, Size);
+
+            // Draw selection rectangle
+            if (_contents._leftMouseDown && !_contents._isMovingSelection)
+            {
+                var selectionRect = Rectangle.FromPoints
+                (
+                    _mainPanel.PointToParent(_contents.PointToParent(_contents._leftMouseDownPos)),
+                    _mainPanel.PointToParent(_contents.PointToParent(_contents._mousePos))
+                );
+                Render2D.FillRectangle(selectionRect, Color.Orange * 0.4f);
+                Render2D.DrawRectangle(selectionRect, Color.Orange);
+            }
+
+            base.Draw();
+
+            // Draw border
+            if (ContainsFocus)
+            {
+                Render2D.DrawRectangle(rect, style.BackgroundSelected);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void SetSizeInternal(ref Vector2 size)
+        {
+            base.SetSizeInternal(ref size);
+
+            UpdateKeyframes();
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (key == Keys.Delete)
+            {
+                RemoveKeyframes();
+                return true;
+            }
+
+            if (Root.GetKey(Keys.Control))
+            {
+                switch (key)
+                {
+                case Keys.A:
+                    SelectAll();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            // Clear references to the controls
+            _mainPanel = null;
+            _contents = null;
+            _popup = null;
+
+            // Cleanup
+            _points.Clear();
+            _keyframes.Clear();
+
+            base.Dispose();
+        }
+    }
+}

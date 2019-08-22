@@ -141,21 +141,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
                 // Validate value type
                 var valueType = p.PropertyType;
-                var validTypes = new Dictionary<Type, string>
-                {
-                    { typeof(bool), "bool" },
-                    { typeof(byte), "byte" },
-                    { typeof(char), "char" },
-                    { typeof(short), "short" },
-                    { typeof(ushort), "ushort" },
-                    { typeof(int), "int" },
-                    { typeof(uint), "uint" },
-                    { typeof(long), "ulong" },
-                    { typeof(float), "float" },
-                    { typeof(double), "double" },
-                };
-                string name;
-                if (validTypes.TryGetValue(valueType, out name))
+                if (BasicTypesNames.TryGetValue(valueType, out var name))
                 {
                     // Basic type
                 }
@@ -171,7 +157,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 }
 
                 // Prevent from adding the same property twice
-                if (SubTracks.Any(x => x is ObjectPropertyTrack y && y.PropertyName == name))
+                if (SubTracks.Any(x => x is ObjectPropertyTrack y && y.PropertyName == p.Name))
                     continue;
 
                 menu.AddButton(name + " " + p.Name, OnAddObjectPropertyTrack).Tag = p;
@@ -208,14 +194,60 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         private void OnAddObjectPropertyTrack(ContextMenuButton button)
         {
             var p = (PropertyInfo)button.Tag;
-            var track = (ObjectPropertyTrack)Timeline.AddTrack(ObjectPropertyTrack.GetArchetype());
+
+            // Detect the type of the track to use
+            var valueType = p.PropertyType;
+            if (BasicTypesTrackArchetypes.TryGetValue(valueType, out var archetype))
+            {
+                // Basic type
+            }
+            else if (valueType.IsEnum)
+            {
+                // Enum
+                archetype = KeyframesObjectPropertyTrack.GetArchetype();
+            }
+            else
+            {
+                throw new Exception("Invalid property type to create animation track for it. Value type: " + valueType);
+            }
+
+            var track = (ObjectPropertyTrack)Timeline.AddTrack(archetype);
             track.ParentTrack = this;
             track.TrackIndex = TrackIndex + 1;
             track.Name = Guid.NewGuid().ToString();
             track.Property = p;
+
             Timeline.OnTracksOrderChanged();
             Timeline.MarkAsEdited();
             Expand();
         }
+
+        private static readonly Dictionary<Type, string> BasicTypesNames = new Dictionary<Type, string>
+        {
+            { typeof(bool), "bool" },
+            { typeof(byte), "byte" },
+            { typeof(char), "char" },
+            { typeof(short), "short" },
+            { typeof(ushort), "ushort" },
+            { typeof(int), "int" },
+            { typeof(uint), "uint" },
+            { typeof(long), "ulong" },
+            { typeof(float), "float" },
+            { typeof(double), "double" },
+        };
+
+        private static readonly Dictionary<Type, TrackArchetype> BasicTypesTrackArchetypes = new Dictionary<Type, TrackArchetype>
+        {
+            { typeof(bool), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(byte), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(char), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(short), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(ushort), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(int), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(uint), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(long), KeyframesObjectPropertyTrack.GetArchetype() },
+            //{ typeof(float), CurveObjectPropertyTrack.GetArchetype() },
+            //{ typeof(double), CurveObjectPropertyTrack.GetArchetype() },
+        };
     }
 }

@@ -282,6 +282,9 @@ namespace FlaxEditor.Utilities
         /// <returns>The type or null if failed.</returns>
         public static Type GetType(string typeName)
         {
+            if (string.IsNullOrEmpty(typeName))
+                return null;
+
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             for (int i = 0; i < assemblies.Length; i++)
             {

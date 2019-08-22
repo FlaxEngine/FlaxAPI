@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
@@ -11,46 +12,62 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating object property (managed object).
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public sealed class ObjectPropertyTrack : Track
+    public abstract class ObjectPropertyTrack : Track
     {
         /// <summary>
-        /// Gets the archetype.
+        /// Loads the track.
         /// </summary>
-        /// <returns>The archetype.</returns>
-        public static TrackArchetype GetArchetype()
-        {
-            return new TrackArchetype
-            {
-                TypeId = 9,
-                Name = "Object Property",
-                DisableSpawnViaGUI = true,
-                Create = options => new ObjectPropertyTrack(ref options),
-                Load = LoadTrack,
-                Save = SaveTrack,
-            };
-        }
-
-        private static void LoadTrack(int version, Track track, BinaryReader stream)
+        /// <param name="version">The version.</param>
+        /// <param name="track">The track.</param>
+        /// <param name="stream">The stream.</param>
+        protected static void LoadTrackBase(int version, Track track, BinaryReader stream)
         {
             var e = (ObjectPropertyTrack)track;
+
             int propertyNameLength = stream.ReadInt32();
             var propertyName = stream.ReadBytes(propertyNameLength);
             e.PropertyName = Encoding.UTF8.GetString(propertyName, 0, propertyNameLength);
-        }
 
-        private static void SaveTrack(Track track, BinaryWriter stream)
-        {
-            var e = (ObjectPropertyTrack)track;
-            var propertyName = e.PropertyName ?? string.Empty;
-            var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
-            if (propertyNameData.Length != propertyName.Length)
-                throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", e.PropertyName));
-            stream.Write(propertyNameData.Length);
-            stream.Write(propertyNameData);
+            int propertyTypeNameLength = stream.ReadInt32();
+            var propertyTypeName = stream.ReadBytes(propertyTypeNameLength);
+            e.PropertyTypeName = Encoding.UTF8.GetString(propertyTypeName, 0, propertyTypeNameLength);
+
+            e.ValueSize = stream.ReadInt32();
         }
 
         /// <summary>
-        /// Gets or sets the object property name. Does not validate the value.
+        /// Saves the track.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        /// <param name="stream">The stream.</param>
+        protected static void SaveTrackBase(Track track, BinaryWriter stream)
+        {
+            var e = (ObjectPropertyTrack)track;
+
+            var propertyName = e.PropertyName ?? string.Empty;
+            var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
+            if (propertyNameData.Length != propertyName.Length)
+                throw new Exception(string.Format("The object property name bytes data has different size as UTF8 bytes. Type {0}.", propertyName));
+            stream.Write(propertyNameData.Length);
+            stream.Write(propertyNameData);
+
+            var propertyTypeName = e.PropertyTypeName ?? string.Empty;
+            var propertyTypeNameData = Encoding.UTF8.GetBytes(propertyTypeName);
+            if (propertyTypeNameData.Length != propertyTypeName.Length)
+                throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
+            stream.Write(propertyTypeNameData.Length);
+            stream.Write(propertyTypeNameData);
+
+            stream.Write(e.ValueSize);
+        }
+
+        /// <summary>
+        /// The property value data size (in bytes).
+        /// </summary>
+        public int ValueSize;
+
+        /// <summary>
+        /// Gets or sets the object property name (just a member name). Does not validate the value on set.
         /// </summary>
         public string PropertyName
         {
@@ -59,7 +76,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <summary>
-        /// Gets or sets the object property. Performs the value validation.
+        /// The property typename (fullname including namespace but not assembly).
+        /// </summary>
+        public string PropertyTypeName;
+
+        /// <summary>
+        /// Gets or sets the object property. Performs the value validation on set.
         /// </summary>
         public PropertyInfo Property
         {
@@ -87,12 +109,26 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     }
                 }
 
-                PropertyName = value?.Name ?? Name;
+                if (value != null)
+                {
+                    var type = value.PropertyType;
+                    PropertyName = value.Name;
+                    PropertyTypeName = type.FullName;
+                    ValueSize = Marshal.SizeOf(type);
+                }
+                else
+                {
+                    PropertyName = string.Empty;
+                    PropertyTypeName = string.Empty;
+                    ValueSize = 0;
+                }
+
+                OnPropertyChanged(value);
             }
         }
 
         /// <inheritdoc />
-        public ObjectPropertyTrack(ref TrackCreateOptions options)
+        protected ObjectPropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
         }
@@ -102,5 +138,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         /// <inheritdoc />
         protected override bool CanRename => false;
+
+        /// <summary>
+        /// Called when property gets changed.
+        /// </summary>
+        /// <param name="p">The property value assigned.</param>
+        protected virtual void OnPropertyChanged(PropertyInfo p)
+        {
+        }
     }
 }
