@@ -34,7 +34,7 @@ namespace FlaxEngine
         /// Changing script parent breaks any existing prefab links.
         /// </remarks>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public Actor Actor
         {
 #if UNIT_TEST_COMPILANT
@@ -49,7 +49,7 @@ namespace FlaxEngine
         /// Gets or sets zero-based index in parent actor scripts list.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public int OrderInParent
         {
 #if UNIT_TEST_COMPILANT

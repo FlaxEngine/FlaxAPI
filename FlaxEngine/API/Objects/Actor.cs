@@ -36,7 +36,7 @@ namespace FlaxEngine
         /// </remarks>
         [UnmanagedCall]
         [HideInEditor]
-        [NoSerialize]
+        [NoSerialize, NoAnimate]
         public Vector3 EulerAngles
         {
 #if UNIT_TEST_COMPILANT
@@ -68,7 +68,7 @@ namespace FlaxEngine
         /// </remarks>
         [UnmanagedCall]
         [HideInEditor]
-        [NoSerialize]
+        [NoSerialize, NoAnimate]
         public Vector3 LocalEulerAngles
         {
 #if UNIT_TEST_COMPILANT
@@ -94,7 +94,7 @@ namespace FlaxEngine
         /// Gets or sets the actor direction vector (aka forward direction).
         /// </summary>
         [HideInEditor]
-        [NoSerialize]
+        [NoSerialize, NoAnimate]
         public Vector3 Direction
         {
             get => Vector3.Forward * Orientation;
@@ -118,7 +118,7 @@ namespace FlaxEngine
         /// collection.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         [EditorDisplay("Scripts", EditorDisplayAttribute.InlineStyle)]
         [EditorOrder(-5)]
         [MemberCollection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]

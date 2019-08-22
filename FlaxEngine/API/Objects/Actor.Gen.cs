@@ -39,7 +39,7 @@ namespace FlaxEngine
         /// Gets or sets parent actor (or null if actor has no parent)
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public Actor Parent
         {
 #if UNIT_TEST_COMPILANT
@@ -72,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets zero-based index in parent actor children list.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public int OrderInParent
         {
 #if UNIT_TEST_COMPILANT
@@ -87,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets object hide flags.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public HideFlags HideFlags
         {
 #if UNIT_TEST_COMPILANT
@@ -102,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the actor name.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-100), Tooltip("Custom name of the actor")]
+        [NoAnimate, EditorDisplay("General"), EditorOrder(-100), Tooltip("Custom name of the actor")]
         public string Name
         {
 #if UNIT_TEST_COMPILANT
@@ -117,7 +117,7 @@ namespace FlaxEngine
         /// Gets or sets actor static fags
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-80), Tooltip("Static flags describe type of the object")]
+        [NoAnimate, EditorDisplay("General"), EditorOrder(-80), Tooltip("Static flags describe type of the object")]
         public StaticFlags StaticFlags
         {
 #if UNIT_TEST_COMPILANT
@@ -132,7 +132,7 @@ namespace FlaxEngine
         /// Gets or sets the layer actor is in. Can be used for selective rendering or ignoring raycasts.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-69), Tooltip("The layer object is in")]
+        [NoAnimate, EditorDisplay("General"), EditorOrder(-69), Tooltip("The layer object is in")]
         public int Layer
         {
 #if UNIT_TEST_COMPILANT
@@ -147,7 +147,7 @@ namespace FlaxEngine
         /// Gets or sets the object tag. Can be used to identify the objects.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-68), Tooltip("The object tag. Can be used to identify it.")]
+        [NoAnimate, EditorDisplay("General"), EditorOrder(-68), Tooltip("The object tag. Can be used to identify it.")]
         public string Tag
         {
 #if UNIT_TEST_COMPILANT
@@ -236,7 +236,7 @@ namespace FlaxEngine
         /// Gets or sets actor's world a three dimensional mathematical transformation
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor, NoSerialize]
+        [HideInEditor, NoSerialize, NoAnimate]
         public Transform Transform
         {
 #if UNIT_TEST_COMPILANT
@@ -296,7 +296,7 @@ namespace FlaxEngine
         /// Gets or sets actor's world a three dimensional mathematical transformation
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public Transform LocalTransform
         {
 #if UNIT_TEST_COMPILANT

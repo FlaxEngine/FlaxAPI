@@ -1,10 +1,14 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Newtonsoft.Json;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
@@ -95,6 +99,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             var actor = Actor;
             var selection = Editor.Instance.SceneEditing.Selection;
 
+            // Missing actor case
             if (actor == null)
             {
                 if (selection.Count == 1 && selection[0] is ActorNode actorNode && actorNode.Actor)
@@ -112,7 +117,56 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 // TODO: add option to change the actor to the selected one
             }
 
-            menu.AddButton("....", OnAddPropertyTrack);
+            // Object properties
+            // TODO: implement editor-wide cache for animated properties per object type (add this in CodeEditingModule)
+            var type = actor.GetType();
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            for (int i = 0; i < properties.Length; i++)
+            {
+                var p = properties[i];
+
+                // Properties with read/write
+                if (!(p.CanRead && p.CanWrite && p.GetIndexParameters().GetLength(0) == 0))
+                    continue;
+
+                var attributes = p.GetCustomAttributes();
+
+                // Check if has attribute to skip animating
+                if (attributes.Any(x => x is NoAnimateAttribute))
+                    continue;
+
+                // Validate value type
+                var valueType = p.PropertyType;
+                var validTypes = new Dictionary<Type, string>
+                {
+                    { typeof(bool), "bool" },
+                    { typeof(byte), "byte" },
+                    { typeof(char), "char" },
+                    { typeof(short), "short" },
+                    { typeof(ushort), "ushort" },
+                    { typeof(int), "int" },
+                    { typeof(uint), "uint" },
+                    { typeof(long), "ulong" },
+                    { typeof(float), "float" },
+                    { typeof(double), "double" },
+                };
+                string name;
+                if (validTypes.TryGetValue(valueType, out name))
+                {
+                    // Basic type
+                }
+                else if (valueType.IsValueType)
+                {
+                    // Structure or Enum
+                    name = valueType.Name;
+                }
+                else
+                {
+                    continue;
+                }
+
+                menu.AddButton(name + " " + p.Name, OnAddPropertyTrack);
+            }
         }
 
         private void OnClickedSelectActor()
