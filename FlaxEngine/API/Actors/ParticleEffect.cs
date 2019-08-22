@@ -282,11 +282,11 @@ namespace FlaxEngine
 
                     case ParameterType.CubeTexture:
                     case ParameterType.Texture:
-                    case ParameterType.NormalMap:
+                    case ParameterType.NormalMap: return Object.Find<Object>(ref vGuid);
                     case ParameterType.RenderTargetArray:
                     case ParameterType.RenderTargetCube:
                     case ParameterType.RenderTargetVolume:
-                    case ParameterType.RenderTarget: return Object.Find<Object>(ref vGuid);
+                    case ParameterType.RenderTarget: return Object.TryFind<Object>(ref vGuid);
 
                     default: throw new ArgumentOutOfRangeException();
                     }

@@ -75,7 +75,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Finds the object with the given ID.
+        /// Finds the object with the given ID. Searches registered scene objects and assets.
         /// </summary>
         /// <param name="id">Unique ID of the object.</param>
         /// <typeparam name="T">Type of the object.</typeparam>
@@ -86,6 +86,21 @@ namespace FlaxEngine
             return null;
 #else
             return Internal_FindObject(ref id) as T;
+#endif
+        }
+
+        /// <summary>
+        /// Tries to find the object by the given identifier. Searches only registered scene objects.
+        /// </summary>
+        /// <param name="id">Unique ID of the object.</param>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <returns>Found object or null if missing.</returns>
+        public static T TryFind<T>(ref Guid id) where T : Object
+        {
+#if UNIT_TEST_COMPILANT
+            return null;
+#else
+            return Internal_TryFindObject(ref id) as T;
 #endif
         }
 
@@ -165,6 +180,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Object Internal_FindObject(ref Guid id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Object Internal_TryFindObject(ref Guid id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ChangeID(IntPtr obj, ref Guid id);
