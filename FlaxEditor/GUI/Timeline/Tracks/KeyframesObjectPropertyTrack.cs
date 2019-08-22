@@ -65,6 +65,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
             handle.Free();
 
+            e.Keyframes.DefaultValue = Activator.CreateInstance(propertyType);
             e.Keyframes.SetKeyframes(keyframes);
         }
 
