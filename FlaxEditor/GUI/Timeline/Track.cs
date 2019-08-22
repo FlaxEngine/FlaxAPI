@@ -127,6 +127,11 @@ namespace FlaxEditor.GUI.Timeline
         public string Title;
 
         /// <summary>
+        /// The track title color.
+        /// </summary>
+        public Color TitleTintColor = Color.White;
+
+        /// <summary>
         /// The track icon.
         /// </summary>
         public Sprite Icon;
@@ -731,7 +736,7 @@ namespace FlaxEditor.GUI.Timeline
             var bounds = new Rectangle(Vector2.Zero, Size);
             var textRect = new Rectangle(left, 0, Width - left, height);
             _margin.ShrinkRectangle(ref textRect);
-            var TextColor = style.Foreground;
+            var TextColor = style.Foreground * TitleTintColor;
             var BackgroundColorSelected = style.BackgroundSelected;
             var BackgroundColorHighlighted = style.BackgroundHighlighted;
             var BackgroundColorSelectedUnfocused = style.LightBackground;

@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using FlaxEditor.GUI.Timeline.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
