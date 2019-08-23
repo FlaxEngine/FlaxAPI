@@ -146,9 +146,49 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Keyframes.Edited += OnKeyframesEdited;
             Keyframes.UnlockChildrenRecursive();
 
+            // Navigation buttons
+            const float buttonSize = 14;
+            var icons = Editor.Instance.Icons;
+            var rightKey = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Sets the time to the next key",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(1),
+                Brush = new SpriteBrush(icons.ArrowRight32),
+                Parent = this
+            };
+            rightKey.Clicked += OnRightKeyClicked;
+            var addKey = new Image(rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Adds a new key at the current time",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(3),
+                Brush = new SpriteBrush(icons.Add48),
+                Parent = this
+            };
+            addKey.Clicked += OnAddKeyClicked;
+            var leftKey = new Image(addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Sets the time to the previous key",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(1),
+                Brush = new SpriteBrush(icons.ArrowLeft32),
+                Parent = this
+            };
+            leftKey.Clicked += OnLeftKeyClicked;
+
             // Value preview
             var previewWidth = 50.0f;
-            _previewValue = new Label(_muteCheckbox.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
+            _previewValue = new Label(leftKey.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
             {
                 AutoFocus = true,
                 AnchorStyle = AnchorStyle.CenterRight,
@@ -160,7 +200,62 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             };
         }
 
-        private void UpdateCurve()
+        private void OnRightKeyClicked(Image image, MouseButton button)
+        {
+            if (button == MouseButton.Left)
+            {
+                var time = Timeline.CurrentTime;
+                for (int i = 0; i < Keyframes.Keyframes.Count; i++)
+                {
+                    var k = Keyframes.Keyframes[i];
+                    if (k.Time > time)
+                    {
+                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond));
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void OnAddKeyClicked(Image image, MouseButton button)
+        {
+            if (button == MouseButton.Left)
+            {
+                var time = Timeline.CurrentTime;
+                for (int i = Keyframes.Keyframes.Count - 1; i >= 0; i--)
+                {
+                    var k = Keyframes.Keyframes[i];
+                    var frame = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
+                    if (frame == Timeline.CurrentFrame)
+                    {
+                        // Already added
+                        return;
+                    }
+                }
+
+                var value = Keyframes.Evaluate(time);
+                Keyframes.AddKeyframe(new KeyframesEditor.Keyframe(time, value));
+            }
+        }
+
+        private void OnLeftKeyClicked(Image image, MouseButton button)
+        {
+            if (button == MouseButton.Left)
+            {
+                var time = Timeline.CurrentTime;
+                for (int i = Keyframes.Keyframes.Count - 1; i >= 0; i--)
+                {
+                    var k = Keyframes.Keyframes[i];
+                    if (k.Time < time)
+                    {
+                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond));
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void UpdateKeyframes()
         {
             if (Keyframes == null)
                 return;
@@ -211,7 +306,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             Keyframes.Parent = timeline?.MediaPanel;
             Keyframes.FPS = timeline?.FramesPerSecond;
-            UpdateCurve();
+            UpdateKeyframes();
             UpdatePreviewValue();
         }
 
@@ -220,7 +315,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnTimelineZoomChanged();
 
-            UpdateCurve();
+            UpdateKeyframes();
         }
 
         /// <inheritdoc />
@@ -228,7 +323,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnTimelineArrange();
 
-            UpdateCurve();
+            UpdateKeyframes();
         }
 
         /// <inheritdoc />

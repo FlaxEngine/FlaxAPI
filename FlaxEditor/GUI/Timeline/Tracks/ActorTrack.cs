@@ -9,7 +9,6 @@ using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Newtonsoft.Json;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
