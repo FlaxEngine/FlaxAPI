@@ -3,6 +3,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using FlaxEngine;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
@@ -96,6 +97,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <param name="p">The property value assigned.</param>
         protected virtual void OnPropertyChanged(PropertyInfo p)
         {
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            var p = Property;
+            TitleTintColor = p != null ? Color.White : Color.Red;
         }
     }
 }
