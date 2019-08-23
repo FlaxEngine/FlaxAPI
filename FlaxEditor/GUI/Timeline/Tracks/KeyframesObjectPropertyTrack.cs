@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -34,24 +35,37 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void LoadTrack(int version, Track track, BinaryReader stream)
         {
-            LoadTrackBase(version, track, stream);
-
             var e = (KeyframesObjectPropertyTrack)track;
-            int count = stream.ReadInt32();
-            var keyframes = new KeyframesEditor.Keyframe[count];
+
+            e.ValueSize = stream.ReadInt32();
+            int propertyNameLength = stream.ReadInt32();
+            int propertyTypeNameLength = stream.ReadInt32();
+            int keyframesCount = stream.ReadInt32();
+
+            var propertyName = stream.ReadBytes(propertyNameLength);
+            e.PropertyName = Encoding.UTF8.GetString(propertyName, 0, propertyNameLength);
+            if (stream.ReadChar() != 0)
+                throw new Exception("Invalid track data.");
+
+            var propertyTypeName = stream.ReadBytes(propertyTypeNameLength);
+            e.PropertyTypeName = Encoding.UTF8.GetString(propertyTypeName, 0, propertyTypeNameLength);
+            if (stream.ReadChar() != 0)
+                throw new Exception("Invalid track data.");
+
+            var keyframes = new KeyframesEditor.Keyframe[keyframesCount];
             var dataBuffer = new byte[e.ValueSize];
             var propertyType = Utilities.Utils.GetType(e.PropertyTypeName);
             if (propertyType == null)
             {
                 e.Keyframes.ResetKeyframes();
-                stream.ReadBytes(count * (sizeof(float) + e.ValueSize));
+                stream.ReadBytes(keyframesCount * (sizeof(float) + e.ValueSize));
                 if (!string.IsNullOrEmpty(e.PropertyTypeName))
                     Editor.LogError("Cannot load track " + e.PropertyName + " of type " + e.PropertyTypeName + ". Failed to find the value type information.");
                 return;
             }
 
             GCHandle handle = GCHandle.Alloc(dataBuffer, GCHandleType.Pinned);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < keyframesCount; i++)
             {
                 var time = stream.ReadSingle();
                 stream.Read(dataBuffer, 0, e.ValueSize);
@@ -71,15 +85,34 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void SaveTrack(Track track, BinaryWriter stream)
         {
-            SaveTrackBase(track, stream);
-
             var e = (KeyframesObjectPropertyTrack)track;
+
+            var propertyName = e.PropertyName ?? string.Empty;
+            var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
+            if (propertyNameData.Length != propertyName.Length)
+                throw new Exception(string.Format("The object property name bytes data has different size as UTF8 bytes. Type {0}.", propertyName));
+
+            var propertyTypeName = e.PropertyTypeName ?? string.Empty;
+            var propertyTypeNameData = Encoding.UTF8.GetBytes(propertyTypeName);
+            if (propertyTypeNameData.Length != propertyTypeName.Length)
+                throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
+
             var keyframes = e.Keyframes.Keyframes;
-            int count = keyframes.Count;
-            stream.Write(count);
+
+            stream.Write(e.ValueSize);
+            stream.Write(propertyNameData.Length);
+            stream.Write(propertyTypeNameData.Length);
+            stream.Write(keyframes.Count);
+
+            stream.Write(propertyNameData);
+            stream.Write('\0');
+
+            stream.Write(propertyTypeNameData);
+            stream.Write('\0');
+
             var dataBuffer = new byte[e.ValueSize];
             IntPtr ptr = Marshal.AllocHGlobal(e.ValueSize);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < keyframes.Count; i++)
             {
                 var keyframe = keyframes[i];
                 Marshal.StructureToPtr(keyframe.Value, ptr, true);

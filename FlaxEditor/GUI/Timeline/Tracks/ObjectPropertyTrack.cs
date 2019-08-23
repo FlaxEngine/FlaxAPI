@@ -1,10 +1,8 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
@@ -14,53 +12,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
     public abstract class ObjectPropertyTrack : Track
     {
-        /// <summary>
-        /// Loads the track.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <param name="track">The track.</param>
-        /// <param name="stream">The stream.</param>
-        protected static void LoadTrackBase(int version, Track track, BinaryReader stream)
-        {
-            var e = (ObjectPropertyTrack)track;
-
-            int propertyNameLength = stream.ReadInt32();
-            var propertyName = stream.ReadBytes(propertyNameLength);
-            e.PropertyName = Encoding.UTF8.GetString(propertyName, 0, propertyNameLength);
-
-            int propertyTypeNameLength = stream.ReadInt32();
-            var propertyTypeName = stream.ReadBytes(propertyTypeNameLength);
-            e.PropertyTypeName = Encoding.UTF8.GetString(propertyTypeName, 0, propertyTypeNameLength);
-
-            e.ValueSize = stream.ReadInt32();
-        }
-
-        /// <summary>
-        /// Saves the track.
-        /// </summary>
-        /// <param name="track">The track.</param>
-        /// <param name="stream">The stream.</param>
-        protected static void SaveTrackBase(Track track, BinaryWriter stream)
-        {
-            var e = (ObjectPropertyTrack)track;
-
-            var propertyName = e.PropertyName ?? string.Empty;
-            var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
-            if (propertyNameData.Length != propertyName.Length)
-                throw new Exception(string.Format("The object property name bytes data has different size as UTF8 bytes. Type {0}.", propertyName));
-            stream.Write(propertyNameData.Length);
-            stream.Write(propertyNameData);
-
-            var propertyTypeName = e.PropertyTypeName ?? string.Empty;
-            var propertyTypeNameData = Encoding.UTF8.GetBytes(propertyTypeName);
-            if (propertyTypeNameData.Length != propertyTypeName.Length)
-                throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
-            stream.Write(propertyTypeNameData.Length);
-            stream.Write(propertyTypeNameData);
-
-            stream.Write(e.ValueSize);
-        }
-
         /// <summary>
         /// The property value data size (in bytes).
         /// </summary>
