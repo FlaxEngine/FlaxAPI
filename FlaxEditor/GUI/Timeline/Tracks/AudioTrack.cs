@@ -422,7 +422,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
-        private void UpdateCurvePreviewValue()
+        private void UpdatePreviewValue()
         {
             if (_audioMedia == null || Curve == null)
                 return;
@@ -460,7 +460,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnCurveEdited()
         {
-            UpdateCurvePreviewValue();
+            UpdatePreviewValue();
             Timeline.MarkAsEdited();
         }
 
@@ -492,7 +492,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 media.DurationFramesChanged += UpdateCurve;
                 _audioMedia = media;
                 UpdateCurve();
-                UpdateCurvePreviewValue();
+                UpdatePreviewValue();
             }
         }
 
@@ -521,7 +521,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Curve.Parent = timeline?.MediaPanel;
             Curve.FPS = timeline?.FramesPerSecond;
             UpdateCurve();
-            UpdateCurvePreviewValue();
+            UpdatePreviewValue();
         }
 
         /// <inheritdoc />
@@ -546,7 +546,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             base.OnTimelineFpsChanged(before, after);
 
             Curve.FPS = after;
-            UpdateCurvePreviewValue();
+            UpdatePreviewValue();
         }
 
         /// <inheritdoc />
@@ -554,7 +554,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnTimelineCurrentFrameChanged(frame);
 
-            UpdateCurvePreviewValue();
+            UpdatePreviewValue();
         }
 
         /// <inheritdoc />

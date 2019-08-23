@@ -608,6 +608,39 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
+        /// Evaluates the keyframe value at the specified time.
+        /// </summary>
+        /// <param name="time">The time to evaluate the keyframe value.</param>
+        /// <returns>The evaluated value.</returns>
+        public object Evaluate(float time)
+        {
+            if (_keyframes.Count == 0)
+                return DefaultValue;
+
+            // Find the keyframe at time
+            int start = 0;
+            int searchLength = _keyframes.Count;
+            while (searchLength > 0)
+            {
+                int half = searchLength >> 1;
+                int mid = start + half;
+
+                if (time < _keyframes[mid].Time)
+                {
+                    searchLength = half;
+                }
+                else
+                {
+                    start = mid + 1;
+                    searchLength -= (half + 1);
+                }
+            }
+            int leftKey = Mathf.Max(0, start - 1);
+
+            return _keyframes[leftKey].Value;
+        }
+
+        /// <summary>
         /// Resets the keyframes collection.
         /// </summary>
         public void ResetKeyframes()

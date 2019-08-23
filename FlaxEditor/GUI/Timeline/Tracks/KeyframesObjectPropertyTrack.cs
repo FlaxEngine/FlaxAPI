@@ -145,6 +145,19 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             };
             Keyframes.Edited += OnKeyframesEdited;
             Keyframes.UnlockChildrenRecursive();
+
+            // Value preview
+            var previewWidth = 50.0f;
+            _previewValue = new Label(_muteCheckbox.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
+            {
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                HorizontalAlignment = TextAlignment.Near,
+                TextColor = new Color(0.8f),
+                Margin = new Margin(1),
+                Parent = this
+            };
         }
 
         private void UpdateCurve()
@@ -165,7 +178,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void UpdatePreviewValue()
         {
-            // TODO: update preview value
+            var time = Timeline.CurrentTime;
+            var value = Keyframes.Evaluate(time);
+            _previewValue.Text = value?.ToString() ?? string.Empty;
         }
 
         /// <inheritdoc />
@@ -176,6 +191,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Keyframes.ResetKeyframes();
             if (p != null)
             {
+                // TODO: pick the default value from property attribute via DefaultValueAttribute if available
                 Keyframes.DefaultValue = Activator.CreateInstance(p.PropertyType);
             }
         }

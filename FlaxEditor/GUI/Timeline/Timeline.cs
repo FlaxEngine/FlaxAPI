@@ -311,6 +311,11 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Gets the current animation time position (in seconds).
+        /// </summary>
+        public float CurrentTime => _currentFrame / _framesPerSecond;
+
+        /// <summary>
         /// Occurs when current playback animation frame gets changed.
         /// </summary>
         public event Action CurrentFrameChanged;
