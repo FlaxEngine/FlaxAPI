@@ -159,6 +159,11 @@ namespace FlaxEditor.GUI.Timeline
         internal bool DrawDisabled;
 
         /// <summary>
+        /// Gets a value indicating whether this track is expanded and all of its parents are also expanded.
+        /// </summary>
+        public bool IsExpandedAll => (ParentTrack == null || ParentTrack.IsExpandedAll) && (!CanExpand || IsExpanded);
+
+        /// <summary>
         /// Gets or sets a value indicating whether this track is expanded.
         /// </summary>
         public bool IsExpanded

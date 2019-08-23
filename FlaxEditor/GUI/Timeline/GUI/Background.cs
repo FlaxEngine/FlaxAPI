@@ -112,7 +112,7 @@ namespace FlaxEditor.GUI.Timeline.GUI
             for (int i = 0; i < tracks.Count; i++)
             {
                 var track = tracks[i];
-                if (track.DrawDisabled)
+                if (track.DrawDisabled && track.IsExpandedAll)
                 {
                     Render2D.FillRectangle(new Rectangle(areaLeft, track.Top, areaRight, track.Height), new Color(0, 0, 0, 100));
                 }
