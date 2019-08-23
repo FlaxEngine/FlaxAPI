@@ -203,7 +203,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             var track = Timeline.AddTrack(AudioVolumeTrack.GetArchetype());
             track.ParentTrack = this;
             track.TrackIndex = TrackIndex + 1;
-            track.Name = Guid.NewGuid().ToString();
+            track.Name = Guid.NewGuid().ToString("N");
             Timeline.OnTracksOrderChanged();
             Timeline.MarkAsEdited();
             Expand();

@@ -10,9 +10,9 @@ namespace FlaxEngine
     /// An animation spline represented by a set of keyframes, each representing an endpoint of a Bezier curve. 
     /// </summary>
     /// <typeparam name="T">The animated value type.</typeparam>
-    public class Curve<T> where T : struct
+    public class Curve<T> where T : new()
     {
-        interface IKeyframeAccess<TT> where TT : struct
+        interface IKeyframeAccess<TT> where TT : new()
         {
             void GetTangent(ref TT value, ref TT tangent, float lengthThird, out TT result);
 

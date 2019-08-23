@@ -11,17 +11,113 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.GUI
 {
     /// <summary>
+    /// The base class for <see cref="Curve{T}"/> editors. Allows to use generic curve editor without type information at compile-time.
+    /// </summary>
+    public abstract class CurveEditorBase : ContainerControl
+    {
+        /// <summary>
+        /// Occurs when curve gets edited.
+        /// </summary>
+        public event Action Edited;
+
+        /// <summary>
+        /// The maximum amount of keyframes to use in a single curve.
+        /// </summary>
+        public int MaxKeyframes = ushort.MaxValue;
+
+        /// <summary>
+        /// True if enable view zooming. Otherwise user won't be able to zoom in or out.
+        /// </summary>
+        public bool EnableZoom = true;
+
+        /// <summary>
+        /// True if enable view panning. Otherwise user won't be able to move the view area.
+        /// </summary>
+        public bool EnablePanning = true;
+
+        /// <summary>
+        /// Gets or sets the scroll bars usage.
+        /// </summary>
+        public abstract ScrollBars ScrollBars { get; set; }
+
+        /// <summary>
+        /// Enables drawing start/end values continuous lines.
+        /// </summary>
+        public bool ShowStartEndLines;
+
+        /// <summary>
+        /// Enables drawing background.
+        /// </summary>
+        public bool ShowBackground = true;
+
+        /// <summary>
+        /// Enables drawing time and values axes (lines and labels).
+        /// </summary>
+        public bool ShowAxes = true;
+
+        /// <summary>
+        /// The amount of frames per second of the curve animation (optional). Can be sued to restrict the keyframes time values to the given time quantization rate.
+        /// </summary>
+        public abstract float? FPS { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show curve collapsed as a list of keyframe points rather than a full curve.
+        /// </summary>
+        public abstract bool ShowCollapsed { get; set; }
+
+        /// <summary>
+        /// Called when curve gets edited.
+        /// </summary>
+        public virtual void OnEdited()
+        {
+            Edited?.Invoke();
+        }
+
+        /// <summary>
+        /// Updates the keyframes positioning.
+        /// </summary>
+        public abstract void UpdateKeyframes();
+
+        /// <summary>
+        /// Evaluates the animation curve value at the specified time.
+        /// </summary>
+        /// <param name="result">The interpolated value from the curve at provided time.</param>
+        /// <param name="time">The time to evaluate the curve at.</param>
+        /// <param name="loop">If true the curve will loop when it goes past the end or beginning. Otherwise the curve value will be clamped.</param>
+        public abstract void Evaluate(out object result, float time, bool loop = true);
+
+        /// <summary>
+        /// Gets the keyframes collection as boxes object values.
+        /// </summary>
+        /// <returns>The array of boxed keyframe values of type <see cref="Curve{T}.Keyframe"/>.</returns>
+        public abstract Curve<object>.Keyframe[] GetKeyframes();
+
+        /// <summary>
+        /// Sets the keyframes collection as boxes object values.
+        /// </summary>
+        /// <param name="keyframes">The array of boxed keyframe values of type <see cref="Curve{T}.Keyframe"/>.</param>
+        public abstract void SetKeyframes(Curve<object>.Keyframe[] keyframes);
+
+        /// <summary>
+        /// Adds the new keyframe as boxed value.
+        /// </summary>
+        /// <param name="k">The keyframe time.</param>
+        /// <param name="k">The keyframe value.</param>
+        public abstract void AddKeyframe(float time, object value);
+    }
+
+    /// <summary>
     /// The Bezier curve editor control.
     /// </summary>
     /// <typeparam name="T">The keyframe value type.</typeparam>
-    /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-    public class CurveEditor<T> : ContainerControl where T : struct
+    /// <seealso cref="CurveEditorBase" />
+    public class CurveEditor<T> : CurveEditorBase where T : new()
     {
         /// <summary>
         /// The generic keyframe value accessor object for curve editor.
         /// </summary>
         /// <typeparam name="TT">The keyframe value type.</typeparam>
-        public interface IKeyframeAccess<TT> where TT : struct
+        public interface IKeyframeAccess<TT> where TT : new()
         {
             /// <summary>
             /// Gets the default value.
@@ -582,13 +678,13 @@ namespace FlaxEditor.GUI
                     if (_isMovingTangent)
                     {
                         if (_mouseMoveAmount > 3.0f)
-                            _curve.MarkAsEdited();
+                            _curve.OnEdited();
                     }
                     // Moving keyframes
                     else if (_isMovingSelection)
                     {
                         if (_mouseMoveAmount > 3.0f)
-                            _curve.MarkAsEdited();
+                            _curve.OnEdited();
                     }
                     // Selecting
                     else
@@ -929,63 +1025,24 @@ namespace FlaxEditor.GUI
         public readonly IKeyframeAccess<T> Accessor = new KeyframeAccess() as IKeyframeAccess<T>;
 
         /// <summary>
-        /// Occurs when curve gets edited.
-        /// </summary>
-        public event Action Edited;
-
-        /// <summary>
-        /// The maximum amount of keyframes to use in a single curve.
-        /// </summary>
-        public int MaxKeyframes = ushort.MaxValue;
-
-        /// <summary>
-        /// True if enable view zooming. Otherwise user won't be able to zoom in or out.
-        /// </summary>
-        public bool EnableZoom = true;
-
-        /// <summary>
-        /// True if enable view panning. Otherwise user won't be able to move the view area.
-        /// </summary>
-        public bool EnablePanning = true;
-
-        /// <summary>
         /// Gets a value indicating whether user is editing the curve.
         /// </summary>
         public bool IsUserEditing => _keyframesEditor != null || _contents._leftMouseDown;
-
-        /// <summary>
-        /// Gets or sets the scroll bars usage.
-        /// </summary>
-        public ScrollBars ScrollBars
-        {
-            get => _mainPanel.ScrollBars;
-            set => _mainPanel.ScrollBars = value;
-        }
 
         /// <summary>
         /// The default value.
         /// </summary>
         public T DefaultValue;
 
-        /// <summary>
-        /// Enables drawing start/end values continuous lines.
-        /// </summary>
-        public bool ShowStartEndLines;
+        /// <inheritdoc />
+        public override ScrollBars ScrollBars
+        {
+            get => _mainPanel.ScrollBars;
+            set => _mainPanel.ScrollBars = value;
+        }
 
-        /// <summary>
-        /// Enables drawing background.
-        /// </summary>
-        public bool ShowBackground = true;
-
-        /// <summary>
-        /// Enables drawing time and values axes (lines and labels).
-        /// </summary>
-        public bool ShowAxes = true;
-
-        /// <summary>
-        /// The amount of frames per second of the curve animation (optional). Can be sued to restrict the keyframes time values to the given time quantization rate.
-        /// </summary>
-        public float? FPS
+        /// <inheritdoc />
+        public override float? FPS
         {
             get => _fps;
             set
@@ -999,10 +1056,8 @@ namespace FlaxEditor.GUI
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether show curve collapsed as a list of keyframe points rather than a full curve.
-        /// </summary>
-        public bool ShowCollapsed
+        /// <inheritdoc />
+        public override bool ShowCollapsed
         {
             get => _showCollapsed;
             set
@@ -1062,11 +1117,6 @@ namespace FlaxEditor.GUI
             }
 
             UpdateKeyframes();
-        }
-
-        private void MarkAsEdited()
-        {
-            Edited?.Invoke();
         }
 
         /// <summary>
@@ -1175,7 +1225,7 @@ namespace FlaxEditor.GUI
             _keyframes.Insert(pos, k);
 
             OnKeyframesChanged();
-            MarkAsEdited();
+            OnEdited();
         }
 
         private void AddKeyframe(Vector2 keyframesPos)
@@ -1259,7 +1309,7 @@ namespace FlaxEditor.GUI
 
                 if (IsDirty)
                 {
-                    Curve.MarkAsEdited();
+                    Curve.OnEdited();
                 }
 
                 if (Curve._keyframesEditor == this)
@@ -1336,7 +1386,7 @@ namespace FlaxEditor.GUI
             _keyframes.AddRange(keyframes.Values);
 
             OnKeyframesChanged();
-            MarkAsEdited();
+            OnEdited();
         }
 
         private void SetTangentsLinear()
@@ -1382,7 +1432,7 @@ namespace FlaxEditor.GUI
                 return;
 
             UpdateTangents();
-            MarkAsEdited();
+            OnEdited();
         }
 
         private void SetTangentsSmooth()
@@ -1425,7 +1475,7 @@ namespace FlaxEditor.GUI
                 return;
 
             UpdateTangents();
-            MarkAsEdited();
+            OnEdited();
         }
 
         /// <summary>
@@ -1507,10 +1557,8 @@ namespace FlaxEditor.GUI
             }
         }
 
-        /// <summary>
-        /// Updates the keyframes positioning.
-        /// </summary>
-        public virtual void UpdateKeyframes()
+        /// <inheritdoc />
+        public override void UpdateKeyframes()
         {
             if (_points.Count == 0)
             {
@@ -1572,6 +1620,43 @@ namespace FlaxEditor.GUI
 
             _mainPanel.IsLayoutLocked = wasLocked;
             _mainPanel.PerformLayout();
+        }
+
+        /// <inheritdoc />
+        public override void Evaluate(out object result, float time, bool loop = true)
+        {
+            Evaluate(out var value, time, loop);
+            result = value;
+        }
+
+        /// <inheritdoc />
+        public override Curve<object>.Keyframe[] GetKeyframes()
+        {
+            var keyframes = new Curve<object>.Keyframe[_keyframes.Count];
+            for (int i = 0; i < keyframes.Length; i++)
+            {
+                var k = _keyframes[i];
+                keyframes[i] = new Curve<object>.Keyframe(k.Time, k.Value, k.TangentIn, k.TangentOut);
+            }
+            return keyframes;
+        }
+
+        /// <inheritdoc />
+        public override void SetKeyframes(Curve<object>.Keyframe[] keyframes)
+        {
+            var data = new Curve<T>.Keyframe[keyframes.Length];
+            for (int i = 0; i < keyframes.Length; i++)
+            {
+                var k = keyframes[i];
+                data[i] = new Curve<T>.Keyframe(k.Time, (T)k.Value, (T)k.TangentIn, (T)k.TangentOut);
+            }
+            SetKeyframes(data);
+        }
+
+        /// <inheritdoc />
+        public override void AddKeyframe(float time, object value)
+        {
+            AddKeyframe(new Curve<T>.Keyframe(time, (T)value));
         }
 
         private int SelectionCount
