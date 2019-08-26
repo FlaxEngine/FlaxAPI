@@ -303,6 +303,7 @@
     <Compile Include="GUI\Timeline\Tracks\ObjectPropertyTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\ObjectTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\ScreenFadeTrack.cs" />
+    <Compile Include="GUI\Timeline\Tracks\ScriptTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\SingleMediaAssetTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\SingleMediaTrack.cs" />
     <Compile Include="GUI\Timeline\GUI\TimelineEdge.cs" />

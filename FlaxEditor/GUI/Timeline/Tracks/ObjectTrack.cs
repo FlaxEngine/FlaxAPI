@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
@@ -50,6 +51,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             menu.Show(_addButton.Parent, _addButton.BottomLeft);
         }
 
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            var obj = Object;
+            TitleTintColor = obj ? Color.White : Color.Red;
+        }
+
         /// <summary>
         /// Called when showing the context menu for add button (for sub-tracks adding).
         /// </summary>
@@ -91,6 +101,60 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Timeline.OnTracksOrderChanged();
             Timeline.MarkAsEdited();
             Expand();
+        }
+
+        /// <summary>
+        /// Adds the object properties animation track options to menu.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        /// <param name="type">The object type.</param>
+        /// <returns>The added options count.</returns>
+        protected int AddObjectProperties(ContextMenu.ContextMenu menu, Type type)
+        {
+            int count = 0;
+
+            // TODO: implement editor-wide cache for animated properties per object type (add this in CodeEditingModule)
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            for (int i = 0; i < properties.Length; i++)
+            {
+                var p = properties[i];
+
+                // Properties with read/write
+                if (!(p.CanRead && p.CanWrite && p.GetIndexParameters().GetLength(0) == 0))
+                    continue;
+
+                var attributes = p.GetCustomAttributes();
+
+                // Check if has attribute to skip animating
+                if (attributes.Any(x => x is NoAnimateAttribute))
+                    continue;
+
+                // Validate value type
+                var valueType = p.PropertyType;
+                if (BasicTypesNames.TryGetValue(valueType, out var name))
+                {
+                    // Basic type
+                }
+                else if (valueType.IsValueType)
+                {
+                    // Enum or Structure
+                    name = valueType.Name;
+                }
+                else
+                {
+                    // Animating subobjects properties is not supported
+                    continue;
+                }
+
+                // Prevent from adding the same track twice
+                if (SubTracks.Any(x => x is ObjectPropertyTrack y && y.PropertyName == p.Name))
+                    continue;
+
+                menu.AddButton(name + " " + p.Name, OnAddObjectPropertyTrack).Tag = p;
+                count++;
+            }
+
+            return count;
         }
 
         /// <summary>

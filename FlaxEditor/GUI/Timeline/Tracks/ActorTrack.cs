@@ -3,7 +3,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using FlaxEditor.CustomEditors;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -81,15 +82,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public override void Update(float deltaTime)
-        {
-            base.Update(deltaTime);
-
-            var actor = Actor;
-            TitleTintColor = actor ? Color.White : Color.Red;
-        }
-
-        /// <inheritdoc />
         public override Object Object => Actor;
 
         /// <inheritdoc />
@@ -118,47 +110,43 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 // TODO: add option to change the actor to the selected one
             }
 
-            // Object properties
-            // TODO: implement editor-wide cache for animated properties per object type (add this in CodeEditingModule)
             var type = actor.GetType();
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            for (int i = 0; i < properties.Length; i++)
+            if (AddObjectProperties(menu, type) != 0)
+                menu.AddSeparator();
+
+            // Child scripts
+            var scripts = actor.Scripts;
+            for (int i = 0; i < scripts.Length; i++)
             {
-                var p = properties[i];
+                var script = scripts[i];
 
-                // Properties with read/write
-                if (!(p.CanRead && p.CanWrite && p.GetIndexParameters().GetLength(0) == 0))
+                // Prevent from adding the same track twice
+                if (SubTracks.Any(x => x is ObjectTrack y && y.Object == script))
                     continue;
 
-                var attributes = p.GetCustomAttributes();
-
-                // Check if has attribute to skip animating
-                if (attributes.Any(x => x is NoAnimateAttribute))
-                    continue;
-
-                // Validate value type
-                var valueType = p.PropertyType;
-                if (BasicTypesNames.TryGetValue(valueType, out var name))
-                {
-                    // Basic type
-                }
-                else if (valueType.IsValueType)
-                {
-                    // Enum or Structure
-                    name = valueType.Name;
-                }
-                else
-                {
-                    // Animating subobjects properties is not supported
-                    continue;
-                }
-
-                // Prevent from adding the same property twice
-                if (SubTracks.Any(x => x is ObjectPropertyTrack y && y.PropertyName == p.Name))
-                    continue;
-
-                menu.AddButton(name + " " + p.Name, OnAddObjectPropertyTrack).Tag = p;
+                var name = CustomEditorsUtil.GetPropertyNameUI(script.GetType().Name);
+                menu.AddButton(name, OnAddScriptTrack).Tag = script;
             }
+        }
+
+        private void OnAddScriptTrack(ContextMenuButton button)
+        {
+            var script = (Script)button.Tag;
+
+            var track = (ScriptTrack)Timeline.AddTrack(ScriptTrack.GetArchetype());
+            track.ParentTrack = this;
+            track.TrackIndex = TrackIndex + 1;
+            track.Script = script;
+
+            int counter = 0;
+            string name = script.GetType().Name;
+            while (!Timeline.IsTrackNameValid(name))
+                name = string.Format("{0} {1}", script.GetType().Name, counter++);
+            track.Name = name;
+
+            Timeline.OnTracksOrderChanged();
+            Timeline.MarkAsEdited();
+            Expand();
         }
 
         private void OnClickedSelectActor()
