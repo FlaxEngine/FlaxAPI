@@ -238,7 +238,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             if (button == MouseButton.Left && Curve != null)
             {
+                // Evaluate a value
                 var time = Timeline.CurrentTime;
+                if (!TryGetValue(out var value))
+                    Curve.Evaluate(out value, time);
+
+                // Find keyframe at the current location
                 var keyframes = Curve.GetKeyframes();
                 for (int i = keyframes.Length - 1; i >= 0; i--)
                 {
@@ -246,12 +251,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     var frame = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
                     if (frame == Timeline.CurrentFrame)
                     {
-                        // Already added
+                        // Update existing key value
+                        Curve.SetKeyframe(i, value);
+                        UpdatePreviewValue();
                         return;
                     }
                 }
 
-                Curve.Evaluate(out var value, time);
+                // Add a new key
                 Curve.AddKeyframe(time, value);
             }
         }

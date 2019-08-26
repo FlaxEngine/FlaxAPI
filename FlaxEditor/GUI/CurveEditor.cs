@@ -138,9 +138,16 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Adds the new keyframe as boxed value.
         /// </summary>
-        /// <param name="k">The keyframe time.</param>
-        /// <param name="k">The keyframe value.</param>
+        /// <param name="time">The keyframe time.</param>
+        /// <param name="value">The keyframe value.</param>
         public abstract void AddKeyframe(float time, object value);
+
+        /// <summary>
+        /// Sets the existing keyframe value as boxed value.
+        /// </summary>
+        /// <param name="index">The keyframe index.</param>
+        /// <param name="value">The keyframe value.</param>
+        public abstract void SetKeyframe(int index, object value);
 
         /// <summary>
         /// Converts the <see cref="UseMode"/> into the <see cref="Vector2"/> mask.
@@ -908,8 +915,7 @@ namespace FlaxEditor.GUI
             {
                 base.SetLocationInternal(ref location);
 
-                var k = Curve._keyframes[Index];
-                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, Curve.Accessor.GetCurveValue(ref k.Value, Component));
+                UpdateTooltip();
             }
 
             public void Select()
@@ -920,6 +926,15 @@ namespace FlaxEditor.GUI
             public void Deselect()
             {
                 IsSelected = false;
+            }
+
+            /// <summary>
+            /// Updates the tooltip.
+            /// </summary>
+            public void UpdateTooltip()
+            {
+                var k = Curve._keyframes[Index];
+                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, Curve.Accessor.GetCurveValue(ref k.Value, Component));
             }
         }
 
@@ -988,11 +1003,11 @@ namespace FlaxEditor.GUI
                 Render2D.FillRectangle(rect, color);
             }
 
-            /// <inheritdoc />
-            protected override void SetLocationInternal(ref Vector2 location)
+            /// <summary>
+            /// Updates the tooltip.
+            /// </summary>
+            public void UpdateTooltip()
             {
-                base.SetLocationInternal(ref location);
-
                 TooltipText = string.Format("Tangent {0}: {1}", IsIn ? "in" : "out", TangentValue);
             }
         }
@@ -1606,6 +1621,7 @@ namespace FlaxEditor.GUI
                     var isFirst = selectedIndex == 0 && t.IsIn;
                     var isLast = selectedIndex == _keyframes.Count - 1 && !t.IsIn;
                     t.Visible = !isFirst && !isLast;
+                    t.UpdateTooltip();
 
                     if (t.Visible)
                         _tangents[i].Location -= posOffset;
@@ -1660,6 +1676,7 @@ namespace FlaxEditor.GUI
                     p.Visible = true;
                 }
                 p.Location = point;
+                p.UpdateTooltip();
             }
 
             // Calculate bounds
@@ -1727,6 +1744,16 @@ namespace FlaxEditor.GUI
         public override void AddKeyframe(float time, object value)
         {
             AddKeyframe(new Curve<T>.Keyframe(time, (T)value));
+        }
+
+        /// <inheritdoc />
+        public override void SetKeyframe(int index, object value)
+        {
+            var k = _keyframes[index];
+            k.Value = (T)value;
+            _keyframes[index] = k;
+
+            OnKeyframesChanged();
         }
 
         private int SelectionCount

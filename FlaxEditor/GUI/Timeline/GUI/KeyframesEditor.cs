@@ -448,8 +448,7 @@ namespace FlaxEditor.GUI
             {
                 base.SetLocationInternal(ref location);
 
-                var k = Editor._keyframes[Index];
-                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, k.Value);
+                UpdateTooltip();
             }
 
             public void Select()
@@ -460,6 +459,15 @@ namespace FlaxEditor.GUI
             public void Deselect()
             {
                 IsSelected = false;
+            }
+
+            /// <summary>
+            /// Updates the tooltip.
+            /// </summary>
+            public void UpdateTooltip()
+            {
+                var k = Editor._keyframes[Index];
+                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, k.Value);
             }
         }
 
@@ -747,6 +755,20 @@ namespace FlaxEditor.GUI
             MarkAsEdited();
         }
 
+        /// <summary>
+        /// Sets the existing keyframe value as boxed value.
+        /// </summary>
+        /// <param name="index">The keyframe index.</param>
+        /// <param name="value">The keyframe value.</param>
+        public void SetKeyframe(int index, object value)
+        {
+            var k = _keyframes[index];
+            k.Value = value;
+            _keyframes[index] = k;
+
+            OnKeyframesChanged();
+        }
+
         private void AddKeyframe(Vector2 keyframesPos)
         {
             var k = new Keyframe
@@ -943,6 +965,7 @@ namespace FlaxEditor.GUI
 
                 p.Size = new Vector2(4.0f / viewScale.X, Height - 2.0f);
                 p.Location = new Vector2(k.Time * UnitsPerSecond - p.Width * 0.5f, 1.0f);
+                p.UpdateTooltip();
             }
 
             // Calculate bounds

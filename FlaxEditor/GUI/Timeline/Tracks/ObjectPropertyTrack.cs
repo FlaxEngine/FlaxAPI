@@ -85,6 +85,39 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
         }
 
+        /// <summary>
+        /// Tries the get current value from the assigned object property.
+        /// </summary>
+        /// <param name="value">The result value. Valid only if methods returns true.</param>
+        /// <returns>True if got value, otherwise false.</returns>
+        public bool TryGetValue(out object value)
+        {
+            if (!string.IsNullOrEmpty(PropertyName) && ParentTrack is ObjectTrack objectTrack)
+            {
+                var obj = objectTrack.Object;
+                if (obj)
+                {
+                    var p = obj.GetType().GetProperty(PropertyName, BindingFlags.Public | BindingFlags.Instance);
+                    if (p != null)
+                    {
+                        try
+                        {
+                            value = p.GetValue(obj);
+                            return true;
+                        }
+                        catch
+                        {
+                            value = null;
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            value = null;
+            return false;
+        }
+
         /// <inheritdoc />
         protected override bool CanDrag => false;
 

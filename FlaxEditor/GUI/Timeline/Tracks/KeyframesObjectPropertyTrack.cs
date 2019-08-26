@@ -222,19 +222,26 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             if (button == MouseButton.Left)
             {
+                // Evaluate a value
                 var time = Timeline.CurrentTime;
+                if (!TryGetValue(out var value))
+                    value = Keyframes.Evaluate(time);
+
+                // Find keyframe at the current location
                 for (int i = Keyframes.Keyframes.Count - 1; i >= 0; i--)
                 {
                     var k = Keyframes.Keyframes[i];
                     var frame = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
                     if (frame == Timeline.CurrentFrame)
                     {
-                        // Already added
+                        // Update existing key value
+                        Keyframes.SetKeyframe(i, value);
+                        UpdatePreviewValue();
                         return;
                     }
                 }
 
-                var value = Keyframes.Evaluate(time);
+                // Add a new key
                 Keyframes.AddKeyframe(new KeyframesEditor.Keyframe(time, value));
             }
         }
