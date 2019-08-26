@@ -239,6 +239,7 @@ namespace FlaxEditor.GUI.Timeline
         private int _durationFrames = 30 * 5;
         private int _currentFrame;
         private TimeShowModes _timeShowMode = TimeShowModes.Frames;
+        private bool _showPreviewValues = true;
         private PlaybackStates _state = PlaybackStates.Disabled;
 
         /// <summary>
@@ -288,6 +289,27 @@ namespace FlaxEditor.GUI.Timeline
         /// Occurs when current time showing mode gets changed.
         /// </summary>
         public event Action TimeShowModeChanged;
+
+        /// <summary>
+        /// Gets or sets the preview values showing option value.
+        /// </summary>
+        public bool ShowPreviewValues
+        {
+            get => _showPreviewValues;
+            set
+            {
+                if (_showPreviewValues == value)
+                    return;
+
+                _showPreviewValues = value;
+                ShowPreviewValuesChanged?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Occurs when preview values showing option gets changed.
+        /// </summary>
+        public event Action ShowPreviewValuesChanged;
 
         /// <summary>
         /// Gets or sets the current animation playback time position (frame number).
@@ -846,8 +868,6 @@ namespace FlaxEditor.GUI.Timeline
 
         private void OnViewButtonClicked()
         {
-            // TODO: maybe cache context menu object?
-            // TODO: maybe add some customization options/events to allow editor plugins for extending this part?
             var menu = new ContextMenu.ContextMenu();
 
             var showTimeAs = menu.AddChildMenu("Show time as");
@@ -855,7 +875,25 @@ namespace FlaxEditor.GUI.Timeline
             showTimeAs.ContextMenu.AddButton("Seconds", () => TimeShowMode = TimeShowModes.Seconds).Checked = TimeShowMode == TimeShowModes.Seconds;
             showTimeAs.ContextMenu.AddButton("Time", () => TimeShowMode = TimeShowModes.Time).Checked = TimeShowMode == TimeShowModes.Time;
 
+            menu.AddButton("Show preview values", () => ShowPreviewValues = !ShowPreviewValues).Checked = ShowPreviewValues;
+
+            OnShowViewContextMenu(menu);
+
             menu.Show(_addTrackButton.Parent, _addTrackButton.BottomLeft);
+        }
+
+        /// <summary>
+        /// Occurs when timeline shows the View context menu. Can be sued to add custom options.
+        /// </summary>
+        public event Action<ContextMenu.ContextMenu> ShowViewContextMenu;
+
+        /// <summary>
+        /// Called when timeline shows the View context menu. Can be sued to add custom options.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        protected virtual void OnShowViewContextMenu(ContextMenu.ContextMenu menu)
+        {
+            ShowViewContextMenu?.Invoke(menu);
         }
 
         private void OnStopClicked(Image stop, MouseButton button)

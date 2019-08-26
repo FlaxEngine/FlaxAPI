@@ -241,6 +241,7 @@ namespace FlaxEditor.Windows.Assets
             writer.WriteAttributeString("TimeShowMode", _timeline.TimeShowMode.ToString());
             var id = _timeline.Player?.ID ?? _cachedPlayerId;
             writer.WriteAttributeString("SelectedPlayer", id.ToString());
+            writer.WriteAttributeString("ShowPreviewValues", _timeline.ShowPreviewValues.ToString());
         }
 
         /// <inheritdoc />
@@ -249,6 +250,7 @@ namespace FlaxEditor.Windows.Assets
             float value1;
             Guid value2;
             Timeline.TimeShowModes value3;
+            bool value4;
 
             if (float.TryParse(node.GetAttribute("TimelineSplitter"), out value1))
                 _timeline.Splitter.SplitterValue = value1;
@@ -256,6 +258,8 @@ namespace FlaxEditor.Windows.Assets
                 _cachedPlayerId = value2;
             if (Enum.TryParse(node.GetAttribute("TimeShowMode"), out value3))
                 _timeline.TimeShowMode = value3;
+            if (bool.TryParse(node.GetAttribute("ShowPreviewValues"), out value4))
+                _timeline.ShowPreviewValues = value4;
         }
 
         /// <inheritdoc />
