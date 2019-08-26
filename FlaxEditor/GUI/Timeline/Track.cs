@@ -249,6 +249,8 @@ namespace FlaxEditor.GUI.Timeline
             {
                 _media[i].OnTimelineChanged(this);
             }
+
+            UnlockChildrenRecursive();
         }
 
         /// <summary>
