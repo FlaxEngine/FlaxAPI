@@ -60,12 +60,16 @@ namespace FlaxEngine.GUI
 
                 if ((value & ScrollBars.Vertical) == ScrollBars.Vertical)
                 {
-                    // Create vertical scroll bar
-                    VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+                    if (VScrollBar == null)
+                        VScrollBar = GetChild<VScrollBar>();
+                    if (VScrollBar == null)
                     {
-                        DockStyle = DockStyle.Right,
-                        Parent = this
-                    };
+                        VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+                        {
+                            DockStyle = DockStyle.Right,
+                            Parent = this
+                        };
+                    }
                 }
                 else if (VScrollBar != null)
                 {
@@ -75,12 +79,16 @@ namespace FlaxEngine.GUI
 
                 if ((value & ScrollBars.Horizontal) == ScrollBars.Horizontal)
                 {
-                    // Create vertical scroll bar
-                    HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+                    if (HScrollBar == null)
+                        HScrollBar = GetChild<HScrollBar>();
+                    if (HScrollBar == null)
                     {
-                        DockStyle = DockStyle.Bottom,
-                        Parent = this
-                    };
+                        HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+                        {
+                            DockStyle = DockStyle.Bottom,
+                            Parent = this
+                        };
+                    }
                 }
                 else if (HScrollBar != null)
                 {
