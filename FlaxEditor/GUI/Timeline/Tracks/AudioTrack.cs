@@ -120,8 +120,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Guid id = new Guid(stream.ReadBytes(16));
             e.Asset = FlaxEngine.Content.LoadAsync<AudioClip>(ref id);
             var m = e.TrackMedia;
-            var tmp = stream.ReadInt32();
-            m.Loop = (tmp & 1) == 1;
             m.StartFrame = stream.ReadInt32();
             m.DurationFrames = stream.ReadInt32();
         }
