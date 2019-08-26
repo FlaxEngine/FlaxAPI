@@ -1031,6 +1031,7 @@ namespace FlaxEditor.GUI.Timeline
                         var flag = stream.ReadByte();
                         Track track = null;
                         var mute = (flag & 1) == 1;
+                        var loop = (flag & 2) == 2;
                         for (int j = 0; j < TrackArchetypes.Count; j++)
                         {
                             if (TrackArchetypes[j].TypeId == type)
@@ -1039,6 +1040,7 @@ namespace FlaxEditor.GUI.Timeline
                                 {
                                     Archetype = TrackArchetypes[j],
                                     Mute = mute,
+                                    Loop = loop,
                                 };
                                 track = TrackArchetypes[j].Create(options);
                                 break;
@@ -1105,6 +1107,8 @@ namespace FlaxEditor.GUI.Timeline
                     byte flag = 0;
                     if (track.Mute)
                         flag |= 1;
+                    if (track.Loop)
+                        flag |= 2;
                     stream.Write(flag);
                     stream.Write(_tracks.IndexOf(track.ParentTrack));
                     stream.Write(track.SubTracks.Count);

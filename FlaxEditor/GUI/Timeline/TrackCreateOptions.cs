@@ -16,5 +16,10 @@ namespace FlaxEditor.GUI.Timeline
         /// Create muted track.
         /// </summary>
         public bool Mute;
+
+        /// <summary>
+        /// Create looped track.
+        /// </summary>
+        public bool Loop;
     }
 }

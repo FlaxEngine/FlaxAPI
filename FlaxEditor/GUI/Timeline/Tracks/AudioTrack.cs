@@ -14,19 +14,17 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
     public class AudioMedia : SingleMediaAssetMedia
     {
-        private bool _loop;
-
         /// <summary>
         /// True if loop track, otherwise audio clip will stop on the end.
         /// </summary>
         public bool Loop
         {
-            get => _loop;
+            get => Track.Loop;
             set
             {
-                if (_loop != value)
+                if (Track.Loop != value)
                 {
-                    _loop = value;
+                    Track.Loop = value;
                     Preview.DrawMode = value ? AudioClipPreview.DrawModes.Looped : AudioClipPreview.DrawModes.Single;
                 }
             }
@@ -50,8 +48,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             [EditorDisplay("General"), EditorOrder(20), Tooltip("If checked, the audio clip will loop when playback exceeds its duration. Otherwise it will stop play.")]
             public bool Loop
             {
-                get => Track.Loop;
-                set => Track.Loop = value;
+                get => Track.TrackLoop;
+                set => Track.TrackLoop = value;
             }
 
             /// <inheritdoc />
@@ -138,16 +136,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (e.Media.Count != 0)
             {
                 var m = e.TrackMedia;
-                var tmp = 0;
-                if (e.Loop)
-                    tmp |= 1;
-                stream.Write(tmp);
                 stream.Write(m.StartFrame);
                 stream.Write(m.DurationFrames);
             }
             else
             {
-                stream.Write(0);
                 stream.Write(0);
                 stream.Write(track.Timeline.DurationFrames);
             }
@@ -156,7 +149,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Gets or sets the audio clip looping mode.
         /// </summary>
-        public bool Loop
+        public bool TrackLoop
         {
             get => TrackMedia.Loop;
             set

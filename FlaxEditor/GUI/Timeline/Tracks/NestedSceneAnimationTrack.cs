@@ -12,11 +12,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
     public class NestedSceneAnimationMedia : SingleMediaAssetMedia
     {
-        /// <summary>
-        /// True if loop track, otherwise animation will stop on the end.
-        /// </summary>
-        public bool Loop;
-
         private sealed class Proxy : ProxyBase<NestedSceneAnimationTrack, NestedSceneAnimationMedia>
         {
             /// <summary>
@@ -83,8 +78,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Guid id = new Guid(stream.ReadBytes(16));
             e.Asset = FlaxEngine.Content.LoadAsync<SceneAnimation>(ref id);
             var m = e.TrackMedia;
-            var tmp = stream.ReadInt32();
-            m.Loop = (tmp & 1) == 1;
             m.StartFrame = stream.ReadInt32();
             m.DurationFrames = stream.ReadInt32();
         }
@@ -99,16 +92,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (e.Media.Count != 0)
             {
                 var m = e.TrackMedia;
-                var tmp = 0;
-                if (e.Loop)
-                    tmp |= 1;
-                stream.Write(tmp);
                 stream.Write(m.StartFrame);
                 stream.Write(m.DurationFrames);
             }
             else
             {
-                stream.Write(0);
                 stream.Write(0);
                 stream.Write(track.Timeline.DurationFrames);
             }
@@ -117,16 +105,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Gets or sets the nested animation looping mode.
         /// </summary>
-        public bool Loop
+        public bool TrackLoop
         {
-            get => TrackMedia.Loop;
+            get => Loop;
             set
             {
                 NestedSceneAnimationMedia media = TrackMedia;
-                if (media.Loop == value)
+                if (Loop == value)
                     return;
 
-                media.Loop = value;
+                Loop = value;
                 Timeline?.MarkAsEdited();
             }
         }

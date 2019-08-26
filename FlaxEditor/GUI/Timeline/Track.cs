@@ -152,6 +152,11 @@ namespace FlaxEditor.GUI.Timeline
         public bool Mute;
 
         /// <summary>
+        /// The loop flag. Looped tracks are doing a playback of its data in a loop.
+        /// </summary>
+        public bool Loop;
+
+        /// <summary>
         /// The track archetype.
         /// </summary>
         public TrackArchetype Archetype;
@@ -206,6 +211,7 @@ namespace FlaxEditor.GUI.Timeline
             Name = options.Archetype.Name;
             Icon = options.Archetype.Icon;
             Mute = options.Mute;
+            Loop = options.Loop;
 
             // Mute checkbox
             const float buttonSize = 14;
