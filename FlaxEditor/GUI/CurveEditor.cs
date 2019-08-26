@@ -16,6 +16,33 @@ namespace FlaxEditor.GUI
     public abstract class CurveEditorBase : ContainerControl
     {
         /// <summary>
+        /// The UI use mode flags.
+        /// </summary>
+        [Flags]
+        public enum UseMode
+        {
+            /// <summary>
+            /// Disable usage.
+            /// </summary>
+            Off = 0,
+
+            /// <summary>
+            /// Allow only vertical usage.
+            /// </summary>
+            Vertical = 1,
+
+            /// <summary>
+            /// Allow only horizontal usage.
+            /// </summary>
+            Horizontal = 2,
+
+            /// <summary>
+            /// Allow both vertical and horizontal usage.
+            /// </summary>
+            On = Vertical | Horizontal,
+        }
+
+        /// <summary>
         /// Occurs when curve gets edited.
         /// </summary>
         public event Action Edited;
@@ -28,12 +55,12 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// True if enable view zooming. Otherwise user won't be able to zoom in or out.
         /// </summary>
-        public bool EnableZoom = true;
+        public UseMode EnableZoom = UseMode.On;
 
         /// <summary>
         /// True if enable view panning. Otherwise user won't be able to move the view area.
         /// </summary>
-        public bool EnablePanning = true;
+        public UseMode EnablePanning = UseMode.On;
 
         /// <summary>
         /// Gets or sets the scroll bars usage.
@@ -114,6 +141,31 @@ namespace FlaxEditor.GUI
         /// <param name="k">The keyframe time.</param>
         /// <param name="k">The keyframe value.</param>
         public abstract void AddKeyframe(float time, object value);
+
+        /// <summary>
+        /// Converts the <see cref="UseMode"/> into the <see cref="Vector2"/> mask.
+        /// </summary>
+        /// <param name="mode">The mode.</param>
+        /// <returns>The mask.</returns>
+        protected static Vector2 GetUseModeMask(UseMode mode)
+        {
+            return new Vector2((mode & UseMode.Horizontal) == UseMode.Horizontal ? 1.0f : 0.0f, (mode & UseMode.Vertical) == UseMode.Vertical ? 1.0f : 0.0f);
+        }
+
+        /// <summary>
+        /// Filters teh given value using the the <see cref="UseMode"/>.
+        /// </summary>
+        /// <param name="mode">The mode.</param>
+        /// <param name="value">The value to process.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>The combined value.</returns>
+        protected static Vector2 ApplyUseModeMask(UseMode mode, Vector2 value, Vector2 defaultValue)
+        {
+            return new Vector2(
+                (mode & UseMode.Horizontal) == UseMode.Horizontal ? value.X : defaultValue.X,
+                (mode & UseMode.Vertical) == UseMode.Vertical ? value.Y : defaultValue.Y
+            );
+        }
     }
 
     /// <summary>
@@ -443,7 +495,8 @@ namespace FlaxEditor.GUI
                 {
                     // Calculate delta
                     Vector2 delta = location - _rightMouseDownPos;
-                    if (delta.LengthSquared > 0.01f && _curve.EnablePanning)
+                    delta *= GetUseModeMask(_curve.EnablePanning);
+                    if (delta.LengthSquared > 0.01f)
                     {
                         // Move view
                         _mouseMoveAmount += delta.Length;
@@ -517,8 +570,10 @@ namespace FlaxEditor.GUI
                             }
                         }
                         _curve.UpdateKeyframes();
-                        if (_curve.EnablePanning)
+                        if (_curve.EnablePanning == UseMode.On)
+                        {
                             _curve._mainPanel.ScrollViewTo(PointToParent(location));
+                        }
                         _leftMouseDownPos = location;
                         Cursor = CursorType.SizeAll;
                     }
@@ -748,7 +803,7 @@ namespace FlaxEditor.GUI
                             cm.AddButton("Linear", _curve.SetTangentsLinear);
                             cm.AddButton("Smooth", _curve.SetTangentsSmooth);
                         }
-                        if (_curve.EnableZoom && _curve.EnablePanning)
+                        if (_curve.EnableZoom != UseMode.Off || _curve.EnablePanning != UseMode.Off)
                         {
                             cm.AddSeparator();
                             cm.AddButton("Show whole curve", _curve.ShowWholeCurve);
@@ -777,10 +832,10 @@ namespace FlaxEditor.GUI
                     return true;
 
                 // Zoom in/out
-                if (_curve.EnableZoom && IsMouseOver && !_leftMouseDown)
+                if (_curve.EnableZoom != UseMode.Off && IsMouseOver && !_leftMouseDown)
                 {
                     // TODO: preserve the view center point for easier zooming
-                    _curve.ViewScale += delta * 0.1f;
+                    _curve.ViewScale += GetUseModeMask(_curve.EnableZoom) * (delta * 0.1f);
                     return true;
                 }
 
@@ -1010,14 +1065,14 @@ namespace FlaxEditor.GUI
         /// Gets the keyframes collection (read-only).
         /// </summary>
         public IReadOnlyList<Curve<T>.Keyframe> Keyframes => _keyframes;
-        
+
         /// <inheritdoc />
         public override Vector2 ViewOffset
         {
             get => _mainPanel.ViewOffset;
             set => _mainPanel.ViewOffset = value;
         }
-        
+
         /// <inheritdoc />
         public override Vector2 ViewScale
         {
@@ -1489,8 +1544,9 @@ namespace FlaxEditor.GUI
         /// </summary>
         public void ShowWholeCurve()
         {
-            ViewScale = _mainPanel.Size / _contents.Size;
-            ViewOffset = -_mainPanel.ControlsBounds.Location;
+            ViewScale = ApplyUseModeMask(EnableZoom, _mainPanel.Size / _contents.Size, ViewScale);
+            ViewOffset = ApplyUseModeMask(EnablePanning, -_mainPanel.ControlsBounds.Location, ViewOffset);
+            UpdateKeyframes();
         }
 
         /// <summary>
@@ -1498,8 +1554,9 @@ namespace FlaxEditor.GUI
         /// </summary>
         public void ResetView()
         {
-            ViewScale = Vector2.One;
-            ViewOffset = Vector2.Zero;
+            ViewScale = ApplyUseModeMask(EnableZoom, Vector2.One, ViewScale);
+            ViewOffset = ApplyUseModeMask(EnablePanning, Vector2.Zero, ViewOffset);
+            UpdateKeyframes();
         }
 
         private void UpdateTangents()
@@ -1613,8 +1670,14 @@ namespace FlaxEditor.GUI
             }
 
             // Adjust contents bounds to fill the curve area
-            if (EnablePanning)
+            if (EnablePanning != UseMode.Off)
+            {
+                bounds.Width = Mathf.Max(bounds.Width, 1.0f);
+                bounds.Height = Mathf.Max(bounds.Height, 1.0f);
+                bounds.Location = ApplyUseModeMask(EnablePanning, bounds.Location, _contents.Location);
+                bounds.Size = ApplyUseModeMask(EnablePanning, bounds.Size, _contents.Size);
                 _contents.Bounds = bounds;
+            }
 
             // Offset the keyframes (parent container changed its location)
             var posOffset = _contents.Location;

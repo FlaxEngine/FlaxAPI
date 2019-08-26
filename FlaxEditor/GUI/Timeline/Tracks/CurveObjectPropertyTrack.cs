@@ -150,9 +150,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// The curve editor.
         /// </summary>
         public CurveEditorBase Curve;
-        
+
         private const float CollapsedHeight = 20.0f;
-        private const float ExpandedHeight = 64.0f;
+        private const float ExpandedHeight = 120.0f;
         private Label _previewValue;
 
         /// <inheritdoc />
@@ -311,9 +311,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             var curveEditorType = typeof(CurveEditor<>).MakeGenericType(propertyType);
             Curve = (CurveEditorBase)Activator.CreateInstance(curveEditorType);
-            Curve.EnableZoom = false;
-            Curve.EnablePanning = false;
-            Curve.ScrollBars = ScrollBars.None;
+            Curve.EnableZoom = CurveEditorBase.UseMode.Vertical;
+            Curve.EnablePanning = CurveEditorBase.UseMode.Vertical;
+            Curve.ScrollBars = ScrollBars.Vertical;
             Curve.Parent = Timeline?.MediaPanel;
             Curve.FPS = Timeline?.FramesPerSecond;
             Curve.Edited += OnKeyframesEdited;

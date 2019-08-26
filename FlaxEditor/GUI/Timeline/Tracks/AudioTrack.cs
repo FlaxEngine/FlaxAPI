@@ -304,8 +304,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Curve = new CurveEditor<float>
             {
                 Visible = false,
-                EnableZoom = false,
-                EnablePanning = false,
+                EnableZoom = CurveEditorBase.UseMode.Off,
+                EnablePanning = CurveEditorBase.UseMode.Off,
                 ScrollBars = ScrollBars.None,
                 DefaultValue = 1.0f,
                 ShowStartEndLines = true,
