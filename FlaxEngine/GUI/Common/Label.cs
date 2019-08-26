@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System.ComponentModel;
+
 namespace FlaxEngine.GUI
 {
     /// <summary>
@@ -11,6 +13,9 @@ namespace FlaxEngine.GUI
         private string _text;
         private bool _autoWidth;
         private bool _autoHeight;
+        private bool _autoFitText;
+        private Vector2 _textSize;
+        private Vector2 _autoFitTextRange = new Vector2(0.1f, 100.0f);
 
         /// <summary>
         /// Gets or sets the text.
@@ -21,8 +26,12 @@ namespace FlaxEngine.GUI
             get => _text;
             set
             {
-                _text = value;
-                PerformLayout();
+                if (_text != value)
+                {
+                    _text = value;
+                    _textSize = Vector2.Zero;
+                    PerformLayout();
+                }
             }
         }
 
@@ -77,13 +86,13 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether clip text during rendering.
         /// </summary>
-        [EditorOrder(80), Tooltip("If checked, text will be clipped during rendering.")]
-        public bool ClipText { get; set; } = false;
+        [EditorOrder(80), DefaultValue(false), Tooltip("If checked, text will be clipped during rendering.")]
+        public bool ClipText { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether set automatic width based on text contents.
         /// </summary>
-        [EditorOrder(85), Tooltip("If checked, the control width will be based on text contents.")]
+        [EditorOrder(85), DefaultValue(false), Tooltip("If checked, the control width will be based on text contents.")]
         public bool AutoWidth
         {
             get => _autoWidth;
@@ -100,7 +109,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether set automatic height based on text contents.
         /// </summary>
-        [EditorOrder(90), Tooltip("If checked, the control height will be based on text contents.")]
+        [EditorOrder(90), DefaultValue(false), Tooltip("If checked, the control height will be based on text contents.")]
         public bool AutoHeight
         {
             get => _autoHeight;
@@ -112,6 +121,34 @@ namespace FlaxEngine.GUI
                     PerformLayout();
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether scale text to fit the label control bounds. Disables using text alignment, automatic width and height.
+        /// </summary>
+        [EditorOrder(100), DefaultValue(false), Tooltip("If checked, enables scaling text to fit the label control bounds. Disables using text alignment, automatic width and height.")]
+        public bool AutoFitText
+        {
+            get => _autoFitText;
+            set
+            {
+                if (_autoFitText != value)
+                {
+                    _autoFitText = value;
+                    PerformLayout();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the text scale range (min and max) for automatic fit text option. Can be used to constraint the text scale adjustment.
+        /// </summary>
+        [VisibleIf(nameof(AutoFitText))]
+        [EditorOrder(110), DefaultValue(typeof(Vector2), "0.1, 100"), Tooltip("The text scale range (min and max) for automatic fit text option. Can be used to constraint the text scale adjustment.")]
+        public Vector2 AutoFitTextRange
+        {
+            get => _autoFitTextRange;
+            set => _autoFitTextRange = value;
         }
 
         /// <summary>
@@ -149,15 +186,31 @@ namespace FlaxEngine.GUI
             if (!EnabledInHierarchy)
                 color *= 0.6f;
 
+            var scale = 1.0f;
+            var hAlignment = _autoWidth ? TextAlignment.Near : HorizontalAlignment;
+            var wAlignment = _autoHeight ? TextAlignment.Near : VerticalAlignment;
+            if (_autoFitText)
+            {
+                hAlignment = TextAlignment.Center;
+                wAlignment = TextAlignment.Center;
+                if (!_textSize.IsZero)
+                {
+                    scale = (rect.Size / _textSize).MinValue;
+                    scale = Mathf.Clamp(scale, _autoFitTextRange.X, _autoFitTextRange.Y);
+                }
+            }
+
             Render2D.DrawText(
                 Font.GetFont(),
                 Material,
                 Text,
                 rect,
                 color,
-                _autoWidth ? TextAlignment.Near : HorizontalAlignment,
-                _autoHeight ? TextAlignment.Near : VerticalAlignment,
-                Wrapping
+                hAlignment,
+                wAlignment,
+                Wrapping,
+                1.0f,
+                scale
             );
 
             if (ClipText)
@@ -167,22 +220,24 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            // Check if size is controlled via text
-            if (_autoWidth || _autoHeight)
+            if (_autoWidth || _autoHeight || _autoFitText)
             {
                 var font = Font.GetFont();
                 if (font)
                 {
                     // Calculate text size
-                    Vector2 textSize = font.MeasureText(_text);
+                    _textSize = font.MeasureText(_text);
 
-                    // Update size
-                    var size = Size;
-                    if (_autoWidth)
-                        size.X = textSize.X + Margin.Width;
-                    if (_autoHeight)
-                        size.Y = textSize.Y + Margin.Height;
-                    Size = size;
+                    // Check if size is controlled via text
+                    if (_autoWidth || _autoHeight)
+                    {
+                        var size = Size;
+                        if (_autoWidth)
+                            size.X = _textSize.X + Margin.Width;
+                        if (_autoHeight)
+                            size.Y = _textSize.Y + Margin.Height;
+                        Size = size;
+                    }
                 }
             }
 
