@@ -202,13 +202,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             leftKey.Clicked += OnLeftKeyClicked;
 
             // Value preview
-            var previewWidth = 50.0f;
+            var previewWidth = 100.0f;
             _previewValue = new Label(leftKey.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
             {
                 AutoFocus = true,
                 AnchorStyle = AnchorStyle.CenterRight,
                 IsScrollable = false,
-                HorizontalAlignment = TextAlignment.Near,
+                AutoFitText = true,
+                AutoFitTextRange = new Vector2(0.01f, 1.0f),
                 TextColor = new Color(0.8f),
                 Margin = new Margin(1),
                 Parent = this

@@ -635,7 +635,7 @@ namespace FlaxEditor.GUI.Timeline
             AutoFocus = false;
             _splitter = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
-                SplitterValue = 0.2f,
+                SplitterValue = 0.4f,
                 DockStyle = DockStyle.Fill,
                 Parent = this
             };
