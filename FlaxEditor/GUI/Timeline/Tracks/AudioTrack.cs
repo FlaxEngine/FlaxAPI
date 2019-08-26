@@ -448,7 +448,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
             else
             {
-                Curve.ViewScale = Vector2.One;
+                Curve.ViewScale = new Vector2(Timeline.Zoom, 1.0f);
                 Curve.ViewOffset = Vector2.Zero;
             }
             Curve.ShowCollapsed = !expanded;

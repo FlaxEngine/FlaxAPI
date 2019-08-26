@@ -935,12 +935,13 @@ namespace FlaxEditor.GUI
             _mainPanel.IsLayoutLocked = true;
 
             // Place keyframes
+            var viewScale = ViewScale;
             for (int i = 0; i < _points.Count; i++)
             {
                 var p = _points[i];
                 var k = _keyframes[p.Index];
 
-                p.Size = new Vector2(4.0f, Height - 2.0f);
+                p.Size = new Vector2(4.0f / viewScale.X, Height - 2.0f);
                 p.Location = new Vector2(k.Time * UnitsPerSecond - p.Width * 0.5f, 1.0f);
             }
 

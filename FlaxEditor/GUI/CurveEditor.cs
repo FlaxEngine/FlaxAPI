@@ -66,6 +66,16 @@ namespace FlaxEditor.GUI
         public abstract bool ShowCollapsed { get; set; }
 
         /// <summary>
+        /// Gets or sets the view offset (via scroll bars).
+        /// </summary>
+        public abstract Vector2 ViewOffset { get; set; }
+
+        /// <summary>
+        /// Gets or sets the view scale.
+        /// </summary>
+        public abstract Vector2 ViewScale { get; set; }
+
+        /// <summary>
         /// Called when curve gets edited.
         /// </summary>
         public virtual void OnEdited()
@@ -1000,20 +1010,16 @@ namespace FlaxEditor.GUI
         /// Gets the keyframes collection (read-only).
         /// </summary>
         public IReadOnlyList<Curve<T>.Keyframe> Keyframes => _keyframes;
-
-        /// <summary>
-        /// Gets or sets the view offset (via scroll bars).
-        /// </summary>
-        public Vector2 ViewOffset
+        
+        /// <inheritdoc />
+        public override Vector2 ViewOffset
         {
             get => _mainPanel.ViewOffset;
             set => _mainPanel.ViewOffset = value;
         }
-
-        /// <summary>
-        /// Gets or sets the view scale.
-        /// </summary>
-        public Vector2 ViewScale
+        
+        /// <inheritdoc />
+        public override Vector2 ViewScale
         {
             get => _contents.Scale;
             set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.02f), new Vector2(10.0f));
@@ -1572,6 +1578,7 @@ namespace FlaxEditor.GUI
 
             // Place keyframes
             Rectangle curveContentAreaBounds = _mainPanel.GetClientArea();
+            var viewScale = ViewScale;
             for (int i = 0; i < _points.Count; i++)
             {
                 var p = _points[i];
@@ -1587,12 +1594,12 @@ namespace FlaxEditor.GUI
                 if (_showCollapsed)
                 {
                     point.Y = 1.0f;
-                    p.Size = new Vector2(4.0f, Height - 2.0f);
+                    p.Size = new Vector2(4.0f / viewScale.X, Height - 2.0f);
                     p.Visible = p.Component == 0;
                 }
                 else
                 {
-                    p.Size = KeyframesSize / ViewScale;
+                    p.Size = KeyframesSize / viewScale;
                     p.Visible = true;
                 }
                 p.Location = point;
