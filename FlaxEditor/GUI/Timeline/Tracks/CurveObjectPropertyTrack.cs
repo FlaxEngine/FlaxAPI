@@ -150,14 +150,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// The curve editor.
         /// </summary>
         public CurveEditorBase Curve;
-
+        
+        private const float CollapsedHeight = 20.0f;
+        private const float ExpandedHeight = 64.0f;
         private Label _previewValue;
 
         /// <inheritdoc />
         public CurveObjectPropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
-            Height = 20.0f;
+            Height = CollapsedHeight;
 
             // Navigation buttons
             const float buttonSize = 14;
@@ -277,6 +279,20 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 return;
 
             Curve.Bounds = new Rectangle(Timeline.StartOffset, Y + 1.0f, Timeline.Duration * Timeline.UnitsPerSecond * Timeline.Zoom, Height - 2.0f);
+            var expanded = IsExpanded;
+            /*if (expanded)
+            {
+                Curve.ViewScale = new Vector2(Timeline.Zoom, 0.4f);
+                Curve.ViewOffset = new Vector2(0.0f, 30.0f);
+            }
+            else
+            {
+                Curve.ViewScale = Vector2.One;
+                Curve.ViewOffset = Vector2.Zero;
+            }*/
+            Curve.ShowCollapsed = !expanded;
+            Curve.ShowBackground = expanded;
+            Curve.ShowAxes = expanded;
             Curve.Visible = Visible;
             Curve.UpdateKeyframes();
         }
@@ -325,6 +341,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
+        protected override bool CanExpand => true;
+
+        /// <inheritdoc />
         protected override void OnPropertyChanged(PropertyInfo p)
         {
             base.OnPropertyChanged(p);
@@ -346,6 +365,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             {
                 Curve.Visible = Visible;
             }
+        }
+
+        /// <inheritdoc />
+        protected override void OnExpandedChanged()
+        {
+            Height = IsExpanded ? ExpandedHeight : CollapsedHeight;
+            UpdateCurve();
+
+            base.OnExpandedChanged();
         }
 
         /// <inheritdoc />
