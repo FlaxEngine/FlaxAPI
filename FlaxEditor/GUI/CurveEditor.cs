@@ -949,7 +949,10 @@ namespace FlaxEditor.GUI
             public void UpdateTooltip()
             {
                 var k = Editor._keyframes[Index];
-                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, Editor.Accessor.GetCurveValue(ref k.Value, Component));
+                if (Editor.ShowCollapsed)
+                    TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, k.Value);
+                else
+                    TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, Editor.Accessor.GetCurveValue(ref k.Value, Component));
             }
         }
 
