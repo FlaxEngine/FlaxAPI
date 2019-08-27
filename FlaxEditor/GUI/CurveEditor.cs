@@ -881,7 +881,7 @@ namespace FlaxEditor.GUI
             /// <summary>
             /// The parent curve editor.
             /// </summary>
-            public CurveEditor<T> Curve;
+            public CurveEditor<T> Editor;
 
             /// <summary>
             /// The keyframe index.
@@ -902,9 +902,9 @@ namespace FlaxEditor.GUI
             public override void Draw()
             {
                 var rect = new Rectangle(Vector2.Zero, Size);
-                var color = Curve.ShowCollapsed ? Color.Gray : Colors[Component];
+                var color = Editor.ShowCollapsed ? Color.Gray : Colors[Component];
                 if (IsSelected)
-                    color = Color.YellowGreen;
+                    color = Editor.ContainsFocus ? Color.YellowGreen : Color.Lerp(Color.Gray, Color.YellowGreen, 0.4f);
                 if (IsMouseOver)
                     color *= 1.1f;
                 Render2D.FillRectangle(rect, color);
@@ -916,6 +916,21 @@ namespace FlaxEditor.GUI
                 base.SetLocationInternal(ref location);
 
                 UpdateTooltip();
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDoubleClick(location, buttons))
+                    return true;
+
+                if (buttons == MouseButton.Left)
+                {
+                    Editor.EditKeyframes(this, location, new List<int> { Index });
+                    return true;
+                }
+
+                return false;
             }
 
             public void Select()
@@ -933,8 +948,8 @@ namespace FlaxEditor.GUI
             /// </summary>
             public void UpdateTooltip()
             {
-                var k = Curve._keyframes[Index];
-                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, Curve.Accessor.GetCurveValue(ref k.Value, Component));
+                var k = Editor._keyframes[Index];
+                TooltipText = string.Format("Time: {0}, Value: {1}", k.Time, Editor.Accessor.GetCurveValue(ref k.Value, Component));
             }
         }
 
@@ -1255,7 +1270,7 @@ namespace FlaxEditor.GUI
                 {
                     AutoFocus = false,
                     Size = KeyframesSize,
-                    Curve = this,
+                    Editor = this,
                     Index = _points.Count / components,
                     Component = _points.Count % components,
                     Parent = _contents,
@@ -1418,22 +1433,31 @@ namespace FlaxEditor.GUI
 
         private void EditKeyframes(Control control, Vector2 pos)
         {
-            var keyframes = new List<Curve<T>.Keyframe>();
-            var indices = new List<int>();
+            var keyframeIndices = new List<int>();
             for (int i = 0; i < _points.Count; i++)
             {
                 var p = _points[i];
-                if (!p.IsSelected || indices.Contains(p.Index))
+                if (!p.IsSelected || keyframeIndices.Contains(p.Index))
                     continue;
 
-                indices.Add(p.Index);
-                keyframes.Add(_keyframes[p.Index]);
+                keyframeIndices.Add(p.Index);
+            }
+
+            EditKeyframes(control, pos, keyframeIndices);
+        }
+
+        private void EditKeyframes(Control control, Vector2 pos, List<int> keyframeIndices)
+        {
+            var keyframes = new List<Curve<T>.Keyframe>();
+            for (int i = 0; i < keyframeIndices.Count; i++)
+            {
+                keyframes.Add(_keyframes[keyframeIndices[i]]);
             }
 
             _keyframesEditor = new KeyframesEditor(keyframes)
             {
                 Curve = this,
-                KeyframeIndices = indices,
+                KeyframeIndices = keyframeIndices,
             };
             _keyframesEditor.Show(control, pos);
         }
