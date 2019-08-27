@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.GUI.Drag;
-using FlaxEditor.GUI.Tree;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -670,6 +669,9 @@ namespace FlaxEditor.GUI.Timeline
         {
             ExpandAllParents();
 
+            if (_opened)
+                return;
+
             _opened = true;
 
             OnExpandedChanged();
@@ -680,6 +682,9 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public void Collapse()
         {
+            if (!_opened)
+                return;
+
             _opened = false;
 
             OnExpandedChanged();
@@ -695,12 +700,10 @@ namespace FlaxEditor.GUI.Timeline
 
             Expand();
 
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < SubTracks.Count; i++)
             {
-                if (_children[i] is TreeNode node)
-                {
-                    node.ExpandAll();
-                }
+                if (SubTracks[i].CanExpand)
+                    SubTracks[i].ExpandAll();
             }
 
             IsLayoutLocked = wasLayoutLocked;
@@ -717,12 +720,10 @@ namespace FlaxEditor.GUI.Timeline
 
             Collapse();
 
-            for (int i = 0; i < _children.Count; i++)
+            for (int i = 0; i < SubTracks.Count; i++)
             {
-                if (_children[i] is TreeNode node)
-                {
-                    node.CollapseAll();
-                }
+                if (SubTracks[i].CanExpand)
+                    SubTracks[i].CollapseAll();
             }
 
             IsLayoutLocked = wasLayoutLocked;
@@ -863,6 +864,12 @@ namespace FlaxEditor.GUI.Timeline
                 if (CanRename)
                     menu.AddButton("Rename", StartRenaming);
                 menu.AddButton("Delete", Delete);
+                if (CanExpand)
+                {
+                    menu.AddSeparator();
+                    menu.AddButton("Expand All", ExpandAll);
+                    menu.AddButton("Collapse All", CollapseAll);
+                }
                 OnContextMenu(menu);
                 menu.Show(this, location);
             }
