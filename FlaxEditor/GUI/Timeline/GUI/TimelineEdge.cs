@@ -36,11 +36,12 @@ namespace FlaxEditor.GUI.Timeline.GUI
         public override void Draw()
         {
             var style = Style.Current;
+            var timeAxisHeaderOffset = -_timeline.MediaBackground.ViewOffset.Y;
 
             var moveColor = style.ProgressNormal;
             var thickness = 2.0f;
             var borderColor = _isMoving ? moveColor : (IsMouseOver && _canEdit ? Color.Yellow : style.BorderNormal);
-            Render2D.FillRectangle(new Rectangle((Width - thickness) * 0.5f, 0, thickness, Height), borderColor);
+            Render2D.FillRectangle(new Rectangle((Width - thickness) * 0.5f, timeAxisHeaderOffset, thickness, Height - timeAxisHeaderOffset), borderColor);
         }
 
         /// <inheritdoc />

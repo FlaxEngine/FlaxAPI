@@ -74,8 +74,6 @@ namespace FlaxEditor.GUI.Timeline.GUI
             var zoom = Timeline.UnitsPerSecond * _timeline.Zoom;
             var leftFrame = Mathf.Floor((leftSideMin.X - Timeline.StartOffset) / zoom) * _timeline.FramesPerSecond;
             var rightFrame = Mathf.Ceil((rightSideMax.X - Timeline.StartOffset) / zoom) * _timeline.FramesPerSecond;
-            var verticalLinesHeaderExtend = Timeline.HeaderTopAreaHeight * 0.5f;
-            var timeShowMode = _timeline.TimeShowMode;
             for (float frame = leftFrame; frame <= rightFrame; frame += _timeline.FramesPerSecond)
             {
                 var time = frame / _timeline.FramesPerSecond;
@@ -83,27 +81,6 @@ namespace FlaxEditor.GUI.Timeline.GUI
 
                 // Vertical line
                 Render2D.FillRectangle(new Rectangle(x - 0.5f, 0, 1.0f, height), style.ForegroundDisabled.RGBMultiplied(0.7f));
-
-                // Header line
-                Render2D.FillRectangle(new Rectangle(x - 0.5f, -verticalLinesHeaderExtend, 1.0f, verticalLinesHeaderExtend), style.Foreground.RGBMultiplied(0.8f));
-
-                // Time
-                string label;
-                switch (timeShowMode)
-                {
-                case Timeline.TimeShowModes.Frames:
-                    label = frame.ToString("0000");
-                    break;
-                case Timeline.TimeShowModes.Seconds:
-                    label = time.ToString() + 's';
-                    break;
-                case Timeline.TimeShowModes.Time:
-                    label = TimeSpan.FromSeconds(time).ToString();
-                    break;
-                default: throw new ArgumentOutOfRangeException();
-                }
-                var labelRect = new Rectangle(x + 2, -verticalLinesHeaderExtend, 50, verticalLinesHeaderExtend);
-                Render2D.DrawText(style.FontSmall, label, labelRect, style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.8f);
             }
 
             DrawChildren();
@@ -122,6 +99,38 @@ namespace FlaxEditor.GUI.Timeline.GUI
             var outsideDurationAreaColor = new Color(0, 0, 0, 100);
             Render2D.FillRectangle(new Rectangle(leftSideMin, leftSideMax.X - leftSideMin.X, height), outsideDurationAreaColor);
             Render2D.FillRectangle(new Rectangle(rightSideMin, rightSideMax.X - rightSideMin.X, height), outsideDurationAreaColor);
+
+            // Draw time axis header
+            var timeAxisHeaderOffset = -_timeline.MediaBackground.ViewOffset.Y;
+            var verticalLinesHeaderExtend = Timeline.HeaderTopAreaHeight * 0.5f;
+            var timeShowMode = _timeline.TimeShowMode;
+            Render2D.FillRectangle(new Rectangle(areaLeft, timeAxisHeaderOffset - Timeline.HeaderTopAreaHeight, areaRight - areaLeft, Timeline.HeaderTopAreaHeight), style.Background.RGBMultiplied(0.7f));
+            for (float frame = leftFrame; frame <= rightFrame; frame += _timeline.FramesPerSecond)
+            {
+                var time = frame / _timeline.FramesPerSecond;
+                var x = time * zoom + Timeline.StartOffset;
+
+                // Header line
+                Render2D.FillRectangle(new Rectangle(x - 0.5f, -verticalLinesHeaderExtend + timeAxisHeaderOffset, 1.0f, verticalLinesHeaderExtend), style.Foreground.RGBMultiplied(0.8f));
+
+                // Time label
+                string label;
+                switch (timeShowMode)
+                {
+                case Timeline.TimeShowModes.Frames:
+                    label = frame.ToString("0000");
+                    break;
+                case Timeline.TimeShowModes.Seconds:
+                    label = time.ToString() + 's';
+                    break;
+                case Timeline.TimeShowModes.Time:
+                    label = TimeSpan.FromSeconds(time).ToString();
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+                }
+                var labelRect = new Rectangle(x + 2, -verticalLinesHeaderExtend + timeAxisHeaderOffset, 50, verticalLinesHeaderExtend);
+                Render2D.DrawText(style.FontSmall, label, labelRect, style.ForegroundDisabled, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, 0.8f);
+            }
         }
 
         /// <inheritdoc />
