@@ -734,6 +734,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 DockStyle = DockStyle.Top,
                 IsScrollable = true,
+                BottomMargin = 40.0f,
                 Parent = _tracksPanelArea
             };
             _noTracksLabel = new Label
@@ -1519,7 +1520,7 @@ namespace FlaxEditor.GUI.Timeline
             // Synchronize scroll vertical bars for tracks and media panels to keep the view in sync
             var scroll1 = _tracksPanelArea.VScrollBar;
             var scroll2 = _backgroundArea.VScrollBar;
-            if (scroll1.IsThumbClicked)
+            if (scroll1.IsThumbClicked || _tracksPanelArea.IsMouseOver)
                 scroll2.TargetValue = scroll1.Value;
             else
                 scroll1.TargetValue = scroll2.Value;
