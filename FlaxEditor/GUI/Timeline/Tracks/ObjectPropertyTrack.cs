@@ -66,7 +66,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     var type = value.PropertyType;
                     PropertyName = value.Name;
                     PropertyTypeName = type.FullName;
-                    ValueSize = Marshal.SizeOf(type);
+                    ValueSize = Marshal.SizeOf(type.IsEnum ? Enum.GetUnderlyingType(type) : type);
                 }
                 else
                 {
