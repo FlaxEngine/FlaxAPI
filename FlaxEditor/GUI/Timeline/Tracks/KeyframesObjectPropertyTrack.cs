@@ -284,7 +284,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             var time = Timeline.CurrentTime;
             var value = Keyframes.Evaluate(time);
-            _previewValue.Text = value?.ToString() ?? string.Empty;
+            _previewValue.Text = GetValueText(value);
         }
 
         /// <inheritdoc />

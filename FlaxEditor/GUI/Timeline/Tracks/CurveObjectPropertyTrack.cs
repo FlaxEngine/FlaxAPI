@@ -312,7 +312,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             var time = Timeline.CurrentTime;
             Curve.Evaluate(out var value, time);
-            _previewValue.Text = value?.ToString() ?? string.Empty;
+            _previewValue.Text = GetValueText(value);
         }
 
         private void CreateCurve(Type propertyType)

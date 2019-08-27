@@ -90,7 +90,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// </summary>
         /// <param name="value">The result value. Valid only if methods returns true.</param>
         /// <returns>True if got value, otherwise false.</returns>
-        public bool TryGetValue(out object value)
+        protected bool TryGetValue(out object value)
         {
             if (!string.IsNullOrEmpty(PropertyName) && ParentTrack is ObjectTrack objectTrack)
             {
@@ -116,6 +116,22 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             value = null;
             return false;
+        }
+
+        /// <summary>
+        /// Gets the value text for UI.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The text.</returns>
+        protected string GetValueText(object value)
+        {
+            if (value == null)
+                return string.Empty;
+
+            if (value is Quaternion asQuaternion)
+                return asQuaternion.EulerAngles.ToString();
+
+            return value.ToString();
         }
 
         /// <inheritdoc />
