@@ -168,7 +168,7 @@ namespace FlaxEditor.CustomEditors.Elements
         /// </value>
         public object EnumTypeValue
         {
-            get => Convert.ChangeType(Value, _underlyingType);
+            get => Enum.ToObject(_enumType, Value);
             set => Value = Convert.ToInt32(value);
         }
 
