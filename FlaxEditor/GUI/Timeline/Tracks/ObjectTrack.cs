@@ -164,6 +164,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             { typeof(bool), "bool" },
             { typeof(byte), "byte" },
+            { typeof(sbyte), "sbyte" },
             { typeof(char), "char" },
             { typeof(short), "short" },
             { typeof(ushort), "ushort" },
@@ -181,6 +182,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             { typeof(bool), KeyframesObjectPropertyTrack.GetArchetype() },
             { typeof(byte), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(sbyte), KeyframesObjectPropertyTrack.GetArchetype() },
             { typeof(char), KeyframesObjectPropertyTrack.GetArchetype() },
             { typeof(short), KeyframesObjectPropertyTrack.GetArchetype() },
             { typeof(ushort), KeyframesObjectPropertyTrack.GetArchetype() },
@@ -195,6 +197,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             { typeof(Quaternion), CurveObjectPropertyTrack.GetArchetype() },
             { typeof(Color), CurveObjectPropertyTrack.GetArchetype() },
             { typeof(Color32), CurveObjectPropertyTrack.GetArchetype() },
+            { typeof(Guid), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(DateTime), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(TimeSpan), KeyframesObjectPropertyTrack.GetArchetype() },
         };
     }
 }
