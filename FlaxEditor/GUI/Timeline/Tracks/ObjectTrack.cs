@@ -173,6 +173,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             { typeof(long), "ulong" },
             { typeof(float), "float" },
             { typeof(double), "double" },
+            { typeof(string), "string" },
         };
 
         /// <summary>
@@ -200,6 +201,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             { typeof(Guid), KeyframesObjectPropertyTrack.GetArchetype() },
             { typeof(DateTime), KeyframesObjectPropertyTrack.GetArchetype() },
             { typeof(TimeSpan), KeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(string), StringKeyframesObjectPropertyTrack.GetArchetype() },
         };
     }
 }

@@ -309,6 +309,7 @@
     <Compile Include="GUI\Timeline\GUI\TimelineEdge.cs" />
     <Compile Include="GUI\Timeline\TrackArchetype.cs" />
     <Compile Include="GUI\Timeline\TrackCreateOptions.cs" />
+    <Compile Include="GUI\Timeline\Tracks\StringKeyframesObjectPropertyTrack.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />

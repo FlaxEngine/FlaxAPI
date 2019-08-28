@@ -4,6 +4,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
@@ -66,7 +67,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     var type = value.PropertyType;
                     PropertyName = value.Name;
                     PropertyTypeName = type.FullName;
-                    ValueSize = Marshal.SizeOf(type.IsEnum ? Enum.GetUnderlyingType(type) : type);
+                    ValueSize = type.IsValueType ? (Marshal.SizeOf(type.IsEnum ? Enum.GetUnderlyingType(type) : type)) : 0;
                 }
                 else
                 {
@@ -79,10 +80,65 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
+        protected Label _previewValue;
+        protected Image _rightKey;
+        protected Image _addKey;
+        protected Image _leftKey;
+
         /// <inheritdoc />
         protected ObjectPropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
+            // Navigation buttons
+            const float buttonSize = 14;
+            var icons = Editor.Instance.Icons;
+            _rightKey = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Sets the time to the next key",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(1),
+                Brush = new SpriteBrush(icons.ArrowRight32),
+                Parent = this
+            };
+            _addKey = new Image(_rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Adds a new key at the current time",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(3),
+                Brush = new SpriteBrush(icons.Add48),
+                Parent = this
+            };
+            _leftKey = new Image(_addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Sets the time to the previous key",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(1),
+                Brush = new SpriteBrush(icons.ArrowLeft32),
+                Parent = this
+            };
+
+            // Value preview
+            var previewWidth = 100.0f;
+            _previewValue = new Label(_leftKey.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
+            {
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                AutoFitTextRange = new Vector2(0.01f, 1.0f),
+                AutoFitText = true,
+                TextColor = new Color(0.8f),
+                Margin = new Margin(1),
+                Parent = this
+            };
         }
 
         /// <summary>
@@ -90,7 +146,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// </summary>
         /// <param name="value">The result value. Valid only if methods returns true.</param>
         /// <returns>True if got value, otherwise false.</returns>
-        protected bool TryGetValue(out object value)
+        protected virtual bool TryGetValue(out object value)
         {
             if (!string.IsNullOrEmpty(PropertyName) && ParentTrack is ObjectTrack objectTrack)
             {

@@ -14,7 +14,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating object property via keyframes collection.
     /// </summary>
     /// <seealso cref="ObjectPropertyTrack" />
-    public sealed class KeyframesObjectPropertyTrack : ObjectPropertyTrack
+    public class KeyframesObjectPropertyTrack : ObjectPropertyTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -128,8 +128,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// </summary>
         public KeyframesEditor Keyframes;
 
-        private Label _previewValue;
-
         /// <inheritdoc />
         public KeyframesObjectPropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
@@ -146,59 +144,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Keyframes.Edited += OnKeyframesEdited;
             Keyframes.UnlockChildrenRecursive();
 
-            // Navigation buttons
-            const float buttonSize = 14;
-            var icons = Editor.Instance.Icons;
-            var rightKey = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Sets the time to the next key",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(1),
-                Brush = new SpriteBrush(icons.ArrowRight32),
-                Parent = this
-            };
-            rightKey.Clicked += OnRightKeyClicked;
-            var addKey = new Image(rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Adds a new key at the current time",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(3),
-                Brush = new SpriteBrush(icons.Add48),
-                Parent = this
-            };
-            addKey.Clicked += OnAddKeyClicked;
-            var leftKey = new Image(addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Sets the time to the previous key",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(1),
-                Brush = new SpriteBrush(icons.ArrowLeft32),
-                Parent = this
-            };
-            leftKey.Clicked += OnLeftKeyClicked;
-
-            // Value preview
-            var previewWidth = 100.0f;
-            _previewValue = new Label(leftKey.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
-            {
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                AutoFitTextRange = new Vector2(0.01f, 1.0f),
-                AutoFitText = true,
-                TextColor = new Color(0.8f),
-                Margin = new Margin(1),
-                Parent = this
-            };
+            _addKey.Clicked += OnAddKeyClicked;
+            _leftKey.Clicked += OnLeftKeyClicked;
+            _rightKey.Clicked += OnRightKeyClicked;
         }
 
         private void OnRightKeyClicked(Image image, MouseButton button)
