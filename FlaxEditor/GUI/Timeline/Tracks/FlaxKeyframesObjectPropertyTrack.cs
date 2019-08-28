@@ -8,11 +8,11 @@ using System.Text;
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
-    /// The timeline track for animating string property via keyframes collection.
+    /// The timeline track for animating Flax Object property via keyframes collection.
     /// </summary>
     /// <seealso cref="ObjectPropertyTrack" />
     /// <seealso cref="KeyframesObjectPropertyTrack" />
-    public sealed class StringKeyframesObjectPropertyTrack : KeyframesObjectPropertyTrack
+    sealed class FlaxKeyframesObjectPropertyTrack : KeyframesObjectPropertyTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -22,10 +22,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             return new TrackArchetype
             {
-                TypeId = 11,
+                TypeId = 12,
                 Name = "Object Property",
                 DisableSpawnViaGUI = true,
-                Create = options => new StringKeyframesObjectPropertyTrack(ref options),
+                Create = options => new FlaxKeyframesObjectPropertyTrack(ref options),
                 Load = LoadTrack,
                 Save = SaveTrack,
             };
@@ -33,7 +33,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void LoadTrack(int version, Track track, BinaryReader stream)
         {
-            var e = (StringKeyframesObjectPropertyTrack)track;
+            var e = (FlaxKeyframesObjectPropertyTrack)track;
 
             e.ValueSize = stream.ReadInt32();
             int propertyNameLength = stream.ReadInt32();
@@ -51,7 +51,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 throw new Exception("Invalid track data.");
 
             var keyframes = new KeyframesEditor.Keyframe[keyframesCount];
-            var dataBuffer = new byte[e.ValueSize];
             var propertyType = Utilities.Utils.GetType(e.PropertyTypeName);
             if (propertyType == null)
             {
@@ -65,9 +64,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             for (int i = 0; i < keyframesCount; i++)
             {
                 var time = stream.ReadSingle();
-                var length = stream.ReadInt32();
-                var data = stream.ReadBytes(length * 2);
-                var value = Encoding.Unicode.GetString(data, 0, data.Length);
+                var value = new Guid(stream.ReadBytes(16));
 
                 keyframes[i] = new KeyframesEditor.Keyframe
                 {
@@ -76,13 +73,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 };
             }
 
-            e.Keyframes.DefaultValue = string.Empty;
+            e.Keyframes.DefaultValue = Guid.Empty;
             e.Keyframes.SetKeyframes(keyframes);
         }
 
         private static void SaveTrack(Track track, BinaryWriter stream)
         {
-            var e = (StringKeyframesObjectPropertyTrack)track;
+            var e = (FlaxKeyframesObjectPropertyTrack)track;
 
             var propertyName = e.PropertyName ?? string.Empty;
             var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
@@ -111,23 +108,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             {
                 var keyframe = keyframes[i];
                 stream.Write(keyframe.Time);
-                if (keyframe.Value is string value)
-                {
-                    var valueData = Encoding.Unicode.GetBytes(value);
-                    stream.Write(value.Length);
-                    if (valueData.Length != value.Length * 2)
-                        throw new Exception("Invalid string value data length.");
-                    stream.Write(valueData);
-                }
-                else
-                {
-                    stream.Write(0);
-                }
+                stream.Write(((Guid)keyframe.Value).ToByteArray());
             }
         }
 
         /// <inheritdoc />
-        public StringKeyframesObjectPropertyTrack(ref TrackCreateOptions options)
+        public FlaxKeyframesObjectPropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
         }
@@ -140,8 +126,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Keyframes.ResetKeyframes();
             if (p != null)
             {
-                // TODO: pick the default value from property attribute via DefaultValueAttribute if available
-                Keyframes.DefaultValue = string.Empty;
+                Keyframes.DefaultValue = Guid.Empty;
             }
         }
 
@@ -150,8 +135,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             if (base.TryGetValue(out value))
             {
-                if (value == null)
-                    value = string.Empty;
+                value = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
                 return true;
             }
             return false;

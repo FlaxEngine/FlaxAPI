@@ -87,6 +87,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 // Enum
                 archetype = KeyframesObjectPropertyTrack.GetArchetype();
             }
+            else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
+            {
+                // Flax object
+                archetype = FlaxKeyframesObjectPropertyTrack.GetArchetype();
+            }
             else
             {
                 throw new Exception("Invalid property type to create animation track for it. Value type: " + valueType);
@@ -138,6 +143,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 else if (valueType.IsValueType)
                 {
                     // Enum or Structure
+                    name = valueType.Name;
+                }
+                else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
+                {
+                    // Flax object
                     name = valueType.Name;
                 }
                 else
