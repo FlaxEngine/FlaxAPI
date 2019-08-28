@@ -16,7 +16,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating <see cref="FlaxEngine.Actor"/> objects.
     /// </summary>
     /// <seealso cref="ObjectTrack" />
-    public sealed class ActorTrack : ObjectTrack
+    sealed class ActorTrack : ObjectTrack
     {
         /// <summary>
         /// Gets the archetype.

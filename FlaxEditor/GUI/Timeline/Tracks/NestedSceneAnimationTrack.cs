@@ -10,7 +10,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline media that represents a nested scene animation media event.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    public class NestedSceneAnimationMedia : SingleMediaAssetMedia
+    class NestedSceneAnimationMedia : SingleMediaAssetMedia
     {
         private sealed class Proxy : ProxyBase<NestedSceneAnimationTrack, NestedSceneAnimationMedia>
         {
@@ -54,7 +54,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track that represents a nested scene animation playback.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public class NestedSceneAnimationTrack : SingleMediaAssetTrack<SceneAnimation, NestedSceneAnimationMedia>
+    class NestedSceneAnimationTrack : SingleMediaAssetTrack<SceneAnimation, NestedSceneAnimationMedia>
     {
         /// <summary>
         /// Gets the archetype.

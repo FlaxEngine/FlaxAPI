@@ -14,7 +14,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating object property via Bezier Curve.
     /// </summary>
     /// <seealso cref="ObjectPropertyTrack" />
-    public sealed class CurveObjectPropertyTrack : ObjectPropertyTrack
+    sealed class CurveObjectPropertyTrack : ObjectPropertyTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -200,6 +200,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     var frame = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
                     if (frame == Timeline.CurrentFrame)
                     {
+                        // Skip if value is the same
+                        if (k.Value == value)
+                            return;
+
                         // Update existing key value
                         Curve.SetKeyframe(i, value);
                         UpdatePreviewValue();

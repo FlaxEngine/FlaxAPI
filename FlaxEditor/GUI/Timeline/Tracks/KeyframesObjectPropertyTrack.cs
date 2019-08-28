@@ -14,7 +14,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating object property via keyframes collection.
     /// </summary>
     /// <seealso cref="ObjectPropertyTrack" />
-    public class KeyframesObjectPropertyTrack : ObjectPropertyTrack
+    class KeyframesObjectPropertyTrack : ObjectPropertyTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -182,6 +182,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     var frame = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
                     if (frame == Timeline.CurrentFrame)
                     {
+                        // Skip if value is the same
+                        if (k.Value == value)
+                            return;
+
                         // Update existing key value
                         Keyframes.SetKeyframe(i, value);
                         UpdatePreviewValue();

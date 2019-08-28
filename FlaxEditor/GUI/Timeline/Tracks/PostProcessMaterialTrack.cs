@@ -10,7 +10,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline media that represents a post-process material media event.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    public class PostProcessMaterialMedia : SingleMediaAssetMedia
+    class PostProcessMaterialMedia : SingleMediaAssetMedia
     {
         private sealed class Proxy : ProxyBase<PostProcessMaterialTrack, PostProcessMaterialMedia>
         {
@@ -44,7 +44,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track that represents a post-process material playback.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public class PostProcessMaterialTrack : SingleMediaAssetTrack<MaterialBase, PostProcessMaterialMedia>
+    class PostProcessMaterialTrack : SingleMediaAssetTrack<MaterialBase, PostProcessMaterialMedia>
     {
         /// <summary>
         /// Gets the archetype.

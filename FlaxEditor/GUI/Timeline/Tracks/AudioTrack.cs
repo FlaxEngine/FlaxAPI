@@ -12,7 +12,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline media that represents an audio clip media event.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    public class AudioMedia : SingleMediaAssetMedia
+    class AudioMedia : SingleMediaAssetMedia
     {
         /// <summary>
         /// True if loop track, otherwise audio clip will stop on the end.
@@ -96,7 +96,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track that represents an audio clip playback.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public class AudioTrack : SingleMediaAssetTrack<AudioClip, AudioMedia>
+    class AudioTrack : SingleMediaAssetTrack<AudioClip, AudioMedia>
     {
         /// <summary>
         /// Gets the archetype.
@@ -221,7 +221,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The child volume track for audio track. Used to animate audio volume over time.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public class AudioVolumeTrack : Track
+    class AudioVolumeTrack : Track
     {
         /// <summary>
         /// Gets the archetype.
