@@ -302,7 +302,7 @@ namespace FlaxEditor.GUI
                     if (_isMovingSelection)
                     {
                         if (_mouseMoveAmount > 3.0f)
-                            _curve.MarkAsEdited();
+                            _curve.OnEdited();
                     }
                     // Selecting
                     else
@@ -625,7 +625,7 @@ namespace FlaxEditor.GUI
             UpdateKeyframes();
         }
 
-        private void MarkAsEdited()
+        private void OnEdited()
         {
             Edited?.Invoke();
         }
@@ -767,7 +767,7 @@ namespace FlaxEditor.GUI
             _keyframes.Insert(pos, k);
 
             OnKeyframesChanged();
-            MarkAsEdited();
+            OnEdited();
         }
 
         /// <summary>
@@ -782,6 +782,7 @@ namespace FlaxEditor.GUI
             _keyframes[index] = k;
 
             OnKeyframesChanged();
+            OnEdited();
         }
 
         private void AddKeyframe(Vector2 keyframesPos)
@@ -859,7 +860,7 @@ namespace FlaxEditor.GUI
 
                 if (IsDirty)
                 {
-                    Editor.MarkAsEdited();
+                    Editor.OnEdited();
                 }
 
                 if (Editor._popup == this)
@@ -944,7 +945,7 @@ namespace FlaxEditor.GUI
             _keyframes.AddRange(keyframes.Values);
 
             OnKeyframesChanged();
-            MarkAsEdited();
+            OnEdited();
         }
 
         /// <summary>

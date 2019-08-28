@@ -1781,6 +1781,7 @@ namespace FlaxEditor.GUI
             _keyframes[index] = k;
 
             OnKeyframesChanged();
+            OnEdited();
         }
 
         private int SelectionCount
