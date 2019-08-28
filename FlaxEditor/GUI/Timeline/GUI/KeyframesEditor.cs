@@ -492,17 +492,6 @@ namespace FlaxEditor.GUI
         public static readonly float UnitsPerSecond = 100.0f;
 
         /// <summary>
-        /// The colors for the keyframes,
-        /// </summary>
-        private static readonly Color[] Colors =
-        {
-            Color.OrangeRed,
-            Color.ForestGreen,
-            Color.CornflowerBlue,
-            Color.White,
-        };
-
-        /// <summary>
         /// The keyframes size.
         /// </summary>
         private static readonly Vector2 KeyframesSize = new Vector2(5.0f);
@@ -873,13 +862,16 @@ namespace FlaxEditor.GUI
             /// <inheritdoc />
             public override bool OnKeyDown(Keys key)
             {
+                if (base.OnKeyDown(key))
+                    return true;
+
                 if (key == Keys.Escape)
                 {
                     Hide();
                     return true;
                 }
 
-                return base.OnKeyDown(key);
+                return false;
             }
 
             /// <inheritdoc />

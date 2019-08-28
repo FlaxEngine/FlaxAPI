@@ -1,216 +1,137 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using FlaxEngine;
-using FlaxEngine.GUI;
+using System.IO;
+using System.Text;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
-    /// The timeline track for animating object property (managed object).
+    /// The timeline track for animating Flax Object property via keyframes collection.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public abstract class ObjectPropertyTrack : Track
+    /// <seealso cref="PropertyTrack" />
+    /// <seealso cref="KeyframesPropertyTrack" />
+    sealed class ObjectPropertyTrack : KeyframesPropertyTrack
     {
         /// <summary>
-        /// The property value data size (in bytes).
+        /// Gets the archetype.
         /// </summary>
-        public int ValueSize;
-
-        /// <summary>
-        /// Gets or sets the object property name (just a member name). Does not validate the value on set.
-        /// </summary>
-        public string PropertyName
+        /// <returns>The archetype.</returns>
+        public static TrackArchetype GetArchetype()
         {
-            get => Title;
-            set => Title = value;
+            return new TrackArchetype
+            {
+                TypeId = 12,
+                Name = "Property",
+                DisableSpawnViaGUI = true,
+                Create = options => new ObjectPropertyTrack(ref options),
+                Load = LoadTrack,
+                Save = SaveTrack,
+            };
         }
 
-        /// <summary>
-        /// The property typename (fullname including namespace but not assembly).
-        /// </summary>
-        public string PropertyTypeName;
-
-        /// <summary>
-        /// Gets or sets the object property. Performs the value validation on set.
-        /// </summary>
-        public PropertyInfo Property
+        private static void LoadTrack(int version, Track track, BinaryReader stream)
         {
-            get
-            {
-                if (ParentTrack is ObjectTrack objectTrack)
-                {
-                    var obj = objectTrack.Object;
-                    if (obj)
-                    {
-                        return obj.GetType().GetProperty(PropertyName, BindingFlags.Public | BindingFlags.Instance);
-                    }
-                }
-                return null;
-            }
-            set
-            {
-                if (value != null && ParentTrack is ObjectTrack objectTrack)
-                {
-                    var obj = objectTrack.Object;
-                    if (obj)
-                    {
-                        if (obj.GetType().GetProperty(value.Name, BindingFlags.Public | BindingFlags.Instance) == null)
-                            throw new Exception("Cannot use property " + value + " for object of type " + obj.GetType());
-                    }
-                }
+            var e = (ObjectPropertyTrack)track;
 
-                if (value != null)
-                {
-                    var type = value.PropertyType;
-                    PropertyName = value.Name;
-                    PropertyTypeName = type.FullName;
-                    ValueSize = type.IsValueType ? (Marshal.SizeOf(type.IsEnum ? Enum.GetUnderlyingType(type) : type)) : 0;
-                }
-                else
-                {
-                    PropertyName = string.Empty;
-                    PropertyTypeName = string.Empty;
-                    ValueSize = 0;
-                }
+            e.ValueSize = stream.ReadInt32();
+            int propertyNameLength = stream.ReadInt32();
+            int propertyTypeNameLength = stream.ReadInt32();
+            int keyframesCount = stream.ReadInt32();
 
-                OnPropertyChanged(value);
+            var propertyName = stream.ReadBytes(propertyNameLength);
+            e.PropertyName = Encoding.UTF8.GetString(propertyName, 0, propertyNameLength);
+            if (stream.ReadChar() != 0)
+                throw new Exception("Invalid track data.");
+
+            var propertyTypeName = stream.ReadBytes(propertyTypeNameLength);
+            e.PropertyTypeName = Encoding.UTF8.GetString(propertyTypeName, 0, propertyTypeNameLength);
+            if (stream.ReadChar() != 0)
+                throw new Exception("Invalid track data.");
+
+            var keyframes = new KeyframesEditor.Keyframe[keyframesCount];
+            var propertyType = Utilities.Utils.GetType(e.PropertyTypeName);
+            if (propertyType == null)
+            {
+                e.Keyframes.ResetKeyframes();
+                stream.ReadBytes(keyframesCount * (sizeof(float) + e.ValueSize));
+                if (!string.IsNullOrEmpty(e.PropertyTypeName))
+                    Editor.LogError("Cannot load track " + e.PropertyName + " of type " + e.PropertyTypeName + ". Failed to find the value type information.");
+                return;
             }
+
+            for (int i = 0; i < keyframesCount; i++)
+            {
+                var time = stream.ReadSingle();
+                var value = new Guid(stream.ReadBytes(16));
+
+                keyframes[i] = new KeyframesEditor.Keyframe
+                {
+                    Time = time,
+                    Value = value,
+                };
+            }
+
+            e.Keyframes.DefaultValue = Guid.Empty;
+            e.Keyframes.SetKeyframes(keyframes);
         }
 
-        protected Label _previewValue;
-        protected Image _rightKey;
-        protected Image _addKey;
-        protected Image _leftKey;
+        private static void SaveTrack(Track track, BinaryWriter stream)
+        {
+            var e = (ObjectPropertyTrack)track;
+
+            var propertyName = e.PropertyName ?? string.Empty;
+            var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
+            if (propertyNameData.Length != propertyName.Length)
+                throw new Exception(string.Format("The object property name bytes data has different size as UTF8 bytes. Type {0}.", propertyName));
+
+            var propertyTypeName = e.PropertyTypeName ?? string.Empty;
+            var propertyTypeNameData = Encoding.UTF8.GetBytes(propertyTypeName);
+            if (propertyTypeNameData.Length != propertyTypeName.Length)
+                throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
+
+            var keyframes = e.Keyframes.Keyframes;
+
+            stream.Write(e.ValueSize);
+            stream.Write(propertyNameData.Length);
+            stream.Write(propertyTypeNameData.Length);
+            stream.Write(keyframes.Count);
+
+            stream.Write(propertyNameData);
+            stream.Write('\0');
+
+            stream.Write(propertyTypeNameData);
+            stream.Write('\0');
+
+            for (int i = 0; i < keyframes.Count; i++)
+            {
+                var keyframe = keyframes[i];
+                stream.Write(keyframe.Time);
+                stream.Write(((Guid)keyframe.Value).ToByteArray());
+            }
+        }
 
         /// <inheritdoc />
-        protected ObjectPropertyTrack(ref TrackCreateOptions options)
+        public ObjectPropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
-            // Navigation buttons
-            const float buttonSize = 14;
-            var icons = Editor.Instance.Icons;
-            _rightKey = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Sets the time to the next key",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(1),
-                Brush = new SpriteBrush(icons.ArrowRight32),
-                Parent = this
-            };
-            _addKey = new Image(_rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Adds a new key at the current time",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(3),
-                Brush = new SpriteBrush(icons.Add48),
-                Parent = this
-            };
-            _leftKey = new Image(_addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Sets the time to the previous key",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(1),
-                Brush = new SpriteBrush(icons.ArrowLeft32),
-                Parent = this
-            };
-
-            // Value preview
-            var previewWidth = 100.0f;
-            _previewValue = new Label(_leftKey.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
-            {
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                AutoFitTextRange = new Vector2(0.01f, 1.0f),
-                AutoFitText = true,
-                TextColor = new Color(0.8f),
-                Margin = new Margin(1),
-                Parent = this
-            };
         }
 
-        /// <summary>
-        /// Tries the get current value from the assigned object property.
-        /// </summary>
-        /// <param name="value">The result value. Valid only if methods returns true.</param>
-        /// <returns>True if got value, otherwise false.</returns>
-        protected virtual bool TryGetValue(out object value)
+        /// <inheritdoc />
+        protected override object GetDefaultValue(Type propertyType)
         {
-            if (!string.IsNullOrEmpty(PropertyName) && ParentTrack is ObjectTrack objectTrack)
+            return Guid.Empty;
+        }
+
+        /// <inheritdoc />
+        protected override bool TryGetValue(out object value)
+        {
+            if (base.TryGetValue(out value))
             {
-                var obj = objectTrack.Object;
-                if (obj)
-                {
-                    var p = obj.GetType().GetProperty(PropertyName, BindingFlags.Public | BindingFlags.Instance);
-                    if (p != null)
-                    {
-                        try
-                        {
-                            value = p.GetValue(obj);
-                            return true;
-                        }
-                        catch
-                        {
-                            value = null;
-                            return false;
-                        }
-                    }
-                }
+                value = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
+                return true;
             }
-
-            value = null;
             return false;
-        }
-
-        /// <summary>
-        /// Gets the value text for UI.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The text.</returns>
-        protected string GetValueText(object value)
-        {
-            if (value == null)
-                return string.Empty;
-
-            if (value is Quaternion asQuaternion)
-                return asQuaternion.EulerAngles.ToString();
-
-            return value.ToString();
-        }
-
-        /// <inheritdoc />
-        protected override bool CanDrag => false;
-
-        /// <inheritdoc />
-        protected override bool CanRename => false;
-
-        /// <summary>
-        /// Called when property gets changed.
-        /// </summary>
-        /// <param name="p">The property value assigned.</param>
-        protected virtual void OnPropertyChanged(PropertyInfo p)
-        {
-        }
-
-        /// <inheritdoc />
-        public override void Update(float deltaTime)
-        {
-            base.Update(deltaTime);
-
-            var p = Property;
-            TitleTintColor = p != null ? Color.White : Color.Red;
         }
     }
 }

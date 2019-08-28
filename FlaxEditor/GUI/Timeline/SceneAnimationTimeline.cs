@@ -64,10 +64,10 @@ namespace FlaxEditor.GUI.Timeline
             TrackArchetypes.Add(AudioVolumeTrack.GetArchetype());
             TrackArchetypes.Add(ActorTrack.GetArchetype());
             TrackArchetypes.Add(ScriptTrack.GetArchetype());
-            TrackArchetypes.Add(KeyframesObjectPropertyTrack.GetArchetype());
-            TrackArchetypes.Add(CurveObjectPropertyTrack.GetArchetype());
-            TrackArchetypes.Add(StringKeyframesObjectPropertyTrack.GetArchetype());
-            TrackArchetypes.Add(FlaxKeyframesObjectPropertyTrack.GetArchetype());
+            TrackArchetypes.Add(KeyframesPropertyTrack.GetArchetype());
+            TrackArchetypes.Add(CurvePropertyTrack.GetArchetype());
+            TrackArchetypes.Add(StringPropertyTrack.GetArchetype());
+            TrackArchetypes.Add(ObjectPropertyTrack.GetArchetype());
         }
 
         private void UpdatePlaybackState()

@@ -1076,7 +1076,7 @@ namespace FlaxEditor.GUI
         private readonly float[] _tickStrengths = new float[TickSteps.Length];
         private bool _refreshAfterEdit;
         private bool _showCollapsed;
-        private KeyframesEditor _keyframesEditor;
+        private Popup _popup;
         private float? _fps;
 
         private Color _contentsColor;
@@ -1121,7 +1121,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets a value indicating whether user is editing the curve.
         /// </summary>
-        public bool IsUserEditing => _keyframesEditor != null || _contents._leftMouseDown;
+        public bool IsUserEditing => _popup != null || _contents._leftMouseDown;
 
         /// <summary>
         /// The default value.
@@ -1338,14 +1338,14 @@ namespace FlaxEditor.GUI
             AddKeyframe(k);
         }
 
-        class KeyframesEditor : ContextMenuBase
+        class Popup : ContextMenuBase
         {
             private CustomEditorPresenter _editor;
             public CurveEditor<T> Curve;
             public List<int> KeyframeIndices;
             public bool IsDirty;
 
-            public KeyframesEditor(List<Curve<T>.Keyframe> keyframes)
+            public Popup(List<Curve<T>.Keyframe> keyframes)
             {
                 const float width = 280.0f;
                 const float height = 120.0f;
@@ -1406,8 +1406,8 @@ namespace FlaxEditor.GUI
                     Curve.OnEdited();
                 }
 
-                if (Curve._keyframesEditor == this)
-                    Curve._keyframesEditor = null;
+                if (Curve._popup == this)
+                    Curve._popup = null;
                 _editor = null;
 
                 base.Hide();
@@ -1416,13 +1416,16 @@ namespace FlaxEditor.GUI
             /// <inheritdoc />
             public override bool OnKeyDown(Keys key)
             {
+                if (base.OnKeyDown(key))
+                    return true;
+
                 if (key == Keys.Escape)
                 {
                     Hide();
                     return true;
                 }
 
-                return base.OnKeyDown(key);
+                return false;
             }
 
             /// <inheritdoc />
@@ -1457,12 +1460,12 @@ namespace FlaxEditor.GUI
                 keyframes.Add(_keyframes[keyframeIndices[i]]);
             }
 
-            _keyframesEditor = new KeyframesEditor(keyframes)
+            _popup = new Popup(keyframes)
             {
                 Curve = this,
                 KeyframeIndices = keyframeIndices,
             };
-            _keyframesEditor.Show(control, pos);
+            _popup.Show(control, pos);
         }
 
         private void RemoveKeyframes()
@@ -2107,7 +2110,7 @@ namespace FlaxEditor.GUI
             // Clear references to the controls
             _mainPanel = null;
             _contents = null;
-            _keyframesEditor = null;
+            _popup = null;
 
             // Cleanup
             _points.Clear();

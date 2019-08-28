@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
@@ -10,9 +9,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <summary>
     /// The timeline track for animating string property via keyframes collection.
     /// </summary>
-    /// <seealso cref="ObjectPropertyTrack" />
-    /// <seealso cref="KeyframesObjectPropertyTrack" />
-    sealed class StringKeyframesObjectPropertyTrack : KeyframesObjectPropertyTrack
+    /// <seealso cref="PropertyTrack" />
+    /// <seealso cref="KeyframesPropertyTrack" />
+    sealed class StringPropertyTrack : KeyframesPropertyTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -23,9 +22,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             return new TrackArchetype
             {
                 TypeId = 11,
-                Name = "Object Property",
+                Name = "Property",
                 DisableSpawnViaGUI = true,
-                Create = options => new StringKeyframesObjectPropertyTrack(ref options),
+                Create = options => new StringPropertyTrack(ref options),
                 Load = LoadTrack,
                 Save = SaveTrack,
             };
@@ -33,7 +32,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void LoadTrack(int version, Track track, BinaryReader stream)
         {
-            var e = (StringKeyframesObjectPropertyTrack)track;
+            var e = (StringPropertyTrack)track;
 
             e.ValueSize = stream.ReadInt32();
             int propertyNameLength = stream.ReadInt32();
@@ -82,7 +81,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void SaveTrack(Track track, BinaryWriter stream)
         {
-            var e = (StringKeyframesObjectPropertyTrack)track;
+            var e = (StringPropertyTrack)track;
 
             var propertyName = e.PropertyName ?? string.Empty;
             var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
@@ -127,22 +126,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public StringKeyframesObjectPropertyTrack(ref TrackCreateOptions options)
+        public StringPropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
         }
 
         /// <inheritdoc />
-        protected override void OnPropertyChanged(PropertyInfo p)
+        protected override object GetDefaultValue(Type propertyType)
         {
-            //base.OnPropertyChanged(p);
-
-            Keyframes.ResetKeyframes();
-            if (p != null)
-            {
-                // TODO: pick the default value from property attribute via DefaultValueAttribute if available
-                Keyframes.DefaultValue = string.Empty;
-            }
+            return string.Empty;
         }
 
         /// <inheritdoc />

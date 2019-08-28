@@ -85,19 +85,19 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             else if (valueType.IsEnum)
             {
                 // Enum
-                archetype = KeyframesObjectPropertyTrack.GetArchetype();
+                archetype = KeyframesPropertyTrack.GetArchetype();
             }
             else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
             {
                 // Flax object
-                archetype = FlaxKeyframesObjectPropertyTrack.GetArchetype();
+                archetype = ObjectPropertyTrack.GetArchetype();
             }
             else
             {
                 throw new Exception("Invalid property type to create animation track for it. Value type: " + valueType);
             }
 
-            var track = (ObjectPropertyTrack)Timeline.AddTrack(archetype);
+            var track = (PropertyTrack)Timeline.AddTrack(archetype);
             track.ParentTrack = this;
             track.TrackIndex = TrackIndex + 1;
             track.Name = Guid.NewGuid().ToString("N");
@@ -157,7 +157,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 }
 
                 // Prevent from adding the same track twice
-                if (SubTracks.Any(x => x is ObjectPropertyTrack y && y.PropertyName == p.Name))
+                if (SubTracks.Any(x => x is PropertyTrack y && y.PropertyName == p.Name))
                     continue;
 
                 menu.AddButton(name + " " + p.Name, OnAddObjectPropertyTrack).Tag = p;
@@ -191,27 +191,27 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// </summary>
         protected static readonly Dictionary<Type, TrackArchetype> BasicTypesTrackArchetypes = new Dictionary<Type, TrackArchetype>
         {
-            { typeof(bool), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(byte), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(sbyte), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(char), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(short), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(ushort), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(int), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(uint), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(long), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(float), CurveObjectPropertyTrack.GetArchetype() },
-            { typeof(double), CurveObjectPropertyTrack.GetArchetype() },
-            { typeof(Vector2), CurveObjectPropertyTrack.GetArchetype() },
-            { typeof(Vector3), CurveObjectPropertyTrack.GetArchetype() },
-            { typeof(Vector4), CurveObjectPropertyTrack.GetArchetype() },
-            { typeof(Quaternion), CurveObjectPropertyTrack.GetArchetype() },
-            { typeof(Color), CurveObjectPropertyTrack.GetArchetype() },
-            { typeof(Color32), CurveObjectPropertyTrack.GetArchetype() },
-            { typeof(Guid), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(DateTime), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(TimeSpan), KeyframesObjectPropertyTrack.GetArchetype() },
-            { typeof(string), StringKeyframesObjectPropertyTrack.GetArchetype() },
+            { typeof(bool), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(byte), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(sbyte), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(char), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(short), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(ushort), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(int), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(uint), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(long), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(float), CurvePropertyTrack.GetArchetype() },
+            { typeof(double), CurvePropertyTrack.GetArchetype() },
+            { typeof(Vector2), CurvePropertyTrack.GetArchetype() },
+            { typeof(Vector3), CurvePropertyTrack.GetArchetype() },
+            { typeof(Vector4), CurvePropertyTrack.GetArchetype() },
+            { typeof(Quaternion), CurvePropertyTrack.GetArchetype() },
+            { typeof(Color), CurvePropertyTrack.GetArchetype() },
+            { typeof(Color32), CurvePropertyTrack.GetArchetype() },
+            { typeof(Guid), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(DateTime), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(TimeSpan), KeyframesPropertyTrack.GetArchetype() },
+            { typeof(string), StringPropertyTrack.GetArchetype() },
         };
     }
 }

@@ -11,10 +11,10 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
-    /// The timeline track for animating object property via keyframes collection.
+    /// The timeline track for animating object property via Bezier Curve.
     /// </summary>
-    /// <seealso cref="ObjectPropertyTrack" />
-    class KeyframesObjectPropertyTrack : ObjectPropertyTrack
+    /// <seealso cref="PropertyTrack" />
+    sealed class CurvePropertyTrack : PropertyTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -24,10 +24,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             return new TrackArchetype
             {
-                TypeId = 9,
-                Name = "Object Property",
+                TypeId = 10,
+                Name = "Property",
                 DisableSpawnViaGUI = true,
-                Create = options => new KeyframesObjectPropertyTrack(ref options),
+                Create = options => new CurvePropertyTrack(ref options),
                 Load = LoadTrack,
                 Save = SaveTrack,
             };
@@ -35,7 +35,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void LoadTrack(int version, Track track, BinaryReader stream)
         {
-            var e = (KeyframesObjectPropertyTrack)track;
+            var e = (CurvePropertyTrack)track;
+
+            if (e.Curve != null)
+            {
+                e.Curve.Dispose();
+                e.Curve = null;
+            }
 
             e.ValueSize = stream.ReadInt32();
             int propertyNameLength = stream.ReadInt32();
@@ -52,13 +58,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (stream.ReadChar() != 0)
                 throw new Exception("Invalid track data.");
 
-            var keyframes = new KeyframesEditor.Keyframe[keyframesCount];
+            var keyframes = new Curve<object>.Keyframe[keyframesCount];
             var dataBuffer = new byte[e.ValueSize];
             var propertyType = Utilities.Utils.GetType(e.PropertyTypeName);
             if (propertyType == null)
             {
-                e.Keyframes.ResetKeyframes();
-                stream.ReadBytes(keyframesCount * (sizeof(float) + e.ValueSize));
+                stream.ReadBytes(keyframesCount * (sizeof(float) + e.ValueSize * 3));
                 if (!string.IsNullOrEmpty(e.PropertyTypeName))
                     Editor.LogError("Cannot load track " + e.PropertyName + " of type " + e.PropertyTypeName + ". Failed to find the value type information.");
                 return;
@@ -68,24 +73,33 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             for (int i = 0; i < keyframesCount; i++)
             {
                 var time = stream.ReadSingle();
+
                 stream.Read(dataBuffer, 0, e.ValueSize);
                 var value = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), propertyType);
 
-                keyframes[i] = new KeyframesEditor.Keyframe
+                stream.Read(dataBuffer, 0, e.ValueSize);
+                var tangentIn = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), propertyType);
+
+                stream.Read(dataBuffer, 0, e.ValueSize);
+                var tangentOut = Marshal.PtrToStructure(handle.AddrOfPinnedObject(), propertyType);
+
+                keyframes[i] = new Curve<object>.Keyframe
                 {
                     Time = time,
                     Value = value,
+                    TangentIn = tangentIn,
+                    TangentOut = tangentOut,
                 };
             }
             handle.Free();
 
-            e.Keyframes.DefaultValue = Activator.CreateInstance(propertyType);
-            e.Keyframes.SetKeyframes(keyframes);
+            e.CreateCurve(propertyType);
+            e.Curve.SetKeyframes(keyframes);
         }
 
         private static void SaveTrack(Track track, BinaryWriter stream)
         {
-            var e = (KeyframesObjectPropertyTrack)track;
+            var e = (CurvePropertyTrack)track;
 
             var propertyName = e.PropertyName ?? string.Empty;
             var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
@@ -97,12 +111,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (propertyTypeNameData.Length != propertyTypeName.Length)
                 throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
 
-            var keyframes = e.Keyframes.Keyframes;
+            var keyframes = e.Curve.GetKeyframes();
 
             stream.Write(e.ValueSize);
             stream.Write(propertyNameData.Length);
             stream.Write(propertyTypeNameData.Length);
-            stream.Write(keyframes.Count);
+            stream.Write(keyframes.Length);
 
             stream.Write(propertyNameData);
             stream.Write('\0');
@@ -112,37 +126,39 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             var dataBuffer = new byte[e.ValueSize];
             IntPtr ptr = Marshal.AllocHGlobal(e.ValueSize);
-            for (int i = 0; i < keyframes.Count; i++)
+            for (int i = 0; i < keyframes.Length; i++)
             {
                 var keyframe = keyframes[i];
+                stream.Write(keyframe.Time);
+
                 Marshal.StructureToPtr(keyframe.Value, ptr, true);
                 Marshal.Copy(ptr, dataBuffer, 0, e.ValueSize);
-                stream.Write(keyframe.Time);
+                stream.Write(dataBuffer);
+
+                Marshal.StructureToPtr(keyframe.TangentIn, ptr, true);
+                Marshal.Copy(ptr, dataBuffer, 0, e.ValueSize);
+                stream.Write(dataBuffer);
+
+                Marshal.StructureToPtr(keyframe.TangentOut, ptr, true);
+                Marshal.Copy(ptr, dataBuffer, 0, e.ValueSize);
                 stream.Write(dataBuffer);
             }
             Marshal.FreeHGlobal(ptr);
         }
 
         /// <summary>
-        /// The keyframes editor.
+        /// The curve editor.
         /// </summary>
-        public KeyframesEditor Keyframes;
+        public CurveEditorBase Curve;
+
+        private const float CollapsedHeight = 20.0f;
+        private const float ExpandedHeight = 120.0f;
 
         /// <inheritdoc />
-        public KeyframesObjectPropertyTrack(ref TrackCreateOptions options)
+        public CurvePropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
-            Height = 20.0f;
-
-            // Keyframes editor
-            Keyframes = new KeyframesEditor
-            {
-                EnableZoom = false,
-                EnablePanning = false,
-                ScrollBars = ScrollBars.None,
-            };
-            Keyframes.Edited += OnKeyframesEdited;
-            Keyframes.UnlockChildrenRecursive();
+            Height = CollapsedHeight;
 
             _addKey.Clicked += OnAddKeyClicked;
             _leftKey.Clicked += OnLeftKeyClicked;
@@ -151,12 +167,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnRightKeyClicked(Image image, MouseButton button)
         {
-            if (button == MouseButton.Left)
+            if (button == MouseButton.Left && Curve != null)
             {
                 var time = Timeline.CurrentTime;
-                for (int i = 0; i < Keyframes.Keyframes.Count; i++)
+                var keyframes = Curve.GetKeyframes();
+                for (int i = 0; i < keyframes.Length; i++)
                 {
-                    var k = Keyframes.Keyframes[i];
+                    var k = keyframes[i];
                     if (k.Time > time)
                     {
                         Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond));
@@ -168,17 +185,18 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnAddKeyClicked(Image image, MouseButton button)
         {
-            if (button == MouseButton.Left)
+            if (button == MouseButton.Left && Curve != null)
             {
                 // Evaluate a value
                 var time = Timeline.CurrentTime;
                 if (!TryGetValue(out var value))
-                    value = Keyframes.Evaluate(time);
+                    Curve.Evaluate(out value, time);
 
                 // Find keyframe at the current location
-                for (int i = Keyframes.Keyframes.Count - 1; i >= 0; i--)
+                var keyframes = Curve.GetKeyframes();
+                for (int i = keyframes.Length - 1; i >= 0; i--)
                 {
-                    var k = Keyframes.Keyframes[i];
+                    var k = keyframes[i];
                     var frame = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
                     if (frame == Timeline.CurrentFrame)
                     {
@@ -187,25 +205,26 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                             return;
 
                         // Update existing key value
-                        Keyframes.SetKeyframe(i, value);
+                        Curve.SetKeyframe(i, value);
                         UpdatePreviewValue();
                         return;
                     }
                 }
 
                 // Add a new key
-                Keyframes.AddKeyframe(new KeyframesEditor.Keyframe(time, value));
+                Curve.AddKeyframe(time, value);
             }
         }
 
         private void OnLeftKeyClicked(Image image, MouseButton button)
         {
-            if (button == MouseButton.Left)
+            if (button == MouseButton.Left && Curve != null)
             {
                 var time = Timeline.CurrentTime;
-                for (int i = Keyframes.Keyframes.Count - 1; i >= 0; i--)
+                var keyframes = Curve.GetKeyframes();
+                for (int i = keyframes.Length - 1; i >= 0; i--)
                 {
-                    var k = Keyframes.Keyframes[i];
+                    var k = keyframes[i];
                     if (k.Time < time)
                     {
                         Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond));
@@ -215,15 +234,19 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
-        private void UpdateKeyframes()
+        private void UpdateCurve()
         {
-            if (Keyframes == null)
+            if (Curve == null || Timeline == null)
                 return;
 
-            Keyframes.Bounds = new Rectangle(Timeline.StartOffset, Y + 1.0f, Timeline.Duration * Timeline.UnitsPerSecond * Timeline.Zoom, Height - 2.0f);
-            Keyframes.ViewScale = new Vector2(Timeline.Zoom, 1.0f);
-            Keyframes.Visible = Visible;
-            Keyframes.UpdateKeyframes();
+            Curve.Bounds = new Rectangle(Timeline.StartOffset, Y + 1.0f, Timeline.Duration * Timeline.UnitsPerSecond * Timeline.Zoom, Height - 2.0f);
+            var expanded = IsExpanded;
+            Curve.ViewScale = new Vector2(Timeline.Zoom, Curve.ViewScale.Y);
+            Curve.ShowCollapsed = !expanded;
+            Curve.ShowBackground = expanded;
+            Curve.ShowAxes = expanded;
+            Curve.Visible = Visible;
+            Curve.UpdateKeyframes();
         }
 
         private void OnKeyframesEdited()
@@ -234,21 +257,54 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void UpdatePreviewValue()
         {
+            if (Curve == null)
+            {
+                _previewValue.Text = string.Empty;
+                return;
+            }
+
             var time = Timeline.CurrentTime;
-            var value = Keyframes.Evaluate(time);
+            Curve.Evaluate(out var value, time);
             _previewValue.Text = GetValueText(value);
         }
+
+        private void CreateCurve(Type propertyType)
+        {
+            var curveEditorType = typeof(CurveEditor<>).MakeGenericType(propertyType);
+            Curve = (CurveEditorBase)Activator.CreateInstance(curveEditorType);
+            Curve.EnableZoom = CurveEditorBase.UseMode.Vertical;
+            Curve.EnablePanning = CurveEditorBase.UseMode.Vertical;
+            Curve.ScrollBars = ScrollBars.Vertical;
+            Curve.Parent = Timeline?.MediaPanel;
+            Curve.FPS = Timeline?.FramesPerSecond;
+            Curve.Edited += OnKeyframesEdited;
+            Curve.UnlockChildrenRecursive();
+            UpdateCurve();
+        }
+
+        private void DisposeCurve()
+        {
+            if (Curve == null)
+                return;
+
+            Curve.Edited -= OnKeyframesEdited;
+            Curve.Dispose();
+            Curve = null;
+        }
+
+        /// <inheritdoc />
+        protected override bool CanExpand => true;
 
         /// <inheritdoc />
         protected override void OnPropertyChanged(PropertyInfo p)
         {
             base.OnPropertyChanged(p);
 
-            Keyframes.ResetKeyframes();
+            DisposeCurve();
+
             if (p != null)
             {
-                // TODO: pick the default value from property attribute via DefaultValueAttribute if available
-                Keyframes.DefaultValue = Activator.CreateInstance(p.PropertyType);
+                CreateCurve(p.PropertyType);
             }
         }
 
@@ -257,7 +313,19 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnVisibleChanged();
 
-            Keyframes.Visible = Visible;
+            if (Curve != null)
+            {
+                Curve.Visible = Visible;
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnExpandedChanged()
+        {
+            Height = IsExpanded ? ExpandedHeight : CollapsedHeight;
+            UpdateCurve();
+
+            base.OnExpandedChanged();
         }
 
         /// <inheritdoc />
@@ -276,10 +344,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 Timeline.ShowPreviewValuesChanged += OnTimelineShowPreviewValuesChanged;
             }
 
-            Keyframes.Parent = timeline?.MediaPanel;
-            Keyframes.FPS = timeline?.FramesPerSecond;
-
-            UpdateKeyframes();
+            if (Curve != null)
+            {
+                Curve.Parent = timeline?.MediaPanel;
+                Curve.FPS = timeline?.FramesPerSecond;
+                UpdateCurve();
+            }
             UpdatePreviewValue();
         }
 
@@ -293,7 +363,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnTimelineZoomChanged();
 
-            UpdateKeyframes();
+            UpdateCurve();
         }
 
         /// <inheritdoc />
@@ -301,7 +371,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnTimelineArrange();
 
-            UpdateKeyframes();
+            UpdateCurve();
         }
 
         /// <inheritdoc />
@@ -309,7 +379,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnTimelineFpsChanged(before, after);
 
-            Keyframes.FPS = after;
+            if (Curve != null)
+            {
+                Curve.FPS = after;
+            }
             UpdatePreviewValue();
         }
 
@@ -324,11 +397,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <inheritdoc />
         public override void Dispose()
         {
-            if (Keyframes != null)
-            {
-                Keyframes.Dispose();
-                Keyframes = null;
-            }
+            DisposeCurve();
 
             base.Dispose();
         }
