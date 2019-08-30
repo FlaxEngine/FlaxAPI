@@ -111,7 +111,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (propertyTypeNameData.Length != propertyTypeName.Length)
                 throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
 
-            var keyframes = e.Curve.GetKeyframes();
+            var keyframes = e.Curve?.GetKeyframes() ?? Utils.GetEmptyArray<Curve<object>.Keyframe>();
 
             stream.Write(e.ValueSize);
             stream.Write(propertyNameData.Length);
@@ -124,6 +124,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             stream.Write(propertyTypeNameData);
             stream.Write('\0');
 
+            if (keyframes.Length == 0)
+                return;
             var dataBuffer = new byte[e.ValueSize];
             IntPtr ptr = Marshal.AllocHGlobal(e.ValueSize);
             for (int i = 0; i < keyframes.Length; i++)
