@@ -250,14 +250,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        protected override void OnPropertyChanged(PropertyInfo p)
+        protected override void OnPropertyChanged(MemberInfo value, Type type)
         {
-            base.OnPropertyChanged(p);
+            base.OnPropertyChanged(value, type);
 
             Keyframes.ResetKeyframes();
-            if (p != null)
+            if (type != null)
             {
-                Keyframes.DefaultValue = GetDefaultValue(p.PropertyType);
+                Keyframes.DefaultValue = GetDefaultValue(type);
             }
         }
 

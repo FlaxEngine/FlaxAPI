@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using FlaxEngine;
@@ -34,40 +35,43 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         public string PropertyTypeName;
 
         /// <summary>
-        /// Gets or sets the object property. Performs the value validation on set.
+        /// Gets or sets the object property. Performs the value validation on set. This can be <see cref="PropertyInfo"/> or <see cref="FieldInfo"/>.
         /// </summary>
-        public PropertyInfo Property
+        public MemberInfo Property
         {
             get
             {
-                if (ParentTrack is ObjectTrack objectTrack)
+                if (ParentTrack is IObjectTrack objectTrack)
                 {
                     var obj = objectTrack.Object;
-                    if (obj)
+                    if (obj != null)
                     {
-                        return obj.GetType().GetProperty(PropertyName, BindingFlags.Public | BindingFlags.Instance);
+                        return GetMember(obj.GetType(), PropertyName);
                     }
                 }
                 return null;
             }
             set
             {
-                if (value != null && ParentTrack is ObjectTrack objectTrack)
+                if (value != null && ParentTrack is IObjectTrack objectTrack)
                 {
                     var obj = objectTrack.Object;
-                    if (obj)
+                    if (obj != null)
                     {
-                        if (obj.GetType().GetProperty(value.Name, BindingFlags.Public | BindingFlags.Instance) == null)
+                        if (GetMember(obj.GetType(), value.Name) == null)
                             throw new Exception("Cannot use property " + value + " for object of type " + obj.GetType());
                     }
                 }
 
+                var p = value as PropertyInfo;
+                var f = value as FieldInfo;
+                var type = p?.PropertyType ?? f?.FieldType;
+
                 if (value != null)
                 {
-                    var type = value.PropertyType;
                     PropertyName = value.Name;
                     PropertyTypeName = type.FullName;
-                    ValueSize = type.IsValueType ? (Marshal.SizeOf(type.IsEnum ? Enum.GetUnderlyingType(type) : type)) : 0;
+                    ValueSize = GetValueDataSize(type);
                 }
                 else
                 {
@@ -76,7 +80,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     ValueSize = 0;
                 }
 
-                OnPropertyChanged(value);
+                OnPropertyChanged(value, type);
             }
         }
 
@@ -85,60 +89,85 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         protected Image _addKey;
         protected Image _leftKey;
 
-        /// <inheritdoc />
-        protected PropertyTrack(ref TrackCreateOptions options)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyTrack"/> class.
+        /// </summary>
+        /// <param name="options">The track initial options.</param>
+        /// <param name="useNavigationButtons">True if show keyframe navigation buttons, otherwise false.</param>
+        /// <param name="useValuePreview">True if show current value preview, otherwise false.</param>
+        protected PropertyTrack(ref TrackCreateOptions options, bool useNavigationButtons = true, bool useValuePreview = true)
         : base(ref options)
         {
-            // Navigation buttons
-            const float buttonSize = 14;
-            var icons = Editor.Instance.Icons;
-            _rightKey = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Sets the time to the next key",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(1),
-                Brush = new SpriteBrush(icons.ArrowRight32),
-                Parent = this
-            };
-            _addKey = new Image(_rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Adds a new key at the current time",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(3),
-                Brush = new SpriteBrush(icons.Add48),
-                Parent = this
-            };
-            _leftKey = new Image(_addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
-            {
-                TooltipText = "Sets the time to the previous key",
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                Color = new Color(0.8f),
-                Margin = new Margin(1),
-                Brush = new SpriteBrush(icons.ArrowLeft32),
-                Parent = this
-            };
+            var uiLeft = _muteCheckbox.Left;
 
-            // Value preview
-            var previewWidth = 100.0f;
-            _previewValue = new Label(_leftKey.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
+            if (useNavigationButtons)
             {
-                AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
-                IsScrollable = false,
-                AutoFitTextRange = new Vector2(0.01f, 1.0f),
-                AutoFitText = true,
-                TextColor = new Color(0.8f),
-                Margin = new Margin(1),
-                Parent = this
-            };
+                // Navigation buttons
+                const float buttonSize = 14;
+                var icons = Editor.Instance.Icons;
+                _rightKey = new Image(uiLeft - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+                {
+                    TooltipText = "Sets the time to the next key",
+                    AutoFocus = true,
+                    AnchorStyle = AnchorStyle.CenterRight,
+                    IsScrollable = false,
+                    Color = new Color(0.8f),
+                    Margin = new Margin(1),
+                    Brush = new SpriteBrush(icons.ArrowRight32),
+                    Parent = this
+                };
+                _addKey = new Image(_rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+                {
+                    TooltipText = "Adds a new key at the current time",
+                    AutoFocus = true,
+                    AnchorStyle = AnchorStyle.CenterRight,
+                    IsScrollable = false,
+                    Color = new Color(0.8f),
+                    Margin = new Margin(3),
+                    Brush = new SpriteBrush(icons.Add48),
+                    Parent = this
+                };
+                _leftKey = new Image(_addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+                {
+                    TooltipText = "Sets the time to the previous key",
+                    AutoFocus = true,
+                    AnchorStyle = AnchorStyle.CenterRight,
+                    IsScrollable = false,
+                    Color = new Color(0.8f),
+                    Margin = new Margin(1),
+                    Brush = new SpriteBrush(icons.ArrowLeft32),
+                    Parent = this
+                };
+                uiLeft = _leftKey.Left;
+            }
+
+            if (useValuePreview)
+            {
+                // Value preview
+                var previewWidth = 100.0f;
+                _previewValue = new Label(uiLeft - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
+                {
+                    AutoFocus = true,
+                    AnchorStyle = AnchorStyle.CenterRight,
+                    IsScrollable = false,
+                    AutoFitTextRange = new Vector2(0.01f, 1.0f),
+                    AutoFitText = true,
+                    TextColor = new Color(0.8f),
+                    Margin = new Margin(1),
+                    Parent = this
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the member (field or property) from the given type.
+        /// </summary>
+        /// <param name="type">The declaring type.</param>
+        /// <param name="name">The member name.</param>
+        /// <returns>The member or null if not found.</returns>
+        protected static MemberInfo GetMember(Type type, string name)
+        {
+            return type.GetMember(name, MemberTypes.Field | MemberTypes.Property, BindingFlags.Public | BindingFlags.Instance).FirstOrDefault();
         }
 
         /// <summary>
@@ -148,17 +177,30 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <returns>True if got value, otherwise false.</returns>
         protected virtual bool TryGetValue(out object value)
         {
-            if (!string.IsNullOrEmpty(PropertyName) && ParentTrack is ObjectTrack objectTrack)
+            if (!string.IsNullOrEmpty(PropertyName) && ParentTrack is IObjectTrack objectTrack)
             {
                 var obj = objectTrack.Object;
-                if (obj)
+                if (obj != null)
                 {
-                    var p = obj.GetType().GetProperty(PropertyName, BindingFlags.Public | BindingFlags.Instance);
-                    if (p != null)
+                    var member = GetMember(obj.GetType(), PropertyName);
+                    if (member is PropertyInfo p)
                     {
                         try
                         {
                             value = p.GetValue(obj);
+                            return true;
+                        }
+                        catch
+                        {
+                            value = null;
+                            return false;
+                        }
+                    }
+                    if (member is FieldInfo f)
+                    {
+                        try
+                        {
+                            value = f.GetValue(obj);
                             return true;
                         }
                         catch
@@ -190,6 +232,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             return value.ToString();
         }
 
+        /// <summary>
+        /// Gets the size of the value data type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The value data size (in bytes).</returns>
+        protected virtual int GetValueDataSize(Type type)
+        {
+            return type.IsValueType ? (Marshal.SizeOf(type.IsEnum ? Enum.GetUnderlyingType(type) : type)) : 0;
+        }
+
         /// <inheritdoc />
         protected override bool CanDrag => false;
 
@@ -199,8 +251,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Called when property gets changed.
         /// </summary>
-        /// <param name="p">The property value assigned.</param>
-        protected virtual void OnPropertyChanged(PropertyInfo p)
+        /// <param name="value">The property value assigned.</param>
+        /// <param name="type">The property type assigned.</param>
+        protected virtual void OnPropertyChanged(MemberInfo value, Type type)
         {
         }
 
@@ -211,6 +264,17 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             var p = Property;
             TitleTintColor = p != null ? Color.White : Color.Red;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            _previewValue = null;
+            _rightKey = null;
+            _addKey = null;
+            _leftKey = null;
+
+            base.Dispose();
         }
     }
 }

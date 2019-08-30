@@ -17,7 +17,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// Gets the archetype.
         /// </summary>
         /// <returns>The archetype.</returns>
-        public static TrackArchetype GetArchetype()
+        public new static TrackArchetype GetArchetype()
         {
             return new TrackArchetype
             {
@@ -121,6 +121,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         protected override object GetDefaultValue(Type propertyType)
         {
             return Guid.Empty;
+        }
+
+        /// <inheritdoc />
+        protected override int GetValueDataSize(Type type)
+        {
+            // Size of Guid
+            return 16;
         }
 
         /// <inheritdoc />

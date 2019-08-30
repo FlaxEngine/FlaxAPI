@@ -2,29 +2,30 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
-    /// The timeline track for animating string property via keyframes collection.
+    /// The timeline track for animating structure property via keyframes collection.
     /// </summary>
     /// <seealso cref="PropertyTrack" />
-    /// <seealso cref="KeyframesPropertyTrack" />
-    sealed class StringPropertyTrack : KeyframesPropertyTrack
+    class StructPropertyTrack : PropertyTrack, IObjectTrack
     {
         /// <summary>
         /// Gets the archetype.
         /// </summary>
         /// <returns>The archetype.</returns>
-        public new static TrackArchetype GetArchetype()
+        public static TrackArchetype GetArchetype()
         {
             return new TrackArchetype
             {
-                TypeId = 11,
+                TypeId = 13,
                 Name = "Property",
                 DisableSpawnViaGUI = true,
-                Create = options => new StringPropertyTrack(ref options),
+                Create = options => new StructPropertyTrack(ref options),
                 Load = LoadTrack,
                 Save = SaveTrack,
             };
@@ -32,12 +33,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void LoadTrack(int version, Track track, BinaryReader stream)
         {
-            var e = (StringPropertyTrack)track;
+            var e = (StructPropertyTrack)track;
 
             e.ValueSize = stream.ReadInt32();
             int propertyNameLength = stream.ReadInt32();
             int propertyTypeNameLength = stream.ReadInt32();
-            int keyframesCount = stream.ReadInt32();
 
             var propertyName = stream.ReadBytes(propertyNameLength);
             e.PropertyName = Encoding.UTF8.GetString(propertyName, 0, propertyNameLength);
@@ -49,39 +49,18 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (stream.ReadChar() != 0)
                 throw new Exception("Invalid track data.");
 
-            var keyframes = new KeyframesEditor.Keyframe[keyframesCount];
-            var dataBuffer = new byte[e.ValueSize];
             var propertyType = Utilities.Utils.GetType(e.PropertyTypeName);
             if (propertyType == null)
             {
-                e.Keyframes.ResetKeyframes();
-                stream.ReadBytes(keyframesCount * (sizeof(float) + e.ValueSize));
                 if (!string.IsNullOrEmpty(e.PropertyTypeName))
                     Editor.LogError("Cannot load track " + e.PropertyName + " of type " + e.PropertyTypeName + ". Failed to find the value type information.");
                 return;
             }
-
-            for (int i = 0; i < keyframesCount; i++)
-            {
-                var time = stream.ReadSingle();
-                var length = stream.ReadInt32();
-                var data = stream.ReadBytes(length * 2);
-                var value = Encoding.Unicode.GetString(data, 0, data.Length);
-
-                keyframes[i] = new KeyframesEditor.Keyframe
-                {
-                    Time = time,
-                    Value = value,
-                };
-            }
-
-            e.Keyframes.DefaultValue = string.Empty;
-            e.Keyframes.SetKeyframes(keyframes);
         }
 
         private static void SaveTrack(Track track, BinaryWriter stream)
         {
-            var e = (StringPropertyTrack)track;
+            var e = (StructPropertyTrack)track;
 
             var propertyName = e.PropertyName ?? string.Empty;
             var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
@@ -93,60 +72,70 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (propertyTypeNameData.Length != propertyTypeName.Length)
                 throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
 
-            var keyframes = e.Keyframes.Keyframes;
-
             stream.Write(e.ValueSize);
             stream.Write(propertyNameData.Length);
             stream.Write(propertyTypeNameData.Length);
-            stream.Write(keyframes.Count);
 
             stream.Write(propertyNameData);
             stream.Write('\0');
 
             stream.Write(propertyTypeNameData);
             stream.Write('\0');
+        }
 
-            for (int i = 0; i < keyframes.Count; i++)
+        private Button _addButton;
+
+        /// <inheritdoc />
+        public StructPropertyTrack(ref TrackCreateOptions options)
+        : base(ref options, false, false)
+        {
+            // Add track button
+            const float buttonSize = 14;
+            _addButton = new Button(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
             {
-                var keyframe = keyframes[i];
-                stream.Write(keyframe.Time);
-                if (keyframe.Value is string value)
-                {
-                    var valueData = Encoding.Unicode.GetBytes(value);
-                    stream.Write(value.Length);
-                    if (valueData.Length != value.Length * 2)
-                        throw new Exception("Invalid string value data length.");
-                    stream.Write(valueData);
-                }
-                else
-                {
-                    stream.Write(0);
-                }
+                Text = "+",
+                TooltipText = "Add sub-tracks",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Parent = this
+            };
+            _addButton.Clicked += OnAddButtonClicked;
+        }
+
+        /// <inheritdoc />
+        public object Object
+        {
+            get
+            {
+                TryGetValue(out var value);
+                return value;
             }
         }
 
-        /// <inheritdoc />
-        public StringPropertyTrack(ref TrackCreateOptions options)
-        : base(ref options)
+        private void OnAddButtonClicked()
         {
-        }
+            var menu = new ContextMenu.ContextMenu();
 
-        /// <inheritdoc />
-        protected override object GetDefaultValue(Type propertyType)
-        {
-            return string.Empty;
-        }
-
-        /// <inheritdoc />
-        protected override bool TryGetValue(out object value)
-        {
-            if (base.TryGetValue(out value))
+            var obj = Object;
+            if (obj == null)
             {
-                if (value == null)
-                    value = string.Empty;
-                return true;
+                menu.AddButton("Missing object");
+                return;
             }
-            return false;
+
+            var type = obj.GetType();
+            ObjectTrack.AddProperties(this, menu, type, m => m is FieldInfo);
+
+            menu.Show(_addButton.Parent, _addButton.BottomLeft);
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            _addButton = null;
+
+            base.Dispose();
         }
     }
 }

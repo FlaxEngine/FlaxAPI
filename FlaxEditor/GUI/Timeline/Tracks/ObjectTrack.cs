@@ -11,10 +11,21 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
+    /// The base interface for <see cref="ObjectTrack"/>.
+    /// </summary>
+    public interface IObjectTrack
+    {
+        /// <summary>
+        /// Gets the object instance (may be null if reference is invalid or data is missing).
+        /// </summary>
+        object Object { get; }
+    }
+
+    /// <summary>
     /// The timeline track for animating managed objects.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public abstract class ObjectTrack : Track
+    public abstract class ObjectTrack : Track, IObjectTrack
     {
         /// <summary>
         /// The add button.
@@ -24,13 +35,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Gets the object instance (may be null if reference is invalid or data is missing).
         /// </summary>
-        public abstract FlaxEngine.Object Object { get; }
+        public abstract object Object { get; }
 
         /// <inheritdoc />
         protected ObjectTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
-            // Add button
+            // Add track button
             const float buttonSize = 14;
             _addButton = new Button(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
             {
@@ -57,7 +68,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             base.Update(deltaTime);
 
             var obj = Object;
-            TitleTintColor = obj ? Color.White : Color.Red;
+            TitleTintColor = obj != null ? Color.White : Color.Red;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            _addButton = null;
+
+            base.Dispose();
         }
 
         /// <summary>
@@ -69,15 +88,18 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <summary>
-        /// Called on context menu button click to add new object property animation track. Button should have <see cref="PropertyInfo"/> value assigned to the <see cref="Control.Tag"/> field.
+        /// Called on context menu button click to add new object property animation track. Button should have <see cref="PropertyInfo"/> or <see cref="FieldInfo"/> value assigned to the <see cref="Control.Tag"/> field.
         /// </summary>
-        /// <param name="button">The button (with <see cref="PropertyInfo"/> value assigned to the <see cref="Control.Tag"/> field.).</param>
-        protected void OnAddObjectPropertyTrack(ContextMenuButton button)
+        /// <param name="button">The button (with <see cref="PropertyInfo"/> or <see cref="FieldInfo"/> value assigned to the <see cref="Control.Tag"/> field.).</param>
+        public static void OnAddPropertyTrack(ContextMenuButton button)
         {
-            var p = (PropertyInfo)button.Tag;
+            var m = button.Tag as MemberInfo;
+            var p = m as PropertyInfo;
+            var f = m as FieldInfo;
+            var parentTrack = (Track)button.ParentContextMenu.Tag;
 
             // Detect the type of the track to use
-            var valueType = p.PropertyType;
+            var valueType = p?.PropertyType ?? f?.FieldType ?? throw new ArgumentNullException("Missing PropertyInfo or FieldInfo for property track to add (should be assigned to button tag).");
             if (BasicTypesTrackArchetypes.TryGetValue(valueType, out var archetype))
             {
                 // Basic type
@@ -92,50 +114,77 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 // Flax object
                 archetype = ObjectPropertyTrack.GetArchetype();
             }
+            else if (valueType.IsValueType)
+            {
+                // Structure
+                archetype = StructPropertyTrack.GetArchetype();
+            }
             else
             {
                 throw new Exception("Invalid property type to create animation track for it. Value type: " + valueType);
             }
 
-            var track = (PropertyTrack)Timeline.AddTrack(archetype);
-            track.ParentTrack = this;
-            track.TrackIndex = TrackIndex + 1;
+            var timeline = parentTrack.Timeline;
+            var track = (PropertyTrack)timeline.AddTrack(archetype);
+            track.ParentTrack = parentTrack;
+            track.TrackIndex = parentTrack.TrackIndex + 1;
             track.Name = Guid.NewGuid().ToString("N");
-            track.Property = p;
+            track.Property = m;
 
-            Timeline.OnTracksOrderChanged();
-            Timeline.MarkAsEdited();
-            Expand();
+            timeline.OnTracksOrderChanged();
+            timeline.MarkAsEdited();
+            parentTrack.Expand();
         }
 
         /// <summary>
         /// Adds the object properties animation track options to menu.
         /// </summary>
+        /// <param name="parentTrack">The parent track.</param>
         /// <param name="menu">The menu.</param>
         /// <param name="type">The object type.</param>
+        /// <param name="memberCheck">The custom callback that can reject the members that should not be animated. Returns true if member is valid. Can be null to skip this feature.</param>
         /// <returns>The added options count.</returns>
-        protected int AddObjectProperties(ContextMenu.ContextMenu menu, Type type)
+        public static int AddProperties(Track parentTrack, ContextMenu.ContextMenu menu, Type type, Func<MemberInfo, bool> memberCheck = null)
         {
             int count = 0;
+            menu.Tag = parentTrack;
 
             // TODO: implement editor-wide cache for animated properties per object type (add this in CodeEditingModule)
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            for (int i = 0; i < properties.Length; i++)
-            {
-                var p = properties[i];
+            var members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
 
-                // Properties with read/write
-                if (!(p.CanRead && p.CanWrite && p.GetIndexParameters().GetLength(0) == 0))
+            for (int i = 0; i < members.Length; i++)
+            {
+                var m = members[i];
+
+                Type t;
+                if (m is PropertyInfo p)
+                {
+                    // Properties with read/write
+                    if (!(p.CanRead && p.CanWrite && p.GetIndexParameters().GetLength(0) == 0))
+                        continue;
+
+                    t = p.PropertyType;
+                }
+                else if (m is FieldInfo f)
+                {
+                    t = f.FieldType;
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (memberCheck != null && !memberCheck(m))
                     continue;
 
-                var attributes = p.GetCustomAttributes();
+                var attributes = m.GetCustomAttributes();
 
                 // Check if has attribute to skip animating
                 if (attributes.Any(x => x is NoAnimateAttribute))
                     continue;
 
                 // Validate value type
-                var valueType = p.PropertyType;
+                var valueType = t;
                 if (BasicTypesNames.TryGetValue(valueType, out var name))
                 {
                     // Basic type
@@ -157,10 +206,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 }
 
                 // Prevent from adding the same track twice
-                if (SubTracks.Any(x => x is PropertyTrack y && y.PropertyName == p.Name))
+                if (parentTrack.SubTracks.Any(x => x is PropertyTrack y && y.PropertyName == m.Name))
                     continue;
 
-                menu.AddButton(name + " " + p.Name, OnAddObjectPropertyTrack).Tag = p;
+                menu.AddButton(name + " " + m.Name, OnAddPropertyTrack).Tag = m;
                 count++;
             }
 

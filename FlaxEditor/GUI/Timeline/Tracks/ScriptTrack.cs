@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using FlaxEngine;
-using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
@@ -52,7 +51,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// </summary>
         public Script Script
         {
-            get => Object.TryFind<Script>(ref ScriptID);
+            get => FlaxEngine.Object.TryFind<Script>(ref ScriptID);
             set => ScriptID = value?.ID ?? Guid.Empty;
         }
 
@@ -63,7 +62,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public override Object Object => Script;
+        public override object Object => Script;
 
         /// <inheritdoc />
         protected override void OnShowAddContextMenu(ContextMenu.ContextMenu menu)
@@ -78,7 +77,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
 
             var type = script.GetType();
-            AddObjectProperties(menu, type);
+            AddProperties(this, menu, type);
         }
     }
 }

@@ -296,15 +296,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         protected override bool CanExpand => true;
 
         /// <inheritdoc />
-        protected override void OnPropertyChanged(PropertyInfo p)
+        protected override void OnPropertyChanged(MemberInfo value, Type type)
         {
-            base.OnPropertyChanged(p);
+            base.OnPropertyChanged(value, type);
 
             DisposeCurve();
 
-            if (p != null)
+            if (type != null)
             {
-                CreateCurve(p.PropertyType);
+                CreateCurve(type);
             }
         }
 

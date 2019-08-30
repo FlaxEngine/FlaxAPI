@@ -311,6 +311,7 @@
     <Compile Include="GUI\Timeline\TrackArchetype.cs" />
     <Compile Include="GUI\Timeline\TrackCreateOptions.cs" />
     <Compile Include="GUI\Timeline\Tracks\StringPropertyTrack.cs" />
+    <Compile Include="GUI\Timeline\Tracks\StructPropertyTrack.cs" />
     <Compile Include="GUI\ToolStrip.cs" />
     <Compile Include="GUI\ToolStripButton.cs" />
     <Compile Include="GUI\ToolStripSeparator.cs" />

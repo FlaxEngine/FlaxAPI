@@ -8,7 +8,6 @@ using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
@@ -56,7 +55,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// </summary>
         public Actor Actor
         {
-            get => Object.TryFind<Actor>(ref ActorID);
+            get => FlaxEngine.Object.TryFind<Actor>(ref ActorID);
             set => ActorID = value?.ID ?? Guid.Empty;
         }
 
@@ -82,7 +81,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public override Object Object => Actor;
+        public override object Object => Actor;
 
         /// <inheritdoc />
         protected override void OnShowAddContextMenu(ContextMenu.ContextMenu menu)
@@ -111,7 +110,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
 
             var type = actor.GetType();
-            if (AddObjectProperties(menu, type) != 0)
+            if (AddProperties(this, menu, type) != 0)
                 menu.AddSeparator();
 
             // Child scripts
@@ -121,7 +120,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 var script = scripts[i];
 
                 // Prevent from adding the same track twice
-                if (SubTracks.Any(x => x is ObjectTrack y && y.Object == script))
+                if (SubTracks.Any(x => x is IObjectTrack y && y.Object == script))
                     continue;
 
                 var name = CustomEditorsUtil.GetPropertyNameUI(script.GetType().Name);
