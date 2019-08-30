@@ -143,10 +143,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the value that determinates whether the scene animation should restore initial state on playback stop.
+        /// Gets or sets the value that determinates whether the scene animation should restore initial state on playback stop. State is cached when animation track starts play after being stopped (not paused).
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation", "Restore State On Stop"), EditorOrder(70), Tooltip("Determines whether the scene animation should restore initial state on playback stop.")]
+        [EditorDisplay("Scene Animation", "Restore State On Stop"), EditorOrder(70), Tooltip("Determines whether the scene animation should restore initial state on playback stop. State is cached when animations stats play after being stopped (not paused).")]
         public bool RestoreStateOnStop
         {
 #if UNIT_TEST_COMPILANT
