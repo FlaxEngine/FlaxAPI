@@ -30,7 +30,7 @@
     <DebugType>portable</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;FLAX_ASSERTIONS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -376,7 +376,6 @@
     <Compile Include="API\Actors\EmptyActor.cs" />
     <Compile Include="Assertions\Assert.cs" />
     <Compile Include="Assertions\AssertionException.cs" />
-    <Compile Include="Assertions\AssertionMessageUtil.cs" />
     <Compile Include="Assertions\FloatComparer.cs" />
     <Compile Include="AssetTypes\MaterialBase.cs" />
     <Compile Include="AssetTypes\Shader.cs" />

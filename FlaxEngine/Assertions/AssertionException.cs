@@ -1,9 +1,11 @@
+// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+
 using System;
 
 namespace FlaxEngine.Assertions
 {
     /// <summary>
-    /// An exception that is thrown on a failure. Assertions.Assert._raiseExceptions needs to be set to true.
+    /// An exception that is thrown on a failure. To enable this feature <see cref="Assert.RaiseExceptions"/> needs to be set to true.
     /// </summary>
     public class AssertionException : Exception
     {
