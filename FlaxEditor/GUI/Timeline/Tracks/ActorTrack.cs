@@ -119,6 +119,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             {
                 var script = scripts[i];
 
+                // Skip invalid or hidden scripts
+                if (script == null || script.GetType().GetCustomAttributes(true).Any(x => x is HideInEditorAttribute))
+                    continue;
+
                 // Prevent from adding the same track twice
                 if (SubTracks.Any(x => x is IObjectTrack y && y.Object == script))
                     continue;
