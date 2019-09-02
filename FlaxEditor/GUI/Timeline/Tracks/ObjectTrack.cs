@@ -88,48 +88,36 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <summary>
-        /// Called on context menu button click to add new object property animation track. Button should have <see cref="PropertyInfo"/> or <see cref="FieldInfo"/> value assigned to the <see cref="Control.Tag"/> field.
+        /// The data for add property track buttons tag.
         /// </summary>
-        /// <param name="button">The button (with <see cref="PropertyInfo"/> or <see cref="FieldInfo"/> value assigned to the <see cref="Control.Tag"/> field.).</param>
+        public struct AddPropertyTag
+        {
+            /// <summary>
+            /// The member.
+            /// </summary>
+            public MemberInfo Member;
+
+            /// <summary>
+            /// The archetype.
+            /// </summary>
+            public TrackArchetype Archetype;
+        }
+
+        /// <summary>
+        /// Called on context menu button click to add new object property animation track. Button should have <see cref="AddPropertyTag"/> value assigned to the <see cref="Control.Tag"/> field.
+        /// </summary>
+        /// <param name="button">The button (with <see cref="AddPropertyTag"/> value assigned to the <see cref="Control.Tag"/> field.).</param>
         public static void OnAddPropertyTrack(ContextMenuButton button)
         {
-            var m = button.Tag as MemberInfo;
-            var p = m as PropertyInfo;
-            var f = m as FieldInfo;
+            var tag = (AddPropertyTag)button.Tag;
             var parentTrack = (Track)button.ParentContextMenu.Tag;
 
-            // Detect the type of the track to use
-            var valueType = p?.PropertyType ?? f?.FieldType ?? throw new ArgumentNullException("Missing PropertyInfo or FieldInfo for property track to add (should be assigned to button tag).");
-            if (BasicTypesTrackArchetypes.TryGetValue(valueType, out var archetype))
-            {
-                // Basic type
-            }
-            else if (valueType.IsEnum)
-            {
-                // Enum
-                archetype = KeyframesPropertyTrack.GetArchetype();
-            }
-            else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
-            {
-                // Flax object
-                archetype = ObjectReferencePropertyTrack.GetArchetype();
-            }
-            else if (valueType.IsValueType)
-            {
-                // Structure
-                archetype = StructPropertyTrack.GetArchetype();
-            }
-            else
-            {
-                throw new Exception("Invalid property type to create animation track for it. Value type: " + valueType);
-            }
-
             var timeline = parentTrack.Timeline;
-            var track = (PropertyTrack)timeline.AddTrack(archetype);
+            var track = (PropertyTrack)timeline.AddTrack(tag.Archetype);
             track.ParentTrack = parentTrack;
             track.TrackIndex = parentTrack.TrackIndex + 1;
             track.Name = Guid.NewGuid().ToString("N");
-            track.Property = m;
+            track.Property = tag.Member;
 
             timeline.OnTracksOrderChanged();
             timeline.MarkAsEdited();
@@ -183,25 +171,41 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 if (attributes.Any(x => x is NoAnimateAttribute))
                     continue;
 
-                // Validate value type
+                // Validate value type and pick the track archetype
                 var valueType = t;
+                TrackArchetype archetype;
                 if (BasicTypesNames.TryGetValue(valueType, out var name))
                 {
                     // Basic type
+                    archetype = BasicTypesTrackArchetypes[valueType];
+                }
+                else if (valueType.IsEnum)
+                {
+                    // Enum
+                    name = valueType.Name;
+                    archetype = KeyframesPropertyTrack.GetArchetype();
                 }
                 else if (valueType.IsValueType)
                 {
-                    // Enum or Structure
+                    // Structure
                     name = valueType.Name;
+                    archetype = StructPropertyTrack.GetArchetype();
                 }
                 else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
                 {
-                    // Flax object
+                    // Flax object reference
                     name = valueType.Name;
+                    archetype = ObjectReferencePropertyTrack.GetArchetype();
+                }
+                else if (CanAnimateObjectType(valueType))
+                {
+                    // Nested object
+                    name = valueType.Name;
+                    archetype = ObjectPropertyTrack.GetArchetype();
                 }
                 else
                 {
-                    // Animating subobjects properties is not supported
+                    // Not supported
                     continue;
                 }
 
@@ -209,12 +213,32 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 if (parentTrack.SubTracks.Any(x => x is PropertyTrack y && y.PropertyName == m.Name))
                     continue;
 
-                menu.AddButton(name + " " + m.Name, OnAddPropertyTrack).Tag = m;
+                AddPropertyTag tag;
+                tag.Member = m;
+                tag.Archetype = archetype;
+                menu.AddButton(name + " " + m.Name, OnAddPropertyTrack).Tag = tag;
                 count++;
             }
 
             return count;
         }
+
+        private static bool CanAnimateObjectType(Type type)
+        {
+            if (InvalidGenericTypes.Contains(type) || (type.IsGenericType && InvalidGenericTypes.Contains(type.GetGenericTypeDefinition())))
+                return false;
+
+            return !type.ContainsGenericParameters &&
+                   !type.IsArray &&
+                   !type.IsGenericType &&
+                   type.IsClass;
+        }
+
+        private static readonly HashSet<Type> InvalidGenericTypes = new HashSet<Type>
+        {
+            typeof(Action), typeof(Action<>), typeof(Action<,>),
+            typeof(Func<>), typeof(Func<,>), typeof(Func<,,>),
+        };
 
         /// <summary>
         /// Maps the basic type to it's UI name.
