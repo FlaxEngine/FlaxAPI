@@ -48,7 +48,7 @@ namespace FlaxEditor.GUI.Timeline
 
         protected CheckBox _muteCheckbox;
 
-        private DragNames _dragTracks;
+        private DragTracks _dragTracks;
         private DragHandlers _dragHandlers;
         private DragItemPositioning _dragOverMode;
         private bool _isDragOverHeader;
@@ -423,6 +423,57 @@ namespace FlaxEditor.GUI.Timeline
             SubTracksChanged?.Invoke(this);
         }
 
+        sealed class DragTracks : DragNames<DragEventArgs>
+        {
+            private Track _track;
+
+            public DragTracks(Track track)
+            : base(Track.DragPrefix, track.ValidateTrackDrag)
+            {
+                _track = track;
+            }
+
+            public List<Track> Tracks => Objects.ConvertAll(x => _track.Timeline.Tracks.FirstOrDefault(y => y.Name == x));
+
+            /// <inheritdoc />
+            public override DragDropEffect Effect
+            {
+                get
+                {
+                    var result = base.Effect;
+
+                    // Reject drag over if one of the tracks cannot be moved to this track
+                    if (result != DragDropEffect.None)
+                    {
+                        var tracks = Tracks;
+                        for (int i = 0; i < tracks.Count; i++)
+                        {
+                            var track = tracks[i];
+                            if (track == null)
+                                continue;
+
+                            bool blockDrag = false;
+                            switch (_track._dragOverMode)
+                            {
+                            case DragItemPositioning.At:
+                                blockDrag = !_track.CanAddChildTrack(track);
+                                break;
+                            case DragItemPositioning.Above:
+                            case DragItemPositioning.Below:
+                                var parent = _track.ParentTrack;
+                                blockDrag = parent != null && !parent.CanAddChildTrack(track);
+                                break;
+                            }
+                            if (blockDrag)
+                                return DragDropEffect.None;
+                        }
+                    }
+
+                    return result;
+                }
+            }
+        }
+
         /// <summary>
         /// Called when drag and drop enters the track header area.
         /// </summary>
@@ -436,7 +487,7 @@ namespace FlaxEditor.GUI.Timeline
             // Check if drop tracks
             if (_dragTracks == null)
             {
-                _dragTracks = new DragNames(DragPrefix, ValidateTrackDrag);
+                _dragTracks = new DragTracks(this);
                 _dragHandlers.Add(_dragTracks);
             }
             if (_dragTracks.OnDragEnter(data))
@@ -447,15 +498,10 @@ namespace FlaxEditor.GUI.Timeline
 
         private bool ValidateTrackDrag(string name)
         {
-            // Find track
             var track = _timeline.Tracks.FirstOrDefault(x => x.Name == name);
 
-            // Validate track
-            if (track == null || !CanAddChildTrack(track))
-                return false;
-
             // Reject dragging parents and itself
-            return track != this && !track.ContainsTrack(this);
+            return track != null && track != this && !track.ContainsTrack(this);
         }
 
         /// <summary>
@@ -499,14 +545,14 @@ namespace FlaxEditor.GUI.Timeline
             // Drag tracks
             if (_dragTracks != null && _dragTracks.HasValidDrag)
             {
-                var targetTracks = _dragTracks.Objects.ConvertAll(x => _timeline.SelectedTracks.Find(y => y.Name == x));
-                for (int i = 0; i < targetTracks.Count; i++)
+                var tracks = _dragTracks.Tracks;
+                for (int i = 0; i < tracks.Count; i++)
                 {
-                    var targetTrack = targetTracks[i];
-                    if (targetTrack != null)
+                    var track = tracks[i];
+                    if (track != null)
                     {
-                        targetTrack.ParentTrack = newParent;
-                        targetTrack.TrackIndex = newOrder;
+                        track.ParentTrack = newParent;
+                        track.TrackIndex = newOrder;
                     }
                 }
                 _timeline.OnTracksOrderChanged();
