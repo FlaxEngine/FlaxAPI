@@ -291,6 +291,7 @@
     <Compile Include="GUI\Timeline\Tracks\ActorTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\AudioTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\CurvePropertyTrack.cs" />
+    <Compile Include="GUI\Timeline\Tracks\EventTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\ObjectPropertyTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\ObjectReferencePropertyTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\FolderTrack.cs" />
@@ -302,7 +303,7 @@
     <Compile Include="GUI\Timeline\GUI\PositionHandle.cs" />
     <Compile Include="GUI\Timeline\Tracks\PostProcessMaterialTrack.cs" />
     <Compile Include="GUI\Timeline\SceneAnimationTimeline.cs" />
-    <Compile Include="GUI\Timeline\Tracks\PropertyTrack.cs" />
+    <Compile Include="GUI\Timeline\Tracks\MemberTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\ObjectTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\ScreenFadeTrack.cs" />
     <Compile Include="GUI\Timeline\Tracks\ScriptTrack.cs" />

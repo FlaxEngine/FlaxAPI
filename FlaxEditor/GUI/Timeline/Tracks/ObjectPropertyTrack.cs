@@ -10,8 +10,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <summary>
     /// The timeline track for animating sub-object properties via child tracks.
     /// </summary>
-    /// <seealso cref="PropertyTrack" />
-    class ObjectPropertyTrack : PropertyTrack, IObjectTrack
+    /// <seealso cref="MemberTrack" />
+    class ObjectPropertyTrack : MemberTrack, IObjectTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -39,20 +39,20 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             int propertyTypeNameLength = stream.ReadInt32();
 
             var propertyName = stream.ReadBytes(propertyNameLength);
-            e.PropertyName = Encoding.UTF8.GetString(propertyName, 0, propertyNameLength);
+            e.MemberName = Encoding.UTF8.GetString(propertyName, 0, propertyNameLength);
             if (stream.ReadChar() != 0)
                 throw new Exception("Invalid track data.");
 
             var propertyTypeName = stream.ReadBytes(propertyTypeNameLength);
-            e.PropertyTypeName = Encoding.UTF8.GetString(propertyTypeName, 0, propertyTypeNameLength);
+            e.MemberTypeName = Encoding.UTF8.GetString(propertyTypeName, 0, propertyTypeNameLength);
             if (stream.ReadChar() != 0)
                 throw new Exception("Invalid track data.");
 
-            var propertyType = Utilities.Utils.GetType(e.PropertyTypeName);
+            var propertyType = Utilities.Utils.GetType(e.MemberTypeName);
             if (propertyType == null)
             {
-                if (!string.IsNullOrEmpty(e.PropertyTypeName))
-                    Editor.LogError("Cannot load track " + e.PropertyName + " of type " + e.PropertyTypeName + ". Failed to find the value type information.");
+                if (!string.IsNullOrEmpty(e.MemberTypeName))
+                    Editor.LogError("Cannot load track " + e.MemberName + " of type " + e.MemberTypeName + ". Failed to find the value type information.");
                 return;
             }
         }
@@ -61,15 +61,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             var e = (ObjectPropertyTrack)track;
 
-            var propertyName = e.PropertyName ?? string.Empty;
+            var propertyName = e.MemberName ?? string.Empty;
             var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
             if (propertyNameData.Length != propertyName.Length)
-                throw new Exception(string.Format("The object property name bytes data has different size as UTF8 bytes. Type {0}.", propertyName));
+                throw new Exception(string.Format("The object member name bytes data has different size as UTF8 bytes. Type {0}.", propertyName));
 
-            var propertyTypeName = e.PropertyTypeName ?? string.Empty;
+            var propertyTypeName = e.MemberTypeName ?? string.Empty;
             var propertyTypeNameData = Encoding.UTF8.GetBytes(propertyTypeName);
             if (propertyTypeNameData.Length != propertyTypeName.Length)
-                throw new Exception(string.Format("The object property typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
+                throw new Exception(string.Format("The object member typename bytes data has different size as UTF8 bytes. Type {0}.", propertyTypeName));
 
             stream.Write(e.ValueSize);
             stream.Write(propertyNameData.Length);

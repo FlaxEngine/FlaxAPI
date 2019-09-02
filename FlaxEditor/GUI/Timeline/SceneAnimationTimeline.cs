@@ -70,6 +70,7 @@ namespace FlaxEditor.GUI.Timeline
             TrackArchetypes.Add(ObjectReferencePropertyTrack.GetArchetype());
             TrackArchetypes.Add(StructPropertyTrack.GetArchetype());
             TrackArchetypes.Add(ObjectPropertyTrack.GetArchetype());
+            TrackArchetypes.Add(EventTrack.GetArchetype());
         }
 
         private void UpdatePlaybackState()

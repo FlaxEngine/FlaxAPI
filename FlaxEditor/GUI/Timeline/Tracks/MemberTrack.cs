@@ -10,34 +10,34 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
-    /// The timeline track for animating object property (managed object).
+    /// The timeline track for animating object member (managed object).
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    public abstract class PropertyTrack : Track
+    public abstract class MemberTrack : Track
     {
         /// <summary>
-        /// The property value data size (in bytes).
+        /// The member value data size (in bytes).
         /// </summary>
         public int ValueSize;
 
         /// <summary>
-        /// Gets or sets the object property name (just a member name). Does not validate the value on set.
+        /// Gets or sets the object member name (just a member name). Does not validate the value on set.
         /// </summary>
-        public string PropertyName
+        public string MemberName
         {
             get => Title;
             set => Title = value;
         }
 
         /// <summary>
-        /// The property typename (fullname including namespace but not assembly).
+        /// The member typename (fullname including namespace but not assembly).
         /// </summary>
-        public string PropertyTypeName;
+        public string MemberTypeName;
 
         /// <summary>
-        /// Gets or sets the object property. Performs the value validation on set. This can be <see cref="PropertyInfo"/> or <see cref="FieldInfo"/>.
+        /// Gets or sets the object member. Performs the value validation on set.
         /// </summary>
-        public MemberInfo Property
+        public MemberInfo Member
         {
             get
             {
@@ -46,7 +46,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     var obj = objectTrack.Object;
                     if (obj != null)
                     {
-                        return GetMember(obj.GetType(), PropertyName);
+                        return GetMember(obj.GetType(), MemberName);
                     }
                 }
                 return null;
@@ -59,7 +59,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     if (obj != null)
                     {
                         if (GetMember(obj.GetType(), value.Name) == null)
-                            throw new Exception("Cannot use property " + value + " for object of type " + obj.GetType());
+                            throw new Exception("Cannot use member " + value + " for object of type " + obj.GetType());
                     }
                 }
 
@@ -69,18 +69,18 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
                 if (value != null)
                 {
-                    PropertyName = value.Name;
-                    PropertyTypeName = type.FullName;
-                    ValueSize = GetValueDataSize(type);
+                    MemberName = value.Name;
+                    MemberTypeName = type?.FullName ?? string.Empty;
+                    ValueSize = GetValueDataSize(value, type);
                 }
                 else
                 {
-                    PropertyName = string.Empty;
-                    PropertyTypeName = string.Empty;
+                    MemberName = string.Empty;
+                    MemberTypeName = string.Empty;
                     ValueSize = 0;
                 }
 
-                OnPropertyChanged(value, type);
+                OnMemberChanged(value, type);
             }
         }
 
@@ -90,12 +90,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         protected Image _leftKey;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyTrack"/> class.
+        /// Initializes a new instance of the <see cref="MemberTrack"/> class.
         /// </summary>
         /// <param name="options">The track initial options.</param>
         /// <param name="useNavigationButtons">True if show keyframe navigation buttons, otherwise false.</param>
         /// <param name="useValuePreview">True if show current value preview, otherwise false.</param>
-        protected PropertyTrack(ref TrackCreateOptions options, bool useNavigationButtons = true, bool useValuePreview = true)
+        protected MemberTrack(ref TrackCreateOptions options, bool useNavigationButtons = true, bool useValuePreview = true)
         : base(ref options)
         {
             var uiLeft = _muteCheckbox.Left;
@@ -160,15 +160,20 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <summary>
-        /// Gets the member (field or property) from the given type.
+        /// Gets the member from the given type.
         /// </summary>
         /// <param name="type">The declaring type.</param>
         /// <param name="name">The member name.</param>
         /// <returns>The member or null if not found.</returns>
-        protected static MemberInfo GetMember(Type type, string name)
+        protected MemberInfo GetMember(Type type, string name)
         {
-            return type.GetMember(name, MemberTypes.Field | MemberTypes.Property, BindingFlags.Public | BindingFlags.Instance).FirstOrDefault();
+            return type.GetMember(name, MemberTypes, BindingFlags.Public | BindingFlags.Instance).FirstOrDefault();
         }
+
+        /// <summary>
+        /// Gets the allowed member types for this track type.
+        /// </summary>
+        protected MemberTypes MemberTypes => MemberTypes.Field | MemberTypes.Property;
 
         /// <summary>
         /// Tries the get current value from the assigned object property.
@@ -177,12 +182,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <returns>True if got value, otherwise false.</returns>
         protected virtual bool TryGetValue(out object value)
         {
-            if (!string.IsNullOrEmpty(PropertyName) && ParentTrack is IObjectTrack objectTrack)
+            if (!string.IsNullOrEmpty(MemberName) && ParentTrack is IObjectTrack objectTrack)
             {
                 var obj = objectTrack.Object;
                 if (obj != null)
                 {
-                    var member = GetMember(obj.GetType(), PropertyName);
+                    var member = GetMember(obj.GetType(), MemberName);
                     if (member is PropertyInfo p)
                     {
                         try
@@ -235,11 +240,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Gets the size of the value data type.
         /// </summary>
+        /// <param name="member">The member.</param>
         /// <param name="type">The type.</param>
         /// <returns>The value data size (in bytes).</returns>
-        protected virtual int GetValueDataSize(Type type)
+        protected virtual int GetValueDataSize(MemberInfo member, Type type)
         {
-            return type.IsValueType ? (Marshal.SizeOf(type.IsEnum ? Enum.GetUnderlyingType(type) : type)) : 0;
+            return type != null && type.IsValueType ? (Marshal.SizeOf(type.IsEnum ? Enum.GetUnderlyingType(type) : type)) : 0;
         }
 
         /// <inheritdoc />
@@ -249,11 +255,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         protected override bool CanRename => false;
 
         /// <summary>
-        /// Called when property gets changed.
+        /// Called when member gets changed.
         /// </summary>
-        /// <param name="value">The property value assigned.</param>
-        /// <param name="type">The property type assigned.</param>
-        protected virtual void OnPropertyChanged(MemberInfo value, Type type)
+        /// <param name="value">The member value assigned.</param>
+        /// <param name="type">The member type assigned.</param>
+        protected virtual void OnMemberChanged(MemberInfo value, Type type)
         {
         }
 
@@ -262,7 +268,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.Update(deltaTime);
 
-            var p = Property;
+            var p = Member;
             TitleTintColor = p != null ? Color.White : Color.Red;
         }
 

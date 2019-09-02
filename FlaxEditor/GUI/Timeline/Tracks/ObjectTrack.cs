@@ -90,7 +90,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// The data for add property track buttons tag.
         /// </summary>
-        public struct AddPropertyTag
+        public struct AddMemberTag
         {
             /// <summary>
             /// The member.
@@ -104,20 +104,20 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <summary>
-        /// Called on context menu button click to add new object property animation track. Button should have <see cref="AddPropertyTag"/> value assigned to the <see cref="Control.Tag"/> field.
+        /// Called on context menu button click to add new object property animation track. Button should have <see cref="AddMemberTag"/> value assigned to the <see cref="Control.Tag"/> field.
         /// </summary>
-        /// <param name="button">The button (with <see cref="AddPropertyTag"/> value assigned to the <see cref="Control.Tag"/> field.).</param>
-        public static void OnAddPropertyTrack(ContextMenuButton button)
+        /// <param name="button">The button (with <see cref="AddMemberTag"/> value assigned to the <see cref="Control.Tag"/> field.).</param>
+        public static void OnAddMemberTrack(ContextMenuButton button)
         {
-            var tag = (AddPropertyTag)button.Tag;
+            var tag = (AddMemberTag)button.Tag;
             var parentTrack = (Track)button.ParentContextMenu.Tag;
 
             var timeline = parentTrack.Timeline;
-            var track = (PropertyTrack)timeline.AddTrack(tag.Archetype);
+            var track = (MemberTrack)timeline.AddTrack(tag.Archetype);
             track.ParentTrack = parentTrack;
             track.TrackIndex = parentTrack.TrackIndex + 1;
             track.Name = Guid.NewGuid().ToString("N");
-            track.Property = tag.Member;
+            track.Member = tag.Member;
 
             timeline.OnTracksOrderChanged();
             timeline.MarkAsEdited();
@@ -206,13 +206,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 }
 
                 // Prevent from adding the same track twice
-                if (parentTrack.SubTracks.Any(x => x is PropertyTrack y && y.PropertyName == m.Name))
+                if (parentTrack.SubTracks.Any(x => x is MemberTrack y && y.MemberName == m.Name))
                     continue;
 
-                AddPropertyTag tag;
+                AddMemberTag tag;
                 tag.Member = m;
                 tag.Archetype = archetype;
-                menu.AddButton(name + " " + m.Name, OnAddPropertyTrack).Tag = tag;
+                menu.AddButton(name + " " + m.Name, OnAddMemberTrack).Tag = tag;
                 count++;
             }
 
