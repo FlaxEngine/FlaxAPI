@@ -56,7 +56,7 @@ namespace FlaxEditor.Windows.Assets
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
                 PreviewLight.CascadeCount = 2;
                 PreviewLight.ShadowsDistance = 1000.0f;
-                Task.Flags |= ViewFlags.Shadows;
+                Task.View.Flags |= ViewFlags.Shadows;
             }
 
             private void OnShowFloorModelClicked(ContextMenuButton obj)

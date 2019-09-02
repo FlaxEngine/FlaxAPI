@@ -478,7 +478,7 @@ namespace FlaxEditor.Viewport
                         var button = viewFlags.AddButton(v.Name);
                         button.Tag = v.Mode;
                     }
-                    viewFlags.ButtonClicked += (button) => Task.Flags ^= (ViewFlags)button.Tag;
+                    viewFlags.ButtonClicked += (button) => Task.View.Flags ^= (ViewFlags)button.Tag;
                     viewFlags.VisibleChanged += WidgetViewFlagsShowHide;
                 }
 
@@ -491,7 +491,7 @@ namespace FlaxEditor.Viewport
                         var button = debugView.AddButton(v.Name);
                         button.Tag = v.Mode;
                     }
-                    debugView.ButtonClicked += (button) => Task.Mode = (ViewMode)button.Tag;
+                    debugView.ButtonClicked += (button) => Task.View.Mode = (ViewMode)button.Tag;
                     debugView.VisibleChanged += WidgetViewModeShowHide;
                 }
 
@@ -1159,7 +1159,7 @@ namespace FlaxEditor.Viewport
                 if (e is ContextMenuButton b)
                 {
                     var v = (ViewMode)b.Tag;
-                    b.Icon = Task.Mode == v
+                    b.Icon = Task.View.Mode == v
                              ? Style.Current.CheckBoxTick
                              : Sprite.Invalid;
                 }
@@ -1216,7 +1216,7 @@ namespace FlaxEditor.Viewport
                 if (e is ContextMenuButton b)
                 {
                     var v = (ViewFlags)b.Tag;
-                    b.Icon = (Task.Flags & v) != 0
+                    b.Icon = (Task.View.Flags & v) != 0
                              ? Style.Current.CheckBoxTick
                              : Sprite.Invalid;
                 }

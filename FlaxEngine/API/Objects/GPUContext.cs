@@ -153,7 +153,7 @@ namespace FlaxEngine.Rendering
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, ref RenderView view, ViewFlags flags, ViewMode mode, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
+        public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, ref RenderView view, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -164,7 +164,7 @@ namespace FlaxEngine.Rendering
             // Get unmanaged postFx
             var postFx = GetPostFx(customPostFx, out int postFxCount);
 
-            Internal_DrawScene(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), GetUnmanagedPtr(buffers), ref view, flags, mode, actors, actorsCount, actorsSource, postFx, postFxCount);
+            Internal_DrawScene(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), GetUnmanagedPtr(buffers), ref view, actors, actorsCount, actorsSource, postFx, postFxCount);
 #endif
         }
 
@@ -184,7 +184,7 @@ namespace FlaxEngine.Rendering
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, ref RenderView view, ViewFlags flags, ViewMode mode, List<Actor> customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
+        public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, ref RenderView view, List<Actor> customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -195,7 +195,7 @@ namespace FlaxEngine.Rendering
             // Get unmanaged postFx
             var postFx = GetPostFx(customPostFx, out int postFxCount);
 
-            Internal_DrawScene(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), GetUnmanagedPtr(buffers), ref view, flags, mode, actors, actorsCount, actorsSource, postFx, postFxCount);
+            Internal_DrawScene(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), GetUnmanagedPtr(buffers), ref view, actors, actorsCount, actorsSource, postFx, postFxCount);
 #endif
         }
 
@@ -298,7 +298,7 @@ namespace FlaxEngine.Rendering
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, ViewFlags flags, ViewMode mode, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource, IntPtr[] customPostFx, int customPostFxCount);
+        internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource, IntPtr[] customPostFx, int customPostFxCount);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawSceneDepth(IntPtr obj, IntPtr task, IntPtr output, bool drawTransparency, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource);

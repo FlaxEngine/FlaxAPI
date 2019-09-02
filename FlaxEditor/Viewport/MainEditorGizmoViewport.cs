@@ -109,7 +109,7 @@ namespace FlaxEditor.Viewport
 
             // Prepare rendering task
             Task.ActorsSource = ActorsSources.ScenesAndCustomActors;
-            Task.Flags = ViewFlags.DefaultEditor;
+            Task.View.Flags = ViewFlags.DefaultEditor;
             Task.Begin += RenderTaskOnBegin;
             Task.Draw += RenderTaskOnDraw;
             Task.End += RenderTaskOnEnd;
@@ -347,7 +347,7 @@ namespace FlaxEditor.Viewport
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
         {
             // Render editor primitives, gizmo and debug shapes in debug view modes
-            if (task.Mode != ViewMode.Default)
+            if (task.View.Mode != ViewMode.Default)
             {
                 // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
                 EditorPrimitives.Render(context, task, task.Output, task.Output);

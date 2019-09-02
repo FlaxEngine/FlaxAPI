@@ -128,7 +128,7 @@ namespace FlaxEditor.Windows
             // Create viewport
             Viewport = new MainEditorGizmoViewport(editor);
             Viewport.Parent = this;
-            Viewport.Task.Flags = ViewFlags.DefaultEditor;
+            Viewport.Task.View.Flags = ViewFlags.DefaultEditor;
             Viewport.NearPlane = 8.0f;
             Viewport.FarPlane = 20000.0f;
 
