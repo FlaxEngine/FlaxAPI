@@ -112,7 +112,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
             {
                 // Flax object
-                archetype = ObjectPropertyTrack.GetArchetype();
+                archetype = ObjectReferencePropertyTrack.GetArchetype();
             }
             else if (valueType.IsValueType)
             {

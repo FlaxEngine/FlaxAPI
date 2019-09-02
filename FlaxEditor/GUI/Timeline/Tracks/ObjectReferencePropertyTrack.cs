@@ -7,11 +7,11 @@ using System.Text;
 namespace FlaxEditor.GUI.Timeline.Tracks
 {
     /// <summary>
-    /// The timeline track for animating Flax Object property via keyframes collection.
+    /// The timeline track for animating <see cref="FlaxEngine.Object"/> reference property via keyframes collection.
     /// </summary>
     /// <seealso cref="PropertyTrack" />
     /// <seealso cref="KeyframesPropertyTrack" />
-    sealed class ObjectPropertyTrack : KeyframesPropertyTrack
+    sealed class ObjectReferencePropertyTrack : KeyframesPropertyTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -24,7 +24,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 TypeId = 12,
                 Name = "Property",
                 DisableSpawnViaGUI = true,
-                Create = options => new ObjectPropertyTrack(ref options),
+                Create = options => new ObjectReferencePropertyTrack(ref options),
                 Load = LoadTrack,
                 Save = SaveTrack,
             };
@@ -32,7 +32,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void LoadTrack(int version, Track track, BinaryReader stream)
         {
-            var e = (ObjectPropertyTrack)track;
+            var e = (ObjectReferencePropertyTrack)track;
 
             e.ValueSize = stream.ReadInt32();
             int propertyNameLength = stream.ReadInt32();
@@ -78,7 +78,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private static void SaveTrack(Track track, BinaryWriter stream)
         {
-            var e = (ObjectPropertyTrack)track;
+            var e = (ObjectReferencePropertyTrack)track;
 
             var propertyName = e.PropertyName ?? string.Empty;
             var propertyNameData = Encoding.UTF8.GetBytes(propertyName);
@@ -112,7 +112,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public ObjectPropertyTrack(ref TrackCreateOptions options)
+        public ObjectReferencePropertyTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
         }
