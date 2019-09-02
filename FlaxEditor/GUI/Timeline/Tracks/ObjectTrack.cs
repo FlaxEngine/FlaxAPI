@@ -173,34 +173,30 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
                 // Validate value type and pick the track archetype
                 var valueType = t;
-                TrackArchetype archetype;
-                if (BasicTypesNames.TryGetValue(valueType, out var name))
+                string name = valueType.Name;
+                if (BasicTypesTrackArchetypes.TryGetValue(valueType, out var archetype))
                 {
                     // Basic type
-                    archetype = BasicTypesTrackArchetypes[valueType];
+                    BasicTypesNames.TryGetValue(valueType, out name);
                 }
                 else if (valueType.IsEnum)
                 {
                     // Enum
-                    name = valueType.Name;
                     archetype = KeyframesPropertyTrack.GetArchetype();
                 }
                 else if (valueType.IsValueType)
                 {
                     // Structure
-                    name = valueType.Name;
                     archetype = StructPropertyTrack.GetArchetype();
                 }
                 else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
                 {
                     // Flax object reference
-                    name = valueType.Name;
                     archetype = ObjectReferencePropertyTrack.GetArchetype();
                 }
                 else if (CanAnimateObjectType(valueType))
                 {
                     // Nested object
-                    name = valueType.Name;
                     archetype = ObjectPropertyTrack.GetArchetype();
                 }
                 else
