@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets probe brightness parameter.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), Limit(0, 1000, 0.01f), EditorDisplay("Probe"), Tooltip("Reflections brightness")]
+        [EditorOrder(10), DefaultValue(1.0f), Limit(0, 1000, 0.01f), EditorDisplay("Probe"), Tooltip("Reflections brightness")]
         public float Brightness
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets probe radius.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), Limit(0), EditorDisplay("Probe"), Tooltip("Probe radius")]
+        [EditorOrder(20), DefaultValue(3000.0f), Limit(0), EditorDisplay("Probe"), Tooltip("Probe radius")]
         public float Radius
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets value indicating if probe should be updated automatically on change.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), EditorDisplay("Probe"), Tooltip("Enable auto probe update on transform changed")]
+        [EditorOrder(30), DefaultValue(false), EditorDisplay("Probe"), Tooltip("Enable auto probe update on transform changed")]
         public bool AutoUpdate
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets the probe capture camera near plane distance..
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), Limit(0, float.MaxValue, 0.01f), EditorDisplay("Probe"), Tooltip("The probe capture camera near plane distance.")]
+        [EditorOrder(30), DefaultValue(10.0f), Limit(0, float.MaxValue, 0.01f), EditorDisplay("Probe"), Tooltip("The probe capture camera near plane distance.")]
         public float CaptureNearPlane
         {
 #if UNIT_TEST_COMPILANT
@@ -101,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the custom probe texture to be used during reflections pass rendering. Use null if disable custom probe feature.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), EditorDisplay("Probe"), Tooltip("Custom probe to override baked probe")]
+        [EditorOrder(40), DefaultValue(null), EditorDisplay("Probe"), Tooltip("Custom probe to override baked probe")]
         public CubeTexture CustomProbe
         {
 #if UNIT_TEST_COMPILANT

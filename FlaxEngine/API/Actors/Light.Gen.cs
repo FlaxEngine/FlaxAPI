@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -62,7 +63,7 @@ namespace FlaxEngine
         /// Gets or sets the factor that controls how much this light will contribute indirect lighting. When set to 0, there is no GI from the light. The default value is 1.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), Limit(0, 100, 0.1f), EditorDisplay("Light", "Indirect Lighting Intensity"), Tooltip("Controls how much this light will contribute indirect lighting. When set to 0, there is no GI from the light. The default value is 1.")]
+        [EditorOrder(40), DefaultValue(1.0f), Limit(0, 100, 0.1f), EditorDisplay("Light", "Indirect Lighting Intensity"), Tooltip("Controls how much this light will contribute indirect lighting. When set to 0, there is no GI from the light. The default value is 1.")]
         public float IndirectLightingIntensity
         {
 #if UNIT_TEST_COMPILANT
@@ -77,7 +78,7 @@ namespace FlaxEngine
         /// Gets or sets the factor that controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(110), Limit(0, 100, 0.01f), EditorDisplay("Volumetric Fog", "Scattering Intensity"), Tooltip("Controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.")]
+        [EditorOrder(110),DefaultValue(1.0f),  Limit(0, 100, 0.01f), EditorDisplay("Volumetric Fog", "Scattering Intensity"), Tooltip("Controls how much this light will contribute to the Volumetric Fog. When set to 0, there is no contribution.")]
         public float VolumetricScatteringIntensity
         {
 #if UNIT_TEST_COMPILANT

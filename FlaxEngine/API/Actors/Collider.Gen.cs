@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -20,7 +21,7 @@ namespace FlaxEngine
         /// A trigger doesn't register a collision with an incoming Rigidbody. Instead, it sends OnTriggerEnter, OnTriggerExit and OnTriggerStay message when a rigidbody enters or exits the trigger volume.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(0), EditorDisplay("Collider"), Tooltip("Check if use collider shape to detect objects or turn if off to collide with others")]
+        [EditorOrder(0), DefaultValue(false), EditorDisplay("Collider"), Tooltip("Check if use collider shape to detect objects or turn if off to collide with others")]
         public bool IsTrigger
         {
 #if UNIT_TEST_COMPILANT
@@ -35,7 +36,7 @@ namespace FlaxEngine
         /// Gets or sets the center of the collider, measured in the object's local space.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("Collider"), Tooltip("Center point of the collider in the actor local space")]
+        [EditorOrder(10), DefaultValue(typeof(Vector3), "0,0,0"), EditorDisplay("Collider"), Tooltip("Center point of the collider in the actor local space")]
         public Vector3 Center
         {
 #if UNIT_TEST_COMPILANT
@@ -53,7 +54,7 @@ namespace FlaxEngine
         /// Colliders whose distance is less than the sum of their ContactOffset values will generate contacts. The contact offset must be positive. Contact offset allows the collision detection system to predictively enforce the contact constraint even when the objects are slightly separated.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(1), Limit(0, 100), EditorDisplay("Collider"), Tooltip("Determinates distance for detecting contacts with other colliders.")]
+        [EditorOrder(1), DefaultValue(10.0f), Limit(0, 100), EditorDisplay("Collider"), Tooltip("Determinates distance for detecting contacts with other colliders.")]
         public float ContactOffset
         {
 #if UNIT_TEST_COMPILANT
@@ -68,7 +69,7 @@ namespace FlaxEngine
         /// Gets or sets the physical material used by this collider.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(2), AssetReference(typeof(PhysicalMaterial), true), EditorDisplay("Collider"), Tooltip("The physical material used by this collider.")]
+        [EditorOrder(2), DefaultValue(null), AssetReference(typeof(PhysicalMaterial), true), EditorDisplay("Collider"), Tooltip("The physical material used by this collider.")]
         public JsonAsset Material
         {
 #if UNIT_TEST_COMPILANT

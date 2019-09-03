@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets the particle system to play.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Particle Effect"), EditorOrder(0), Tooltip("The particle system to play.")]
+        [EditorDisplay("Particle Effect"), DefaultValue(null), EditorOrder(0), Tooltip("The particle system to play.")]
         public ParticleSystem ParticleSystem
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the particles simulation update mode. Defines how to update particles emitter.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Particle Effect"), EditorOrder(10), Tooltip("The particles simulation update mode. Defines how to update particles emitter.")]
+        [EditorDisplay("Particle Effect"), DefaultValue(SimulationUpdateMode.Realtime), EditorOrder(10), Tooltip("The particles simulation update mode. Defines how to update particles emitter.")]
         public SimulationUpdateMode UpdateMode
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets the fixed timestep for simulation updates. Used only if UpdateMode is set to FixedTimestep.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Particle Effect"), EditorOrder(20), VisibleIf(nameof(IsFixedTimestep)), Tooltip("The fixed timestep for simulation updates. Used only if UpdateMode is set to FixedTimestep.")]
+        [EditorDisplay("Particle Effect"), DefaultValue(1.0f / 60.0f), EditorOrder(20), VisibleIf(nameof(IsFixedTimestep)), Tooltip("The fixed timestep for simulation updates. Used only if UpdateMode is set to FixedTimestep.")]
         public float FixedTimestep
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets the particles simulation speed factor. Scales the particle system update delta time. Can be used to speed up or slow down the particles.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Particle Effect"), EditorOrder(30), Tooltip("The particles simulation speed factor. Scales the particle system update delta time. Can be used to speed up or slow down the particles.")]
+        [EditorDisplay("Particle Effect"), DefaultValue(1.0f), EditorOrder(30), Tooltip("The particles simulation speed factor. Scales the particle system update delta time. Can be used to speed up or slow down the particles.")]
         public float SimulationSpeed
         {
 #if UNIT_TEST_COMPILANT
@@ -101,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the global time scale usage for particle simulation. Determines whether the particle effect should take into account the global game time scale for simulation updates..
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Particle Effect"), EditorOrder(40), Tooltip("Determines whether the particle effect should take into account the global game time scale for simulation updates.")]
+        [EditorDisplay("Particle Effect"), DefaultValue(true), EditorOrder(40), Tooltip("Determines whether the particle effect should take into account the global game time scale for simulation updates.")]
         public bool UseTimeScale
         {
 #if UNIT_TEST_COMPILANT
@@ -116,7 +117,7 @@ namespace FlaxEngine
         /// Gets or sets the particle system play mode looping. Determines whether the particle effect should loop when it finishes playing.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Particle Effect"), EditorOrder(50), Tooltip("Determines whether the particle effect should loop when it finishes playing.")]
+        [EditorDisplay("Particle Effect"), DefaultValue(false), EditorOrder(50), Tooltip("Determines whether the particle effect should loop when it finishes playing.")]
         public bool IsLooping
         {
 #if UNIT_TEST_COMPILANT
@@ -131,7 +132,7 @@ namespace FlaxEngine
         /// If true, the particle simulation will be updated even when an actor cannot be seen by any camera. Otherwise, the simulation will stop running when the actor is off-screen.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Particle Effect"), EditorOrder(60), Tooltip("If true, the particle simulation will be updated even when an actor cannot be seen by any camera. Otherwise, the simulation will stop running when the actor is off-screen.")]
+        [EditorDisplay("Particle Effect"), DefaultValue(true), EditorOrder(60), Tooltip("If true, the particle simulation will be updated even when an actor cannot be seen by any camera. Otherwise, the simulation will stop running when the actor is off-screen.")]
         public bool UpdateWhenOffscreen
         {
 #if UNIT_TEST_COMPILANT
