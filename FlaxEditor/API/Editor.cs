@@ -1088,7 +1088,7 @@ namespace FlaxEditor
             {
                 var win = Windows.GameWin.Root;
                 if (win != null)
-                    resultAsRef = Windows.GameWin.Viewport.PointFromWindow(win.MousePosition);
+                    resultAsRef = Vector2.Round(Windows.GameWin.Viewport.PointFromWindow(win.MousePosition));
             }
         }
 
@@ -1123,6 +1123,7 @@ namespace FlaxEditor
                     resultAsRef = dockedTo.SelectedTab.Size;
                 else
                     resultAsRef = gameWin.Size;
+                resultAsRef = Vector2.Round(resultAsRef);
             }
         }
 
