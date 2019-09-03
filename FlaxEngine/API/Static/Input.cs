@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -93,30 +94,35 @@ namespace FlaxEngine
             /// <summary>
             /// Any positive or negative values that are less than this number will register as zero. Useful for gamepads to specify the deadzone.
             /// </summary>
+            [DefaultValue(0.1f)]
             [EditorOrder(50), Limit(0.0f, 100.0f, 0.01f), Tooltip("Any positive or negative values that are less than this number will register as zero. Useful for gamepads  to specify the deadzone.")]
             public float DeadZone;
 
             /// <summary>
             /// For keyboard input, a larger value will result in faster response time (in units/s). A lower value will be more smooth. For Mouse delta the value will scale the actual mouse delta.
             /// </summary>
+            [DefaultValue(0.4f)]
             [EditorOrder(60), Limit(0.0f, 10000.0f, 0.1f), Tooltip("For keyboard input, a larger value will result in faster response time (in units/s). A lower value will be more smooth. For Mouse delta the value will scale the actual mouse delta.")]
             public float Sensitivity;
 
             /// <summary>
             /// For keyboard input describes how fast will the input recenter. Speed (in units/s) that output value will rest to neutral value if not when device at rest.
             /// </summary>
+            [DefaultValue(1.0f)]
             [EditorOrder(70), Limit(0.0f, 10000.0f, 0.1f), Tooltip("For keyboard input describes how fast will the input recenter. Speed (in units/s) that output value will rest to neutral value if not when device at rest.")]
             public float Gravity;
 
             /// <summary>
             /// Additional scale parameter applied to the axis value. Allows to invert it or modify the range.
             /// </summary>
+            [DefaultValue(1.0f)]
             [EditorOrder(80), Limit(-1000.0f, 1000.0f, 0.01f), Tooltip("Additional scale parameter applied to the axis value. Allows to invert it or modify the range.")]
             public float Scale;
 
             /// <summary>
             /// If enabled, the axis value will be immediately reset to zero after it receives opposite inputs. For keyboard input only.
             /// </summary>
+            [DefaultValue(false)]
             [EditorOrder(90), Tooltip("If enabled, the axis value will be immediately reset to zero after it receives opposite inputs. For keyboard input only.")]
             public bool Snap;
         }
