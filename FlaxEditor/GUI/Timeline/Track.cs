@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -1151,6 +1153,38 @@ namespace FlaxEditor.GUI.Timeline
             _muteCheckbox = null;
 
             base.Dispose();
+        }
+
+        /// <summary>
+        /// Loads the name using UTF8 encoding by reading name length (as 32bit int) followed by the contents and null-terminated character.
+        /// </summary>
+        /// <param name="stream">The input stream.</param>
+        /// <returns>The name.</returns>
+        protected static string LoadName(BinaryReader stream)
+        {
+            var length = stream.ReadInt32();
+            var data = stream.ReadBytes(length);
+            var value = Encoding.UTF8.GetString(data, 0, length);
+            if (stream.ReadChar() != 0)
+                throw new Exception("Invalid track data.");
+            return value;
+        }
+
+        /// <summary>
+        /// Saves the name using UTF8 encoding by writing name length (as 32bit int) followed by the contents and null-terminated character.
+        /// </summary>
+        /// <param name="stream">The output stream.</param>
+        /// <param name="value">The value to write (can be null).</param>
+        protected static void SaveName(BinaryWriter stream, string value)
+        {
+            value = value ?? string.Empty;
+            var data = Encoding.UTF8.GetBytes(value);
+            if (data.Length != value.Length)
+                throw new Exception(string.Format("The name bytes data has different size as UTF8 bytes. Type {0}.", value));
+
+            stream.Write(data.Length);
+            stream.Write(data);
+            stream.Write('\0');
         }
     }
 }

@@ -173,7 +173,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Gets the allowed member types for this track type.
         /// </summary>
-        protected MemberTypes MemberTypes => MemberTypes.Field | MemberTypes.Property;
+        protected virtual MemberTypes MemberTypes => MemberTypes.Field | MemberTypes.Property;
 
         /// <summary>
         /// Tries the get current value from the assigned object property.

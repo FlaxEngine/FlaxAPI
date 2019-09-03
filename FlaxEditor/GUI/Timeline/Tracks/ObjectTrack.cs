@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -103,6 +104,91 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             public TrackArchetype Archetype;
         }
 
+        private static bool IsEventParamInvalid(ParameterInfo p)
+        {
+            var t = p.ParameterType;
+            return !t.IsValueType;
+        }
+
+        /// <summary>
+        /// Adds the object events track options to menu.
+        /// </summary>
+        /// <param name="parentTrack">The parent track.</param>
+        /// <param name="menu">The menu.</param>
+        /// <param name="type">The object type.</param>
+        /// <param name="memberCheck">The custom callback that can reject the members that should not be animated. Returns true if member is valid. Can be null to skip this feature.</param>
+        /// <returns>The added options count.</returns>
+        public static int AddEvents(Track parentTrack, ContextMenu.ContextMenu menu, Type type, Func<MemberInfo, bool> memberCheck = null)
+        {
+            int count = 0;
+            menu.Tag = parentTrack;
+
+            // TODO: implement editor-wide cache for animated properties per object type (add this in CodeEditingModule)
+            var members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < members.Length; i++)
+            {
+                var m = members[i] as MethodInfo;
+                if (m == null)
+                    continue;
+                if (memberCheck != null && !memberCheck(m))
+                    continue;
+
+                // Skip properties getters/setters and events add/remove
+                var mName = m.Name;
+                if (mName.StartsWith("get_", StringComparison.Ordinal) ||
+                    mName.StartsWith("set_", StringComparison.Ordinal) ||
+                    mName.StartsWith("add_", StringComparison.Ordinal) ||
+                    mName.StartsWith("remove_", StringComparison.Ordinal))
+                    continue;
+
+                // Allow to invoke only void functions with basic parameter types
+                var parameters = m.GetParameters();
+                if (m.ReturnType != typeof(void) ||
+                    parameters.Length > 8 ||
+                    m.IsGenericMethod ||
+                    parameters.Any(IsEventParamInvalid))
+                    continue;
+
+                var attributes = m.GetCustomAttributes();
+
+                // Check if has attribute to skip animating
+                if (attributes.Any(x => x is NoAnimateAttribute || x is HideInEditorAttribute))
+                    continue;
+
+                // Prevent from adding the same track twice
+                if (parentTrack.SubTracks.Any(x => x is MemberTrack y && y.MemberName == m.Name))
+                    continue;
+
+                // Build function name for UI
+                sb.Clear();
+                sb.Append(mName);
+                sb.Append('(');
+                for (int j = 0; j < parameters.Length; j++)
+                {
+                    if (j != 0)
+                        sb.Append(", ");
+                    var p = parameters[j];
+                    if (!BasicTypesNames.TryGetValue(p.ParameterType, out var pName))
+                        pName = p.ParameterType.Name;
+                    sb.Append(pName);
+                    sb.Append(' ');
+                    sb.Append(p.Name);
+                }
+                sb.Append(')');
+
+                AddMemberTag tag;
+                tag.Member = m;
+                tag.Archetype = EventTrack.GetArchetype();
+
+                menu.AddButton(sb.ToString(), OnAddMemberTrack).Tag = tag;
+                count++;
+            }
+
+            return count;
+        }
+
         /// <summary>
         /// Called on context menu button click to add new object property animation track. Button should have <see cref="AddMemberTag"/> value assigned to the <see cref="Control.Tag"/> field.
         /// </summary>
@@ -177,7 +263,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 if (BasicTypesTrackArchetypes.TryGetValue(valueType, out var archetype))
                 {
                     // Basic type
-                    BasicTypesNames.TryGetValue(valueType, out name);
+                    if (!BasicTypesNames.TryGetValue(valueType, out name))
+                        name = valueType.Name;
                 }
                 else if (valueType.IsEnum)
                 {

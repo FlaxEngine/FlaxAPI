@@ -77,7 +77,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
 
             var type = script.GetType();
-            AddProperties(this, menu, type);
+            if (AddProperties(this, menu, type) != 0)
+                menu.AddSeparator();
+
+            AddEvents(this, menu, type);
         }
     }
 }

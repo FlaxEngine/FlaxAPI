@@ -124,7 +124,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
 
             var type = obj.GetType();
-            ObjectTrack.AddProperties(this, menu, type);
+            if (ObjectTrack.AddProperties(this, menu, type) != 0)
+                menu.AddSeparator();
+            ObjectTrack.AddEvents(this, menu, type);
 
             menu.Show(_addButton.Parent, _addButton.BottomLeft);
         }

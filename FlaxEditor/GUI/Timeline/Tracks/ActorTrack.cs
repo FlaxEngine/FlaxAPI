@@ -112,6 +112,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             var type = actor.GetType();
             if (AddProperties(this, menu, type) != 0)
                 menu.AddSeparator();
+            if (AddEvents(this, menu, type) != 0)
+                menu.AddSeparator();
 
             // Child scripts
             var scripts = actor.Scripts;
