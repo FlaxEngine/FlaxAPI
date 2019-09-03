@@ -14,7 +14,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating object property via keyframes collection.
     /// </summary>
     /// <seealso cref="MemberTrack" />
-    class KeyframesPropertyTrack : MemberTrack
+    public class KeyframesPropertyTrack : MemberTrack
     {
         /// <summary>
         /// Gets the archetype.

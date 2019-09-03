@@ -11,7 +11,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// </summary>
     /// <seealso cref="MemberTrack" />
     /// <seealso cref="KeyframesPropertyTrack" />
-    sealed class StringPropertyTrack : KeyframesPropertyTrack
+    public sealed class StringPropertyTrack : KeyframesPropertyTrack
     {
         /// <summary>
         /// Gets the archetype.

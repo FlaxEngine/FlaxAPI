@@ -11,7 +11,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline media that represents a particle miter playback media event.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    class ParticleEmitterMedia : SingleMediaAssetMedia
+    public class ParticleEmitterMedia : SingleMediaAssetMedia
     {
         private sealed class Proxy : ProxyBase<ParticleEmitterTrack, ParticleEmitterMedia>
         {
@@ -45,7 +45,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track that represents a particle emitter playback.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    class ParticleEmitterTrack : SingleMediaAssetTrack<ParticleEmitter, ParticleEmitterMedia>
+    public class ParticleEmitterTrack : SingleMediaAssetTrack<ParticleEmitter, ParticleEmitterMedia>
     {
         /// <summary>
         /// Gets the archetype.

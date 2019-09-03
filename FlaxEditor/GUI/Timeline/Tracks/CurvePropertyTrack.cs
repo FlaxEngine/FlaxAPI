@@ -14,7 +14,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating object property via Bezier Curve.
     /// </summary>
     /// <seealso cref="MemberTrack" />
-    sealed class CurvePropertyTrack : MemberTrack
+    public sealed class CurvePropertyTrack : MemberTrack
     {
         /// <summary>
         /// Gets the archetype.

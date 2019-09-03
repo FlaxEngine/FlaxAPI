@@ -11,7 +11,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating sub-object properties via child tracks.
     /// </summary>
     /// <seealso cref="MemberTrack" />
-    class ObjectPropertyTrack : MemberTrack, IObjectTrack
+    public class ObjectPropertyTrack : MemberTrack, IObjectTrack
     {
         /// <summary>
         /// Gets the archetype.

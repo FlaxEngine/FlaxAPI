@@ -14,7 +14,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline media that represents a screen fade animation event.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
-    class ScreenFadeMedia : Media
+    public class ScreenFadeMedia : Media
     {
         private sealed class Proxy : ProxyBase<ScreenFadeTrack, ScreenFadeMedia>
         {
@@ -106,7 +106,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track that represents a screen fade animation.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
-    class ScreenFadeTrack : SingleMediaTrack<ScreenFadeMedia>
+    public class ScreenFadeTrack : SingleMediaTrack<ScreenFadeMedia>
     {
         /// <summary>
         /// Gets the archetype.

@@ -15,7 +15,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for invoking events on a certain points in the time.
     /// </summary>
     /// <seealso cref="MemberTrack" />
-    class EventTrack : MemberTrack
+    public class EventTrack : MemberTrack
     {
         /// <summary>
         /// Gets the archetype.
