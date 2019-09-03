@@ -106,6 +106,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Lock all child controls layout and itself
         /// </summary>
+        [NoAnimate]
         public virtual void LockChildrenRecursive()
         {
             // Itself
@@ -122,6 +123,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Unlocks all child controls layout and itself
         /// </summary>
+        [NoAnimate]
         public virtual void UnlockChildrenRecursive()
         {
             // Itself
@@ -138,6 +140,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Unlink all child controls
         /// </summary>
+        [NoAnimate]
         public virtual void RemoveChildren()
         {
             bool wasLayoutLocked = IsLayoutLocked;
@@ -430,6 +433,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Sort child controls list
         /// </summary>
+        [NoAnimate]
         public void SortChildren()
         {
             _children.Sort();
@@ -439,6 +443,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Sort children using recursion
         /// </summary>
+        [NoAnimate]
         public void SortChildrenRecursive()
         {
             SortChildren();
@@ -462,6 +467,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Called when children collection gets changed (child added or removed).
         /// </summary>
+        [NoAnimate]
         public virtual void OnChildrenChanged()
         {
             // Check if control isn't during disposing state

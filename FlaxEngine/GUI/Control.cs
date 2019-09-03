@@ -408,6 +408,7 @@ namespace FlaxEngine.GUI
         ///     Perform control update and all its children
         /// </summary>
         /// <param name="deltaTime">Delta time in seconds</param>
+        [NoAnimate]
         public virtual void Update(float deltaTime)
         {
             // TODO: move all controls to use UpdateDelegate and remove this generic Update
@@ -421,6 +422,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Draw control
         /// </summary>
+        [NoAnimate]
         public virtual void Draw()
         {
             // Paint Background
@@ -434,6 +436,7 @@ namespace FlaxEngine.GUI
         ///     Update control layout
         /// </summary>
         /// <param name="force">True if perform layout by force even if cached state wants to skip it due to optimization.</param>
+        [NoAnimate]
         public virtual void PerformLayout(bool force = false)
         {
         }
@@ -485,6 +488,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     When control gets input focus
         /// </summary>
+        [NoAnimate]
         public virtual void OnGotFocus()
         {
             // Cache flag
@@ -494,6 +498,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     When control losts input focus
         /// </summary>
+        [NoAnimate]
         public virtual void OnLostFocus()
         {
             // Clear flag
@@ -503,6 +508,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Action fired when control gets 'Contains Focus' state
         /// </summary>
+        [NoAnimate]
         public virtual void OnStartContainsFocus()
         {
         }
@@ -510,6 +516,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Action fired when control losts 'Contains Focus' state
         /// </summary>
+        [NoAnimate]
         public virtual void OnEndContainsFocus()
         {
         }
@@ -528,6 +535,7 @@ namespace FlaxEngine.GUI
         /// Starts the mouse tracking. Used by the scrollbars, splitters, etc.
         /// </summary>
         /// <param name="useMouseScreenOffset">If set to <c>true</c> will use mouse screen offset.</param>
+        [NoAnimate]
         public void StartMouseCapture(bool useMouseScreenOffset = false)
         {
             var parent = Root;
@@ -537,6 +545,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Ends the mouse tracking.
         /// </summary>
+        [NoAnimate]
         public void EndMouseCapture()
         {
             var parent = Root;
@@ -547,6 +556,7 @@ namespace FlaxEngine.GUI
         ///     When mouse goes up/down not over the control but it has user focus so remove that focus from it (used by scroll
         ///     bars, sliders etc.)
         /// </summary>
+        [NoAnimate]
         public virtual void OnEndMouseCapture()
         {
         }
@@ -565,6 +575,7 @@ namespace FlaxEngine.GUI
         ///     When mouse enters control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
+        [NoAnimate]
         public virtual void OnMouseEnter(Vector2 location)
         {
             // Set flag
@@ -582,6 +593,7 @@ namespace FlaxEngine.GUI
         ///     When mouse moves over control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
+        [NoAnimate]
         public virtual void OnMouseMove(Vector2 location)
         {
             // Update tooltip
@@ -595,6 +607,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     When mouse leaves control's area
         /// </summary>
+        [NoAnimate]
         public virtual void OnMouseLeave()
         {
             // Clear flag
@@ -617,6 +630,7 @@ namespace FlaxEngine.GUI
         ///   the user; a negative value indicates that the wheel was rotated backward, toward the user. Normalized to [-1;1] range.
         /// </param>
         /// <returns>True if event has been handled</returns>
+        [NoAnimate]
         public virtual bool OnMouseWheel(Vector2 location, float delta)
         {
             return false;
@@ -628,6 +642,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
+        [NoAnimate]
         public virtual bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             return _autoFocus && Focus(this);
@@ -639,6 +654,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
+        [NoAnimate]
         public virtual bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             return false;
@@ -650,6 +666,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
+        [NoAnimate]
         public virtual bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
             return false;
@@ -664,6 +681,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="c">Input character</param>
         /// <returns>True if event has been handled, otherwise false</returns>
+        [NoAnimate]
         public virtual bool OnCharInput(char c)
         {
             return false;
@@ -674,6 +692,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="key">Key value</param>
         /// <returns>True if event has been handled, otherwise false</returns>
+        [NoAnimate]
         public virtual bool OnKeyDown(Keys key)
         {
             return false;
@@ -683,6 +702,7 @@ namespace FlaxEngine.GUI
         ///     When key goes up
         /// </summary>
         /// <param name="key">Key value</param>
+        [NoAnimate]
         public virtual void OnKeyUp(Keys key)
         {
         }
@@ -702,6 +722,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
         /// <returns>The drag event result effect.</returns>
+        [NoAnimate]
         public virtual DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             // Set flag
@@ -716,6 +737,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
         /// <returns>The drag event result effect.</returns>
+        [NoAnimate]
         public virtual DragDropEffect OnDragMove(ref Vector2 location, DragData data)
         {
             return DragDropEffect.None;
@@ -727,6 +749,7 @@ namespace FlaxEngine.GUI
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
         /// <returns>The drag event result effect.</returns>
+        [NoAnimate]
         public virtual DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
         {
             // Clear flag
@@ -738,6 +761,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     When mouse dragging leaves control's area
         /// </summary>
+        [NoAnimate]
         public virtual void OnDragLeave()
         {
             // Clear flag
@@ -748,6 +772,7 @@ namespace FlaxEngine.GUI
         /// Starts the drag and drop operation.
         /// </summary>
         /// <param name="data">The data.</param>
+        [NoAnimate]
         public virtual void DoDragDrop(DragData data)
         {
             Root.DoDragDrop(data);
@@ -796,6 +821,7 @@ namespace FlaxEngine.GUI
         /// <param name="text">The text.</param>
         /// <param name="customTooltip">The custom tooltip.</param>
         /// <returns>This control pointer. Useful for creating controls in code.</returns>
+        [NoAnimate]
         public Control LinkTooltip(string text, Tooltip customTooltip = null)
         {
             _tooltipText = text;
@@ -806,6 +832,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Unlinks the tooltip.
         /// </summary>
+        [NoAnimate]
         public void UnlinkTooltip()
         {
             _tooltipText = null;
@@ -1269,6 +1296,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Method called when managed instance should be destroyed
         /// </summary>
+        [NoAnimate]
         public virtual void OnDestroy()
         {
             // Set disposing flag

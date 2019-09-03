@@ -633,6 +633,7 @@ namespace FlaxEngine
         /// Destroys the children. Calls Object.Destroy on every child actor and unlink them for the parent.
         /// </summary>
         /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
+        [NoAnimate]
         public void DestroyChildren(float timeLeft = 0.0f)
         {
             Actor[] children = GetChildren();

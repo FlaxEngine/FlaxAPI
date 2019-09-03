@@ -65,6 +65,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called after the object is loaded.
         /// </summary>
+        [NoAnimate]
         public virtual void OnAwake()
         {
         }
@@ -72,6 +73,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called when object becomes enabled and active.
         /// </summary>
+        [NoAnimate]
         public virtual void OnEnable()
         {
         }
@@ -79,6 +81,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called when object becomes disabled and inactive.
         /// </summary>
+        [NoAnimate]
         public virtual void OnDisable()
         {
         }
@@ -86,6 +89,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called before the object will be destroyed..
         /// </summary>
+        [NoAnimate]
         public virtual void OnDestroy()
         {
         }
@@ -93,6 +97,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called when a script is enabled just before any of the Update methods is called for the first time.
         /// </summary>
+        [NoAnimate]
         public virtual void OnStart()
         {
         }
@@ -100,6 +105,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called every frame if object is enabled.
         /// </summary>
+        [NoAnimate]
         public virtual void OnUpdate()
         {
         }
@@ -107,6 +113,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called every frame (after gameplay Update) if object is enabled.
         /// </summary>
+        [NoAnimate]
         public virtual void OnLateUpdate()
         {
         }
@@ -114,6 +121,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called every fixed framerate frame if object is enabled.
         /// </summary>
+        [NoAnimate]
         public virtual void OnFixedUpdate()
         {
         }
@@ -121,6 +129,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called during drawing debug shapes in editor. Use <see cref="DebugDraw"/> to draw debug shapes and other visualization.
         /// </summary>
+        [NoAnimate]
         public virtual void OnDebugDraw()
         {
         }
@@ -128,6 +137,7 @@ namespace FlaxEngine
         /// <summary>
         /// Called during drawing debug shapes in editor when object is selected. Use <see cref="DebugDraw"/> to draw debug shapes and other visualization.
         /// </summary>
+        [NoAnimate]
         public virtual void OnDebugDrawSelected()
         {
         }

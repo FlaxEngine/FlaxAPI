@@ -106,6 +106,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
+        [NoAnimate]
         public void BreakPrefabLink()
         {
 #if UNIT_TEST_COMPILANT
