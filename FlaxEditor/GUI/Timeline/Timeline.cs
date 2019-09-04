@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.GUI.Drag;
 using FlaxEditor.GUI.Input;
 using FlaxEditor.GUI.Timeline.GUI;
 using FlaxEngine;
@@ -17,7 +18,7 @@ namespace FlaxEditor.GUI.Timeline
     /// The timeline control that contains tracks section and headers. Can be used to create time-based media interface for camera tracks editing, audio mixing and events tracking.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
-    public partial class Timeline : ContainerControl
+    public class Timeline : ContainerControl
     {
         private static readonly KeyValuePair<float, string>[] FPSValues =
         {
@@ -260,7 +261,7 @@ namespace FlaxEditor.GUI.Timeline
         private ComboBox _fpsComboBox;
         private Button _viewButton;
         private FloatValueBox _fpsCustomValue;
-        private Panel _tracksPanelArea;
+        private TracksPanelArea _tracksPanelArea;
         private VerticalPanel _tracksPanel;
         private Image _playbackStop;
         private Image _playbackPlay;
@@ -633,6 +634,38 @@ namespace FlaxEditor.GUI.Timeline
         public bool IsMovingPositionHandle => _isMovingPositionHandle;
 
         /// <summary>
+        /// The drag and drop handler.
+        /// </summary>
+        public struct DragHandler
+        {
+            /// <summary>
+            /// The drag and drop handler.
+            /// </summary>
+            public DragHelper Helper;
+
+            /// <summary>
+            /// The action.
+            /// </summary>
+            public Action<Timeline, DragHelper> Action;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DragHandler"/> struct.
+            /// </summary>
+            /// <param name="helper">The helper.</param>
+            /// <param name="action">The action.</param>
+            public DragHandler(DragHelper helper, Action<Timeline, DragHelper> action)
+            {
+                Helper = helper;
+                Action = action;
+            }
+        }
+
+        /// <summary>
+        /// The drag handlers pairs of drag helper and the function that creates a track on drag drop.
+        /// </summary>
+        public readonly List<DragHandler> DragHandlers = new List<DragHandler>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
         /// </summary>
         /// <param name="playbackButtons">The playback buttons to use.</param>
@@ -733,7 +766,7 @@ namespace FlaxEditor.GUI.Timeline
                 playbackButtonsPanel.Width += playbackButtonsSize;
             }
 
-            _tracksPanelArea = new Panel(ScrollBars.Vertical)
+            _tracksPanelArea = new TracksPanelArea(this)
             {
                 AutoFocus = false,
                 Size = new Vector2(_splitter.Panel1.Width, _splitter.Panel1.Height - playbackButtonsSize - HeaderTopAreaHeight),
@@ -1378,6 +1411,13 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Called once to setup the drag drop handling for the timeline (lazy init on first drag action).
+        /// </summary>
+        protected virtual void SetupDragDrop()
+        {
+        }
+
+        /// <summary>
         /// Mark timeline as edited.
         /// </summary>
         public void MarkAsEdited()
@@ -1719,6 +1759,105 @@ namespace FlaxEditor.GUI.Timeline
             }
         }
 
+        class TracksPanelArea : Panel
+        {
+            private DragDropEffect _currentDragEffect = DragDropEffect.None;
+            private Timeline _timeline;
+            private bool _needSetup = true;
+
+            public TracksPanelArea(Timeline timeline)
+            : base(ScrollBars.Vertical)
+            {
+                _timeline = timeline;
+            }
+
+            /// <inheritdoc />
+            public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
+            {
+                var result = base.OnDragEnter(ref location, data);
+                if (result == DragDropEffect.None)
+                {
+                    if (_needSetup)
+                    {
+                        _needSetup = false;
+                        _timeline.SetupDragDrop();
+                    }
+                    for (int i = 0; i < _timeline.DragHandlers.Count; i++)
+                    {
+                        var dragHelper = _timeline.DragHandlers[i].Helper;
+                        if (dragHelper.OnDragEnter(data))
+                        {
+                            result = dragHelper.Effect;
+                            break;
+                        }
+                    }
+                    _currentDragEffect = result;
+                }
+
+                return result;
+            }
+
+            /// <inheritdoc />
+            public override DragDropEffect OnDragMove(ref Vector2 location, DragData data)
+            {
+                var result = base.OnDragEnter(ref location, data);
+                if (result == DragDropEffect.None)
+                {
+                    result = _currentDragEffect;
+                }
+
+                return result;
+            }
+
+            /// <inheritdoc />
+            public override void OnDragLeave()
+            {
+                _currentDragEffect = DragDropEffect.None;
+                _timeline.DragHandlers.ForEach(x => x.Helper.OnDragLeave());
+
+                base.OnDragLeave();
+            }
+
+            /// <inheritdoc />
+            public override DragDropEffect OnDragDrop(ref Vector2 location, DragData data)
+            {
+                var result = base.OnDragDrop(ref location, data);
+                if (result == DragDropEffect.None && _currentDragEffect != DragDropEffect.None)
+                {
+                    for (int i = 0; i < _timeline.DragHandlers.Count; i++)
+                    {
+                        var e = _timeline.DragHandlers[i];
+                        if (e.Helper.HasValidDrag)
+                        {
+                            e.Action(_timeline, e.Helper);
+                        }
+                    }
+                }
+
+                return result;
+            }
+
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                if (IsDragOver && _currentDragEffect != DragDropEffect.None)
+                {
+                    var style = Style.Current;
+                    Render2D.FillRectangle(new Rectangle(Vector2.Zero, Size), style.BackgroundSelected * 0.4f);
+                }
+
+                base.Draw();
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                _timeline = null;
+
+                base.Dispose();
+            }
+        }
+
         /// <summary>
         /// Shows the timeline object editing popup.
         /// </summary>
@@ -1762,6 +1901,7 @@ namespace FlaxEditor.GUI.Timeline
             _playbackPlay = null;
             _noTracksLabel = null;
             _positionHandle = null;
+            DragHandlers.Clear();
 
             base.Dispose();
         }
