@@ -170,6 +170,16 @@ namespace FlaxEditor.GUI.Timeline
         public bool IsExpandedAll => (ParentTrack == null || ParentTrack.IsExpandedAll) && (!CanExpand || IsExpanded);
 
         /// <summary>
+        /// Gets a value indicating whether this all of this track parents are expanded.
+        /// </summary>
+        public bool HasParentsExpanded => (ParentTrack == null || ParentTrack.IsExpandedAll);
+
+        /// <summary>
+        /// Gets a value indicating whether this track has any sub-tracks.
+        /// </summary>
+        public bool HasSubTracks => _subTracks.Count > 0;
+
+        /// <summary>
         /// Gets or sets a value indicating whether this track is expanded.
         /// </summary>
         public bool IsExpanded
@@ -1125,6 +1135,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             if (IsFocused)
             {
+                Track toSelect = null;
                 switch (key)
                 {
                 case Keys.F2:
@@ -1134,11 +1145,76 @@ namespace FlaxEditor.GUI.Timeline
                 case Keys.Delete:
                     _timeline.DeleteSelection();
                     return true;
+                case Keys.ArrowLeft:
+                    if (CanExpand && IsExpanded)
+                    {
+                        Collapse();
+                        return true;
+                    }
+                    else
+                    {
+                        toSelect = ParentTrack;
+                    }
+                    break;
+                case Keys.ArrowRight:
+                    if (CanExpand)
+                    {
+                        if (IsExpanded && HasSubTracks)
+                        {
+                            toSelect = SubTracks[0];
+                        }
+                        else
+                        {
+                            Expand();
+                            return true;
+                        }
+                    }
+                    break;
+                case Keys.ArrowUp:
+                {
+                    int index = IndexInParent;
+                    if (index > 0)
+                    {
+                        do
+                        {
+                            toSelect = Parent.GetChild(--index) as Track;
+                        } while (index != -1 && toSelect != null && !toSelect.HasParentsExpanded);
+                    }
+                    break;
                 }
-                // TODO: track duplicate with Ctrl+D
+                case Keys.ArrowDown:
+                {
+                    int index = IndexInParent;
+                    if (index < Parent.ChildrenCount - 1)
+                    {
+                        do
+                        {
+                            toSelect = Parent.GetChild(++index) as Track;
+                        } while (index != Parent.ChildrenCount && toSelect != null && !toSelect.HasParentsExpanded);
+                    }
+                    break;
+                }
+                }
+                if (toSelect != null)
+                {
+                    Timeline.Select(toSelect);
+                    toSelect.Focus();
+                    return true;
+                }
             }
 
-            return base.OnKeyDown(key);
+            // Base
+            if (_opened)
+                return base.OnKeyDown(key);
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnKeyUp(Keys key)
+        {
+            // Base
+            if (_opened)
+                base.OnKeyUp(key);
         }
 
         /// <inheritdoc />

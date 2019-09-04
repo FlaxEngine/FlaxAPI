@@ -57,6 +57,8 @@ namespace FlaxEditor.GUI.Timeline
                     _isLeftMouseButtonDown = true;
                     _timeline._isMovingPositionHandle = true;
                     StartMouseCapture();
+                    Seek(ref location);
+                    Focus();
                     return true;
                 }
 
@@ -502,6 +504,11 @@ namespace FlaxEditor.GUI.Timeline
         public Background MediaPanel => _background;
 
         /// <summary>
+        /// Gets the track controls parent panel.
+        /// </summary>
+        public VerticalPanel TracksPanel => _tracksPanel;
+
+        /// <summary>
         /// Gets the state of the timeline animation playback.
         /// </summary>
         public PlaybackStates PlaybackState
@@ -688,12 +695,14 @@ namespace FlaxEditor.GUI.Timeline
             var icons = Editor.Instance.Icons;
             var playbackButtonsArea = new ContainerControl(0, 0, 100, playbackButtonsSize)
             {
+                AutoFocus = false,
                 BackgroundColor = Style.Current.LightBackground,
                 DockStyle = DockStyle.Bottom,
                 Parent = _splitter.Panel1
             };
             var playbackButtonsPanel = new ContainerControl(0, 0, 0, playbackButtonsSize)
             {
+                AutoFocus = false,
                 AnchorStyle = AnchorStyle.Center,
                 Parent = playbackButtonsArea
             };
@@ -726,12 +735,14 @@ namespace FlaxEditor.GUI.Timeline
 
             _tracksPanelArea = new Panel(ScrollBars.Vertical)
             {
+                AutoFocus = false,
                 Size = new Vector2(_splitter.Panel1.Width, _splitter.Panel1.Height - playbackButtonsSize - HeaderTopAreaHeight),
                 DockStyle = DockStyle.Fill,
                 Parent = _splitter.Panel1
             };
             _tracksPanel = new VerticalPanel
             {
+                AutoFocus = false,
                 DockStyle = DockStyle.Top,
                 IsScrollable = true,
                 BottomMargin = 40.0f,
@@ -756,6 +767,7 @@ namespace FlaxEditor.GUI.Timeline
             };
             _backgroundArea = new Panel(ScrollBars.Both)
             {
+                AutoFocus = false,
                 ClipChildren = false,
                 BackgroundColor = Style.Current.Background.RGBMultiplied(0.7f),
                 DockStyle = DockStyle.Fill,
@@ -770,6 +782,7 @@ namespace FlaxEditor.GUI.Timeline
             };
             _background = new Background(this)
             {
+                AutoFocus = false,
                 ClipChildren = false,
                 Height = 0,
                 Parent = _backgroundArea
@@ -1216,7 +1229,7 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         /// <param name="track">The track.</param>
         /// <param name="addToSelection">If set to <c>true</c> track will be added to selection, otherwise will clear selection before.</param>
-        public void Select(Track track, bool addToSelection)
+        public void Select(Track track, bool addToSelection = false)
         {
             if (SelectedTracks.Contains(track) && (addToSelection || (SelectedTracks.Count == 1 && SelectedMedia.Count == 0)))
                 return;
@@ -1248,7 +1261,7 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         /// <param name="media">The media.</param>
         /// <param name="addToSelection">If set to <c>true</c> track will be added to selection, otherwise will clear selection before.</param>
-        public void Select(Media media, bool addToSelection)
+        public void Select(Media media, bool addToSelection = false)
         {
             if (SelectedMedia.Contains(media) && (addToSelection || (SelectedTracks.Count == 0 && SelectedMedia.Count == 1)))
                 return;
@@ -1536,7 +1549,14 @@ namespace FlaxEditor.GUI.Timeline
             {
                 _isRightMouseButtonDown = true;
                 _rightMouseButtonDownPos = location;
+                Focus();
 
+                return true;
+            }
+
+            if (!ContainsFocus)
+            {
+                Focus();
                 return true;
             }
 
@@ -1584,6 +1604,31 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             return base.OnMouseUp(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (base.OnKeyDown(key))
+                return true;
+
+            switch (key)
+            {
+            case Keys.ArrowLeft:
+                OnSeek(CurrentFrame - 1);
+                return true;
+            case Keys.ArrowRight:
+                OnSeek(CurrentFrame + 1);
+                return true;
+            case Keys.Home:
+                OnSeek(0);
+                return true;
+            case Keys.End:
+                OnSeek(DurationFrames);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

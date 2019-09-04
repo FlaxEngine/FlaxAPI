@@ -869,6 +869,14 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
+        public override void OnKeyUp(Keys key)
+        {
+            // Base
+            if (_opened)
+                base.OnKeyUp(key);
+        }
+
+        /// <inheritdoc />
         public override void OnChildResized(Control control)
         {
             PerformLayout();
