@@ -134,10 +134,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
-        private void OnAddScriptTrack(ContextMenuButton button)
+        /// <summary>
+        /// Adds the script track to this actor track.
+        /// </summary>
+        /// <param name="script">The script object.</param>
+        public void AddScriptTrack(Script script)
         {
-            var script = (Script)button.Tag;
-
             var track = (ScriptTrack)Timeline.AddTrack(ScriptTrack.GetArchetype());
             track.ParentTrack = this;
             track.TrackIndex = TrackIndex + 1;
@@ -147,6 +149,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Timeline.OnTracksOrderChanged();
             Timeline.MarkAsEdited();
             Expand();
+        }
+
+        private void OnAddScriptTrack(ContextMenuButton button)
+        {
+            var script = (Script)button.Tag;
+            AddScriptTrack(script);
         }
 
         private void OnClickedSelectActor()

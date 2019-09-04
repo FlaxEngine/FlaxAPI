@@ -131,7 +131,11 @@ namespace FlaxEditor.GUI.Timeline
         /// Get the media duration in seconds.
         /// </summary>
         /// <seealso cref="DurationFrames"/>
-        public float Duration => _durationFrames / _timeline.FramesPerSecond;
+        public float Duration
+        {
+            get => _durationFrames / _timeline.FramesPerSecond;
+            set => DurationFrames = (int)(value * _timeline.FramesPerSecond);
+        }
 
         /// <summary>
         /// Gets the parent timeline.

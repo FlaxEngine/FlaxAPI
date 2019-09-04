@@ -1,7 +1,10 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.Content;
+using FlaxEditor.GUI.Drag;
 using FlaxEditor.GUI.Timeline.Tracks;
+using FlaxEditor.SceneGraph;
 using FlaxEngine;
 
 namespace FlaxEditor.GUI.Timeline
@@ -71,6 +74,115 @@ namespace FlaxEditor.GUI.Timeline
             TrackArchetypes.Add(StructPropertyTrack.GetArchetype());
             TrackArchetypes.Add(ObjectPropertyTrack.GetArchetype());
             TrackArchetypes.Add(EventTrack.GetArchetype());
+        }
+
+        /// <inheritdoc />
+        protected override void SetupDragDrop()
+        {
+            base.SetupDragDrop();
+
+            DragHandlers.Add(new DragHandler(new DragActors(IsValidActor), OnDragActor));
+            DragHandlers.Add(new DragHandler(new DragScripts(IsValidScript), OnDragScript));
+            DragHandlers.Add(new DragHandler(new DragAssets(IsValidAsset), OnDragAsset));
+        }
+
+        private static bool IsValidActor(ActorNode actorNode)
+        {
+            return actorNode.Actor;
+        }
+
+        private static void OnDragActor(Timeline timeline, DragHelper drag)
+        {
+            foreach (var actorNode in ((DragActors)drag).Objects)
+            {
+                var track = (ActorTrack)timeline.AddTrack(ActorTrack.GetArchetype());
+                track.Actor = actorNode.Actor;
+                track.Rename(actorNode.Name);
+            }
+        }
+
+        private static bool IsValidScript(Script script)
+        {
+            return script && script.Actor;
+        }
+
+        private static void OnDragScript(Timeline timeline, DragHelper drag)
+        {
+            foreach (var script in ((DragScripts)drag).Objects)
+            {
+                var actor = script.Actor;
+                var track = (ActorTrack)timeline.AddTrack(ActorTrack.GetArchetype());
+                track.Actor = actor;
+                track.Rename(actor.Name);
+                track.AddScriptTrack(script);
+            }
+        }
+
+        private static bool IsValidAsset(AssetItem assetItem)
+        {
+            if (assetItem is BinaryAssetItem binaryAssetItem)
+            {
+                if (typeof(MaterialBase).IsAssignableFrom(binaryAssetItem.Type))
+                {
+                    var material = FlaxEngine.Content.Load<MaterialBase>(binaryAssetItem.ID);
+                    if (material && !material.WaitForLoaded() && material.IsPostFx)
+                        return true;
+                }
+                else if (typeof(SceneAnimation).IsAssignableFrom(binaryAssetItem.Type))
+                {
+                    var sceneAnimation = FlaxEngine.Content.Load<SceneAnimation>(binaryAssetItem.ID);
+                    if (sceneAnimation)
+                        return true;
+                }
+                else if (typeof(AudioClip).IsAssignableFrom(binaryAssetItem.Type))
+                {
+                    var audioClip = FlaxEngine.Content.Load<AudioClip>(binaryAssetItem.ID);
+                    if (audioClip)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void OnDragAsset(Timeline timeline, DragHelper drag)
+        {
+            foreach (var assetItem in ((DragAssets)drag).Objects)
+            {
+                if (assetItem is BinaryAssetItem binaryAssetItem)
+                {
+                    if (typeof(MaterialBase).IsAssignableFrom(binaryAssetItem.Type))
+                    {
+                        var material = FlaxEngine.Content.Load<MaterialBase>(binaryAssetItem.ID);
+                        if (material && !material.WaitForLoaded() && material.IsPostFx)
+                        {
+                            var track = (PostProcessMaterialTrack)timeline.AddTrack(PostProcessMaterialTrack.GetArchetype());
+                            track.Asset = material;
+                            track.Rename(assetItem.ShortName);
+                        }
+                    }
+                    else if (typeof(SceneAnimation).IsAssignableFrom(binaryAssetItem.Type))
+                    {
+                        var sceneAnimation = FlaxEngine.Content.Load<SceneAnimation>(binaryAssetItem.ID);
+                        if (!sceneAnimation || sceneAnimation.WaitForLoaded())
+                            continue;
+                        var track = (NestedSceneAnimationTrack)timeline.AddTrack(NestedSceneAnimationTrack.GetArchetype());
+                        track.Asset = sceneAnimation;
+                        track.TrackMedia.DurationFrames = sceneAnimation.DurationFrames;
+                        track.Rename(assetItem.ShortName);
+                    }
+                    else if (typeof(AudioClip).IsAssignableFrom(binaryAssetItem.Type))
+                    {
+                        var audioClip = FlaxEngine.Content.Load<AudioClip>(binaryAssetItem.ID);
+                        if (!audioClip || audioClip.WaitForLoaded())
+                            continue;
+                        var track = (AudioTrack)timeline.AddTrack(AudioTrack.GetArchetype());
+                        track.Asset = audioClip;
+                        track.TrackMedia.Duration = audioClip.Length;
+                        track.Rename(assetItem.ShortName);
+                    }
+                }
+            }
         }
 
         private void UpdatePlaybackState()
