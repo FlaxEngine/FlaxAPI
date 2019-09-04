@@ -713,6 +713,21 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Renames the track to the specified name and handles duplicated track names (adds number after the given name to make it unique).
+        /// </summary>
+        /// <param name="name">The base name.</param>
+        public void Rename(string name)
+        {
+            string newName = name;
+            int count = 0;
+            while (!_timeline.IsTrackNameValid(newName))
+            {
+                newName = string.Format("{0} {1}", name, count++);
+            }
+            OnRename(newName);
+        }
+
+        /// <summary>
         /// Deletes this track.
         /// </summary>
         public void Delete()

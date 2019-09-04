@@ -142,12 +142,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             track.ParentTrack = this;
             track.TrackIndex = TrackIndex + 1;
             track.Script = script;
-
-            int counter = 0;
-            string name = script.GetType().Name;
-            while (!Timeline.IsTrackNameValid(name))
-                name = string.Format("{0} {1}", script.GetType().Name, counter++);
-            track.Name = name;
+            track.Rename(script.GetType().Name);
 
             Timeline.OnTracksOrderChanged();
             Timeline.MarkAsEdited();
