@@ -94,6 +94,27 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Computes minimum translational distance between two geometry objects. Translating the first collider by direction * distance will separate the colliders apart if the function returned true. Otherwise, direction and distance are not defined. The one of the colliders has to be BoxCollider, SphereCollider CapsuleCollider or a convex MeshCollider. The other one can be any type.
+        /// </summary>
+        /// <param name="colliderA">The first collider.</param>
+        /// <param name="colliderB">The second collider.</param>
+        /// <param name="direction">The computed direction along which the translation required to separate the colliders apart is minimal. Valid only if function returns true.</param>
+        /// <param name="distance">The penetration distance along direction that is required to separate the colliders apart. Valid only if function returns true.</param>
+        /// <returns>True if the distance has successfully been computed, i.e. if objects do overlap, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool ComputePenetration(Collider colliderA, Collider colliderB, out Vector3 direction, out float distance)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ComputePenetration(Object.GetUnmanagedPtr(colliderA), Object.GetUnmanagedPtr(colliderB), out direction, out distance);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -123,6 +144,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern RigidBody Internal_GetAttachedRigidBody(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ComputePenetration(IntPtr colliderA, IntPtr colliderB, out Vector3 direction, out float distance);
 #endif
 
         #endregion
