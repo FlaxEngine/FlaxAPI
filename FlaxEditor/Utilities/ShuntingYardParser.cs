@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -258,7 +259,7 @@ namespace FlaxEditor.Utilities
             {
                 if (token.Type == TokenType.Number)
                 {
-                    stack.Push(double.Parse(token.Value));
+                    stack.Push(double.Parse(token.Value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture));
                 }
                 else if (token.Type == TokenType.Variable)
                 {
