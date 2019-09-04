@@ -63,6 +63,30 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
+        /// The colors for the keyframes used by the curve editor.
+        /// </summary>
+        internal static readonly Color[] CurveKeyframesColors =
+        {
+            Color.OrangeRed,
+            Color.ForestGreen,
+            Color.CornflowerBlue,
+            Color.White,
+        };
+
+        /// <summary>
+        /// The time/value axes tick steps for editors with timeline.
+        /// </summary>
+        internal static readonly float[] CurveTickSteps =
+        {
+            0.0000001f, 0.0000005f, 0.000001f, 0.000005f, 0.00001f,
+            0.00005f, 0.0001f, 0.0005f, 0.001f, 0.005f,
+            0.01f, 0.05f, 0.1f, 0.5f, 1,
+            5, 10, 50, 100, 500,
+            1000, 5000, 10000, 50000, 100000,
+            500000, 1000000, 5000000, 10000000, 100000000
+        };
+
+        /// <summary>
         /// Determines whether the specified path string contains any invalid character.
         /// </summary>
         /// <param name="path">The path.</param>

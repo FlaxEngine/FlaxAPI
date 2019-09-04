@@ -902,7 +902,7 @@ namespace FlaxEditor.GUI
             public override void Draw()
             {
                 var rect = new Rectangle(Vector2.Zero, Size);
-                var color = Editor.ShowCollapsed ? Color.Gray : Colors[Component];
+                var color = Editor.ShowCollapsed ? Color.Gray : Editor.Colors[Component];
                 if (IsSelected)
                     color = Editor.ContainsFocus ? Color.YellowGreen : Color.Lerp(Color.Gray, Color.YellowGreen, 0.4f);
                 if (IsMouseOver)
@@ -1041,39 +1041,18 @@ namespace FlaxEditor.GUI
         public static readonly float UnitsPerSecond = 100.0f;
 
         /// <summary>
-        /// The colors for the keyframes,
-        /// </summary>
-        private static readonly Color[] Colors =
-        {
-            Color.OrangeRed,
-            Color.ForestGreen,
-            Color.CornflowerBlue,
-            Color.White,
-        };
-
-        /// <summary>
-        /// The time/value axes tick steps.
-        /// </summary>
-        private static readonly float[] TickSteps =
-        {
-            0.0000001f, 0.0000005f, 0.000001f, 0.000005f, 0.00001f,
-            0.00005f, 0.0001f, 0.0005f, 0.001f, 0.005f,
-            0.01f, 0.05f, 0.1f, 0.5f, 1,
-            5, 10, 50, 100, 500,
-            1000, 5000, 10000, 50000, 100000,
-            500000, 1000000, 5000000, 10000000, 100000000
-        };
-
-        /// <summary>
         /// The keyframes size.
         /// </summary>
         private static readonly Vector2 KeyframesSize = new Vector2(5.0f);
+
+        private Color[] Colors = Utilities.Utils.CurveKeyframesColors;
+        private float[] TickSteps = Utilities.Utils.CurveTickSteps;
 
         private Contents _contents;
         private Panel _mainPanel;
         private readonly List<KeyframePoint> _points = new List<KeyframePoint>();
         private readonly TangentPoint[] _tangents = new TangentPoint[2];
-        private readonly float[] _tickStrengths = new float[TickSteps.Length];
+        private float[] _tickStrengths;
         private bool _refreshAfterEdit;
         private bool _showCollapsed;
         private Popup _popup;
@@ -1170,6 +1149,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         public CurveEditor()
         {
+            _tickStrengths = new float[TickSteps.Length];
             Accessor.GetDefaultValue(out DefaultValue);
 
             var style = Style.Current;
@@ -1868,7 +1848,7 @@ namespace FlaxEditor.GUI
             return _mainPanel.PointToParent(point);
         }
 
-        private void DrawAxis(ref Vector2 axis, ref Rectangle viewRect, float min, float max, float pixelRange)
+        private void DrawAxis(Vector2 axis, ref Rectangle viewRect, float min, float max, float pixelRange)
         {
             int minDistanceBetweenTicks = 20;
             int maxDistanceBetweenTicks = 60;
@@ -1983,10 +1963,8 @@ namespace FlaxEditor.GUI
 
                 Render2D.PushClip(ref viewRect);
 
-                var axisX = Vector2.UnitX;
-                var axisY = Vector2.UnitY;
-                DrawAxis(ref axisX, ref viewRect, min.X, max.X, pixelRange.X);
-                DrawAxis(ref axisY, ref viewRect, min.Y, max.Y, pixelRange.Y);
+                DrawAxis(Vector2.UnitX, ref viewRect, min.X, max.X, pixelRange.X);
+                DrawAxis(Vector2.UnitY, ref viewRect, min.Y, max.Y, pixelRange.Y);
 
                 Render2D.PopClip();
             }
@@ -2116,6 +2094,10 @@ namespace FlaxEditor.GUI
             _points.Clear();
             _keyframes.Clear();
             _labelsFont = null;
+            Colors = null;
+            DefaultValue = default(T);
+            TickSteps = null;
+            _tickStrengths = null;
 
             base.Dispose();
         }
