@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets linked directional light actor that is used to simulate the sun.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("Sun"), Tooltip("Directional light used to simulate the sun")]
+        [EditorOrder(10), DefaultValue(null), EditorDisplay("Sun"), Tooltip("Directional light used to simulate the sun")]
         public DirectionalLight SunLight
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the sun disc scale.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Sun"), Tooltip("Sun disc scale"), Limit(0, 100, 0.01f)]
+        [EditorOrder(20), DefaultValue(1.0f), EditorDisplay("Sun"), Tooltip("Sun disc scale"), Limit(0, 100, 0.01f)]
         public float SunDiscScale
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets the sun power.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), EditorDisplay("Sun"), Tooltip("Sun light power"), Limit(0, 1000, 0.01f)]
+        [EditorOrder(30), DefaultValue(8.0f), EditorDisplay("Sun"), Tooltip("Sun light power"), Limit(0, 1000, 0.01f)]
         public float SunPower
         {
 #if UNIT_TEST_COMPILANT

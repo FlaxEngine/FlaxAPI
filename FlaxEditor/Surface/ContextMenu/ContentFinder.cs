@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using FlaxEditor.Content;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Modules;
@@ -18,7 +17,6 @@ namespace FlaxEditor.Surface.ContextMenu
     {
         private Panel _resultPanel;
         private TextBox _searchBox;
-        private Match _match;
         private SearchItem _selectedItem;
 
         /// <summary>

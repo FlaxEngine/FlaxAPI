@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets model scale in lightmap parameter.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("Model", "Scale In Lightmap"), Tooltip("Model meshes master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
+        [EditorOrder(10), DefaultValue(1.0f), EditorDisplay("Model", "Scale In Lightmap"), Tooltip("Model meshes master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
         public float ScaleInLightmap
         {
 #if UNIT_TEST_COMPILANT
@@ -59,7 +60,7 @@ namespace FlaxEngine
         /// Increasing the bounds of an object will reduce performance and shadow quality.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(12), EditorDisplay("Model"), Tooltip("Model bounds scale parameter. It is useful when using Position Offset to animate the vertices of the object outside of its bounds."), Limit(0, 10.0f, 0.1f)]
+        [EditorOrder(12), DefaultValue(1.0f), EditorDisplay("Model"), Tooltip("Model bounds scale parameter. It is useful when using Position Offset to animate the vertices of the object outside of its bounds."), Limit(0, 10.0f, 0.1f)]
         public float BoundsScale
         {
 #if UNIT_TEST_COMPILANT
@@ -74,7 +75,7 @@ namespace FlaxEngine
         /// Gets or sets hidden shadow flag. If set to true, the object will cast a shadow but won't be visible.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(15), EditorDisplay("Model"), Tooltip("If checked, the object will cast a shadow but won't be visible.")]
+        [EditorOrder(15), DefaultValue(false), EditorDisplay("Model"), Tooltip("If checked, the object will cast a shadow but won't be visible.")]
         public bool HiddenShadow
         {
 #if UNIT_TEST_COMPILANT
@@ -89,7 +90,7 @@ namespace FlaxEngine
         /// Gets or sets model asset to draw.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Model"), Tooltip("Model asset to draw")]
+        [EditorOrder(20), DefaultValue(null), EditorDisplay("Model"), Tooltip("Model asset to draw")]
         public Model Model
         {
 #if UNIT_TEST_COMPILANT
@@ -104,7 +105,7 @@ namespace FlaxEngine
         /// Gets or sets the model Level Of Detail bias value. Allows to increase or decrease rendered model quality.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), Limit(-100, 100, 0.1f), EditorDisplay("Model", "LOD Bias"), Tooltip("Model Level Of Detail bias value. Allows to increase or decrease rendered model quality.")]
+        [EditorOrder(40), DefaultValue(0), Limit(-100, 100, 0.1f), EditorDisplay("Model", "LOD Bias"), Tooltip("Model Level Of Detail bias value. Allows to increase or decrease rendered model quality.")]
         public int LODBias
         {
 #if UNIT_TEST_COMPILANT
@@ -119,7 +120,7 @@ namespace FlaxEngine
         /// Gets or sets the model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(50), Limit(-1, 100, 0.1f), EditorDisplay("Model", "Forced LOD"), Tooltip("Model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.")]
+        [EditorOrder(50), DefaultValue(-1), Limit(-1, 100, 0.1f), EditorDisplay("Model", "Forced LOD"), Tooltip("Model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.")]
         public int ForcedLOD
         {
 #if UNIT_TEST_COMPILANT

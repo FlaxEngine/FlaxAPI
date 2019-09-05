@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets size of the volume in the local space.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Nav Mesh Bounds"), EditorOrder(0), Tooltip("Volume size")]
+        [EditorDisplay("Nav Mesh Bounds"), DefaultValue(typeof(Vector3), "1000,1000,1000"), EditorOrder(0), Tooltip("Volume size")]
         public Vector3 Size
         {
 #if UNIT_TEST_COMPILANT

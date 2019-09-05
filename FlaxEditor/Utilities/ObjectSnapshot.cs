@@ -74,7 +74,7 @@ namespace FlaxEditor.Utilities
                     }
                     refStack.Pop();
                 }
-                else if (typeof(IList).IsAssignableFrom(memberType))
+                else if (typeof(IList).IsAssignableFrom(memberType) && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType.GetElementType()))
                 {
                     var list = (IList)memberValue;
                     var elementType = memberType.GetGenericArguments()[0];

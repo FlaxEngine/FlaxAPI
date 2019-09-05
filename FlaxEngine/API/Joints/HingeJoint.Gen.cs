@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets the joint mode flags. Controls joint behaviour.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(100), EditorDisplay("Joint"), Tooltip("The joint mode flags. Controls joint behaviour.")]
+        [EditorOrder(100), DefaultValue(HingeJointFlag.Limit | HingeJointFlag.Drive), EditorDisplay("Joint"), Tooltip("The joint mode flags. Controls joint behaviour.")]
         public HingeJointFlag Flags
         {
 #if UNIT_TEST_COMPILANT

@@ -178,6 +178,18 @@ namespace FlaxEngine
             return result;
         }
 
+        internal static T[] ExtractArrayFromList<T>(List<T> list)
+        {
+            T[] result = null;
+            if (list != null)
+            {
+                // TODO: move it to the native code
+                var field = list.GetType().GetField("_items", BindingFlags.Instance | BindingFlags.NonPublic);
+                result = (T[])field.GetValue(list);
+            }
+            return result;
+        }
+
         /// <summary>
         /// Reads the color from the binary stream.
         /// </summary>

@@ -1,3 +1,5 @@
+// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -100,14 +102,14 @@ namespace FlaxEngine.Assertions
                 return;
             }
             if (!comparer.Equals(actual, expected))
-                Fail(AssertionMessageUtil.GetEqualityMessage(actual, expected, true), message);
+                Fail(GetEqualityMessage(actual, expected, true), message);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
         public static void AreEqual(Object expected, Object actual, string message)
         {
             if (actual != expected)
-                Fail(AssertionMessageUtil.GetEqualityMessage(actual, expected, true), message);
+                Fail(GetEqualityMessage(actual, expected, true), message);
         }
 
         /// <summary>
@@ -183,20 +185,18 @@ namespace FlaxEngine.Assertions
                 return;
             }
             if (comparer.Equals(actual, expected))
-                Fail(AssertionMessageUtil.GetEqualityMessage(actual, expected, false), message);
+                Fail(GetEqualityMessage(actual, expected, false), message);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
         public static void AreNotEqual(Object expected, Object actual, string message)
         {
             if (actual == expected)
-                Fail(AssertionMessageUtil.GetEqualityMessage(actual, expected, false), message);
+                Fail(GetEqualityMessage(actual, expected, false), message);
         }
 
         public static void Fail(string message = "", string userMessage = "")
         {
-            if (Debugger.IsAttached)
-                throw new AssertionException(message, userMessage);
             if (RaiseExceptions)
                 throw new AssertionException(message, userMessage);
             if (message == null)
@@ -225,7 +225,7 @@ namespace FlaxEngine.Assertions
         public static void IsFalse(bool condition, string message)
         {
             if (condition)
-                Fail(AssertionMessageUtil.BooleanFailureMessage(false), message);
+                Fail(BooleanFailureMessage(false), message);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
@@ -242,14 +242,14 @@ namespace FlaxEngine.Assertions
             if (typeof(Object).IsAssignableFrom(typeof(T)))
                 IsNotNull((object)value as Object, message);
             else if (value == null)
-                Fail(AssertionMessageUtil.NullFailureMessage(null, false), message);
+                Fail(NullFailureMessage(null, false), message);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
         public static void IsNotNull(Object value, string message)
         {
             if (value == null)
-                Fail(AssertionMessageUtil.NullFailureMessage(null, false), message);
+                Fail(NullFailureMessage(null, false), message);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
@@ -266,14 +266,14 @@ namespace FlaxEngine.Assertions
             if (typeof(Object).IsAssignableFrom(typeof(T)))
                 IsNull((object)value as Object, message);
             else if (value != null)
-                Fail(AssertionMessageUtil.NullFailureMessage(value, true), message);
+                Fail(NullFailureMessage(value, true), message);
         }
 
         [Conditional("FLAX_ASSERTIONS")]
         public static void IsNull(Object value, string message)
         {
             if (value != null)
-                Fail(AssertionMessageUtil.NullFailureMessage(value, true), message);
+                Fail(NullFailureMessage(value, true), message);
         }
 
         /// <summary>
@@ -295,13 +295,13 @@ namespace FlaxEngine.Assertions
         public static void IsTrue(bool condition, string message)
         {
             if (!condition)
-                Fail(AssertionMessageUtil.BooleanFailureMessage(true), message);
+                Fail(BooleanFailureMessage(true), message);
         }
 
         /// <summary>
         /// Expect action to fail
         /// </summary>
-        /// <param name="exceptionType">Type of expeption to expect</param>
+        /// <param name="exceptionType">Type of exception to expect</param>
         /// <param name="action">Action to expect</param>
         /// <param name="message">User custom message to display</param>
         [Conditional("FLAX_ASSERTIONS")]
@@ -315,11 +315,48 @@ namespace FlaxEngine.Assertions
             {
                 if (exceptionType != e.GetType())
                 {
-                    Fail(AssertionMessageUtil.GetMessage("Expected exception of type " + exceptionType.FullName + " got " + e.GetType().FullName), message);
+                    Fail(GetMessage("Expected exception of type " + exceptionType.FullName + " got " + e.GetType().FullName), message);
                 }
                 return;
             }
-            Fail(AssertionMessageUtil.GetMessage("Expected exception of type " + exceptionType.FullName), message);
+            Fail(GetMessage("Expected exception of type " + exceptionType.FullName), message);
+        }
+
+        public static string BooleanFailureMessage(bool expected)
+        {
+            return GetMessage(string.Concat("Value was ", !expected), expected.ToString());
+        }
+
+        public static string GetEqualityMessage(object actual, object expected, bool expectEqual)
+        {
+            string str = string.Format("Values are {0}equal.", new object[] { !expectEqual ? string.Empty : "not " });
+            object[] objArray =
+            {
+                actual,
+                expected,
+                null
+            };
+            objArray[2] = !expectEqual ? "!=" : "==";
+            return GetMessage(str, string.Format("{0} {2} {1}", objArray));
+        }
+
+        public static string GetMessage(string failureMessage)
+        {
+            return string.Format("{0} {1}", new object[]
+            {
+                "Assertion failed.",
+                failureMessage
+            });
+        }
+
+        public static string GetMessage(string failureMessage, string expected)
+        {
+            return GetMessage($"{failureMessage}\nExpected: {expected}");
+        }
+
+        public static string NullFailureMessage(object value, bool expectNull)
+        {
+            return GetMessage(string.Format("Value was {0}Null", new object[] { !expectNull ? string.Empty : "not " }), string.Format("Value was {0}Null", new object[] { !expectNull ? "not " : string.Empty }));
         }
     }
 }

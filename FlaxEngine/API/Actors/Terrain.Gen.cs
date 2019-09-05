@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets the terrain Level Of Detail bias value. Allows to increase or decrease rendered terrain quality.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(50), Limit(-100, 100, 0.1f), EditorDisplay("Terrain", "LOD Bias"), Tooltip("Terrain Level Of Detail bias value. Allows to increase or decrease rendered terrain quality.")]
+        [EditorOrder(50), DefaultValue(0), Limit(-100, 100, 0.1f), EditorDisplay("Terrain", "LOD Bias"), Tooltip("Terrain Level Of Detail bias value. Allows to increase or decrease rendered terrain quality.")]
         public int LODBias
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the terrain forced Level Of Detail index. Allows to bind the given terrain LOD to show. Value -1 disables this feature.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(60), Limit(-1, 100, 0.1f), EditorDisplay("Terrain", "Forced LOD"), Tooltip("Terrain forced Level Of Detail index. Allows to bind the given chunk LOD to show. Value -1 disables this feature.")]
+        [EditorOrder(60), DefaultValue(-1), Limit(-1, 100, 0.1f), EditorDisplay("Terrain", "Forced LOD"), Tooltip("Terrain forced Level Of Detail index. Allows to bind the given chunk LOD to show. Value -1 disables this feature.")]
         public int ForcedLOD
         {
 #if UNIT_TEST_COMPILANT
@@ -74,7 +75,7 @@ namespace FlaxEngine
         /// Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.6.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(70), Limit(0, 5, 0.01f), EditorDisplay("Terrain", "LOD Distribution"), Tooltip("Terrain LODs distribution parameter. Adjusts terrain chunks transitions distances. Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.75.")]
+        [EditorOrder(70), DefaultValue(0.6f), Limit(0, 5, 0.01f), EditorDisplay("Terrain", "LOD Distribution"), Tooltip("Terrain LODs distribution parameter. Adjusts terrain chunks transitions distances. Use lower value to increase terrain quality or higher value to increase performance. Default value is 0.75.")]
         public float LODDistribution
         {
 #if UNIT_TEST_COMPILANT
@@ -89,7 +90,7 @@ namespace FlaxEngine
         /// Gets or sets the default material used for terrain rendering (chunks can override this).
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(100), EditorDisplay("Terrain"), Tooltip("The default material used for terrain rendering (chunks can override this).")]
+        [EditorOrder(100), DefaultValue(null), EditorDisplay("Terrain"), Tooltip("The default material used for terrain rendering (chunks can override this).")]
         public MaterialBase Material
         {
 #if UNIT_TEST_COMPILANT
@@ -107,7 +108,7 @@ namespace FlaxEngine
         /// Use value higher than 1 to increase baked lighting resolution.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(110), Limit(0, 10000, 0.1f), EditorDisplay("Terrain", "Scale In Lightmap"), Tooltip("Terrain scale in lightmap (applied to all the chunks). Use value higher than 1 to increase baked lighting resolution.")]
+        [EditorOrder(110), DefaultValue(1.0f), Limit(0, 10000, 0.1f), EditorDisplay("Terrain", "Scale In Lightmap"), Tooltip("Terrain scale in lightmap (applied to all the chunks). Use value higher than 1 to increase baked lighting resolution.")]
         public float ScaleInLightmap
         {
 #if UNIT_TEST_COMPILANT
@@ -137,7 +138,7 @@ namespace FlaxEngine
         /// Gets or sets the terrain geometry LOD index used for collision.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(500), Limit(-1, 100, 0.1f), EditorDisplay("Collision", "Collision LOD"), Tooltip("Terrain geometry LOD index used for collision.")]
+        [EditorOrder(500), DefaultValue(-1), Limit(-1, 100, 0.1f), EditorDisplay("Collision", "Collision LOD"), Tooltip("Terrain geometry LOD index used for collision.")]
         public int CollisionLOD
         {
 #if UNIT_TEST_COMPILANT
@@ -152,7 +153,7 @@ namespace FlaxEngine
         /// Gets or sets the default physical material used to define the terrain collider physical properties.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(520), Limit(-1, 100, 0.1f), EditorDisplay("Collision"), AssetReference(typeof(PhysicalMaterial), true), Tooltip("Terrain default physical material used to define the collider physical properties.")]
+        [EditorOrder(520), DefaultValue(null), Limit(-1, 100, 0.1f), EditorDisplay("Collision"), AssetReference(typeof(PhysicalMaterial), true), Tooltip("Terrain default physical material used to define the collider physical properties.")]
         public JsonAsset PhysicalMaterial
         {
 #if UNIT_TEST_COMPILANT

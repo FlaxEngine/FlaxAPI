@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the decal rendering order. The higher values are render later (on top).
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Decal"), Tooltip("The decal rendering order. The higher values are render later (on top).")]
+        [EditorOrder(20), DefaultValue(0), EditorDisplay("Decal"), Tooltip("The decal rendering order. The higher values are render later (on top).")]
         public int SortOrder
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets the decal bounds size (in local space).
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), Limit(0), EditorDisplay("Decal"), Tooltip("The decal bounds size (in local space).")]
+        [EditorOrder(30), DefaultValue(typeof(Vector3), "100,100,100"), Limit(0), EditorDisplay("Decal"), Tooltip("The decal bounds size (in local space).")]
         public Vector3 Size
         {
 #if UNIT_TEST_COMPILANT

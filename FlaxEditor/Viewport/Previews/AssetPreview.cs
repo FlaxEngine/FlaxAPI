@@ -83,7 +83,7 @@ namespace FlaxEditor.Viewport.Previews
         {
             DockStyle = DockStyle.Fill;
 
-            Task.Flags = ViewFlags.DefaultAssetPreview;
+            Task.View.Flags = ViewFlags.DefaultAssetPreview;
             Task.AllowGlobalCustomPostFx = false;
 
             var orbitRadius = 200.0f;

@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets the start location which transform is representing link start position. It is defined in local-space of the actor.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Nav Link"), EditorOrder(0), Tooltip("Start location which transform is representing link start position. It is defined in local-space of the actor.")]
+        [EditorDisplay("Nav Link"), DefaultValue(typeof(Vector3), "0,0,0"), EditorOrder(0), Tooltip("Start location which transform is representing link start position. It is defined in local-space of the actor.")]
         public Vector3 Start
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the end location which transform is representing link end position. It is defined in local-space of the actor.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Nav Link"), EditorOrder(10), Tooltip("End location which transform is representing link end position. It is defined in local-space of the actor.")]
+        [EditorDisplay("Nav Link"), DefaultValue(typeof(Vector3), "0,0,0"), EditorOrder(10), Tooltip("End location which transform is representing link end position. It is defined in local-space of the actor.")]
         public Vector3 End
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets the radius of the agents that can go through the link.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Nav Link"), EditorOrder(20), Tooltip("Radius of the agents that can go through the link.")]
+        [EditorDisplay("Nav Link"), DefaultValue(30.0f), EditorOrder(20), Tooltip("Radius of the agents that can go through the link.")]
         public float Radius
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets the flag used to define links that can be traversed in both directions. When set to false the link can only be traversed from start to end.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Nav Link"), EditorOrder(30), Tooltip("Flag used to define links that can be traversed in both directions. If false the link can only be traversed from start to end.")]
+        [EditorDisplay("Nav Link"), DefaultValue(true), EditorOrder(30), Tooltip("Flag used to define links that can be traversed in both directions. If false the link can only be traversed from start to end.")]
         public bool BiDirectional
         {
 #if UNIT_TEST_COMPILANT

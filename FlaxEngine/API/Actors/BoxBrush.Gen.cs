@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets brush surfaces scale in lightmap parameter.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), EditorDisplay("CSG", "Scale In Lightmap"), Tooltip("Brush surfaces master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
+        [EditorOrder(30), DefaultValue(1.0f), EditorDisplay("CSG", "Scale In Lightmap"), Tooltip("Brush surfaces master scale in lightmap"), Limit(0, 1000.0f, 0.1f)]
         public float ScaleInLightmap
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets brush center location (in local space).
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(21), EditorDisplay("CSG"), Tooltip("CSG brush center location (in local space)")]
+        [EditorOrder(21), DefaultValue(typeof(Vector3), "0,0,0"), EditorDisplay("CSG"), Tooltip("CSG brush center location (in local space)")]
         public Vector3 Center
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets CSG brush mode.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("CSG"), Tooltip("CSG brush mode")]
+        [EditorOrder(10), DefaultValue(BrushMode.Additive), EditorDisplay("CSG"), Tooltip("CSG brush mode")]
         public BrushMode Mode
         {
 #if UNIT_TEST_COMPILANT

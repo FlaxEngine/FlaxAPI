@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -44,7 +45,7 @@ namespace FlaxEngine
         /// The box size will be scaled by the actor's world scale.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(100), EditorDisplay("Collider"), Tooltip("Size of the box, measured in the object's local space")]
+        [EditorOrder(100), DefaultValue(typeof(Vector3), "100,100,100"), EditorDisplay("Collider"), Tooltip("Size of the box, measured in the object's local space")]
         public Vector3 Size
         {
 #if UNIT_TEST_COMPILANT
