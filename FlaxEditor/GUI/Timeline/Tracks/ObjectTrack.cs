@@ -311,6 +311,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (InvalidGenericTypes.Contains(type) || (type.IsGenericType && InvalidGenericTypes.Contains(type.GetGenericTypeDefinition())))
                 return false;
 
+            // Skip delegates
+            if (typeof(MulticastDelegate).IsAssignableFrom(type.BaseType))
+                return false;
+
             return !type.ContainsGenericParameters &&
                    !type.IsArray &&
                    !type.IsGenericType &&

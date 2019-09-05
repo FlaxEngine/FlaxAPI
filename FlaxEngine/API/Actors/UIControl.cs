@@ -158,6 +158,7 @@ namespace FlaxEngine
         /// <summary>
         /// Unlinks the control from the actor without disposing it or modifying.
         /// </summary>
+        [NoAnimate]
         public void UnlinkControl()
         {
             if (_control != null)

@@ -861,7 +861,7 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             // Draw drag and drop effect
-            if (IsDragOver)
+            if (IsDragOver && _isDragOverHeader)
             {
                 Color dragOverColor = style.BackgroundSelected * 0.6f;
                 Rectangle rect;
@@ -1022,6 +1022,14 @@ namespace FlaxEditor.GUI.Timeline
                 // Start
                 DoDragDrop();
             }
+
+            // Hack fix for drag problems
+            if (_isDragOverHeader)
+            {
+                _dragOverMode = DragItemPositioning.None;
+                _isDragOverHeader = false;
+                OnDragLeave();
+            }
         }
 
         /// <inheritdoc />
@@ -1083,10 +1091,16 @@ namespace FlaxEditor.GUI.Timeline
                     else
                         result = OnDragMoveHeader(data);
                 }
+                else if (_isDragOverHeader)
+                {
+                    OnDragLeaveHeader();
+                }
                 _isDragOverHeader = isDragOverHeader;
 
-                if (result == DragDropEffect.None)
+                if (result == DragDropEffect.None || !isDragOverHeader)
+                {
                     _dragOverMode = DragItemPositioning.None;
+                }
             }
 
             return result;
@@ -1119,6 +1133,8 @@ namespace FlaxEditor.GUI.Timeline
         /// <inheritdoc />
         public override void OnDragLeave()
         {
+            base.OnDragLeave();
+
             // Clear cache
             if (_isDragOverHeader)
             {
@@ -1126,8 +1142,6 @@ namespace FlaxEditor.GUI.Timeline
                 OnDragLeaveHeader();
             }
             _dragOverMode = DragItemPositioning.None;
-
-            base.OnDragLeave();
         }
 
         /// <inheritdoc />
