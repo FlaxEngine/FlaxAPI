@@ -372,7 +372,7 @@ namespace FlaxEditor.Windows.Profiler
 
                     // Count sub-events time
                     double subEventsTimeTotal = 0;
-                    int subEventsMemoryTotal = e.MemoryAllocation;
+                    int subEventsMemoryTotal = e.ManagedMemoryAllocation + e.NativeMemoryAllocation;
                     for (int k = i + 1; k < events.Length; k++)
                     {
                         var sub = events[k];
@@ -385,7 +385,7 @@ namespace FlaxEditor.Windows.Profiler
                             break;
                         }
 
-                        subEventsMemoryTotal += sub.MemoryAllocation;
+                        subEventsMemoryTotal += sub.ManagedMemoryAllocation + e.NativeMemoryAllocation;
                     }
 
                     var row = new Row
