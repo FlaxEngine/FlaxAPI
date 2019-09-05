@@ -154,7 +154,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 var attributes = m.GetCustomAttributes();
 
                 // Check if has attribute to skip animating
-                if (attributes.Any(x => x is NoAnimateAttribute || x is HideInEditorAttribute))
+                if (attributes.Any(x => x is NoAnimateAttribute))
                     continue;
 
                 // Prevent from adding the same track twice
@@ -254,7 +254,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 var attributes = m.GetCustomAttributes();
 
                 // Check if has attribute to skip animating
-                if (attributes.Any(x => x is NoAnimateAttribute || x is HideInEditorAttribute))
+                if (attributes.Any(x => x is NoAnimateAttribute))
                     continue;
 
                 // Validate value type and pick the track archetype
