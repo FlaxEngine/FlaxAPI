@@ -3,6 +3,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FlaxEditor.Content;
+using FlaxEditor.GUI.Drag;
 using FlaxEditor.GUI.Timeline.Tracks;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -41,6 +43,49 @@ namespace FlaxEditor.GUI.Timeline
             // Setup track types
             TrackArchetypes.Add(ParticleEmitterTrack.GetArchetype());
             TrackArchetypes.Add(FolderTrack.GetArchetype());
+        }
+        
+        /// <inheritdoc />
+        protected override void SetupDragDrop()
+        {
+            base.SetupDragDrop();
+            
+            DragHandlers.Add(new DragHandler(new DragAssets(IsValidAsset), OnDragAsset));
+        }
+        
+        private static bool IsValidAsset(AssetItem assetItem)
+        {
+            if (assetItem is BinaryAssetItem binaryAssetItem)
+            {
+                if (typeof(ParticleEmitter).IsAssignableFrom(binaryAssetItem.Type))
+                {
+                    var emitter = FlaxEngine.Content.Load<ParticleEmitter>(binaryAssetItem.ID);
+                    if (emitter)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void OnDragAsset(Timeline timeline, DragHelper drag)
+        {
+            foreach (var assetItem in ((DragAssets)drag).Objects)
+            {
+                if (assetItem is BinaryAssetItem binaryAssetItem)
+                {
+                    if (typeof(ParticleEmitter).IsAssignableFrom(binaryAssetItem.Type))
+                    {
+                        var emitter = FlaxEngine.Content.Load<ParticleEmitter>(binaryAssetItem.ID);
+                        if (emitter)
+                        {
+                            var track = (ParticleEmitterTrack)timeline.AddTrack(ParticleEmitterTrack.GetArchetype());
+                            track.Asset = emitter;
+                            track.Rename(assetItem.ShortName);
+                        }
+                    }
+                }
+            }
         }
 
         /// <inheritdoc />

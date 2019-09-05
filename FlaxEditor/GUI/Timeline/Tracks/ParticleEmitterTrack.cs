@@ -104,15 +104,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
         }
 
-        /// <inheritdoc />
-        public override void OnSpawned()
-        {
-            base.OnSpawned();
-
-            // Ask user to specify the particle emitter asset to playback
-            AssetSearchPopup.Show(this, Size * 0.5f, IsValid, (assetItem) => Asset = FlaxEngine.Content.LoadAsync<ParticleEmitter>(assetItem.ID));
-        }
-
         private bool IsValid(AssetItem item)
         {
             return item is BinaryAssetItem binaryItem && typeof(ParticleEmitter).IsAssignableFrom(binaryItem.Type);
