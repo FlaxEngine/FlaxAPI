@@ -122,6 +122,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             var m = e.TrackMedia;
             m.StartFrame = stream.ReadInt32();
             m.DurationFrames = stream.ReadInt32();
+            m.Preview.DrawMode = track.Loop ? AudioClipPreview.DrawModes.Looped : AudioClipPreview.DrawModes.Single;
         }
 
         private static void SaveTrack(Track track, BinaryWriter stream)

@@ -127,11 +127,11 @@ namespace FlaxEditor.Viewport.Previews
                 case DrawModes.Single:
                     clipsInView = Mathf.Min(clipsInView, 1.0f);
                     clipWidth = clipDefaultWidth;
-                    samplesPerIndex = (uint)(info.SampleRate * info.NumChannels / unitsPerSecond);
+                    samplesPerIndex = (uint)(info.SampleRate / unitsPerSecond);
                     break;
                 case DrawModes.Looped:
                     clipWidth = width / clipsInView;
-                    samplesPerIndex = (uint)(info.SampleRate * info.NumChannels / unitsPerSecond);
+                    samplesPerIndex = (uint)(info.SampleRate / unitsPerSecond);
                     break;
                 default: throw new ArgumentOutOfRangeException();
                 }
