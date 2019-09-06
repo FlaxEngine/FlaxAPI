@@ -2,13 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
 using FlaxEngine.Rendering;
-using Newtonsoft.Json.Schema;
 
 namespace FlaxEditor.CustomEditors.Dedicated
 {
