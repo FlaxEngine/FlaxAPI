@@ -1958,5 +1958,49 @@ namespace FlaxEngine.Rendering
                 }
             }
         }
+
+        /// <summary>
+        /// Adds the material to the settings.
+        /// </summary>
+        /// <param name="material">The material.</param>
+        public unsafe void AddMaterial(MaterialBase material)
+        {
+            if (_MaterialsCount < MaxPostFxMaterials && material)
+            {
+                fixed (Guid* postFxMaterials = &_Material0)
+                {
+                    postFxMaterials[_MaterialsCount++] = material.ID;
+                    _Materials = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes the material from the settings.
+        /// </summary>
+        /// <param name="material">The material.</param>
+        public unsafe void RemoveMaterial(MaterialBase material)
+        {
+            if (_MaterialsCount != 0 && material)
+            {
+                fixed (Guid* postFxMaterials = &_Material0)
+                {
+                    var id = material.ID;
+                    for (int i = 0; i < _MaterialsCount; i++)
+                    {
+                        if (postFxMaterials[i] == id)
+                        {
+                            _MaterialsCount--;
+                            for (int j = i; j < _MaterialsCount; j++)
+                            {
+                                postFxMaterials[j] = postFxMaterials[j + 1];
+                            }
+                            _Materials = null;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
