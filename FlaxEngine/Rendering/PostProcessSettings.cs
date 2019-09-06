@@ -2,13 +2,11 @@
 
 using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 // ReSharper disable UnusedMember.Global
-// ReSharper disable InconsistentNaming
-// ReSharper disable NonReadonlyMemberInGetHashCode
+// ReSharper disable EnumUnderlyingTypeIsInt
+// ReSharper disable ShiftExpressionRealShiftCountIsZero
 
 namespace FlaxEngine.Rendering
 {
@@ -106,1414 +104,471 @@ namespace FlaxEngine.Rendering
         Half = 2,
     }
 
+    internal class PostProcessSettingAttribute : Attribute
+    {
+        public int Bit;
+
+        public PostProcessSettingAttribute(int bit)
+        {
+            Bit = bit;
+        }
+    }
+
     /// <summary>
-    /// Contains settings for rendering advanced visual effects and post effects.
+    /// Contains settings for Ambient Occlusion effect rendering.
     /// </summary>
-    [Serializable]
-    public struct PostProcessSettings : IEquatable<PostProcessSettings>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct AmbientOcclusionSettings
     {
         /// <summary>
-        /// Packed settings storage container used with C++ interop.
+        /// The structure members override flags.
         /// </summary>
-        [Serializable, StructLayout(LayoutKind.Sequential)]
-        internal struct Data
+        [Flags]
+        public enum Override : int
         {
-            // Flags
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
 
-            // Every property has order eg. 601, 812. We use dozens number as group index and rest as a property index.
-            // Bit fields contain flags if override every parameter.
-            // Helper functions GetFlag/SetFlags are used to modify override flag per single setting.
+            /// <summary>
+            /// Overrides <see cref="AmbientOcclusionSettings.Enabled"/> property.
+            /// </summary>
+            Enabled = 1 << 0,
 
-            public int Flags0; //
-            public int Flags1; // AO
-            public int Flags2; // Bloom
-            public int Flags3; // ToneMap
-            public int Flags4; // Eye
-            public int Flags5; // Cam
-            public int Flags6; // Flare
-            public int Flags7; // DOF
-            public int Flags8; // SSR
-            public int Flags9; // ColorGrading
-            public int Flags10; // MB
-            public int Flags11; // AA
+            /// <summary>
+            /// Overrides <see cref="AmbientOcclusionSettings.Intensity"/> property.
+            /// </summary>
+            Intensity = 1 << 1,
 
-            // Ambient Occlusion
+            /// <summary>
+            /// Overrides <see cref="AmbientOcclusionSettings.Power"/> property.
+            /// </summary>
+            Power = 1 << 2,
 
-            public byte AO_Enabled;
-            public float AO_Intensity;
-            public float AO_Power;
-            public float AO_Radius;
-            public float AO_FadeOutDistance;
-            public float AO_FadeDistance;
+            /// <summary>
+            /// Overrides <see cref="AmbientOcclusionSettings.Radius"/> property.
+            /// </summary>
+            Radius = 1 << 3,
 
-            // Screen Space Reflections
+            /// <summary>
+            /// Overrides <see cref="AmbientOcclusionSettings.FadeOutDistance"/> property.
+            /// </summary>
+            FadeOutDistance = 1 << 4,
 
-            public float SSR_Intensity;
-            public ResolutionMode SSR_DepthResolution;
-            public ResolutionMode SSR_RayTracePassResolution;
-            public float SSR_BRDFBias;
-            public float SSR_RoughnessThreshold;
-            public float SSR_WorldAntiSelfOcclusionBias;
-            public ResolutionMode SSR_ResolvePassResolution;
-            public int SSR_ResolveSamples;
-            public byte SSR_UseColorBufferMips;
-            public float SSR_EdgeFadeFactor;
-            public byte SSR_TemporalEffect;
-            public float SSR_TemporalScale;
-            public float SSR_TemporalResponse;
+            /// <summary>
+            /// Overrides <see cref="AmbientOcclusionSettings.FadeDistance"/> property.
+            /// </summary>
+            FadeDistance = 1 << 5,
 
-            // Bloom
-
-            public byte Bloom_Enabled;
-            public float Bloom_Intensity;
-            public float Bloom_Threshold;
-            public float Bloom_BlurSigma;
-            public float Bloom_Scale;
-
-            // Tone Mapping
-
-            public float ToneMap_WhiteTemp;
-            public float ToneMap_WhiteTint;
-            public float ToneMap_FilmSlope;
-            public float ToneMap_FilmToe;
-            public float ToneMap_FilmShoulder;
-            public float ToneMap_FilmBlackClip;
-            public float ToneMap_FilmWhiteClip;
-
-            // Color Grading
-
-            public Vector4 ColorGrading_ColorSaturation;
-            public Vector4 ColorGrading_ColorContrast;
-            public Vector4 ColorGrading_ColorGamma;
-            public Vector4 ColorGrading_ColorGain;
-            public Vector4 ColorGrading_ColorOffset;
-            public Vector4 ColorGrading_ColorSaturationShadows;
-            public Vector4 ColorGrading_ColorContrastShadows;
-            public Vector4 ColorGrading_ColorGammaShadows;
-            public Vector4 ColorGrading_ColorGainShadows;
-            public Vector4 ColorGrading_ColorOffsetShadows;
-            public Vector4 ColorGrading_ColorSaturationMidtones;
-            public Vector4 ColorGrading_ColorContrastMidtones;
-            public Vector4 ColorGrading_ColorGammaMidtones;
-            public Vector4 ColorGrading_ColorGainMidtones;
-            public Vector4 ColorGrading_ColorOffsetMidtones;
-            public Vector4 ColorGrading_ColorSaturationHighlights;
-            public Vector4 ColorGrading_ColorContrastHighlights;
-            public Vector4 ColorGrading_ColorGammaHighlights;
-            public Vector4 ColorGrading_ColorGainHighlights;
-            public Vector4 ColorGrading_ColorOffsetHighlights;
-            public float ColorGrading_ShadowsMax;
-            public float ColorGrading_HighlightsMin;
-
-            // Eye Adaptation
-
-            public EyeAdaptationTechnique Eye_Technique;
-            public float Eye_SpeedUp;
-            public float Eye_SpeedDown;
-            public float Eye_Exposure;
-            public float Eye_KeyValue;
-            public float Eye_MinLuminance;
-            public float Eye_MaxLuminance;
-
-            // Camera Artifacts
-
-            public float Cam_VignetteIntensity;
-            public Vector3 Cam_VignetteColor;
-            public float Cam_VignetteShapeFactor;
-            public float Cam_GrainAmount;
-            public float Cam_GrainParticleSize;
-            public float Cam_GrainSpeed;
-            public float Cam_ChromaticDistortion;
-            public Color Cam_ScreenFadeColor;
-
-            // Lens Flares
-
-            public float Flare_Intensity;
-            public int Flare_Ghosts;
-            public float Flare_HaloWidth;
-            public float Flare_HaloIntensity;
-            public float Flare_GhostDispersal;
-            public float Flare_Distortion;
-            public float Flare_ThresholdBias;
-            public float Flare_ThresholdScale;
-            public Guid Flare_LensColor;
-            public Guid Flare_LensStar;
-            public Guid Flare_LensDirt;
-            public float Flare_LensDirtIntensity;
-
-            // Depth Of Field
-
-            public byte DOF_Enabled;
-            public float DOF_BlurStrength;
-            public float DOF_FocalDistance;
-            public float DOF_FocalRegion;
-            public float DOF_NearTransitionRange;
-            public float DOF_FarTransitionRange;
-            public float DOF_DepthLimit;
-            public byte DOF_BokehEnabled;
-            public float DOF_BokehSize;
-            public BokehShapeType DOF_BokehShape;
-            public Guid DOF_BokehShapeCustom;
-            public float DOF_BokehBrightnessThreshold;
-            public float DOF_BokehBlurThreshold;
-            public float DOF_BokehFalloff;
-            public float DOF_BokehDepthCutoff;
-
-            // Motion Blur
-
-            public byte MB_Enabled;
-            public float MB_Scale;
-            public int MB_SampleCount;
-            public ResolutionMode MB_MotionVectorsResolution;
-
-            // Anti Aliasing
-
-            public AntialiasingMode AA_Mode;
-            public float AA_TAA_JitterSpread;
-            public float AA_TAA_Sharpness;
-            public float AA_TAA_StationaryBlending;
-            public float AA_TAA_MotionBlending;
-
-            // Post Fx Materials
-
-            public int PostFxMaterialsCount;
-            public Guid PostFxMaterial0;
-            public Guid PostFxMaterial1;
-            public Guid PostFxMaterial2;
-            public Guid PostFxMaterial3;
-            public Guid PostFxMaterial4;
-            public Guid PostFxMaterial5;
-            public Guid PostFxMaterial6;
-            public Guid PostFxMaterial7;
-
-            public bool GetFlag(int order)
-            {
-                int groupIndex = order / 100;
-                int propertyIndex = order - groupIndex * 100;
-                return GetFlag(groupIndex, propertyIndex);
-            }
-
-            public unsafe bool GetFlag(int groupIndex, int propertyIndex)
-            {
-                fixed (int* ptr = &Flags0)
-                {
-                    int* groupFlag = (int*)((long)ptr + groupIndex * sizeof(int));
-                    int propertyFlag = 1 << propertyIndex;
-                    return (*groupFlag & propertyFlag) != 0;
-                }
-            }
-
-            public void SetFlag(int order, bool value)
-            {
-                int groupIndex = order / 100;
-                int propertyIndex = order - groupIndex * 100;
-                SetFlag(groupIndex, propertyIndex, value);
-            }
-
-            public unsafe void SetFlag(int groupIndex, int propertyIndex, bool value)
-            {
-                fixed (int* ptr = &Flags0)
-                {
-                    int* groupFlag = (int*)((long)ptr + groupIndex * sizeof(int));
-                    int propertyFlag = 1 << propertyIndex;
-                    if (value)
-                        *groupFlag |= propertyFlag;
-                    else
-                        *groupFlag &= ~propertyFlag;
-                }
-            }
-        }
-
-        [NoSerialize]
-        internal bool isDataDirty;
-
-        [NoSerialize]
-        private MaterialBase[] _postFxMaterials;
-
-        [Serialize]
-        internal Data data;
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = Enabled | Intensity | Power | Radius | FadeOutDistance | FadeDistance,
+        };
 
         /// <summary>
-        /// The maximum allowed amount custom post fx materials assigned to <see cref="PostProcessSettings"/>.
+        /// The flags for overriden properties.
         /// </summary>
-        public const int MaxPostFxMaterials = 8;
-
-        /// <summary>
-        /// Gets the override flag for the given property.
-        /// </summary>
-        /// <param name="p">The property.</param>
-        /// <returns>True if property value is being overriden, otherwise false.</returns>
-        public bool GetOverrideFlag(PropertyInfo p)
-        {
-            var attributes = p.GetCustomAttributes(true);
-            var order = (EditorOrderAttribute)attributes.First(x => x is EditorOrderAttribute);
-            return data.GetFlag(order.Order);
-        }
-
-        /// <summary>
-        /// Sets the override flag for the given property.
-        /// </summary>
-        /// <param name="p">The property.</param>
-        /// <param name="value">True if override the property value, otherwise false..</param>
-        public void SetOverrideFlag(PropertyInfo p, bool value)
-        {
-            var attributes = p.GetCustomAttributes(true);
-            var order = (EditorOrderAttribute)attributes.First(x => x is EditorOrderAttribute);
-            data.SetFlag(order.Order, value);
-        }
-
-        /// <summary>
-        /// Gets the override flag for the given property.
-        /// </summary>
-        /// <param name="order">The property order (see <see cref="EditorOrderAttribute"/> order value for properties).</param>
-        /// <returns>True if property value is being overriden, otherwise false.</returns>
-        public bool GetOverrideFlag(int order)
-        {
-            return data.GetFlag(order);
-        }
-
-        /// <summary>
-        /// Sets the override flag for the given property.
-        /// </summary>
-        /// <param name="order">The property order (see <see cref="EditorOrderAttribute"/> order value for properties.</param>
-        /// <param name="value">True if override the property value, otherwise false..</param>
-        public void SetOverrideFlag(int order, bool value)
-        {
-            data.SetFlag(order, value);
-        }
-
-        #region Ambient Occlusion
+        [HideInEditor]
+        public Override OverrideFlags;
 
         /// <summary>
         /// Enable/disable ambient occlusion effect.
         /// </summary>
         [DefaultValue(true)]
-        [NoSerialize, EditorOrder(100), EditorDisplay("Ambient Occlusion", "Enabled")]
-        public bool AO_Enabled
-        {
-            get => data.AO_Enabled != 0;
-            set
-            {
-                data.AO_Enabled = (byte)(value ? 1 : 0);
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(0), PostProcessSetting((int)Override.Enabled)]
+        public bool Enabled;
 
         /// <summary>
         /// Gets or sets the ambient occlusion intensity.
         /// </summary>
         [DefaultValue(0.6f), Limit(0, 2.0f, 0.01f)]
-        [NoSerialize, EditorOrder(101), EditorDisplay("Ambient Occlusion", "Intensity")]
-        public float AO_Intensity
-        {
-            get => data.AO_Intensity;
-            set
-            {
-                data.AO_Intensity = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(1), PostProcessSetting((int)Override.Intensity)]
+        public float Intensity;
 
         /// <summary>
         /// Gets or sets the ambient occlusion power.
         /// </summary>
         [DefaultValue(0.75f), Limit(0, 4.0f, 0.01f)]
-        [NoSerialize, EditorOrder(102), EditorDisplay("Ambient Occlusion", "Power")]
-        public float AO_Power
-        {
-            get => data.AO_Power;
-            set
-            {
-                data.AO_Power = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(2), PostProcessSetting((int)Override.Power)]
+        public float Power;
 
         /// <summary>
         /// Gets or sets the ambient occlusion check range radius.
         /// </summary>
         [DefaultValue(0.7f), Limit(0, 100.0f, 0.01f)]
-        [NoSerialize, EditorOrder(103), EditorDisplay("Ambient Occlusion", "Radius")]
-        public float AO_Radius
-        {
-            get => data.AO_Radius;
-            set
-            {
-                data.AO_Radius = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(3), PostProcessSetting((int)Override.Radius)]
+        public float Radius;
 
         /// <summary>
         /// Gets or sets the ambient occlusion fade out end distance from camera (in world units).
         /// </summary>
         [DefaultValue(5000.0f), Limit(0.0f)]
-        [NoSerialize, EditorOrder(104), EditorDisplay("Ambient Occlusion", "Fade Out Distance")]
-        public float AO_FadeOutDistance
-        {
-            get => data.AO_FadeOutDistance;
-            set
-            {
-                data.AO_FadeOutDistance = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(4), PostProcessSetting((int)Override.FadeOutDistance)]
+        public float FadeOutDistance;
 
         /// <summary>
         /// Gets or sets the ambient occlusion fade distance (in world units). Defines the size of the effect fade from fully visible to fully invisible at FadeOutDistance.
         /// </summary>
         [DefaultValue(500.0f), Limit(0.0f)]
-        [NoSerialize, EditorOrder(105), EditorDisplay("Ambient Occlusion", "Fade Distance")]
-        public float AO_FadeDistance
+        [EditorOrder(5), PostProcessSetting((int)Override.FadeDistance)]
+        public float FadeDistance;
+    }
+
+    /// <summary>
+    /// Contains settings for Bloom effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct BloomSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
         {
-            get => data.AO_FadeDistance;
-            set
-            {
-                data.AO_FadeDistance = value;
-                isDataDirty = true;
-            }
-        }
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
 
-        #endregion
+            /// <summary>
+            /// Overrides <see cref="BloomSettings.Enabled"/> property.
+            /// </summary>
+            Enabled = 1 << 0,
 
-        #region Bloom
+            /// <summary>
+            /// Overrides <see cref="BloomSettings.Intensity"/> property.
+            /// </summary>
+            Intensity = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="BloomSettings.Power"/> property.
+            /// </summary>
+            Threshold = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="BloomSettings.Radius"/> property.
+            /// </summary>
+            BlurSigma = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="BloomSettings.FadeOutDistance"/> property.
+            /// </summary>
+            Scale = 1 << 4,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = Enabled | Intensity | Threshold | BlurSigma | Scale,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
 
         /// <summary>
         /// Enables/disables bloom effect.
         /// </summary>
         [DefaultValue(true)]
-        [NoSerialize, EditorOrder(200), EditorDisplay("Bloom", "Enabled")]
-        public bool Bloom_Enabled
-        {
-            get => data.Bloom_Enabled != 0;
-            set
-            {
-                data.Bloom_Enabled = (byte)(value ? 1 : 0);
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(0), PostProcessSetting((int)Override.Enabled)]
+        public bool Enabled;
 
         /// <summary>
         /// Gets or sets the bloom intensity.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 10.0f, 0.1f)]
-        [NoSerialize, EditorOrder(201), EditorDisplay("Bloom", "Intensity")]
-        public float Bloom_Intensity
-        {
-            get => data.Bloom_Intensity;
-            set
-            {
-                data.Bloom_Intensity = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(1), PostProcessSetting((int)Override.Intensity)]
+        public float Intensity;
 
         /// <summary>
         /// Gets or sets the bloom threshold. Pixels with higher luminance are glowing.
         /// </summary>
         [DefaultValue(3.0f), Limit(0, 15.0f, 0.01f)]
-        [NoSerialize, EditorOrder(202), EditorDisplay("Bloom", "Threshold")]
-        public float Bloom_Threshold
-        {
-            get => data.Bloom_Threshold;
-            set
-            {
-                data.Bloom_Threshold = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(2), PostProcessSetting((int)Override.Threshold)]
+        public float Threshold;
 
         /// <summary>
         /// Gets or sets the bloom blur sigma parameter.
         /// </summary>
         [DefaultValue(3.6f)]
-        [NoSerialize, EditorOrder(203), EditorDisplay("Bloom", "Blur Sigma")]
-        public float Bloom_BlurSigma
-        {
-            get => data.Bloom_BlurSigma;
-            set
-            {
-                data.Bloom_BlurSigma = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(3), PostProcessSetting((int)Override.BlurSigma)]
+        public float BlurSigma;
 
         /// <summary>
         /// Gets or sets the bloom blur scale.
         /// </summary>
         [DefaultValue(1.8f)]
-        [NoSerialize, EditorOrder(204), EditorDisplay("Bloom", "Scale")]
-        public float Bloom_Scale
+        [EditorOrder(4), PostProcessSetting((int)Override.Scale)]
+        public float Scale;
+    }
+
+    /// <summary>
+    /// Contains settings for Tone Mapping effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct ToneMappingSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
         {
-            get => data.Bloom_Scale;
-            set
-            {
-                data.Bloom_Scale = value;
-                isDataDirty = true;
-            }
-        }
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
 
-        #endregion
+            /// <summary>
+            /// Overrides <see cref="ToneMappingSettings.WhiteTemperature"/> property.
+            /// </summary>
+            WhiteTemperature = 1 << 0,
 
-        #region Tone Mapping
+            /// <summary>
+            /// Overrides <see cref="ToneMappingSettings.WhiteTint"/> property.
+            /// </summary>
+            WhiteTint = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="ToneMappingSettings.FilmSlope"/> property.
+            /// </summary>
+            FilmSlope = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="ToneMappingSettings.FilmToe"/> property.
+            /// </summary>
+            FilmToe = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="ToneMappingSettings.FilmShoulder"/> property.
+            /// </summary>
+            FilmShoulder = 1 << 4,
+
+            /// <summary>
+            /// Overrides <see cref="ToneMappingSettings.FilmBlackClip"/> property.
+            /// </summary>
+            FilmBlackClip = 1 << 5,
+
+            /// <summary>
+            /// Overrides <see cref="ToneMappingSettings.FilmWhiteClip"/> property.
+            /// </summary>
+            FilmWhiteClip = 1 << 6,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = WhiteTemperature | WhiteTint | FilmSlope | FilmToe | FilmShoulder | FilmBlackClip | FilmWhiteClip,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
 
         /// <summary>
         /// Gets or sets the white color temperature. Default is 6500.
         /// </summary>
         [DefaultValue(6500.0f), Limit(1500, 15000)]
-        [NoSerialize, EditorOrder(300), EditorDisplay("Tone Mapping", "White Temperature"), Tooltip("White color temperature. Default is 6500.")]
-        public float ToneMap_WhiteTemp
-        {
-            get => data.ToneMap_WhiteTemp;
-            set
-            {
-                data.ToneMap_WhiteTemp = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(0), PostProcessSetting((int)Override.WhiteTemperature)]
+        [Tooltip("White color temperature. Default is 6500.")]
+        public float WhiteTemperature;
 
         /// <summary>
         /// Gets or sets the white tint. Default is 0.
         /// </summary>
         [DefaultValue(0.0f), Limit(-1, 1, 0.001f)]
-        [NoSerialize, EditorOrder(301), EditorDisplay("Tone Mapping", "White Tint"), Tooltip("White color tint. Default is 0.")]
-        public float ToneMap_WhiteTint
-        {
-            get => data.ToneMap_WhiteTint;
-            set
-            {
-                data.ToneMap_WhiteTint = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(1), PostProcessSetting((int)Override.WhiteTint)]
+        [Tooltip("White color tint. Default is 0.")]
+        public float WhiteTint;
 
         /// <summary>
         /// Gets or sets the film curve slope. Default is 0.88.
         /// </summary>
         [DefaultValue(0.88f), Limit(0, 1, 0.01f)]
-        [NoSerialize, EditorOrder(302), EditorDisplay("Tone Mapping", "Film Slope"), Tooltip("This will adjust the steepness of the S-curve used for the tone mapper, where larger values will make the slope steeper (darker) and lower values will make the slope less steep (lighter). Default is 0.88.")]
-        public float ToneMap_FilmSlope
-        {
-            get => data.ToneMap_FilmSlope;
-            set
-            {
-                data.ToneMap_FilmSlope = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(2), PostProcessSetting((int)Override.FilmSlope)]
+        [Tooltip("This will adjust the steepness of the S-curve used for the tone mapper, where larger values will make the slope steeper (darker) and lower values will make the slope less steep (lighter). Default is 0.88.")]
+        public float FilmSlope;
 
         /// <summary>
         /// Gets or sets the film curve toe. Default is 0.55.
         /// </summary>
         [DefaultValue(0.55f), Limit(0, 1, 0.01f)]
-        [NoSerialize, EditorOrder(303), EditorDisplay("Tone Mapping", "Film Toe"), Tooltip("This will adjust the dark color in the tone mapper. Default is 0.55.")]
-        public float ToneMap_FilmToe
-        {
-            get => data.ToneMap_FilmToe;
-            set
-            {
-                data.ToneMap_FilmToe = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(3), PostProcessSetting((int)Override.FilmToe)]
+        [Tooltip("This will adjust the dark color in the tone mapper. Default is 0.55.")]
+        public float FilmToe;
 
         /// <summary>
         /// Gets or sets the film curve shoulder. Default is 0.26.
         /// </summary>
         [DefaultValue(0.26f), Limit(0, 1, 0.01f)]
-        [NoSerialize, EditorOrder(304), EditorDisplay("Tone Mapping", "Film Shoulder"), Tooltip("This will adjust the bright color in the tone mapper. Default is 0.26.")]
-        public float ToneMap_FilmShoulder
-        {
-            get => data.ToneMap_FilmShoulder;
-            set
-            {
-                data.ToneMap_FilmShoulder = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(4), PostProcessSetting((int)Override.FilmShoulder)]
+        [Tooltip("This will adjust the bright color in the tone mapper. Default is 0.26.")]
+        public float FilmShoulder;
 
         /// <summary>
         /// Gets or sets the film curve black clip. Default is 0.
         /// </summary>
         [DefaultValue(0.0f), Limit(0, 1, 0.01f)]
-        [NoSerialize, EditorOrder(305), EditorDisplay("Tone Mapping", "Film Black Clip"), Tooltip("This will set where the crossover happens where black's start to cut off their value. In general, this value should not be adjusted. Default is 0.")]
-        public float ToneMap_FilmBlackClip
-        {
-            get => data.ToneMap_FilmBlackClip;
-            set
-            {
-                data.ToneMap_FilmBlackClip = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(5), PostProcessSetting((int)Override.FilmBlackClip)]
+        [Tooltip("This will set where the crossover happens where black's start to cut off their value. In general, this value should not be adjusted. Default is 0.")]
+        public float FilmBlackClip;
 
         /// <summary>
         /// Gets or sets the film curve white clip. Default is 0.04.
         /// </summary>
         [DefaultValue(0.04f), Limit(0, 1, 0.01f)]
-        [NoSerialize, EditorOrder(306), EditorDisplay("Tone Mapping", "Film White Clip"), Tooltip("This will set where the crossover happens where white's start to cut off their values. This will appear as a subtle change in most cases. Default is 0.04.")]
-        public float ToneMap_FilmWhiteClip
+        [EditorOrder(6), PostProcessSetting((int)Override.FilmWhiteClip)]
+        [Tooltip("This will set where the crossover happens where white's start to cut off their values. This will appear as a subtle change in most cases. Default is 0.04.")]
+        public float FilmWhiteClip;
+    }
+
+    /// <summary>
+    /// Contains settings for Color Grading effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct ColorGradingSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
         {
-            get => data.ToneMap_FilmWhiteClip;
-            set
-            {
-                data.ToneMap_FilmWhiteClip = value;
-                isDataDirty = true;
-            }
-        }
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
 
-        #endregion
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorSaturation"/> property.
+            /// </summary>
+            ColorSaturation = 1 << 0,
 
-        #region Eye Adaptation
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorContrast"/> property.
+            /// </summary>
+            ColorContrast = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorGamma"/> property.
+            /// </summary>
+            ColorGamma = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorGain"/> property.
+            /// </summary>
+            ColorGain = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorOffset"/> property.
+            /// </summary>
+            ColorOffset = 1 << 4,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorSaturationShadows"/> property.
+            /// </summary>
+            ColorSaturationShadows = 1 << 5,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorContrastShadows"/> property.
+            /// </summary>
+            ColorContrastShadows = 1 << 6,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorGammaShadows"/> property.
+            /// </summary>
+            ColorGammaShadows = 1 << 7,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorGainShadows"/> property.
+            /// </summary>
+            ColorGainShadows = 1 << 8,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorOffsetShadows"/> property.
+            /// </summary>
+            ColorOffsetShadows = 1 << 9,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorSaturationMidtones"/> property.
+            /// </summary>
+            ColorSaturationMidtones = 1 << 10,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorContrastMidtones"/> property.
+            /// </summary>
+            ColorContrastMidtones = 1 << 11,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorGammaMidtones"/> property.
+            /// </summary>
+            ColorGammaMidtones = 1 << 12,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorGainMidtones"/> property.
+            /// </summary>
+            ColorGainMidtones = 1 << 13,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorOffsetMidtones"/> property.
+            /// </summary>
+            ColorOffsetMidtones = 1 << 14,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorSaturationHighlights"/> property.
+            /// </summary>
+            ColorSaturationHighlights = 1 << 15,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorContrastHighlights"/> property.
+            /// </summary>
+            ColorContrastHighlights = 1 << 16,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorGammaHighlights"/> property.
+            /// </summary>
+            ColorGammaHighlights = 1 << 17,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorGainHighlights"/> property.
+            /// </summary>
+            ColorGainHighlights = 1 << 18,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ColorOffsetHighlights"/> property.
+            /// </summary>
+            ColorOffsetHighlights = 1 << 19,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.ShadowsMax"/> property.
+            /// </summary>
+            ShadowsMax = 1 << 20,
+
+            /// <summary>
+            /// Overrides <see cref="ColorGradingSettings.HighlightsMin"/> property.
+            /// </summary>
+            HighlightsMin = 1 << 21,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = ColorSaturation | ColorContrast | ColorGamma | ColorGain | ColorOffset |
+                  ColorSaturationShadows | ColorContrastShadows | ColorGammaShadows | ColorGainShadows | ColorOffsetShadows |
+                  ColorSaturationMidtones | ColorContrastMidtones | ColorGammaMidtones | ColorGainMidtones | ColorOffsetMidtones |
+                  ColorSaturationHighlights | ColorContrastHighlights | ColorGammaHighlights | ColorGainHighlights | ColorOffsetHighlights |
+                  ShadowsMax | HighlightsMin,
+        };
 
         /// <summary>
-        /// Gets or sets the eye adaptation mode.
+        /// The flags for overriden properties.
         /// </summary>
-        [DefaultValue(EyeAdaptationTechnique.Auto)]
-        [NoSerialize, EditorOrder(400), EditorDisplay("Eye Adaptation", "Technique")]
-        public EyeAdaptationTechnique Eye_Technique
-        {
-            get => data.Eye_Technique;
-            set
-            {
-                data.Eye_Technique = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the speed up of the eye adaptation effect.
-        /// </summary>
-        [DefaultValue(3.0f), Limit(0, 100.0f, 0.01f)]
-        [NoSerialize, EditorOrder(401), EditorDisplay("Eye Adaptation", "Speed Up")]
-        public float Eye_SpeedUp
-        {
-            get => data.Eye_SpeedUp;
-            set
-            {
-                data.Eye_SpeedUp = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the speed up of the eye adaptation effect.
-        /// </summary>
-        [DefaultValue(1.0f), Limit(0, 100.0f, 0.01f)]
-        [NoSerialize, EditorOrder(402), EditorDisplay("Eye Adaptation", "Speed Down")]
-        public float Eye_SpeedDown
-        {
-            get => data.Eye_SpeedDown;
-            set
-            {
-                data.Eye_SpeedDown = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the camera exposure.
-        /// </summary>
-        [DefaultValue(1.5f), Limit(-1000, 1000, 0.001f)]
-        [NoSerialize, EditorOrder(403), EditorDisplay("Eye Adaptation", "Exposure")]
-        public float Eye_Exposure
-        {
-            get => data.Eye_Exposure;
-            set
-            {
-                data.Eye_Exposure = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the pixels light value to achieve.
-        /// </summary>
-        [DefaultValue(0.2f), Limit(-100, 100, 0.001f)]
-        [NoSerialize, EditorOrder(404), EditorDisplay("Eye Adaptation", "Key Value")]
-        public float Eye_KeyValue
-        {
-            get => data.Eye_KeyValue;
-            set
-            {
-                data.Eye_KeyValue = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the minimum luminance value used for tone mapping.
-        /// </summary>
-        [DefaultValue(0.01f), Limit(0, 50.0f, 0.01f)]
-        [NoSerialize, EditorOrder(405), EditorDisplay("Eye Adaptation", "Minimum luminance")]
-        public float Eye_MinLuminance
-        {
-            get => data.Eye_MinLuminance;
-            set
-            {
-                data.Eye_MinLuminance = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum luminance value used for tone mapping.
-        /// </summary>
-        [DefaultValue(100.0f), Limit(0, 100.0f, 0.01f)]
-        [NoSerialize, EditorOrder(406), EditorDisplay("Eye Adaptation", "Maximum luminance")]
-        public float Eye_MaxLuminance
-        {
-            get => data.Eye_MaxLuminance;
-            set
-            {
-                data.Eye_MaxLuminance = value;
-                isDataDirty = true;
-            }
-        }
-
-        #endregion
-
-        #region Camera Artifacts
-
-        /// <summary>
-        /// Gets or sets the vignette intensity.
-        /// </summary>
-        [DefaultValue(0.8f), Limit(0, 2, 0.001f)]
-        [NoSerialize, EditorOrder(500), EditorDisplay("Camera Artifacts", "Vignette Intensity")]
-        public float Cam_VignetteIntensity
-        {
-            get => data.Cam_VignetteIntensity;
-            set
-            {
-                data.Cam_VignetteIntensity = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the vignette color.
-        /// </summary>
-        [NoSerialize, EditorOrder(501), EditorDisplay("Camera Artifacts", "Vignette Color")]
-        public Color Cam_VignetteColor
-        {
-            get => data.Cam_VignetteColor;
-            set
-            {
-                data.Cam_VignetteColor = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the vignette shape factor.
-        /// </summary>
-        [DefaultValue(0.125f), Limit(0.0001f, 2.0f, 0.001f)]
-        [NoSerialize, EditorOrder(502), EditorDisplay("Camera Artifacts", "Vignette Shape Factor")]
-        public float Cam_VignetteShapeFactor
-        {
-            get => data.Cam_VignetteShapeFactor;
-            set
-            {
-                data.Cam_VignetteShapeFactor = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the grain noise amount.
-        /// </summary>
-        [DefaultValue(0.006f), Limit(0.0f, 2.0f, 0.005f)]
-        [NoSerialize, EditorOrder(503), EditorDisplay("Camera Artifacts", "Grain Amount")]
-        public float Cam_GrainAmount
-        {
-            get => data.Cam_GrainAmount;
-            set
-            {
-                data.Cam_GrainAmount = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the grain noise particles size.
-        /// </summary>
-        [DefaultValue(1.6f), Limit(1.0f, 3.0f, 0.01f)]
-        [NoSerialize, EditorOrder(504), EditorDisplay("Camera Artifacts", "Grain Particle Size")]
-        public float Cam_GrainParticleSize
-        {
-            get => data.Cam_GrainParticleSize;
-            set
-            {
-                data.Cam_GrainParticleSize = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the grain noise particles size.
-        /// </summary>
-        [DefaultValue(1.0f), Limit(0.0f, 10.0f, 0.01f)]
-        [NoSerialize, EditorOrder(505), EditorDisplay("Camera Artifacts", "Grain Speed"), Tooltip("Specifies grain particles animation speed")]
-        public float Cam_GrainSpeed
-        {
-            get => data.Cam_GrainSpeed;
-            set
-            {
-                data.Cam_GrainSpeed = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the chromatic aberration distortion intensity.
-        /// </summary>
-        [DefaultValue(0.0f), Limit(0.0f, 1.0f, 0.01f)]
-        [NoSerialize, EditorOrder(506), EditorDisplay("Camera Artifacts", "Chromatic Distortion")]
-        public float Cam_ChromaticDistortion
-        {
-            get => data.Cam_ChromaticDistortion;
-            set
-            {
-                data.Cam_ChromaticDistortion = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the screen tint color (alpha channel defines the blending factor)..
-        /// </summary>
-        [DefaultValue(typeof(Color), "0,0,0,0")]
-        [NoSerialize, EditorOrder(507), EditorDisplay("Camera Artifacts", "Screen Fade Color"), Tooltip("Screen fade color (alpha channel defines the blending factor)")]
-        public Color Cam_ScreenFadeColor
-        {
-            get => data.Cam_ScreenFadeColor;
-            set
-            {
-                data.Cam_ScreenFadeColor = value;
-                isDataDirty = true;
-            }
-        }
-
-        #endregion
-
-        #region Lens Flares
-
-        /// <summary>
-        /// Gets or sets the lens flares intensity.
-        /// </summary>
-        [DefaultValue(1.0f), Limit(0, 10.0f, 0.01f)]
-        [NoSerialize, EditorOrder(600), EditorDisplay("Lens Flares", "Intensity")]
-        public float Flare_Intensity
-        {
-            get => data.Flare_Intensity;
-            set
-            {
-                data.Flare_Intensity = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the amount of lens flares ghosts.
-        /// </summary>
-        [DefaultValue(8), Limit(0, 16)]
-        [NoSerialize, EditorOrder(601), EditorDisplay("Lens Flares", "Ghosts")]
-        public int Flare_Ghosts
-        {
-            get => data.Flare_Ghosts;
-            set
-            {
-                data.Flare_Ghosts = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the lens flares halo size.
-        /// </summary>
-        [DefaultValue(0.16f)]
-        [NoSerialize, EditorOrder(602), EditorDisplay("Lens Flares", "Halo Width")]
-        public float Flare_HaloWidth
-        {
-            get => data.Flare_HaloWidth;
-            set
-            {
-                data.Flare_HaloWidth = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the lens flares halo intensity.
-        /// </summary>
-        [DefaultValue(0.666f), Limit(0, 10.0f, 0.01f)]
-        [NoSerialize, EditorOrder(603), EditorDisplay("Lens Flares", "Halo Intensity")]
-        public float Flare_HaloIntensity
-        {
-            get => data.Flare_HaloIntensity;
-            set
-            {
-                data.Flare_HaloIntensity = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the lens flares ghosts dispersal.
-        /// </summary>
-        [DefaultValue(0.3f)]
-        [NoSerialize, EditorOrder(604), EditorDisplay("Lens Flares", "Ghost Dispersal")]
-        public float Flare_GhostDispersal
-        {
-            get => data.Flare_GhostDispersal;
-            set
-            {
-                data.Flare_GhostDispersal = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the lens flares distortion.
-        /// </summary>
-        [DefaultValue(1.5f)]
-        [NoSerialize, EditorOrder(605), EditorDisplay("Lens Flares", "Distortion")]
-        public float Flare_Distortion
-        {
-            get => data.Flare_Distortion;
-            set
-            {
-                data.Flare_Distortion = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the lens flares threshold bias.
-        /// </summary>
-        [DefaultValue(-0.5f)]
-        [NoSerialize, EditorOrder(606), EditorDisplay("Lens Flares", "Threshold Bias")]
-        public float Flare_ThresholdBias
-        {
-            get => data.Flare_ThresholdBias;
-            set
-            {
-                data.Flare_ThresholdBias = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the lens flares threshold scale.
-        /// </summary>
-        [DefaultValue(0.22f)]
-        [NoSerialize, EditorOrder(607), EditorDisplay("Lens Flares", "Threshold Scale")]
-        public float Flare_ThresholdScale
-        {
-            get => data.Flare_ThresholdScale;
-            set
-            {
-                data.Flare_ThresholdScale = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the camera lens dirt texture.
-        /// </summary>
-        [DefaultValue(null)]
-        [NoSerialize, EditorOrder(608), EditorDisplay("Lens Flares", "Lens Dirt"), Tooltip("Custom texture for camera dirt")]
-        public Texture Flare_LensDirt
-        {
-            get => Content.LoadAsync<Texture>(data.Flare_LensDirt);
-            set
-            {
-                data.Flare_LensDirt = value?.ID ?? Guid.Empty;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the lens dirt intensity.
-        /// </summary>
-        [DefaultValue(1.0f), Limit(0, 100, 0.01f)]
-        [NoSerialize, EditorOrder(609), EditorDisplay("Lens Flares", "Lens Dirt Intensity")]
-        public float Flare_LensDirtIntensity
-        {
-            get => data.Flare_LensDirtIntensity;
-            set
-            {
-                data.Flare_LensDirtIntensity = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the camera lens color lookup texture.
-        /// </summary>
-        [DefaultValue(null)]
-        [NoSerialize, EditorOrder(610), EditorDisplay("Lens Flares", "Lens Color"), Tooltip("Custom texture for lens flares color")]
-        public Texture Flare_LensColor
-        {
-            get => Content.LoadAsync<Texture>(data.Flare_LensColor);
-            set
-            {
-                data.Flare_LensColor = value?.ID ?? Guid.Empty;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the lens star lookup texture.
-        /// </summary>
-        [DefaultValue(null)]
-        [NoSerialize, EditorOrder(611), EditorDisplay("Lens Flares", "Lens Star"), Tooltip("Custom texture for lens flares star")]
-        public Texture Flare_LensStar
-        {
-            get => Content.LoadAsync<Texture>(data.Flare_LensStar);
-            set
-            {
-                data.Flare_LensStar = value?.ID ?? Guid.Empty;
-                isDataDirty = true;
-            }
-        }
-
-        #endregion
-
-        #region Depth of Field
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Depth of Field is enabled.
-        /// </summary>
-        [DefaultValue(false)]
-        [NoSerialize, EditorOrder(700), EditorDisplay("Depth of Field", "Enabled"), Tooltip("Enable depth of field effect")]
-        public bool DOF_Enabled
-        {
-            get => data.DOF_Enabled != 0;
-            set
-            {
-                data.DOF_Enabled = (byte)(value ? 1 : 0);
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.
-        /// </summary>
-        [DefaultValue(1.0f), Limit(0, 1, 0.1f)]
-        [NoSerialize, EditorOrder(701), EditorDisplay("Depth of Field", "Blur Strength"), Tooltip("The blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.")]
-        public float DOF_BlurStrength
-        {
-            get => data.DOF_BlurStrength;
-            set
-            {
-                data.DOF_BlurStrength = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.
-        /// </summary>
-        [DefaultValue(550.0f), Limit(0)]
-        [NoSerialize, EditorOrder(702), EditorDisplay("Depth of Field", "Focal Distance"), Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs")]
-        public float DOF_FocalDistance
-        {
-            get => data.DOF_FocalDistance;
-            set
-            {
-                data.DOF_FocalDistance = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
-        /// </summary>
-        [DefaultValue(1000.0f), Limit(0)]
-        [NoSerialize, EditorOrder(703), EditorDisplay("Depth of Field", "Focal Region"), Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs")]
-        public float DOF_FocalRegion
-        {
-            get => data.DOF_FocalRegion;
-            set
-            {
-                data.DOF_FocalRegion = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
-        /// </summary>
-        [DefaultValue(80.0f), Limit(0)]
-        [NoSerialize, EditorOrder(704), EditorDisplay("Depth of Field", "Near Transition Range"), Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred")]
-        public float DOF_NearTransitionRange
-        {
-            get => data.DOF_NearTransitionRange;
-            set
-            {
-                data.DOF_NearTransitionRange = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
-        /// </summary>
-        [DefaultValue(100.0f), Limit(0)]
-        [NoSerialize, EditorOrder(705), EditorDisplay("Depth of Field", "Far Transition Range"), Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred")]
-        public float DOF_FarTransitionRange
-        {
-            get => data.DOF_FarTransitionRange;
-            set
-            {
-                data.DOF_FarTransitionRange = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.
-        /// </summary>
-        [DefaultValue(6000.0f), Limit(0, float.MaxValue, 2)]
-        [NoSerialize, EditorOrder(706), EditorDisplay("Depth of Field", "Depth Limit"), Tooltip("The distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.")]
-        public float DOF_DepthLimit
-        {
-            get => data.DOF_DepthLimit;
-            set
-            {
-                data.DOF_DepthLimit = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Enables/disables generating Bokeh shapes.
-        /// </summary>
-        [DefaultValue(true)]
-        [NoSerialize, EditorOrder(707), EditorDisplay("Depth of Field", "Bokeh Enable"), Tooltip("Enables/disables generating Bokeh shapes")]
-        public bool DOF_BokehEnabled
-        {
-            get => data.DOF_BokehEnabled != 0;
-            set
-            {
-                data.DOF_BokehEnabled = (byte)(value ? 1 : 0);
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Controls Bokeh shapes maximum size.
-        /// </summary>
-        [DefaultValue(25.0f), Limit(0, 200.0f, 0.1f)]
-        [NoSerialize, EditorOrder(708), EditorDisplay("Depth of Field", "Bokeh Size"), Tooltip("Controls Bokeh shapes maximum size")]
-        public float DOF_BokehSize
-        {
-            get => data.DOF_BokehSize;
-            set
-            {
-                data.DOF_BokehSize = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the Bokeh shapes style.
-        /// </summary>
-        [DefaultValue(BokehShapeType.Circle)]
-        [NoSerialize, EditorOrder(709), EditorDisplay("Depth of Field", "Bokeh Shape"), Tooltip("Bokeh shapes style")]
-        public BokehShapeType DOF_BokehShape
-        {
-            get => data.DOF_BokehShape;
-            set
-            {
-                data.DOF_BokehShape = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the custom texture for bokeh shapes.
-        /// </summary>
-        [DefaultValue(null)]
-        [NoSerialize, EditorOrder(710), EditorDisplay("Depth of Field", "Bokeh Shape Custom Texture"), Tooltip("Custom texture for bokeh shapes")]
-        public Texture DOF_BokehShapeCustom
-        {
-            get => Content.LoadAsync<Texture>(data.DOF_BokehShapeCustom);
-            set
-            {
-                data.DOF_BokehShapeCustom = value?.ID ?? Guid.Empty;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Controls Bokeh shapes generating minimum pixel brightness to appear.
-        /// </summary>
-        [DefaultValue(0.8f), Limit(0, 10.0f, 0.01f)]
-        [NoSerialize, EditorOrder(711), EditorDisplay("Depth of Field", "Bokeh Brightness Threshold"), Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear")]
-        public float DOF_BokehBrightnessThreshold
-        {
-            get => data.DOF_BokehBrightnessThreshold;
-            set
-            {
-                data.DOF_BokehBrightnessThreshold = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Controls Bokeh shapes blur threshold.
-        /// </summary>
-        [DefaultValue(0.05f), Limit(0, 1.0f, 0.001f)]
-        [NoSerialize, EditorOrder(712), EditorDisplay("Depth of Field", "Bokeh Blur Threshold"), Tooltip("Controls Bokeh shapes blur threshold")]
-        public float DOF_BokehBlurThreshold
-        {
-            get => data.DOF_BokehBlurThreshold;
-            set
-            {
-                data.DOF_BokehBlurThreshold = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Controls Bokeh shapes brightness falloff parameter.
-        /// </summary>
-        [DefaultValue(0.5f), Limit(0, 2.0f, 0.001f)]
-        [NoSerialize, EditorOrder(713), EditorDisplay("Depth of Field", "Bokeh Falloff"), Tooltip("Controls Bokeh shapes brightness falloff parameter")]
-        public float DOF_BokehFalloff
-        {
-            get => data.DOF_BokehFalloff;
-            set
-            {
-                data.DOF_BokehFalloff = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Controls Bokeh shapes depth cutoff parameter.
-        /// </summary>
-        [DefaultValue(1.5f), Limit(0, 5.0f, 0.001f)]
-        [NoSerialize, EditorOrder(714), EditorDisplay("Depth of Field", "Bokeh Depth Cutoff"), Tooltip("Controls Bokeh shapes depth cutoff parameter")]
-        public float DOF_BokehDepthCutoff
-        {
-            get => data.DOF_BokehDepthCutoff;
-            set
-            {
-                data.DOF_BokehDepthCutoff = value;
-                isDataDirty = true;
-            }
-        }
-
-        #endregion
-
-        #region Screen Space Reflections
-
-        /// <summary>
-        /// Gets or sets the effect intensity (normalized to range [0;1]). Use 0 to disable it.
-        /// </summary>
-        [DefaultValue(1.0f), Limit(0, 1.0f, 0.01f)]
-        [NoSerialize, EditorOrder(800), EditorDisplay("Screen Space Reflections", "Intensity"), Tooltip("Effect intensity (normalized to range [0;1]). Use 0 to disable it.")]
-        public float SSR_Intensity
-        {
-            get => data.SSR_Intensity;
-            set
-            {
-                data.SSR_Intensity = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the input depth resolution mode.
-        /// </summary>
-        [DefaultValue(ResolutionMode.Half)]
-        [NoSerialize, EditorOrder(801), EditorDisplay("Screen Space Reflections", "Depth Resolution"), Tooltip("The depth buffer downscale option to optimize raycast performance. Full gives better quality, but half improves performance. The default value is half.")]
-        public ResolutionMode SSR_DepthResolution
-        {
-            get => data.SSR_DepthResolution;
-            set
-            {
-                data.SSR_DepthResolution = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the ray trace pass resolution mode.
-        /// </summary>
-        [DefaultValue(ResolutionMode.Half)]
-        [NoSerialize, EditorOrder(802), EditorDisplay("Screen Space Reflections", "Ray Trace Resolution"), Tooltip("The raycast resolution. Full gives better quality, but half improves performance. The default value is half.")]
-        public ResolutionMode SSR_RayTracePassResolution
-        {
-            get => data.SSR_RayTracePassResolution;
-            set
-            {
-                data.SSR_RayTracePassResolution = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the BRDF bias. This value controls source roughness effect on reflections blur.
-        /// Smaller values produce wider reflections spread but also introduce more noise.
-        /// Higher values provide more mirror-like reflections. Default value is 0.8.
-        /// </summary>
-        [DefaultValue(0.82f), Limit(0, 1.0f, 0.01f)]
-        [NoSerialize, EditorOrder(803), EditorDisplay("Screen Space Reflections", "BRDF Bias"), Tooltip("The reflection spread. Higher values provide finer, more mirror-like reflections. This setting has no effect on performance. The default value is 0.82")]
-        public float SSR_BRDFBias
-        {
-            get => data.SSR_BRDFBias;
-            set
-            {
-                data.SSR_BRDFBias = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Minimum allowed surface roughness value to use local reflections.
-        /// Pixels with higher values won't be affected by the effect.
-        /// </summary>
-        [DefaultValue(0.45f), Limit(0, 1.0f, 0.01f)]
-        [NoSerialize, EditorOrder(804), EditorDisplay("Screen Space Reflections", "Roughness Threshold"), Tooltip("The maximum amount of roughness a material must have to reflect the scene. For example, if this value is set to 0.4, only materials with a roughness value of 0.4 or below reflect the scene. The default value is 0.45.")]
-        public float SSR_RoughnessThreshold
-        {
-            get => data.SSR_RoughnessThreshold;
-            set
-            {
-                data.SSR_RoughnessThreshold = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Ray tracing starting position is offset by a percent of the normal in world space to avoid self occlusions.
-        /// </summary>
-        [DefaultValue(0.1f), Limit(0, 10.0f, 0.01f)]
-        [NoSerialize, EditorOrder(805), EditorDisplay("Screen Space Reflections", "World Anti Self Occlusion Bias"), Tooltip("The offset of the raycast origin. Lower values produce more correct reflection placement, but produce more artifacts. We recommend values of 0.3 or lower. The default value is 0.1.")]
-        public float SSR_WorldAntiSelfOcclusionBias
-        {
-            get => data.SSR_WorldAntiSelfOcclusionBias;
-            set
-            {
-                data.SSR_WorldAntiSelfOcclusionBias = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the resolve pass resolution mode.
-        /// </summary>
-        [DefaultValue(ResolutionMode.Full)]
-        [NoSerialize, EditorOrder(806), EditorDisplay("Screen Space Reflections", "Resolve Resolution"), Tooltip("The raycast resolution. Full gives better quality, but half improves performance. The default value is half.")]
-        public ResolutionMode SSR_ResolvePassResolution
-        {
-            get => data.SSR_ResolvePassResolution;
-            set
-            {
-                data.SSR_ResolvePassResolution = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the resolve pass samples amount. Higher values provide better quality but reduce effect performance.
-        /// Default value is 4. Use 1 for the highest speed.
-        /// </summary>
-        [DefaultValue(4), Limit(1, 8)]
-        [NoSerialize, EditorOrder(807), EditorDisplay("Screen Space Reflections", "Resolve Samples"), Tooltip("The number of rays used to resolve the reflection color. Higher values produce less noise, but worse performance. The default value is 4.")]
-        public int SSR_ResolveSamples
-        {
-            get => data.SSR_ResolveSamples;
-            set
-            {
-                data.SSR_ResolveSamples = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the edge fade factor. It's used to fade off effect on screen edges to provide smoother image.
-        /// </summary>
-        [DefaultValue(0.1f), Limit(0, 1.0f, 0.02f)]
-        [NoSerialize, EditorOrder(808), EditorDisplay("Screen Space Reflections", "Edge Fade Factor"), Tooltip("The point at which the far edges of the reflection begin to fade. Has no effect on performance. The default value is 0.1.")]
-        public float SSR_EdgeFadeFactor
-        {
-            get => data.SSR_EdgeFadeFactor;
-            set
-            {
-                data.SSR_EdgeFadeFactor = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether use color buffer mipmaps chain; otherwise will use raw input color buffer to sample reflections color.
-        /// Using mipmaps improves resolve pass performance and reduces GPU cache misses.
-        /// </summary>
-        [DefaultValue(true)]
-        [NoSerialize, EditorOrder(809), EditorDisplay("Screen Space Reflections", "Use Color Buffer Mips"), Tooltip("The input color buffer downscale mode that uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.")]
-        public bool SSR_UseColorBufferMips
-        {
-            get => data.SSR_UseColorBufferMips != 0;
-            set
-            {
-                data.SSR_UseColorBufferMips = (byte)(value ? 1 : 0);
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether use temporal effect to smooth reflections.
-        /// </summary>
-        [DefaultValue(true)]
-        [NoSerialize, EditorOrder(810), EditorDisplay("Screen Space Reflections", "Enable Temporal Effect"), Tooltip("Enables the temporal pass. Reduces noise, but produces an animated \"jittering\" effect that's sometimes noticeable. If disabled, the properties below have no effect.")]
-        public bool SSR_TemporalEffect
-        {
-            get => data.SSR_TemporalEffect != 0;
-            set
-            {
-                data.SSR_TemporalEffect = (byte)(value ? 1 : 0);
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the temporal effect scale. Default is 8.
-        /// </summary>
-        [DefaultValue(8.0f), Limit(0, 20.0f, 0.5f)]
-        [NoSerialize, EditorOrder(811), EditorDisplay("Screen Space Reflections", "Temporal Scale"), Tooltip("The intensity of the temporal effect. Lower values produce reflections faster, but more noise. The default value is 8.")]
-        public float SSR_TemporalScale
-        {
-            get => data.SSR_TemporalScale;
-            set
-            {
-                data.SSR_TemporalScale = value;
-                isDataDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the temporal response. Default is 0.8.
-        /// </summary>
-        [DefaultValue(0.8f), Limit(0.05f, 1.0f, 0.01f)]
-        [NoSerialize, EditorOrder(812), EditorDisplay("Screen Space Reflections", "Temporal Response"), Tooltip("How quickly reflections blend between the reflection in the current frame and the history buffer. Lower values produce reflections faster, but with more jittering. If the camera in your game doesn't move much, we recommend values closer to 1. The default value is 0.8.")]
-        public float SSR_TemporalResponse
-        {
-            get => data.SSR_TemporalResponse;
-            set
-            {
-                data.SSR_TemporalResponse = value;
-                isDataDirty = true;
-            }
-        }
-
-        #endregion
-
-        #region Color Grading
+        [HideInEditor]
+        public Override OverrideFlags;
 
         /// <summary>
         /// The track ball editor typename used for color grading knobs. Use custom editor alias because FlaxEditor assembly is not referenced by the FlaxEngine.
@@ -1527,80 +582,50 @@ namespace FlaxEngine.Rendering
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(900), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Saturation"), Tooltip("Color saturation (applies globally to the whole image). Default is 1.")]
-        public Vector4 ColorGrading_ColorSaturation
-        {
-            get => data.ColorGrading_ColorSaturation;
-            set
-            {
-                data.ColorGrading_ColorSaturation = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(0), PostProcessSetting((int)Override.ColorSaturation)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Global", "Saturation")]
+        [Tooltip("Color saturation (applies globally to the whole image). Default is 1.")]
+        public Vector4 ColorSaturation;
 
         /// <summary>
         /// Gets or sets the color contrast (applies globally to the whole image). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(901), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Contrast"), Tooltip("Color contrast (applies globally to the whole image). Default is 1.")]
-        public Vector4 ColorGrading_ColorContrast
-        {
-            get => data.ColorGrading_ColorContrast;
-            set
-            {
-                data.ColorGrading_ColorContrast = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(1), PostProcessSetting((int)Override.ColorContrast)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Global", "Contrast")]
+        [Tooltip("Color contrast (applies globally to the whole image). Default is 1.")]
+        public Vector4 ColorContrast;
 
         /// <summary>
         /// Gets or sets the color gamma (applies globally to the whole image). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(902), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Gamma"), Tooltip("Color gamma (applies globally to the whole image). Default is 1.")]
-        public Vector4 ColorGrading_ColorGamma
-        {
-            get => data.ColorGrading_ColorGamma;
-            set
-            {
-                data.ColorGrading_ColorGamma = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(2), PostProcessSetting((int)Override.ColorGamma)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Global", "Gamma")]
+        [Tooltip("Color gamma (applies globally to the whole image). Default is 1.")]
+        public Vector4 ColorGamma;
 
         /// <summary>
         /// Gets or sets the color gain (applies globally to the whole image). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(903), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Gain"), Tooltip("Color gain (applies globally to the whole image). Default is 1.")]
-        public Vector4 ColorGrading_ColorGain
-        {
-            get => data.ColorGrading_ColorGain;
-            set
-            {
-                data.ColorGrading_ColorGain = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(3), PostProcessSetting((int)Override.ColorGain)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Global", "Gain")]
+        [Tooltip("Color gain (applies globally to the whole image). Default is 1.")]
+        public Vector4 ColorGain;
 
         /// <summary>
         /// Gets or sets the color offset (applies globally to the whole image). Default is 0.
         /// </summary>
         [DefaultValue(typeof(Vector4), "0,0,0,0")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(904), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Offset"), Tooltip("Color offset (applies globally to the whole image). Default is 0.")]
-        public Vector4 ColorGrading_ColorOffset
-        {
-            get => data.ColorGrading_ColorOffset;
-            set
-            {
-                data.ColorGrading_ColorOffset = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(4), PostProcessSetting((int)Override.ColorOffset)]
+        [Limit(-1, 1, 0.001f), EditorDisplay("Global", "Offset")]
+        [Tooltip("Color offset (applies globally to the whole image). Default is 0.")]
+        public Vector4 ColorOffset;
 
         #endregion
 
@@ -1611,80 +636,50 @@ namespace FlaxEngine.Rendering
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(905), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Saturation"), Tooltip("Color saturation (applies to shadows only). Default is 1.")]
-        public Vector4 ColorGrading_ColorSaturationShadows
-        {
-            get => data.ColorGrading_ColorSaturationShadows;
-            set
-            {
-                data.ColorGrading_ColorSaturationShadows = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(5), PostProcessSetting((int)Override.ColorSaturationShadows)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Shadows", "Shadows Saturation")]
+        [Tooltip("Color saturation (applies to shadows only). Default is 1.")]
+        public Vector4 ColorSaturationShadows;
 
         /// <summary>
         /// Gets or sets the color contrast (applies to shadows only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(906), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Contrast"), Tooltip("Color contrast (applies to shadows only). Default is 1.")]
-        public Vector4 ColorGrading_ColorContrastShadows
-        {
-            get => data.ColorGrading_ColorContrastShadows;
-            set
-            {
-                data.ColorGrading_ColorContrastShadows = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(6), PostProcessSetting((int)Override.ColorContrastShadows)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Shadows", "Shadows Contrast")]
+        [Tooltip("Color contrast (applies to shadows only). Default is 1.")]
+        public Vector4 ColorContrastShadows;
 
         /// <summary>
         /// Gets or sets the color gamma (applies to shadows only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(907), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Gamma"), Tooltip("Color gamma (applies to shadows only). Default is 1.")]
-        public Vector4 ColorGrading_ColorGammaShadows
-        {
-            get => data.ColorGrading_ColorGammaShadows;
-            set
-            {
-                data.ColorGrading_ColorGammaShadows = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(7), PostProcessSetting((int)Override.ColorGammaShadows)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Shadows", "Shadows Gamma")]
+        [Tooltip("Color gamma (applies to shadows only). Default is 1.")]
+        public Vector4 ColorGammaShadows;
 
         /// <summary>
         /// Gets or sets the color gain (applies to shadows only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(908), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Shadows Gain"), Tooltip("Color gain (applies to shadows only). Default is 1.")]
-        public Vector4 ColorGrading_ColorGainShadows
-        {
-            get => data.ColorGrading_ColorGainShadows;
-            set
-            {
-                data.ColorGrading_ColorGainShadows = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(8), PostProcessSetting((int)Override.ColorGainShadows)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Shadows", "Shadows Gain")]
+        [Tooltip("Color gain (applies to shadows only). Default is 1.")]
+        public Vector4 ColorGainShadows;
 
         /// <summary>
         /// Gets or sets the color offset (applies to shadows only). Default is 0.
         /// </summary>
         [DefaultValue(typeof(Vector4), "0,0,0,0")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(909), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Shadows Offset"), Tooltip("Color offset (applies to shadows only). Default is 0.")]
-        public Vector4 ColorGrading_ColorOffsetShadows
-        {
-            get => data.ColorGrading_ColorOffsetShadows;
-            set
-            {
-                data.ColorGrading_ColorOffsetShadows = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(9), PostProcessSetting((int)Override.ColorOffsetShadows)]
+        [Limit(-1, 1, 0.001f), EditorDisplay("Shadows", "Shadows Offset")]
+        [Tooltip("Color offset (applies to shadows only). Default is 0.")]
+        public Vector4 ColorOffsetShadows;
 
         #endregion
 
@@ -1695,80 +690,50 @@ namespace FlaxEngine.Rendering
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(910), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Saturation"), Tooltip("Color saturation (applies to midtones only). Default is 1.")]
-        public Vector4 ColorGrading_ColorSaturationMidtones
-        {
-            get => data.ColorGrading_ColorSaturationMidtones;
-            set
-            {
-                data.ColorGrading_ColorSaturationMidtones = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(10), PostProcessSetting((int)Override.ColorSaturationMidtones)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Midtones", "Midtones Saturation")]
+        [Tooltip("Color saturation (applies to midtones only). Default is 1.")]
+        public Vector4 ColorSaturationMidtones;
 
         /// <summary>
         /// Gets or sets the color contrast (applies to midtones only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(911), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Contrast"), Tooltip("Color contrast (applies to midtones only). Default is 1.")]
-        public Vector4 ColorGrading_ColorContrastMidtones
-        {
-            get => data.ColorGrading_ColorContrastMidtones;
-            set
-            {
-                data.ColorGrading_ColorContrastMidtones = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(11), PostProcessSetting((int)Override.ColorContrastMidtones)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Midtones", "Midtones Contrast")]
+        [Tooltip("Color contrast (applies to midtones only). Default is 1.")]
+        public Vector4 ColorContrastMidtones;
 
         /// <summary>
         /// Gets or sets the color gamma (applies to midtones only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(912), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Gamma"), Tooltip("Color gamma (applies to midtones only). Default is 1.")]
-        public Vector4 ColorGrading_ColorGammaMidtones
-        {
-            get => data.ColorGrading_ColorGammaMidtones;
-            set
-            {
-                data.ColorGrading_ColorGammaMidtones = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(12), PostProcessSetting((int)Override.ColorGammaMidtones)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Midtones", "Midtones Gamma")]
+        [Tooltip("Color gamma (applies to midtones only). Default is 1.")]
+        public Vector4 ColorGammaMidtones;
 
         /// <summary>
         /// Gets or sets the color gain (applies to midtones only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(913), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Midtones Gain"), Tooltip("Color gain (applies to midtones only). Default is 1.")]
-        public Vector4 ColorGrading_ColorGainMidtones
-        {
-            get => data.ColorGrading_ColorGainMidtones;
-            set
-            {
-                data.ColorGrading_ColorGainMidtones = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(13), PostProcessSetting((int)Override.ColorGainMidtones)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Midtones", "Midtones Gain")]
+        [Tooltip("Color gain (applies to midtones only). Default is 1.")]
+        public Vector4 ColorGainMidtones;
 
         /// <summary>
         /// Gets or sets the color offset (applies to midtones only). Default is 0.
         /// </summary>
         [DefaultValue(typeof(Vector4), "0,0,0,0")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(914), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Midtones Offset"), Tooltip("Color offset (applies to midtones only). Default is 0.")]
-        public Vector4 ColorGrading_ColorOffsetMidtones
-        {
-            get => data.ColorGrading_ColorOffsetMidtones;
-            set
-            {
-                data.ColorGrading_ColorOffsetMidtones = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(14), PostProcessSetting((int)Override.ColorOffsetMidtones)]
+        [Limit(-1, 1, 0.001f), EditorDisplay("Midtones", "Midtones Offset")]
+        [Tooltip("Color offset (applies to midtones only). Default is 0.")]
+        public Vector4 ColorOffsetMidtones;
 
         #endregion
 
@@ -1779,80 +744,50 @@ namespace FlaxEngine.Rendering
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(915), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Saturation"), Tooltip("Color saturation (applies to highlights only). Default is 1.")]
-        public Vector4 ColorGrading_ColorSaturationHighlights
-        {
-            get => data.ColorGrading_ColorSaturationHighlights;
-            set
-            {
-                data.ColorGrading_ColorSaturationHighlights = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(15), PostProcessSetting((int)Override.ColorSaturationHighlights)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Highlights", "Highlights Saturation")]
+        [Tooltip("Color saturation (applies to highlights only). Default is 1.")]
+        public Vector4 ColorSaturationHighlights;
 
         /// <summary>
         /// Gets or sets the color contrast (applies to highlights only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(916), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Contrast"), Tooltip("Color contrast (applies to highlights only). Default is 1.")]
-        public Vector4 ColorGrading_ColorContrastHighlights
-        {
-            get => data.ColorGrading_ColorContrastHighlights;
-            set
-            {
-                data.ColorGrading_ColorContrastHighlights = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(16), PostProcessSetting((int)Override.ColorContrastHighlights)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Highlights", "Highlights Contrast")]
+        [Tooltip("Color contrast (applies to highlights only). Default is 1.")]
+        public Vector4 ColorContrastHighlights;
 
         /// <summary>
         /// Gets or sets the color gamma (applies to highlights only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(917), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Gamma"), Tooltip("Color gamma (applies to highlights only). Default is 1.")]
-        public Vector4 ColorGrading_ColorGammaHighlights
-        {
-            get => data.ColorGrading_ColorGammaHighlights;
-            set
-            {
-                data.ColorGrading_ColorGammaHighlights = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(17), PostProcessSetting((int)Override.ColorGammaHighlights)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Highlights", "Highlights Gamma")]
+        [Tooltip("Color gamma (applies to highlights only). Default is 1.")]
+        public Vector4 ColorGammaHighlights;
 
         /// <summary>
         /// Gets or sets the color gain (applies to highlights only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(918), Limit(0, 2, 0.01f), EditorDisplay("Color Grading", "Highlights Gain"), Tooltip("Color gain (applies to highlights only). Default is 1.")]
-        public Vector4 ColorGrading_ColorGainHighlights
-        {
-            get => data.ColorGrading_ColorGainHighlights;
-            set
-            {
-                data.ColorGrading_ColorGainHighlights = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(18), PostProcessSetting((int)Override.ColorGainHighlights)]
+        [Limit(0, 2, 0.01f), EditorDisplay("Highlights", "Highlights Gain")]
+        [Tooltip("Color gain (applies to highlights only). Default is 1.")]
+        public Vector4 ColorGainHighlights;
 
         /// <summary>
         /// Gets or sets the color offset (applies to highlights only). Default is 0.
         /// </summary>
         [DefaultValue(typeof(Vector4), "0,0,0,0")]
         [CustomEditorAlias(TrackBallEditorTypename)]
-        [NoSerialize, EditorOrder(919), Limit(-1, 1, 0.001f), EditorDisplay("Color Grading", "Highlights Offset"), Tooltip("Color offset (applies to highlights only). Default is 0.")]
-        public Vector4 ColorGrading_ColorOffsetHighlights
-        {
-            get => data.ColorGrading_ColorOffsetHighlights;
-            set
-            {
-                data.ColorGrading_ColorOffsetHighlights = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(19), PostProcessSetting((int)Override.ColorOffsetHighlights)]
+        [Limit(-1, 1, 0.001f), EditorDisplay("Highlights", "Highlights Offset")]
+        [Tooltip("Color offset (applies to highlights only). Default is 0.")]
+        public Vector4 ColorOffsetHighlights;
 
         #endregion
 
@@ -1860,114 +795,1043 @@ namespace FlaxEngine.Rendering
         /// Gets or sets the shadows maximum value. Default is 0.09.
         /// </summary>
         [DefaultValue(0.09f), Limit(-1, 1, 0.01f)]
-        [NoSerialize, EditorOrder(920), EditorDisplay("Color Grading", "Shadows Max"), Tooltip("Shadows maximum value. Default is 0.09.")]
-        public float ColorGrading_ShadowsMax
-        {
-            get => data.ColorGrading_ShadowsMax;
-            set
-            {
-                data.ColorGrading_ShadowsMax = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(20), PostProcessSetting((int)Override.ShadowsMax)]
+        [Tooltip("Shadows maximum value. Default is 0.09.")]
+        public float ShadowsMax;
 
         /// <summary>
         /// Gets or sets the highlights minimum value. Default is 0.5.
         /// </summary>
         [DefaultValue(0.5f), Limit(-1, 1, 0.01f)]
-        [NoSerialize, EditorOrder(921), EditorDisplay("Color Grading", "Highlights Min"), Tooltip("Highlights minimum value. Default is 0.5.")]
-        public float ColorGrading_HighlightsMin
+        [EditorOrder(21), PostProcessSetting((int)Override.HighlightsMin)]
+        [Tooltip("Highlights minimum value. Default is 0.5.")]
+        public float HighlightsMin;
+    }
+
+    /// <summary>
+    /// Contains settings for Eye Adaptation effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct EyeAdaptationSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
         {
-            get => data.ColorGrading_HighlightsMin;
-            set
-            {
-                data.ColorGrading_HighlightsMin = value;
-                isDataDirty = true;
-            }
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.Technique"/> property.
+            /// </summary>
+            Technique = 1 << 0,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.SpeedUp"/> property.
+            /// </summary>
+            SpeedUp = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.SpeedDown"/> property.
+            /// </summary>
+            SpeedDown = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.Exposure"/> property.
+            /// </summary>
+            Exposure = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.KeyValue"/> property.
+            /// </summary>
+            KeyValue = 1 << 4,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.MinLuminance"/> property.
+            /// </summary>
+            MinLuminance = 1 << 5,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.MaxLuminance"/> property.
+            /// </summary>
+            MaxLuminance = 1 << 6,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = Technique | SpeedUp | SpeedDown | Exposure | KeyValue | MinLuminance | MaxLuminance,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
+
+        /// <summary>
+        /// Gets or sets the eye adaptation mode.
+        /// </summary>
+        [DefaultValue(EyeAdaptationTechnique.Auto)]
+        [EditorOrder(0), PostProcessSetting((int)Override.Technique)]
+        public EyeAdaptationTechnique Technique;
+
+        /// <summary>
+        /// Gets or sets the speed up of the eye adaptation effect.
+        /// </summary>
+        [DefaultValue(3.0f), Limit(0, 100.0f, 0.01f)]
+        [EditorOrder(1), PostProcessSetting((int)Override.SpeedUp)]
+        public float SpeedUp;
+
+        /// <summary>
+        /// Gets or sets the speed up of the eye adaptation effect.
+        /// </summary>
+        [DefaultValue(1.0f), Limit(0, 100.0f, 0.01f)]
+        [EditorOrder(2), PostProcessSetting((int)Override.SpeedDown)]
+        public float SpeedDown;
+
+        /// <summary>
+        /// Gets or sets the camera exposure.
+        /// </summary>
+        [DefaultValue(1.5f), Limit(-1000, 1000, 0.001f)]
+        [EditorOrder(3), PostProcessSetting((int)Override.Exposure)]
+        public float Exposure;
+
+        /// <summary>
+        /// Gets or sets the pixels light value to achieve.
+        /// </summary>
+        [DefaultValue(0.2f), Limit(-100, 100, 0.001f)]
+        [EditorOrder(4), PostProcessSetting((int)Override.KeyValue)]
+        public float KeyValue;
+
+        /// <summary>
+        /// Gets or sets the minimum luminance value used for tone mapping.
+        /// </summary>
+        [DefaultValue(0.01f), Limit(0, 50.0f, 0.01f)]
+        [EditorOrder(5), PostProcessSetting((int)Override.MinLuminance)]
+        [EditorDisplay(null, "Minimum Luminance")]
+        public float MinLuminance;
+
+        /// <summary>
+        /// Gets or sets the maximum luminance value used for tone mapping.
+        /// </summary>
+        [DefaultValue(100.0f), Limit(0, 100.0f, 0.01f)]
+        [EditorOrder(6), PostProcessSetting((int)Override.MaxLuminance)]
+        [EditorDisplay(null, "Maximum Luminance")]
+        public float MaxLuminance;
+    }
+
+    /// <summary>
+    /// Contains settings for Camera Artifacts effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct CameraArtifactsSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
+        {
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// Overrides <see cref="CameraArtifactsSettings.VignetteIntensity"/> property.
+            /// </summary>
+            VignetteIntensity = 1 << 0,
+
+            /// <summary>
+            /// Overrides <see cref="CameraArtifactsSettings.VignetteColor"/> property.
+            /// </summary>
+            VignetteColor = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="CameraArtifactsSettings.VignetteShapeFactor"/> property.
+            /// </summary>
+            VignetteShapeFactor = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="CameraArtifactsSettings.GrainAmount"/> property.
+            /// </summary>
+            GrainAmount = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="CameraArtifactsSettings.GrainParticleSize"/> property.
+            /// </summary>
+            GrainParticleSize = 1 << 4,
+
+            /// <summary>
+            /// Overrides <see cref="CameraArtifactsSettings.GrainSpeed"/> property.
+            /// </summary>
+            GrainSpeed = 1 << 5,
+
+            /// <summary>
+            /// Overrides <see cref="CameraArtifactsSettings.ChromaticDistortion"/> property.
+            /// </summary>
+            ChromaticDistortion = 1 << 6,
+
+            /// <summary>
+            /// Overrides <see cref="CameraArtifactsSettings.ScreenFadeColor"/> property.
+            /// </summary>
+            ScreenFadeColor = 1 << 7,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = VignetteIntensity | VignetteColor | VignetteShapeFactor | GrainAmount | GrainParticleSize |
+                  GrainSpeed | ChromaticDistortion | ScreenFadeColor,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
+
+        /// <summary>
+        /// Gets or sets the vignette intensity.
+        /// </summary>
+        [DefaultValue(0.8f), Limit(0, 2, 0.001f)]
+        [EditorOrder(0), PostProcessSetting((int)Override.VignetteIntensity)]
+        public float VignetteIntensity;
+
+        /// <summary>
+        /// Gets or sets the vignette color.
+        /// </summary>
+        [EditorOrder(1), PostProcessSetting((int)Override.VignetteColor)]
+        public Color VignetteColor;
+
+        /// <summary>
+        /// Gets or sets the vignette shape factor.
+        /// </summary>
+        [DefaultValue(0.125f), Limit(0.0001f, 2.0f, 0.001f)]
+        [EditorOrder(2), PostProcessSetting((int)Override.VignetteShapeFactor)]
+        public float VignetteShapeFactor;
+
+        /// <summary>
+        /// Gets or sets the grain noise amount.
+        /// </summary>
+        [DefaultValue(0.006f), Limit(0.0f, 2.0f, 0.005f)]
+        [EditorOrder(3), PostProcessSetting((int)Override.GrainAmount)]
+        public float GrainAmount;
+
+        /// <summary>
+        /// Gets or sets the grain noise particles size.
+        /// </summary>
+        [DefaultValue(1.6f), Limit(1.0f, 3.0f, 0.01f)]
+        [EditorOrder(4), PostProcessSetting((int)Override.GrainParticleSize)]
+        public float GrainParticleSize;
+
+        /// <summary>
+        /// Gets or sets the grain noise particles size.
+        /// </summary>
+        [DefaultValue(1.0f), Limit(0.0f, 10.0f, 0.01f)]
+        [EditorOrder(5), PostProcessSetting((int)Override.GrainSpeed)]
+        [Tooltip("Specifies grain particles animation speed")]
+        public float GrainSpeed;
+
+        /// <summary>
+        /// Gets or sets the chromatic aberration distortion intensity.
+        /// </summary>
+        [DefaultValue(0.0f), Limit(0.0f, 1.0f, 0.01f)]
+        [EditorOrder(6), PostProcessSetting((int)Override.ChromaticDistortion)]
+        public float ChromaticDistortion;
+
+        /// <summary>
+        /// Gets or sets the screen tint color (alpha channel defines the blending factor)..
+        /// </summary>
+        [DefaultValue(typeof(Color), "0,0,0,0")]
+        [EditorOrder(7), PostProcessSetting((int)Override.ScreenFadeColor)]
+        [Tooltip("Screen fade color (alpha channel defines the blending factor)")]
+        public Color ScreenFadeColor;
+    }
+
+    /// <summary>
+    /// Contains settings for Lens Flares effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct LensFlaresSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
+        {
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.Intensity"/> property.
+            /// </summary>
+            Intensity = 1 << 0,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.Ghosts"/> property.
+            /// </summary>
+            Ghosts = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.HaloWidth"/> property.
+            /// </summary>
+            HaloWidth = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.HaloIntensity"/> property.
+            /// </summary>
+            HaloIntensity = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.GhostDispersal"/> property.
+            /// </summary>
+            GhostDispersal = 1 << 4,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.Distortion"/> property.
+            /// </summary>
+            Distortion = 1 << 5,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.ThresholdBias"/> property.
+            /// </summary>
+            ThresholdBias = 1 << 6,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.ThresholdScale"/> property.
+            /// </summary>
+            ThresholdScale = 1 << 7,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.LensDirt"/> property.
+            /// </summary>
+            LensDirt = 1 << 8,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.LensDirtIntensity"/> property.
+            /// </summary>
+            LensDirtIntensity = 1 << 9,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.LensColor"/> property.
+            /// </summary>
+            LensColor = 1 << 10,
+
+            /// <summary>
+            /// Overrides <see cref="LensFlaresSettings.LensStar"/> property.
+            /// </summary>
+            LensStar = 1 << 11,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = Intensity | Ghosts | HaloWidth | HaloIntensity | GhostDispersal | Distortion |
+                  ThresholdBias | ThresholdScale | LensDirt | LensDirtIntensity | LensColor | LensStar,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
+
+        /// <summary>
+        /// Gets or sets the lens flares intensity.
+        /// </summary>
+        [DefaultValue(1.0f), Limit(0, 10.0f, 0.01f)]
+        [EditorOrder(0), PostProcessSetting((int)Override.Intensity)]
+        public float Intensity;
+
+        /// <summary>
+        /// Gets or sets the amount of lens flares ghosts.
+        /// </summary>
+        [DefaultValue(8), Limit(0, 16)]
+        [EditorOrder(1), PostProcessSetting((int)Override.Ghosts)]
+        public int Ghosts;
+
+        /// <summary>
+        /// Gets or sets the lens flares halo size.
+        /// </summary>
+        [DefaultValue(0.16f)]
+        [EditorOrder(2), PostProcessSetting((int)Override.HaloWidth)]
+        public float HaloWidth;
+
+        /// <summary>
+        /// Gets or sets the lens flares halo intensity.
+        /// </summary>
+        [DefaultValue(0.666f), Limit(0, 10.0f, 0.01f)]
+        [EditorOrder(3), PostProcessSetting((int)Override.HaloIntensity)]
+        public float HaloIntensity;
+
+        /// <summary>
+        /// Gets or sets the lens flares ghosts dispersal.
+        /// </summary>
+        [DefaultValue(0.3f)]
+        [EditorOrder(4), PostProcessSetting((int)Override.GhostDispersal)]
+        public float GhostDispersal;
+
+        /// <summary>
+        /// Gets or sets the lens flares distortion.
+        /// </summary>
+        [DefaultValue(1.5f)]
+        [EditorOrder(5), PostProcessSetting((int)Override.Distortion)]
+        public float Distortion;
+
+        /// <summary>
+        /// Gets or sets the lens flares threshold bias.
+        /// </summary>
+        [DefaultValue(-0.5f)]
+        [EditorOrder(6), PostProcessSetting((int)Override.ThresholdBias)]
+        public float ThresholdBias;
+
+        /// <summary>
+        /// Gets or sets the lens flares threshold scale.
+        /// </summary>
+        [DefaultValue(0.22f)]
+        [EditorOrder(7), PostProcessSetting((int)Override.ThresholdScale)]
+        public float ThresholdScale;
+
+        private Guid _LensDirt;
+
+        /// <summary>
+        /// Gets or sets the camera lens dirt texture.
+        /// </summary>
+        [DefaultValue(null)]
+        [EditorOrder(8), PostProcessSetting((int)Override.LensDirt)]
+        [Tooltip("Custom texture for camera dirt")]
+        public Texture LensDirt
+        {
+            get => Content.LoadAsync<Texture>(_LensDirt);
+            set => _LensDirt = value?.ID ?? Guid.Empty;
         }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the lens dirt intensity.
+        /// </summary>
+        [DefaultValue(1.0f), Limit(0, 100, 0.01f)]
+        [EditorOrder(9), PostProcessSetting((int)Override.LensDirtIntensity)]
+        public float LensDirtIntensity;
 
-        #region Motion Blur
+        private Guid _LensColor;
+
+        /// <summary>
+        /// Gets or sets the camera lens color lookup texture.
+        /// </summary>
+        [DefaultValue(null)]
+        [EditorOrder(10), PostProcessSetting((int)Override.LensColor)]
+        [Tooltip("Custom texture for lens flares color")]
+        public Texture LensColor
+        {
+            get => Content.LoadAsync<Texture>(_LensColor);
+            set => _LensColor = value?.ID ?? Guid.Empty;
+        }
+
+        private Guid _LensStar;
+
+        /// <summary>
+        /// Gets or sets the lens star lookup texture.
+        /// </summary>
+        [DefaultValue(null)]
+        [EditorOrder(11), PostProcessSetting((int)Override.LensStar)]
+        [Tooltip("Custom texture for lens flares star")]
+        public Texture LensStar
+        {
+            get => Content.LoadAsync<Texture>(_LensStar);
+            set => _LensStar = value?.ID ?? Guid.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Contains settings for Depth Of Field effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct DepthOfFieldSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
+        {
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.Enabled"/> property.
+            /// </summary>
+            Enabled = 1 << 0,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BlurStrength"/> property.
+            /// </summary>
+            BlurStrength = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.FocalDistance"/> property.
+            /// </summary>
+            FocalDistance = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.FocalRegion"/> property.
+            /// </summary>
+            FocalRegion = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.NearTransitionRange"/> property.
+            /// </summary>
+            NearTransitionRange = 1 << 4,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.FarTransitionRange"/> property.
+            /// </summary>
+            FarTransitionRange = 1 << 5,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.DepthLimit"/> property.
+            /// </summary>
+            DepthLimit = 1 << 6,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BokehEnabled"/> property.
+            /// </summary>
+            BokehEnabled = 1 << 7,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BokehSize"/> property.
+            /// </summary>
+            BokehSize = 1 << 8,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BokehShape"/> property.
+            /// </summary>
+            BokehShape = 1 << 9,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BokehShapeCustom"/> property.
+            /// </summary>
+            BokehShapeCustom = 1 << 10,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BokehBrightnessThreshold"/> property.
+            /// </summary>
+            BokehBrightnessThreshold = 1 << 11,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BokehBlurThreshold"/> property.
+            /// </summary>
+            BokehBlurThreshold = 1 << 12,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BokehFalloff"/> property.
+            /// </summary>
+            BokehFalloff = 1 << 13,
+
+            /// <summary>
+            /// Overrides <see cref="DepthOfFieldSettings.BokehDepthCutoff"/> property.
+            /// </summary>
+            BokehDepthCutoff = 1 << 14,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = Enabled | BlurStrength | FocalDistance | FocalRegion | NearTransitionRange | FarTransitionRange |
+                  DepthLimit | BokehEnabled | BokehSize | BokehShape | BokehShapeCustom | BokehBrightnessThreshold |
+                  BokehBlurThreshold | BokehFalloff | BokehDepthCutoff,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Depth of Field is enabled.
+        /// </summary>
+        [DefaultValue(false)]
+        [EditorOrder(0), PostProcessSetting((int)Override.Enabled)]
+        [Tooltip("Enable depth of field effect")]
+        public bool Enabled;
+
+        /// <summary>
+        /// Gets or sets the blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.
+        /// </summary>
+        [DefaultValue(1.0f), Limit(0, 1, 0.1f)]
+        [EditorOrder(1), PostProcessSetting((int)Override.BlurStrength)]
+        [Tooltip("The blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.")]
+        public float BlurStrength;
+
+        /// <summary>
+        /// Gets or sets the distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.
+        /// </summary>
+        [DefaultValue(550.0f), Limit(0)]
+        [EditorOrder(2), PostProcessSetting((int)Override.FocalDistance)]
+        [Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs")]
+        public float FocalDistance;
+
+        /// <summary>
+        /// Gets or sets the distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
+        /// </summary>
+        [DefaultValue(1000.0f), Limit(0)]
+        [EditorOrder(3), PostProcessSetting((int)Override.FocalRegion)]
+        [Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs")]
+        public float FocalRegion;
+
+        /// <summary>
+        /// Gets or sets the distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
+        /// </summary>
+        [DefaultValue(80.0f), Limit(0)]
+        [EditorOrder(4), PostProcessSetting((int)Override.NearTransitionRange)]
+        [Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred")]
+        public float NearTransitionRange;
+
+        /// <summary>
+        /// Gets or sets the distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
+        /// </summary>
+        [DefaultValue(100.0f), Limit(0)]
+        [EditorOrder(5), PostProcessSetting((int)Override.FarTransitionRange)]
+        [Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred")]
+        public float FarTransitionRange;
+
+        /// <summary>
+        /// Gets or sets the distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.
+        /// </summary>
+        [DefaultValue(6000.0f), Limit(0, float.MaxValue, 2)]
+        [EditorOrder(6), PostProcessSetting((int)Override.DepthLimit)]
+        [Tooltip("The distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.")]
+        public float DepthLimit;
+
+        /// <summary>
+        /// Enables/disables generating Bokeh shapes.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorOrder(7), PostProcessSetting((int)Override.BokehEnabled)]
+        [Tooltip("Enables/disables generating Bokeh shapes")]
+        public bool BokehEnabled;
+
+        /// <summary>
+        /// Controls Bokeh shapes maximum size.
+        /// </summary>
+        [DefaultValue(25.0f), Limit(0, 200.0f, 0.1f)]
+        [EditorOrder(8), PostProcessSetting((int)Override.BokehSize)]
+        [Tooltip("Controls Bokeh shapes maximum size")]
+        public float BokehSize;
+
+        /// <summary>
+        /// Gets or sets the Bokeh shapes style.
+        /// </summary>
+        [DefaultValue(BokehShapeType.Circle)]
+        [EditorOrder(9), PostProcessSetting((int)Override.BokehShape)]
+        [Tooltip("Bokeh shapes style")]
+        public BokehShapeType BokehShape;
+
+        private Guid _BokehShapeCustom;
+
+        /// <summary>
+        /// Gets or sets the custom texture for bokeh shapes.
+        /// </summary>
+        [DefaultValue(null)]
+        [EditorOrder(10), PostProcessSetting((int)Override.BokehShapeCustom)]
+        [Tooltip("Custom texture for bokeh shapes")]
+        public Texture BokehShapeCustom
+        {
+            get => Content.LoadAsync<Texture>(_BokehShapeCustom);
+            set => _BokehShapeCustom = value?.ID ?? Guid.Empty;
+        }
+
+        /// <summary>
+        /// Controls Bokeh shapes generating minimum pixel brightness to appear.
+        /// </summary>
+        [DefaultValue(0.8f), Limit(0, 10.0f, 0.01f)]
+        [EditorOrder(11), PostProcessSetting((int)Override.BokehBrightnessThreshold)]
+        [Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear")]
+        public float BokehBrightnessThreshold;
+
+        /// <summary>
+        /// Controls Bokeh shapes blur threshold.
+        /// </summary>
+        [DefaultValue(0.05f), Limit(0, 1.0f, 0.001f)]
+        [EditorOrder(12), PostProcessSetting((int)Override.BokehBlurThreshold)]
+        [Tooltip("Controls Bokeh shapes blur threshold")]
+        public float BokehBlurThreshold;
+
+        /// <summary>
+        /// Controls Bokeh shapes brightness falloff parameter.
+        /// </summary>
+        [DefaultValue(0.5f), Limit(0, 2.0f, 0.001f)]
+        [EditorOrder(13), PostProcessSetting((int)Override.BokehFalloff)]
+        [Tooltip("Controls Bokeh shapes brightness falloff parameter")]
+        public float BokehFalloff;
+
+        /// <summary>
+        /// Controls Bokeh shapes depth cutoff parameter.
+        /// </summary>
+        [DefaultValue(1.5f), Limit(0, 5.0f, 0.001f)]
+        [EditorOrder(14), PostProcessSetting((int)Override.BokehDepthCutoff)]
+        [Tooltip("Controls Bokeh shapes depth cutoff parameter")]
+        public float BokehDepthCutoff;
+    }
+
+    /// <summary>
+    /// Contains settings for Motion Blur effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct MotionBlurSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
+        {
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// Overrides <see cref="MotionBlurSettings.Enabled"/> property.
+            /// </summary>
+            Enabled = 1 << 0,
+
+            /// <summary>
+            /// Overrides <see cref="MotionBlurSettings.Scale"/> property.
+            /// </summary>
+            Scale = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="MotionBlurSettings.SampleCount"/> property.
+            /// </summary>
+            SampleCount = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="MotionBlurSettings.MotionVectorsResolution"/> property.
+            /// </summary>
+            MotionVectorsResolution = 1 << 3,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = Enabled | Scale | SampleCount | MotionVectorsResolution,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
 
         /// <summary>
         /// Gets or sets a value indicating whether Motion Blur is enabled.
         /// </summary>
         [DefaultValue(true)]
-        [NoSerialize, EditorOrder(1000), EditorDisplay("Motion Blur", "Enabled"), Tooltip("Enable motion blur effect")]
-        public bool MB_Enabled
-        {
-            get => data.MB_Enabled != 0;
-            set
-            {
-                data.MB_Enabled = (byte)(value ? 1 : 0);
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(0), PostProcessSetting((int)Override.Enabled)]
+        [Tooltip("Enable motion blur effect")]
+        public bool Enabled;
 
         /// <summary>
         /// Gets or sets the motion blur effect scale.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 5, 0.01f)]
-        [NoSerialize, EditorOrder(1001), EditorDisplay("Motion Blur", "Scale"), Tooltip("The motion blur effect scale.")]
-        public float MB_Scale
-        {
-            get => data.MB_Scale;
-            set
-            {
-                data.MB_Scale = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(1), PostProcessSetting((int)Override.Scale)]
+        [Tooltip("The motion blur effect scale.")]
+        public float Scale;
 
         /// <summary>
         /// Gets or sets the amount of sample points used during motion blur rendering. It affects quality and performances.
         /// </summary>
         [DefaultValue(10), Limit(4, 32, 0.1f)]
-        [NoSerialize, EditorOrder(1002), EditorDisplay("Motion Blur", "Sample Count"), Tooltip("The amount of sample points used during motion blur rendering. It affects quality and performances.")]
-        public int MB_SampleCount
-        {
-            get => data.MB_SampleCount;
-            set
-            {
-                data.MB_SampleCount = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(2), PostProcessSetting((int)Override.SampleCount)]
+        [Tooltip("The amount of sample points used during motion blur rendering. It affects quality and performances.")]
+        public int SampleCount;
 
         /// <summary>
-        /// Gets or sets the motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lowe resolution to improve performance.
+        /// Gets or sets the motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lower resolution to improve performance.
         /// </summary>
         [DefaultValue(ResolutionMode.Half)]
-        [NoSerialize, EditorOrder(1003), EditorDisplay("Motion Blur", "Motion Vectors Resolution"), Tooltip("The motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lowe resolution to improve performance.")]
-        public ResolutionMode MB_MotionVectorsResolution
+        [EditorOrder(3), PostProcessSetting((int)Override.MotionVectorsResolution)]
+        [Tooltip("The motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lower resolution to improve performance.")]
+        public ResolutionMode MotionVectorsResolution;
+    }
+
+    /// <summary>
+    /// Contains settings for Screen Space Reflections effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct ScreenSpaceReflectionsSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
         {
-            get => data.MB_MotionVectorsResolution;
-            set
-            {
-                data.MB_MotionVectorsResolution = value;
-                isDataDirty = true;
-            }
-        }
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
 
-        #endregion
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.Intensity"/> property.
+            /// </summary>
+            Intensity = 1 << 0,
 
-        #region Anti Aliasing
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.DepthResolution"/> property.
+            /// </summary>
+            DepthResolution = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.RayTracePassResolution"/> property.
+            /// </summary>
+            RayTracePassResolution = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.BRDFBias"/> property.
+            /// </summary>
+            BRDFBias = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.RoughnessThreshold"/> property.
+            /// </summary>
+            RoughnessThreshold = 1 << 4,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.WorldAntiSelfOcclusionBias"/> property.
+            /// </summary>
+            WorldAntiSelfOcclusionBias = 1 << 5,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.ResolvePassResolution"/> property.
+            /// </summary>
+            ResolvePassResolution = 1 << 6,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.ResolveSamples"/> property.
+            /// </summary>
+            ResolveSamples = 1 << 7,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.EdgeFadeFactor"/> property.
+            /// </summary>
+            EdgeFadeFactor = 1 << 8,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.UseColorBufferMips"/> property.
+            /// </summary>
+            UseColorBufferMips = 1 << 9,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.TemporalEffect"/> property.
+            /// </summary>
+            TemporalEffect = 1 << 10,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.TemporalScale"/> property.
+            /// </summary>
+            TemporalScale = 1 << 11,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.TemporalResponse"/> property.
+            /// </summary>
+            TemporalResponse = 1 << 12,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = Intensity | DepthResolution | RayTracePassResolution | BRDFBias | RoughnessThreshold | WorldAntiSelfOcclusionBias |
+                  ResolvePassResolution | ResolveSamples | EdgeFadeFactor | UseColorBufferMips | TemporalEffect | TemporalScale | TemporalResponse,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
+
+        /// <summary>
+        /// Gets or sets the effect intensity (normalized to range [0;1]). Use 0 to disable it.
+        /// </summary>
+        [DefaultValue(1.0f), Limit(0, 1.0f, 0.01f)]
+        [EditorOrder(0), PostProcessSetting((int)Override.Intensity)]
+        [Tooltip("Effect intensity (normalized to range [0;1]). Use 0 to disable it.")]
+        public float Intensity;
+
+        /// <summary>
+        /// Gets or sets the input depth resolution mode.
+        /// </summary>
+        [DefaultValue(ResolutionMode.Half)]
+        [EditorOrder(1), PostProcessSetting((int)Override.DepthResolution)]
+        [Tooltip("The depth buffer downscale option to optimize raycast performance. Full gives better quality, but half improves performance. The default value is half.")]
+        public ResolutionMode DepthResolution;
+
+        /// <summary>
+        /// Gets or sets the ray trace pass resolution mode.
+        /// </summary>
+        [DefaultValue(ResolutionMode.Half)]
+        [EditorOrder(2), PostProcessSetting((int)Override.RayTracePassResolution)]
+        [Tooltip("The raycast resolution. Full gives better quality, but half improves performance. The default value is half.")]
+        public ResolutionMode RayTracePassResolution;
+
+        /// <summary>
+        /// Gets or sets the BRDF bias. This value controls source roughness effect on reflections blur.
+        /// Smaller values produce wider reflections spread but also introduce more noise.
+        /// Higher values provide more mirror-like reflections. Default value is 0.8.
+        /// </summary>
+        [DefaultValue(0.82f), Limit(0, 1.0f, 0.01f)]
+        [EditorOrder(3), PostProcessSetting((int)Override.BRDFBias)]
+        [EditorDisplay(null, "BRDF Bias")]
+        [Tooltip("The reflection spread. Higher values provide finer, more mirror-like reflections. This setting has no effect on performance. The default value is 0.82")]
+        public float BRDFBias;
+
+        /// <summary>
+        /// Minimum allowed surface roughness value to use local reflections.
+        /// Pixels with higher values won't be affected by the effect.
+        /// </summary>
+        [DefaultValue(0.45f), Limit(0, 1.0f, 0.01f)]
+        [EditorOrder(4), PostProcessSetting((int)Override.RoughnessThreshold)]
+        [Tooltip("The maximum amount of roughness a material must have to reflect the scene. For example, if this value is set to 0.4, only materials with a roughness value of 0.4 or below reflect the scene. The default value is 0.45.")]
+        public float RoughnessThreshold;
+
+        /// <summary>
+        /// Ray tracing starting position is offset by a percent of the normal in world space to avoid self occlusions.
+        /// </summary>
+        [DefaultValue(0.1f), Limit(0, 10.0f, 0.01f)]
+        [EditorOrder(5), PostProcessSetting((int)Override.WorldAntiSelfOcclusionBias)]
+        [Tooltip("The offset of the raycast origin. Lower values produce more correct reflection placement, but produce more artifacts. We recommend values of 0.3 or lower. The default value is 0.1.")]
+        public float WorldAntiSelfOcclusionBias;
+
+        /// <summary>
+        /// Gets or sets the resolve pass resolution mode.
+        /// </summary>
+        [DefaultValue(ResolutionMode.Full)]
+        [EditorOrder(6), PostProcessSetting((int)Override.ResolvePassResolution)]
+        [Tooltip("The raycast resolution. Full gives better quality, but half improves performance. The default value is half.")]
+        public ResolutionMode ResolvePassResolution;
+
+        /// <summary>
+        /// Gets or sets the resolve pass samples amount. Higher values provide better quality but reduce effect performance.
+        /// Default value is 4. Use 1 for the highest speed.
+        /// </summary>
+        [DefaultValue(4), Limit(1, 8)]
+        [EditorOrder(7), PostProcessSetting((int)Override.ResolveSamples)]
+        [Tooltip("The number of rays used to resolve the reflection color. Higher values produce less noise, but worse performance. The default value is 4.")]
+        public int ResolveSamples;
+
+        /// <summary>
+        /// Gets or sets the edge fade factor. It's used to fade off effect on screen edges to provide smoother image.
+        /// </summary>
+        [DefaultValue(0.1f), Limit(0, 1.0f, 0.02f)]
+        [EditorOrder(8), PostProcessSetting((int)Override.EdgeFadeFactor)]
+        [Tooltip("The point at which the far edges of the reflection begin to fade. Has no effect on performance. The default value is 0.1.")]
+        public float EdgeFadeFactor;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether use color buffer mipmaps chain; otherwise will use raw input color buffer to sample reflections color.
+        /// Using mipmaps improves resolve pass performance and reduces GPU cache misses.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorOrder(9), PostProcessSetting((int)Override.UseColorBufferMips)]
+        [EditorDisplay(null, "Use Color Buffer Mips")]
+        [Tooltip("The input color buffer downscale mode that uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.")]
+        public bool UseColorBufferMips;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether use temporal effect to smooth reflections.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorOrder(10), PostProcessSetting((int)Override.TemporalEffect)]
+        [EditorDisplay(null, "Enable Temporal Effect")]
+        [Tooltip("Enables the temporal pass. Reduces noise, but produces an animated \"jittering\" effect that's sometimes noticeable. If disabled, the properties below have no effect.")]
+        public bool TemporalEffect;
+
+        /// <summary>
+        /// Gets or sets the temporal effect scale. Default is 8.
+        /// </summary>
+        [DefaultValue(8.0f), Limit(0, 20.0f, 0.5f)]
+        [EditorOrder(11), PostProcessSetting((int)Override.TemporalScale)]
+        [Tooltip("The intensity of the temporal effect. Lower values produce reflections faster, but more noise. The default value is 8.")]
+        public float TemporalScale;
+
+        /// <summary>
+        /// Gets or sets the temporal response. Default is 0.8.
+        /// </summary>
+        [DefaultValue(0.8f), Limit(0.05f, 1.0f, 0.01f)]
+        [EditorOrder(12), PostProcessSetting((int)Override.TemporalResponse)]
+        [Tooltip("How quickly reflections blend between the reflection in the current frame and the history buffer. Lower values produce reflections faster, but with more jittering. If the camera in your game doesn't move much, we recommend values closer to 1. The default value is 0.8.")]
+        public float TemporalResponse;
+    }
+
+    /// <summary>
+    /// Contains settings for Anti Aliasing effect rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct AntiAliasingSettings
+    {
+        /// <summary>
+        /// The structure members override flags.
+        /// </summary>
+        [Flags]
+        public enum Override : int
+        {
+            /// <summary>
+            /// None properties.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// Overrides <see cref="AntiAliasingSettings.Mode"/> property.
+            /// </summary>
+            Mode = 1 << 0,
+
+            /// <summary>
+            /// Overrides <see cref="AntiAliasingSettings.TAA_JitterSpread"/> property.
+            /// </summary>
+            TAA_JitterSpread = 1 << 1,
+
+            /// <summary>
+            /// Overrides <see cref="AntiAliasingSettings.TAA_Sharpness"/> property.
+            /// </summary>
+            TAA_Sharpness = 1 << 2,
+
+            /// <summary>
+            /// Overrides <see cref="AntiAliasingSettings.TAA_StationaryBlending"/> property.
+            /// </summary>
+            TAA_StationaryBlending = 1 << 3,
+
+            /// <summary>
+            /// Overrides <see cref="AntiAliasingSettings.TAA_MotionBlending"/> property.
+            /// </summary>
+            TAA_MotionBlending = 1 << 4,
+
+            /// <summary>
+            /// All properties.
+            /// </summary>
+            All = Mode | TAA_JitterSpread | TAA_Sharpness | TAA_StationaryBlending | TAA_MotionBlending,
+        };
+
+        /// <summary>
+        /// The flags for overriden properties.
+        /// </summary>
+        [HideInEditor]
+        public Override OverrideFlags;
 
         /// <summary>
         /// Gets or sets the anti-aliasing effect mode.
         /// </summary>
         [DefaultValue(AntialiasingMode.FastApproximateAntialiasing)]
-        [NoSerialize, EditorOrder(1100), EditorDisplay("Anti Aliasing", "Mode"), Tooltip("The anti-aliasing effect mode.")]
-        public AntialiasingMode AA_Mode
-        {
-            get => data.AA_Mode;
-            set
-            {
-                data.AA_Mode = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(0), PostProcessSetting((int)Override.Mode)]
+        [Tooltip("The anti-aliasing effect mode.")]
+        public AntialiasingMode Mode;
 
         /// <summary>
         /// Gets or sets the diameter (in texels) inside which jitter samples are spread. Smaller values result
@@ -1975,94 +1839,94 @@ namespace FlaxEngine.Rendering
         /// blurrier output.
         /// </summary>
         [DefaultValue(0.75f), Limit(0.1f, 1f, 0.001f)]
-        [NoSerialize, EditorOrder(1101), EditorDisplay("Anti Aliasing", "TAA Jitter Spread"), Tooltip("The diameter (in texels) inside which jitter samples are spread. Smaller values result in crisper but more aliased output, while larger values result in more stable but blurrier output.")]
-        public float AA_TAA_JitterSpread
-        {
-            get => data.AA_TAA_JitterSpread;
-            set
-            {
-                data.AA_TAA_JitterSpread = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(1), PostProcessSetting((int)Override.TAA_JitterSpread)]
+        [EditorDisplay(null, "TAA Jitter Spread")]
+        [Tooltip("The diameter (in texels) inside which jitter samples are spread. Smaller values result in crisper but more aliased output, while larger values result in more stable but blurrier output.")]
+        public float TAA_JitterSpread;
 
         /// <summary>
         /// Gets or sets the amount of sharpening applied to the color buffer. High values may introduce dark-border artifacts.
         /// </summary>
         [DefaultValue(0f), Limit(0, 3f, 0.001f)]
-        [NoSerialize, EditorOrder(1102), EditorDisplay("Anti Aliasing", "TAA Sharpness"), Tooltip("Controls the amount of sharpening applied to the color buffer. High values may introduce dark-border artifacts.")]
-        public float AA_TAA_Sharpness
-        {
-            get => data.AA_TAA_Sharpness;
-            set
-            {
-                data.AA_TAA_Sharpness = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(2), PostProcessSetting((int)Override.TAA_Sharpness)]
+        [EditorDisplay(null, "TAA Sharpness")]
+        [Tooltip("Controls the amount of sharpening applied to the color buffer. High values may introduce dark-border artifacts.")]
+        public float TAA_Sharpness;
 
         /// <summary>
         /// Gets or sets the blend coefficient for a stationary fragment. Controls the percentage of history sample blended into the final color.
         /// </summary>
         [DefaultValue(0.95f), Limit(0, 0.99f, 0.001f)]
-        [NoSerialize, EditorOrder(1103), EditorDisplay("Anti Aliasing", "TAA Stationary Blending"), Tooltip("The anti-aliasing effect mode.")]
-        public float AA_TAA_StationaryBlending
-        {
-            get => data.AA_TAA_StationaryBlending;
-            set
-            {
-                data.AA_TAA_StationaryBlending = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(3), PostProcessSetting((int)Override.TAA_StationaryBlending)]
+        [EditorDisplay(null, "TAA Stationary Blending")]
+        [Tooltip("The anti-aliasing effect mode.")]
+        public float TAA_StationaryBlending;
 
         /// <summary>
         /// Gets or sets the blend coefficient for a fragment with significant motion. Controls the percentage of history sample blended into the final color.
         /// </summary>
         [DefaultValue(0.4f), Limit(0, 0.99f, 0.001f)]
-        [NoSerialize, EditorOrder(1104), EditorDisplay("Anti Aliasing", "TAA Motion Blending"), Tooltip("The anti-aliasing effect mode.")]
-        public float AA_TAA_MotionBlending
-        {
-            get => data.AA_TAA_MotionBlending;
-            set
-            {
-                data.AA_TAA_MotionBlending = value;
-                isDataDirty = true;
-            }
-        }
+        [EditorOrder(4), PostProcessSetting((int)Override.TAA_MotionBlending)]
+        [EditorDisplay(null, "TAA Motion Blending")]
+        [Tooltip("The anti-aliasing effect mode.")]
+        public float TAA_MotionBlending;
+    }
 
-        #endregion
+    /// <summary>
+    /// Contains settings for custom PostFx materials rendering.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct PostFxMaterialsSettings
+    {
+        private int _MaterialsCount;
+        private Guid _Material0;
+        private Guid _Material1;
+        private Guid _Material2;
+        private Guid _Material3;
+        private Guid _Material4;
+        private Guid _Material5;
+        private Guid _Material6;
+        private Guid _Material7;
 
-        #region PostFx Materials
+        /// <summary>
+        /// The maximum allowed amount custom post fx materials assigned to <see cref="PostFxMaterialsSettings"/>.
+        /// </summary>
+        public const int MaxPostFxMaterials = 8;
+
+        [NoSerialize]
+        private MaterialBase[] _Materials;
 
         /// <summary>
         /// Gets the post effect materials collection.
         /// </summary>
-        [NoSerialize, EditorOrder(10000), EditorDisplay("PostFx Materials", EditorDisplayAttribute.InlineStyle), Tooltip("Post effect materials to render")]
         [CustomEditorAlias("FlaxEditor.CustomEditors.Editors.PostFxMaterials")]
-        public unsafe MaterialBase[] PostFxMaterials
+        [EditorDisplay(null, EditorDisplayAttribute.InlineStyle)]
+        [Tooltip("Post effect materials to render")]
+        public unsafe MaterialBase[] Materials
         {
             get
             {
-                if (_postFxMaterials == null || _postFxMaterials.Length != data.PostFxMaterialsCount)
-                    _postFxMaterials = new MaterialBase[data.PostFxMaterialsCount];
-
-                fixed (Guid* postFxMaterials = &data.PostFxMaterial0)
+                if (_Materials == null || _Materials.Length != _MaterialsCount)
                 {
-                    for (int i = 0; i < data.PostFxMaterialsCount; i++)
+                    _Materials = _MaterialsCount != 0 ? new MaterialBase[_MaterialsCount] : Utils.GetEmptyArray<MaterialBase>();
+                }
+
+                fixed (Guid* postFxMaterials = &_Material0)
+                {
+                    for (int i = 0; i < _MaterialsCount; i++)
                     {
-                        _postFxMaterials[i] = Content.LoadAsync<MaterialBase>(postFxMaterials[i]);
+                        _Materials[i] = Content.LoadAsync<MaterialBase>(postFxMaterials[i]);
                     }
                 }
 
-                return _postFxMaterials;
+                return _Materials;
             }
             set
             {
-                fixed (Guid* postFxMaterials = &data.PostFxMaterial0)
+                fixed (Guid* postFxMaterials = &_Material0)
                 {
                     var postFxLength = Mathf.Min(value?.Length ?? 0, MaxPostFxMaterials);
-                    bool posFxMaterialsChanged = data.PostFxMaterialsCount != postFxLength;
+                    bool posFxMaterialsChanged = _MaterialsCount != postFxLength;
 
                     for (int i = 0; i < postFxLength; i++)
                     {
@@ -2086,36 +1950,13 @@ namespace FlaxEngine.Rendering
                         postFxMaterials[i] = Guid.Empty;
                     }
 
-                    data.PostFxMaterialsCount = postFxLength;
+                    _MaterialsCount = postFxLength;
                     if (posFxMaterialsChanged)
                     {
-                        _postFxMaterials = null;
-                        isDataDirty = true;
+                        _Materials = null;
                     }
                 }
             }
-        }
-
-        #endregion
-
-        /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            if (obj is PostProcessSettings other)
-                return data.Equals(other.data);
-            return false;
-        }
-
-        /// <inheritdoc />
-        public bool Equals(PostProcessSettings other)
-        {
-            return data.Equals(other.data);
-        }
-
-        /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return data.GetHashCode();
         }
     }
 }

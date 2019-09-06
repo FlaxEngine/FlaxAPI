@@ -160,7 +160,10 @@ namespace FlaxEditor.Viewport.Previews
             if (entries.Length == 1)
                 entries[0].Material = surfaceMaterial;
             _postFxMaterialsCache[0] = postFxMaterial;
-            PostFxVolume.Settings.PostFxMaterials = _postFxMaterialsCache;
+            PostFxVolume.PostFxMaterials = new PostFxMaterialsSettings
+            {
+                Materials = _postFxMaterialsCache,
+            };
 
             // Decal
             if (decalMaterial && _decal == null)
