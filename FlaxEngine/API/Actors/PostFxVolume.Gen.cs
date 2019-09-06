@@ -282,7 +282,7 @@ namespace FlaxEngine
         /// Gets or sets the PostFx materials rendering settings.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("PostFx Materials"), EditorOrder(1200), Tooltip("The PostFx materials rendering settings.")]
+        [EditorDisplay("PostFx Materials"), NoAnimate, EditorOrder(1200), Tooltip("The PostFx materials rendering settings.")]
         public PostFxMaterialsSettings PostFxMaterials
         {
 #if UNIT_TEST_COMPILANT

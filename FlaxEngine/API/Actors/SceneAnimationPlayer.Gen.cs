@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets the scene animation to play.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation"), EditorOrder(0), Tooltip("The scene animation to play.")]
+        [EditorDisplay("Scene Animation"), EditorOrder(0), DefaultValue(null), Tooltip("The scene animation to play.")]
         public SceneAnimation Animation
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the animation playback speed factor. Scales the timeline update delta time. Can be used to speed up or slow down the sequence.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation"), EditorOrder(10), Tooltip("The animation playback speed factor. Scales the timeline update delta time. Can be used to speed up or slow down the sequence.")]
+        [EditorDisplay("Scene Animation"), EditorOrder(10), DefaultValue(1.0f), Tooltip("The animation playback speed factor. Scales the timeline update delta time. Can be used to speed up or slow down the sequence.")]
         public float Speed
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets the animation start time. Can be used to skip part of the sequence on begin.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation"), EditorOrder(20), Tooltip("The animation start time. Can be used to skip part of the sequence on begin.")]
+        [EditorDisplay("Scene Animation"), EditorOrder(20), DefaultValue(0.0f), Tooltip("The animation start time. Can be used to skip part of the sequence on begin.")]
         public float StartTime
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets the value that determinates whether the scene animation should take into account the global game time scale for simulation updates.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation"), EditorOrder(30), Tooltip("Determines whether the scene animation should take into account the global game time scale for simulation updates.")]
+        [EditorDisplay("Scene Animation"), EditorOrder(30), DefaultValue(true), Tooltip("Determines whether the scene animation should take into account the global game time scale for simulation updates.")]
         public bool UseTimeScale
         {
 #if UNIT_TEST_COMPILANT
@@ -101,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the value that determinates whether the scene animation should loop when it finishes playing.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation"), EditorOrder(40), Tooltip("Determines whether the scene animation should loop when it finishes playing.")]
+        [EditorDisplay("Scene Animation"), EditorOrder(40), DefaultValue(false), Tooltip("Determines whether the scene animation should loop when it finishes playing.")]
         public bool Loop
         {
 #if UNIT_TEST_COMPILANT
@@ -116,7 +117,7 @@ namespace FlaxEngine
         /// Gets or sets the value that determinates whether the scene animation should auto play on game start.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation", "Play On Start"), EditorOrder(50), Tooltip("Determines whether the scene animation should auto play on game start.")]
+        [EditorDisplay("Scene Animation", "Play On Start"), EditorOrder(50), DefaultValue(false), Tooltip("Determines whether the scene animation should auto play on game start.")]
         public bool PlayOnStart
         {
 #if UNIT_TEST_COMPILANT
@@ -131,7 +132,7 @@ namespace FlaxEngine
         /// Gets or sets the value that determinates whether the scene animation should randomize the start time on play begin.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation"), EditorOrder(60), Tooltip("Determines whether the scene animation should randomize the start time on play begin.")]
+        [EditorDisplay("Scene Animation"), EditorOrder(60), DefaultValue(false), Tooltip("Determines whether the scene animation should randomize the start time on play begin.")]
         public bool RandomStartTime
         {
 #if UNIT_TEST_COMPILANT
@@ -146,7 +147,7 @@ namespace FlaxEngine
         /// Gets or sets the value that determinates whether the scene animation should restore initial state on playback stop. State is cached when animation track starts play after being stopped (not paused).
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("Scene Animation", "Restore State On Stop"), EditorOrder(70), Tooltip("Determines whether the scene animation should restore initial state on playback stop. State is cached when animations stats play after being stopped (not paused).")]
+        [EditorDisplay("Scene Animation", "Restore State On Stop"), EditorOrder(70), DefaultValue(false), Tooltip("Determines whether the scene animation should restore initial state on playback stop. State is cached when animations stats play after being stopped (not paused).")]
         public bool RestoreStateOnStop
         {
 #if UNIT_TEST_COMPILANT
