@@ -207,8 +207,7 @@
     </Compile>
     <Compile Include="API\Objects\Window.cs" />
     <Compile Include="API\Objects\Window.Gen.cs" />
-    <Compile Include="API\Static\Application.cs" />
-    <Compile Include="API\Static\Application.Gen.cs" />
+    <Compile Include="API\Static\Platform.cs" />
     <Compile Include="API\Static\Audio.cs" />
     <Compile Include="API\Static\Audio.Gen.cs" />
     <Compile Include="API\Static\Content.cs" />
@@ -233,6 +232,7 @@
     <Compile Include="API\Static\Navigation.Gen.cs" />
     <Compile Include="API\Static\Physics.cs" />
     <Compile Include="API\Static\Physics.Gen.cs" />
+    <Compile Include="API\Static\Platform.Gen.cs" />
     <Compile Include="API\Static\PluginManager.cs" />
     <Compile Include="API\Static\PluginManager.Gen.cs" />
     <Compile Include="API\Static\PrefabManager.cs" />

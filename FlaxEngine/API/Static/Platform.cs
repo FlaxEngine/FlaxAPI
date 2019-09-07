@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace FlaxEngine
 {
-    public static partial class Application
+    public static partial class Platform
     {
         internal static bool _is64Bit;
         internal static bool _isEditor;
@@ -44,7 +44,7 @@ namespace FlaxEngine
         /// <remarks>
         /// Use this property to perform platform dependent actions.
         /// </remarks>
-        public static PlatformType Platform
+        public static PlatformType PlatformType
         {
             get { return _platform; }
         }

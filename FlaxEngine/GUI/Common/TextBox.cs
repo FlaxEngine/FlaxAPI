@@ -428,7 +428,7 @@ namespace FlaxEngine.GUI
             if (selectedText.Length > 0)
             {
                 // Copy selected text
-                Application.ClipboardText = selectedText;
+                Platform.ClipboardText = selectedText;
             }
         }
 
@@ -441,7 +441,7 @@ namespace FlaxEngine.GUI
             if (selectedText.Length > 0)
             {
                 // Copy selected text
-                Application.ClipboardText = selectedText;
+                Platform.ClipboardText = selectedText;
 
                 if (IsReadOnly)
                     return;
@@ -463,7 +463,7 @@ namespace FlaxEngine.GUI
                 return;
 
             // Get clipboard data
-            var clipboardText = Application.ClipboardText;
+            var clipboardText = Platform.ClipboardText;
             if (string.IsNullOrEmpty(clipboardText))
                 return;
 

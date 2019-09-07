@@ -37,7 +37,7 @@ namespace FlaxEditor.GUI.Docking
             window.Focus();
 
             // Calculate dragging offset and move window to the destination position
-            Vector2 mouse = Application.MousePosition;
+            Vector2 mouse = Platform.MousePosition;
             Vector2 baseWinPos = window.Position;
             _dragOffset = mouse - baseWinPos;
 
@@ -91,7 +91,7 @@ namespace FlaxEditor.GUI.Docking
             if (_toSet == DockState.Float)
             {
                 var window = _toMove.Window.Window;
-                Vector2 mouse = Application.MousePosition;
+                Vector2 mouse = Platform.MousePosition;
 
                 // Move base window
                 window.Position = mouse - _dragOffset;
@@ -169,7 +169,7 @@ namespace FlaxEditor.GUI.Docking
 
             // Move window to the mouse position (with some offset for caption bar)
             var window = (WindowRootControl)toMove.Root;
-            Vector2 mouse = Application.MousePosition;
+            Vector2 mouse = Platform.MousePosition;
             window.Window.Position = mouse - new Vector2(8, 8);
 
             // Get floating panel
@@ -214,10 +214,10 @@ namespace FlaxEditor.GUI.Docking
         private void UpdateRects()
         {
             // Cache mouse position
-            _mouse = Application.MousePosition;
+            _mouse = Platform.MousePosition;
 
             // Check intersection with any dock panel
-            var dpiScale = Application.DpiScale;
+            var dpiScale = Platform.DpiScale;
             var uiMouse = _mouse / dpiScale;
             _toDock = _toMove.MasterPanel.HitTest(ref uiMouse, _toMove);
 

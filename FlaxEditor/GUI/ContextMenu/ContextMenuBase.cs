@@ -124,12 +124,12 @@ namespace FlaxEditor.GUI.ContextMenu
             PerformLayout();
 
             // Calculate popup direction and initial location (fit on a single monitor)
-            var dpiScale = Application.DpiScale;
+            var dpiScale = Platform.DpiScale;
             Vector2 dpiSize = Size * dpiScale;
             Vector2 locationWS = parent.PointToWindow(location);
             Vector2 locationSS = parentWin.ClientToScreen(locationWS * dpiScale);
             Location = Vector2.Zero;
-            Rectangle monitorBounds = Application.GetMonitorBounds(locationSS);
+            Rectangle monitorBounds = Platform.GetMonitorBounds(locationSS);
             Vector2 rightBottomLocationSS = locationSS + dpiSize;
             bool isUp = false, isLeft = false;
             if (monitorBounds.Bottom < rightBottomLocationSS.Y)
@@ -259,7 +259,7 @@ namespace FlaxEditor.GUI.ContextMenu
         {
             if (_window != null)
             {
-                _window.ClientSize = Size * Application.DpiScale;
+                _window.ClientSize = Size * Platform.DpiScale;
             }
         }
 
@@ -290,7 +290,7 @@ namespace FlaxEditor.GUI.ContextMenu
             if (_parentCM != null)
             {
                 // Skip if user clicked over the parent popup
-                var mouse = _parentCM.ScreenToClient(Application.MousePosition / Application.Dpi);
+                var mouse = _parentCM.ScreenToClient(Platform.MousePosition / Platform.Dpi);
                 if (!_parentCM.ContainsPoint(ref mouse))
                 {
                     root.Hide();

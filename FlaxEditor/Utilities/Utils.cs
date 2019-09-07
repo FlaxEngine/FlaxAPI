@@ -883,13 +883,13 @@ namespace FlaxEditor.Utilities
             settings.AllowMinimize = false;
             settings.HasSizingFrame = false;
             settings.StartPosition = WindowStartPosition.CenterScreen;
-            settings.Size = new Vector2(500, 600) * Application.DpiScale;
+            settings.Size = new Vector2(500, 600) * Platform.DpiScale;
             settings.Title = title;
             var dialog = Window.Create(settings);
 
             var copyButton = new Button(4, 4, 100);
             copyButton.Text = "Copy";
-            copyButton.Clicked += () => Application.ClipboardText = source;
+            copyButton.Clicked += () => Platform.ClipboardText = source;
             copyButton.Parent = dialog.GUI;
 
             var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);

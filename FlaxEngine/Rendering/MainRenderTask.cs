@@ -30,7 +30,7 @@ namespace FlaxEngine.Rendering
             // Use the main camera for the game
             Camera = Camera.MainCamera;
 
-            if (!Application.IsEditor)
+            if (!Platform.IsEditor)
             {
                 // Sync render buffers size with the backbuffer
                 Buffers.Size = Screen.Size;
@@ -43,7 +43,7 @@ namespace FlaxEngine.Rendering
         {
             bool result = base.OnBegin(out outputPtr);
 
-            if (!Application.IsEditor)
+            if (!Platform.IsEditor)
             {
                 // Standalone build uses hidden, internal output (native window backbuffer in most cases)
                 // So pass rendering even with missing output

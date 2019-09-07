@@ -9,9 +9,9 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Application management utilities.
+    /// Platform management utilities.
     /// </summary>
-    public static partial class Application
+    public static partial class Platform
     {
         /// <summary>
         /// Gets the name of the computer machine.
@@ -27,7 +27,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the command line for the application.
+        /// Gets the command line for the Platform.
         /// </summary>
         [UnmanagedCall]
         public static string CommandLine
@@ -181,7 +181,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Immediately released all the engine resources and closes the application. Used when fatal error occurred.
+        /// Immediately released all the engine resources and closes the Platform. Used when fatal error occurred.
         /// </summary>
         /// <param name="msg">Fatal error message. Will be saved to the log. Should contain basic information about the error.</param>
 #if UNIT_TEST_COMPILANT
@@ -243,7 +243,7 @@ namespace FlaxEngine
         /// Starts a new native process.
         /// </summary>
         /// <param name="path">Target file path.</param>
-        /// <param name="args">Custom command line arguments to pass to the new application.</param>
+        /// <param name="args">Custom command line arguments to pass to the new Platform.</param>
         /// <param name="hiddenWindow">True if hide process window, otherwise false (it's not always possible).</param>
         /// <param name="waitForEnd">True if wait for the process end, otherwise false.</param>
         /// <returns>Retrieves the termination status of the specified process. Invalid if process is still running.</returns>

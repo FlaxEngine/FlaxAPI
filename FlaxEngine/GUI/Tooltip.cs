@@ -54,11 +54,11 @@ namespace FlaxEngine.GUI
             var parentWin = target.Root;
             if (parentWin == null)
                 return;
-            float dpiScale = Application.DpiScale;
+            float dpiScale = Platform.DpiScale;
             Vector2 dpiSize = Size * dpiScale;
             Vector2 locationWS = target.PointToWindow(location);
             Vector2 locationSS = parentWin.ClientToScreen(locationWS * dpiScale);
-            Vector2 screenSize = Application.VirtualDesktopSize;
+            Vector2 screenSize = Platform.VirtualDesktopSize;
             Vector2 rightBottomLocationSS = locationSS + dpiSize;
             if (screenSize.Y < rightBottomLocationSS.Y)
             {
@@ -170,7 +170,7 @@ namespace FlaxEngine.GUI
         {
             if (_window)
             {
-                _window.ClientSize = Size * Application.DpiScale;
+                _window.ClientSize = Size * Platform.DpiScale;
             }
         }
 
@@ -178,8 +178,8 @@ namespace FlaxEngine.GUI
         public override void Update(float deltaTime)
         {
             // Auto hide if mouse leaves control area
-            Vector2 mousePos = Application.MousePosition;
-            Vector2 location = _showTarget.ScreenToClient(mousePos / Application.DpiScale);
+            Vector2 mousePos = Platform.MousePosition;
+            Vector2 location = _showTarget.ScreenToClient(mousePos / Platform.DpiScale);
             if (!_showTarget.OnTestTooltipOverControl(ref location))
             {
                 // Mouse left or sth

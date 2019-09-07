@@ -155,7 +155,7 @@ namespace FlaxEditor.Modules
             if (mainWindow)
             {
                 var projectPath = Globals.ProjectFolder.Replace('/', '\\');
-                var platformBit = Application.Is64bitApp ? "64" : "32";
+                var platformBit = Platform.Is64bitApp ? "64" : "32";
                 var title = string.Format("Flax Editor - \'{0}\' ({1}-bit)", projectPath, platformBit);
                 mainWindow.Title = title;
             }
@@ -258,7 +258,7 @@ namespace FlaxEditor.Modules
 
                 // Get metadata
                 int version = int.Parse(root.Attributes["Version"].Value, CultureInfo.InvariantCulture);
-                var virtualDesktopBounds = Application.VirtualDesktopBounds;
+                var virtualDesktopBounds = Platform.VirtualDesktopBounds;
                 var virtualDesktopSafeLeftCorner = virtualDesktopBounds.Location + new Vector2(0, 23); // 23 is a window strip size
                 var virtualDesktopSafeRightCorner = virtualDesktopBounds.BottomRight - new Vector2(50, 50); // apply some safe area
 
@@ -688,7 +688,7 @@ namespace FlaxEditor.Modules
             _windowsLayoutPath = StringUtils.CombinePaths(Globals.ProjectCacheFolder, "WindowsLayout.xml");
 
             // Create main window
-            var dpiScale = Application.DpiScale;
+            var dpiScale = Platform.DpiScale;
             var settings = CreateWindowSettings.Default;
             settings.Title = "Flax Editor";
             settings.Size = new Vector2(1300 * dpiScale, 900 * dpiScale);
@@ -839,7 +839,7 @@ namespace FlaxEditor.Modules
             else
             {
                 // Close editor
-                Application.Exit();
+                Platform.Exit();
             }
         }
 
@@ -889,7 +889,7 @@ namespace FlaxEditor.Modules
             {
                 Editor.Log("Closing Editor after project icon screenshot");
                 EditWin.Viewport.SaveProjectIconEnd();
-                Application.Exit();
+                Platform.Exit();
             }
 
             // Update editor windows

@@ -203,7 +203,7 @@ namespace FlaxEditor.Windows
             /// </summary>
             public void Copy()
             {
-                Application.ClipboardText = Info.Replace("\n", Environment.NewLine);
+                Platform.ClipboardText = Info.Replace("\n", Environment.NewLine);
             }
 
             public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)

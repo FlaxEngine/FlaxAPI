@@ -150,7 +150,7 @@ namespace FlaxEngine
         private Window()
         {
             GUI = new WindowRootControl(this);
-            _dpiScale = Application.DpiScale;
+            _dpiScale = Platform.DpiScale;
         }
 
         /// <summary>

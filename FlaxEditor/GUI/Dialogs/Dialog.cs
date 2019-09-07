@@ -138,7 +138,7 @@ namespace FlaxEditor.GUI.Dialogs
             // Setup initial window settings
             CreateWindowSettings settings = CreateWindowSettings.Default;
             settings.Title = _title;
-            settings.Size = Size * Application.DpiScale;
+            settings.Size = Size * Platform.DpiScale;
             settings.AllowMaximize = false;
             settings.AllowMinimize = false;
             settings.HasSizingFrame = false;

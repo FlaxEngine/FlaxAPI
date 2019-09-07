@@ -178,7 +178,7 @@ namespace FlaxEditor.Windows
             }
 
             // Show the output folder
-            Application.StartProcess(_options.OutputPath);
+            Platform.StartProcess(_options.OutputPath);
 
             Close(DialogResult.OK);
         }

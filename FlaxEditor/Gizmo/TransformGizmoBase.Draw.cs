@@ -46,7 +46,7 @@ namespace FlaxEditor.Gizmo
             )
             {
                 // Error
-                Application.Fatal("Failed to load Transform Gizmo resources.");
+                Platform.Fatal("Failed to load Transform Gizmo resources.");
             }
         }
 
