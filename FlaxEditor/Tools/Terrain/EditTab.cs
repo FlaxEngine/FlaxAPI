@@ -313,7 +313,16 @@ namespace FlaxEditor.Tools.Terrain
                     _exportTerrainButton.Visible = false;
 
                     _isUpdatingUI = true;
-                    _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
+                    if (terrain.HasPatch(ref patchCoord))
+                    {
+                        _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
+                        _chunkOverrideMaterial.Enabled = true;
+                    }
+                    else
+                    {
+                        _chunkOverrideMaterial.SelectedAsset = null;
+                        _chunkOverrideMaterial.Enabled = false;
+                    }
                     _isUpdatingUI = false;
                     break;
                 }
