@@ -978,10 +978,12 @@ namespace FlaxEditor.Modules
             case WatcherChangeTypes.Created:
             case WatcherChangeTypes.Deleted:
             {
-                // We want to enqueue dir modification events for better stability
-                if (!_dirtyNodes.Contains(node))
-                    _dirtyNodes.Enqueue(node);
-
+                lock (_dirtyNodes)
+                {
+                    // We want to enqueue dir modification events for better stability
+                    if (!_dirtyNodes.Contains(node))
+                        _dirtyNodes.Enqueue(node);
+                }
                 break;
             }
 
@@ -992,17 +994,20 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnUpdate()
         {
-            while (_dirtyNodes.Count > 0)
+            lock (_dirtyNodes)
             {
-                // Get node
-                var node = _dirtyNodes.Dequeue();
+                while (_dirtyNodes.Count > 0)
+                {
+                    // Get node
+                    var node = _dirtyNodes.Dequeue();
 
-                // Refresh
-                loadFolder(node, true);
+                    // Refresh
+                    loadFolder(node, true);
 
-                // Fire event
-                if (_enableEvents)
-                    OnWorkspaceModified?.Invoke();
+                    // Fire event
+                    if (_enableEvents)
+                        OnWorkspaceModified?.Invoke();
+                }
             }
         }
 
