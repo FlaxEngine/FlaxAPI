@@ -263,6 +263,19 @@ namespace FlaxEditor
 #endif
         }
 
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool ExportTerrain(Terrain terrain, string outputFolder)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ExportTerrain(Object.GetUnmanagedPtr(terrain), outputFolder);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -301,6 +314,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GenerateTerrain(IntPtr terrain, ref Int2 numberOfPatches, IntPtr heightmap, float heightmapScale, IntPtr splatmap1, IntPtr splatmap2);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_ExportTerrain(IntPtr terrain, string outputFolder);
 #endif
 
         #endregion
