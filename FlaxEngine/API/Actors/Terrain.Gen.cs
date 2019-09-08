@@ -222,6 +222,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the zero-based index of the terrain patch in the terrain patches collection.
+        /// </summary>
+        /// <param name="patchCoord">The patch location (x and z coordinates).</param>
+        /// <returns>The zero-based index of the terrain patch in the terrain patches collection. Returns -1 if patch coordinates are invalid.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public int GetPatchIndex(ref Int2 patchCoord)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetPatchIndex(unmanagedPtr, ref patchCoord);
+#endif
+        }
+
+        /// <summary>
         /// Gets the terrain patch coordinates (x and z) at the given index.
         /// </summary>
         /// <param name="patchIndex">The zero-based index of the terrain patch in the terrain patches collection.</param>
@@ -390,6 +408,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_HasPatch(IntPtr obj, ref Int2 patchCoord);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetPatchIndex(IntPtr obj, ref Int2 patchCoord);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetPatchCoord(IntPtr obj, int patchIndex, out Int2 patchCoord);
