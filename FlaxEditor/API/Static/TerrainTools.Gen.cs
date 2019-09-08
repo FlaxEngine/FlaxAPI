@@ -263,6 +263,12 @@ namespace FlaxEditor
 #endif
         }
 
+        /// <summary>
+        /// Export terrain's highmap as a texture.
+        /// </summary>
+        /// <param name="terrain">The terrain.</param>
+        /// <param name="outputFolder">The output folder path</param>
+        /// <returns>True if failed, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
