@@ -76,8 +76,11 @@ namespace FlaxEditor.Tools.Terrain
             {
                 // Highlight selected chunk
                 var patchCoord = Mode.SelectedPatchCoord;
-                var chunkCoord = Mode.SelectedChunkCoord;
-                collector.AddDrawCall(terrain, ref patchCoord, ref chunkCoord, _highlightTerrainMaterial);
+                if (terrain.HasPatch(ref patchCoord))
+                {
+                    var chunkCoord = Mode.SelectedChunkCoord;
+                    collector.AddDrawCall(terrain, ref patchCoord, ref chunkCoord, _highlightTerrainMaterial);
+                }
 
                 break;
             }
@@ -104,8 +107,10 @@ namespace FlaxEditor.Tools.Terrain
             {
                 // Highlight selected patch
                 var patchCoord = Mode.SelectedPatchCoord;
-                collector.AddDrawCall(terrain, ref patchCoord, _highlightTerrainMaterial);
-
+                if (terrain.HasPatch(ref patchCoord))
+                {
+                    collector.AddDrawCall(terrain, ref patchCoord, _highlightTerrainMaterial);
+                }
                 break;
             }
             }
