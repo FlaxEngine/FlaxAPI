@@ -281,7 +281,7 @@ namespace FlaxEditor.Tools.Terrain
                 return;
 
             string outputFolder = MessageBox.BrowseFolderDialog(null, null, "Select the output folder");
-            // do something here
+            TerrainTools.ExportTerrain(CarveTab.SelectedTerrain, outputFolder);
         }
 
         private void OnSelectionChanged()
