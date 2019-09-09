@@ -255,7 +255,7 @@ namespace FlaxEngine
         /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
         /// </remarks>
         /// <param name="initData">The texture init data.</param>
-        public unsafe void Init(InitData initData)
+        public unsafe void Init(ref InitData initData)
         {
             // Validate input
             if (!IsVirtual)
