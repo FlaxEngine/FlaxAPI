@@ -146,11 +146,11 @@ namespace FlaxEditor.CustomEditors.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             SetupContextMenu = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

@@ -48,7 +48,7 @@ namespace FlaxEditor.GUI.Docking
         : base(null)
         {
         }
-        
+
         /// <summary>
         /// Resets windows layout.
         /// </summary>

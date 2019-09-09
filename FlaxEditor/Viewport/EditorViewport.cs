@@ -1061,14 +1061,11 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             Editor.Instance.Options.OptionsChanged -= OnEditorOptionsChanged;
 
-            base.Dispose();
+            base.OnDestroy();
         }
 
         private float[] EditorViewportCameraSpeedValues =

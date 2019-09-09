@@ -550,7 +550,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             if (Curve != null)
             {
@@ -558,7 +558,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 Curve = null;
             }
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

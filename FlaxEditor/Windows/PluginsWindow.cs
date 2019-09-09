@@ -295,15 +295,12 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             PluginManager.PluginLoaded -= OnPluginLoaded;
             PluginManager.PluginUnloading -= OnPluginUnloading;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

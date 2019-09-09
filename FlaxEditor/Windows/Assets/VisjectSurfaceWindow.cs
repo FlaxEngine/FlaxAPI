@@ -720,15 +720,12 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             _undo.Clear();
             _propertiesEditor.Deselect();
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

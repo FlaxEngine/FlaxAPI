@@ -269,18 +269,15 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             SceneManager.ActorDeleted -= OnActorDeleted;
 
             _timeline = null;
             _saveButton = null;
             _previewPlayerPicker = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

@@ -102,7 +102,7 @@ namespace FlaxEditor.CustomEditors.Editors
             {
                 // TODO: support different values for ValueBox<T>
             }
-            else if(Values[0] is Version value)
+            else if (Values[0] is Version value)
             {
                 Major.IntValue.Value = value.Major;
                 Minor.IntValue.Value = value.Minor;

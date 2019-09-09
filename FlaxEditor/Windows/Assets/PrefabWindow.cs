@@ -445,11 +445,8 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             Editor.Prefabs.PrefabApplied -= OnPrefabApplied;
             ScriptsBuilder.ScriptsReloadBegin -= OnScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd -= OnScriptsReloadEnd;
@@ -457,7 +454,7 @@ namespace FlaxEditor.Windows.Assets
             _undo.Dispose();
             Graph.Dispose();
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

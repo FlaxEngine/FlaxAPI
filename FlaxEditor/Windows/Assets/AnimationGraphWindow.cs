@@ -94,12 +94,12 @@ namespace FlaxEditor.Windows.Assets
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 FlaxEngine.Object.Destroy(ref _floorModel);
                 _showFloorButton = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 

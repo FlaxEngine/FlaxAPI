@@ -208,7 +208,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             if (_cmStateMachineMenu != null)
             {
@@ -226,7 +226,7 @@ namespace FlaxEditor.Surface
                 ScriptsBuilder.ScriptsReloadBegin -= OnScriptsReloadBegin;
             }
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

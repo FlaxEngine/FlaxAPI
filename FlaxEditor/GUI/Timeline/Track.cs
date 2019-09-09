@@ -1247,17 +1247,15 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
+            // Cleanup
             Archetype = new TrackArchetype();
             MediaChanged = null;
             _timeline = null;
             _muteCheckbox = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
 
         /// <summary>

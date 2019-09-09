@@ -62,13 +62,13 @@ namespace FlaxEngine.GUI
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
-                base.Dispose();
-
                 ItemClicked = null;
                 LostFocus = null;
                 ItemsContainer = null;
+
+                base.OnDestroy();
             }
         }
 

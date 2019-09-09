@@ -331,7 +331,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             if (Keyframes != null)
             {
@@ -339,7 +339,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 Keyframes = null;
             }
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

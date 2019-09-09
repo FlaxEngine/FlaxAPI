@@ -68,11 +68,11 @@ namespace FlaxEditor.Surface.Archetypes
                 }
 
                 /// <inheritdoc />
-                public override void Dispose()
+                public override void OnDestroy()
                 {
                     Node = null;
 
-                    base.Dispose();
+                    base.OnDestroy();
                 }
             }
 
@@ -312,12 +312,12 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 _gradient = null;
                 _stops.Clear();
 
-                base.Dispose();
+                base.OnDestroy();
             }
 
             private void Select(GradientStop stop)
@@ -532,11 +532,11 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 _curve = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 

@@ -86,7 +86,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     OnTimelineZoomChanged();
                 }
-                StartFrameChanged?.Invoke();
+                OnStartFrameChanged();
             }
         }
 
@@ -112,7 +112,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     OnTimelineZoomChanged();
                 }
-                DurationFramesChanged?.Invoke();
+                OnDurationFramesChanged();
             }
         }
 
@@ -205,6 +205,22 @@ namespace FlaxEditor.GUI.Timeline
         public virtual void OnDeleted()
         {
             Dispose();
+        }
+
+        /// <summary>
+        /// Called when media start frame gets changed.
+        /// </summary>
+        protected virtual void OnStartFrameChanged()
+        {
+            StartFrameChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Called when media duration in frames gets changed.
+        /// </summary>
+        protected virtual void OnDurationFramesChanged()
+        {
+            DurationFramesChanged?.Invoke();
         }
 
         /// <summary>
@@ -381,15 +397,12 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             _timeline = null;
             _tack = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

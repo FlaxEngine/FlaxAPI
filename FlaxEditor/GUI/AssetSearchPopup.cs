@@ -64,7 +64,7 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 if (_asset != null)
                 {
@@ -72,7 +72,7 @@ namespace FlaxEditor.GUI
                     _asset = null;
                 }
 
-                base.Dispose();
+                base.OnDestroy();
             }
 
             /// <inheritdoc />
@@ -161,12 +161,12 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             _isValid = null;
             _selected = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

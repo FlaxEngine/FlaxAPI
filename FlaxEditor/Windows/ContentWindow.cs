@@ -798,13 +798,13 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             _foldersSearchBox = null;
             _itemsSearchBox = null;
             _itemsFilterBox = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

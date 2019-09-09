@@ -147,7 +147,7 @@ namespace FlaxEditor.GUI.Timeline.GUI
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 if (_currentDialog != null)
                 {
@@ -155,7 +155,7 @@ namespace FlaxEditor.GUI.Timeline.GUI
                     _currentDialog = null;
                 }
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 
@@ -445,17 +445,14 @@ namespace FlaxEditor.GUI.Timeline.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             _stops.Clear();
             _data.Clear();
             _stops = null;
             _data = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

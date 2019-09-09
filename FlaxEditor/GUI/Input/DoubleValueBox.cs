@@ -151,7 +151,7 @@ namespace FlaxEditor.GUI.Input
             {
                 Value = ShuntingYard.Parse(Text);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // Fall back to previous value
                 Editor.LogWarning(ex);

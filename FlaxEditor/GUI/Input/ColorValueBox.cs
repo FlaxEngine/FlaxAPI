@@ -143,7 +143,7 @@ namespace FlaxEditor.GUI.Input
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             if (_currentDialog != null)
             {
@@ -151,7 +151,7 @@ namespace FlaxEditor.GUI.Input
                 _currentDialog = null;
             }
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

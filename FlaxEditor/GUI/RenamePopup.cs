@@ -179,14 +179,14 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             Renamed = null;
             Closed = null;
             Validate = null;
             _inputField = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

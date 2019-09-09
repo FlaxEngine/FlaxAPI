@@ -217,18 +217,15 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
-                if (IsDisposing)
-                    return;
-
                 Surface.RemoveContext(this);
 
                 _maxTransitionsPerUpdate = null;
                 _reinitializeOnBecomingRelevant = null;
                 _skipFirstUpdateTransition = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
 
             /// <inheritdoc />
@@ -1277,16 +1274,13 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
-                if (IsDisposing)
-                    return;
-
                 Surface.RemoveContext(this);
 
                 ClearData();
 
-                base.Dispose();
+                base.OnDestroy();
             }
 
             /// <inheritdoc />

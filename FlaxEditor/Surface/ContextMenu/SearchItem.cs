@@ -98,15 +98,12 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             _finder = null;
             _icon = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 
@@ -138,7 +135,7 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             if (_asset != null)
             {
@@ -146,7 +143,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 _asset = null;
             }
 
-            base.Dispose();
+            base.OnDestroy();
         }
 
         /// <inheritdoc />

@@ -44,15 +44,15 @@ namespace FlaxEditor.GUI.Timeline
             TrackArchetypes.Add(ParticleEmitterTrack.GetArchetype());
             TrackArchetypes.Add(FolderTrack.GetArchetype());
         }
-        
+
         /// <inheritdoc />
         protected override void SetupDragDrop()
         {
             base.SetupDragDrop();
-            
+
             DragHandlers.Add(new DragHandler(new DragAssets(IsValidAsset), OnDragAsset));
         }
-        
+
         private static bool IsValidAsset(AssetItem assetItem)
         {
             if (assetItem is BinaryAssetItem binaryAssetItem)
@@ -173,14 +173,11 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             _preview = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

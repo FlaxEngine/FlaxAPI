@@ -38,11 +38,11 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 _actor = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 
@@ -108,12 +108,12 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             _isValid = null;
             _selected = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

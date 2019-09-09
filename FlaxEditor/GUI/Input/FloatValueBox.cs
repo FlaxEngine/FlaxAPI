@@ -152,7 +152,7 @@ namespace FlaxEditor.GUI.Input
                 var value = ShuntingYard.Parse(Text);
                 Value = (float)Math.Round(value, 5);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // Fall back to previous value
                 Editor.LogWarning(ex);

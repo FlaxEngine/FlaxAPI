@@ -21,7 +21,7 @@ namespace FlaxEditor.GUI.Tabs
         /// Gets or sets the icon.
         /// </summary>
         public Sprite Icon;
-        
+
         /// <summary>
         /// Occurs when tab gets selected.
         /// </summary>

@@ -228,13 +228,13 @@ namespace FlaxEditor.GUI.Timeline.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             // Cleanup
             _tickSteps = null;
             _tickStrengths = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

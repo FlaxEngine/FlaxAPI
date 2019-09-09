@@ -1409,11 +1409,11 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 Curve = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 
@@ -2083,7 +2083,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             // Clear references to the controls
             _mainPanel = null;
@@ -2099,7 +2099,7 @@ namespace FlaxEditor.GUI
             TickSteps = null;
             _tickStrengths = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

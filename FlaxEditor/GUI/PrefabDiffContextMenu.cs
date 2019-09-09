@@ -109,12 +109,12 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             RevertAll = null;
             ApplyAll = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

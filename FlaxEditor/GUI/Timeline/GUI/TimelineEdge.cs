@@ -136,11 +136,11 @@ namespace FlaxEditor.GUI.Timeline.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             _timeline = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

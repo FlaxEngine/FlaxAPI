@@ -875,11 +875,11 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 Editor = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 
@@ -1103,7 +1103,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             // Clear references to the controls
             _mainPanel = null;
@@ -1114,7 +1114,7 @@ namespace FlaxEditor.GUI
             _points.Clear();
             _keyframes.Clear();
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

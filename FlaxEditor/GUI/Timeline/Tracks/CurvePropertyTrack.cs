@@ -397,11 +397,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             DisposeCurve();
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

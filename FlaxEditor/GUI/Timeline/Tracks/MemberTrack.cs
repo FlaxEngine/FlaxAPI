@@ -273,14 +273,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             _previewValue = null;
             _rightKey = null;
             _addKey = null;
             _leftKey = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

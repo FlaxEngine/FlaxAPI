@@ -131,11 +131,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             _addButton = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

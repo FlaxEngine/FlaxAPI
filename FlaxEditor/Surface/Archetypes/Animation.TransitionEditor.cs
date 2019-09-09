@@ -119,14 +119,11 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
-                if (IsDisposing)
-                    return;
-
                 _transition = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
     }

@@ -234,12 +234,12 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 // Unlink
                 ParticleSurface._rootNode = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 

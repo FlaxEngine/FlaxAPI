@@ -9,6 +9,7 @@ using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.GUI.Input;
 using FlaxEditor.GUI.Timeline.GUI;
+using FlaxEditor.GUI.Timeline.Tracks;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -114,11 +115,11 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 _timeline = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 
@@ -664,6 +665,11 @@ namespace FlaxEditor.GUI.Timeline
         /// The drag handlers pairs of drag helper and the function that creates a track on drag drop.
         /// </summary>
         public readonly List<DragHandler> DragHandlers = new List<DragHandler>();
+
+        /// <summary>
+        /// The camera cut thumbnail renderer.
+        /// </summary>
+        public CameraCutThumbnailRenderer CameraCutThumbnailRenderer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Timeline"/> class.
@@ -1751,11 +1757,11 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 _timeline = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 
@@ -1850,11 +1856,11 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 _timeline = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 
@@ -1878,10 +1884,13 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
+            if (CameraCutThumbnailRenderer != null)
+            {
+                CameraCutThumbnailRenderer.Dispose();
+                CameraCutThumbnailRenderer = null;
+            }
 
             // Clear references to the controls
             _splitter = null;
@@ -1903,7 +1912,7 @@ namespace FlaxEditor.GUI.Timeline
             _positionHandle = null;
             DragHandlers.Clear();
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }
