@@ -74,6 +74,7 @@ namespace FlaxEditor.GUI.Timeline
             TrackArchetypes.Add(StructPropertyTrack.GetArchetype());
             TrackArchetypes.Add(ObjectPropertyTrack.GetArchetype());
             TrackArchetypes.Add(EventTrack.GetArchetype());
+            TrackArchetypes.Add(CameraCutTrack.GetArchetype());
         }
 
         /// <inheritdoc />
@@ -95,7 +96,11 @@ namespace FlaxEditor.GUI.Timeline
         {
             foreach (var actorNode in ((DragActors)drag).Objects)
             {
-                var track = (ActorTrack)timeline.AddTrack(ActorTrack.GetArchetype());
+                ActorTrack track;
+                if (actorNode.Actor is Camera)
+                    track = (CameraCutTrack)timeline.AddTrack(CameraCutTrack.GetArchetype());
+                else
+                    track = (ActorTrack)timeline.AddTrack(ActorTrack.GetArchetype());
                 track.Actor = actorNode.Actor;
                 track.Rename(actorNode.Name);
             }

@@ -15,7 +15,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// The timeline track for animating <see cref="FlaxEngine.Actor"/> objects.
     /// </summary>
     /// <seealso cref="ObjectTrack" />
-    public sealed class ActorTrack : ObjectTrack
+    public class ActorTrack : ObjectTrack
     {
         /// <summary>
         /// Gets the archetype.
@@ -94,13 +94,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             // Missing actor case
             if (actor == null)
             {
-                if (selection.Count == 1 && selection[0] is ActorNode actorNode && actorNode.Actor)
+                if (selection.Count == 1 && selection[0] is ActorNode actorNode && actorNode.Actor && IsActorValid(actorNode.Actor))
                 {
                     menu.AddButton("Select " + actorNode.Actor, OnClickedSelectActor);
                 }
                 else
                 {
-                    menu.AddButton("No actor selected");
+                    menu.AddButton("No valid actor selected");
                 }
                 return;
             }
@@ -151,6 +151,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Expand();
         }
 
+        /// <summary>
+        /// Determines whether actor is valid for this track.
+        /// </summary>
+        /// <param name="actor">The actor.</param>
+        /// <returns>True if it's valid, otherwise false.</returns>
+        protected virtual bool IsActorValid(Actor actor)
+        {
+            return true;
+        }
+
         private void OnAddScriptTrack(ContextMenuButton button)
         {
             var script = (Script)button.Tag;
@@ -160,7 +170,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         private void OnClickedSelectActor()
         {
             var selection = Editor.Instance.SceneEditing.Selection;
-            if (selection.Count == 1 && selection[0] is ActorNode actorNode && actorNode.Actor)
+            if (selection.Count == 1 && selection[0] is ActorNode actorNode && actorNode.Actor && IsActorValid(actorNode.Actor))
             {
                 Actor = actorNode.Actor;
 

@@ -69,7 +69,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             Preview = new AudioClipPreview
             {
-                DockStyle = FlaxEngine.GUI.DockStyle.Fill,
+                DockStyle = DockStyle.Fill,
                 DrawMode = AudioClipPreview.DrawModes.Single,
                 Parent = this,
             };
