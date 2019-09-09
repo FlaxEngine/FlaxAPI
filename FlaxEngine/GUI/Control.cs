@@ -173,16 +173,9 @@ namespace FlaxEngine.GUI
                     _anchorStyle = value;
 
                     // Update layout
-                    if (_parent != null)
+                    if (_parent != null && _anchorStyle == AnchorStyle.Center)
                     {
-                        if (_anchorStyle == AnchorStyle.Center)
-                        {
-                            UpdateCenterAnchor();
-                        }
-                        else
-                        {
-                            _parent.PerformLayout();
-                        }
+                        Location = (_parent.Size - Size) * 0.5f;
                     }
                 }
             }
@@ -1070,16 +1063,45 @@ namespace FlaxEngine.GUI
         /// <param name="size"></param>
         protected virtual void SetSizeInternal(ref Vector2 size)
         {
+            var oldSize = _bounds.Size;
             _bounds.Size = size;
 
             UpdateTransform();
             SizeChanged?.Invoke(this);
             _parent?.OnChildResized(this);
 
-            // Auto-center
-            if (_anchorStyle == AnchorStyle.Center && _parent != null)
+            // Update layout
+            if (_parent != null)
             {
-                UpdateCenterAnchor();
+                switch (_anchorStyle)
+                {
+                case AnchorStyle.UpperCenter:
+                    X = (_parent.Width - size.X) * 0.5f;
+                    break;
+                case AnchorStyle.CenterLeft:
+                    Y = (_parent.Height - Height) * 0.5f;
+                    break;
+                case AnchorStyle.Center:
+                    Location = (_parent.Size - Size) * 0.5f;
+                    break;
+                case AnchorStyle.CenterRight:
+                    Location = new Vector2(X - (size.X - oldSize.X), (_parent.Height - Height) * 0.5f);
+                    break;
+                case AnchorStyle.BottomCenter:
+                    Location = new Vector2((_parent.Width - size.X) * 0.5f, Y - (size.Y - oldSize.Y));
+                    break;
+                case AnchorStyle.BottomRight:
+                    Location -= size - oldSize;
+                    break;
+                case AnchorStyle.Bottom:
+                case AnchorStyle.BottomLeft:
+                    Y -= size.Y - oldSize.Y;
+                    break;
+                case AnchorStyle.Right:
+                case AnchorStyle.UpperRight:
+                    X -= size.X - oldSize.X;
+                    break;
+                }
             }
         }
 
@@ -1198,11 +1220,6 @@ namespace FlaxEngine.GUI
 
             if (_root != null && onUpdate != null)
                 _root.UpdateCallbacksToAdd.Add(onUpdate);
-        }
-
-        private void UpdateCenterAnchor()
-        {
-            Location = (_parent.Size - Size) * 0.5f;
         }
 
         /// <summary>
