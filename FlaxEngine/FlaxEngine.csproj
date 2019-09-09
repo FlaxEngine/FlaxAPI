@@ -317,7 +317,7 @@
     <Compile Include="Enums\PlatformType.cs" />
     <Compile Include="Enums\Quality.cs" />
     <Compile Include="Enums\RigidbodyConstraints.cs" />
-    <Compile Include="Enums\UI.cs" />
+    <Compile Include="API\TextLayoutOptions.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />
     <Compile Include="Attributes\Editor\EditorOrderAttribute.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
