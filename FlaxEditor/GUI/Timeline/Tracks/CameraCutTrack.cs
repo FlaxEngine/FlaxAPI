@@ -1,0 +1,624 @@
+// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using FlaxEngine;
+using FlaxEngine.GUI;
+using FlaxEngine.Rendering;
+using Object = FlaxEngine.Object;
+
+namespace FlaxEditor.GUI.Timeline.Tracks
+{
+    /// <summary>
+    /// The timeline media that represents an camera cut media event.
+    /// </summary>
+    /// <seealso cref="FlaxEditor.GUI.Timeline.Media" />
+    public class CameraCutMedia : Media
+    {
+        private sealed class Proxy : ProxyBase<CameraCutTrack, CameraCutMedia>
+        {
+            public Proxy(CameraCutTrack track, CameraCutMedia media)
+            : base(track, media)
+            {
+            }
+        }
+
+        private Image[] _thumbnails = new Image[2];
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CameraCutMedia"/> class.
+        /// </summary>
+        public CameraCutMedia()
+        {
+            ClipChildren = true;
+        }
+
+        /// <summary>
+        /// Updates the thumbnails.
+        /// </summary>
+        public void UpdateThumbnails()
+        {
+            if (Timeline != null)
+            {
+                if (Timeline.CameraCutThumbnailRenderer == null)
+                    Timeline.CameraCutThumbnailRenderer = new CameraCutThumbnailRenderer();
+                Timeline.CameraCutThumbnailRenderer.AddRequest(new CameraCutThumbnailRenderer.Request(this, 0));
+                Timeline.CameraCutThumbnailRenderer.AddRequest(new CameraCutThumbnailRenderer.Request(this, 1));
+            }
+        }
+
+        /// <summary>
+        /// Called when thumbnail rendering begins.
+        /// </summary>
+        /// <param name="task">The scene rendering task to customize.</param>
+        /// <param name="context">The GPU rendering context.</param>
+        /// <param name="req">The request data.</param>
+        public void OnThumbnailRenderingBegin(SceneRenderTask task, GPUContext context, ref CameraCutThumbnailRenderer.Request req)
+        {
+            var view = new RenderView();
+            var track = (CameraCutTrack)Track;
+            var viewport = new FlaxEngine.Viewport(Vector2.Zero, task.Buffers.Size);
+
+            // Try to evaluate camera properties based on the animated tracks
+            var time = req.ThumbnailIndex == 0 ? Start : Start + Duration;
+            var orientation = Quaternion.Identity;
+            view.Near = 10.0f;
+            view.Far = 20000.0f;
+            var usePerspective = true;
+            var orthoScale = 1.0f;
+            var fov = 60.0f;
+            var customAspectRatio = 0.0f;
+            foreach (var subTrack in track.SubTracks)
+            {
+                if (subTrack is MemberTrack memberTrack)
+                {
+                    object value = memberTrack.Evaluate(time);
+                    if (value != null)
+                    {
+                        // TODO: try to make it better
+                        if (memberTrack.MemberName == "Position" && value is Vector3 asPosition)
+                            view.Position = asPosition;
+                        else if (memberTrack.MemberName == "Orientation" && value is Quaternion asRotation)
+                            orientation = asRotation;
+                        else if (memberTrack.MemberName == "NearPlane" && value is float asNearPlane)
+                            view.Near = asNearPlane;
+                        else if (memberTrack.MemberName == "FarPlane" && value is float asFarPlane)
+                            view.Far = asFarPlane;
+                        else if (memberTrack.MemberName == "UsePerspective" && value is bool asUsePerspective)
+                            usePerspective = asUsePerspective;
+                        else if (memberTrack.MemberName == "FieldOfView" && value is float asFieldOfView)
+                            fov = asFieldOfView;
+                        else if (memberTrack.MemberName == "CustomAspectRatio" && value is float asCustomAspectRatio)
+                            customAspectRatio = asCustomAspectRatio;
+                        else if (memberTrack.MemberName == "OrthographicScale" && value is float asOrthographicScale)
+                            orthoScale = asOrthographicScale;
+                    }
+                }
+            }
+
+            // Build view
+            view.Direction = Vector3.Forward * orientation;
+            if (usePerspective)
+            {
+                float aspect = customAspectRatio <= 0.0f ? viewport.AspectRatio : customAspectRatio;
+                view.Projection = Matrix.PerspectiveFov(fov * Mathf.DegreesToRadians, aspect, view.Near, view.Far);
+            }
+            else
+            {
+                view.Projection = Matrix.Ortho(viewport.Width * orthoScale, viewport.Height * orthoScale, view.Near, view.Far);
+            }
+            Vector3 target = view.Position + view.Direction;
+            var up = Vector3.Transform(Vector3.Up, orientation);
+            view.View = Matrix.LookAt(view.Position, target, up);
+            view.NonJitteredProjection = view.Projection;
+            view.TemporalAAJitter = Vector4.Zero;
+            view.Flags = ViewFlags.Reflections | ViewFlags.Decals | ViewFlags.GI | ViewFlags.DirectionalLights | ViewFlags.PointLights |
+                         ViewFlags.SpotLights | ViewFlags.SkyLights | ViewFlags.SpecularLight | ViewFlags.AntiAliasing | ViewFlags.Bloom |
+                         ViewFlags.ToneMapping | ViewFlags.CameraArtifacts | ViewFlags.LensFlares;
+            task.View = view;
+        }
+
+        /// <summary>
+        /// Called when thumbnail rendering ends. The task output buffer contains ready frame.
+        /// </summary>
+        /// <param name="task">The scene rendering task to customize.</param>
+        /// <param name="context">The GPU rendering context.</param>
+        /// <param name="req">The request data.</param>
+        /// <param name="sprite">The thumbnail sprite.</param>
+        public void OnThumbnailRenderingEnd(SceneRenderTask task, GPUContext context, ref CameraCutThumbnailRenderer.Request req, ref Sprite sprite)
+        {
+            var image = _thumbnails[req.ThumbnailIndex];
+            if (image == null)
+            {
+                if (req.ThumbnailIndex == 0)
+                    image = new Image(2, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height)
+                    {
+                        AnchorStyle = AnchorStyle.Left,
+                    };
+                else
+                    image = new Image(Width - 2 - CameraCutThumbnailRenderer.Width, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height)
+                    {
+                        AnchorStyle = AnchorStyle.Right,
+                    };
+                image.Parent = this;
+                image.UnlockChildrenRecursive();
+                _thumbnails[req.ThumbnailIndex] = image;
+                UpdateUI();
+            }
+            else
+            {
+                Timeline.CameraCutThumbnailRenderer.ReleaseThumbnail(((SpriteBrush)image.Brush).Sprite);
+            }
+
+            image.Brush = new SpriteBrush(sprite);
+        }
+
+        private void UpdateUI()
+        {
+            var width = Mathf.Min(CameraCutThumbnailRenderer.Width, (Width - 6.0f) * 0.5f);
+            for (int i = 0; i < _thumbnails.Length; i++)
+            {
+                var image = _thumbnails[i];
+                if (image != null)
+                {
+                    image.Width = width;
+                    image.Visible = width >= 10.0f;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnTimelineChanged(Track track)
+        {
+            base.OnTimelineChanged(track);
+
+            PropertiesEditObject = new Proxy(Track as CameraCutTrack, this);
+            UpdateThumbnails();
+        }
+
+        /// <inheritdoc />
+        protected override void OnStartFrameChanged()
+        {
+            base.OnStartFrameChanged();
+
+            UpdateThumbnails();
+        }
+
+        /// <inheritdoc />
+        protected override void OnDurationFramesChanged()
+        {
+            base.OnDurationFramesChanged();
+
+            if (Timeline != null)
+            {
+                if (Timeline.CameraCutThumbnailRenderer == null)
+                    Timeline.CameraCutThumbnailRenderer = new CameraCutThumbnailRenderer();
+                Timeline.CameraCutThumbnailRenderer.AddRequest(new CameraCutThumbnailRenderer.Request(this, 1));
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void SetSizeInternal(ref Vector2 size)
+        {
+            base.SetSizeInternal(ref size);
+
+            UpdateUI();
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            Timeline?.CameraCutThumbnailRenderer?.RemoveRequest(this);
+            _thumbnails = null;
+
+            base.OnDestroy();
+        }
+    }
+
+    /// <summary>
+    /// The helper utility for rendering camera cuts tracks thumbnails.
+    /// </summary>
+    public class CameraCutThumbnailRenderer
+    {
+        /// <summary>
+        /// The camera cut thumbnail rendering request.
+        /// </summary>
+        public struct Request : IEquatable<Request>
+        {
+            /// <summary>
+            /// The media.
+            /// </summary>
+            public CameraCutMedia Media;
+
+            /// <summary>
+            /// The thumbnail index.
+            /// </summary>
+            public int ThumbnailIndex;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Request"/> struct.
+            /// </summary>
+            /// <param name="media">The media.</param>
+            /// <param name="thumbnailIndex"> The index of the thumbnail.</param>
+            public Request(CameraCutMedia media, int thumbnailIndex)
+            {
+                Media = media;
+                ThumbnailIndex = thumbnailIndex;
+            }
+
+            /// <inheritdoc />
+            public bool Equals(Request other)
+            {
+                return Equals(Media, other.Media) && ThumbnailIndex == other.ThumbnailIndex;
+            }
+
+            /// <inheritdoc />
+            public override bool Equals(object obj)
+            {
+                return obj is Request other && Equals(other);
+            }
+
+            /// <inheritdoc />
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((Media != null ? Media.GetHashCode() : 0) * 397) ^ ThumbnailIndex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The thumbnails atlas.
+        /// </summary>
+        private struct Atlas
+        {
+            /// <summary>
+            /// The atlas texture.
+            /// </summary>
+            public SpriteAtlas Texture;
+
+            /// <summary>
+            /// The slots usage flags.
+            /// </summary>
+            public BitArray SlotsUsage;
+
+            /// <summary>
+            /// The used slots count.
+            /// </summary>
+            public int Count;
+
+            /// <summary>
+            /// Gets a value indicating whether this instance is full.
+            /// </summary>
+            public bool IsFull => SlotsUsage.Length == Count;
+        }
+
+        /// <summary>
+        /// The thumbnail height.
+        /// </summary>
+        public static int Height => 64;
+
+        /// <summary>
+        /// The thumbnail width.
+        /// </summary>
+        public static int Width => (int)(Height * (16.0f / 9.0f));
+
+        private List<Request> _queue;
+        private SceneRenderTask _task;
+        private RenderTarget _output;
+        private List<Atlas> _atlases;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CameraCutThumbnailRenderer"/> class.
+        /// </summary>
+        public CameraCutThumbnailRenderer()
+        {
+            _queue = new List<Request>();
+            FlaxEngine.Scripting.Update += OnUpdate;
+        }
+
+        /// <summary>
+        /// Adds the request for thumbnail rendering.
+        /// </summary>
+        /// <param name="req">The request.</param>
+        public void AddRequest(Request req)
+        {
+            if (!_queue.Contains(req))
+                _queue.Add(req);
+        }
+
+        /// <summary>
+        /// Removes all the requests that are related to the given media.
+        /// </summary>
+        /// <param name="media">The media.</param>
+        public void RemoveRequest(CameraCutMedia media)
+        {
+            _queue.RemoveAll(x => x.Media == media);
+
+            // End rendering if queue is not empty
+            if (_queue.Count == 0 && _task != null && _task.Enabled)
+                _task.Enabled = false;
+        }
+
+        /// <summary>
+        /// Releases the thumbnail ans frees the sprite slot used by it.
+        /// </summary>
+        /// <param name="sprite">The sprite.</param>
+        public void ReleaseThumbnail(Sprite sprite)
+        {
+            if (!sprite.IsValid)
+                return;
+
+            for (var i = 0; i < _atlases.Count; i++)
+            {
+                var atlas = _atlases[i];
+                if (atlas.Texture == sprite.Atlas)
+                {
+                    atlas.Count--;
+                    atlas.SlotsUsage[sprite.Index] = false;
+
+                    _atlases[i] = atlas;
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Releases object resources.
+        /// </summary>
+        public void Dispose()
+        {
+            FlaxEngine.Scripting.Update -= OnUpdate;
+            _queue.Clear();
+            _queue = null;
+            Object.Destroy(ref _task);
+            Object.Destroy(ref _output);
+            if (_atlases != null)
+            {
+                foreach (var atlas in _atlases)
+                    Object.Destroy(atlas.Texture);
+                _atlases.Clear();
+                _atlases = null;
+            }
+        }
+
+        private void OnUpdate()
+        {
+            if (_queue.Count == 0 || (_task != null && _task.Enabled))
+                return;
+
+            // TODO: add delay when processing the requests to reduce perf impact (eg. 0.2s before actual rendering)
+
+            // Setup pipeline
+            if (_atlases == null)
+                _atlases = new List<Atlas>(4);
+            if (_output == null)
+            {
+                _output = RenderTarget.New();
+                _output.Init(PixelFormat.R8G8B8A8_UNorm, Width, Height);
+            }
+            if (_task == null)
+            {
+                _task = RenderTask.Create<SceneRenderTask>();
+                _task.Output = _output;
+                _task.Begin += OnBegin;
+                _task.End += OnEnd;
+            }
+
+            // Kick off the rendering
+            _task.Enabled = true;
+        }
+
+        private void OnBegin(SceneRenderTask task, GPUContext context)
+        {
+            // Setup
+            var req = _queue[0];
+            req.Media.OnThumbnailRenderingBegin(task, context, ref req);
+        }
+
+        private void OnEnd(SceneRenderTask task, GPUContext context)
+        {
+            // Pick the atlas or create a new one
+            int atlasIndex = -1;
+            for (int i = 0; i < _atlases.Count; i++)
+            {
+                if (!_atlases[i].IsFull)
+                {
+                    atlasIndex = i;
+                    break;
+                }
+            }
+            if (atlasIndex == -1)
+            {
+                // Setup configuration
+                var atlasSize = 1024;
+                var atlasFormat = PixelFormat.R8G8B8A8_UNorm;
+                var width = (float)Width;
+                var height = (float)Height;
+                var countX = Mathf.FloorToInt(atlasSize / width);
+                var countY = Mathf.FloorToInt(atlasSize / height);
+                var count = countX * countY;
+
+                // Create sprite atlas texture
+                var spriteAtlas = FlaxEngine.Content.CreateVirtualAsset<SpriteAtlas>();
+                var data = new byte[atlasSize * atlasSize * atlasFormat.SizeInBytes()];
+                var initData = new TextureBase.InitData
+                {
+                    Width = atlasSize,
+                    Height = atlasSize,
+                    ArraySize = 1,
+                    Format = atlasFormat,
+                    Mips = new[]
+                    {
+                        new TextureBase.InitData.MipData
+                        {
+                            Data = data,
+                            RowPitch = data.Length / atlasSize,
+                            SlicePitch = data.Length
+                        },
+                    },
+                };
+                spriteAtlas.Init(ref initData);
+
+                // Setup sprite atlas slots (each per thumbnail)
+                var thumbnailSizeUV = new Vector2(width / atlasSize, height / atlasSize);
+                for (int i = 0; i < count; i++)
+                {
+                    var s = spriteAtlas.AddSprite();
+                    var x = i % count;
+                    var y = i / count;
+                    s.Area = new Rectangle(new Vector2(x, y) * thumbnailSizeUV, thumbnailSizeUV);
+                }
+
+                // Add atlas to the cached ones
+                atlasIndex = _atlases.Count;
+                _atlases.Add(new Atlas
+                {
+                    Texture = spriteAtlas,
+                    SlotsUsage = new BitArray(count, false),
+                    Count = 0,
+                });
+            }
+
+            // Skip ending if the atlas is not loaded yet (streaming backend uploads texture to GPU or sth)
+            var atlas = _atlases[atlasIndex];
+            if (atlas.Texture.ResidentMipLevels == 0)
+                return;
+
+            // Pick the sprite slot from the atlas
+            var spriteIndex = -1;
+            for (int i = 0; i < atlas.SlotsUsage.Count; i++)
+            {
+                if (atlas.SlotsUsage[i] == false)
+                {
+                    atlas.SlotsUsage[i] = true;
+                    spriteIndex = i;
+                    break;
+                }
+            }
+            if (spriteIndex == -1)
+                throw new FlaxException();
+            atlas.Count++;
+            _atlases[atlasIndex] = atlas;
+            var sprite = atlas.Texture.GetSprite(spriteIndex);
+
+            // Copy output frame to the sprite atlas slot
+            var spriteLocation = sprite.Location;
+            context.CopyTextureRegion(atlas.Texture, 0, (uint)spriteLocation.X, (uint)spriteLocation.Y, 0, _output, 0);
+
+            // Link sprite to the UI
+            var req = _queue[0];
+            req.Media.OnThumbnailRenderingEnd(task, context, ref req, ref sprite);
+
+            // End
+            _queue.RemoveAt(0);
+            task.Enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// The timeline track for animating <see cref="FlaxEngine.Camera"/> objects.
+    /// </summary>
+    /// <seealso cref="ActorTrack" />
+    public class CameraCutTrack : ActorTrack
+    {
+        /// <summary>
+        /// Gets the archetype.
+        /// </summary>
+        /// <returns>The archetype.</returns>
+        public new static TrackArchetype GetArchetype()
+        {
+            return new TrackArchetype
+            {
+                TypeId = 16,
+                Name = "Camera Cut",
+                Create = options => new CameraCutTrack(ref options),
+                Load = LoadTrack,
+                Save = SaveTrack,
+            };
+        }
+
+        private static void LoadTrack(int version, Track track, BinaryReader stream)
+        {
+            var e = (CameraCutTrack)track;
+            e.ActorID = new Guid(stream.ReadBytes(16));
+            var m = e.TrackMedia;
+            m.StartFrame = stream.ReadInt32();
+            m.DurationFrames = stream.ReadInt32();
+        }
+
+        private static void SaveTrack(Track track, BinaryWriter stream)
+        {
+            var e = (CameraCutTrack)track;
+            stream.Write(e.ActorID.ToByteArray());
+            if (e.Media.Count != 0)
+            {
+                var m = e.TrackMedia;
+                stream.Write(m.StartFrame);
+                stream.Write(m.DurationFrames);
+            }
+            else
+            {
+                stream.Write(0);
+                stream.Write(track.Timeline.DurationFrames);
+            }
+        }
+
+        /// <summary>
+        /// Gets the camera object instance (it might be missing).
+        /// </summary>
+        public Camera Camera => Actor as Camera;
+
+        /// <summary>
+        /// Gets the camera track media.
+        /// </summary>
+        public CameraCutMedia TrackMedia
+        {
+            get
+            {
+                CameraCutMedia media;
+                if (Media.Count == 0)
+                {
+                    media = new CameraCutMedia
+                    {
+                        StartFrame = 0,
+                        DurationFrames = Timeline != null ? (int)(Timeline.FramesPerSecond * 2) : 60,
+                    };
+                    AddMedia(media);
+                }
+                else
+                {
+                    media = (CameraCutMedia)Media[0];
+                }
+                return media;
+            }
+        }
+
+        /// <inheritdoc />
+        public CameraCutTrack(ref TrackCreateOptions options)
+        : base(ref options)
+        {
+            Height = CameraCutThumbnailRenderer.Height + 4 + 4;
+        }
+
+        /// <inheritdoc />
+        protected override bool IsActorValid(Actor actor)
+        {
+            return base.IsActorValid(actor) && actor is Camera;
+        }
+
+        /// <inheritdoc />
+        public override void OnSpawned()
+        {
+            // Ensure to have valid media added
+            // ReSharper disable once UnusedVariable
+            var media = TrackMedia;
+
+            base.OnSpawned();
+        }
+    }
+}

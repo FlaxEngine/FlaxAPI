@@ -160,6 +160,16 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <summary>
+        /// Evaluates the member value value at the specified time.
+        /// </summary>
+        /// <param name="time">The time to evaluate the member at.</param>
+        /// <returns>The member value at provided time.</returns>
+        public virtual object Evaluate(float time)
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Gets the member from the given type.
         /// </summary>
         /// <param name="type">The declaring type.</param>

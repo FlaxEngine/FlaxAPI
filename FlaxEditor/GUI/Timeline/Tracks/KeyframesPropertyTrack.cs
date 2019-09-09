@@ -239,6 +239,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             _previewValue.Text = GetValueText(value);
         }
 
+        /// <inheritdoc />
+        public override object Evaluate(float time)
+        {
+            if (Keyframes != null)
+                return Keyframes.Evaluate(time);
+            return base.Evaluate(time);
+        }
+
         /// <summary>
         /// Gets the default value for the given property type.
         /// </summary>

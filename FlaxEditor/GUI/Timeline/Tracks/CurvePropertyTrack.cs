@@ -295,6 +295,18 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
+        public override object Evaluate(float time)
+        {
+            if (Curve != null)
+            {
+                Curve.Evaluate(out var result, time);
+                return result;
+            }
+
+            return base.Evaluate(time);
+        }
+
+        /// <inheritdoc />
         protected override bool CanExpand => true;
 
         /// <inheritdoc />

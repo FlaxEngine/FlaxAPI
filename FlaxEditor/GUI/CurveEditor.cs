@@ -121,7 +121,7 @@ namespace FlaxEditor.GUI
         /// <param name="result">The interpolated value from the curve at provided time.</param>
         /// <param name="time">The time to evaluate the curve at.</param>
         /// <param name="loop">If true the curve will loop when it goes past the end or beginning. Otherwise the curve value will be clamped.</param>
-        public abstract void Evaluate(out object result, float time, bool loop = true);
+        public abstract void Evaluate(out object result, float time, bool loop = false);
 
         /// <summary>
         /// Gets the keyframes collection as boxes object values.
