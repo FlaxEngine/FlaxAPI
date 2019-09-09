@@ -172,6 +172,98 @@ namespace FlaxEngine.Rendering
 #endif
         }
 
+        /// <summary>
+        /// Copies region of the texture.
+        /// </summary>
+        /// <param name="dstResource">The destination resource.</param>
+        /// <param name="dstSubresource">The destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="srcResource">The source resource.</param>
+        /// <param name="srcSubresource">The source subresource index.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CopyTextureRegion(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CopyTextureRegion1(unmanagedPtr, Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, Object.GetUnmanagedPtr(srcResource), srcSubresource);
+#endif
+        }
+
+        /// <summary>
+        /// Copies region of the texture.
+        /// </summary>
+        /// <param name="dstResource">The destination resource.</param>
+        /// <param name="dstSubresource">The destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="srcResource">The source resource.</param>
+        /// <param name="srcSubresource">The source subresource index.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CopyTextureRegion(RenderTarget dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CopyTextureRegion2(unmanagedPtr, Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, Object.GetUnmanagedPtr(srcResource), srcSubresource);
+#endif
+        }
+
+        /// <summary>
+        /// Copies region of the texture.
+        /// </summary>
+        /// <param name="dstResource">The destination resource.</param>
+        /// <param name="dstSubresource">The destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="srcResource">The source resource.</param>
+        /// <param name="srcSubresource">The source subresource index.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CopyTextureRegion(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, RenderTarget srcResource, uint srcSubresource)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CopyTextureRegion3(unmanagedPtr, Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, Object.GetUnmanagedPtr(srcResource), srcSubresource);
+#endif
+        }
+
+        /// <summary>
+        /// Copies region of the texture.
+        /// </summary>
+        /// <param name="dstResource">The destination resource.</param>
+        /// <param name="dstSubresource">The destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="srcResource">The source resource.</param>
+        /// <param name="srcSubresource">The source subresource index.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CopyTextureRegion(RenderTarget dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, RenderTarget srcResource, uint srcSubresource)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CopyTextureRegion4(unmanagedPtr, Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, Object.GetUnmanagedPtr(srcResource), srcSubresource);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -198,6 +290,18 @@ namespace FlaxEngine.Rendering
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawPostFxMaterial3(IntPtr obj, IntPtr material, RenderTargetView view, ref Viewport viewport, IntPtr input);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyTextureRegion1(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyTextureRegion2(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyTextureRegion3(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyTextureRegion4(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);
 #endif
 
         #endregion
