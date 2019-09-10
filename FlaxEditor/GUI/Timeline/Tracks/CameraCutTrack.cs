@@ -99,10 +99,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             var view = new RenderView();
             var track = (CameraCutTrack)Track;
+            var cam = track.Camera;
             var viewport = new FlaxEngine.Viewport(Vector2.Zero, task.Buffers.Size);
-
-            // Try to evaluate camera properties based on the animated tracks
-            var time = req.ThumbnailIndex == 0 ? Start : Start + Duration;
             var orientation = Quaternion.Identity;
             view.Near = 10.0f;
             view.Far = 20000.0f;
@@ -110,6 +108,22 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             var orthoScale = 1.0f;
             var fov = 60.0f;
             var customAspectRatio = 0.0f;
+
+            // Try to evaluate camera properties based on the initial camera state
+            if (cam)
+            {
+                view.Position = cam.Position;
+                orientation = cam.Orientation;
+                view.Near = cam.NearPlane;
+                view.Far = cam.FarPlane;
+                usePerspective = cam.UsePerspective;
+                orthoScale = cam.OrthographicScale;
+                fov = cam.FieldOfView;
+                customAspectRatio = cam.CustomAspectRatio;
+            }
+
+            // Try to evaluate camera properties based on the animated tracks
+            var time = req.ThumbnailIndex == 0 ? Start : Start + Duration;
             foreach (var subTrack in track.SubTracks)
             {
                 if (subTrack is MemberTrack memberTrack)
@@ -187,7 +201,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 _thumbnails[req.ThumbnailIndex] = image;
                 UpdateUI();
             }
-            else if(image.Brush != null)
+            else if (image.Brush != null)
             {
                 Timeline.CameraCutThumbnailRenderer.ReleaseThumbnail(((SpriteBrush)image.Brush).Sprite);
                 image.Brush = null;
