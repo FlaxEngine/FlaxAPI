@@ -149,12 +149,6 @@ namespace FlaxEngine
             Internal_GetMatrices(unmanagedPtr, out view, out projection, ref customViewport);
         }
 
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return $"{Name} ({GetType().Name})";
-        }
-
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
