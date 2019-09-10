@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -39,14 +38,54 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Updates the thumbnails.
         /// </summary>
-        public void UpdateThumbnails()
+        /// <param name="indices">The icon indices to update (null if update all of them).</param>
+        public void UpdateThumbnails(int[] indices = null)
         {
-            if (Timeline != null)
+            if (Timeline == null)
+                return;
+
+            if (((CameraCutTrack)Track).Camera)
             {
                 if (Timeline.CameraCutThumbnailRenderer == null)
                     Timeline.CameraCutThumbnailRenderer = new CameraCutThumbnailRenderer();
-                Timeline.CameraCutThumbnailRenderer.AddRequest(new CameraCutThumbnailRenderer.Request(this, 0));
-                Timeline.CameraCutThumbnailRenderer.AddRequest(new CameraCutThumbnailRenderer.Request(this, 1));
+
+                if (indices == null)
+                {
+                    for (int i = 0; i < _thumbnails.Length; i++)
+                        Timeline.CameraCutThumbnailRenderer.AddRequest(new CameraCutThumbnailRenderer.Request(this, i));
+                }
+                else
+                {
+                    foreach (var i in indices)
+                        Timeline.CameraCutThumbnailRenderer.AddRequest(new CameraCutThumbnailRenderer.Request(this, i));
+                }
+            }
+            else if (Timeline.CameraCutThumbnailRenderer != null)
+            {
+                if (indices == null)
+                {
+                    for (int i = 0; i < _thumbnails.Length; i++)
+                    {
+                        var image = _thumbnails[i];
+                        if (image?.Brush != null)
+                        {
+                            Timeline.CameraCutThumbnailRenderer.ReleaseThumbnail(((SpriteBrush)image.Brush).Sprite);
+                            image.Brush = null;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var i in indices)
+                    {
+                        var image = _thumbnails[i];
+                        if (image?.Brush != null)
+                        {
+                            Timeline.CameraCutThumbnailRenderer.ReleaseThumbnail(((SpriteBrush)image.Brush).Sprite);
+                            image.Brush = null;
+                        }
+                    }
+                }
             }
         }
 
@@ -148,9 +187,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 _thumbnails[req.ThumbnailIndex] = image;
                 UpdateUI();
             }
-            else
+            else if(image.Brush != null)
             {
                 Timeline.CameraCutThumbnailRenderer.ReleaseThumbnail(((SpriteBrush)image.Brush).Sprite);
+                image.Brush = null;
             }
 
             image.Brush = new SpriteBrush(sprite);
@@ -192,12 +232,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             base.OnDurationFramesChanged();
 
-            if (Timeline != null)
-            {
-                if (Timeline.CameraCutThumbnailRenderer == null)
-                    Timeline.CameraCutThumbnailRenderer = new CameraCutThumbnailRenderer();
-                Timeline.CameraCutThumbnailRenderer.AddRequest(new CameraCutThumbnailRenderer.Request(this, 1));
-            }
+            UpdateThumbnails(new[] { 1 });
         }
 
         /// <inheritdoc />
@@ -603,6 +638,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         : base(ref options)
         {
             Height = CameraCutThumbnailRenderer.Height + 4 + 4;
+        }
+
+        /// <inheritdoc />
+        protected override void OnObjectExistenceChanged(object obj)
+        {
+            base.OnObjectExistenceChanged(obj);
+
+            TrackMedia.UpdateThumbnails();
         }
 
         /// <inheritdoc />

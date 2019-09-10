@@ -28,6 +28,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
     /// <seealso cref="FlaxEditor.GUI.Timeline.Track" />
     public abstract class ObjectTrack : Track, IObjectTrack
     {
+        private bool _hasObject;
+
         /// <summary>
         /// The add button.
         /// </summary>
@@ -69,7 +71,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             base.Update(deltaTime);
 
             var obj = Object;
-            TitleTintColor = obj != null ? Color.White : Color.Red;
+            var hasObject = obj != null;
+            TitleTintColor = hasObject ? Color.White : Color.Red;
+            if (hasObject != _hasObject)
+                OnObjectExistenceChanged(obj);
+            _hasObject = hasObject;
         }
 
         /// <inheritdoc />
@@ -78,6 +84,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             _addButton = null;
 
             base.OnDestroy();
+        }
+
+        /// <summary>
+        /// Called when object existence gets changed (eg. object found after being not found).
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        protected virtual void OnObjectExistenceChanged(object obj)
+        {
         }
 
         /// <summary>
