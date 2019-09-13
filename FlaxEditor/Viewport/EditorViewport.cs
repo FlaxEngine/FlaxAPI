@@ -478,7 +478,7 @@ namespace FlaxEditor.Viewport
                         var button = viewFlags.AddButton(v.Name);
                         button.Tag = v.Mode;
                     }
-                    viewFlags.ButtonClicked += (button) => Task.Flags ^= (ViewFlags)button.Tag;
+                    viewFlags.ButtonClicked += (button) => Task.View.Flags ^= (ViewFlags)button.Tag;
                     viewFlags.VisibleChanged += WidgetViewFlagsShowHide;
                 }
 
@@ -491,7 +491,7 @@ namespace FlaxEditor.Viewport
                         var button = debugView.AddButton(v.Name);
                         button.Tag = v.Mode;
                     }
-                    debugView.ButtonClicked += (button) => Task.Mode = (ViewMode)button.Tag;
+                    debugView.ButtonClicked += (button) => Task.View.Mode = (ViewMode)button.Tag;
                     debugView.VisibleChanged += WidgetViewModeShowHide;
                 }
 
@@ -564,6 +564,15 @@ namespace FlaxEditor.Viewport
                     brightnessValue.Parent = brightness;
                     brightnessValue.ValueChanged += () => Brightness = brightnessValue.Value;
                     ViewWidgetButtonMenu.VisibleChanged += control => brightnessValue.Value = Brightness;
+                }
+
+                // Resolution
+                {
+                    var resolution = ViewWidgetButtonMenu.AddButton("Resolution");
+                    var resolutionValue = new FloatValueBox(1.0f, 75, 2, 50.0f, 0.1f, 4.0f, 0.001f);
+                    resolutionValue.Parent = resolution;
+                    resolutionValue.ValueChanged += () => ResolutionScale = resolutionValue.Value;
+                    ViewWidgetButtonMenu.VisibleChanged += control => resolutionValue.Value = ResolutionScale;
                 }
             }
 
@@ -921,17 +930,17 @@ namespace FlaxEditor.Viewport
                 _mouseDeltaRight.Y *= size.Y / size.X;
 
                 Vector2 mouseDelta = Vector2.Zero;
-                if (_useMouseFiltering) // mouse filtering
+                if (_useMouseFiltering)
                 {
-                    // update delta filtering buffer
+                    // Update delta filtering buffer
                     _deltaFilteringBuffer[_deltaFilteringStep] = _mouseDeltaRight;
                     _deltaFilteringStep++;
 
-                    // if the step is too far, zero
+                    // If the step is too far, zero
                     if (_deltaFilteringStep == FpsCameraFilteringFrames)
                         _deltaFilteringStep = 0;
 
-                    // calculate filtered delta(avg)
+                    // Calculate filtered delta (avg)
                     for (int i = 0; i < FpsCameraFilteringFrames; i++)
                         mouseDelta += _deltaFilteringBuffer[i];
 
@@ -940,9 +949,9 @@ namespace FlaxEditor.Viewport
                 else
                     mouseDelta = _mouseDeltaRight;
 
-                if (_useMouseAcceleration) // mouse acceleration
+                if (_useMouseAcceleration)
                 {
-                    // accelerate the delta
+                    // Accelerate the delta
                     var currentDelta = mouseDelta;
                     mouseDelta = mouseDelta + _mouseDeltaRightLast * _mouseAccelerationScale;
                     _mouseDeltaRightLast = currentDelta;
@@ -951,8 +960,7 @@ namespace FlaxEditor.Viewport
                 // Update
                 moveDelta *= dt * (60.0f * 4.0f);
                 mouseDelta *= 200.0f * MouseSpeed * _mouseSensitivity;
-                bool centerMouse;
-                UpdateView(dt, ref moveDelta, ref mouseDelta, out centerMouse);
+                UpdateView(dt, ref moveDelta, ref mouseDelta, out var centerMouse);
 
                 // Move mouse back to the root position
                 if (centerMouse && (_input.IsMouseRightDown || _input.IsMouseLeftDown))
@@ -991,7 +999,7 @@ namespace FlaxEditor.Viewport
                     {
                         moveDelta += Vector3.Down;
                     }
-                    moveDelta.Normalize(); // normalize direction
+                    moveDelta.Normalize();
                     moveDelta *= _movementSpeed;
 
                     // Update
@@ -1156,7 +1164,7 @@ namespace FlaxEditor.Viewport
                 if (e is ContextMenuButton b)
                 {
                     var v = (ViewMode)b.Tag;
-                    b.Icon = Task.Mode == v
+                    b.Icon = Task.View.Mode == v
                              ? Style.Current.CheckBoxTick
                              : Sprite.Invalid;
                 }
@@ -1213,7 +1221,7 @@ namespace FlaxEditor.Viewport
                 if (e is ContextMenuButton b)
                 {
                     var v = (ViewFlags)b.Tag;
-                    b.Icon = (Task.Flags & v) != 0
+                    b.Icon = (Task.View.Flags & v) != 0
                              ? Style.Current.CheckBoxTick
                              : Sprite.Invalid;
                 }

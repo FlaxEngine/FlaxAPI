@@ -161,7 +161,7 @@ namespace FlaxEditor.Content.Import
         private void OnShowInExplorerClicked(ContextMenuButton button)
         {
             var node = (ItemNode)button.ParentContextMenu.Tag;
-            Application.StartProcess(Path.GetDirectoryName(node.Entry.SourceUrl));
+            Platform.StartProcess(Path.GetDirectoryName(node.Entry.SourceUrl));
         }
 
         private class ItemNode : TreeNode

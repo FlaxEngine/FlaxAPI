@@ -362,7 +362,7 @@ namespace FlaxEditor.Content.GUI
                 return;
 
             var files = _selection.ConvertAll(x => x.Path).ToArray();
-            Application.ClipboardFiles = files;
+            Platform.ClipboardFiles = files;
         }
 
         /// <summary>
@@ -371,7 +371,7 @@ namespace FlaxEditor.Content.GUI
         /// <returns>True if can paste files.</returns>
         public bool CanPaste()
         {
-            var files = Application.ClipboardFiles;
+            var files = Platform.ClipboardFiles;
             return files != null && files.Length > 0;
         }
 
@@ -380,7 +380,7 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public void Paste()
         {
-            var files = Application.ClipboardFiles;
+            var files = Platform.ClipboardFiles;
             if (files == null || files.Length == 0)
                 return;
 

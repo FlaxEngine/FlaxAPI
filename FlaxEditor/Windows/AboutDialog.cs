@@ -57,7 +57,7 @@ namespace FlaxEditor.Windows
                 TooltipText = "Copies the current engine version information to system clipboard.",
                 Parent = this
             };
-            copyVersionButton.Clicked += () => Application.ClipboardText = Globals.Version;
+            copyVersionButton.Clicked += () => Platform.ClipboardText = Globals.Version;
             return icon;
         }
 

@@ -10,7 +10,8 @@ namespace FlaxEditor.Windows.Profiler
     /// <seealso cref="FlaxEditor.Windows.Profiler.ProfilerMode" />
     internal sealed class Memory : ProfilerMode
     {
-        private readonly SingleChart _allocationsChart;
+        private readonly SingleChart _nativeAllocationsChart;
+        private readonly SingleChart _managedAllocationsChart;
 
         public Memory()
         : base("Memory")
@@ -29,26 +30,35 @@ namespace FlaxEditor.Windows.Profiler
             };
 
             // Chart
-            _allocationsChart = new SingleChart
+            _nativeAllocationsChart = new SingleChart
             {
-                Title = "Memory Allocation",
+                Title = "Native Memory Allocation",
                 FormatSample = v => Utilities.Utils.FormatBytesCount((int)v),
                 Parent = layout,
             };
-            _allocationsChart.SelectedSampleChanged += OnSelectedSampleChanged;
+            _nativeAllocationsChart.SelectedSampleChanged += OnSelectedSampleChanged;
+            _managedAllocationsChart = new SingleChart
+            {
+                Title = "Managed Memory Allocation",
+                FormatSample = v => Utilities.Utils.FormatBytesCount((int)v),
+                Parent = layout,
+            };
+            _managedAllocationsChart.SelectedSampleChanged += OnSelectedSampleChanged;
         }
 
         /// <inheritdoc />
         public override void Clear()
         {
-            _allocationsChart.Clear();
+            _nativeAllocationsChart.Clear();
+            _managedAllocationsChart.Clear();
         }
 
         /// <inheritdoc />
         public override void Update(ref SharedUpdateData sharedData)
         {
             // Count memory allocated during last frame
-            int memoryAlloc = 0;
+            int nativeMemoryAllocation = 0;
+            int managedMemoryAllocation = 0;
             var events = sharedData.GetEventsCPU();
             var length = events?.Length ?? 0;
             for (int i = 0; i < length; i++)
@@ -56,17 +66,20 @@ namespace FlaxEditor.Windows.Profiler
                 for (int j = 0; j < events[i].Events.Length; j++)
                 {
                     var e = events[i].Events[j];
-                    memoryAlloc += e.MemoryAllocation;
+                    nativeMemoryAllocation += e.NativeMemoryAllocation;
+                    managedMemoryAllocation += e.ManagedMemoryAllocation;
                 }
             }
 
-            _allocationsChart.AddSample(memoryAlloc);
+            _nativeAllocationsChart.AddSample(nativeMemoryAllocation);
+            _managedAllocationsChart.AddSample(managedMemoryAllocation);
         }
 
         /// <inheritdoc />
         public override void UpdateView(int selectedFrame, bool showOnlyLastUpdateEvents)
         {
-            _allocationsChart.SelectedSampleIndex = selectedFrame;
+            _nativeAllocationsChart.SelectedSampleIndex = selectedFrame;
+            _managedAllocationsChart.SelectedSampleIndex = selectedFrame;
         }
     }
 }

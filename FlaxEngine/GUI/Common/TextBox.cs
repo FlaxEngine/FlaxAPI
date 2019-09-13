@@ -278,7 +278,11 @@ namespace FlaxEngine.GUI
         /// Gets or sets the text wrapping within the control bounds.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The text wrapping within the control bounds.")]
-        public TextWrapping Wrapping { get => _layout.TextWrapping; set => _layout.TextWrapping = value; }
+        public TextWrapping Wrapping
+        {
+            get => _layout.TextWrapping;
+            set => _layout.TextWrapping = value;
+        }
 
         /// <summary>
         /// Gets or sets the font.
@@ -428,7 +432,7 @@ namespace FlaxEngine.GUI
             if (selectedText.Length > 0)
             {
                 // Copy selected text
-                Application.ClipboardText = selectedText;
+                Platform.ClipboardText = selectedText;
             }
         }
 
@@ -441,7 +445,7 @@ namespace FlaxEngine.GUI
             if (selectedText.Length > 0)
             {
                 // Copy selected text
-                Application.ClipboardText = selectedText;
+                Platform.ClipboardText = selectedText;
 
                 if (IsReadOnly)
                     return;
@@ -463,7 +467,7 @@ namespace FlaxEngine.GUI
                 return;
 
             // Get clipboard data
-            var clipboardText = Application.ClipboardText;
+            var clipboardText = Platform.ClipboardText;
             if (string.IsNullOrEmpty(clipboardText))
                 return;
 
@@ -917,11 +921,11 @@ namespace FlaxEngine.GUI
                 var color = TextColor;
                 if (!enabled)
                     color *= 0.6f;
-                Render2D.DrawText(font, TextMaterial, _text, _layout.Bounds, color, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+                Render2D.DrawText(font, TextMaterial, _text, color, ref _layout);
             }
             else if (!string.IsNullOrEmpty(WatermarkText) && !IsFocused)
             {
-                Render2D.DrawText(font, TextMaterial, WatermarkText, _layout.Bounds, WatermarkTextColor, _layout.HorizontalAlignment, _layout.VerticalAlignment, _layout.TextWrapping);
+                Render2D.DrawText(font, TextMaterial, WatermarkText, WatermarkTextColor, ref _layout);
             }
 
             // Caret

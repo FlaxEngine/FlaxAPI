@@ -240,7 +240,7 @@ namespace FlaxEditor.Windows
         {
             if (Root is WindowRootControl win && win.Window.IsFocused && win.ContainsFocus && Viewport.IsMouseOver)
             {
-                win.MousePosition = Viewport.PointToWindow(val);
+                win.MousePosition = Vector2.Round(Viewport.PointToWindow(val));
             }
         }
 

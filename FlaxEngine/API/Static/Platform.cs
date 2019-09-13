@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace FlaxEngine
 {
-    public static partial class Application
+    public static partial class Platform
     {
         internal static bool _is64Bit;
         internal static bool _isEditor;
@@ -44,9 +44,19 @@ namespace FlaxEngine
         /// <remarks>
         /// Use this property to perform platform dependent actions.
         /// </remarks>
-        public static PlatformType Platform
+        public static PlatformType PlatformType
         {
             get { return _platform; }
         }
+
+        /// <summary>
+        /// Gets the DPI setting scale factor (1 is default).
+        /// </summary>
+        [UnmanagedCall]
+#if UNIT_TEST_COMPILANT
+        public static float DpiScale => 1.0f;
+#else
+        public static float DpiScale => Internal_GetDpi() / 96.0f;
+#endif
     }
 }

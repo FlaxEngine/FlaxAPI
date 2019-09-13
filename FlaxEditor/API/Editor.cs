@@ -369,7 +369,7 @@ namespace FlaxEditor
                 // Drop performance if app has no focus (only when game is not running)
                 if (!StateMachine.IsPlayMode)
                 {
-                    bool isFocused = Application.HasFocus;
+                    bool isFocused = Platform.HasFocus;
                     Time.DrawFPS = isFocused ? 60 : 15;
                     Time.UpdateFPS = isFocused ? 60 : 15;
                     Time.PhysicsFPS = isFocused ? 30 : 20;
@@ -475,7 +475,7 @@ namespace FlaxEditor
                 string editorExePath = Globals.StartupPath + "/Win64/FlaxEditor.exe";
                 string args = string.Format("-project \"{0}\"", _projectToOpen);
                 _projectToOpen = null;
-                Application.StartProcess(editorExePath, args);
+                Platform.StartProcess(editorExePath, args);
             }
         }
 
@@ -1008,7 +1008,7 @@ namespace FlaxEditor
         internal void BuildCommand(string arg)
         {
             if (TryBuildCommand(arg))
-                Application.Exit();
+                Platform.Exit();
         }
 
         private bool TryBuildCommand(string arg)
@@ -1088,7 +1088,7 @@ namespace FlaxEditor
             {
                 var win = Windows.GameWin.Root;
                 if (win != null)
-                    resultAsRef = Windows.GameWin.Viewport.PointFromWindow(win.MousePosition);
+                    resultAsRef = Vector2.Round(Windows.GameWin.Viewport.PointFromWindow(win.MousePosition));
             }
         }
 
@@ -1123,6 +1123,7 @@ namespace FlaxEditor
                     resultAsRef = dockedTo.SelectedTab.Size;
                 else
                     resultAsRef = gameWin.Size;
+                resultAsRef = Vector2.Round(resultAsRef);
             }
         }
 

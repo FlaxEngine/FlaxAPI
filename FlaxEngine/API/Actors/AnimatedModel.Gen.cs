@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets a skinned model asset used for rendering.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("Skinned Model"), Tooltip("Skinned model asset to draw")]
+        [EditorOrder(10), DefaultValue(null), EditorDisplay("Skinned Model"), Tooltip("Skinned model asset to draw")]
         public SkinnedModel SkinnedModel
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the animation graph used for the skinned mesh skeleton bones evaluation.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(15), EditorDisplay("Skinned Model"), Tooltip("Animation graph used for the skinned mesh skeleton bones evaluation")]
+        [EditorOrder(15), DefaultValue(null), EditorDisplay("Skinned Model"), Tooltip("Animation graph used for the skinned mesh skeleton bones evaluation")]
         public AnimationGraph AnimationGraph
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// If true, use per-bone motion blur on this skeletal model. It requires additional rendering, can be disabled to save performance.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Skinned Model"), Tooltip("If true, use per-bone motion blur on this skeletal model. It requires additional rendering, can be disabled to save performance.")]
+        [EditorOrder(20), DefaultValue(true), EditorDisplay("Skinned Model"), Tooltip("If true, use per-bone motion blur on this skeletal model. It requires additional rendering, can be disabled to save performance.")]
         public bool PerBoneMotionBlur
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// If true, animation speed will be affected by the global time scale parameter.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), EditorDisplay("Skinned Model"), Tooltip("If true, animation speed will be affected by the global time scale parameter.")]
+        [EditorOrder(30), DefaultValue(true), EditorDisplay("Skinned Model"), Tooltip("If true, animation speed will be affected by the global time scale parameter.")]
         public bool UseTimeScale
         {
 #if UNIT_TEST_COMPILANT
@@ -101,7 +102,7 @@ namespace FlaxEngine
         /// If true, the animation will be updated even when an actor cannot be seen by any camera. Otherwise, the animations themselves will also stop running when the actor is off-screen.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), EditorDisplay("Skinned Model"), Tooltip(" If true, the animation will be updated even when an actor cannot be seen by any camera. Otherwise, the animations themselves will also stop running when the actor is off-screen.")]
+        [EditorOrder(40), DefaultValue(false), EditorDisplay("Skinned Model"), Tooltip(" If true, the animation will be updated even when an actor cannot be seen by any camera. Otherwise, the animations themselves will also stop running when the actor is off-screen.")]
         public bool UpdateWhenOffscreen
         {
 #if UNIT_TEST_COMPILANT
@@ -116,7 +117,7 @@ namespace FlaxEngine
         /// Gets or sets the animation update mode. Can be used to optimize the performance.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(50), EditorDisplay("Skinned Model"), Tooltip("The animation update mode. Can be used to optimize the performance.")]
+        [EditorOrder(50), DefaultValue(AnimationUpdateMode.Auto), EditorDisplay("Skinned Model"), Tooltip("The animation update mode. Can be used to optimize the performance.")]
         public AnimationUpdateMode UpdateMode
         {
 #if UNIT_TEST_COMPILANT
@@ -131,7 +132,7 @@ namespace FlaxEngine
         /// Gets or sets the master scale parameter for the actor bounding box. Helps reducing mesh flickering effect on screen edges.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(60), Limit(0), EditorDisplay("Skinned Model"), Tooltip("The master scale parameter for the actor bounding box. Helps reducing mesh flickering effect on screen edges.")]
+        [EditorOrder(60), DefaultValue(1.5f), Limit(0), EditorDisplay("Skinned Model"), Tooltip("The master scale parameter for the actor bounding box. Helps reducing mesh flickering effect on screen edges.")]
         public float BoundsScale
         {
 #if UNIT_TEST_COMPILANT
@@ -161,7 +162,7 @@ namespace FlaxEngine
         /// Gets or sets the shadows casting mode.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(80), EditorDisplay("Skinned Model"), Tooltip("The shadows casting mode.")]
+        [EditorOrder(80), DefaultValue(ShadowsCastingMode.All), EditorDisplay("Skinned Model"), Tooltip("The shadows casting mode.")]
         public ShadowsCastingMode ShadowsMode
         {
 #if UNIT_TEST_COMPILANT
@@ -176,7 +177,7 @@ namespace FlaxEngine
         /// Gets or sets the animation root motion apply target. If not specified the animated model will apply it itself.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(100), EditorDisplay("Skinned Model"), Tooltip("The animation root motion apply target. If not specified the animated model will apply it itself.")]
+        [EditorOrder(100), DefaultValue(null), EditorDisplay("Skinned Model"), Tooltip("The animation root motion apply target. If not specified the animated model will apply it itself.")]
         public Actor RootMotionTarget
         {
 #if UNIT_TEST_COMPILANT

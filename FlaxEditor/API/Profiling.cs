@@ -93,9 +93,14 @@ namespace FlaxEditor.Profiling
         public int Depth;
 
         /// <summary>
-        /// The dynamic memory allocation size during this event (excluding the child events). Given value is in bytes.
+        /// The native dynamic memory allocation size during this event (excluding the child events). Given value is in bytes.
         /// </summary>
-        public int MemoryAllocation;
+        public int NativeMemoryAllocation;
+
+        /// <summary>
+        /// The managed memory allocation size during this event (excluding the child events). Given value is in bytes.
+        /// </summary>
+        public int ManagedMemoryAllocation;
 
         /// <summary>
         /// The event name.

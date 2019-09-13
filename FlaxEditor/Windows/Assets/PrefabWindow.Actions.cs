@@ -40,7 +40,7 @@ namespace FlaxEditor.Windows.Assets
             }
 
             // Copy data
-            Application.ClipboardRawData = data;
+            Platform.ClipboardRawData = data;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace FlaxEditor.Windows.Assets
         public void Paste(Actor pasteTargetActor)
         {
             // Get clipboard data
-            var data = Application.ClipboardRawData;
+            var data = Platform.ClipboardRawData;
 
             // Set paste target if only one actor is selected and no target provided
             if (pasteTargetActor == null && Selection.Count == 1 && Selection[0] is ActorNode actorNode)

@@ -147,6 +147,18 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 p.SourceHolesMask = (byte*)sourceHolesPtr.ToPointer();
                 Apply(ref p);
             }
+
+            var editorOptions = Editor.Instance.Options.Options;
+            bool isPlayMode = Editor.Instance.StateMachine.IsPlayMode;
+
+            // Auto NavMesh rebuild
+            if (!isPlayMode && editorOptions.General.AutoRebuildNavMesh)
+            {
+                if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
+                {
+                    terrain.Scene.BuildNavMesh(brushBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                }
+            }
         }
 
         /// <summary>

@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using FlaxEditor.Content;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Modules;
@@ -18,7 +17,6 @@ namespace FlaxEditor.Surface.ContextMenu
     {
         private Panel _resultPanel;
         private TextBox _searchBox;
-        private Match _match;
         private SearchItem _selectedItem;
 
         /// <summary>
@@ -39,20 +37,26 @@ namespace FlaxEditor.Surface.ContextMenu
             get => _selectedItem;
             set
             {
-                if (value == null || !MatchedItems.Contains(value))
+                if (value == _selectedItem || (value != null && !MatchedItems.Contains(value)))
                     return;
 
                 if (_selectedItem != null)
+                {
                     _selectedItem.BackgroundColor = Color.Transparent;
+                }
 
-                value.BackgroundColor = Style.Current.BackgroundSelected;
                 _selectedItem = value;
 
-                if (MatchedItems.Count > VisibleItemCount)
+                if (_selectedItem != null)
                 {
-                    _resultPanel.VScrollBar.SmoothingScale = 0;
-                    _resultPanel.ScrollViewTo(_selectedItem);
-                    _resultPanel.VScrollBar.SmoothingScale = 1;
+                    _selectedItem.BackgroundColor = Style.Current.BackgroundSelected;
+
+                    if (MatchedItems.Count > VisibleItemCount)
+                    {
+                        _resultPanel.VScrollBar.SmoothingScale = 0;
+                        _resultPanel.ScrollViewTo(_selectedItem);
+                        _resultPanel.VScrollBar.SmoothingScale = 1;
+                    }
                 }
             }
         }
@@ -93,6 +97,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private void OnTextChanged()
         {
             MatchedItems.Clear();
+            SelectedItem = null;
 
             List<SearchResult> results = Editor.Instance.ContentFinding.Search(_searchBox.Text);
 
@@ -107,7 +112,7 @@ namespace FlaxEditor.Surface.ContextMenu
             {
                 Height = _searchBox.Height + 1;
                 _resultPanel.ScrollBars = ScrollBars.None;
-                RootWindow.Window.ClientSize = new Vector2(RootWindow.Window.ClientSize.X, Height);
+                RootWindow.Window.ClientSize = new Vector2(RootWindow.Window.ClientSize.X, Height * Platform.DpiScale);
                 return;
             }
 
@@ -141,7 +146,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 MatchedItems.Add(searchItem);
             }
 
-            RootWindow.Window.ClientSize = new Vector2(RootWindow.Window.ClientSize.X, Height);
+            RootWindow.Window.ClientSize = new Vector2(RootWindow.Window.ClientSize.X, Height * Platform.DpiScale);
 
             PerformLayout();
         }

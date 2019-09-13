@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the value indicating whenever use the target bone scale. Otherwise won't override the actor scale.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Bone Socket"), Tooltip("If checked, the actor will use the target bone scale. Otherwise it won't override the actor scale.")]
+        [EditorOrder(20), DefaultValue(false), EditorDisplay("Bone Socket"), Tooltip("If checked, the actor will use the target bone scale. Otherwise it won't override the actor scale.")]
         public bool UseScale
         {
 #if UNIT_TEST_COMPILANT

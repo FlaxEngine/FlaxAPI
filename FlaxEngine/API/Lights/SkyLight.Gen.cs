@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets the additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(21), EditorDisplay("Light"), Tooltip("Additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.")]
+        [EditorOrder(21), DefaultValue(typeof(Color), "0,0,0,1"), EditorDisplay("Light"), Tooltip("Additional color to add. Source texture colors are sumed with it. Can be used to apply custom ambient color.")]
         public Color AdditiveColor
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets light radius.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(29), Limit(0), EditorDisplay("Light"), Tooltip("Light range (in world units). Use very high value to apply light globally.")]
+        [EditorOrder(29), DefaultValue(1000000.0f), Limit(0), EditorDisplay("Light"), Tooltip("Light range (in world units). Use very high value to apply light globally.")]
         public float Radius
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets the sky light source mode.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), EditorDisplay("Probe"), Tooltip("Sky light source mode")]
+        [EditorOrder(40), DefaultValue(Modes.CustomTexture), EditorDisplay("Probe"), Tooltip("Sky light source mode")]
         public Modes Mode
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets the distance from the light at which any geometry should be treated as part of the sky.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(45), Limit(0), EditorDisplay("Probe"), Tooltip("Distance from the light at which any geometry should be treated as part of the sky.")]
+        [EditorOrder(45), DefaultValue(150000.0f), Limit(0), EditorDisplay("Probe"), Tooltip("Distance from the light at which any geometry should be treated as part of the sky.")]
         public float SkyDistanceThreshold
         {
 #if UNIT_TEST_COMPILANT
@@ -101,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the custom cube texture to be used during sky light rendering. Used only if Mode is set to CustomTexture.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(50), EditorDisplay("Probe"), Tooltip("Custom light texture. Used only if Mode is set to CustomTexture")]
+        [EditorOrder(50), DefaultValue(null), EditorDisplay("Probe"), Tooltip("Custom light texture. Used only if Mode is set to CustomTexture")]
         public CubeTexture CustomTexture
         {
 #if UNIT_TEST_COMPILANT

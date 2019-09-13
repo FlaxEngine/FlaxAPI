@@ -72,16 +72,6 @@ namespace FlaxEngine.Rendering
         public RenderBuffers Buffers;
 
         /// <summary>
-        /// The view flags.
-        /// </summary>
-        public ViewFlags Flags = ViewFlags.DefaultGame;
-
-        /// <summary>
-        /// The view mode.
-        /// </summary>
-        public ViewMode Mode = ViewMode.Default;
-
-        /// <summary>
         /// The rendering view description.
         /// </summary>
         public RenderView View;
@@ -133,10 +123,7 @@ namespace FlaxEngine.Rendering
 
         internal SceneRenderTask()
         {
-            // Init view defaults
-            View.MaxShadowsQuality = Quality.Ultra;
-            View.ModelLODDistanceFactor = 1.0f;
-            View.ShadowModelLODDistanceFactor = 1.0f;
+            View.Init();
         }
 
         /// <inheritdoc />
@@ -165,10 +152,6 @@ namespace FlaxEngine.Rendering
 
         internal override void OnRender(GPUContext context)
         {
-            // Copy flags
-            View.Flags = Flags;
-            View.Mode = Mode;
-
             // Create buffers if missing
             if (Buffers == null)
                 Buffers = RenderBuffers.New();
@@ -200,7 +183,7 @@ namespace FlaxEngine.Rendering
             }
 
             // Call scene rendering
-            context.DrawScene(this, Output, Buffers, ref View, Flags, Mode, CustomActors, ActorsSource, _postFx);
+            context.DrawScene(this, Output, Buffers, ref View, CustomActors, ActorsSource, _postFx);
             FrameCount++;
 
             // Finish

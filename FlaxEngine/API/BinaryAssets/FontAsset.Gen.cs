@@ -3,12 +3,13 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
     /// <summary>
-    /// Font asset contains glyph collection and cached data used to render text
+    /// Font asset contains glyph collection and cached data used to render text.
     /// </summary>
     public partial class FontAsset : BinaryAsset
     {
@@ -20,7 +21,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets font family name
+        /// Gets the font family name.
         /// </summary>
         [UnmanagedCall]
         public string FamilyName
@@ -33,7 +34,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets font style name
+        /// Gets the font style name.
         /// </summary>
         [UnmanagedCall]
         public string StyleName
@@ -46,10 +47,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates font object of given characters size.
+        /// Creates the font object of given characters size.
         /// </summary>
-        /// <param name="size">Characters size.</param>
-        /// <returns>Font object.</returns>
+        /// <param name="size">The font characters size.</param>
+        /// <returns>The font object.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif

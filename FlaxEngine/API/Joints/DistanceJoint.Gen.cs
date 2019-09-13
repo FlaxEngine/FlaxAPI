@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets the joint mode flags. Controls joint behaviour.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(100), EditorDisplay("Joint"), Tooltip("The joint mode flags. Controls joint behaviour.")]
+        [EditorOrder(100), DefaultValue(DistanceJointFlag.MinDistance | DistanceJointFlag.MaxDistance), EditorDisplay("Joint"), Tooltip("The joint mode flags. Controls joint behaviour.")]
         public DistanceJointFlag Flags
         {
 #if UNIT_TEST_COMPILANT
@@ -59,7 +60,7 @@ namespace FlaxEngine
         /// Used only when DistanceJointFlag.MinDistance flag is set. The minimum distance must be no more than the maximum distance. Default: 0, Range: [0, float.MaxValue].
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(110), Limit(0.0f), EditorDisplay("Joint"), Tooltip("The allowed minimum distance for the joint. Used only when DistanceJointFlag.MinDistance flag is set. The minimum distance must be no more than the maximum distance.")]
+        [EditorOrder(110), DefaultValue(0.0f), Limit(0.0f), EditorDisplay("Joint"), Tooltip("The allowed minimum distance for the joint. Used only when DistanceJointFlag.MinDistance flag is set. The minimum distance must be no more than the maximum distance.")]
         public float MinDistance
         {
 #if UNIT_TEST_COMPILANT
@@ -77,7 +78,7 @@ namespace FlaxEngine
         /// Used only when DistanceJointFlag.MaxDistance flag is set. The maximum distance must be no less than the minimum distance. Default: 0, Range: [0, float.MaxValue].
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(120), Limit(0.0f), EditorDisplay("Joint"), Tooltip("The allowed maximum distance for the joint. Used only when DistanceJointFlag.MinDistance flag is set. The maximum distance must be no less than the minimum distance.")]
+        [EditorOrder(120), DefaultValue(10.0f), Limit(0.0f), EditorDisplay("Joint"), Tooltip("The allowed maximum distance for the joint. Used only when DistanceJointFlag.MinDistance flag is set. The maximum distance must be no less than the minimum distance.")]
         public float MaxDistance
         {
 #if UNIT_TEST_COMPILANT
@@ -95,7 +96,7 @@ namespace FlaxEngine
         /// The distance beyond the joint's [min, max] range before the joint becomes active. Default: 25, Range: [0.1, float.MaxValue].
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(130), Limit(0.0f), EditorDisplay("Joint"), Tooltip("The error tolerance of the joint.")]
+        [EditorOrder(130), DefaultValue(25.0f), Limit(0.0f), EditorDisplay("Joint"), Tooltip("The error tolerance of the joint.")]
         public float Tolerance
         {
 #if UNIT_TEST_COMPILANT

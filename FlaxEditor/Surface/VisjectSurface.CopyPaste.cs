@@ -28,7 +28,7 @@ namespace FlaxEditor.Surface
 
             if (selection.Count == 0)
             {
-                Application.ClipboardText = string.Empty;
+                Platform.ClipboardText = string.Empty;
                 return;
             }
 
@@ -153,7 +153,7 @@ namespace FlaxEditor.Surface
                 jsonWriter.WriteEnd();
             }
 
-            Application.ClipboardText = sw.ToString();
+            Platform.ClipboardText = sw.ToString();
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace FlaxEditor.Surface
         /// <returns>True if can paste data, otherwise false.</returns>
         public bool CanPaste()
         {
-            var data = Application.ClipboardText;
+            var data = Platform.ClipboardText;
             if (data == null || data.Length < 2)
                 return false;
 
@@ -276,7 +276,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void Paste()
         {
-            var data = Application.ClipboardText;
+            var data = Platform.ClipboardText;
             if (data == null || data.Length < 2)
                 return;
 

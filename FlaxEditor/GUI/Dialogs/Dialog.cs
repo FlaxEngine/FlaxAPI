@@ -22,7 +22,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// <summary>
         /// The parent window.
         /// </summary>
-        protected FlaxEngine.Window _window;
+        protected Window _window;
 
         /// <summary>
         /// The dialog result.
@@ -83,7 +83,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// </summary>
         /// <param name="parentWindow">The parent window.</param>
         /// <returns>The dialog result.</returns>
-        public DialogResult ShowDialog(FlaxEngine.Window parentWindow)
+        public DialogResult ShowDialog(Window parentWindow)
         {
             // Show window
             Show(parentWindow);
@@ -126,19 +126,19 @@ namespace FlaxEditor.GUI.Dialogs
         /// <param name="control">The control calling.</param>
         public void Show(Control control)
         {
-            Show(control?.Root);
+            Show(control?.Root.RootWindow);
         }
 
         /// <summary>
         /// Shows the dialog.
         /// </summary>
         /// <param name="parentWindow">The parent window.</param>
-        public void Show(FlaxEngine.Window parentWindow)
+        public void Show(Window parentWindow)
         {
             // Setup initial window settings
             CreateWindowSettings settings = CreateWindowSettings.Default;
             settings.Title = _title;
-            settings.Size = Size;
+            settings.Size = Size * Platform.DpiScale;
             settings.AllowMaximize = false;
             settings.AllowMinimize = false;
             settings.HasSizingFrame = false;
@@ -147,7 +147,7 @@ namespace FlaxEditor.GUI.Dialogs
             SetupWindowSettings(ref settings);
 
             // Create window
-            _window = FlaxEngine.Window.Create(settings);
+            _window = Window.Create(settings);
             var windowGUI = _window.GUI;
 
             // Attach events

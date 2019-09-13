@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Specifies the alignment of the text along horizontal or vertical direction in the layout box
+    /// Specifies the alignment of the text along horizontal or vertical direction in the layout box.
     /// </summary>
     public enum TextAlignment
     {
@@ -26,7 +26,7 @@ namespace FlaxEngine
     };
 
     /// <summary>
-    /// Specifies text wrapping to be used in a particular multiline paragraph
+    /// Specifies text wrapping to be used in a particular multiline paragraph.
     /// </summary>
     public enum TextWrapping
     {
@@ -47,38 +47,38 @@ namespace FlaxEngine
     };
 
     /// <summary>
-    /// Structure which describes text layout properties
+    /// Structure which describes text layout properties.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct TextLayoutOptions
     {
         /// <summary>
-        /// Layout rectangle
+        /// The layout rectangle (text bounds).
         /// </summary>
         public Rectangle Bounds;
 
         /// <summary>
-        /// Horizontal alignment
+        /// The horizontal alignment mode.
         /// </summary>
         public TextAlignment HorizontalAlignment;
 
         /// <summary>
-        /// Vertical alignment
+        /// The vertical alignment mode.
         /// </summary>
         public TextAlignment VerticalAlignment;
 
         /// <summary>
-        /// Text wrapping mode
+        /// The text wrapping mode/
         /// </summary>
         public TextWrapping TextWrapping;
 
         /// <summary>
-        /// The text scale.
+        /// The text scale factor. Default is 1.
         /// </summary>
         public float Scale;
 
         /// <summary>
-        /// Base line gap scale
+        /// Base line gap scale. Default is 1.
         /// </summary>
         public float BaseLinesGapScale;
 

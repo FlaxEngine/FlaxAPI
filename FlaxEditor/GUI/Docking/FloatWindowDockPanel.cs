@@ -38,8 +38,8 @@ namespace FlaxEditor.GUI.Docking
             // Link
             _masterPanel.FloatingPanels.Add(this);
             Parent = window;
-            _window.Window.Closing += onClosing;
-            _window.Window.LeftButtonHit += onLButtonHit;
+            _window.Window.Closing += OnClosing;
+            _window.Window.LeftButtonHit += OnLeftButtonHit;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace FlaxEditor.GUI.Docking
         /// <param name="size">Window client area size.</param>
         /// <param name="startPosition">Window start position.</param>
         /// <param name="title">Initial window title.</param>
-        internal static FlaxEngine.Window CreateFloatWindow(RootControl parent, Vector2 location, Vector2 size, WindowStartPosition startPosition, string title)
+        internal static Window CreateFloatWindow(RootControl parent, Vector2 location, Vector2 size, WindowStartPosition startPosition, string title)
         {
             // Setup initial window settings
             var settings = CreateWindowSettings.Default;
@@ -96,7 +96,7 @@ namespace FlaxEditor.GUI.Docking
             return FlaxEngine.Window.Create(settings);
         }
 
-        private bool onLButtonHit(WindowHitCodes hitTest)
+        private bool OnLeftButtonHit(WindowHitCodes hitTest)
         {
             if (hitTest == WindowHitCodes.Caption)
             {
@@ -107,7 +107,7 @@ namespace FlaxEditor.GUI.Docking
             return false;
         }
 
-        private void onClosing(ClosingReason reason, ref bool cancel)
+        private void OnClosing(ClosingReason reason, ref bool cancel)
         {
             // Close all docked windows
             while (Tabs.Count > 0)
@@ -121,7 +121,7 @@ namespace FlaxEditor.GUI.Docking
             }
 
             // Unlink
-            _window.Window.Closing -= onClosing;
+            _window.Window.Closing -= OnClosing;
             _window.Window.LeftButtonHit = null;
             _window = null;
 

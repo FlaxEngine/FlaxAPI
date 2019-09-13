@@ -65,17 +65,17 @@ namespace FlaxEngine
             Debug.Logger.LogHandler.LogWrite(LogType.Log, "Using FlaxAPI in Release");
 #endif
 
-            Application._is64Bit = (flags & 0x01) != 0;
-            Application._isEditor = (flags & 0x02) != 0;
-            Application._mainThreadId = Thread.CurrentThread.ManagedThreadId;
-            Application._platform = platform;
+            Platform._is64Bit = (flags & 0x01) != 0;
+            Platform._isEditor = (flags & 0x02) != 0;
+            Platform._mainThreadId = Thread.CurrentThread.ManagedThreadId;
+            Platform._platform = platform;
 
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
             TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 
             Globals.Init();
 
-            if (!Application.IsEditor)
+            if (!Platform.IsEditor)
             {
                 CreateGuiStyle();
             }

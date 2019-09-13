@@ -349,7 +349,7 @@ namespace FlaxEditor.Windows
                     AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
                 };
-                helpButton.Clicked += () => Application.StartProcess(Constants.DocsUrl + "manual/editor/game-cooker/");
+                helpButton.Clicked += () => Platform.StartProcess(Constants.DocsUrl + "manual/editor/game-cooker/");
                 var buildAllButton = new Button
                 {
                     Text = "Build All",
@@ -472,7 +472,7 @@ namespace FlaxEditor.Windows
             {
                 var tmpBat = StringUtils.CombinePaths(Globals.TemporaryFolder, Guid.NewGuid().ToString("N") + ".bat");
                 File.WriteAllText(tmpBat, command);
-                Application.StartProcess(tmpBat, null, true, true);
+                Platform.StartProcess(tmpBat, null, true, true);
                 File.Delete(tmpBat);
             }
             catch (Exception ex)
@@ -793,7 +793,7 @@ namespace FlaxEditor.Windows
                 else if (_exitOnBuildEnd)
                 {
                     _exitOnBuildEnd = false;
-                    Application.Exit();
+                    Platform.Exit();
                 }
             }
         }

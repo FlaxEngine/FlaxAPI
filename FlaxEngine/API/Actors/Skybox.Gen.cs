@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets skybox cube texture.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("Skybox"), Tooltip("Skybox cube texture")]
+        [EditorOrder(10), DefaultValue(null), EditorDisplay("Skybox"), Tooltip("Skybox cube texture")]
         public CubeTexture CubeTexture
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets skybox custom material used to override default.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Skybox"), Tooltip("Skybox custom material used to override default")]
+        [EditorOrder(20), DefaultValue(null), EditorDisplay("Skybox"), Tooltip("Skybox custom material used to override default")]
         public MaterialBase CustomMaterial
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets skybox color.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), EditorDisplay("Skybox"), Tooltip("Skybox color")]
+        [EditorOrder(30), DefaultValue(typeof(Color), "1,1,1,1"), EditorDisplay("Skybox"), Tooltip("Skybox color")]
         public Color Color
         {
 #if UNIT_TEST_COMPILANT

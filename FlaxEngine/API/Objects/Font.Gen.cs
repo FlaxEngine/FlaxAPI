@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -20,7 +21,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets parent font asset that contains font family used by this font.
+        /// Gets the parent font asset that contains font family used by this font.
         /// </summary>
         [UnmanagedCall]
         public FontAsset Asset
@@ -33,7 +34,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets font size.
+        /// Gets the font size.
         /// </summary>
         [UnmanagedCall]
         public int Size
@@ -46,7 +47,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets characters height.
+        /// Gets the font characters height.
         /// </summary>
         [UnmanagedCall]
         public int Height
@@ -137,7 +138,7 @@ namespace FlaxEngine
         /// Measures minimum size of the rectangle that will be needed to draw given text.
         /// </summary>
         /// <param name="text">Input text.</param>
-        /// <returns>Minimum size for that text and fot to render properly.</returns>
+        /// <returns>The minimum size for that text and fot to render properly.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -156,10 +157,10 @@ namespace FlaxEngine
         /// <summary>
         /// Calculates character position for given text and character index.
         /// </summary>
-        /// <param name="text">Input text.</param>
+        /// <param name="text">The input text.</param>
         /// <param name="index">The text position to get it's coordinates.</param>
-        /// <param name="layout">Layout properties.</param>
-        /// <returns>Character position (upper left corner which can be used for a caret position).</returns>
+        /// <param name="layout">The layout properties.</param>
+        /// <returns>The character position (upper left corner which can be used for a caret position).</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -178,9 +179,9 @@ namespace FlaxEngine
         /// <summary>
         /// Calculates character position for given text and character index.
         /// </summary>
-        /// <param name="text">Input text.</param>
+        /// <param name="text">The input text.</param>
         /// <param name="index">The text position to get it's coordinates.</param>
-        /// <returns>Character position (upper left corner which can be used for a caret position).</returns>
+        /// <returns>The character position (upper left corner which can be used for a caret position).</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -199,10 +200,10 @@ namespace FlaxEngine
         /// <summary>
         /// Calculates hit character index at given location.
         /// </summary>
-        /// <param name="text">Input text to test.</param>
-        /// <param name="location">Location to test.</param>
+        /// <param name="text">The input text to test.</param>
+        /// <param name="location">The location to test.</param>
         /// <param name="layout">Layout properties.</param>
-        /// <returns>Selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
+        /// <returns>The selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -219,9 +220,9 @@ namespace FlaxEngine
         /// <summary>
         /// Calculates hit character index at given location.
         /// </summary>
-        /// <param name="text">Input text to test.</param>
-        /// <param name="location">Location to test.</param>
-        /// <returns>Selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
+        /// <param name="text">The input text to test.</param>
+        /// <param name="location">The location to test.</param>
+        /// <returns>The selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif

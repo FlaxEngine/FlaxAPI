@@ -162,8 +162,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override Vector2 MousePosition
         {
-            get => _window.MousePosition;
-            set => _window.MousePosition = value;
+            get => _window.MousePosition / _window._dpiScale;
+            set => _window.MousePosition = value * _window._dpiScale;
         }
 
         /// <inheritdoc />

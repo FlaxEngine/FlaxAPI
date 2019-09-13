@@ -28,6 +28,7 @@ namespace FlaxEditor.Tools.Terrain
         private readonly ComboBox _modeComboBox;
         private readonly Label _selectionInfoLabel;
         private readonly Button _deletePatchButton;
+        private readonly Button _exportTerrainButton;
         private readonly ContainerControl _chunkProperties;
         private readonly AssetPicker _chunkOverrideMaterial;
         private bool _isUpdatingUI;
@@ -66,6 +67,7 @@ namespace FlaxEditor.Tools.Terrain
             _modeComboBox.AddItem("Edit Chunk");
             _modeComboBox.AddItem("Add Patch");
             _modeComboBox.AddItem("Remove Patch");
+            _modeComboBox.AddItem("Export terrain");
             _modeComboBox.SelectedIndex = 0;
             _modeComboBox.SelectedIndexChanged += (combobox) => Gizmo.EditMode = (EditTerrainGizmoMode.Modes)combobox.SelectedIndex;
             Gizmo.ModeChanged += OnGizmoModeChanged;
@@ -105,6 +107,14 @@ namespace FlaxEditor.Tools.Terrain
                 Parent = panel,
             };
             _deletePatchButton.Clicked += OnDeletePatchButtonClicked;
+
+            // Export terrain
+            _exportTerrainButton = new Button(_selectionInfoLabel.X, _selectionInfoLabel.Bottom + 4)
+            {
+                Text = "Export terrain",
+                Parent = panel,
+            };
+            _exportTerrainButton.Clicked += OnExportTerrainButtonClicked;
 
             // Update UI to match the current state
             OnSelectionChanged();
@@ -146,9 +156,9 @@ namespace FlaxEditor.Tools.Terrain
                     return;
                 }
 
+                terrain.GetPatchBounds(terrain.GetPatchIndex(ref _patchCoord), out var patchBounds);
                 terrain.RemovePatch(ref _patchCoord);
-
-                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
+                OnPatchEdit(terrain, ref patchBounds);
             }
 
             /// <inheritdoc />
@@ -163,8 +173,25 @@ namespace FlaxEditor.Tools.Terrain
 
                 terrain.AddPatch(ref _patchCoord);
                 TerrainTools.DeserializePatch(terrain, ref _patchCoord, _data);
+                terrain.GetPatchBounds(terrain.GetPatchIndex(ref _patchCoord), out var patchBounds);
+                OnPatchEdit(terrain, ref patchBounds);
+            }
 
+            private void OnPatchEdit(FlaxEngine.Terrain terrain, ref BoundingBox patchBounds)
+            {
                 Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
+
+                var editorOptions = Editor.Instance.Options.Options;
+                bool isPlayMode = Editor.Instance.StateMachine.IsPlayMode;
+
+                // Auto NavMesh rebuild
+                if (!isPlayMode && editorOptions.General.AutoRebuildNavMesh)
+                {
+                    if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
+                    {
+                        terrain.Scene.BuildNavMesh(patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                    }
+                }
             }
 
             /// <inheritdoc />
@@ -265,6 +292,15 @@ namespace FlaxEditor.Tools.Terrain
             CarveTab.Editor.Undo.AddAction(action);
         }
 
+        private void OnExportTerrainButtonClicked()
+        {
+            if (_isUpdatingUI)
+                return;
+
+            string outputFolder = MessageBox.BrowseFolderDialog(null, null, "Select the output folder");
+            TerrainTools.ExportTerrain(CarveTab.SelectedTerrain, outputFolder);
+        }
+
         private void OnSelectionChanged()
         {
             var terrain = CarveTab.SelectedTerrain;
@@ -273,6 +309,7 @@ namespace FlaxEditor.Tools.Terrain
                 _selectionInfoLabel.Text = "Select a terrain to modify its properties.";
                 _chunkProperties.Visible = false;
                 _deletePatchButton.Visible = false;
+                _exportTerrainButton.Visible = false;
             }
             else
             {
@@ -290,9 +327,19 @@ namespace FlaxEditor.Tools.Terrain
                     );
                     _chunkProperties.Visible = true;
                     _deletePatchButton.Visible = false;
+                    _exportTerrainButton.Visible = false;
 
                     _isUpdatingUI = true;
-                    _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
+                    if (terrain.HasPatch(ref patchCoord))
+                    {
+                        _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
+                        _chunkOverrideMaterial.Enabled = true;
+                    }
+                    else
+                    {
+                        _chunkOverrideMaterial.SelectedAsset = null;
+                        _chunkOverrideMaterial.Enabled = false;
+                    }
                     _isUpdatingUI = false;
                     break;
                 }
@@ -315,6 +362,7 @@ namespace FlaxEditor.Tools.Terrain
                     }
                     _chunkProperties.Visible = false;
                     _deletePatchButton.Visible = false;
+                    _exportTerrainButton.Visible = false;
                     break;
                 }
                 case EditTerrainGizmoMode.Modes.Remove:
@@ -326,6 +374,18 @@ namespace FlaxEditor.Tools.Terrain
                     );
                     _chunkProperties.Visible = false;
                     _deletePatchButton.Visible = true;
+                    _exportTerrainButton.Visible = false;
+                    break;
+                }
+                case EditTerrainGizmoMode.Modes.Export:
+                {
+                    _selectionInfoLabel.Text = string.Format(
+                        "Selected terrain: {0}",
+                        terrain.Name
+                    );
+                    _chunkProperties.Visible = false;
+                    _deletePatchButton.Visible = false;
+                    _exportTerrainButton.Visible = true;
                     break;
                 }
                 }
