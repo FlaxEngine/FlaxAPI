@@ -11,24 +11,29 @@ using System.Runtime.InteropServices;
 namespace FlaxEngine.Rendering
 {
     /// <summary>
-    /// Eye adaptation technique.
+    /// Eye adaptation effect rendering modes.
     /// </summary>
-    public enum EyeAdaptationTechnique
+    public enum EyeAdaptationMode
     {
         /// <summary>
-        /// The none.
+        /// Disabled eye adaptation effect.
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// The manual.
+        /// The manual mode that uses a fixed exposure values.
         /// </summary>
         Manual = 1,
 
         /// <summary>
-        /// The automatic.
+        /// The automatic mode applies the eye adaptation exposure based on the scene color luminance blending using the histogram. Requires compute shader support.
         /// </summary>
-        Auto = 2
+        AutomaticHistogram = 2,
+
+        /// <summary>
+        /// The automatic mode applies the eye adaptation exposure based on the scene color luminance blending using the average luminance.
+        /// </summary>
+        AutomaticAverageLuminance = 3,
     }
 
     /// <summary>
@@ -826,9 +831,9 @@ namespace FlaxEngine.Rendering
             None = 0,
 
             /// <summary>
-            /// Overrides <see cref="EyeAdaptationSettings.Technique"/> property.
+            /// Overrides <see cref="EyeAdaptationSettings.Mode"/> property.
             /// </summary>
-            Technique = 1 << 0,
+            Mode = 1 << 0,
 
             /// <summary>
             /// Overrides <see cref="EyeAdaptationSettings.SpeedUp"/> property.
@@ -841,29 +846,39 @@ namespace FlaxEngine.Rendering
             SpeedDown = 1 << 2,
 
             /// <summary>
-            /// Overrides <see cref="EyeAdaptationSettings.Exposure"/> property.
+            /// Overrides <see cref="EyeAdaptationSettings.PreExposure"/> property.
             /// </summary>
-            Exposure = 1 << 3,
+            PreExposure = 1 << 3,
 
             /// <summary>
-            /// Overrides <see cref="EyeAdaptationSettings.KeyValue"/> property.
+            /// Overrides <see cref="EyeAdaptationSettings.PostExposure"/> property.
             /// </summary>
-            KeyValue = 1 << 4,
+            PostExposure = 1 << 4,
 
             /// <summary>
-            /// Overrides <see cref="EyeAdaptationSettings.MinLuminance"/> property.
+            /// Overrides <see cref="EyeAdaptationSettings.MinBrightness"/> property.
             /// </summary>
-            MinLuminance = 1 << 5,
+            MinBrightness = 1 << 5,
 
             /// <summary>
-            /// Overrides <see cref="EyeAdaptationSettings.MaxLuminance"/> property.
+            /// Overrides <see cref="EyeAdaptationSettings.MaxBrightness"/> property.
             /// </summary>
-            MaxLuminance = 1 << 6,
+            MaxBrightness = 1 << 6,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.HistogramLowPercent"/> property.
+            /// </summary>
+            HistogramLowPercent = 1 << 7,
+
+            /// <summary>
+            /// Overrides <see cref="EyeAdaptationSettings.HistogramHighPercent"/> property.
+            /// </summary>
+            HistogramHighPercent = 1 << 8,
 
             /// <summary>
             /// All properties.
             /// </summary>
-            All = Technique | SpeedUp | SpeedDown | Exposure | KeyValue | MinLuminance | MaxLuminance,
+            All = Mode | SpeedUp | SpeedDown | PreExposure | PostExposure | MinBrightness | MaxBrightness | HistogramLowPercent | HistogramHighPercent,
         };
 
         /// <summary>
@@ -873,55 +888,78 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Gets or sets the eye adaptation mode.
+        /// The effect rendering mode used for the exposure processing.
         /// </summary>
-        [DefaultValue(EyeAdaptationTechnique.Auto)]
-        [EditorOrder(0), PostProcessSetting((int)Override.Technique)]
-        public EyeAdaptationTechnique Technique;
+        [DefaultValue(EyeAdaptationMode.AutomaticHistogram)]
+        [Tooltip("The effect rendering mode used for the exposure processing.")]
+        [EditorOrder(0), PostProcessSetting((int)Override.Mode)]
+        public EyeAdaptationMode Mode;
 
         /// <summary>
-        /// Gets or sets the speed up of the eye adaptation effect.
+        /// The speed at which the exposure changes when the scene brightness moves from a dark area to a bright area (brightness goes up).
         /// </summary>
         [DefaultValue(3.0f), Limit(0, 100.0f, 0.01f)]
+        [Tooltip("The speed at which the exposure changes when the scene brightness moves from a dark area to a bright area (brightness goes up).")]
         [EditorOrder(1), PostProcessSetting((int)Override.SpeedUp)]
         public float SpeedUp;
 
         /// <summary>
-        /// Gets or sets the speed up of the eye adaptation effect.
+        /// The speed at which the exposure changes when the scene brightness moves from a bright area to a dark area (brightness goes down).
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 100.0f, 0.01f)]
+        [Tooltip("The speed at which the exposure changes when the scene brightness moves from a bright area to a dark area (brightness goes down).")]
         [EditorOrder(2), PostProcessSetting((int)Override.SpeedDown)]
         public float SpeedDown;
 
         /// <summary>
-        /// Gets or sets the camera exposure.
+        /// The pre-exposure value applied to the scene color before performing post-processing (such as bloom, lens flares, etc.).
         /// </summary>
-        [DefaultValue(1.5f), Limit(-1000, 1000, 0.001f)]
-        [EditorOrder(3), PostProcessSetting((int)Override.Exposure)]
-        public float Exposure;
+        [DefaultValue(0.0f), Limit(-100, 100, 0.01f)]
+        [Tooltip("The pre-exposure value applied to the scene color before performing post-processing (such as bloom, lens flares, etc.).")]
+        [EditorOrder(3), PostProcessSetting((int)Override.PreExposure)]
+        public float PreExposure;
 
         /// <summary>
-        /// Gets or sets the pixels light value to achieve.
+        /// The post-exposure value applied to the scene color after performing post-processing (such as bloom, lens flares, etc.) but before color grading and tone mapping.
         /// </summary>
-        [DefaultValue(0.2f), Limit(-100, 100, 0.001f)]
-        [EditorOrder(4), PostProcessSetting((int)Override.KeyValue)]
-        public float KeyValue;
+        [DefaultValue(0.0f), Limit(-100, 100, 0.01f)]
+        [Tooltip("The post-exposure value applied to the scene color after performing post-processing (such as bloom, lens flares, etc.) but before color grading and tone mapping.")]
+        [EditorOrder(3), PostProcessSetting((int)Override.PostExposure)]
+        public float PostExposure;
 
         /// <summary>
-        /// Gets or sets the minimum luminance value used for tone mapping.
+        /// The minimum brightness for the auto exposure which limits the lower brightness the eye can adapt within.
         /// </summary>
-        [DefaultValue(0.01f), Limit(0, 50.0f, 0.01f)]
-        [EditorOrder(5), PostProcessSetting((int)Override.MinLuminance)]
-        [EditorDisplay(null, "Minimum Luminance")]
-        public float MinLuminance;
+        [DefaultValue(0.03f), Limit(0, 20.0f, 0.01f)]
+        [Tooltip("The minimum brightness for the auto exposure which limits the lower brightness the eye can adapt within.")]
+        [EditorOrder(5), PostProcessSetting((int)Override.MinBrightness)]
+        [EditorDisplay(null, "Minimum Brightness")]
+        public float MinBrightness;
 
         /// <summary>
-        /// Gets or sets the maximum luminance value used for tone mapping.
+        /// The maximum brightness for the auto exposure which limits the upper brightness the eye can adapt within.
         /// </summary>
-        [DefaultValue(100.0f), Limit(0, 100.0f, 0.01f)]
-        [EditorOrder(6), PostProcessSetting((int)Override.MaxLuminance)]
-        [EditorDisplay(null, "Maximum Luminance")]
-        public float MaxLuminance;
+        [DefaultValue(2.0f), Limit(0, 100.0f, 0.01f)]
+        [Tooltip("The maximum brightness for the auto exposure which limits the upper brightness the eye can adapt within.")]
+        [EditorOrder(6), PostProcessSetting((int)Override.MaxBrightness)]
+        [EditorDisplay(null, "Maximum Brightness")]
+        public float MaxBrightness;
+
+        /// <summary>
+        /// The lower bound for the luminance histogram of the scene color. Value is in percent and limits the pixels below this brightness. Use values from range 60-80. Used only in AutomaticHistogram mode.
+        /// </summary>
+        [DefaultValue(75.0f), Limit(1, 99, 0.001f)]
+        [Tooltip("The lower bound for the luminance histogram of the scene color. Value is in percent and limits the pixels below this brightness. Use values from range 60-80. Used only in AutomaticHistogram mode.")]
+        [EditorOrder(3), PostProcessSetting((int)Override.HistogramLowPercent)]
+        public float HistogramLowPercent;
+
+        /// <summary>
+        /// The upper bound for the luminance histogram of the scene color. Value is in percent and limits the pixels above this brightness. Use values from range 80-95. Used only in AutomaticHistogram mode.
+        /// </summary>
+        [DefaultValue(98.0f), Limit(1, 99, 0.001f)]
+        [Tooltip("The upper bound for the luminance histogram of the scene color. Value is in percent and limits the pixels above this brightness. Use values from range 80-95. Used only in AutomaticHistogram mode.")]
+        [EditorOrder(3), PostProcessSetting((int)Override.HistogramHighPercent)]
+        public float HistogramHighPercent;
     }
 
     /// <summary>

@@ -53,9 +53,8 @@ namespace FlaxEditor.Content
                 _preview.Task.Enabled = false;
 
                 var eyeAdaptation = _preview.PostFxVolume.EyeAdaptation;
-                eyeAdaptation.Technique = EyeAdaptationTechnique.None;
-                eyeAdaptation.Exposure = 0.1f;
-                eyeAdaptation.OverrideFlags |= EyeAdaptationSettings.Override.Technique | EyeAdaptationSettings.Override.Exposure;
+                eyeAdaptation.Mode = EyeAdaptationMode.None;
+                eyeAdaptation.OverrideFlags |= EyeAdaptationSettings.Override.Mode;
                 _preview.PostFxVolume.EyeAdaptation = eyeAdaptation;
 
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);

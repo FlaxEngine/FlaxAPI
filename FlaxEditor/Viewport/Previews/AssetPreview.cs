@@ -119,11 +119,6 @@ namespace FlaxEditor.Viewport.Previews
             //
             PostFxVolume = PostFxVolume.New();
             PostFxVolume.IsBounded = false;
-            //
-            var eyeAdaptation = PostFxVolume.EyeAdaptation;
-            eyeAdaptation.MinLuminance = 0.1f;
-            eyeAdaptation.OverrideFlags |= EyeAdaptationSettings.Override.MinLuminance;
-            PostFxVolume.EyeAdaptation = eyeAdaptation;
 
             // Link actors for rendering
             Task.ActorsSource = ActorsSources.CustomActors;
