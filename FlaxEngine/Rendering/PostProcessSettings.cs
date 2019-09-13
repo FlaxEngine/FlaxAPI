@@ -249,24 +249,24 @@ namespace FlaxEngine.Rendering
             Intensity = 1 << 1,
 
             /// <summary>
-            /// Overrides <see cref="BloomSettings.Power"/> property.
+            /// Overrides <see cref="BloomSettings.Threshold"/> property.
             /// </summary>
             Threshold = 1 << 2,
 
             /// <summary>
-            /// Overrides <see cref="BloomSettings.Radius"/> property.
+            /// Overrides <see cref="BloomSettings.BlurSigma"/> property.
             /// </summary>
             BlurSigma = 1 << 3,
 
             /// <summary>
-            /// Overrides <see cref="BloomSettings.FadeOutDistance"/> property.
+            /// Overrides <see cref="BloomSettings.Limit"/> property.
             /// </summary>
-            Scale = 1 << 4,
+            Limit = 1 << 4,
 
             /// <summary>
             /// All properties.
             /// </summary>
-            All = Enabled | Intensity | Threshold | BlurSigma | Scale,
+            All = Enabled | Intensity | Threshold | BlurSigma | Limit,
         };
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the bloom intensity.
         /// </summary>
-        [DefaultValue(1.0f), Limit(0, 10.0f, 0.1f)]
+        [DefaultValue(1.0f), Limit(0, 20.0f, 0.01f)]
         [EditorOrder(1), PostProcessSetting((int)Override.Intensity)]
         public float Intensity;
 
@@ -299,16 +299,16 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the bloom blur sigma parameter.
         /// </summary>
-        [DefaultValue(3.6f)]
+        [DefaultValue(4.0f), Limit(0, 20.0f, 0.01f)]
         [EditorOrder(3), PostProcessSetting((int)Override.BlurSigma)]
         public float BlurSigma;
 
         /// <summary>
-        /// Gets or sets the bloom blur scale.
+        /// Gets or sets the bloom brightness limit. Pixels with higher luminance will be capped to this brightness level.
         /// </summary>
-        [DefaultValue(1.8f)]
-        [EditorOrder(4), PostProcessSetting((int)Override.Scale)]
-        public float Scale;
+        [DefaultValue(10.0f), Limit(0, 100.0f, 0.01f)]
+        [EditorOrder(4), PostProcessSetting((int)Override.Limit)]
+        public float Limit;
     }
 
     /// <summary>
