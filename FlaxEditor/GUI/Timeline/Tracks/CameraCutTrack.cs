@@ -520,8 +520,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 for (int i = 0; i < count; i++)
                 {
                     var s = spriteAtlas.AddSprite();
-                    var x = i % count;
-                    var y = i / count;
+                    var x = i % countX;
+                    var y = i / countX;
                     s.Area = new Rectangle(new Vector2(x, y) * thumbnailSizeUV, thumbnailSizeUV);
                 }
 
