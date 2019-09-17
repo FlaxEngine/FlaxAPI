@@ -11,6 +11,27 @@ using System.Runtime.InteropServices;
 namespace FlaxEngine.Rendering
 {
     /// <summary>
+    /// Tone mapping effect rendering modes.
+    /// </summary>
+    public enum ToneMappingMode
+    {
+        /// <summary>
+        /// Disabled tone mapping effect.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// The neutral tonemapper.
+        /// </summary>
+        Neutral = 1,
+
+        /// <summary>
+        /// The ACES Filmic reference tonemapper (approximation).
+        /// </summary>
+        ACES = 2,
+    }
+
+    /// <summary>
     /// Eye adaptation effect rendering modes.
     /// </summary>
     public enum EyeAdaptationMode
@@ -339,34 +360,14 @@ namespace FlaxEngine.Rendering
             WhiteTint = 1 << 1,
 
             /// <summary>
-            /// Overrides <see cref="ToneMappingSettings.FilmSlope"/> property.
+            /// Overrides <see cref="ToneMappingSettings.Mode"/> property.
             /// </summary>
-            FilmSlope = 1 << 2,
-
-            /// <summary>
-            /// Overrides <see cref="ToneMappingSettings.FilmToe"/> property.
-            /// </summary>
-            FilmToe = 1 << 3,
-
-            /// <summary>
-            /// Overrides <see cref="ToneMappingSettings.FilmShoulder"/> property.
-            /// </summary>
-            FilmShoulder = 1 << 4,
-
-            /// <summary>
-            /// Overrides <see cref="ToneMappingSettings.FilmBlackClip"/> property.
-            /// </summary>
-            FilmBlackClip = 1 << 5,
-
-            /// <summary>
-            /// Overrides <see cref="ToneMappingSettings.FilmWhiteClip"/> property.
-            /// </summary>
-            FilmWhiteClip = 1 << 6,
+            Mode = 1 << 2,
 
             /// <summary>
             /// All properties.
             /// </summary>
-            All = WhiteTemperature | WhiteTint | FilmSlope | FilmToe | FilmShoulder | FilmBlackClip | FilmWhiteClip,
+            All = WhiteTemperature | WhiteTint | Mode,
         };
 
         /// <summary>
@@ -392,44 +393,12 @@ namespace FlaxEngine.Rendering
         public float WhiteTint;
 
         /// <summary>
-        /// Gets or sets the film curve slope. Default is 0.88.
+        /// The tone mapping mode to use for the color grading process.
         /// </summary>
-        [DefaultValue(0.88f), Limit(0, 1, 0.01f)]
-        [EditorOrder(2), PostProcessSetting((int)Override.FilmSlope)]
-        [Tooltip("This will adjust the steepness of the S-curve used for the tone mapper, where larger values will make the slope steeper (darker) and lower values will make the slope less steep (lighter). Default is 0.88.")]
-        public float FilmSlope;
-
-        /// <summary>
-        /// Gets or sets the film curve toe. Default is 0.55.
-        /// </summary>
-        [DefaultValue(0.55f), Limit(0, 1, 0.01f)]
-        [EditorOrder(3), PostProcessSetting((int)Override.FilmToe)]
-        [Tooltip("This will adjust the dark color in the tone mapper. Default is 0.55.")]
-        public float FilmToe;
-
-        /// <summary>
-        /// Gets or sets the film curve shoulder. Default is 0.26.
-        /// </summary>
-        [DefaultValue(0.26f), Limit(0, 1, 0.01f)]
-        [EditorOrder(4), PostProcessSetting((int)Override.FilmShoulder)]
-        [Tooltip("This will adjust the bright color in the tone mapper. Default is 0.26.")]
-        public float FilmShoulder;
-
-        /// <summary>
-        /// Gets or sets the film curve black clip. Default is 0.
-        /// </summary>
-        [DefaultValue(0.0f), Limit(0, 1, 0.01f)]
-        [EditorOrder(5), PostProcessSetting((int)Override.FilmBlackClip)]
-        [Tooltip("This will set where the crossover happens where black's start to cut off their value. In general, this value should not be adjusted. Default is 0.")]
-        public float FilmBlackClip;
-
-        /// <summary>
-        /// Gets or sets the film curve white clip. Default is 0.04.
-        /// </summary>
-        [DefaultValue(0.04f), Limit(0, 1, 0.01f)]
-        [EditorOrder(6), PostProcessSetting((int)Override.FilmWhiteClip)]
-        [Tooltip("This will set where the crossover happens where white's start to cut off their values. This will appear as a subtle change in most cases. Default is 0.04.")]
-        public float FilmWhiteClip;
+        [DefaultValue(ToneMappingMode.ACES)]
+        [Tooltip("The tone mapping mode to use for the color grading process.")]
+        [EditorOrder(2), PostProcessSetting((int)Override.Mode)]
+        public ToneMappingMode Mode;
     }
 
     /// <summary>
