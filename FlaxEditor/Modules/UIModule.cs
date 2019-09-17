@@ -43,6 +43,7 @@ namespace FlaxEditor.Modules
         private ContextMenuButton _menuSceneMoveActorToViewport;
         private ContextMenuButton _menuSceneAlignActorWithViewport;
         private ContextMenuButton _menuSceneAlignViewportWithActor;
+        private ContextMenuButton _menuScenePilotActor;
         private ContextMenuButton _menuSceneCreateTerrain;
         private ContextMenuButton _menuGamePlay;
         private ContextMenuButton _menuGamePause;
@@ -401,6 +402,7 @@ namespace FlaxEditor.Modules
             _menuSceneMoveActorToViewport = cm.AddButton("Move actor to viewport", MoveActorToViewport);
             _menuSceneAlignActorWithViewport = cm.AddButton("Align actor with viewport", AlignActorWithViewport);
             _menuSceneAlignViewportWithActor = cm.AddButton("Align viewport with actor", AlignViewportWithActor);
+            _menuScenePilotActor = cm.AddButton("Pilot actor", PilotActor);
             cm.AddSeparator();
             _menuSceneCreateTerrain = cm.AddButton("Create terrain", CreateTerrain);
 
@@ -589,10 +591,13 @@ namespace FlaxEditor.Modules
 
             var selection = Editor.SceneEditing;
             bool hasActorSelected = selection.HasSthSelected && selection.Selection[0] is ActorNode;
+            bool isPilotActorActive = Editor.Windows.EditWin.IsPilotActorActive;
 
             _menuSceneMoveActorToViewport.Enabled = hasActorSelected;
             _menuSceneAlignActorWithViewport.Enabled = hasActorSelected;
             _menuSceneAlignViewportWithActor.Enabled = hasActorSelected;
+            _menuScenePilotActor.Enabled = hasActorSelected || isPilotActorActive;
+            _menuScenePilotActor.Text = isPilotActorActive ? "Stop pilot actor" : "Pilot actor";
             _menuSceneCreateTerrain.Enabled = SceneManager.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
 
             control.PerformLayout();
@@ -693,6 +698,22 @@ namespace FlaxEditor.Modules
                 {
                     actor.Position = viewport.ViewPosition;
                     actor.Orientation = viewport.ViewOrientation;
+                }
+            }
+        }
+
+        internal void PilotActor()
+        {
+            if (Editor.Windows.EditWin.IsPilotActorActive)
+            {
+                Editor.Windows.EditWin.EndPilot();
+            }
+            else
+            {
+                var selection = Editor.SceneEditing;
+                if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
+                {
+                    Editor.Windows.EditWin.PilotActor(node.Actor);
                 }
             }
         }

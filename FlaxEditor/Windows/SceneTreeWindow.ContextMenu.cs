@@ -40,6 +40,11 @@ namespace FlaxEditor.Windows
             b = contextMenu.AddButton("Collapse All", OnCollapseAllClicked);
             b.Enabled = hasSthSelected;
 
+            if (hasSthSelected)
+            {
+                contextMenu.AddButton(Editor.Windows.EditWin.IsPilotActorActive ? "Stop pilot actor" : "Pilot actor", Editor.UI.PilotActor);
+            }
+
             contextMenu.AddSeparator();
 
             // Basic editing options
@@ -54,6 +59,7 @@ namespace FlaxEditor.Windows
             b.Enabled = hasSthSelected;
 
             contextMenu.AddSeparator();
+
             b = contextMenu.AddButton("Copy", Editor.SceneEditing.Copy);
 
             b.Enabled = hasSthSelected;
@@ -82,6 +88,7 @@ namespace FlaxEditor.Windows
             // Spawning actors options
 
             contextMenu.AddSeparator();
+
             var spawnMenu = contextMenu.AddChildMenu("New");
             var newActorCm = spawnMenu.ContextMenu;
             for (int i = 0; i < SpawnActorsGroups.Length; i++)

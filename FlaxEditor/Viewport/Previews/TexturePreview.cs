@@ -325,28 +325,28 @@ namespace FlaxEditor.Viewport.Previews
                     TooltipText = "Show/hide texture red channel",
                     Parent = channelsWidget
                 };
-                channelR.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Red : (ViewChannels & ~ChannelFlags.Red);
+                channelR.Toggled += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Red : (ViewChannels & ~ChannelFlags.Red);
                 var channelG = new ViewportWidgetButton("G", Sprite.Invalid, null, true)
                 {
                     Checked = true,
                     TooltipText = "Show/hide texture green channel",
                     Parent = channelsWidget
                 };
-                channelG.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Green : (ViewChannels & ~ChannelFlags.Green);
+                channelG.Toggled += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Green : (ViewChannels & ~ChannelFlags.Green);
                 var channelB = new ViewportWidgetButton("B", Sprite.Invalid, null, true)
                 {
                     Checked = true,
                     TooltipText = "Show/hide texture blue channel",
                     Parent = channelsWidget
                 };
-                channelB.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Blue : (ViewChannels & ~ChannelFlags.Blue);
+                channelB.Toggled += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Blue : (ViewChannels & ~ChannelFlags.Blue);
                 var channelA = new ViewportWidgetButton("A", Sprite.Invalid, null, true)
                 {
                     Checked = true,
                     TooltipText = "Show/hide texture alpha channel",
                     Parent = channelsWidget
                 };
-                channelA.OnToggle += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Alpha : (ViewChannels & ~ChannelFlags.Alpha);
+                channelA.Toggled += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Alpha : (ViewChannels & ~ChannelFlags.Alpha);
                 //
                 channelsWidget.Parent = this;
 

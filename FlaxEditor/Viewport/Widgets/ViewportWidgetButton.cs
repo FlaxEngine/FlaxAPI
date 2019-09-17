@@ -18,11 +18,17 @@ namespace FlaxEditor.Viewport.Widgets
         private ContextMenu _cm;
         private bool _checked;
         private bool _autoCheck;
+        private bool _isMosueDown;
 
         /// <summary>
         /// Event fired when user toggles checked state.
         /// </summary>
-        public Action<ViewportWidgetButton> OnToggle;
+        public event Action<ViewportWidgetButton> Toggled;
+
+        /// <summary>
+        /// Event fired when user click the button.
+        /// </summary>
+        public event Action<ViewportWidgetButton> Clicked;
 
         /// <summary>
         /// Gets or sets the text.
@@ -40,9 +46,6 @@ namespace FlaxEditor.Viewport.Widgets
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="ViewportWidgetButton"/> is checked.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if checked; otherwise, <c>false</c>.
-        /// </value>
         public bool Checked
         {
             get => _checked;
@@ -57,7 +60,7 @@ namespace FlaxEditor.Viewport.Widgets
         /// <param name="contextMenu">The context menu.</param>
         /// <param name="autoCheck">if set to <c>true</c> will be automatic checked on mouse click.</param>
         public ViewportWidgetButton(string text, Sprite icon, ContextMenu contextMenu = null, bool autoCheck = false)
-        : base(0, 0, calculateButtonWidth(0, icon.IsValid), ViewportWidgetsContainer.WidgetsHeight)
+        : base(0, 0, CalculateButtonWidth(0, icon.IsValid), ViewportWidgetsContainer.WidgetsHeight)
         {
             _text = text;
             _icon = icon;
@@ -80,7 +83,7 @@ namespace FlaxEditor.Viewport.Widgets
             }
         }
 
-        private static float calculateButtonWidth(float textWidth, bool hasIcon)
+        private static float CalculateButtonWidth(float textWidth, bool hasIcon)
         {
             return (hasIcon ? ViewportWidgetsContainer.WidgetsIconSize : 0) + (textWidth > 0 ? textWidth + 8 : 0);
         }
@@ -118,24 +121,32 @@ namespace FlaxEditor.Viewport.Widgets
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            // Check if auto check feature is enabled
+            if (buttons == MouseButton.Left)
+            {
+                _isMosueDown = true;
+            }
             if (_autoCheck)
             {
                 // Toggle
                 Checked = !_checked;
-
-                // Fire event
-                OnToggle?.Invoke(this);
+                Toggled?.Invoke(this);
             }
 
-            // Check if has context menu binded
-            if (_cm != null)
-            {
-                // Show
-                _cm.Show(this, new Vector2(-1, Height + 2));
-            }
+            _cm?.Show(this, new Vector2(-1, Height + 2));
 
             return base.OnMouseDown(location, buttons);
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (buttons == MouseButton.Left && _isMosueDown)
+            {
+                _isMosueDown = false;
+                Clicked?.Invoke(this);
+            }
+
+            return base.OnMouseUp(location, buttons);
         }
 
         /// <inheritdoc />
@@ -144,7 +155,7 @@ namespace FlaxEditor.Viewport.Widgets
             var style = Style.Current;
 
             if (style != null && style.FontMedium)
-                Width = calculateButtonWidth(style.FontMedium.MeasureText(_text).X, _icon.IsValid);
+                Width = CalculateButtonWidth(style.FontMedium.MeasureText(_text).X, _icon.IsValid);
         }
     }
 }

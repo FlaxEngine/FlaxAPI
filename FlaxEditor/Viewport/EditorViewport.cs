@@ -230,7 +230,15 @@ namespace FlaxEditor.Viewport
         /// <summary>
         /// Gets the view transform.
         /// </summary>
-        public Transform ViewTransform => new Transform(ViewPosition, ViewOrientation);
+        public Transform ViewTransform
+        {
+            get => new Transform(ViewPosition, ViewOrientation);
+            set
+            {
+                ViewPosition = value.Translation;
+                ViewOrientation = value.Orientation;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the view position.

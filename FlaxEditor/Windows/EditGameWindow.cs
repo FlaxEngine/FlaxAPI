@@ -9,6 +9,7 @@ using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.States;
 using FlaxEditor.Viewport;
 using FlaxEditor.Viewport.Cameras;
+using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
@@ -104,12 +105,17 @@ namespace FlaxEditor.Windows
             {
                 IsPinned = false;
                 Camera = null;
+                _pinButton = null;
 
                 base.OnDestroy();
             }
         }
 
         private readonly List<CameraPreview> _previews = new List<CameraPreview>();
+        private Actor _pilotActor;
+        private BoundingBox _pilotBounds;
+        private Transform _pilotStart;
+        private ViewportWidgetButton _pilotWidget;
 
         /// <summary>
         /// The viewport control.
@@ -126,13 +132,84 @@ namespace FlaxEditor.Windows
             Title = "Editor";
 
             // Create viewport
-            Viewport = new MainEditorGizmoViewport(editor);
-            Viewport.Parent = this;
+            Viewport = new MainEditorGizmoViewport(editor)
+            {
+                Parent = this,
+                NearPlane = 8.0f,
+                FarPlane = 20000.0f
+            };
             Viewport.Task.View.Flags = ViewFlags.DefaultEditor;
-            Viewport.NearPlane = 8.0f;
-            Viewport.FarPlane = 20000.0f;
 
             Editor.Scene.ActorRemoved += SceneOnActorRemoved;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether actor pilot feature is active and in use.
+        /// </summary>
+        public bool IsPilotActorActive => _pilotActor;
+
+        /// <summary>
+        /// Gets the current actor that is during pilot action.
+        /// </summary>
+        public Actor ActorToPilot => _pilotActor;
+
+        /// <summary>
+        /// Moves viewport to the actor and attaches actor to the viewport to pilot it over the scene.
+        /// </summary>
+        /// <param name="actor">The actor to pilot.</param>
+        public void PilotActor(Actor actor)
+        {
+            if (_pilotActor)
+                EndPilot();
+
+            _pilotActor = actor;
+            _pilotStart = actor.Transform;
+            _pilotBounds = actor.BoxWithChildren;
+            Viewport.ViewTransform = _pilotStart;
+            if (_pilotWidget == null)
+            {
+                var container = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft)
+                {
+                    Parent = Viewport,
+                };
+                _pilotWidget = new ViewportWidgetButton(string.Empty, Sprite.Invalid)
+                {
+                    Parent = container,
+                };
+                _pilotWidget.Clicked += button => EndPilot();
+                container.UnlockChildrenRecursive();
+            }
+            else
+            {
+                _pilotWidget.Parent.Visible = true;
+            }
+            _pilotWidget.Text = string.Format("Pilot actor: {0} (click to stop)", actor.Name);
+            _pilotWidget.PerformLayout();
+            _pilotWidget.Parent.PerformLayout();
+        }
+
+        /// <summary>
+        /// Ends the actor piloting mode.
+        /// </summary>
+        public void EndPilot()
+        {
+            if (_pilotActor == null)
+                return;
+
+            if (Editor.Undo.Enabled)
+            {
+                bool navigationDirty = (_pilotActor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation;
+                var action = new TransformObjectsAction
+                (
+                    new List<SceneGraphNode> { Editor.Scene.GetActorNode(_pilotActor) },
+                    new List<Transform> { _pilotStart },
+                    ref _pilotBounds,
+                    navigationDirty
+                );
+                Editor.Undo.AddAction(action);
+            }
+            _pilotActor = null;
+            _pilotWidget.Parent.Visible = false;
         }
 
         private void SceneOnActorRemoved(ActorNode actorNode)
@@ -141,6 +218,10 @@ namespace FlaxEditor.Windows
             {
                 // Remove previews using this camera
                 HideCameraPreview((Camera)cameraNode.Actor);
+            }
+            else if (actorNode.Actor == _pilotActor)
+            {
+                EndPilot();
             }
         }
 
@@ -275,15 +356,6 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override void OnSceneLoaded(Scene scene, Guid sceneId)
-        {
-            if (SceneManager.ScenesCount == 1)
-            {
-                // TODO: load cached viewport for that scene
-            }
-        }
-
-        /// <inheritdoc />
         public override void OnSceneUnloading(Scene scene, Guid sceneId)
         {
             for (int i = 0; i < _previews.Count; i++)
@@ -291,12 +363,17 @@ namespace FlaxEditor.Windows
                 if (_previews[i].Camera.Scene == scene)
                     HideCameraPreview(_previews[i--]);
             }
+
+            if (_pilotActor && _pilotActor.Scene == scene)
+            {
+                EndPilot();
+            }
         }
 
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            // TODO: call camera preview update only on selecion change, or state change
+            // TODO: call camera preview update only on selection change, or state change
             UpdateCameraPreview();
 
             if (Root.GetKeyDown(Keys.F12))
@@ -305,12 +382,21 @@ namespace FlaxEditor.Windows
             }
 
             base.Update(deltaTime);
+
+            if (_pilotActor)
+            {
+                var transform = Viewport.ViewTransform;
+                transform.Scale = _pilotActor.Scale;
+                _pilotActor.Transform = transform;
+            }
         }
 
         /// <inheritdoc />
         public override void OnDestroy()
         {
             HideAllCameraPreviews();
+            EndPilot();
+            _pilotWidget = null;
 
             base.OnDestroy();
         }
