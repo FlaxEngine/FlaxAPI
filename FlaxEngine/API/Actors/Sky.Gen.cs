@@ -57,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets the sun disc scale.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), DefaultValue(1.0f), EditorDisplay("Sun"), Tooltip("Sun disc scale"), Limit(0, 100, 0.01f)]
+        [EditorOrder(20), DefaultValue(3.0f), EditorDisplay("Sun"), Tooltip("Sun disc scale"), Limit(0, 100, 0.01f)]
         public float SunDiscScale
         {
 #if UNIT_TEST_COMPILANT
