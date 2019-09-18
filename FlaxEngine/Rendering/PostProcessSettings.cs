@@ -1372,7 +1372,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.
         /// </summary>
-        [DefaultValue(1.0f), Limit(0, 1, 0.1f)]
+        [DefaultValue(1.0f), Limit(0, 1, 0.01f)]
         [EditorOrder(1), PostProcessSetting((int)Override.BlurStrength)]
         [Tooltip("The blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.")]
         public float BlurStrength;
@@ -1380,7 +1380,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
-        [DefaultValue(550.0f), Limit(0)]
+        [DefaultValue(1700.0f), Limit(0)]
         [EditorOrder(2), PostProcessSetting((int)Override.FocalDistance)]
         [Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs")]
         public float FocalDistance;
@@ -1388,7 +1388,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
-        [DefaultValue(1000.0f), Limit(0)]
+        [DefaultValue(3000.0f), Limit(0)]
         [EditorOrder(3), PostProcessSetting((int)Override.FocalRegion)]
         [Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs")]
         public float FocalRegion;
@@ -1396,7 +1396,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
         /// </summary>
-        [DefaultValue(80.0f), Limit(0)]
+        [DefaultValue(200.0f), Limit(0)]
         [EditorOrder(4), PostProcessSetting((int)Override.NearTransitionRange)]
         [Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred")]
         public float NearTransitionRange;
@@ -1404,7 +1404,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
         /// </summary>
-        [DefaultValue(100.0f), Limit(0)]
+        [DefaultValue(300.0f), Limit(0)]
         [EditorOrder(5), PostProcessSetting((int)Override.FarTransitionRange)]
         [Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred")]
         public float FarTransitionRange;
@@ -1412,7 +1412,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.
         /// </summary>
-        [DefaultValue(6000.0f), Limit(0, float.MaxValue, 2)]
+        [DefaultValue(0.0f), Limit(0, float.MaxValue, 2)]
         [EditorOrder(6), PostProcessSetting((int)Override.DepthLimit)]
         [Tooltip("The distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.")]
         public float DepthLimit;
@@ -1436,7 +1436,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Gets or sets the Bokeh shapes style.
         /// </summary>
-        [DefaultValue(BokehShapeType.Circle)]
+        [DefaultValue(BokehShapeType.Octagon)]
         [EditorOrder(9), PostProcessSetting((int)Override.BokehShape)]
         [Tooltip("Bokeh shapes style")]
         public BokehShapeType BokehShape;
@@ -1458,7 +1458,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Controls Bokeh shapes generating minimum pixel brightness to appear.
         /// </summary>
-        [DefaultValue(0.8f), Limit(0, 10.0f, 0.01f)]
+        [DefaultValue(3.0f), Limit(0, 20.0f, 0.01f)]
         [EditorOrder(11), PostProcessSetting((int)Override.BokehBrightnessThreshold)]
         [Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear")]
         public float BokehBrightnessThreshold;
