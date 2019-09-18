@@ -619,6 +619,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
         }
 
+        private Image _pilotCamera;
+
         /// <summary>
         /// Gets the camera object instance (it might be missing).
         /// </summary>
@@ -654,6 +656,65 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         : base(ref options)
         {
             Height = CameraCutThumbnailRenderer.Height + 4 + 4;
+
+            // Pilot Camera button
+            const float buttonSize = 14;
+            var icons = Editor.Instance.Icons;
+            _pilotCamera = new Image(_selectActor.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            {
+                TooltipText = "Starts pilot of the camera (in scene edit window)",
+                AutoFocus = true,
+                AnchorStyle = AnchorStyle.CenterRight,
+                IsScrollable = false,
+                Color = new Color(0.8f),
+                Margin = new Margin(1),
+                Brush = new SpriteBrush(icons.Translate16),
+                Parent = this
+            };
+            _pilotCamera.Clicked += OnClickedPilotCamera;
+        }
+
+        private void OnClickedPilotCamera(Image image, MouseButton button)
+        {
+            if (button == MouseButton.Left)
+            {
+                var camera = Camera;
+                if (camera)
+                {
+                    Expand();
+
+                    var editWin = Editor.Instance.Windows.EditWin;
+                    editWin.PilotActor(camera);
+
+                    var time = Timeline.CurrentTime;
+                    var hasPositionTrack = false;
+                    var hasOrientationTrack = false;
+                    foreach (var subTrack in SubTracks)
+                    {
+                        if (subTrack is MemberTrack memberTrack)
+                        {
+                            object value = memberTrack.Evaluate(time);
+                            if (value != null)
+                            {
+                                if (memberTrack.MemberName == "Position" && value is Vector3 asPosition)
+                                {
+                                    editWin.Viewport.ViewPosition = asPosition;
+                                    hasPositionTrack = true;
+                                }
+                                else if (memberTrack.MemberName == "Orientation" && value is Quaternion asRotation)
+                                {
+                                    editWin.Viewport.ViewOrientation = asRotation;
+                                    hasOrientationTrack = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!hasPositionTrack)
+                        AddPropertyTrack(camera.GetType().GetProperty("Position"));
+                    if (!hasOrientationTrack)
+                        AddPropertyTrack(camera.GetType().GetProperty("Orientation"));
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -678,6 +739,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             var media = TrackMedia;
 
             base.OnSpawned();
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            _pilotCamera = null;
+
+            base.OnDestroy();
         }
     }
 }

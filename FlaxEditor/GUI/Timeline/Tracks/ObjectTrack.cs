@@ -224,6 +224,35 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             parentTrack.Expand();
         }
 
+
+        /// <summary>
+        /// Adds the property or field track to this object track.
+        /// </summary>
+        /// <param name="script">The member (property or a field).</param>
+        /// <returns>The created track or null if failed.</returns>
+        public MemberTrack AddPropertyTrack(MemberInfo m)
+        {
+            if (SubTracks.Any(x => x is MemberTrack y && y.MemberName == m.Name))
+                return null;
+            if (GetPropertyTrackType(m, out var t))
+                return null;
+            if (GetPropertyTrackArchetype(t, out var archetype, out var name))
+                return null;
+
+            var timeline = Timeline;
+            var track = (MemberTrack)timeline.AddTrack(archetype);
+            track.ParentTrack = this;
+            track.TrackIndex = TrackIndex + 1;
+            track.Name = Guid.NewGuid().ToString("N");
+            track.Member = m;
+
+            timeline.OnTracksOrderChanged();
+            timeline.MarkAsEdited();
+            Expand();
+
+            return track;
+        }
+
         /// <summary>
         /// Adds the object properties animation track options to menu.
         /// </summary>
@@ -244,23 +273,12 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             {
                 var m = members[i];
 
-                Type t;
-                if (m is PropertyInfo p)
-                {
-                    // Properties with read/write
-                    if (!(p.CanRead && p.CanWrite && p.GetIndexParameters().GetLength(0) == 0))
-                        continue;
-
-                    t = p.PropertyType;
-                }
-                else if (m is FieldInfo f)
-                {
-                    t = f.FieldType;
-                }
-                else
-                {
+                // Prevent from adding the same track twice
+                if (parentTrack.SubTracks.Any(x => x is MemberTrack y && y.MemberName == m.Name))
                     continue;
-                }
+
+                if (GetPropertyTrackType(m, out var t))
+                    continue;
 
                 if (memberCheck != null && !memberCheck(m))
                     continue;
@@ -272,42 +290,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     continue;
 
                 // Validate value type and pick the track archetype
-                var valueType = t;
-                string name = valueType.Name;
-                if (BasicTypesTrackArchetypes.TryGetValue(valueType, out var archetype))
-                {
-                    // Basic type
-                    if (!BasicTypesNames.TryGetValue(valueType, out name))
-                        name = valueType.Name;
-                }
-                else if (valueType.IsEnum)
-                {
-                    // Enum
-                    archetype = KeyframesPropertyTrack.GetArchetype();
-                }
-                else if (valueType.IsValueType)
-                {
-                    // Structure
-                    archetype = StructPropertyTrack.GetArchetype();
-                }
-                else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
-                {
-                    // Flax object reference
-                    archetype = ObjectReferencePropertyTrack.GetArchetype();
-                }
-                else if (CanAnimateObjectType(valueType))
-                {
-                    // Nested object
-                    archetype = ObjectPropertyTrack.GetArchetype();
-                }
-                else
-                {
-                    // Not supported
-                    continue;
-                }
-
-                // Prevent from adding the same track twice
-                if (parentTrack.SubTracks.Any(x => x is MemberTrack y && y.MemberName == m.Name))
+                if (GetPropertyTrackArchetype(t, out var archetype, out var name))
                     continue;
 
                 AddMemberTag tag;
@@ -318,6 +301,68 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
 
             return count;
+        }
+
+        private static bool GetPropertyTrackType(MemberInfo m, out Type t)
+        {
+            t = null;
+            if (m is PropertyInfo p)
+            {
+                // Properties with read/write
+                if (!(p.CanRead && p.CanWrite && p.GetIndexParameters().GetLength(0) == 0))
+                    return true;
+
+                t = p.PropertyType;
+            }
+            else if (m is FieldInfo f)
+            {
+                t = f.FieldType;
+            }
+            else
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool GetPropertyTrackArchetype(Type valueType, out TrackArchetype archetype, out string name)
+        {
+            // Validate value type and pick the track archetype
+            name = valueType.Name;
+            if (BasicTypesTrackArchetypes.TryGetValue(valueType, out archetype))
+            {
+                // Basic type
+                if (!BasicTypesNames.TryGetValue(valueType, out name))
+                    name = valueType.Name;
+            }
+            else if (valueType.IsEnum)
+            {
+                // Enum
+                archetype = KeyframesPropertyTrack.GetArchetype();
+            }
+            else if (valueType.IsValueType)
+            {
+                // Structure
+                archetype = StructPropertyTrack.GetArchetype();
+            }
+            else if (typeof(FlaxEngine.Object).IsAssignableFrom(valueType))
+            {
+                // Flax object reference
+                archetype = ObjectReferencePropertyTrack.GetArchetype();
+            }
+            else if (CanAnimateObjectType(valueType))
+            {
+                // Nested object
+                archetype = ObjectPropertyTrack.GetArchetype();
+            }
+            else
+            {
+                // Not supported
+                return true;
+            }
+
+            return false;
         }
 
         private static bool CanAnimateObjectType(Type type)

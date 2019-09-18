@@ -45,6 +45,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             stream.Write(e.ActorID.ToByteArray());
         }
 
+        protected Image _selectActor;
+
         /// <summary>
         /// The object ID.
         /// </summary>
@@ -66,7 +68,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             // Select Actor button
             const float buttonSize = 14;
             var icons = Editor.Instance.Icons;
-            var selectActor = new Image(_addButton.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            _selectActor = new Image(_addButton.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
             {
                 TooltipText = "Selects the actor animated by this track",
                 AutoFocus = true,
@@ -77,7 +79,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 Brush = new SpriteBrush(icons.Search12),
                 Parent = this
             };
-            selectActor.Clicked += OnClickedSelectActor;
+            _selectActor.Clicked += OnClickedSelectActor;
         }
 
         /// <inheritdoc />
@@ -192,6 +194,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     Editor.Instance.SceneEditing.Select(actor);
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            _selectActor = null;
+
+            base.OnDestroy();
         }
     }
 }
