@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine.Rendering
 {
-    public static partial class GraphicsQuality
+    public static partial class GraphicsSettings
     {
         /// <summary>
         /// Enables rendering synchronization with the refresh rate of the display device to avoid "tearing" artifacts.

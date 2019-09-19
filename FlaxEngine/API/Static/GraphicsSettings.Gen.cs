@@ -5,7 +5,7 @@ namespace FlaxEngine.Rendering
     /// <summary>
     /// Graphics rendering quality settings.
     /// </summary>
-    public static partial class GraphicsQuality
+    public static partial class GraphicsSettings
     {
     }
 }
