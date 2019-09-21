@@ -645,6 +645,8 @@ namespace FlaxEditor.Viewport
             {
                 if (binaryAssetItem.Type == typeof(ParticleSystem))
                     return true;
+                if (binaryAssetItem.Type == typeof(SceneAnimation))
+                    return true;
             }
 
             switch (contentItem.ItemDomain)
@@ -716,10 +718,21 @@ namespace FlaxEditor.Viewport
             {
                 if (binaryAssetItem.Type == typeof(ParticleSystem))
                 {
-                    var particleSystem = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
+                    var asset = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
                     var actor = ParticleEffect.New();
                     actor.Name = item.ShortName;
-                    actor.ParticleSystem = particleSystem;
+                    actor.ParticleSystem = asset;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Editor.Instance.SceneEditing.Spawn(actor);
+
+                    return;
+                }
+                if (binaryAssetItem.Type == typeof(SceneAnimation))
+                {
+                    var asset = FlaxEngine.Content.LoadAsync<SceneAnimation>(item.ID);
+                    var actor = SceneAnimationPlayer.New();
+                    actor.Name = item.ShortName;
+                    actor.Animation = asset;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Editor.Instance.SceneEditing.Spawn(actor);
 
