@@ -79,7 +79,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="useWidgets">If set to <c>true</c> use widgets for viewport, otherwise hide them.</param>
         /// <param name="camera">The camera controller.</param>
         protected AssetPreview(bool useWidgets, ViewportCamera camera)
-        : base(RenderTask.Create<SceneRenderTask>(), camera, useWidgets)
+        : base(Object.New<SceneRenderTask>(), camera, useWidgets)
         {
             DockStyle = DockStyle.Fill;
 

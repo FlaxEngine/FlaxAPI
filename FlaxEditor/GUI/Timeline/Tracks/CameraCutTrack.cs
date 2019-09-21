@@ -454,7 +454,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             }
             if (_task == null)
             {
-                _task = RenderTask.Create<SceneRenderTask>();
+                _task = Object.New<SceneRenderTask>();
                 _task.Output = _output;
                 _task.Begin += OnBegin;
                 _task.End += OnEnd;

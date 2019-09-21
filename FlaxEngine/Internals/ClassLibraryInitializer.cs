@@ -80,7 +80,7 @@ namespace FlaxEngine
                 CreateGuiStyle();
             }
 
-            MainRenderTask.Instance = RenderTask.Create<MainRenderTask>();
+            MainRenderTask.Instance = Object.New<MainRenderTask>();
         }
 
         /// <summary>

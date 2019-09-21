@@ -103,7 +103,7 @@ namespace FlaxEditor.Viewport
         /// </summary>
         /// <param name="editor">Editor instance.</param>
         public MainEditorGizmoViewport(Editor editor)
-        : base(FlaxEngine.Rendering.RenderTask.Create<SceneRenderTask>(), editor.Undo)
+        : base(FlaxEngine.Object.New<SceneRenderTask>(), editor.Undo)
         {
             _editor = editor;
 
