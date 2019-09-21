@@ -180,7 +180,8 @@ namespace FlaxEditor.Utilities
         /// <returns>True if type is from gae or editor assembly, otherwise false.</returns>
         public static bool IsTypeFromGameScripts(Type type)
         {
-            return type.Assembly.GetName().Name.StartsWith("Assembly");
+            var name = type.Assembly.GetName().Name;
+            return name == "Game" || name == "Game.Editor";
         }
 
         /// <summary>
