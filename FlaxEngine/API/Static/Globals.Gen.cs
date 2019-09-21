@@ -11,6 +11,9 @@ namespace FlaxEngine
     /// <summary>
     /// Interop class used to access Flax global variables via C# API.
     /// </summary>
+    /// <remarks>
+    /// Profiler is available in the editor and Debug builds. Release builds don't have profiling tools.
+    /// </remarks>
     public static partial class Globals
     {
         /// <summary>
