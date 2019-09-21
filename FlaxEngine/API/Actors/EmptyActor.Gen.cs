@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Empty actor is useful to create hierarchy and/or hold scripts. See <see cref="Script"/>.
+    /// The empty actor that is useful to create hierarchy and/or hold scripts. See <see cref="Script"/>.
     /// </summary>
     [Serializable]
     public sealed partial class EmptyActor : Actor
