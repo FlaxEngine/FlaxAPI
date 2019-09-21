@@ -219,7 +219,7 @@ namespace FlaxEditor.Windows
                 // Remove previews using this camera
                 HideCameraPreview((Camera)cameraNode.Actor);
             }
-            else if (actorNode.Actor == _pilotActor)
+            if (actorNode.Actor == _pilotActor)
             {
                 EndPilot();
             }
