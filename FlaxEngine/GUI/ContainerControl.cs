@@ -32,11 +32,6 @@ namespace FlaxEngine.GUI
         protected bool _performChildrenLayoutFirst;
 
         /// <summary>
-        ///      Action is invoked, when child control gets resized
-        /// </summary>
-        public event Action<Control> OnChildControlResized;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ContainerControl"/> class.
         /// </summary>
         public ContainerControl()
@@ -461,7 +456,6 @@ namespace FlaxEngine.GUI
         /// <param name="control">The resized control.</param>
         public virtual void OnChildResized(Control control)
         {
-            OnChildControlResized?.Invoke(control);
         }
 
         /// <summary>
