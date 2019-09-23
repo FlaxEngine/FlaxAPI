@@ -7,7 +7,7 @@ using FlaxEngine.Assertions;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    ///     Base interface for all GUI controls that can contain controls
+    /// Base class for all GUI controls that can contain child controls.
     /// </summary>
     [HideInEditor]
     public class ContainerControl : Control
@@ -25,16 +25,10 @@ namespace FlaxEngine.GUI
         protected bool _containsFocus;
 
         /// <summary>
-        /// The option to update child controls layout first before self.
-        /// Useful for controls which dimensions are based on children.
+        /// The option to update child controls layout first before self. Useful for controls which dimensions are based on children.
         /// </summary>
         [NoSerialize]
         protected bool _performChildrenLayoutFirst;
-
-        /// <summary>
-        ///      Action is invoked, when child control gets resized
-        /// </summary>
-        public event Action<Control> OnChildControlResized;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerControl"/> class.
@@ -70,29 +64,27 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets child controls list
+        /// Gets child controls list
         /// </summary>
         public List<Control> Children => _children;
 
         /// <summary>
-        ///     Gets amount of the children controls
+        /// Gets amount of the children controls
         /// </summary>
         public int ChildrenCount => _children.Count;
 
         /// <summary>
-        ///     Checks if container has any child controls
+        /// Checks if container has any child controls
         /// </summary>
         public bool HasChildren => _children.Count > 0;
 
         /// <summary>
-        ///     Gets a value indicating whether the control, or one of its child controls, currently has the input focus
+        /// Gets a value indicating whether the control, or one of its child controls, currently has the input focus.
         /// </summary>
-        /// <returns>True if the control, or one of its child controls, currently has the input focus</returns>
         public override bool ContainsFocus => _containsFocus;
 
         /// <summary>
-        ///     True if automatic updates for control layout are locked (useful when creating a lot of GUI control to prevent
-        ///     lags)
+        /// True if automatic updates for control layout are locked (useful when creating a lot of GUI control to prevent lags).
         /// </summary>
         [HideInEditor, NoSerialize]
         public bool IsLayoutLocked { get; set; }
@@ -100,11 +92,11 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets a value indicating whether apply clipping mask on children during rendering.
         /// </summary>
-        [EditorOrder(530), Tooltip("If checked, control will apply clipping mask on children during rendering..")]
+        [EditorOrder(530), Tooltip("If checked, control will apply clipping mask on children during rendering.")]
         public bool ClipChildren { get; set; } = true;
 
         /// <summary>
-        ///     Lock all child controls layout and itself
+        /// Locks all child controls layout and itself.
         /// </summary>
         [NoAnimate]
         public virtual void LockChildrenRecursive()
@@ -121,7 +113,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Unlocks all child controls layout and itself
+        /// Unlocks all the child controls layout and itself.
         /// </summary>
         [NoAnimate]
         public virtual void UnlockChildrenRecursive()
@@ -138,7 +130,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Unlink all child controls
+        /// Unlinks all the child controls.
         /// </summary>
         [NoAnimate]
         public virtual void RemoveChildren()
@@ -157,7 +149,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Remove and dispose all child controls
+        /// Removes and disposes all the child controls
         /// </summary>
         public virtual void DisposeChildren()
         {
@@ -177,7 +169,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Creates a new control and adds it to the container.
         /// </summary>
-        /// <returns>Added control.</returns>
+        /// <returns>The added control.</returns>
         public T AddChild<T>() where T : Control
         {
             var child = (T)Activator.CreateInstance(typeof(T));
@@ -186,10 +178,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Add control to the container
+        /// Adds the control to the container.
         /// </summary>
-        /// <param name="child">Control to add</param>
-        /// <returns>Added control.</returns>
+        /// <param name="child">The control to add.</param>
+        /// <returns>The added control.</returns>
         public T AddChild<T>(T child) where T : Control
         {
             if (child == null)
@@ -204,9 +196,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Remove control from the container
+        /// Removes control from the container.
         /// </summary>
-        /// <param name="child">Control to remove</param>
+        /// <param name="child">The control to remove.</param>
         public void RemoveChild(Control child)
         {
             if (child == null)
@@ -219,10 +211,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets child control at given index.
+        /// Gets child control at given index.
         /// </summary>
-        /// <param name="index">Control index</param>
-        /// <returns>Control handle</returns>
+        /// <param name="index">The control index.</param>
+        /// <returns>The child control.</returns>
         public Control GetChild(int index)
         {
             return _children[index];
@@ -231,8 +223,8 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Searches for a child control of a specific type. If there are multiple controls matching the type, only the first one found is returned.
         /// </summary>
-        /// <typeparam name="T">Type of the control to search for. Includes any controls derived from the type.</typeparam>
-        /// <returns>Control instance if found, null otherwise</returns>
+        /// <typeparam name="T">The type of the control to search for. Includes any controls derived from the type.</typeparam>
+        /// <returns>The control instance if found, otherwise null.</returns>
         public T GetChild<T>() where T : Control
         {
             var type = typeof(T);
@@ -246,10 +238,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets zero-based index in the list of control children
+        /// Gets zero-based index in the list of control children.
         /// </summary>
-        /// <param name="child">Child control</param>
-        /// <returns>Zero-based index in the list of control children</returns>
+        /// <param name="child">The child control.</param>
+        /// <returns>The zero-based index in the list of control children.</returns>
         public int GetChildIndex(Control child)
         {
             return _children.IndexOf(child);
@@ -274,10 +266,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Tries to find any child control at given point in control local coordinates
+        /// Tries to find any child control at given point in control local coordinates.
         /// </summary>
-        /// <param name="point">Local point to check</param>
-        /// <returns>Found control index or -1</returns>
+        /// <param name="point">The local point to check.</param>
+        /// <returns>The found control index or -1 if failed.</returns>
         public int GetChildIndexAt(Vector2 point)
         {
             int result = -1;
@@ -297,10 +289,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Tries to find any child control at given point in control local coordinates
+        /// Tries to find any child control at given point in control local coordinates
         /// </summary>
-        /// <param name="point">Local point to check</param>
-        /// <returns>Found control or null</returns>
+        /// <param name="point">The local point to check.</param>
+        /// <returns>The found control or null.</returns>
         public Control GetChildAt(Vector2 point)
         {
             Control result = null;
@@ -323,8 +315,8 @@ namespace FlaxEngine.GUI
         /// Tries to find valid child control at given point in control local coordinates. Uses custom callback method to test controls to pick.
         /// </summary>
         /// <param name="point">The local point to check.</param>
-        /// <param name="isValid">Control validation callback</param>
-        /// <returns>Found control or null.</returns>
+        /// <param name="isValid">The control validation callback.</param>
+        /// <returns>The found control or null.</returns>
         public Control GetChildAt(Vector2 point, Func<Control, bool> isValid)
         {
             if (isValid == null)
@@ -347,10 +339,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Tries to find lowest child control at given point in control local coordinates
+        /// Tries to find lowest child control at given point in control local coordinates.
         /// </summary>
-        /// <param name="point">Local point to check</param>
-        /// <returns>Found control or null</returns>
+        /// <param name="point">The local point to check.</param>
+        /// <returns>The found control or null.</returns>
         public Control GetChildAtRecursive(Vector2 point)
         {
             Control result = null;
@@ -375,9 +367,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets rectangle in local control coordinates with area for controls (without scroll bars, docked controls, etc.)
+        /// Gets rectangle in local control coordinates with area for controls (without scroll bars, docked controls, etc.).
         /// </summary>
-        /// <returns>Rectangle in local control coordinates with area for controls (without scroll bars etc.)</returns>
+        /// <returns>The rectangle in local control coordinates with area for controls (without scroll bars etc.).</returns>
         public Rectangle GetClientArea()
         {
             Rectangle clientArea;
@@ -461,7 +453,6 @@ namespace FlaxEngine.GUI
         /// <param name="control">The resized control.</param>
         public virtual void OnChildResized(Control control)
         {
-            OnChildControlResized?.Invoke(control);
         }
 
         /// <summary>
@@ -492,9 +483,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Add child control to the container
+        /// Adds a child control to the container.
         /// </summary>
-        /// <param name="child">Control to add</param>
+        /// <param name="child">The control to add.</param>
         internal virtual void AddChildInternal(Control child)
         {
             Assert.IsNotNull(child, "Invalid control.");
@@ -506,9 +497,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Remove child control from this container
+        /// Removes a child control from this container.
         /// </summary>
-        /// <param name="child">Control to remove</param>
+        /// <param name="child">The control to remove.</param>
         internal virtual void RemoveChildInternal(Control child)
         {
             Assert.IsNotNull(child, "Invalid control.");
@@ -520,7 +511,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets the desire client area rectangle for all the controls.
+        /// Gets the desire client area rectangle for all the controls.
         /// </summary>
         /// <param name="rect">The client area rectangle for child controls.</param>
         protected virtual void GetDesireClientArea(out Rectangle rect)

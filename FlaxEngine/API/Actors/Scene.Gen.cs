@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Scene root actor object
+    /// The scene root object that contains a hierarchy of actors.
     /// </summary>
     [Serializable]
     public sealed partial class Scene : Actor

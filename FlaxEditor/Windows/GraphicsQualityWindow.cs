@@ -8,7 +8,7 @@ using FlaxEngine.Rendering;
 namespace FlaxEditor.Windows
 {
     /// <summary>
-    /// Window used to show and edit current graphics rendering settings via <see cref="GraphicsQuality"/>.
+    /// Window used to show and edit current graphics rendering settings via <see cref="GraphicsSettings"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public class GraphicsQualityWindow : EditorWindow
@@ -26,8 +26,8 @@ namespace FlaxEditor.Windows
             [EditorOrder(0), EditorDisplay("Rendering", "Use V-Sync"), Tooltip("Enables rendering synchronization with the refresh rate of the display device to avoid \"tearing\" artifacts.")]
             public bool UseVSync
             {
-                get => GraphicsQuality.UseVSync;
-                set => GraphicsQuality.UseVSync = value;
+                get => GraphicsSettings.UseVSync;
+                set => GraphicsSettings.UseVSync = value;
             }
 
             /// <summary>
@@ -36,8 +36,8 @@ namespace FlaxEditor.Windows
             [EditorOrder(1000), EditorDisplay("Quality", "AA Quality"), Tooltip("Anti Aliasing quality.")]
             public Quality AAQuality
             {
-                get => GraphicsQuality.AAQuality;
-                set => GraphicsQuality.AAQuality = value;
+                get => GraphicsSettings.AAQuality;
+                set => GraphicsSettings.AAQuality = value;
             }
 
             /// <summary>
@@ -46,8 +46,8 @@ namespace FlaxEditor.Windows
             [EditorOrder(1100), EditorDisplay("Quality", "SSR Quality"), Tooltip("Screen Space Reflections quality.")]
             public Quality SSRQuality
             {
-                get => GraphicsQuality.SSRQuality;
-                set => GraphicsQuality.SSRQuality = value;
+                get => GraphicsSettings.SSRQuality;
+                set => GraphicsSettings.SSRQuality = value;
             }
 
             /// <summary>
@@ -56,8 +56,8 @@ namespace FlaxEditor.Windows
             [EditorOrder(1200), EditorDisplay("Quality", "SSAO Quality"), Tooltip("Screen Space Ambient Occlusion quality setting.")]
             public Quality SSAOQuality
             {
-                get => GraphicsQuality.SSAOQuality;
-                set => GraphicsQuality.SSAOQuality = value;
+                get => GraphicsSettings.SSAOQuality;
+                set => GraphicsSettings.SSAOQuality = value;
             }
 
             /// <summary>
@@ -66,8 +66,8 @@ namespace FlaxEditor.Windows
             [EditorOrder(1250), EditorDisplay("Quality", "Volumetric Fog Quality"), Tooltip("Volumetric Fog quality setting.")]
             public Quality VolumetricFogQuality
             {
-                get => GraphicsQuality.VolumetricFogQuality;
-                set => GraphicsQuality.VolumetricFogQuality = value;
+                get => GraphicsSettings.VolumetricFogQuality;
+                set => GraphicsSettings.VolumetricFogQuality = value;
             }
 
             /// <summary>
@@ -76,8 +76,8 @@ namespace FlaxEditor.Windows
             [EditorOrder(1300), EditorDisplay("Quality", "Shadows Quality"), Tooltip("The shadows quality.")]
             public Quality ShadowsQuality
             {
-                get => GraphicsQuality.ShadowsQuality;
-                set => GraphicsQuality.ShadowsQuality = value;
+                get => GraphicsSettings.ShadowsQuality;
+                set => GraphicsSettings.ShadowsQuality = value;
             }
 
             /// <summary>
@@ -86,8 +86,8 @@ namespace FlaxEditor.Windows
             [EditorOrder(1310), EditorDisplay("Quality", "Shadow Maps Quality"), Tooltip("The shadow maps quality (textures resolution).")]
             public Quality ShadowMapsQuality
             {
-                get => GraphicsQuality.ShadowMapsQuality;
-                set => GraphicsQuality.ShadowMapsQuality = value;
+                get => GraphicsSettings.ShadowMapsQuality;
+                set => GraphicsSettings.ShadowMapsQuality = value;
             }
 
             /// <summary>
@@ -96,8 +96,8 @@ namespace FlaxEditor.Windows
             [EditorOrder(1320), EditorDisplay("Quality", "Allow CSM Blending"), Tooltip("Enables cascades splits blending for directional light shadows.")]
             public bool AllowCSMBlending
             {
-                get => GraphicsQuality.AllowCSMBlending;
-                set => GraphicsQuality.AllowCSMBlending = value;
+                get => GraphicsSettings.AllowCSMBlending;
+                set => GraphicsSettings.AllowCSMBlending = value;
             }
         }
 

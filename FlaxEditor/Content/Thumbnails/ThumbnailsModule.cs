@@ -208,7 +208,7 @@ namespace FlaxEditor.Content.Thumbnails
             // Create render task but disabled for now
             _output = RenderTarget.New();
             _output.Init(PreviewsCache.AssetIconsAtlasFormat, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-            _task = RenderTask.Create<CustomRenderTask>();
+            _task = Object.New<CustomRenderTask>();
             _task.Order = 50; // Render this task later
             _task.Enabled = false;
             _task.Render += OnRender;

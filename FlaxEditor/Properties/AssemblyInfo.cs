@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("be9ef022-e4dd-439d-b197-3a3c6058f479")]
-[assembly: AssemblyVersion("0.1.0.1")]
-[assembly: AssemblyFileVersion("0.1.0.1")]
+[assembly: AssemblyVersion("0.5.6187")]
+[assembly: AssemblyFileVersion("0.5.6187")]
 
 [assembly: InternalsVisibleTo("FlaxEditor.Tests")]

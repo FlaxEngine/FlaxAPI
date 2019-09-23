@@ -6,9 +6,9 @@ using FlaxEngine.Rendering;
 namespace FlaxEditor.Content.Settings
 {
     /// <summary>
-    /// The graphics rendering settings container. Allows to edit asset via editor. To modify those settings at runtime use <see cref="GraphicsQuality"/>.
+    /// The graphics rendering settings container. Allows to edit asset via editor. To modify those settings at runtime use <see cref="FlaxEngine.Rendering.GraphicsSettings"/>.
     /// </summary>
-    /// <seealso cref="GraphicsQuality"/>
+    /// <seealso cref="FlaxEngine.Rendering.GraphicsSettings"/>
     public sealed class GraphicsSettings : SettingsBase
     {
         /// <summary>
