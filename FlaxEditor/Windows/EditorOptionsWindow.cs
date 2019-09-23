@@ -174,7 +174,17 @@ namespace FlaxEditor.Windows
 
                 // Update value
                 var settingsPanel = tab.GetChild<Panel>().GetChild<CustomEditorPresenter.PresenterPanel>();
-                settingsPanel.Presenter.Select(JsonSerializer.Deserialize(_options.CustomSettings[name]));
+                try
+                {
+                    var value = JsonSerializer.Deserialize(_options.CustomSettings[name]);
+                    settingsPanel.Presenter.Select(value);
+                }
+                catch (Exception ex)
+                {
+                    Editor.LogWarning(ex);
+                    _customTabs.Remove(tab);
+                    tab.Dispose();
+                }
             }
             if (_customTabs.Count != 0)
                 _tabs.PerformLayout();
