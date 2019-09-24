@@ -130,8 +130,11 @@ namespace FlaxEditor.GUI.ContextMenu
             MinimumWidth = 10;
             MaximumItemsInViewCount = 20;
 
-            _panel = new ItemsPanel(this);
-            _panel.Parent = this;
+            _panel = new ItemsPanel(this)
+            {
+                ClipChildren = false,
+                Parent = this,
+            };
         }
 
         /// <summary>
