@@ -559,7 +559,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             // Copy output frame to the sprite atlas slot
             var spriteLocation = sprite.Location;
-            context.CopyTextureRegion(atlas.Texture, 0, (uint)spriteLocation.X, (uint)spriteLocation.Y, 0, _output, 0);
+            context.CopyTexture(atlas.Texture, 0, (uint)spriteLocation.X, (uint)spriteLocation.Y, 0, _output, 0);
 
             // Link sprite to the UI
             var req = _queue[0];
