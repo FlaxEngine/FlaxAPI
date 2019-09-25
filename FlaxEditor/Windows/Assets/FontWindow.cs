@@ -123,6 +123,7 @@ namespace FlaxEditor.Windows.Assets
             if (assetOptions != options)
             {
                 Asset.Options = options;
+                Asset.Invalidate();
             }
         }
 
