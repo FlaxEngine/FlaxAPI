@@ -99,6 +99,22 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Invalidates all cached dynamic font atlases using this font. Can be used to reload font characters after changing font asset options.
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Invalidate()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Invalidate(unmanagedPtr);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -119,6 +135,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Save(IntPtr obj, string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Invalidate(IntPtr obj);
 #endif
 
         #endregion
