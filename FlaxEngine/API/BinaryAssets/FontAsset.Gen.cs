@@ -47,6 +47,20 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the font options used for the characters rendering.
+        /// </summary>
+        [UnmanagedCall]
+        public FontOptions Options
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { FontOptions resultAsRef; Internal_GetOptions(unmanagedPtr, out resultAsRef); return resultAsRef; }
+            set { Internal_SetOptions(unmanagedPtr, ref value); }
+#endif
+        }
+
+        /// <summary>
         /// Creates the font object of given characters size.
         /// </summary>
         /// <param name="size">The font characters size.</param>
@@ -64,6 +78,43 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Saves asset to the file.
+        /// </summary>
+        /// <remarks>
+        /// Supported only in Editor.
+        /// </remarks>
+        /// <param name="path">The custom asset path to use for the saving. Use empty value to save this asset to its own storage location. Can be used to duplicate asset.</param>
+        /// <returns>True if cannot save data, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public bool Save(string path = null)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Save(unmanagedPtr, path);
+#endif
+        }
+
+        /// <summary>
+        /// Invalidates all cached dynamic font atlases using this font. Can be used to reload font characters after changing font asset options.
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Invalidate()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Invalidate(unmanagedPtr);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -74,7 +125,19 @@ namespace FlaxEngine
         internal static extern string Internal_GetStyleName(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetOptions(IntPtr obj, out FontOptions resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetOptions(IntPtr obj, ref FontOptions val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Font Internal_CreateFont(IntPtr obj, int size);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Save(IntPtr obj, string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Invalidate(IntPtr obj);
 #endif
 
         #endregion
