@@ -183,7 +183,7 @@ namespace FlaxEditor.Windows
             {
                 _pilotWidget.Parent.Visible = true;
             }
-            _pilotWidget.Text = string.Format("Pilot actor: {0} (click to stop)", actor.Name);
+            _pilotWidget.Text = string.Format("Piloting actor: {0} (click to stop)", actor.Name);
             _pilotWidget.PerformLayout();
             _pilotWidget.Parent.PerformLayout();
         }

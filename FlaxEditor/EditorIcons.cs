@@ -66,6 +66,8 @@ namespace FlaxEditor
         public Sprite UV32;
         public Sprite Image32;
         public Sprite Link32;
+        public Sprite Next32;
+        public Sprite Camera32;
 
         public Sprite Add48;
         public Sprite Paint48;

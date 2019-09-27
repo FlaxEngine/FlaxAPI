@@ -671,13 +671,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             var icons = Editor.Instance.Icons;
             _pilotCamera = new Image(_selectActor.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
             {
-                TooltipText = "Starts pilot of the camera (in scene edit window)",
+                TooltipText = "Starts piloting camera (in scene edit window)",
                 AutoFocus = true,
                 AnchorStyle = AnchorStyle.CenterRight,
                 IsScrollable = false,
                 Color = new Color(0.8f),
                 Margin = new Margin(1),
-                Brush = new SpriteBrush(icons.Translate16),
+                Brush = new SpriteBrush(icons.Camera32),
                 Parent = this
             };
             _pilotCamera.Clicked += OnClickedPilotCamera;
