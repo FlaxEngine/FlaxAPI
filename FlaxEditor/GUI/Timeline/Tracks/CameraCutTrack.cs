@@ -260,6 +260,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
+        public override void OnTimelineShowContextMenu(ContextMenu.ContextMenu menu, Control controlUnderMouse)
+        {
+            base.OnTimelineShowContextMenu(menu, controlUnderMouse);
+
+            if (((CameraCutTrack)Track).Camera)
+                menu.AddButton("Refresh thumbnails", () => UpdateThumbnails());
+        }
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
             Timeline?.CameraCutThumbnailRenderer?.RemoveRequest(this);
