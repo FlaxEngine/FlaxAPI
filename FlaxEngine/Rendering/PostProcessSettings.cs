@@ -297,35 +297,39 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Enables/disables bloom effect.
+        /// If checked, bloom effect will be rendered.
         /// </summary>
         [DefaultValue(true)]
         [EditorOrder(0), PostProcessSetting((int)Override.Enabled)]
+        [Tooltip("If checked, bloom effect will be rendered.")]
         public bool Enabled;
 
         /// <summary>
-        /// Gets or sets the bloom intensity.
+        /// Bloom effect strength. Value 0 disabled is, while higher values increase the effect.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 20.0f, 0.01f)]
         [EditorOrder(1), PostProcessSetting((int)Override.Intensity)]
+        [Tooltip("Bloom effect strength. Value 0 disabled is, while higher values increase the effect.")]
         public float Intensity;
 
         /// <summary>
-        /// Gets or sets the bloom threshold. Pixels with higher luminance are glowing.
+        /// Minimum pixel brightness value to start blowing. Values below the threshold are skipped.
         /// </summary>
         [DefaultValue(3.0f), Limit(0, 15.0f, 0.01f)]
         [EditorOrder(2), PostProcessSetting((int)Override.Threshold)]
+        [Tooltip("Minimum pixel brightness value to start blowing. Values below the threshold are skipped.")]
         public float Threshold;
 
         /// <summary>
-        /// Gets or sets the bloom blur sigma parameter.
+        /// This affects the fall-off of the bloom. It's the standard deviation (sigma) used in the Gaussian blur formula when calculating the kernel of the bloom.
         /// </summary>
         [DefaultValue(4.0f), Limit(0, 20.0f, 0.01f)]
         [EditorOrder(3), PostProcessSetting((int)Override.BlurSigma)]
+        [Tooltip("This affects the fall-off of the bloom. It's the standard deviation (sigma) used in the Gaussian blur formula when calculating the kernel of the bloom.")]
         public float BlurSigma;
 
         /// <summary>
-        /// Gets or sets the bloom brightness limit. Pixels with higher luminance will be capped to this brightness level.
+        /// Bloom effect brightness limit. Pixels with higher luminance will be capped to this brightness level.
         /// </summary>
         [DefaultValue(10.0f), Limit(0, 100.0f, 0.01f)]
         [EditorOrder(4), PostProcessSetting((int)Override.Limit)]
@@ -377,19 +381,19 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Gets or sets the white color temperature. Default is 6500.
+        /// Adjusts the white balance in relation to the temperature of the light in the scene. When the light temperature and this one match the light will appear white. When a value is used that is higher than the light in the scene it will yield a "warm" or yellow color, and, conversely, if the value is lower, it would yield a "cool" or blue color. The default value is `6500`.
         /// </summary>
         [DefaultValue(6500.0f), Limit(1500, 15000)]
         [EditorOrder(0), PostProcessSetting((int)Override.WhiteTemperature)]
-        [Tooltip("White color temperature. Default is 6500.")]
+        [Tooltip("Adjusts the white balance in relation to the temperature of the light in the scene. When the light temperature and this one match the light will appear white. When a value is used that is higher than the light in the scene it will yield a \"warm\" or yellow color, and, conversely, if the value is lower, it would yield a \"cool\" or blue color. The default value is 6500.")]
         public float WhiteTemperature;
 
         /// <summary>
-        /// Gets or sets the white tint. Default is 0.
+        /// Adjusts the white balance temperature tint for the scene by adjusting the cyan and magenta color ranges. Ideally, this setting should be used once you've adjusted the white balance temporature to get accurate colors. Under some light temperatures, the colors may appear to be more yellow or blue. This can be used to balance the resulting color to look more natural. The default value is `0`.
         /// </summary>
         [DefaultValue(0.0f), Limit(-1, 1, 0.001f)]
         [EditorOrder(1), PostProcessSetting((int)Override.WhiteTint)]
-        [Tooltip("White color tint. Default is 0.")]
+        [Tooltip("Adjusts the white balance temperature tint for the scene by adjusting the cyan and magenta color ranges. Ideally, this setting should be used once you've adjusted the white balance temporature to get accurate colors. Under some light temperatures, the colors may appear to be more yellow or blue. This can be used to balance the resulting color to look more natural. The default value is `0`.")]
         public float WhiteTint;
 
         /// <summary>
@@ -1002,60 +1006,66 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Gets or sets the vignette intensity.
+        /// Strength of the vignette effect. Value 0 hides it. The default value is 0.8.
         /// </summary>
         [DefaultValue(0.8f), Limit(0, 2, 0.001f)]
         [EditorOrder(0), PostProcessSetting((int)Override.VignetteIntensity)]
+        [Tooltip("Strength of the vignette effect. Value 0 hides it. The default value is 0.8.")]
         public float VignetteIntensity;
 
         /// <summary>
-        /// Gets or sets the vignette color.
+        /// Color of the vignette.
         /// </summary>
         [EditorOrder(1), PostProcessSetting((int)Override.VignetteColor)]
+        [Tooltip("Color of the vignette.")]
         public Color VignetteColor;
 
         /// <summary>
-        /// Gets or sets the vignette shape factor.
+        /// Controls shape of the vignette. Values near 0 produce rectangle shape. Higher values result in round shape. The default value is 0.125.
         /// </summary>
         [DefaultValue(0.125f), Limit(0.0001f, 2.0f, 0.001f)]
         [EditorOrder(2), PostProcessSetting((int)Override.VignetteShapeFactor)]
+        [Tooltip("Controls shape of the vignette. Values near 0 produce rectangle shape. Higher values result in round shape. The default value is 0.125.")]
         public float VignetteShapeFactor;
 
         /// <summary>
-        /// Gets or sets the grain noise amount.
+        /// Intensity of the grain filter. Value 0 hides it. The default value is 0.005.
         /// </summary>
         [DefaultValue(0.006f), Limit(0.0f, 2.0f, 0.005f)]
         [EditorOrder(3), PostProcessSetting((int)Override.GrainAmount)]
+        [Tooltip("Intensity of the grain filter. Value 0 hides it. The default value is 0.005.")]
         public float GrainAmount;
 
         /// <summary>
-        /// Gets or sets the grain noise particles size.
+        /// Size of the grain particles. The default value is 1.6.
         /// </summary>
         [DefaultValue(1.6f), Limit(1.0f, 3.0f, 0.01f)]
         [EditorOrder(4), PostProcessSetting((int)Override.GrainParticleSize)]
+        [Tooltip("Size of the grain particles. The default value is 1.6.")]
         public float GrainParticleSize;
 
         /// <summary>
-        /// Gets or sets the grain noise particles size.
+        /// Speed of the grain particles animation.
         /// </summary>
         [DefaultValue(1.0f), Limit(0.0f, 10.0f, 0.01f)]
         [EditorOrder(5), PostProcessSetting((int)Override.GrainSpeed)]
-        [Tooltip("Specifies grain particles animation speed")]
+        [Tooltip("Specifies grain particles animation speed.")]
         public float GrainSpeed;
 
         /// <summary>
-        /// Gets or sets the chromatic aberration distortion intensity.
+        /// Controls chromatic aberration effect strength. Value 0 hides it.
         /// </summary>
         [DefaultValue(0.0f), Limit(0.0f, 1.0f, 0.01f)]
         [EditorOrder(6), PostProcessSetting((int)Override.ChromaticDistortion)]
+        [Tooltip("Controls chromatic aberration effect strength. Value 0 hides it.")]
         public float ChromaticDistortion;
 
         /// <summary>
-        /// Gets or sets the screen tint color (alpha channel defines the blending factor)..
+        /// Screen tint color (alpha channel defines the blending factor).
         /// </summary>
         [DefaultValue(typeof(Color), "0,0,0,0")]
         [EditorOrder(7), PostProcessSetting((int)Override.ScreenFadeColor)]
-        [Tooltip("Screen fade color (alpha channel defines the blending factor)")]
+        [Tooltip("Screen fade color (alpha channel defines the blending factor).")]
         public Color ScreenFadeColor;
     }
 
@@ -1150,65 +1160,73 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Gets or sets the lens flares intensity.
+        /// Strength of the effect. Value 0 disabled it.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 10.0f, 0.01f)]
         [EditorOrder(0), PostProcessSetting((int)Override.Intensity)]
+        [Tooltip("Strength of the effect. Value 0 disabled it.")]
         public float Intensity;
 
         /// <summary>
-        /// Gets or sets the amount of lens flares ghosts.
+        /// Amount of lens flares ghosts.
         /// </summary>
         [DefaultValue(8), Limit(0, 16)]
         [EditorOrder(1), PostProcessSetting((int)Override.Ghosts)]
+        [Tooltip("Amount of lens flares ghosts.")]
         public int Ghosts;
 
         /// <summary>
-        /// Gets or sets the lens flares halo size.
+        /// Lens flares halo width.
         /// </summary>
         [DefaultValue(0.16f)]
         [EditorOrder(2), PostProcessSetting((int)Override.HaloWidth)]
+        [Tooltip("Lens flares halo width.")]
         public float HaloWidth;
 
         /// <summary>
-        /// Gets or sets the lens flares halo intensity.
+        /// Lens flares halo intensity.
         /// </summary>
         [DefaultValue(0.666f), Limit(0, 10.0f, 0.01f)]
         [EditorOrder(3), PostProcessSetting((int)Override.HaloIntensity)]
+        [Tooltip("Lens flares halo intensity.")]
         public float HaloIntensity;
 
         /// <summary>
-        /// Gets or sets the lens flares ghosts dispersal.
+        /// Ghost samples dispersal parameter.
         /// </summary>
         [DefaultValue(0.3f)]
         [EditorOrder(4), PostProcessSetting((int)Override.GhostDispersal)]
+        [Tooltip("Ghost samples dispersal parameter.")]
         public float GhostDispersal;
 
         /// <summary>
-        /// Gets or sets the lens flares distortion.
+        /// Lens flares color distortion parameter.
         /// </summary>
         [DefaultValue(1.5f)]
         [EditorOrder(5), PostProcessSetting((int)Override.Distortion)]
+        [Tooltip("Lens flares color distortion parameter.")]
         public float Distortion;
 
         /// <summary>
-        /// Gets or sets the lens flares threshold bias.
+        /// Input image brightness threshold. Added to input pixels.
         /// </summary>
         [DefaultValue(-0.5f)]
         [EditorOrder(6), PostProcessSetting((int)Override.ThresholdBias)]
+        [Tooltip("Input image brightness threshold. Added to input pixels.")]
         public float ThresholdBias;
 
         /// <summary>
-        /// Gets or sets the lens flares threshold scale.
+        /// Input image brightness threshold scale. Used to multiply input pixels.
         /// </summary>
         [DefaultValue(0.22f)]
         [EditorOrder(7), PostProcessSetting((int)Override.ThresholdScale)]
+        [Tooltip("Input image brightness threshold scale. Used to multiply input pixels.")]
         public float ThresholdScale;
 
         private Guid _LensDirt;
 
         /// <summary>
-        /// Gets or sets the camera lens dirt texture.
+        /// Fullscreen lens dirt texture.
         /// </summary>
         [DefaultValue(null)]
         [EditorOrder(8), PostProcessSetting((int)Override.LensDirt)]
@@ -1220,20 +1238,21 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the lens dirt intensity.
+        /// Fullscreen lens dirt intensity parameter. Allows to tune dirt visibility.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 100, 0.01f)]
         [EditorOrder(9), PostProcessSetting((int)Override.LensDirtIntensity)]
+        [Tooltip("Fullscreen lens dirt intensity parameter. Allows to tune dirt visibility.")]
         public float LensDirtIntensity;
 
         private Guid _LensColor;
 
         /// <summary>
-        /// Gets or sets the camera lens color lookup texture.
+        /// Custom lens color texture (1D) used for lens color spectrum.
         /// </summary>
         [DefaultValue(null)]
         [EditorOrder(10), PostProcessSetting((int)Override.LensColor)]
-        [Tooltip("Custom texture for lens flares color")]
+        [Tooltip("Custom lens color texture (1D) used for lens color spectrum.")]
         public Texture LensColor
         {
             get => Content.LoadAsync<Texture>(_LensColor);
@@ -1243,11 +1262,11 @@ namespace FlaxEngine.Rendering
         private Guid _LensStar;
 
         /// <summary>
-        /// Gets or sets the lens star lookup texture.
+        /// Custom lens star texture sampled by lens flares.
         /// </summary>
         [DefaultValue(null)]
         [EditorOrder(11), PostProcessSetting((int)Override.LensStar)]
-        [Tooltip("Custom texture for lens flares star")]
+        [Tooltip("Custom lens star texture sampled by lens flares.")]
         public Texture LensStar
         {
             get => Content.LoadAsync<Texture>(_LensStar);
@@ -1362,15 +1381,15 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Gets or sets a value indicating whether Depth of Field is enabled.
+        /// If checked, depth of field effect will be visible.
         /// </summary>
         [DefaultValue(false)]
         [EditorOrder(0), PostProcessSetting((int)Override.Enabled)]
-        [Tooltip("Enable depth of field effect")]
+        [Tooltip("If checked, depth of field effect will be visible.")]
         public bool Enabled;
 
         /// <summary>
-        /// Gets or sets the blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.
+        /// The blur intensity in the out-of-focus areas. Allows reducing blur amount by scaling down the Gaussian Blur radius. Normalized to range 0-1.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 1, 0.01f)]
         [EditorOrder(1), PostProcessSetting((int)Override.BlurStrength)]
@@ -1378,39 +1397,39 @@ namespace FlaxEngine.Rendering
         public float BlurStrength;
 
         /// <summary>
-        /// Gets or sets the distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.
+        /// The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
         [DefaultValue(1700.0f), Limit(0)]
         [EditorOrder(2), PostProcessSetting((int)Override.FocalDistance)]
-        [Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs")]
+        [Tooltip("The distance in World Units from the camera that acts as the center of the region where the scene is perfectly in focus and no blurring occurs.")]
         public float FocalDistance;
 
         /// <summary>
-        /// Gets or sets the distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
+        /// The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.
         /// </summary>
         [DefaultValue(3000.0f), Limit(0)]
         [EditorOrder(3), PostProcessSetting((int)Override.FocalRegion)]
-        [Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs")]
+        [Tooltip("The distance in World Units beyond the focal distance where the scene is perfectly in focus and no blurring occurs.")]
         public float FocalRegion;
 
         /// <summary>
-        /// Gets or sets the distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
+        /// The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.
         /// </summary>
         [DefaultValue(200.0f), Limit(0)]
         [EditorOrder(4), PostProcessSetting((int)Override.NearTransitionRange)]
-        [Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred")]
+        [Tooltip("The distance in World Units from the focal region on the side nearer to the camera over which the scene transitions from focused to blurred.")]
         public float NearTransitionRange;
 
         /// <summary>
-        /// Gets or sets the distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
+        /// The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.
         /// </summary>
         [DefaultValue(300.0f), Limit(0)]
         [EditorOrder(5), PostProcessSetting((int)Override.FarTransitionRange)]
-        [Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred")]
+        [Tooltip("The distance in World Units from the focal region on the side farther from the camera over which the scene transitions from focused to blurred.")]
         public float FarTransitionRange;
 
         /// <summary>
-        /// Gets or sets the distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.
+        /// The distance in World Units which describes border after that there is no blur (useful to disable DoF on sky). Use 0 to disable that feature.
         /// </summary>
         [DefaultValue(0.0f), Limit(0, float.MaxValue, 2)]
         [EditorOrder(6), PostProcessSetting((int)Override.DepthLimit)]
@@ -1418,11 +1437,11 @@ namespace FlaxEngine.Rendering
         public float DepthLimit;
 
         /// <summary>
-        /// Enables/disables generating Bokeh shapes.
+        /// EIf checked, bokeh shapes will be rendered.
         /// </summary>
         [DefaultValue(true)]
         [EditorOrder(7), PostProcessSetting((int)Override.BokehEnabled)]
-        [Tooltip("Enables/disables generating Bokeh shapes")]
+        [Tooltip("If checked, bokeh shapes will be rendered.")]
         public bool BokehEnabled;
 
         /// <summary>
@@ -1430,25 +1449,25 @@ namespace FlaxEngine.Rendering
         /// </summary>
         [DefaultValue(25.0f), Limit(0, 200.0f, 0.1f)]
         [EditorOrder(8), PostProcessSetting((int)Override.BokehSize)]
-        [Tooltip("Controls Bokeh shapes maximum size")]
+        [Tooltip("Controls size of the bokeh shapes.")]
         public float BokehSize;
 
         /// <summary>
-        /// Gets or sets the Bokeh shapes style.
+        /// Defines bokeh shapes type.
         /// </summary>
         [DefaultValue(BokehShapeType.Octagon)]
         [EditorOrder(9), PostProcessSetting((int)Override.BokehShape)]
-        [Tooltip("Bokeh shapes style")]
+        [Tooltip("Defines bokeh shapes type.")]
         public BokehShapeType BokehShape;
 
         private Guid _BokehShapeCustom;
 
         /// <summary>
-        /// Gets or sets the custom texture for bokeh shapes.
+        /// If BokehShape is set to Custom, then this texture will be used for the bokeh shapes. For best performance, use small, compressed, grayscale textures (for instance 32px).
         /// </summary>
         [DefaultValue(null)]
         [EditorOrder(10), PostProcessSetting((int)Override.BokehShapeCustom)]
-        [Tooltip("Custom texture for bokeh shapes")]
+        [Tooltip("If BokehShape is set to Custom, then this texture will be used for the bokeh shapes. For best performance, use small, compressed, grayscale textures (for instance 32px).")]
         public Texture BokehShapeCustom
         {
             get => Content.LoadAsync<Texture>(_BokehShapeCustom);
@@ -1456,35 +1475,35 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
-        /// Controls Bokeh shapes generating minimum pixel brightness to appear.
+        /// The minimum pixel brightness to create bokeh. Pixels with lower brightness will be skipped.
         /// </summary>
         [DefaultValue(3.0f), Limit(0, 20.0f, 0.01f)]
         [EditorOrder(11), PostProcessSetting((int)Override.BokehBrightnessThreshold)]
-        [Tooltip("Controls Bokeh shapes generating minimum pixel brightness to appear")]
+        [Tooltip("The minimum pixel brightness to create bokeh. Pixels with lower brightness will be skipped.")]
         public float BokehBrightnessThreshold;
 
         /// <summary>
-        /// Controls Bokeh shapes blur threshold.
+        /// Controls Bokeh shapes blur threshold value.
         /// </summary>
         [DefaultValue(0.05f), Limit(0, 1.0f, 0.001f)]
         [EditorOrder(12), PostProcessSetting((int)Override.BokehBlurThreshold)]
-        [Tooltip("Controls Bokeh shapes blur threshold")]
+        [Tooltip("Controls Bokeh shapes blur threshold value.")]
         public float BokehBlurThreshold;
 
         /// <summary>
-        /// Controls Bokeh shapes brightness falloff parameter.
+        /// Controls bokeh shapes brightness falloff. Higher values reduce bokeh visibility.
         /// </summary>
         [DefaultValue(0.5f), Limit(0, 2.0f, 0.001f)]
         [EditorOrder(13), PostProcessSetting((int)Override.BokehFalloff)]
-        [Tooltip("Controls Bokeh shapes brightness falloff parameter")]
+        [Tooltip("Controls bokeh shapes brightness falloff. Higher values reduce bokeh visibility.")]
         public float BokehFalloff;
 
         /// <summary>
-        /// Controls Bokeh shapes depth cutoff parameter.
+        /// Controls bokeh shape generation for depth discontinuities.
         /// </summary>
         [DefaultValue(1.5f), Limit(0, 5.0f, 0.001f)]
         [EditorOrder(14), PostProcessSetting((int)Override.BokehDepthCutoff)]
-        [Tooltip("Controls Bokeh shapes depth cutoff parameter")]
+        [Tooltip("Controls bokeh shape generation for depth discontinuities.")]
         public float BokehDepthCutoff;
     }
 
@@ -1538,31 +1557,31 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Gets or sets a value indicating whether Motion Blur is enabled.
+        /// If checked, motion blur effect will be rendered.
         /// </summary>
         [DefaultValue(true)]
         [EditorOrder(0), PostProcessSetting((int)Override.Enabled)]
-        [Tooltip("Enable motion blur effect")]
+        [Tooltip("If checked, motion blur effect will be rendered.")]
         public bool Enabled;
 
         /// <summary>
-        /// Gets or sets the motion blur effect scale.
+        /// The blur effect strength. Value 0 disabled is, while higher values increase the effect.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 5, 0.01f)]
         [EditorOrder(1), PostProcessSetting((int)Override.Scale)]
-        [Tooltip("The motion blur effect scale.")]
+        [Tooltip("The blur effect strength. Value 0 disabled is, while higher values increase the effect.")]
         public float Scale;
 
         /// <summary>
-        /// Gets or sets the amount of sample points used during motion blur rendering. It affects quality and performances.
+        /// The amount of sample points used during motion blur rendering. It affects quality and performance.
         /// </summary>
         [DefaultValue(10), Limit(4, 32, 0.1f)]
         [EditorOrder(2), PostProcessSetting((int)Override.SampleCount)]
-        [Tooltip("The amount of sample points used during motion blur rendering. It affects quality and performances.")]
+        [Tooltip("The amount of sample points used during motion blur rendering. It affects quality and performance.")]
         public int SampleCount;
 
         /// <summary>
-        /// Gets or sets the motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lower resolution to improve performance.
+        /// The motion vectors texture resolution. Motion blur uses per-pixel motion vectors buffer that contains objects movement information. Use lower resolution to improve performance.
         /// </summary>
         [DefaultValue(ResolutionMode.Half)]
         [EditorOrder(3), PostProcessSetting((int)Override.MotionVectorsResolution)]
@@ -1666,15 +1685,15 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Gets or sets the effect intensity (normalized to range [0;1]). Use 0 to disable it.
+        /// The effect intensity (normalized to range [0;1]). Use 0 to disable it.
         /// </summary>
         [DefaultValue(1.0f), Limit(0, 1.0f, 0.01f)]
         [EditorOrder(0), PostProcessSetting((int)Override.Intensity)]
-        [Tooltip("Effect intensity (normalized to range [0;1]). Use 0 to disable it.")]
+        [Tooltip("The effect intensity (normalized to range [0;1]). Use 0 to disable it.")]
         public float Intensity;
 
         /// <summary>
-        /// Gets or sets the input depth resolution mode.
+        /// The depth buffer downscale option to optimize raycast performance. Full gives better quality, but half improves performance. The default value is half.
         /// </summary>
         [DefaultValue(ResolutionMode.Half)]
         [EditorOrder(1), PostProcessSetting((int)Override.DepthResolution)]
@@ -1682,7 +1701,7 @@ namespace FlaxEngine.Rendering
         public ResolutionMode DepthResolution;
 
         /// <summary>
-        /// Gets or sets the ray trace pass resolution mode.
+        /// The raycast resolution. Full gives better quality, but half improves performance. The default value is half.
         /// </summary>
         [DefaultValue(ResolutionMode.Half)]
         [EditorOrder(2), PostProcessSetting((int)Override.RayTracePassResolution)]
@@ -1690,19 +1709,16 @@ namespace FlaxEngine.Rendering
         public ResolutionMode RayTracePassResolution;
 
         /// <summary>
-        /// Gets or sets the BRDF bias. This value controls source roughness effect on reflections blur.
-        /// Smaller values produce wider reflections spread but also introduce more noise.
-        /// Higher values provide more mirror-like reflections. Default value is 0.8.
+        /// The reflection spread parameter. This value controls source roughness effect on reflections blur. Smaller values produce wider reflections spread but also introduce more noise. Higher values provide more mirror-like reflections. Default value is 0.82.
         /// </summary>
         [DefaultValue(0.82f), Limit(0, 1.0f, 0.01f)]
         [EditorOrder(3), PostProcessSetting((int)Override.BRDFBias)]
         [EditorDisplay(null, "BRDF Bias")]
-        [Tooltip("The reflection spread. Higher values provide finer, more mirror-like reflections. This setting has no effect on performance. The default value is 0.82")]
+        [Tooltip("The reflection spread parameter. This value controls source roughness effect on reflections blur. Smaller values produce wider reflections spread but also introduce more noise. Higher values provide more mirror-like reflections. Default value is 0.82.")]
         public float BRDFBias;
 
         /// <summary>
-        /// Minimum allowed surface roughness value to use local reflections.
-        /// Pixels with higher values won't be affected by the effect.
+        /// The maximum amount of roughness a material must have to reflect the scene. For example, if this value is set to 0.4, only materials with a roughness value of 0.4 or below reflect the scene. The default value is 0.45.
         /// </summary>
         [DefaultValue(0.45f), Limit(0, 1.0f, 0.01f)]
         [EditorOrder(4), PostProcessSetting((int)Override.RoughnessThreshold)]
@@ -1710,7 +1726,7 @@ namespace FlaxEngine.Rendering
         public float RoughnessThreshold;
 
         /// <summary>
-        /// Ray tracing starting position is offset by a percent of the normal in world space to avoid self occlusions.
+        /// The offset of the raycast origin. Lower values produce more correct reflection placement, but produce more artifacts. We recommend values of 0.3 or lower. The default value is 0.1.
         /// </summary>
         [DefaultValue(0.1f), Limit(0, 10.0f, 0.01f)]
         [EditorOrder(5), PostProcessSetting((int)Override.WorldAntiSelfOcclusionBias)]
@@ -1718,7 +1734,7 @@ namespace FlaxEngine.Rendering
         public float WorldAntiSelfOcclusionBias;
 
         /// <summary>
-        /// Gets or sets the resolve pass resolution mode.
+        /// The raycast resolution. Full gives better quality, but half improves performance. The default value is half.
         /// </summary>
         [DefaultValue(ResolutionMode.Full)]
         [EditorOrder(6), PostProcessSetting((int)Override.ResolvePassResolution)]
@@ -1726,16 +1742,15 @@ namespace FlaxEngine.Rendering
         public ResolutionMode ResolvePassResolution;
 
         /// <summary>
-        /// Gets or sets the resolve pass samples amount. Higher values provide better quality but reduce effect performance.
-        /// Default value is 4. Use 1 for the highest speed.
+        /// The number of rays used to resolve the reflection color. Higher values provide better quality but reduce effect performance. Default value is 4. Use 1 for the highest speed.
         /// </summary>
         [DefaultValue(4), Limit(1, 8)]
         [EditorOrder(7), PostProcessSetting((int)Override.ResolveSamples)]
-        [Tooltip("The number of rays used to resolve the reflection color. Higher values produce less noise, but worse performance. The default value is 4.")]
+        [Tooltip("The number of rays used to resolve the reflection color. Higher values produce less noise, but worse performance. The default value is 4. Use 1 for the highest speed.")]
         public int ResolveSamples;
 
         /// <summary>
-        /// Gets or sets the edge fade factor. It's used to fade off effect on screen edges to provide smoother image.
+        /// The point at which the far edges of the reflection begin to fade. Has no effect on performance. The default value is 0.1."
         /// </summary>
         [DefaultValue(0.1f), Limit(0, 1.0f, 0.02f)]
         [EditorOrder(8), PostProcessSetting((int)Override.EdgeFadeFactor)]
@@ -1743,8 +1758,7 @@ namespace FlaxEngine.Rendering
         public float EdgeFadeFactor;
 
         /// <summary>
-        /// Gets or sets a value indicating whether use color buffer mipmaps chain; otherwise will use raw input color buffer to sample reflections color.
-        /// Using mipmaps improves resolve pass performance and reduces GPU cache misses.
+        /// "The input color buffer downscale mode that uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.
         /// </summary>
         [DefaultValue(true)]
         [EditorOrder(9), PostProcessSetting((int)Override.UseColorBufferMips)]
@@ -1753,16 +1767,16 @@ namespace FlaxEngine.Rendering
         public bool UseColorBufferMips;
 
         /// <summary>
-        /// Gets or sets a value indicating whether use temporal effect to smooth reflections.
+        /// If checked, enables the temporal pass. Reduces noise, but produces an animated "jittering" effect that's sometimes noticeable. If disabled, the properties below have no effect.
         /// </summary>
         [DefaultValue(true)]
         [EditorOrder(10), PostProcessSetting((int)Override.TemporalEffect)]
         [EditorDisplay(null, "Enable Temporal Effect")]
-        [Tooltip("Enables the temporal pass. Reduces noise, but produces an animated \"jittering\" effect that's sometimes noticeable. If disabled, the properties below have no effect.")]
+        [Tooltip("If checked, enables the temporal pass. Reduces noise, but produces an animated \"jittering\" effect that's sometimes noticeable. If disabled, the properties below have no effect.")]
         public bool TemporalEffect;
 
         /// <summary>
-        /// Gets or sets the temporal effect scale. Default is 8.
+        /// The intensity of the temporal effect. Lower values produce reflections faster, but more noise. The default value is 8.
         /// </summary>
         [DefaultValue(8.0f), Limit(0, 20.0f, 0.5f)]
         [EditorOrder(11), PostProcessSetting((int)Override.TemporalScale)]
@@ -1770,7 +1784,7 @@ namespace FlaxEngine.Rendering
         public float TemporalScale;
 
         /// <summary>
-        /// Gets or sets the temporal response. Default is 0.8.
+        /// Defines how quickly reflections blend between the reflection in the current frame and the history buffer. Lower values produce reflections faster, but with more jittering. If the camera in your game doesn't move much, we recommend values closer to 1. The default value is 0.8.
         /// </summary>
         [DefaultValue(0.8f), Limit(0.05f, 1.0f, 0.01f)]
         [EditorOrder(12), PostProcessSetting((int)Override.TemporalResponse)]
@@ -1833,7 +1847,7 @@ namespace FlaxEngine.Rendering
         public Override OverrideFlags;
 
         /// <summary>
-        /// Gets or sets the anti-aliasing effect mode.
+        /// The anti-aliasing effect mode.
         /// </summary>
         [DefaultValue(AntialiasingMode.FastApproximateAntialiasing)]
         [EditorOrder(0), PostProcessSetting((int)Override.Mode)]
@@ -1841,9 +1855,7 @@ namespace FlaxEngine.Rendering
         public AntialiasingMode Mode;
 
         /// <summary>
-        /// Gets or sets the diameter (in texels) inside which jitter samples are spread. Smaller values result
-        /// in crisper but more aliased output, while larger values result in more stable but
-        /// blurrier output.
+        /// The diameter (in texels) inside which jitter samples are spread. Smaller values result in crisper but more aliased output, while larger values result in more stable but blurrier output.
         /// </summary>
         [DefaultValue(0.75f), Limit(0.1f, 1f, 0.001f)]
         [EditorOrder(1), PostProcessSetting((int)Override.TAA_JitterSpread)]
@@ -1852,30 +1864,30 @@ namespace FlaxEngine.Rendering
         public float TAA_JitterSpread;
 
         /// <summary>
-        /// Gets or sets the amount of sharpening applied to the color buffer. High values may introduce dark-border artifacts.
+        /// Controls the amount of sharpening applied to the color buffer. TAA can induce a slight loss of details in high frequency regions. Sharpening alleviates this issue. High values may introduce dark-border artifacts.
         /// </summary>
         [DefaultValue(0f), Limit(0, 3f, 0.001f)]
         [EditorOrder(2), PostProcessSetting((int)Override.TAA_Sharpness)]
         [EditorDisplay(null, "TAA Sharpness")]
-        [Tooltip("Controls the amount of sharpening applied to the color buffer. High values may introduce dark-border artifacts.")]
+        [Tooltip("Controls the amount of sharpening applied to the color buffer. TAA can induce a slight loss of details in high frequency regions. Sharpening alleviates this issue. High values may introduce dark-border artifacts.")]
         public float TAA_Sharpness;
 
         /// <summary>
-        /// Gets or sets the blend coefficient for a stationary fragment. Controls the percentage of history sample blended into the final color.
+        /// The blend coefficient for stationary fragments. Controls the percentage of history sample blended into final color for fragments with minimal active motion.
         /// </summary>
         [DefaultValue(0.95f), Limit(0, 0.99f, 0.001f)]
         [EditorOrder(3), PostProcessSetting((int)Override.TAA_StationaryBlending)]
         [EditorDisplay(null, "TAA Stationary Blending")]
-        [Tooltip("The anti-aliasing effect mode.")]
+        [Tooltip("The blend coefficient for stationary fragments. Controls the percentage of history sample blended into final color for fragments with minimal active motion.")]
         public float TAA_StationaryBlending;
 
         /// <summary>
-        /// Gets or sets the blend coefficient for a fragment with significant motion. Controls the percentage of history sample blended into the final color.
+        /// The blending coefficient for moving fragments. Controls the percentage of history sample blended into the final color for fragments with significant active motion.
         /// </summary>
         [DefaultValue(0.4f), Limit(0, 0.99f, 0.001f)]
         [EditorOrder(4), PostProcessSetting((int)Override.TAA_MotionBlending)]
         [EditorDisplay(null, "TAA Motion Blending")]
-        [Tooltip("The anti-aliasing effect mode.")]
+        [Tooltip("The blending coefficient for moving fragments. Controls the percentage of history sample blended into the final color for fragments with significant active motion.")]
         public float TAA_MotionBlending;
     }
 
