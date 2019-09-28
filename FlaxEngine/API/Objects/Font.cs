@@ -13,17 +13,12 @@ namespace FlaxEngine
         /// <summary>
         /// The root position of the line (upper left corner).
         /// </summary>
-        public Vector2 RootPos;
+        public Vector2 Location;
 
         /// <summary>
-        /// The maximum line extent on the Y axis (down from RootPos).
+        /// The line bounds (width and height).
         /// </summary>
-        public Vector2 MaxYExtent;
-
-        /// <summary>
-        /// The line width.
-        /// </summary>
-        public float Width;
+        public Vector2 Size;
 
         /// <summary>
         /// The first character index (from the input text).
