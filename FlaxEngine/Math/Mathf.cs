@@ -36,26 +36,6 @@ namespace FlaxEngine
         public const float PiOverFour = (float)(Math.PI / 4);
 
         /// <summary>
-        /// A representation of positive infinity (Read Only).
-        /// </summary>
-        public const float Infinity = float.PositiveInfinity;
-
-        /// <summary>
-        /// A representation of negative infinity (Read Only).
-        /// </summary>
-        public const float NegativeInfinity = float.NegativeInfinity;
-
-        /// <summary>
-        /// Degrees-to-radians conversion constant (Read Only).
-        /// </summary>
-        public const float Deg2Rad = 0.0174532924f;
-
-        /// <summary>
-        /// Radians-to-degrees conversion constant (Read Only).
-        /// </summary>
-        public const float Rad2Deg = 57.29578f;
-
-        /// <summary>
         /// Returns the absolute value of f.
         /// </summary>
         /// <param name="f"></param>

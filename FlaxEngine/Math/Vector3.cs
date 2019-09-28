@@ -1283,7 +1283,7 @@ namespace FlaxEngine
             float dot = Mathf.Clamp(Dot(from.Normalized, to.Normalized), -1F, 1F);
             if (Mathf.Abs(dot) > (1F - Mathf.Epsilon))
                 return dot > 0F ? 0F : 180F;
-            return Mathf.Acos(dot) * Mathf.Rad2Deg;
+            return Mathf.Acos(dot) * Mathf.DegreesToRadians;
         }
 
         /// <summary>
