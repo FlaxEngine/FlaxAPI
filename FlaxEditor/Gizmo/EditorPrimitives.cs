@@ -70,7 +70,7 @@ namespace FlaxEditor.Gizmo
             }
 
             // Draw selected objects debug shapes and visuals
-            if (DrawDebugDraw)
+            if (DrawDebugDraw && (task.View.Flags & ViewFlags.DebugDraw) == ViewFlags.DebugDraw)
             {
                 var debugDrawData = Viewport.DebugDrawData;
                 DebugDraw.Draw(task, debugDrawData.ActorsPtrs, target, context, targetDepth, true);
