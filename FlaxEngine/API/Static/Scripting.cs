@@ -39,36 +39,46 @@ namespace FlaxEngine
         /// <param name="action">The action to invoke.</param>
         public static void InvokeOnUpdate(Action action)
         {
-            UpdateActions.Add(action);
+            lock (UpdateActions)
+            {
+                UpdateActions.Add(action);
+            }
         }
 
         internal static void Internal_Update()
         {
             Time.SyncData();
+
             Update?.Invoke();
-            for (int i = 0; i < UpdateActions.Count; i++)
+
+            lock (UpdateActions)
             {
-                try
+                for (int i = 0; i < UpdateActions.Count; i++)
                 {
-                    UpdateActions[i]();
+                    try
+                    {
+                        UpdateActions[i]();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogException(ex);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
+                UpdateActions.Clear();
             }
-            UpdateActions.Clear();
         }
 
         internal static void Internal_LateUpdate()
         {
             Time.SyncData();
+
             LateUpdate?.Invoke();
         }
 
         internal static void Internal_FixedUpdate()
         {
             Time.SyncData();
+
             FixedUpdate?.Invoke();
         }
 
