@@ -73,6 +73,8 @@ namespace FlaxEditor.Surface
         /// <param name="location">The location in the Surface Space.</param>
         public virtual void ShowPrimaryMenu(Vector2 location)
         {
+            // TODO: If the menu is not fully visible, move the surface a bit
+
             // Check if need to create default context menu (no override specified)
             if (_activeVisjectCM == null && _cmPrimaryMenu == null)
             {
@@ -136,32 +138,76 @@ namespace FlaxEditor.Surface
             if (node == null)
                 return;
 
-            // And, if the user is patiently waiting for his box to get connected to the newly created one fulfill his wish!
-            if (selectedBox is Box startBox)
+            // Auto select new node
+            Select(node);
+
+            // If the user is patiently waiting for his box to get connected to the newly created one fulfill his wish!
+            if (selectedBox != null)
             {
-                _connectionInstigator = startBox;
-                Box alternativeBox = null;
+                _connectionInstigator = selectedBox;
+                Box endBox = null;
                 foreach (var box in node.GetBoxes().Where(box => box.IsOutput != selectedBox.IsOutput))
                 {
                     if ((selectedBox.CurrentType & box.CurrentType) != 0)
                     {
-                        ConnectingEnd(box);
-                        return;
+                        endBox = box;
+                        break;
                     }
 
-                    if (alternativeBox == null && selectedBox.CanUseType(box.CurrentType))
+                    if (endBox == null && selectedBox.CanUseType(box.CurrentType))
                     {
-                        alternativeBox = box;
+                        endBox = box;
                     }
                 }
 
-                if (alternativeBox != null)
+                if (endBox != null)
                 {
-                    ConnectingEnd(alternativeBox);
+                    ConnectingEnd(endBox);
                 }
                 else
                 {
                     ConnectingEnd(null);
+                }
+
+                // Smart-Select next box
+                /*
+                 * Output and Output => undefined
+                 * Output and Input => Connect and move to next on input-node
+                 * Input and Output => Connect and move to next on input-node
+                 * Input and Input => undefined, cannot happen
+                 */
+                if (endBox != null)
+                {
+                    Box inputBox = endBox.IsOutput ? selectedBox : endBox;
+                    Box nextBox = GetNextBox(inputBox);
+
+
+                    // If we are going backwards and the end-node has an input box
+                    //   we want to edit backwards
+                    if (!selectedBox.IsOutput)
+                    {
+                        Box endNodeInputBox = endBox.ParentNode.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(b => !b.IsOutput);
+                        if (endNodeInputBox != null)
+                        {
+                            nextBox = endNodeInputBox;
+                        }
+                    }
+
+
+                    // TODO: What if we reached the end (nextBox == null)? Do we travel along the nodes?
+                    /*
+                     * while (nextBox == null && _inputBoxStack.Count > 0)
+                        {
+                            // We found the last box on this node but there are still boxes on previous nodes on the stack
+                            nextBox = GetNextBox(_inputBoxStack.Pop());
+                        }
+                        */
+
+                    if (nextBox != null)
+                    {
+                        Select(nextBox.ParentNode);
+                        nextBox.ParentNode.SelectBox(nextBox);
+                    }
                 }
             }
 
@@ -242,7 +288,6 @@ namespace FlaxEditor.Surface
                 Deselect(toDeselect);
             }
 
-            AddToSelection(node);
             */
         }
     }

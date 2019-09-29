@@ -24,6 +24,10 @@ namespace FlaxEditor.Surface
         private string _currentInputText = string.Empty;
         private Vector2 _movingNodesDelta;
         private HashSet<SurfaceNode> _movingNodes;
+        private bool _hasInputSelectionChanged = false;
+        private readonly Stack<Box> _inputBracketsStack = new Stack<Box>();
+
+        private bool HasInputSelection => HasNodesSelection;
 
         private string CurrentInputText
         {
@@ -294,7 +298,10 @@ namespace FlaxEditor.Surface
                     if (Root.GetKey(Keys.Control))
                     {
                         // Add to selection
-                        AddToSelection(controlUnderMouse);
+                        if (!controlUnderMouse.IsSelected)
+                        {
+                            AddToSelection(controlUnderMouse);
+                        }
                     }
                     // Check if node isn't selected
                     else if (!controlUnderMouse.IsSelected)
@@ -449,8 +456,9 @@ namespace FlaxEditor.Surface
             if (!_rightMouseDown && !_isMovingSelection && _connectionInstigator != null)
             {
                 _cmStartPos = location;
-                ShowPrimaryMenu(_cmStartPos);
+                Cursor = CursorType.Default;
                 EndMouseCapture();
+                ShowPrimaryMenu(_cmStartPos);
             }
 
             return true;
@@ -473,13 +481,13 @@ namespace FlaxEditor.Surface
 
                 return true;
             }
+            else
+            {
+                ShowPrimaryMenu(c + "", null);
+                return false;
+            }
 
-            return false;
         }
-
-        private bool HasInputSelection => HasNodesSelection;
-
-        private bool _hasInputSelectionChanged = false;
 
         private void ResetInputSelection()
         {
@@ -491,58 +499,198 @@ namespace FlaxEditor.Surface
         {
             if (string.IsNullOrEmpty(currentInputText))
                 return;
+
+            ResetInputSelection();
+
+            // TODO: Change comment key to something better. (e.g. // or # or something...)
             if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey))
                 return;
-            if (_activeVisjectCM == null || _activeVisjectCM.Visible)
+            if (IsPrimaryMenuOpened)
                 return;
             var selection = SelectedNodes;
+            if (selection.Count == 0)
+            {
+                ShowPrimaryMenu(currentInputText, null);
+                return;
+            }
+
+            // TODO: What should happen when multiple nodes or multiple boxes are selected?
             if (selection.Count != 1)
                 return;
 
-            // # => color
-            // 1,43 => Vector2
-            // Current node should be modify-able
+            Box selectedBox = GetSelectedBox(selection);
 
-            // Multiple nodes selected?
-
-            var node = selection[0];
-            var firstOutputBox = node.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(box => box != null && box.IsOutput);
-            if (firstOutputBox == null)
+            if (selectedBox == null)
                 return;
 
-            _cmStartPos = _rootControl.PointToParent(_rootControl.Parent, PositionAfterNode(node));
-            _cmStartPos = Vector2.Max(_cmStartPos, Vector2.Zero);
+            // TODO: Editing a primitive
+            /* #    => color
+             * 1,43 => Vector2
+             * =    => set node name
+             * etc.
+             */
 
-            // If the menu is not fully visible, move the surface a bit
-            Vector2 overflow = (_cmStartPos + _activeVisjectCM.Size);
-            if (_connectionInstigator is SurfaceNode instigatorAsSurfaceNode)
-                overflow -= instigatorAsSurfaceNode.Size;
-            else if (_connectionInstigator is Box instigatorAsBox)
-                overflow -= instigatorAsBox.Parent.Size;
-            overflow = Vector2.Max(overflow, Vector2.Zero);
+            if (currentInputText.StartsWith("("))
+            {
+                //TODO: Opening bracket
+                /*if (!selectedBox.IsOutput)
+                {
+                    _inputBracketsStack.Push(selectedBox);
+                }*/
+            }
+            else if (currentInputText.StartsWith(")"))
+            {
+                //TODO: Closing bracket
+                /*if (_inputBracketsStack.Count > 0)
+                {
+                    Box connectTo = _inputBracketsStack.Pop();
+                    if (selectedBox.IsOutput)
+                    {
+                        ConnectingStart(selectedBox);
+                        ConnectingEnd(connectTo);
+                    }
+                }*/
+            }
+            else
+            {
+                // Add a new node
+                ConnectingStart(selectedBox);
+                Cursor = CursorType.Default; // Do I need this?
+                EndMouseCapture();
+                ShowPrimaryMenu(currentInputText, selectedBox);
+            }
+        }
 
-            ViewPosition += overflow;
-            _cmStartPos -= overflow;
+        private Box GetSelectedBox(List<SurfaceNode> selection)
+        {
+            if (selection.Count != 1) return null; // TODO: Handle multiple selected nodes
 
-            // Show it
-            _connectionInstigator = firstOutputBox;
+            SurfaceNode selectedNode = selection[0];
+
+            Box selectedBox = null;
+            // Get selected box
+            for (int i = 0; i < selectedNode.Elements.Count; i++)
+            {
+                if (selectedNode.Elements[i] is Box box && box.IsSelected)
+                {
+                    if (selectedBox == null)
+                    {
+                        selectedBox = box;
+                    }
+                    else
+                    {
+                        // TODO: Multiple boxes are selected. How should this be handled?
+                        return null;
+                    }
+                }
+            }
+
+            // Or get the first output box when a node with only output boxes is selected
+            if (selectedBox == null)
+            {
+                for (int i = 0; i < selectedNode.Elements.Count; i++)
+                {
+                    if (selectedNode.Elements[i] is Box box)
+                    {
+                        if (box.IsOutput)
+                        {
+                            selectedBox = box;
+                            break;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < selectedNode.Elements.Count; i++)
+                {
+                    if (selectedNode.Elements[i] is Box box)
+                    {
+                        if (!box.IsOutput)
+                        {
+                            selectedBox = null;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return selectedBox;
+        }
+
+        private Vector2 PositionAfterBox(Box box)
+        {
+            int boxIndex = 0;
+
+            var node = box.ParentNode;
+            for (int i = 0; i < node.Elements.Count; i++)
+            {
+                // Box on the same side above the current box
+                if (node.Elements[i] is Box nodeBox && nodeBox.IsOutput == box.IsOutput && nodeBox.Y < box.Y)
+                {
+                    boxIndex++;
+                }
+            }
+            //TODO: Dodge the other nodes
+
+            Vector2 DistanceBetweenNodes = new Vector2(40, 20);
+            const float NodeHeight = 120;
+
+            float direction = box.IsOutput ? 1 : -1;
+
+            Vector2 newNodeLocation = node.Location +
+                new Vector2(
+                    (node.Width + DistanceBetweenNodes.X) * direction,
+                    boxIndex * (NodeHeight + DistanceBetweenNodes.Y)
+                );
+
+            return _rootControl.PointToParent(newNodeLocation);
+        }
+
+        private Box GetNextBox(Box box)
+        {
+            SurfaceNode surfaceNode = box.ParentNode;
+            int i = 0;
+            for (; i < surfaceNode.Elements.Count; i++)
+            {
+                if (surfaceNode.Elements[i] is Box b && b == box)
+                {
+                    // We found the box
+                    break;
+                }
+            }
+
+            // Get the one after it
+            i++;
+            for (; i < surfaceNode.Elements.Count; i++)
+            {
+                if (surfaceNode.Elements[i] is Box b)
+                {
+                    return b;
+                }
+            }
+
+            return null;
+        }
+
+        private void ShowPrimaryMenu(string input, Box connectedBox = null)
+        {
+            if (connectedBox == null)
+            {
+                _cmStartPos = _mousePos;
+            }
+            else
+            {
+                _cmStartPos = PositionAfterBox(connectedBox);
+            }
+
             ShowPrimaryMenu(_cmStartPos);
 
-            foreach (char character in currentInputText)
+            foreach (char character in input)
             {
                 // OnKeyDown-- > VisjectCM focuses on the text-thingy
                 _activeVisjectCM.OnKeyDown(Keys.None);
                 _activeVisjectCM.OnCharInput(character);
                 _activeVisjectCM.OnKeyUp(Keys.None);
             }
-            ResetInputSelection();
-        }
-
-        private Vector2 PositionAfterNode(SurfaceNode node)
-        {
-            const float DistanceBetweenNodes = 40;
-            //TODO: Doge the other nodes
-            return node.Location + new Vector2(node.Width + DistanceBetweenNodes, 0);
         }
 
         /// <inheritdoc />
@@ -572,6 +720,24 @@ namespace FlaxEditor.Surface
                     if (CurrentInputText.Length > 0)
                         CurrentInputText = CurrentInputText.Substring(0, CurrentInputText.Length - 1);
                     return true;
+                }
+                else if (key == Keys.Escape)
+                {
+                    ClearSelection();
+                }
+                else if (key == Keys.Return)
+                {
+                    Box selectedBox = GetSelectedBox(SelectedNodes);
+                    if (selectedBox != null)
+                    {
+                        Box toSelect = GetNextBox(selectedBox);
+
+                        if (toSelect != null)
+                        {
+                            Select(toSelect.ParentNode);
+                            toSelect.ParentNode.SelectBox(toSelect);
+                        }
+                    }
                 }
             }
 

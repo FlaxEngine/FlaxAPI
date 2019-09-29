@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -143,6 +144,19 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Draws the unfinished connections for the brackets
+        /// </summary>
+        private void DrawInputBrackets()
+        {
+            // TODO:
+            /*foreach (var box in _inputBracketsStack)
+                {
+                    Vector2 pos = box.ParentNode.PointToParent(_rootControl.Parent, box.Location);
+                    Render2D.DrawText(style.FontTitle, "{}", new Rectangle(pos, 10, 10), Color.YellowGreen);
+                }*/
+        }
+
+        /// <summary>
         /// Draws the contents of the surface (nodes, connections, comments, etc.).
         /// </summary>
         protected virtual void DrawContents()
@@ -179,6 +193,8 @@ namespace FlaxEditor.Surface
             {
                 DrawConnectingLine();
             }
+
+            DrawInputBrackets();
 
             Render2D.PopTransform();
 

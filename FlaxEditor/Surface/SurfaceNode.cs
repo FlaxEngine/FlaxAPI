@@ -392,6 +392,81 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Selects all the boxes.
+        /// </summary>
+        public void SelectAllBoxes()
+        {
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box box)
+                    box.IsSelected = true;
+            }
+        }
+
+        /// <summary>
+        /// Clears the box selection.
+        /// </summary>
+        public void ClearBoxSelection()
+        {
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box box)
+                    box.IsSelected = false;
+            }
+        }
+
+        /// <summary>
+        /// Adds the specified box to the selection.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        public void AddBoxToSelection(Box box)
+        {
+            box.IsSelected = true;
+        }
+
+        /// <summary>
+        /// Selects the specified control.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        public void SelectBox(Box box)
+        {
+            ClearBoxSelection();
+
+            box.IsSelected = true;
+        }
+
+        /// <summary>
+        /// Selects the specified controls collection.
+        /// </summary>
+        /// <param name="boxes">The boxes.</param>
+        public void SelectBoxes(IEnumerable<Box> boxes)
+        {
+            ClearBoxSelection();
+
+            foreach (var box in boxes)
+            {
+                box.IsSelected = true;
+            }
+        }
+
+        /// <summary>
+        /// Deselects the specified control.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        public void DeselectBox(Box box)
+        {
+            box.IsSelected = false;
+        }
+
+        protected override void OnSelectionChanged()
+        {
+            if (!IsSelected)
+            {
+                ClearBoxSelection();
+            }
+        }
+
+        /// <summary>
         /// Implementation of Depth-First traversal over the graph of surface nodes.
         /// </summary>
         /// <returns>The list of nodes as a result of depth-first traversal algorithm execution.</returns>
@@ -506,7 +581,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool CanSelect(ref Vector2 location)
         {
-            return _headerRect.MakeOffseted(Location).Contains(ref location);
+            return _headerRect.MakeOffsetted(Location).Contains(ref location);
         }
 
         /// <inheritdoc />
