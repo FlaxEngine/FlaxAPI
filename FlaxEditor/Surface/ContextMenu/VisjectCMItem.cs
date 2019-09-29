@@ -106,12 +106,15 @@ namespace FlaxEditor.Surface.ContextMenu
             if (!startBox.IsOutput)
                 return false; // For now, I'm only handing the output box case
 
-            for (int i = 0; i < nodeArchetype.Elements.Length; i++)
+            if (nodeArchetype.Elements != null)
             {
-                if (nodeArchetype.Elements[i].Type == NodeElementType.Input &&
-                    startBox.CanUseType(nodeArchetype.Elements[i].ConnectionsType))
+                for (int i = 0; i < nodeArchetype.Elements.Length; i++)
                 {
-                    return true;
+                    if (nodeArchetype.Elements[i].Type == NodeElementType.Input &&
+                        startBox.CanUseType(nodeArchetype.Elements[i].ConnectionsType))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -151,7 +154,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     }
                     Visible = true;
                 }
-                else if (_archetype.AlternativeTitles?.Any(filterText.Equals) == true)
+                else if (_archetype.AlternativeTitles?.Any(altTitle => string.Equals(filterText, altTitle, StringComparison.CurrentCultureIgnoreCase)) == true)
                 {
                     // Update highlights
                     if (_highlights == null)

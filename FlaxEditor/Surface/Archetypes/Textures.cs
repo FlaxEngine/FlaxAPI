@@ -69,6 +69,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 2,
                 Title = "Texcoords",
+                AlternativeTitles = new string[] { "UV", "UVs" },
                 Description = "Texture coordinates",
                 Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(110, 30),
