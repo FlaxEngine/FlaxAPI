@@ -95,17 +95,6 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Draws the comment creating background.
-        /// </summary>
-        /// <remarks>Called only when user is creating comment using rectangle tool.</remarks>
-        protected virtual void DrawCommenting()
-        {
-            var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
-            Render2D.FillRectangle(selectionRect, Color.White * 0.4f);
-            Render2D.DrawRectangle(selectionRect, Color.White);
-        }
-
-        /// <summary>
         /// Draws all the connections between surface nodes.
         /// </summary>
         /// <param name="mousePosition">The current mouse position (in surface-space).</param>
@@ -174,11 +163,7 @@ namespace FlaxEditor.Surface
 
             _rootControl.DrawComments();
 
-            if (IsCreatingComment)
-            {
-                DrawCommenting();
-            }
-            else if (IsSelecting)
+            if (IsSelecting)
             {
                 DrawSelection();
             }

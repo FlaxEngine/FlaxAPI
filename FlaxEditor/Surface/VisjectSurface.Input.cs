@@ -12,11 +12,6 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface
     {
         /// <summary>
-        /// The create comment key shortcut.
-        /// </summary>
-        public Keys CreateCommentKey = Keys.C;
-
-        /// <summary>
         /// The input actions collection to processed during user input.
         /// </summary>
         public readonly InputActionsContainer InputActions;
@@ -29,7 +24,7 @@ namespace FlaxEditor.Surface
 
         private bool HasInputSelection => HasNodesSelection;
 
-        private string CurrentInputText
+        private string InputText
         {
             get => _currentInputText;
             set
@@ -172,12 +167,6 @@ namespace FlaxEditor.Surface
                     // Handled
                     return;
                 }
-                // Commenting
-                else if (_isCommentCreateKeyDown)
-                {
-                    // Handled
-                    return;
-                }
                 // Selecting
                 else
                 {
@@ -253,8 +242,6 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
-            _wasMouseDownSinceCommentCreatingStart = true;
-
             // Check if user is connecting boxes
             if (_connectionInstigator != null)
                 return true;
@@ -383,16 +370,8 @@ namespace FlaxEditor.Surface
                 EndMouseCapture();
                 Cursor = CursorType.Default;
 
-                // Commenting
-                if (_isCommentCreateKeyDown)
-                {
-                    var p1 = _rootControl.PointFromParent(ref _leftMouseDownPos);
-                    var p2 = _rootControl.PointFromParent(ref _mousePos);
-                    var selectionRect = Rectangle.FromPoints(p1, p2);
-                    Context.CreateComment(ref selectionRect, "Comment", new Color(1.0f, 1.0f, 1.0f, 0.2f));
-                }
                 // Moving nodes
-                else if (_isMovingSelection)
+                if (_isMovingSelection)
                 {
                     if (_movingNodes != null && _movingNodes.Count > 0)
                     {
@@ -474,10 +453,10 @@ namespace FlaxEditor.Surface
             {
                 if (_hasInputSelectionChanged)
                 {
-                    ResetInputSelection();
+                    ResetInput();
                 }
 
-                CurrentInputText += c;
+                InputText += c;
 
                 return true;
             }
@@ -489,9 +468,16 @@ namespace FlaxEditor.Surface
 
         }
 
-        private void ResetInputSelection()
+        private string ConsumeInputText()
         {
-            CurrentInputText = "";
+            string text = InputText;
+            ResetInput();
+            return text;
+        }
+
+        private void ResetInput()
+        {
+            InputText = "";
             _hasInputSelectionChanged = false;
         }
 
@@ -499,18 +485,26 @@ namespace FlaxEditor.Surface
         {
             if (string.IsNullOrEmpty(currentInputText))
                 return;
-
-            ResetInputSelection();
-
-            // TODO: Change comment key to something better. (e.g. // or # or something...)
-            if (currentInputText.Length == 1 && char.ToLower(currentInputText[0]) == char.ToLower((char)CreateCommentKey))
-                return;
             if (IsPrimaryMenuOpened)
+            {
+                ConsumeInputText();
                 return;
+            }
+
             var selection = SelectedNodes;
             if (selection.Count == 0)
             {
-                ShowPrimaryMenu(currentInputText, null);
+                ShowPrimaryMenu(ConsumeInputText(), null);
+                return;
+            }
+
+            // Multi-Node Editing
+            const string Comment = "//";
+            if (currentInputText.StartsWith(Comment))
+            {
+                ConsumeInputText();
+                var comment = CommentSelection(currentInputText.Substring(Comment.Length));
+                comment.StartRenaming();
                 return;
             }
 
@@ -702,23 +696,17 @@ namespace FlaxEditor.Surface
             if (InputActions.Process(Editor.Instance, this, key))
                 return true;
 
-            if (key == CreateCommentKey)
-            {
-                _isCommentCreateKeyDown = true;
-                _wasMouseDownSinceCommentCreatingStart = false;
-            }
-
             if (HasInputSelection)
             {
                 if (_hasInputSelectionChanged)
                 {
-                    ResetInputSelection();
+                    ResetInput();
                 }
 
                 if (key == Keys.Backspace)
                 {
-                    if (CurrentInputText.Length > 0)
-                        CurrentInputText = CurrentInputText.Substring(0, CurrentInputText.Length - 1);
+                    if (InputText.Length > 0)
+                        InputText = InputText.Substring(0, InputText.Length - 1);
                     return true;
                 }
                 else if (key == Keys.Escape)
@@ -748,15 +736,6 @@ namespace FlaxEditor.Surface
         public override void OnKeyUp(Keys key)
         {
             base.OnKeyUp(key);
-
-            if (key == CreateCommentKey && !RootWindow.GetKey(Keys.Control))
-            {
-                if (!_wasMouseDownSinceCommentCreatingStart)
-                    CommentSelection();
-
-                _wasMouseDownSinceCommentCreatingStart = false;
-                _isCommentCreateKeyDown = false;
-            }
         }
     }
 }

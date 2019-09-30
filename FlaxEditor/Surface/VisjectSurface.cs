@@ -31,7 +31,6 @@ namespace FlaxEditor.Surface
 
         private float _targetScale = 1.0f;
         private float _moveViewWithMouseDragSpeed = 1.0f;
-        private bool _wasMouseDownSinceCommentCreatingStart;
         private bool _isReleasing;
         private VisjectCM _activeVisjectCM;
         private GroupArchetype _customNodesGroup;
@@ -46,11 +45,6 @@ namespace FlaxEditor.Surface
         /// The right mouse down flag.
         /// </summary>
         protected bool _rightMouseDown;
-
-        /// <summary>
-        /// The flag for keyboard key down for comment creating.
-        /// </summary>
-        protected bool _isCommentCreateKeyDown;
 
         /// <summary>
         /// The left mouse down position.
@@ -176,22 +170,17 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether user is selecting nodes.
         /// </summary>
-        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _connectionInstigator == null && !_isCommentCreateKeyDown;
+        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Gets a value indicating whether user is moving selected nodes.
         /// </summary>
-        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _connectionInstigator == null && !_isCommentCreateKeyDown;
+        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Gets a value indicating whether user is connecting nodes.
         /// </summary>
         public bool IsConnecting => _connectionInstigator != null;
-
-        /// <summary>
-        /// Gets a value indicating whether user is creating comment.
-        /// </summary>
-        public bool IsCreatingComment => _isCommentCreateKeyDown && _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Gets a value indicating whether the left mouse button is down.
@@ -585,11 +574,11 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Creates the comment around the selected nodes.
         /// </summary>
-        public void CommentSelection()
+        public SurfaceComment CommentSelection(string text = "")
         {
             var selection = SelectedNodes;
             if (selection.Count == 0)
-                return;
+                return null;
 
             Rectangle surfaceArea = selection[0].Bounds.MakeExpanded(80.0f);
             for (int i = 1; i < selection.Count; i++)
@@ -597,7 +586,7 @@ namespace FlaxEditor.Surface
                 surfaceArea = Rectangle.Union(surfaceArea, selection[i].Bounds.MakeExpanded(80.0f));
             }
 
-            _context.CreateComment(ref surfaceArea, "Comment", new Color(1.0f, 1.0f, 1.0f, 0.2f));
+            return _context.CreateComment(ref surfaceArea, string.IsNullOrEmpty(text) ? "Comment" : text, new Color(1.0f, 1.0f, 1.0f, 0.2f));
         }
 
         /// <summary>

@@ -18,6 +18,7 @@ namespace FlaxEditor.Surface
         private ContextMenuButton _cmDeleteButton;
         private ContextMenuButton _cmRemoveNodeConnectionsButton;
         private ContextMenuButton _cmRemoveBoxConnectionsButton;
+        private readonly Vector2 ContextMenuOffset = new Vector2(5);
 
         /// <summary>
         /// Gets a value indicating whether the primary surface context menu is being opened (eg. user is adding nodes).
@@ -84,10 +85,10 @@ namespace FlaxEditor.Surface
                 _activeVisjectCM.VisibleChanged += OnPrimaryMenuVisibleChanged;
             }
 
-            // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
-            location += new Vector2(5);
-            _activeVisjectCM.Show(this, location, _connectionInstigator as Box);
+            // Show primary menu
             _cmStartPos = location;
+            // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
+            _activeVisjectCM.Show(this, location + ContextMenuOffset, _connectionInstigator as Box);
         }
 
         /// <summary>
@@ -137,6 +138,17 @@ namespace FlaxEditor.Surface
             );
             if (node == null)
                 return;
+
+            // If the user entered a comment
+            if (node is SurfaceComment surfaceComment)
+            {
+                // Note how the user input exactly mimics the other comment creation way. This is very much desired.
+                // Select node --> Type // --> Type the comment text --> Hit Enter
+                string title = surfaceComment.Title;
+                Delete(node);
+                CommentSelection(title);
+                return;
+            }
 
             // Auto select new node
             Select(node);
@@ -210,6 +222,8 @@ namespace FlaxEditor.Surface
                     }
                 }
             }
+
+
 
             // Disable intelligent connecting for now
             /*

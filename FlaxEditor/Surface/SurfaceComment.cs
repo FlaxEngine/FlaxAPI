@@ -248,13 +248,18 @@ namespace FlaxEditor.Surface
             // Rename
             if (_headerRect.Contains(ref location))
             {
-                Surface.Select(this);
-                var dialog = RenamePopup.Show(this, _headerRect, Title, false);
-                dialog.Renamed += OnRenamed;
+                StartRenaming();
                 return true;
             }
 
             return false;
+        }
+
+        public void StartRenaming()
+        {
+            Surface.Select(this);
+            var dialog = RenamePopup.Show(this, _headerRect, Title, false);
+            dialog.Renamed += OnRenamed;
         }
 
         private void OnRenamed(RenamePopup renamePopup)
