@@ -140,7 +140,7 @@ namespace FlaxEditor.Surface
                 return;
 
             // If the user entered a comment
-            if (node is SurfaceComment surfaceComment)
+            if (node is SurfaceComment surfaceComment && HasNodesSelection)
             {
                 // Note how the user input exactly mimics the other comment creation way. This is very much desired.
                 // Select node --> Type // --> Type the comment text --> Hit Enter
