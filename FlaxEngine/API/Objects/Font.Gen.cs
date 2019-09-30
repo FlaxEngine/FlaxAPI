@@ -118,26 +118,26 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates font object of given characters size.
+        /// Caches the given text to prepared for the rendering.
         /// </summary>
-        /// <param name="size">Characters size.</param>
+        /// <param name="text">The text witch characters to cache.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CacheText(int size)
+        public void CacheText(string text)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_CacheText(unmanagedPtr, size);
+            Internal_CacheText(unmanagedPtr, text);
 #endif
         }
 
         /// <summary>
         /// Measures minimum size of the rectangle that will be needed to draw given text.
         /// </summary>
-        /// <param name="text">Input text.</param>
+        /// <param name="text">The input text.</param>
         /// <returns>The minimum size for that text and fot to render properly.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
@@ -151,6 +151,43 @@ namespace FlaxEngine
             Vector2 resultAsRef;
             Internal_MeasureText(unmanagedPtr, text, out resultAsRef);
             return resultAsRef;
+#endif
+        }
+
+        /// <summary>
+        /// Processes text to get cached lines for rendering.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <returns>The output lines cache.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public FontLineCache[] ProcessText(string text)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ProcessText1(unmanagedPtr, text);
+#endif
+        }
+
+        /// <summary>
+        /// Processes text to get cached lines for rendering.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="layout">The layout properties.</param>
+        /// <returns>The output lines cache.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public FontLineCache[] ProcessText(string text, ref TextLayoutOptions layout)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ProcessText2(unmanagedPtr, text, ref layout);
 #endif
         }
 
@@ -277,10 +314,16 @@ namespace FlaxEngine
         internal static extern int Internal_GetKerning(IntPtr obj, char first, char second);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_CacheText(IntPtr obj, int size);
+        internal static extern void Internal_CacheText(IntPtr obj, string text);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_MeasureText(IntPtr obj, string text, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern FontLineCache[] Internal_ProcessText1(IntPtr obj, string text);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern FontLineCache[] Internal_ProcessText2(IntPtr obj, string text, ref TextLayoutOptions layout);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCharPosition1(IntPtr obj, string text, int index, ref TextLayoutOptions layout, out Vector2 resultAsRef);

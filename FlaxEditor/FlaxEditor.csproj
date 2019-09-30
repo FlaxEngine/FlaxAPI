@@ -382,6 +382,7 @@
     <Compile Include="SceneGraph\Actors\NavLinkNode.cs" />
     <Compile Include="SceneGraph\Actors\NavMeshBoundsVolumeNode.cs" />
     <Compile Include="SceneGraph\Actors\ParticleEffectNode.cs" />
+    <Compile Include="SceneGraph\Actors\SceneAnimationPlayerNode.cs" />
     <Compile Include="SceneGraph\Actors\StaticModelNode.cs" />
     <Compile Include="SceneGraph\Actors\PointLightNode.cs" />
     <Compile Include="SceneGraph\Actors\PostFxVolumeNode.cs" />

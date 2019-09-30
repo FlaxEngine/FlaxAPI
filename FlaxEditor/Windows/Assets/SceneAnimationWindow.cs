@@ -50,6 +50,7 @@ namespace FlaxEditor.Windows.Assets
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/scene-animation/index.html")).LinkTooltip("See documentation to learn more");
 
             // Preview player picker
             var previewPlayerPickerContainer = new ContainerControl();

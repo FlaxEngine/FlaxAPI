@@ -53,7 +53,7 @@ namespace FlaxEditor.GUI.Timeline
         /// Initializes a new instance of the <see cref="SceneAnimationTimeline"/> class.
         /// </summary>
         public SceneAnimationTimeline()
-        : base(PlaybackButtons.Play | PlaybackButtons.Stop)
+        : base(PlaybackButtons.Play | PlaybackButtons.Stop | PlaybackButtons.Navigation)
         {
             PlaybackState = PlaybackStates.Disabled;
             PropertiesEditObject = new Proxy(this);

@@ -42,7 +42,7 @@ namespace FlaxEditor.Windows
 
             if (hasSthSelected)
             {
-                contextMenu.AddButton(Editor.Windows.EditWin.IsPilotActorActive ? "Stop pilot actor" : "Pilot actor", Editor.UI.PilotActor);
+                contextMenu.AddButton(Editor.Windows.EditWin.IsPilotActorActive ? "Stop piloting actor" : "Pilot actor", Editor.UI.PilotActor);
             }
 
             contextMenu.AddSeparator();

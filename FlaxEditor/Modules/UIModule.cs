@@ -597,7 +597,7 @@ namespace FlaxEditor.Modules
             _menuSceneAlignActorWithViewport.Enabled = hasActorSelected;
             _menuSceneAlignViewportWithActor.Enabled = hasActorSelected;
             _menuScenePilotActor.Enabled = hasActorSelected || isPilotActorActive;
-            _menuScenePilotActor.Text = isPilotActorActive ? "Stop pilot actor" : "Pilot actor";
+            _menuScenePilotActor.Text = isPilotActorActive ? "Stop piloting actor" : "Pilot actor";
             _menuSceneCreateTerrain.Enabled = SceneManager.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
 
             control.PerformLayout();

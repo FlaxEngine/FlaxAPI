@@ -1216,6 +1216,7 @@ namespace FlaxEditor.Viewport
             new ViewFlagOptions(ViewFlags.DepthOfField, "Depth of Field"),
             new ViewFlagOptions(ViewFlags.MotionBlur, "Motion Blur"),
             new ViewFlagOptions(ViewFlags.PhysicsDebug, "Physics Debug"),
+            new ViewFlagOptions(ViewFlags.DebugDraw, "Debug Draw"),
         };
 
         private void WidgetViewFlagsShowHide(Control cm)

@@ -220,6 +220,11 @@ namespace FlaxEditor.GUI.Timeline
             /// The stop button.
             /// </summary>
             Stop = 2,
+
+            /// <summary>
+            /// The current frame navigation  buttons (left/right frame, seep begin/end).
+            /// </summary>
+            Navigation = 4,
         }
 
         /// <summary>
@@ -264,6 +269,7 @@ namespace FlaxEditor.GUI.Timeline
         private FloatValueBox _fpsCustomValue;
         private TracksPanelArea _tracksPanelArea;
         private VerticalPanel _tracksPanel;
+        private Image[] _playbackNavigation;
         private Image _playbackStop;
         private Image _playbackPlay;
         private Label _noTracksLabel;
@@ -528,6 +534,14 @@ namespace FlaxEditor.GUI.Timeline
                 switch (value)
                 {
                 case PlaybackStates.Disabled:
+                    if (_playbackNavigation != null)
+                    {
+                        foreach (var e in _playbackNavigation)
+                        {
+                            e.Enabled = false;
+                            e.Visible = false;
+                        }
+                    }
                     if (_playbackStop != null)
                     {
                         _playbackStop.Visible = false;
@@ -542,6 +556,14 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     break;
                 case PlaybackStates.Stopped:
+                    if (_playbackNavigation != null)
+                    {
+                        foreach (var e in _playbackNavigation)
+                        {
+                            e.Enabled = true;
+                            e.Visible = true;
+                        }
+                    }
                     if (_playbackStop != null)
                     {
                         _playbackStop.Visible = true;
@@ -560,6 +582,14 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     break;
                 case PlaybackStates.Playing:
+                    if (_playbackNavigation != null)
+                    {
+                        foreach (var e in _playbackNavigation)
+                        {
+                            e.Enabled = true;
+                            e.Visible = true;
+                        }
+                    }
                     if (_playbackStop != null)
                     {
                         _playbackStop.Visible = true;
@@ -578,6 +608,14 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     break;
                 case PlaybackStates.Paused:
+                    if (_playbackNavigation != null)
+                    {
+                        foreach (var e in _playbackNavigation)
+                        {
+                            e.Enabled = true;
+                            e.Visible = true;
+                        }
+                    }
                     if (_playbackStop != null)
                     {
                         _playbackStop.Visible = true;
@@ -745,6 +783,32 @@ namespace FlaxEditor.GUI.Timeline
                 AnchorStyle = AnchorStyle.Center,
                 Parent = playbackButtonsArea
             };
+            if ((playbackButtons & PlaybackButtons.Navigation) == PlaybackButtons.Navigation)
+            {
+                _playbackNavigation = new Image[4];
+
+                _playbackNavigation[0] = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
+                {
+                    TooltipText = "Rewind to timeline start",
+                    Brush = new SpriteBrush(icons.Step32),
+                    Enabled = false,
+                    Rotation = 180.0f,
+                    Parent = playbackButtonsPanel
+                };
+                _playbackNavigation[0].Clicked += (image, button) => OnSeek(0);
+                playbackButtonsPanel.Width += playbackButtonsSize;
+
+                _playbackNavigation[1] = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
+                {
+                    TooltipText = "Move one frame back",
+                    Brush = new SpriteBrush(icons.Next32),
+                    Enabled = false,
+                    Rotation = 180.0f,
+                    Parent = playbackButtonsPanel
+                };
+                _playbackNavigation[1].Clicked += (image, button) => OnSeek(CurrentFrame - 1);
+                playbackButtonsPanel.Width += playbackButtonsSize;
+            }
             if ((playbackButtons & PlaybackButtons.Stop) == PlaybackButtons.Stop)
             {
                 _playbackStop = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
@@ -769,6 +833,28 @@ namespace FlaxEditor.GUI.Timeline
                     Parent = playbackButtonsPanel
                 };
                 _playbackPlay.Clicked += OnPlayClicked;
+                playbackButtonsPanel.Width += playbackButtonsSize;
+            }
+            if ((playbackButtons & PlaybackButtons.Navigation) == PlaybackButtons.Navigation)
+            {
+                _playbackNavigation[2] = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
+                {
+                    TooltipText = "Move one frame forward",
+                    Brush = new SpriteBrush(icons.Next32),
+                    Enabled = false,
+                    Parent = playbackButtonsPanel
+                };
+                _playbackNavigation[2].Clicked += (image, button) => OnSeek(CurrentFrame + 1);
+                playbackButtonsPanel.Width += playbackButtonsSize;
+
+                _playbackNavigation[3] = new Image(playbackButtonsPanel.Width, 0, playbackButtonsSize, playbackButtonsSize)
+                {
+                    TooltipText = "Rewind to timeline end",
+                    Brush = new SpriteBrush(icons.Step32),
+                    Enabled = false,
+                    Parent = playbackButtonsPanel
+                };
+                _playbackNavigation[3].Clicked += (image, button) => OnSeek(DurationFrames);
                 playbackButtonsPanel.Width += playbackButtonsSize;
             }
 
@@ -1906,6 +1992,7 @@ namespace FlaxEditor.GUI.Timeline
             _fpsCustomValue = null;
             _tracksPanelArea = null;
             _tracksPanel = null;
+            _playbackNavigation = null;
             _playbackStop = null;
             _playbackPlay = null;
             _noTracksLabel = null;

@@ -23,6 +23,11 @@ namespace FlaxEngine.GUI
         public float TimeToShow { get; set; } = 0.3f; // 300ms by default
 
         /// <summary>
+        /// Gets or sets the maximum width of the tooltip. Used to wrap text that overflows and ensure that tooltip stays readable.
+        /// </summary>
+        public float MaxWidth { get; set; } = 500.0f;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Tooltip"/> class.
         /// </summary>
         public Tooltip()
@@ -199,7 +204,15 @@ namespace FlaxEngine.GUI
             Render2D.FillRectangle(new Rectangle(1.1f, 1.1f, Width - 2, Height - 2), style.Background);
 
             // Tooltip text
-            Render2D.DrawText(style.FontMedium, _currentText, GetClientArea(), Color.White, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(
+                style.FontMedium,
+                _currentText,
+                GetClientArea(),
+                Color.White,
+                TextAlignment.Center,
+                TextAlignment.Center,
+                TextWrapping.WrapWords
+            );
 
             base.Draw();
         }
@@ -212,10 +225,23 @@ namespace FlaxEngine.GUI
             var style = Style.Current;
 
             // Calculate size of the tooltip
-            float width = 24.0f;
-            if (style.FontMedium)
-                width += style.FontMedium.MeasureText(_currentText).X;
-            Size = new Vector2(width, 24);
+            var size = Vector2.Zero;
+            if (style.FontMedium && !string.IsNullOrEmpty(_currentText))
+            {
+                var layout = TextLayoutOptions.Default;
+                layout.Bounds = new Rectangle(0, 0, MaxWidth, 10000000);
+                layout.HorizontalAlignment = TextAlignment.Center;
+                layout.VerticalAlignment = TextAlignment.Center;
+                layout.TextWrapping = TextWrapping.WrapWords;
+                var items = style.FontMedium.ProcessText(_currentText, ref layout);
+                for (int i = 0; i < items.Length; i++)
+                {
+                    size.X = Mathf.Max(size.X, items[i].Size.X);
+                    size.Y += items[i].Size.Y;
+                }
+                //size.X += style.FontMedium.MeasureText(_currentText).X;
+            }
+            Size = size + new Vector2(24.0f);
 
             // Check if is visible size get changed
             if (Visible && prevSize != Size)

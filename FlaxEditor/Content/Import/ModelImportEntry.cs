@@ -222,7 +222,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// The custom node name to be used as a root motion source. If not specified the actual root node will be used.
         /// </summary>
-        [EditorOrder(1070), DefaultValue(null), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
+        [EditorOrder(1070), DefaultValue(typeof(string), ""), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
         public string RootNodeName { get; set; }
 
         /// <summary>
