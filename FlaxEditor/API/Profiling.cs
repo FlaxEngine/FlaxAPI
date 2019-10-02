@@ -33,7 +33,7 @@ namespace FlaxEditor.Profiling
         /// <summary>
         /// The CPU memory stats. Total amount of virtual memory in bytes.
         /// </summary>
-        public ulong MemoryCPU_TotalVrtualMemory;
+        public ulong MemoryCPU_TotalVirtualMemory;
 
         /// <summary>
         /// The CPU memory stats. Amount of used virtual memory in bytes.
