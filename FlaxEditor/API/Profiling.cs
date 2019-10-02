@@ -68,7 +68,17 @@ namespace FlaxEditor.Profiling
         /// <summary>
         /// The draw time on CPU (in milliseconds).
         /// </summary>
-        public float DrawTimeMs;
+        public float DrawCPUTimeMs;
+
+        /// <summary>
+        /// The draw time on GPU (in milliseconds).
+        /// </summary>
+        public float DrawGPUTimeMs;
+
+        /// <summary>
+        /// The last rendered frame stats.
+        /// </summary>
+        public RenderStatsData DrawStats;
     }
 
     /// <summary>
