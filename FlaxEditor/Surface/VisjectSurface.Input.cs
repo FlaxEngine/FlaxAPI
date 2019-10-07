@@ -316,9 +316,11 @@ namespace FlaxEditor.Surface
                 _isMovingSelection = false;
                 _rightMouseDown = false;
                 _leftMouseDown = false;
-                ResetInput();
                 return true;
             }
+
+            // Just reset the input text whenever the user presses anywhere
+            ResetInput();
 
             // Cache data
             _isMovingSelection = false;
