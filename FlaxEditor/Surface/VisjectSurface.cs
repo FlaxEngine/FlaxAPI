@@ -102,6 +102,11 @@ namespace FlaxEditor.Surface
         protected Vector2 _cmStartPos = Vector2.Minimum;
 
         /// <summary>
+        /// Occurs when selection gets changed.
+        /// </summary>
+        protected event Action SelectionChanged;
+
+        /// <summary>
         /// The surface owner.
         /// </summary>
         public readonly IVisjectSurfaceOwner Owner;
@@ -351,6 +356,9 @@ namespace FlaxEditor.Surface
                 new InputActionsContainer.Binding(options => options.Duplicate, Duplicate),
             });
 
+            Context.ControlAdded += OnSurfaceControlAdded;
+            Context.ControlRemoved += OnSurfaceControlRemoved;
+
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
             DragHandlers.Add(_dragParameters = new DragNames<DragDropEventArgs>(SurfaceParameter.DragPrefix, ValidateDragParameter));
@@ -497,13 +505,12 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void SelectAll()
         {
-            _hasInputSelectionChanged = true;
-
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceControl control)
                     control.IsSelected = true;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -511,13 +518,12 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void ClearSelection()
         {
-            _hasInputSelectionChanged = true;
-
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceControl control)
                     control.IsSelected = false;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -526,9 +532,8 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void AddToSelection(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             control.IsSelected = true;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -537,11 +542,9 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Select(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             ClearSelection();
-
             control.IsSelected = true;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -550,14 +553,12 @@ namespace FlaxEditor.Surface
         /// <param name="controls">The controls.</param>
         public void Select(IEnumerable<SurfaceControl> controls)
         {
-            _hasInputSelectionChanged = true;
-
             ClearSelection();
-
             foreach (var control in controls)
             {
                 control.IsSelected = true;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -566,9 +567,8 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Deselect(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             control.IsSelected = false;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -579,14 +579,22 @@ namespace FlaxEditor.Surface
             var selection = SelectedNodes;
             if (selection.Count == 0)
                 return null;
-
-            Rectangle surfaceArea = selection[0].Bounds.MakeExpanded(80.0f);
-            for (int i = 1; i < selection.Count; i++)
-            {
-                surfaceArea = Rectangle.Union(surfaceArea, selection[i].Bounds.MakeExpanded(80.0f));
-            }
+            Rectangle surfaceArea = GetNodesBounds(selection).MakeExpanded(80.0f);
 
             return _context.CreateComment(ref surfaceArea, string.IsNullOrEmpty(text) ? "Comment" : text, new Color(1.0f, 1.0f, 1.0f, 0.2f));
+        }
+
+        private static Rectangle GetNodesBounds(List<SurfaceNode> nodes)
+        {
+            if (nodes.Count == 0) return Rectangle.Empty;
+
+            Rectangle surfaceArea = nodes[0].Bounds;
+            for (int i = 1; i < nodes.Count; i++)
+            {
+                surfaceArea = Rectangle.Union(surfaceArea, nodes[i].Bounds);
+            }
+
+            return surfaceArea;
         }
 
         /// <summary>
@@ -595,12 +603,11 @@ namespace FlaxEditor.Surface
         /// <param name="controls">The controls.</param>
         public void Delete(IEnumerable<SurfaceControl> controls)
         {
-            _hasInputSelectionChanged = true;
-
             foreach (var control in controls)
             {
                 Delete(control);
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -609,8 +616,6 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Delete(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             if (control is SurfaceNode node)
             {
                 if ((node.Archetype.Flags & NodeFlags.NoRemove) != 0)
@@ -621,6 +626,7 @@ namespace FlaxEditor.Surface
 
             Context.OnControlDeleted(control);
             MarkAsEdited();
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -628,8 +634,6 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void Delete()
         {
-            _hasInputSelectionChanged = true;
-
             bool edited = false;
 
             List<SurfaceNode> nodes = null;
@@ -691,7 +695,11 @@ namespace FlaxEditor.Surface
             }
 
             if (edited)
+            {
                 MarkAsEdited();
+            }
+
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>

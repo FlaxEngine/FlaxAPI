@@ -1,11 +1,13 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.Options;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Surface.Undo;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface
 {
@@ -19,8 +21,48 @@ namespace FlaxEditor.Surface
         private string _currentInputText = string.Empty;
         private Vector2 _movingNodesDelta;
         private HashSet<SurfaceNode> _movingNodes;
-        private bool _hasInputSelectionChanged = false;
-        private readonly Stack<Box> _inputBracketsStack = new Stack<Box>();
+        private readonly Stack<InputBracket> _inputBrackets = new Stack<InputBracket>();
+
+        private class InputBracket
+        {
+            private readonly Margin _padding = new Margin(10f);
+            public Box Box { get; }
+            public Vector2 EndBracketPosition { get; }
+            public List<SurfaceNode> Nodes { get; } = new List<SurfaceNode>();
+            public Rectangle Area { get; private set; }
+            public InputBracket(Box box, Vector2 nodePosition)
+            {
+                Box = box;
+                EndBracketPosition = nodePosition;
+                Update();
+            }
+
+
+            public void Update()
+            {
+                Rectangle area;
+                if (Nodes.Count > 0)
+                {
+                    area = VisjectSurface.GetNodesBounds(Nodes);
+                }
+                else
+                {
+                    area = new Rectangle(EndBracketPosition, new Vector2(120f, 80f));
+                }
+                _padding.ExpandRectangle(ref area);
+                Vector2 endPoint = area.Location + new Vector2(area.Width, area.Height / 2f);
+                Vector2 offset = EndBracketPosition - endPoint;
+                area.Location += offset;
+                Area = area;
+                if (!offset.IsZero)
+                {
+                    foreach (var node in Nodes)
+                    {
+                        node.Location += offset;
+                    }
+                }
+            }
+        }
 
         private bool HasInputSelection => HasNodesSelection;
 
@@ -96,6 +138,24 @@ namespace FlaxEditor.Surface
                 {
                     control.IsSelected = control.IsSelectionIntersecting(ref selectionRect);
                 }
+            }
+        }
+
+        private void OnSurfaceControlAdded(SurfaceControl control)
+        {
+            if (_inputBrackets.Count > 0 && control is SurfaceNode node)
+            {
+                _inputBrackets.Peek().Nodes.Add(node);
+                _inputBrackets.Peek().Update();
+            }
+        }
+
+        private void OnSurfaceControlRemoved(SurfaceControl control)
+        {
+            if (_inputBrackets.Count > 0 && control is SurfaceNode node)
+            {
+                _inputBrackets.Peek().Nodes.Remove(node);
+                _inputBrackets.Peek().Update();
             }
         }
 
@@ -256,6 +316,7 @@ namespace FlaxEditor.Surface
                 _isMovingSelection = false;
                 _rightMouseDown = false;
                 _leftMouseDown = false;
+                ResetInput();
                 return true;
             }
 
@@ -449,36 +510,14 @@ namespace FlaxEditor.Surface
             if (base.OnCharInput(c))
                 return true;
 
-            if (HasInputSelection)
-            {
-                if (_hasInputSelectionChanged)
-                {
-                    ResetInput();
-                }
-
-                InputText += c;
-
-                return true;
-            }
-            else
-            {
-                ShowPrimaryMenu(c + "", null);
-                return false;
-            }
-
-        }
-
-        private string ConsumeInputText()
-        {
-            string text = InputText;
-            ResetInput();
-            return text;
+            InputText += c;
+            return true;
         }
 
         private void ResetInput()
         {
             InputText = "";
-            _hasInputSelectionChanged = false;
+            _inputBrackets.Clear();
         }
 
         private void CurrentInputTextChanged(string currentInputText)
@@ -487,14 +526,23 @@ namespace FlaxEditor.Surface
                 return;
             if (IsPrimaryMenuOpened)
             {
-                ConsumeInputText();
+                InputText = "";
                 return;
             }
 
             var selection = SelectedNodes;
             if (selection.Count == 0)
             {
-                ShowPrimaryMenu(ConsumeInputText(), null);
+                if (_inputBrackets.Count == 0)
+                {
+                    ResetInput();
+                    ShowPrimaryMenu(_mousePos, currentInputText);
+                }
+                else
+                {
+                    InputText = "";
+                    ShowPrimaryMenu(_rootControl.PointToParent(_inputBrackets.Peek().Area.Location), currentInputText);
+                }
                 return;
             }
 
@@ -502,7 +550,7 @@ namespace FlaxEditor.Surface
             const string Comment = "//";
             if (currentInputText.StartsWith(Comment))
             {
-                ConsumeInputText();
+                InputText = "";
                 var comment = CommentSelection(currentInputText.Substring(Comment.Length));
                 comment.StartRenaming();
                 return;
@@ -512,6 +560,7 @@ namespace FlaxEditor.Surface
             if (selection.Count != 1)
                 return;
 
+            // Single Box Editing
             Box selectedBox = GetSelectedBox(selection);
 
             if (selectedBox == null)
@@ -523,35 +572,40 @@ namespace FlaxEditor.Surface
              * =    => set node name
              * etc.
              */
-
             if (currentInputText.StartsWith("("))
             {
-                //TODO: Opening bracket
-                /*if (!selectedBox.IsOutput)
+                InputText = InputText.Substring(1);
+                // Opening bracket
+                if (!selectedBox.IsOutput)
                 {
-                    _inputBracketsStack.Push(selectedBox);
-                }*/
+                    var bracket = new InputBracket(selectedBox, PositionAfterBox(selectedBox));
+                    _inputBrackets.Push(bracket);
+                    Deselect(selectedBox.ParentNode);
+                }
             }
             else if (currentInputText.StartsWith(")"))
             {
-                //TODO: Closing bracket
-                /*if (_inputBracketsStack.Count > 0)
+                InputText = InputText.Substring(1);
+                // Closing bracket
+                if (_inputBrackets.Count > 0)
                 {
-                    Box connectTo = _inputBracketsStack.Pop();
+                    var bracket = _inputBrackets.Pop();
+                    bracket.Update();
+
                     if (selectedBox.IsOutput)
                     {
-                        ConnectingStart(selectedBox);
-                        ConnectingEnd(connectTo);
+                        TryConnect(selectedBox, bracket.Box);
                     }
-                }*/
+                }
             }
             else
             {
+                InputText = "";
                 // Add a new node
                 ConnectingStart(selectedBox);
                 Cursor = CursorType.Default; // Do I need this?
                 EndMouseCapture();
-                ShowPrimaryMenu(currentInputText, selectedBox);
+                ShowPrimaryMenu(_rootControl.PointToParent(PositionAfterBox(selectedBox)), currentInputText);
             }
         }
 
@@ -636,10 +690,10 @@ namespace FlaxEditor.Surface
                     boxIndex * (NodeHeight + DistanceBetweenNodes.Y)
                 );
 
-            return _rootControl.PointToParent(newNodeLocation);
+            return newNodeLocation;
         }
 
-        private Box GetNextBox(Box box)
+        private static Box GetNextBox(Box box)
         {
             SurfaceNode surfaceNode = box.ParentNode;
             int i = 0;
@@ -665,28 +719,6 @@ namespace FlaxEditor.Surface
             return null;
         }
 
-        private void ShowPrimaryMenu(string input, Box connectedBox = null)
-        {
-            if (connectedBox == null)
-            {
-                _cmStartPos = _mousePos;
-            }
-            else
-            {
-                _cmStartPos = PositionAfterBox(connectedBox);
-            }
-
-            ShowPrimaryMenu(_cmStartPos);
-
-            foreach (char character in input)
-            {
-                // OnKeyDown-- > VisjectCM focuses on the text-thingy
-                _activeVisjectCM.OnKeyDown(Keys.None);
-                _activeVisjectCM.OnCharInput(character);
-                _activeVisjectCM.OnKeyUp(Keys.None);
-            }
-        }
-
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
@@ -698,11 +730,6 @@ namespace FlaxEditor.Surface
 
             if (HasInputSelection)
             {
-                if (_hasInputSelectionChanged)
-                {
-                    ResetInput();
-                }
-
                 if (key == Keys.Backspace)
                 {
                     if (InputText.Length > 0)
