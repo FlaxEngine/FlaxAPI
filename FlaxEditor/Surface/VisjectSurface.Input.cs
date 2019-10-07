@@ -514,6 +514,52 @@ namespace FlaxEditor.Surface
             return true;
         }
 
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (InputActions.Process(Editor.Instance, this, key))
+                return true;
+
+            if (HasInputSelection)
+            {
+                if (key == Keys.Backspace)
+                {
+                    if (InputText.Length > 0)
+                        InputText = InputText.Substring(0, InputText.Length - 1);
+                    return true;
+                }
+                else if (key == Keys.Escape)
+                {
+                    ClearSelection();
+                }
+                else if (key == Keys.Return)
+                {
+                    Box selectedBox = GetSelectedBox(SelectedNodes);
+                    if (selectedBox != null)
+                    {
+                        Box toSelect = selectedBox.ParentNode.GetNextBox(selectedBox);
+
+                        if (toSelect != null)
+                        {
+                            Select(toSelect.ParentNode);
+                            toSelect.ParentNode.SelectBox(toSelect);
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnKeyUp(Keys key)
+        {
+            base.OnKeyUp(key);
+        }
+
         private void ResetInput()
         {
             InputText = "";
@@ -578,7 +624,7 @@ namespace FlaxEditor.Surface
                 // Opening bracket
                 if (!selectedBox.IsOutput)
                 {
-                    var bracket = new InputBracket(selectedBox, PositionAfterBox(selectedBox));
+                    var bracket = new InputBracket(selectedBox, FindEmptySpace(selectedBox));
                     _inputBrackets.Push(bracket);
                     Deselect(selectedBox.ParentNode);
                 }
@@ -605,7 +651,7 @@ namespace FlaxEditor.Surface
                 ConnectingStart(selectedBox);
                 Cursor = CursorType.Default; // Do I need this?
                 EndMouseCapture();
-                ShowPrimaryMenu(_rootControl.PointToParent(PositionAfterBox(selectedBox)), currentInputText);
+                ShowPrimaryMenu(_rootControl.PointToParent(FindEmptySpace(selectedBox)), currentInputText);
             }
         }
 
@@ -664,7 +710,7 @@ namespace FlaxEditor.Surface
             return selectedBox;
         }
 
-        private Vector2 PositionAfterBox(Box box)
+        private Vector2 FindEmptySpace(Box box)
         {
             int boxIndex = 0;
 
@@ -691,78 +737,6 @@ namespace FlaxEditor.Surface
                 );
 
             return newNodeLocation;
-        }
-
-        private static Box GetNextBox(Box box)
-        {
-            SurfaceNode surfaceNode = box.ParentNode;
-            int i = 0;
-            for (; i < surfaceNode.Elements.Count; i++)
-            {
-                if (surfaceNode.Elements[i] is Box b && b == box)
-                {
-                    // We found the box
-                    break;
-                }
-            }
-
-            // Get the one after it
-            i++;
-            for (; i < surfaceNode.Elements.Count; i++)
-            {
-                if (surfaceNode.Elements[i] is Box b)
-                {
-                    return b;
-                }
-            }
-
-            return null;
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            if (base.OnKeyDown(key))
-                return true;
-
-            if (InputActions.Process(Editor.Instance, this, key))
-                return true;
-
-            if (HasInputSelection)
-            {
-                if (key == Keys.Backspace)
-                {
-                    if (InputText.Length > 0)
-                        InputText = InputText.Substring(0, InputText.Length - 1);
-                    return true;
-                }
-                else if (key == Keys.Escape)
-                {
-                    ClearSelection();
-                }
-                else if (key == Keys.Return)
-                {
-                    Box selectedBox = GetSelectedBox(SelectedNodes);
-                    if (selectedBox != null)
-                    {
-                        Box toSelect = GetNextBox(selectedBox);
-
-                        if (toSelect != null)
-                        {
-                            Select(toSelect.ParentNode);
-                            toSelect.ParentNode.SelectBox(toSelect);
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc />
-        public override void OnKeyUp(Keys key)
-        {
-            base.OnKeyUp(key);
         }
     }
 }

@@ -391,6 +391,31 @@ namespace FlaxEditor.Surface
             }
         }
 
+        internal Box GetNextBox(Box box)
+        {
+            int i = 0;
+            for (; i < Elements.Count; i++)
+            {
+                if (Elements[i] == box)
+                {
+                    // We found the box
+                    break;
+                }
+            }
+
+            // Get the one after it
+            i++;
+            for (; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box b)
+                {
+                    return b;
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Selects all the boxes.
         /// </summary>

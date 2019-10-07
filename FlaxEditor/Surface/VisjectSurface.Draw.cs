@@ -138,6 +138,7 @@ namespace FlaxEditor.Surface
         protected virtual void DrawInputBrackets()
         {
             var style = FlaxEngine.GUI.Style.Current;
+            Color fadedColor = style.Foreground * 0.6f;
             foreach (var inputBracket in _inputBrackets)
             {
                 // Draw brackets
@@ -161,15 +162,14 @@ namespace FlaxEditor.Surface
                 Vector2 rightControl2 = new Vector2(upperRight.X + offsetX, upperRight.Y);
 
                 // Draw right bracket
-                Render2D.DrawBezier(bottomRight, rightControl1, rightControl2, upperRight, style.Foreground * 0.6f, 2.2f);
+                Render2D.DrawBezier(bottomRight, rightControl1, rightControl2, upperRight, fadedColor, 2.2f);
 
                 // Draw connection bezier
                 // X-offset at 75%
                 Vector2 bezierStartPoint = new Vector2(upperRight.X + offsetX * 0.75f, (upperRight.Y + bottomRight.Y) * 0.5f);
                 Vector2 bezierEndPoint = inputBracket.Box.ParentNode.PointToParent(_rootControl.Parent, inputBracket.Box.Center);
-                Color color = style.Foreground * 0.6f;
 
-                Elements.OutputBox.DrawConnection(ref bezierStartPoint, ref bezierEndPoint, ref color);
+                Elements.OutputBox.DrawConnection(ref bezierStartPoint, ref bezierEndPoint, ref fadedColor);
                 // Debug Area
                 //Rectangle drawRect = Rectangle.FromPoints(upperLeft, bottomRight);
                 //Render2D.FillRectangle(drawRect, Color.Green * 0.5f);
