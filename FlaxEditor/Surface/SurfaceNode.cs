@@ -646,10 +646,9 @@ namespace FlaxEditor.Surface
             // Selection outline
             if (_isSelected)
             {
-                backgroundRect.Expand(1.5f);
                 var colorTop = Color.Orange;
                 var colorBottom = Color.OrangeRed;
-                Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom, 1.5f);
+                Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom);
             }
         }
 

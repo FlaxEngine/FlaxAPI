@@ -659,7 +659,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                     endPos -= dir * 4.0f;
                 }
-                Render2D.DrawLine(startPos, endPos, color, 2.2f);
+                Render2D.DrawLine(startPos, endPos, color);
             }
 
             /// <summary>

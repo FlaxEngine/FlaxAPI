@@ -195,7 +195,7 @@ namespace FlaxEditor.Surface.Archetypes
                 DrawChildren();
 
                 // Border
-                Render2D.DrawRectangle(new Rectangle(1, 0, Width - 2, Height - 1), Colors[idx], 1.5f);
+                Render2D.DrawRectangle(new Rectangle(1, 0, Width - 2, Height - 1), Colors[idx]);
 
                 // Close button
                 float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;

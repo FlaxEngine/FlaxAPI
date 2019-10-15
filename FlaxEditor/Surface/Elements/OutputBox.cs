@@ -31,7 +31,7 @@ namespace FlaxEditor.Surface.Elements
             Vector2 control2 = new Vector2(end.X - dst.X, end.Y + dst.Y);
 
             // Draw line
-            Render2D.DrawBezier(start, control1, control2, end, color, 2.2f);
+            Render2D.DrawBezier(start, control1, control2, end, color);
 
             /*
             // Debug drawing control points
