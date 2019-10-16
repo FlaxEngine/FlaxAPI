@@ -33,7 +33,7 @@ namespace FlaxEditor.Profiling
         /// <summary>
         /// The CPU memory stats. Total amount of virtual memory in bytes.
         /// </summary>
-        public ulong MemoryCPU_TotalVrtualMemory;
+        public ulong MemoryCPU_TotalVirtualMemory;
 
         /// <summary>
         /// The CPU memory stats. Amount of used virtual memory in bytes.
@@ -68,7 +68,17 @@ namespace FlaxEditor.Profiling
         /// <summary>
         /// The draw time on CPU (in milliseconds).
         /// </summary>
-        public float DrawTimeMs;
+        public float DrawCPUTimeMs;
+
+        /// <summary>
+        /// The draw time on GPU (in milliseconds).
+        /// </summary>
+        public float DrawGPUTimeMs;
+
+        /// <summary>
+        /// The last rendered frame stats.
+        /// </summary>
+        public RenderStatsData DrawStats;
     }
 
     /// <summary>

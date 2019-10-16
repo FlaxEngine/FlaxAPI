@@ -13,7 +13,8 @@ namespace FlaxEditor.Windows.Profiler
     /// <seealso cref="FlaxEditor.Windows.Profiler.ProfilerMode" />
     internal sealed class GPU : ProfilerMode
     {
-        private readonly SingleChart _mainChart;
+        private readonly SingleChart _drawTimeCPU;
+        private readonly SingleChart _drawTimeGPU;
         private readonly Timeline _timeline;
         private readonly Table _table;
         private readonly SamplesBuffer<EventGPU[]> _events = new SamplesBuffer<EventGPU[]>();
@@ -35,13 +36,20 @@ namespace FlaxEditor.Windows.Profiler
             };
 
             // Chart
-            _mainChart = new SingleChart
+            _drawTimeCPU = new SingleChart
             {
-                Title = "Draw",
+                Title = "Draw (CPU)",
                 FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
                 Parent = layout,
             };
-            _mainChart.SelectedSampleChanged += OnSelectedSampleChanged;
+            _drawTimeCPU.SelectedSampleChanged += OnSelectedSampleChanged;
+            _drawTimeGPU = new SingleChart
+            {
+                Title = "Draw (GPU)",
+                FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
+                Parent = layout,
+            };
+            _drawTimeGPU.SelectedSampleChanged += OnSelectedSampleChanged;
 
             // Timeline
             _timeline = new Timeline
@@ -107,7 +115,8 @@ namespace FlaxEditor.Windows.Profiler
         /// <inheritdoc />
         public override void Clear()
         {
-            _mainChart.Clear();
+            _drawTimeCPU.Clear();
+            _drawTimeGPU.Clear();
             _events.Clear();
         }
 
@@ -119,13 +128,11 @@ namespace FlaxEditor.Windows.Profiler
             _events.Add(data);
 
             // Peek draw time
-            float drawTime = sharedData.Stats.DrawTimeMs;
-            if (data != null && data.Length > 0)
-                drawTime = data[0].Time;
-            _mainChart.AddSample(drawTime);
+            _drawTimeCPU.AddSample(sharedData.Stats.DrawCPUTimeMs);
+            _drawTimeGPU.AddSample(sharedData.Stats.DrawGPUTimeMs);
 
             // Update timeline if using the last frame
-            if (_mainChart.SelectedSampleIndex == -1)
+            if (_drawTimeCPU.SelectedSampleIndex == -1)
             {
                 UpdateTimeline();
                 UpdateTable();
@@ -135,7 +142,8 @@ namespace FlaxEditor.Windows.Profiler
         /// <inheritdoc />
         public override void UpdateView(int selectedFrame, bool showOnlyLastUpdateEvents)
         {
-            _mainChart.SelectedSampleIndex = selectedFrame;
+            _drawTimeCPU.SelectedSampleIndex = selectedFrame;
+            _drawTimeGPU.SelectedSampleIndex = selectedFrame;
             UpdateTimeline();
             UpdateTable();
         }
@@ -213,7 +221,7 @@ namespace FlaxEditor.Windows.Profiler
         {
             if (_events.Count == 0)
                 return 0;
-            var data = _events.Get(_mainChart.SelectedSampleIndex);
+            var data = _events.Get(_drawTimeCPU.SelectedSampleIndex);
             if (data == null || data.Length == 0)
                 return 0;
 
@@ -256,11 +264,11 @@ namespace FlaxEditor.Windows.Profiler
         {
             if (_events.Count == 0)
                 return;
-            var data = _events.Get(_mainChart.SelectedSampleIndex);
+            var data = _events.Get(_drawTimeCPU.SelectedSampleIndex);
             if (data == null || data.Length == 0)
                 return;
 
-            float totalTimeMs = _mainChart.SelectedSample;
+            float totalTimeMs = _drawTimeCPU.SelectedSample;
 
             // Add rows
             var rowColor2 = Style.Current.Background * 1.4f;

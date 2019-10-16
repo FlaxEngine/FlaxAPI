@@ -187,7 +187,7 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CopyTextureRegion(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
+        public void CopyTexture(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -210,7 +210,7 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CopyTextureRegion(RenderTarget dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
+        public void CopyTexture(RenderTarget dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -233,7 +233,7 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CopyTextureRegion(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, RenderTarget srcResource, uint srcSubresource)
+        public void CopyTexture(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, RenderTarget srcResource, uint srcSubresource)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -256,7 +256,7 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CopyTextureRegion(RenderTarget dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, RenderTarget srcResource, uint srcSubresource)
+        public void CopyTexture(RenderTarget dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, RenderTarget srcResource, uint srcSubresource)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
