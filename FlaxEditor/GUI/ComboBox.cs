@@ -381,7 +381,7 @@ namespace FlaxEditor.GUI
 
             // Background
             Render2D.FillRectangle(clientRect, backgroundColor);
-            Render2D.DrawRectangle(clientRect, borderColor);
+            Render2D.DrawRectangle(clientRect.MakeExpanded(-2.0f), borderColor);
 
             // Check if has selected item
             if (_selectedIndices.Count > 0)

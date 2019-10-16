@@ -196,7 +196,7 @@ namespace FlaxEditor.Surface.Archetypes
                 // Options border
                 var optionsAreaStart = FlaxEditor.Surface.Constants.NodeHeaderSize + 3.0f;
                 var optionsAreaHeight = 7 * FlaxEditor.Surface.Constants.LayoutOffsetY + 6.0f;
-                Render2D.DrawRectangle(new Rectangle(1, optionsAreaStart, Width - 2, optionsAreaHeight), style.BackgroundSelected, 1.5f);
+                Render2D.DrawRectangle(new Rectangle(1, optionsAreaStart, Width - 2, optionsAreaHeight), style.BackgroundSelected);
 
                 // Selection outline
                 if (_isSelected)
@@ -204,7 +204,7 @@ namespace FlaxEditor.Surface.Archetypes
                     backgroundRect.Expand(1.5f);
                     var colorTop = Color.Orange;
                     var colorBottom = Color.OrangeRed;
-                    Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom, 1.5f);
+                    Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom);
                 }
             }
 

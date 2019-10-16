@@ -16,7 +16,7 @@ namespace FlaxEngine
         /// <summary>
         /// Pushes 2D transformation matrix on the stack.
         /// </summary>
-        /// <param name="transform">The transformation.</param>
+        /// <param name="transform">The transformation to apply.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -47,9 +47,9 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Push clipping rectangle mask
+        /// Pushes clipping rectangle mask.
         /// </summary>
-        /// <param name="clipRect">Axis aligned clipping mask rectangle</param>
+        /// <param name="clipRect">The axis aligned clipping mask rectangle.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -64,7 +64,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Pop clipping rectangle mask
+        /// Pops clipping rectangle mask.
         /// </summary>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
@@ -121,10 +121,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Fill rectangle area
+        /// Fills a rectangle area.
         /// </summary>
-        /// <param name="rect">Rectangle to fill</param>
-        /// <param name="color">Color to use</param>
+        /// <param name="rect">The rectangle to fill.</param>
+        /// <param name="color">The color to use.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -139,32 +139,32 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Fill rectangle area
+        /// Fills a rectangle area.
         /// </summary>
-        /// <param name="rect">Rectangle to fill</param>
-        /// <param name="color0">Color to use for upper left vertex</param>
-        /// <param name="color1">Color to use for upper right vertex</param>
-        /// <param name="color2">Color to use for bottom right vertex</param>
-        /// <param name="color3">Color to use for bottom left vertex</param>
+        /// <param name="rect">The rectangle to fill.</param>
+        /// <param name="color1">The color to use for upper left vertex.</param>
+        /// <param name="color2">The color to use for upper right vertex.</param>
+        /// <param name="color3">The color to use for bottom right vertex.</param>
+        /// <param name="color4">The color to use for bottom left vertex.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void FillRectangle(Rectangle rect, Color color0, Color color1, Color color2, Color color3)
+        public static void FillRectangle(Rectangle rect, Color color1, Color color2, Color color3, Color color4)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_FillRectangle2(ref rect, ref color0, ref color1, ref color2, ref color3);
+            Internal_FillRectangle2(ref rect, ref color1, ref color2, ref color3, ref color4);
 #endif
         }
 
         /// <summary>
-        /// Draw rectangle borders
+        /// Draws a rectangle borders.
         /// </summary>
-        /// <param name="rect">Rectangle to draw</param>
-        /// <param name="color">Color to use</param>
-        /// <param name="thickness">Lines thickness (in pixels)</param>
+        /// <param name="rect">The rectangle to draw.</param>
+        /// <param name="color">The color to use.</param>
+        /// <param name="thickness">The lines thickness.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -179,33 +179,33 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draw rectangle borders
+        /// Draws a rectangle borders.
         /// </summary>
-        /// <param name="rect">Rectangle to draw</param>
-        /// <param name="color0">Color to use for upper left vertex</param>
-        /// <param name="color1">Color to use for upper right vertex</param>
-        /// <param name="color2">Color to use for bottom right vertex</param>
-        /// <param name="color3">Color to use for bottom left vertex</param>
-        /// <param name="thickness">Lines thickness (in pixels)</param>
+        /// <param name="rect">The rectangle to draw.</param>
+        /// <param name="color1">The color to use for upper left vertex.</param>
+        /// <param name="color2">The color to use for upper right vertex.</param>
+        /// <param name="color3">The color to use for bottom right vertex.</param>
+        /// <param name="color4">The color to use for bottom left vertex.</param>
+        /// <param name="thickness">The lines thickness.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawRectangle(Rectangle rect, Color color0, Color color1, Color color2, Color color3, float thickness = 1.0f)
+        public static void DrawRectangle(Rectangle rect, Color color1, Color color2, Color color3, Color color4, float thickness = 1.0f)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawRectangle2(ref rect, ref color0, ref color1, ref color2, ref color3, thickness);
+            Internal_DrawRectangle2(ref rect, ref color1, ref color2, ref color3, ref color4, thickness);
 #endif
         }
 
         /// <summary>
-        /// Draw texture
+        /// Draws a texture.
         /// </summary>
-        /// <param name="rt">Render target to draw</param>
-        /// <param name="rect">Rectangle to draw</param>
-        /// <param name="color">Color to use</param>
+        /// <param name="rt">The render target to draw.</param>
+        /// <param name="rect">The rectangle to draw.</param>
+        /// <param name="color">The color to use.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -220,11 +220,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draw texture
+        /// Draws a texture.
         /// </summary>
-        /// <param name="t">Texture to draw</param>
-        /// <param name="rect">Rectangle to draw</param>
-        /// <param name="color">Color to use</param>
+        /// <param name="t">The texture to draw.</param>
+        /// <param name="rect">The rectangle to draw.</param>
+        /// <param name="color">The color to use.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -239,11 +239,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draw texture
+        /// Draws a texture,
         /// </summary>
-        /// <param name="t">Texture to draw</param>
-        /// <param name="rect">Rectangle to draw</param>
-        /// <param name="color">Color to use</param>
+        /// <param name="t">The texture to draw.</param>
+        /// <param name="rect">The rectangle to draw.</param>
+        /// <param name="color">The color to use.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -258,11 +258,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draw texture (uses point sampler)
+        /// Draws a texture (uses point sampler).
         /// </summary>
-        /// <param name="t">Texture to draw</param>
-        /// <param name="rect">Rectangle to draw</param>
-        /// <param name="color">Color to use</param>
+        /// <param name="t">The texture to draw.</param>
+        /// <param name="rect">The rectangle to draw.</param>
+        /// <param name="color">The color to use.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -277,11 +277,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draw texture (uses point sampler)
+        /// Draws a texture (uses point sampler).
         /// </summary>
-        /// <param name="t">Texture to draw</param>
-        /// <param name="rect">Rectangle to draw</param>
-        /// <param name="color">Color to use</param>
+        /// <param name="t">The texture to draw.</param>
+        /// <param name="rect">The rectangle to draw.</param>
+        /// <param name="color">The color to use.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -296,12 +296,12 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draw line
+        /// Draws a line.
         /// </summary>
-        /// <param name="p1">Start point</param>
-        /// <param name="p2">End point</param>
-        /// <param name="color">Color to use</param>
-        /// <param name="thickness">Lines thickness (in pixels)</param>
+        /// <param name="p1">The start point.</param>
+        /// <param name="p2">The end point.</param>
+        /// <param name="color">The color to use.</param>
+        /// <param name="thickness">The line thickness.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -311,19 +311,40 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawLine(ref p1, ref p2, ref color, thickness);
+            Internal_DrawLine1(ref p1, ref p2, ref color, thickness);
 #endif
         }
 
         /// <summary>
-        /// Draw Bezier curve
+        /// Draws a line.
         /// </summary>
-        /// <param name="p1">Start point</param>
-        /// <param name="p2">First control point</param>
-        /// <param name="p3">Second control point</param>
-        /// <param name="p4">End point</param>
-        /// <param name="color">Color to use</param>
-        /// <param name="thickness">Lines thickness (in pixels)</param>
+        /// <param name="p1">The start point.</param>
+        /// <param name="p2">The end point.</param>
+        /// <param name="color1">The line start color.</param>
+        /// <param name="color2">The line end color.</param>
+        /// <param name="thickness">The line thickness.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawLine(Vector2 p1, Vector2 p2, Color color1, Color color2, float thickness = 1.0f)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawLine2(ref p1, ref p2, ref color1, ref color2, thickness);
+#endif
+        }
+
+        /// <summary>
+        /// Draws a Bezier curve.
+        /// </summary>
+        /// <param name="p1">The start point.</param>
+        /// <param name="p2">The first control point.</param>
+        /// <param name="p3">The second control point.</param>
+        /// <param name="p4">The end point.</param>
+        /// <param name="color">The color to use.</param>
+        /// <param name="thickness">The line thickness.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -340,7 +361,7 @@ namespace FlaxEngine
         /// <summary>
         /// Draws the GUI material in the 2D.
         /// </summary>
-        /// <param name="material">Material to render. Must be a GUI material type.</param>
+        /// <param name="material">The material to render. Must be a GUI material type.</param>
         /// <param name="rect">The target rectangle to draw.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
@@ -356,11 +377,11 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draws the GUI material in the 2D.
+        /// Draws the GUI material.
         /// </summary>
-        /// <param name="material">Material to render. Must be a GUI material type.</param>
+        /// <param name="material">The material to render. Must be a GUI material type.</param>
         /// <param name="rect">The target rectangle to draw.</param>
-        /// <param name="color">Color to use</param>
+        /// <param name="color">The color to use.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -417,13 +438,13 @@ namespace FlaxEngine
         internal static extern void Internal_FillRectangle1(ref Rectangle rect, ref Color color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_FillRectangle2(ref Rectangle rect, ref Color color0, ref Color color1, ref Color color2, ref Color color3);
+        internal static extern void Internal_FillRectangle2(ref Rectangle rect, ref Color color1, ref Color color2, ref Color color3, ref Color color4);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawRectangle1(ref Rectangle rect, ref Color color, float thickness);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawRectangle2(ref Rectangle rect, ref Color color0, ref Color color1, ref Color color2, ref Color color3, float thickness);
+        internal static extern void Internal_DrawRectangle2(ref Rectangle rect, ref Color color1, ref Color color2, ref Color color3, ref Color color4, float thickness);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawRenderTarget(IntPtr rt, ref Rectangle rect, ref Color color);
@@ -441,7 +462,10 @@ namespace FlaxEngine
         internal static extern void Internal_DrawTexture4(IntPtr t, ref Rectangle rect, ref Color color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawLine(ref Vector2 p1, ref Vector2 p2, ref Color color, float thickness);
+        internal static extern void Internal_DrawLine1(ref Vector2 p1, ref Vector2 p2, ref Color color, float thickness);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawLine2(ref Vector2 p1, ref Vector2 p2, ref Color color1, ref Color color2, float thickness);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawBezier(ref Vector2 p1, ref Vector2 p2, ref Vector2 p3, ref Vector2 p4, ref Color color, float thickness);

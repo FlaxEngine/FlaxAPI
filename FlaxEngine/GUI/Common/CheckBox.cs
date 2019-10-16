@@ -199,7 +199,7 @@ namespace FlaxEngine.GUI
                 borderColor *= 0.5f;
             else if (_mouseDown || _mouseOverBox)
                 borderColor = BorderColorHighlighted;
-            Render2D.DrawRectangle(_box, borderColor);
+            Render2D.DrawRectangle(_box.MakeExpanded(-2.0f), borderColor);
 
             // Icon
             if (_state != CheckBoxState.Default)
