@@ -182,7 +182,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draws sprite.
+        /// Draws a sprite.
         /// </summary>
         /// <param name="sprite">Sprite to draw.</param>
         /// <param name="rect">Rectangle to draw.</param>
@@ -201,7 +201,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draws sprite.
+        /// Draws a sprite.
         /// </summary>
         /// <param name="sprite">Sprite to draw.</param>
         /// <param name="rect">Rectangle to draw.</param>
@@ -220,7 +220,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draws sprite (uses point sampler).
+        /// Draws a sprite (uses point sampler).
         /// </summary>
         /// <param name="sprite">Sprite to draw.</param>
         /// <param name="rect">Rectangle to draw.</param>
@@ -239,7 +239,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draws sprite (uses point sampler).
+        /// Draws a sprite (uses point sampler).
         /// </summary>
         /// <param name="sprite">Sprite to draw.</param>
         /// <param name="rect">Rectangle to draw.</param>
