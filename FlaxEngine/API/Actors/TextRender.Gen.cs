@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -110,6 +111,21 @@ namespace FlaxEngine
 #else
             get { return Internal_GetFontSize(unmanagedPtr); }
             set { Internal_SetFontSize(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the draw passes to use for rendering this object.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(75), DefaultValue(DrawPass.Default), EditorDisplay("Text"), Tooltip("The draw passes to use for rendering this object.")]
+        public DrawPass DrawModes
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDrawModes(unmanagedPtr); }
+            set { Internal_SetDrawModes(unmanagedPtr, value); }
 #endif
         }
 
@@ -267,6 +283,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetFontSize(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern DrawPass Internal_GetDrawModes(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetDrawModes(IntPtr obj, DrawPass val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);

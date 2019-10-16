@@ -76,6 +76,11 @@ namespace FlaxEngine
             public float CullDistanceRandomRange;
 
             /// <summary>
+            /// The draw passes to use for rendering this foliage type.
+            /// </summary>
+            public Rendering.DrawPass DrawModes;
+
+            /// <summary>
             /// The shadows casting mode.
             /// </summary>
             public ShadowsCastingMode ShadowsMode;

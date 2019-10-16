@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -116,6 +117,21 @@ namespace FlaxEngine
 #else
             get { return Internal_GetScaleInLightmap(unmanagedPtr); }
             set { Internal_SetScaleInLightmap(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the draw passes to use for rendering this object.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(115), DefaultValue(DrawPass.Default), EditorDisplay("Terrain"), Tooltip("The draw passes to use for rendering this object.")]
+        public DrawPass DrawModes
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDrawModes(unmanagedPtr); }
+            set { Internal_SetDrawModes(unmanagedPtr, value); }
 #endif
         }
 
@@ -378,6 +394,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetScaleInLightmap(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern DrawPass Internal_GetDrawModes(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetDrawModes(IntPtr obj, DrawPass val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetBoundsExtent(IntPtr obj, out Vector3 resultAsRef);

@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
@@ -149,7 +150,18 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
-            [EditorOrder(130), EditorDisplay("Instance Options"), Tooltip("The shadows casting mode.")]
+            [EditorOrder(120), DefaultValue(FlaxEngine.Rendering.DrawPass.Default), EditorDisplay("Instance Options"), Tooltip("The draw passes to use for rendering this foliage type.")]
+            public FlaxEngine.Rendering.DrawPass DrawModes
+            {
+                get => _options.DrawModes;
+                set
+                {
+                    _options.DrawModes = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(130), DefaultValue(ShadowsCastingMode.All), EditorDisplay("Instance Options"), Tooltip("The shadows casting mode.")]
             public ShadowsCastingMode ShadowsMode
             {
                 get => _options.ShadowsMode;

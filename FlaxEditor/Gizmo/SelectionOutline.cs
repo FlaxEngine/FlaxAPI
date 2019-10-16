@@ -168,7 +168,7 @@ namespace FlaxEditor.Gizmo
             }
 
             // Render selected objects depth
-            context.DrawSceneDepth(task, customDepth, true, _actors, ActorsSources.CustomActors);
+            context.DrawSceneDepth(task, customDepth, _actors, ActorsSources.CustomActors);
         }
     }
 }

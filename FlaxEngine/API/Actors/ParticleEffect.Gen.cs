@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -140,6 +141,21 @@ namespace FlaxEngine
 #else
             get { return Internal_GetUpdateWhenOffscreen(unmanagedPtr); }
             set { Internal_SetUpdateWhenOffscreen(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the draw passes to use for rendering this object.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorDisplay("Particle Effect"), EditorOrder(75), DefaultValue(DrawPass.Default), Tooltip("The draw passes to use for rendering this object.")]
+        public DrawPass DrawModes
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDrawModes(unmanagedPtr); }
+            set { Internal_SetDrawModes(unmanagedPtr, value); }
 #endif
         }
 
@@ -280,6 +296,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetUpdateWhenOffscreen(IntPtr obj, bool val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern DrawPass Internal_GetDrawModes(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetDrawModes(IntPtr obj, DrawPass val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetTime(IntPtr obj);

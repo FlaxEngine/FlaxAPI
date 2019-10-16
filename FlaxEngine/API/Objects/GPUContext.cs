@@ -204,14 +204,13 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="task">Calling render task. Uses it's cache, buffers and the view properties.</param>
         /// <param name="output">Output depth buffer.</param>
-        /// <param name="drawTransparency">True if render both opaque and semi-transparent objects.</param>
         /// <param name="customActors">Custom set of actors to render. If set to null default scene will be rendered.</param>
         /// <param name="actorsSource">Actors source to use during rendering.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawSceneDepth(SceneRenderTask task, RenderTarget output, bool drawTransparency = true, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.Scenes)
+        public void DrawSceneDepth(SceneRenderTask task, RenderTarget output, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.Scenes)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -219,7 +218,7 @@ namespace FlaxEngine.Rendering
             // Get unmanaged actors
             var actors = GetActors(customActors, out int actorsCount);
 
-            Internal_DrawSceneDepth(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), drawTransparency, actors, actorsCount, actorsSource);
+            Internal_DrawSceneDepth(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), actors, actorsCount, actorsSource);
 #endif
         }
 
@@ -248,14 +247,13 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="task">Calling render task. Uses it's cache, buffers and the view properties.</param>
         /// <param name="output">Output depth buffer.</param>
-        /// <param name="drawTransparency">True if render both opaque and semi-transparent objects.</param>
         /// <param name="customActors">Custom set of actors to render. If set to null default scene will be rendered.</param>
         /// <param name="actorsSource">Actors source to use during rendering.</param>
 #if UNIT_TEST_COMPILANT
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawSceneDepth(SceneRenderTask task, RenderTarget output, bool drawTransparency = true, List<Actor> customActors = null, ActorsSources actorsSource = ActorsSources.Scenes)
+        public void DrawSceneDepth(SceneRenderTask task, RenderTarget output, List<Actor> customActors = null, ActorsSources actorsSource = ActorsSources.Scenes)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -263,7 +261,7 @@ namespace FlaxEngine.Rendering
             // Get unmanaged actors
             var actors = GetActors(customActors, out int actorsCount);
 
-            Internal_DrawSceneDepth(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), drawTransparency, actors, actorsCount, actorsSource);
+            Internal_DrawSceneDepth(unmanagedPtr, GetUnmanagedPtr(task), GetUnmanagedPtr(output), actors, actorsCount, actorsSource);
 #endif
         }
 
@@ -301,10 +299,10 @@ namespace FlaxEngine.Rendering
         internal static extern void Internal_DrawScene(IntPtr obj, IntPtr task, IntPtr output, IntPtr buffers, ref RenderView view, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource, IntPtr[] customPostFx, int customPostFxCount);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawSceneDepth(IntPtr obj, IntPtr task, IntPtr output, bool drawTransparency, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource);
+        internal static extern void Internal_DrawSceneDepth(IntPtr obj, IntPtr task, IntPtr output, IntPtr[] customActors, int customActorsCount, ActorsSources actorsSource);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_ExecuteDrawCalls(IntPtr obj, IntPtr task, IntPtr output, IntPtr outputDepth, RenderTask.DrawCall[] drawCalls, RenderPass pass);
+        internal static extern void Internal_ExecuteDrawCalls(IntPtr obj, IntPtr task, IntPtr output, IntPtr outputDepth, RenderTask.DrawCall[] drawCalls, DrawPass pass);
 #endif
 
         #endregion

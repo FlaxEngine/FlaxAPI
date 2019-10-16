@@ -392,7 +392,7 @@ namespace FlaxEngine.Rendering
                 DecalBlendingMode = MaterialDecalBlendingMode.Translucent,
                 PostFxLocation = MaterialPostFxLocation.AfterPostProcessingPass,
                 MaskThreshold = 0.3f,
-                OpacityThreshold = 0.004f,
+                OpacityThreshold = 0.12f,
                 TessellationMode = TessellationMethod.None,
                 MaxTessellationFactor = 15,
             };

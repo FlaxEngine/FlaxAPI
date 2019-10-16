@@ -77,8 +77,8 @@ namespace FlaxEditor.Gizmo
             }
 
             // Draw gizmos (actual drawing)
-            _drawCallsCollector.ExecuteDrawCalls(context, task, target, RenderPass.ForwardPass);
-            _drawCallsCollector.ExecuteDrawCalls(context, task, target, RenderPass.GBufferFill);
+            _drawCallsCollector.ExecuteDrawCalls(context, task, target, DrawPass.Forward);
+            _drawCallsCollector.ExecuteDrawCalls(context, task, target, DrawPass.GBuffer);
 
             // Resolve MSAA texture
             if (enableMsaa)

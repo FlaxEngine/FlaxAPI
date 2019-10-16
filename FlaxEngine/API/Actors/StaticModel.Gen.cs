@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -72,17 +73,17 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets hidden shadow flag. If set to true, the object will cast a shadow but won't be visible.
+        /// Gets or sets the draw passes to use for rendering this object.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(15), DefaultValue(false), EditorDisplay("Model"), Tooltip("If checked, the object will cast a shadow but won't be visible.")]
-        public bool HiddenShadow
+        [EditorOrder(15), DefaultValue(DrawPass.Default), EditorDisplay("Model"), Tooltip("The draw passes to use for rendering this object.")]
+        public DrawPass DrawModes
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
-            get { return Internal_GetHiddenShadow(unmanagedPtr); }
-            set { Internal_SetHiddenShadow(unmanagedPtr, value); }
+            get { return Internal_GetDrawModes(unmanagedPtr); }
+            set { Internal_SetDrawModes(unmanagedPtr, value); }
 #endif
         }
 
@@ -182,10 +183,10 @@ namespace FlaxEngine
         internal static extern void Internal_SetBoundsScale(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetHiddenShadow(IntPtr obj);
+        internal static extern DrawPass Internal_GetDrawModes(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetHiddenShadow(IntPtr obj, bool val);
+        internal static extern void Internal_SetDrawModes(IntPtr obj, DrawPass val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Model Internal_GetModel(IntPtr obj);
