@@ -37,8 +37,8 @@ namespace FlaxEditor.Windows
             public Dictionary<PlatformType, Platform> PerPlatformOptions = new Dictionary<PlatformType, Platform>
             {
                 { PlatformType.Windows, new Windows() },
-                { PlatformType.XboxOne, new Xbox() },
-                { PlatformType.WindowsStore, new WPA() },
+                { PlatformType.XboxOne, new XboxOne() },
+                { PlatformType.WindowsStore, new WindowsStore() },
                 { PlatformType.Linux, new Linux() },
             };
 
@@ -142,7 +142,7 @@ namespace FlaxEditor.Windows
                 protected abstract Arch CPUArch { get; }
             }
 
-            public class WPA : UWP
+            public class WindowsStore : UWP
             {
                 /// <summary>
                 /// The architecture.
@@ -155,7 +155,7 @@ namespace FlaxEditor.Windows
                 protected override Arch CPUArch => Architecture;
             }
 
-            public class Xbox : UWP
+            public class XboxOne : UWP
             {
                 protected override Arch CPUArch => Arch.x64;
 
