@@ -187,6 +187,11 @@ namespace FlaxEditor
         /// </summary>
         public event Action InitializationEnd;
 
+        /// <summary>
+        /// The custom data container that is stored in Editor instance. Can be used by plugins to store the state during editor session (state is preserved during scripts reloads).
+        /// </summary>
+        public Dictionary<string, string> CustomData = new Dictionary<string, string>();
+
         internal Editor()
         {
             Instance = this;
