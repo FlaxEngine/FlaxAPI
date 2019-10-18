@@ -1,9 +1,8 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using FlaxEngine;
 
-namespace FlaxEditor.Tools
+namespace FlaxEngine.Utilities
 {
     /// <summary>
     /// Helper class for Perlin Noise generation.
