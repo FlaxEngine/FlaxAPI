@@ -92,7 +92,7 @@ namespace FlaxEditor.Windows
                     // TODO: restore build settings from the Editor cache!
 
                     // Check if can find installed tools for this platform
-                    IsAvailable = Directory.Exists(Path.Combine(Globals.EditorFolder, "PlatformData", platformDataSubDir));
+                    IsAvailable = Directory.Exists(Path.Combine(Globals.StartupPath, "FlaxDeps", platformDataSubDir, "Bin"));
                 }
 
                 public virtual void OnNotAvailableLayout(LayoutElementsContainer layout)
