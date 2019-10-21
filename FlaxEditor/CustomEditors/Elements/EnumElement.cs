@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using FlaxEditor.GUI;
 using FlaxEngine;
@@ -302,6 +303,10 @@ namespace FlaxEditor.CustomEditors.Elements
                 if (field.Name.Equals("value__"))
                     continue;
 
+                var attributes = (Attribute[])field.GetCustomAttributes();
+                if (attributes.Any(x => x is HideInEditorAttribute))
+                    continue;
+
                 string name;
                 switch (formatMode)
                 {
@@ -313,6 +318,7 @@ namespace FlaxEditor.CustomEditors.Elements
                     break;
                 default: throw new ArgumentOutOfRangeException(nameof(formatMode), formatMode, null);
                 }
+
                 entries.Add(new Entry(name, Convert.ToInt32(field.GetRawConstantValue())));
             }
         }

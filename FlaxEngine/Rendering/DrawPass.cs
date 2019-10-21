@@ -43,11 +43,13 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The default set of draw passes for the scene objects.
         /// </summary>
+        [HideInEditor]
         Default = Depth | GBuffer | Forward | Distortion | MotionVectors,
 
         /// <summary>
         /// The all draw passes combined into a single mask.
         /// </summary>
+        [HideInEditor]
         All = Depth | GBuffer | Forward | Distortion | MotionVectors,
     };
 }
