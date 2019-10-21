@@ -141,6 +141,11 @@ namespace FlaxEditor.CustomEditors.Editors
                     // Field declared with `readonly` keyword
                     IsReadOnly = true;
                 }
+                if (!IsReadOnly && info is PropertyInfo propertyInfo && !propertyInfo.CanWrite)
+                {
+                    // Property without a setter
+                    IsReadOnly = true;
+                }
                 if (Display?.Name != null)
                 {
                     // Use name provided by the attribute
@@ -275,10 +280,6 @@ namespace FlaxEditor.CustomEditors.Editors
                         continue;
 
                     var item = new ItemInfo(p, attributes);
-                    if (!p.CanWrite)
-                    {
-                        item.IsReadOnly = true;
-                    }
                     items.Add(item);
                 }
             }
