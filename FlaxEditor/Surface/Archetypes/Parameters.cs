@@ -112,6 +112,19 @@ namespace FlaxEditor.Surface.Archetypes
                     }
                 },
                 {
+                    ParameterType.CubeTexture,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector3, 0, -1),
+                        NodeElementArchetype.Factory.Output(1, "", ConnectionType.Object, 6),
+                        NodeElementArchetype.Factory.Output(2, "Color", ConnectionType.Vector4, 1),
+                        NodeElementArchetype.Factory.Output(3, "R", ConnectionType.Float, 2),
+                        NodeElementArchetype.Factory.Output(4, "G", ConnectionType.Float, 3),
+                        NodeElementArchetype.Factory.Output(5, "B", ConnectionType.Float, 4),
+                        NodeElementArchetype.Factory.Output(6, "A", ConnectionType.Float, 5),
+                    }
+                },
+                {
                     ParameterType.NormalMap,
                     new[]
                     {
@@ -140,7 +153,7 @@ namespace FlaxEditor.Surface.Archetypes
                     ParameterType.RenderTargetArray,
                     new[]
                     {
-                        NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector2, 0, -1),
+                        NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector3, 0, -1),
                         NodeElementArchetype.Factory.Output(1, "", ConnectionType.Object, 6),
                         NodeElementArchetype.Factory.Output(2, "Color", ConnectionType.Vector4, 1),
                         NodeElementArchetype.Factory.Output(3, "R", ConnectionType.Float, 2),
@@ -153,7 +166,7 @@ namespace FlaxEditor.Surface.Archetypes
                     ParameterType.RenderTargetCube,
                     new[]
                     {
-                        NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector2, 0, -1),
+                        NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector3, 0, -1),
                         NodeElementArchetype.Factory.Output(1, "", ConnectionType.Object, 6),
                         NodeElementArchetype.Factory.Output(2, "Color", ConnectionType.Vector4, 1),
                         NodeElementArchetype.Factory.Output(3, "R", ConnectionType.Float, 2),
@@ -166,7 +179,7 @@ namespace FlaxEditor.Surface.Archetypes
                     ParameterType.RenderTargetVolume,
                     new[]
                     {
-                        NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector2, 0, -1),
+                        NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector3, 0, -1),
                         NodeElementArchetype.Factory.Output(1, "", ConnectionType.Object, 6),
                         NodeElementArchetype.Factory.Output(2, "Color", ConnectionType.Vector4, 1),
                         NodeElementArchetype.Factory.Output(3, "R", ConnectionType.Float, 2),

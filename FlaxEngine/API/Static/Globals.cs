@@ -41,11 +41,6 @@ namespace FlaxEngine
         public static string EditorFolder { get; private set; }
 
         /// <summary>
-        /// Gets the external tools folder path.
-        /// </summary>
-        public static string ToolsFolder { get; private set; }
-
-        /// <summary>
         /// Gets the content directory path.
         /// </summary>
         public static string ContentFolder { get; private set; }
@@ -71,7 +66,7 @@ namespace FlaxEngine
         {
             // Initialize paths
             var paths = GetPaths();
-            if (paths == null || paths.Length != 11)
+            if (paths == null || paths.Length != 10)
                 throw new InvalidOperationException("Invalid Globals.");
             StartupPath = paths[0];
             TemporaryFolder = paths[1];
@@ -79,11 +74,10 @@ namespace FlaxEngine
             EngineFolder = paths[3];
             DevelopmentFolder = paths[4];
             EditorFolder = paths[5];
-            ToolsFolder = paths[6];
-            ContentFolder = paths[7];
-            SourceFolder = paths[8];
-            ProjectCacheFolder = paths[9];
-            MonoPath = paths[10];
+            ContentFolder = paths[6];
+            SourceFolder = paths[7];
+            ProjectCacheFolder = paths[8];
+            MonoPath = paths[9];
         }
     }
 }

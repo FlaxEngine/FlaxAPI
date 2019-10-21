@@ -1,9 +1,8 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using FlaxEngine;
 
-namespace FlaxEditor.Tools
+namespace FlaxEngine.Utilities
 {
     /// <summary>
     /// Helper class for Perlin Noise generation.
@@ -26,16 +25,23 @@ namespace FlaxEditor.Tools
         public float NoiseAmount;
 
         /// <summary>
+        /// The noise octaves count.
+        /// </summary>
+        public int Octaves;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PerlinNoise"/> class.
         /// </summary>
         /// <param name="baseValue">The base value.</param>
         /// <param name="scale">The noise scale.</param>
         /// <param name="amount">The noise amount.</param>
-        public PerlinNoise(float baseValue, float scale, float amount)
+        /// <param name="octaves">The noise octaves count.</param>
+        public PerlinNoise(float baseValue, float scale, float amount, int octaves = 4)
         {
             Base = baseValue;
             NoiseScale = scale;
             NoiseAmount = amount;
+            Octaves = octaves;
         }
 
         /// <summary>
@@ -53,7 +59,7 @@ namespace FlaxEditor.Tools
                 x = Math.Abs(x);
                 y = Math.Abs(y);
 
-                for (int octave = 0; octave < 4; octave++)
+                for (int octave = 0; octave < Octaves; octave++)
                 {
                     float octaveShift = 1 << octave;
                     float octaveScale = octaveShift / NoiseScale;
@@ -68,7 +74,7 @@ namespace FlaxEditor.Tools
         {
             return T * T * T * (T * (T * 6 - 15) + 10);
         }
-        
+
         private float Grad(int hash, float x, float y)
         {
             int h = hash & 15;
@@ -102,7 +108,7 @@ namespace FlaxEditor.Tools
                                          Grad(Permutations[bb], fracX - 1, fracY - 1), u), v);
         }
 
-        private static readonly int[] Permutations = new[]
+        private static readonly int[] Permutations =
         {
             151, 160, 137, 91, 90, 15,
             131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23,

@@ -37,8 +37,8 @@ namespace FlaxEditor.Windows
             public Dictionary<PlatformType, Platform> PerPlatformOptions = new Dictionary<PlatformType, Platform>
             {
                 { PlatformType.Windows, new Windows() },
-                { PlatformType.XboxOne, new Xbox() },
-                { PlatformType.WindowsStore, new WPA() },
+                { PlatformType.XboxOne, new XboxOne() },
+                { PlatformType.WindowsStore, new WindowsStore() },
                 { PlatformType.Linux, new Linux() },
             };
 
@@ -92,7 +92,7 @@ namespace FlaxEditor.Windows
                     // TODO: restore build settings from the Editor cache!
 
                     // Check if can find installed tools for this platform
-                    IsAvailable = Directory.Exists(Path.Combine(Globals.EditorFolder, "PlatformData", platformDataSubDir));
+                    IsAvailable = Directory.Exists(Path.Combine(Globals.StartupPath, "FlaxDeps", platformDataSubDir, "Bin"));
                 }
 
                 public virtual void OnNotAvailableLayout(LayoutElementsContainer layout)
@@ -142,7 +142,7 @@ namespace FlaxEditor.Windows
                 protected abstract Arch CPUArch { get; }
             }
 
-            public class WPA : UWP
+            public class WindowsStore : UWP
             {
                 /// <summary>
                 /// The architecture.
@@ -155,7 +155,7 @@ namespace FlaxEditor.Windows
                 protected override Arch CPUArch => Architecture;
             }
 
-            public class Xbox : UWP
+            public class XboxOne : UWP
             {
                 protected override Arch CPUArch => Arch.x64;
 

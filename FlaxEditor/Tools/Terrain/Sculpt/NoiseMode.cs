@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEngine;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Tools.Terrain.Sculpt
 {
