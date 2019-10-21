@@ -23,6 +23,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The base pass rendering to the GBuffer (for opaque materials).
         /// </summary>
+        [EditorDisplay(name: "GBuffer")]
         GBuffer = 1 << 1,
 
         /// <summary>

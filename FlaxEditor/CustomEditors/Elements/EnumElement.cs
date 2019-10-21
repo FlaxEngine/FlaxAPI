@@ -308,15 +308,23 @@ namespace FlaxEditor.CustomEditors.Elements
                     continue;
 
                 string name;
-                switch (formatMode)
+                var nameAttr = (EditorDisplayAttribute)attributes.FirstOrDefault(x => x is EditorDisplayAttribute);
+                if (nameAttr != null)
                 {
-                case EnumDisplayAttribute.FormatMode.Default:
-                    name = CustomEditorsUtil.GetPropertyNameUI(field.Name);
-                    break;
-                case EnumDisplayAttribute.FormatMode.None:
-                    name = field.Name;
-                    break;
-                default: throw new ArgumentOutOfRangeException(nameof(formatMode), formatMode, null);
+                    name = nameAttr.Name;
+                }
+                else
+                {
+                    switch (formatMode)
+                    {
+                    case EnumDisplayAttribute.FormatMode.Default:
+                        name = CustomEditorsUtil.GetPropertyNameUI(field.Name);
+                        break;
+                    case EnumDisplayAttribute.FormatMode.None:
+                        name = field.Name;
+                        break;
+                    default: throw new ArgumentOutOfRangeException(nameof(formatMode), formatMode, null);
+                    }
                 }
 
                 entries.Add(new Entry(name, Convert.ToInt32(field.GetRawConstantValue())));
