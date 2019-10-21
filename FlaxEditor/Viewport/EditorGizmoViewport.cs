@@ -3,6 +3,7 @@
 using FlaxEditor.Gizmo;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
+using FlaxEngine.GUI;
 using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Viewport
@@ -14,6 +15,8 @@ namespace FlaxEditor.Viewport
     /// <seealso cref="IGizmoOwner" />
     public class EditorGizmoViewport : EditorViewport, IGizmoOwner
     {
+        private UpdateDelegate _update;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorGizmoViewport"/> class.
         /// </summary>
@@ -23,6 +26,16 @@ namespace FlaxEditor.Viewport
         : base(task, new FPSCamera(), true)
         {
             Undo = undo;
+
+            SetUpdate(ref _update, OnUpdate);
+        }
+
+        private void OnUpdate(float deltaTime)
+        {
+            for (int i = 0; i < Gizmos.Count; i++)
+            {
+                Gizmos[i].Update(deltaTime);
+            }
         }
 
         /// <inheritdoc />
@@ -45,7 +58,7 @@ namespace FlaxEditor.Viewport
 
         /// <inheritdoc />
         public bool IsControlDown => _input.IsControlDown;
-        
+
         /// <inheritdoc />
         public bool SnapToGround => Editor.Instance.Options.Options.Input.SnapToGround.Process(Root);
 
@@ -62,14 +75,19 @@ namespace FlaxEditor.Viewport
         public Undo Undo { get; }
 
         /// <inheritdoc />
-        public override void Update(float deltaTime)
+        protected override void AddUpdateCallbacks(RootControl root)
         {
-            base.Update(deltaTime);
+            base.AddUpdateCallbacks(root);
 
-            for (int i = 0; i < Gizmos.Count; i++)
-            {
-                Gizmos[i].Update(deltaTime);
-            }
+            root.UpdateCallbacksToAdd.Add(_update);
+        }
+
+        /// <inheritdoc />
+        protected override void RemoveUpdateCallbacks(RootControl root)
+        {
+            base.RemoveUpdateCallbacks(root);
+
+            root.UpdateCallbacksToRemove.Add(_update);
         }
     }
 }

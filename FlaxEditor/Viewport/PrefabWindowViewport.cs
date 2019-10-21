@@ -27,6 +27,7 @@ namespace FlaxEditor.Viewport
     public class PrefabWindowViewport : PrefabPreview, IEditorPrimitivesOwner
     {
         private readonly PrefabWindow _window;
+        private UpdateDelegate _update;
 
         private readonly ViewportWidgetButton _gizmoModeTranslate;
         private readonly ViewportWidgetButton _gizmoModeRotate;
@@ -202,6 +203,16 @@ namespace FlaxEditor.Viewport
             InputActions.Add(options => options.RotateMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate);
             InputActions.Add(options => options.ScaleMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale);
             InputActions.Add(options => options.FocusSelection, ShowSelectedActors);
+
+            SetUpdate(ref _update, OnUpdate);
+        }
+
+        private void OnUpdate(float deltaTime)
+        {
+            for (int i = 0; i < Gizmos.Count; i++)
+            {
+                Gizmos[i].Update(deltaTime);
+            }
         }
 
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
@@ -259,14 +270,19 @@ namespace FlaxEditor.Viewport
         public Undo Undo { get; }
 
         /// <inheritdoc />
-        public override void Update(float deltaTime)
+        protected override void AddUpdateCallbacks(RootControl root)
         {
-            base.Update(deltaTime);
+            base.AddUpdateCallbacks(root);
 
-            for (int i = 0; i < Gizmos.Count; i++)
-            {
-                Gizmos[i].Update(deltaTime);
-            }
+            root.UpdateCallbacksToAdd.Add(_update);
+        }
+
+        /// <inheritdoc />
+        protected override void RemoveUpdateCallbacks(RootControl root)
+        {
+            base.RemoveUpdateCallbacks(root);
+
+            root.UpdateCallbacksToRemove.Add(_update);
         }
 
         private void OnGizmoModeToggle(ViewportWidgetButton button)
