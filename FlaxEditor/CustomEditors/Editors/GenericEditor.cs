@@ -265,16 +265,20 @@ namespace FlaxEditor.CustomEditors.Editors
 
                     // Skip only set properties and special cases
                     var getter = p.GetMethod;
-                    if (getter == null || !p.CanWrite || p.GetIndexParameters().GetLength(0) != 0)
+                    if (getter == null || p.GetIndexParameters().GetLength(0) != 0)
                         continue;
 
                     var attributes = p.GetCustomAttributes(true);
 
-                    // Skip hidden properties, handle special attributes
-                    if ((!getter.IsPublic && !attributes.Any(x => x is ShowInEditorAttribute)) || attributes.Any(x => x is HideInEditorAttribute))
+                    // Skip hidden or get only properties, handle special attributes
+                    if (((!getter.IsPublic || !p.CanWrite) && !attributes.Any(x => x is ShowInEditorAttribute)) || attributes.Any(x => x is HideInEditorAttribute))
                         continue;
 
                     var item = new ItemInfo(p, attributes);
+                    if (!p.CanWrite)
+                    {
+                        item.IsReadOnly = true;
+                    }
                     items.Add(item);
                 }
             }
