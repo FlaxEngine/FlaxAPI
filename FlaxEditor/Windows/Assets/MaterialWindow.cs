@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using FlaxEditor.Content;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
@@ -59,55 +60,55 @@ namespace FlaxEditor.Windows.Assets
 
             // Rendering
 
-            [EditorOrder(100), EditorDisplay("Rendering"), Tooltip("Defines the primitives culling mode used during geometry rendering.")]
+            [EditorOrder(100), DefaultValue(CullMode.Normal), EditorDisplay("Rendering"), Tooltip("Defines the primitives culling mode used during geometry rendering.")]
             public CullMode CullMode;
 
-            [EditorOrder(110), EditorDisplay("Rendering"), Tooltip("If checked, geometry will be rendered in wireframe mode without solid triangles fill.")]
+            [EditorOrder(110), DefaultValue(false), EditorDisplay("Rendering"), Tooltip("If checked, geometry will be rendered in wireframe mode without solid triangles fill.")]
             public bool Wireframe;
 
-            [EditorOrder(120), EditorDisplay("Rendering"), Tooltip("Enables performing depth test during material rendering.")]
+            [EditorOrder(120), DefaultValue(true), EditorDisplay("Rendering"), Tooltip("Enables performing depth test during material rendering.")]
             public bool DepthTest;
 
-            [EditorOrder(130), EditorDisplay("Rendering"), Tooltip("Enable writing to the depth buffer during material rendering.")]
+            [EditorOrder(130), DefaultValue(true), EditorDisplay("Rendering"), Tooltip("Enable writing to the depth buffer during material rendering.")]
             public bool DepthWrite;
 
             // Transparency
 
-            [EditorOrder(200), EditorDisplay("Transparency"), Tooltip("Enables reflections when rendering material.")]
+            [EditorOrder(200), DefaultValue(true), EditorDisplay("Transparency"), Tooltip("Enables reflections when rendering material.")]
             public bool EnableReflections;
 
-            [EditorOrder(210), EditorDisplay("Transparency"), Tooltip("Enables fog effects when rendering material.")]
+            [EditorOrder(210), DefaultValue(true), EditorDisplay("Transparency"), Tooltip("Enables fog effects when rendering material.")]
             public bool EnableFog;
 
-            [EditorOrder(220), EditorDisplay("Transparency"), Tooltip("Enables distortion effect when rendering material.")]
+            [EditorOrder(220), DefaultValue(true), EditorDisplay("Transparency"), Tooltip("Enables distortion effect when rendering material.")]
             public bool EnableDistortion;
 
-            [EditorOrder(230), EditorDisplay("Transparency"), Tooltip("Controls opacity values clipping point."), Limit(0.0f, 1.0f, 0.01f)]
+            [EditorOrder(230), DefaultValue(0.12f), EditorDisplay("Transparency"), Tooltip("Controls opacity values clipping point."), Limit(0.0f, 1.0f, 0.01f)]
             public float OpacityThreshold;
 
             // Tessellation
 
-            [EditorOrder(300), EditorDisplay("Tessellation"), Tooltip("Mesh tessellation method.")]
+            [EditorOrder(300), DefaultValue(TessellationMethod.None), EditorDisplay("Tessellation"), Tooltip("Mesh tessellation method.")]
             public TessellationMethod TessellationMode;
 
-            [EditorOrder(310), EditorDisplay("Tessellation"), Tooltip("Maximum triangle tessellation factor."), Limit(1, 60, 0.01f)]
+            [EditorOrder(310), DefaultValue(15), EditorDisplay("Tessellation"), Tooltip("Maximum triangle tessellation factor."), Limit(1, 60, 0.01f)]
             public int MaxTessellationFactor;
 
             // Misc
 
-            [EditorOrder(400), EditorDisplay("Misc"), Tooltip("If checked, material input normal will be assumed as world-space rather than tangent-space.")]
+            [EditorOrder(400), DefaultValue(false), EditorDisplay("Misc"), Tooltip("If checked, material input normal will be assumed as world-space rather than tangent-space.")]
             public bool InputWorldSpaceNormal;
 
-            [EditorOrder(410), EditorDisplay("Misc", "Dithered LOD Transition"), Tooltip("If checked, material uses dithered model LOD transition for smoother LODs switching.")]
+            [EditorOrder(410), DefaultValue(false), EditorDisplay("Misc", "Dithered LOD Transition"), Tooltip("If checked, material uses dithered model LOD transition for smoother LODs switching.")]
             public bool DitheredLODTransition;
 
-            [EditorOrder(420), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point."), Limit(0.0f, 1.0f, 0.01f)]
+            [EditorOrder(420), DefaultValue(0.3f), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point."), Limit(0.0f, 1.0f, 0.01f)]
             public float MaskThreshold;
 
-            [EditorOrder(430), EditorDisplay("Misc"), Tooltip("The decal material blending mode.")]
+            [EditorOrder(430), DefaultValue(MaterialDecalBlendingMode.Normal), EditorDisplay("Misc"), Tooltip("The decal material blending mode.")]
             public MaterialDecalBlendingMode DecalBlendingMode;
 
-            [EditorOrder(440), EditorDisplay("Misc"), Tooltip("The post fx material rendering location.")]
+            [EditorOrder(440), DefaultValue(MaterialPostFxLocation.AfterPostProcessingPass), EditorDisplay("Misc"), Tooltip("The post fx material rendering location.")]
             public MaterialPostFxLocation PostFxLocation;
 
             // Parameters
