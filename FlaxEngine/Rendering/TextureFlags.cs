@@ -36,18 +36,18 @@ namespace FlaxEngine.Rendering
         DepthStencil = 0x0008,
 
         /// <summary>
-        /// Create render target handles per texture mip map (valid only for Texture2D with ShaderResource or RenderTarget flag).
+        /// Create texture views per texture mip map (valid only for Texture2D with ShaderResource or RenderTarget flag).
         /// </summary>
-        PerMipHandles = 0x0010,
+        PerMipViews = 0x0010,
 
         /// <summary>
-        /// Create render target handles per texture array/volume slice (valid only for Texture2D and Texture3D with ShaderResource or RenderTarget flag).
+        /// Create texture views per texture slice map (valid only for Texture3D with ShaderResource or RenderTarget flag).
         /// </summary>
-        PerSliceHandles = 0x0020,
+        PerSliceViews = 0x0020,
 
         /// <summary>
-        /// Create read-only handle for depth-stencil buffer. Valid only if texture uses depth-stencil and the graphics device supports it.
+        /// Create read-only view for depth-stencil buffer. Valid only if texture uses depth-stencil and the graphics device supports it.
         /// </summary>
-        ReadOnlyDepthHandle = 0x0040,
+        ReadOnlyDepthView = 0x0040,
     }
 }
