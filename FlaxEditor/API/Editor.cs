@@ -327,7 +327,13 @@ namespace FlaxEditor
             }
 
             // Load scene
-            switch (Options.Options.General.StartupSceneMode)
+            var startupSceneMode = Options.Options.General.StartupSceneMode;
+            if (startupSceneMode == GeneralOptions.StartupSceneModes.LastOpened && !ProjectCache.HasCustomData(ProjectDataLastScene))
+            {
+                // Fallback to default project scene if nothing saved in the cache
+                startupSceneMode = GeneralOptions.StartupSceneModes.ProjectDefault;
+            }
+            switch (startupSceneMode)
             {
             case GeneralOptions.StartupSceneModes.ProjectDefault:
             {
