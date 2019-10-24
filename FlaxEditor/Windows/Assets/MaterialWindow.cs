@@ -105,7 +105,7 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(420), DefaultValue(0.3f), EditorDisplay("Misc"), Tooltip("Controls mask values clipping point."), Limit(0.0f, 1.0f, 0.01f)]
             public float MaskThreshold;
 
-            [EditorOrder(430), DefaultValue(MaterialDecalBlendingMode.Normal), EditorDisplay("Misc"), Tooltip("The decal material blending mode.")]
+            [EditorOrder(430), DefaultValue(MaterialDecalBlendingMode.Translucent), EditorDisplay("Misc"), Tooltip("The decal material blending mode.")]
             public MaterialDecalBlendingMode DecalBlendingMode;
 
             [EditorOrder(440), DefaultValue(MaterialPostFxLocation.AfterPostProcessingPass), EditorDisplay("Misc"), Tooltip("The post fx material rendering location.")]
