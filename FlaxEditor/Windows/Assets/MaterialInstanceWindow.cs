@@ -30,11 +30,11 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(ParametersEditor))]
         private sealed class PropertiesProxy
         {
-            private Material _restoreBase;
+            private MaterialBase _restoreBase;
             private Dictionary<string, object> _restoreParams;
 
             [EditorDisplay("General"), Tooltip("The base material used to override it's properties")]
-            public Material BaseMaterial
+            public MaterialBase BaseMaterial
             {
                 get => Window?.Asset?.BaseMaterial;
                 set
@@ -215,7 +215,7 @@ namespace FlaxEditor.Windows.Assets
                 }
             }
 
-            private void InitializeProperties(LayoutElementsContainer layout, MaterialParameter[] parameters, Material baseMaterial)
+            private void InitializeProperties(LayoutElementsContainer layout, MaterialParameter[] parameters, MaterialBase baseMaterial)
             {
                 var baseMaterialParameters = baseMaterial?.Parameters;
                 for (int i = 0; i < parameters.Length; i++)

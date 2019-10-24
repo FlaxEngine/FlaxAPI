@@ -24,7 +24,7 @@ namespace FlaxEngine
         /// Gets or sets the base material. If value gets changed parameters collection is restored to the default values of the new material.
         /// </summary>
         [UnmanagedCall]
-        public Material BaseMaterial
+        public MaterialBase BaseMaterial
         {
 #if UNIT_TEST_COMPILANT
             get; set;
@@ -55,7 +55,7 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Material Internal_GetBaseMaterial(IntPtr obj);
+        internal static extern MaterialBase Internal_GetBaseMaterial(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetBaseMaterial(IntPtr obj, IntPtr val);
