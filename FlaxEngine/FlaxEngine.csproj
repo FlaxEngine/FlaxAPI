@@ -260,6 +260,8 @@
     <Compile Include="API\TextureBases\SpriteAtlas.Gen.cs" />
     <Compile Include="API\TextureBases\Texture.cs" />
     <Compile Include="API\TextureBases\Texture.Gen.cs" />
+    <Compile Include="API\Textures\FontTextureAtlas.cs" />
+    <Compile Include="API\Textures\FontTextureAtlas.Gen.cs" />
     <Compile Include="AssetTypes\TextureBase.cs" />
     <Compile Include="Attributes\Editor\AssetReferenceAttribute.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAliasAttribute.cs" />

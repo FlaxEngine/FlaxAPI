@@ -16,7 +16,7 @@ namespace FlaxEngine
         /// <summary>
         /// Creates new <see cref="Texture"/> object.
         /// </summary>
-        private Texture() : base()
+        protected Texture() : base()
         {
         }
 
