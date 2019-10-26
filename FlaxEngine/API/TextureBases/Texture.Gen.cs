@@ -54,6 +54,47 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Loads the texture from the image file. Supported file formats depend on a runtime platform. All platform support loading PNG, BMP, TGA, HDR and JPEG files.
+        /// </summary>
+        /// <remarks>
+        /// Valid only for virtual assets.
+        /// </remarks>
+        /// <param name="path">The source image file path.</param>
+        /// <param name="generateMips">True if generate mipmaps for the imported texture.</param>
+        /// <returns>True if fails, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public bool LoadFile(string path, bool generateMips = false)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_LoadFile(unmanagedPtr, path, generateMips);
+#endif
+        }
+
+        /// <summary>
+        /// Loads the texture from the image file and creates the virtual texture asset for it. Supported file formats depend on a runtime platform. All platform support loading PNG, BMP, TGA, HDR and JPEG files.
+        /// </summary>
+        /// <param name="path">The source image file path.</param>
+        /// <param name="generateMips">True if generate mipmaps for the imported texture.</param>
+        /// <returns>The loaded texture (virtual asset) or null if fails.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static Texture FromFile(string path, bool generateMips = false)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FromFile(path, generateMips);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -62,6 +103,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Save(IntPtr obj, string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_LoadFile(IntPtr obj, string path, bool generateMips);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Texture Internal_FromFile(string path, bool generateMips);
 #endif
 
         #endregion
