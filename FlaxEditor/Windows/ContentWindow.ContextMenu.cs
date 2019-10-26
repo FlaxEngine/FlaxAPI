@@ -5,6 +5,7 @@ using FlaxEditor.Content;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.Windows
 {
@@ -79,6 +80,11 @@ namespace FlaxEditor.Windows
                                 cm.AddButton("Show import location", () => Platform.StartProcess(importLocation));
                             }
                         }
+                    }
+
+                    if (item is AssetItem assetItem)
+                    {
+                        cm.AddButton("Copy asset ID", () => Platform.ClipboardText = JsonSerializer.GetStringID(assetItem.ID));
                     }
 
                     if (Editor.CanExport(item.Path))
