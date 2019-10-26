@@ -164,6 +164,7 @@ namespace FlaxEngine.Rendering
                 case MaterialParameterType.Bool:
                     ptr = new IntPtr(&vBool);
                     break;
+                case MaterialParameterType.SceneTexture:
                 case MaterialParameterType.Integer:
                     ptr = new IntPtr(&vInt);
                     break;
@@ -204,6 +205,7 @@ namespace FlaxEngine.Rendering
                 switch (_type)
                 {
                 case MaterialParameterType.Bool: return vBool;
+                case MaterialParameterType.SceneTexture:
                 case MaterialParameterType.Integer: return vInt;
                 case MaterialParameterType.Float: return vFloat;
                 case MaterialParameterType.Vector2: return vVector2;
@@ -247,6 +249,7 @@ namespace FlaxEngine.Rendering
                     vBool = Convert.ToBoolean(value);
                     ptr = new IntPtr(&vBool);
                     break;
+                case MaterialParameterType.SceneTexture:
                 case MaterialParameterType.Integer:
                 {
                     vInt = Convert.ToInt32(value);
