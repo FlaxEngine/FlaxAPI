@@ -168,6 +168,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             view.View = Matrix.LookAt(view.Position, target, up);
             view.NonJitteredProjection = view.Projection;
             view.TemporalAAJitter = Vector4.Zero;
+            view.ModelLODDistanceFactor = 100.0f;
             view.Flags = ViewFlags.Reflections | ViewFlags.SSR | ViewFlags.AO | ViewFlags.GI |
                          ViewFlags.DirectionalLights | ViewFlags.PointLights | ViewFlags.SpotLights | ViewFlags.SkyLights |
                          ViewFlags.Shadows | ViewFlags.SpecularLight | ViewFlags.AntiAliasing | ViewFlags.CustomPostProcess |
