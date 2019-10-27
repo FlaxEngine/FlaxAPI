@@ -787,12 +787,15 @@ namespace FlaxEditor.GUI
         class Popup : ContextMenuBase
         {
             private CustomEditorPresenter _editor;
-            public KeyframesEditor Editor;
-            public List<int> KeyframeIndices;
+            private KeyframesEditor Editor;
+            private List<int> _keyframeIndices;
             public bool IsDirty;
 
-            public Popup(List<Keyframe> keyframes)
+            public Popup(KeyframesEditor keyframesEditor, List<Keyframe> keyframes, List<int> keyframeIndices)
             {
+                Editor = keyframesEditor;
+                _keyframeIndices = keyframeIndices;
+
                 const float width = 280.0f;
                 const float height = 120.0f;
                 Size = new Vector2(width, height);
@@ -813,6 +816,8 @@ namespace FlaxEditor.GUI
                     selection[i] = keyframes[i];
                 editor.Select(selection);
 
+                MessageBox.Show("Edit keyframe: " + keyframeIndices[0] + ", value: " + keyframes[0].Value);
+
                 _editor = editor;
             }
 
@@ -823,7 +828,7 @@ namespace FlaxEditor.GUI
                 for (int i = 0; i < _editor.SelectionCount; i++)
                 {
                     var keyframe = (Keyframe)_editor.Selection[i];
-                    var index = KeyframeIndices[i];
+                    var index = _keyframeIndices[i];
                     Editor._keyframes[index] = keyframe;
                 }
 
@@ -855,6 +860,8 @@ namespace FlaxEditor.GUI
                 if (Editor._popup == this)
                     Editor._popup = null;
                 _editor = null;
+                _keyframeIndices = null;
+                Editor = null;
 
                 base.Hide();
             }
@@ -906,11 +913,7 @@ namespace FlaxEditor.GUI
                 keyframes.Add(_keyframes[keyframeIndices[i]]);
             }
 
-            _popup = new Popup(keyframes)
-            {
-                Editor = this,
-                KeyframeIndices = keyframeIndices,
-            };
+            _popup = new Popup(this, keyframes, keyframeIndices);
             _popup.Show(control, pos);
         }
 

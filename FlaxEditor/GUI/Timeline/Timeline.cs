@@ -792,6 +792,7 @@ namespace FlaxEditor.GUI.Timeline
                     TooltipText = "Rewind to timeline start",
                     Brush = new SpriteBrush(icons.Step32),
                     Enabled = false,
+                    Visible = false,
                     Rotation = 180.0f,
                     Parent = playbackButtonsPanel
                 };
@@ -803,6 +804,7 @@ namespace FlaxEditor.GUI.Timeline
                     TooltipText = "Move one frame back",
                     Brush = new SpriteBrush(icons.Next32),
                     Enabled = false,
+                    Visible = false,
                     Rotation = 180.0f,
                     Parent = playbackButtonsPanel
                 };
@@ -842,6 +844,7 @@ namespace FlaxEditor.GUI.Timeline
                     TooltipText = "Move one frame forward",
                     Brush = new SpriteBrush(icons.Next32),
                     Enabled = false,
+                    Visible = false,
                     Parent = playbackButtonsPanel
                 };
                 _playbackNavigation[2].Clicked += (image, button) => OnSeek(CurrentFrame + 1);
@@ -852,6 +855,7 @@ namespace FlaxEditor.GUI.Timeline
                     TooltipText = "Rewind to timeline end",
                     Brush = new SpriteBrush(icons.Step32),
                     Enabled = false,
+                    Visible = false,
                     Parent = playbackButtonsPanel
                 };
                 _playbackNavigation[3].Clicked += (image, button) => OnSeek(DurationFrames);
