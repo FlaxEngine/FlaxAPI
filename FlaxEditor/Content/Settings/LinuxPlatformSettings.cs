@@ -10,10 +10,10 @@ namespace FlaxEditor.Content.Settings
     public class LinuxPlatformSettings : SettingsBase
     {
         /// <summary>
-        /// Use fullscreen mode as default.
+        /// The default game window mode.
         /// </summary>
-        [EditorOrder(10), EditorDisplay("Window"), Tooltip("Use fullscreen mode as default.")]
-        public bool FullscreenMode = false;
+        [EditorOrder(10), EditorDisplay("Window"), Tooltip("The default game window mode.")]
+        public GameWindowMode WindowMode = GameWindowMode.Windowed;
 
         /// <summary>
         /// The default game window width (in pixels).
@@ -44,6 +44,12 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1020), EditorDisplay("Other"), Tooltip("Limits maximum amount of concurrent game instances running to one, otherwise user may launch application more than once.")]
         public bool ForceSingleInstance = false;
+
+        /// <summary>
+        /// Custom icon texture to use for the application (overrides the default one).
+        /// </summary>
+        [EditorOrder(1030), EditorDisplay("Other"), Tooltip("Custom icon texture to use for the application (overrides the default one).")]
+        public Texture OverrideIcon;
 
         /// <summary>
         /// Enables support for Vulkan. Disabling it reduces compiled shaders count.
