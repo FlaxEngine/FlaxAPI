@@ -101,11 +101,11 @@ namespace FlaxEditor.SceneGraph
         public static ActorNode BuildActorNode(Actor actor)
         {
             ActorNode result = null;
+            Type customType;
 
             try
             {
                 // Try to pick custom node type for that actor object
-                Type customType;
                 if (CustomNodesTypes.TryGetValue(actor.GetType(), out customType))
                 {
                     // Use custom type
@@ -125,6 +125,10 @@ namespace FlaxEditor.SceneGraph
             {
                 // Error
                 Editor.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
+                if (CustomNodesTypes.TryGetValue(actor.GetType(), out customType))
+                {
+                    Editor.LogWarning($"Custom node type: {customType}");
+                }
                 Editor.LogWarning(ex);
             }
 
