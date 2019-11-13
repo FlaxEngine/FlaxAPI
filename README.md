@@ -16,9 +16,9 @@ This repository contains an open source public C# API as well as full source cod
 * C# Scripting (C# 7.2)
 * Physics (NVIDIA PhysX)
 * Nested Prefabs
-* Terrain
+* Terrain and foliage
 * Top Performance
-* Xbox One, Windows and UWP support
+* Xbox One, Windows, Linux and UWP support
 * Global Illumination (lightmaps baking on GPU)
 * Model LODs and content streaming
 * Rich & Extensible editor
