@@ -78,7 +78,6 @@ namespace FlaxEditor.Viewport
             SelectionOutline.SelectionGetter = () => _window.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
-            EditorPrimitives.DrawDebugDraw = false;
             EditorPrimitives.Viewport = this;
             Task.CustomPostFx.Add(EditorPrimitives);
 
@@ -801,6 +800,8 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public ViewportDebugDrawData DebugDrawData => null;
+        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, RenderTarget target, RenderTarget targetDepth, DrawCallsCollector collector)
+        {
+        }
     }
 }

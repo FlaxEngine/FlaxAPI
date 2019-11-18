@@ -56,10 +56,41 @@ namespace FlaxEditor.Viewport
             public Vector3 HitLocation;
         }
 
-        private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
+        public sealed class EditorSpritesRenderer : PostProcessEffect
+        {
+            /// <summary>
+            /// The rendering task.
+            /// </summary>
+            public SceneRenderTask Task;
 
+            /// <inheritdoc />
+            public override int Order => -10000000;
+
+            /// <inheritdoc />
+            public override bool UseSingleTarget => true;
+
+            /// <inheritdoc />
+            public override bool CanRender => (Task.View.Flags & ViewFlags.EditorSprites) == ViewFlags.EditorSprites && SceneManager.ScenesCount != 0 && base.CanRender;
+
+            /// <inheritdoc />
+            public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+            {
+                Profiler.BeginEventGPU("Editor Primitives");
+
+                for (int i = 0; i < SceneManager.ScenesCount; i++)
+                {
+                    var scene = SceneManager.GetScene(i);
+                    ViewportIconsRenderer.DrawIcons(context, task, input, task.Buffers.DepthBuffer, scene);
+                }
+
+                Profiler.EndEventGPU();
+            }
+        }
+
+        private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
         private StaticModel _previewStaticModel;
         private int _previewModelEntryIndex;
+        private EditorSpritesRenderer _editorSpritesRenderer;
 
         /// <summary>
         /// Drag and drop handlers
@@ -86,8 +117,10 @@ namespace FlaxEditor.Viewport
         /// </summary>
         public EditorPrimitives EditorPrimitives;
 
-        /// <inheritdoc />
-        public ViewportDebugDrawData DebugDrawData => _debugDrawData;
+        /// <summary>
+        /// Gets or sets a value indicating whether draw <see cref="DebugDraw"/> shapes.
+        /// </summary>
+        public bool DrawDebugDraw = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether show navigation mesh.
@@ -122,9 +155,11 @@ namespace FlaxEditor.Viewport
             SelectionOutline.SelectionGetter = () => _editor.SceneEditing.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
-            EditorPrimitives.DrawDebugDraw = true;
             EditorPrimitives.Viewport = this;
             Task.CustomPostFx.Add(EditorPrimitives);
+            _editorSpritesRenderer = FlaxEngine.Object.New<EditorSpritesRenderer>();
+            _editorSpritesRenderer.Task = Task;
+            Task.CustomPostFx.Add(_editorSpritesRenderer);
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
@@ -342,6 +377,16 @@ namespace FlaxEditor.Viewport
             }
 
             _debugDrawData.OnDraw(collector);
+        }
+
+        /// <inheritdoc />
+        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, RenderTarget target, RenderTarget targetDepth, DrawCallsCollector collector)
+        {
+            // Draw selected objects debug shapes and visuals
+            if (DrawDebugDraw && (task.View.Flags & ViewFlags.DebugDraw) == ViewFlags.DebugDraw)
+            {
+                DebugDraw.Draw(task, _debugDrawData.ActorsPtrs, target, context, targetDepth, true);
+            }
         }
 
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
@@ -882,6 +927,7 @@ namespace FlaxEditor.Viewport
             _debugDrawData.Dispose();
             FlaxEngine.Object.Destroy(ref SelectionOutline);
             FlaxEngine.Object.Destroy(ref EditorPrimitives);
+            FlaxEngine.Object.Destroy(ref _editorSpritesRenderer);
 
             base.OnDestroy();
         }

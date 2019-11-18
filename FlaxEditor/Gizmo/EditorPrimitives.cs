@@ -13,9 +13,14 @@ namespace FlaxEditor.Gizmo
     public interface IEditorPrimitivesOwner : IGizmoOwner
     {
         /// <summary>
-        /// Gets the debug draw data container.
+        /// Draws the custom editor primitives.
         /// </summary>
-        ViewportDebugDrawData DebugDrawData { get; }
+        /// <param name="context">The GPU commands context.</param>
+        /// <param name="task">The current scene rendering task.</param>
+        /// <param name="target">The output texture to render to.</param>
+        /// <param name="targetDepth">The scene depth buffer that can be used to z-buffering.</param>
+        /// <param name="collector">The draw calls collector.</param>
+        void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, RenderTarget target, RenderTarget targetDepth, DrawCallsCollector collector);
     }
 
     /// <summary>
@@ -24,11 +29,6 @@ namespace FlaxEditor.Gizmo
     public sealed class EditorPrimitives : PostProcessEffect
     {
         private readonly DrawCallsCollector _drawCallsCollector = new DrawCallsCollector();
-
-        /// <summary>
-        /// Gets or sets a value indicating whether draw <see cref="DebugDraw"/> shapes.
-        /// </summary>
-        public bool DrawDebugDraw = false;
 
         /// <summary>
         /// The target viewport.
@@ -62,23 +62,17 @@ namespace FlaxEditor.Gizmo
             context.Draw(target, input);
             context.ClearDepth(targetDepth);
 
-            // Draw gizmos (collect draw calls only)
+            // Draw gizmos and other editor primitives (collect draw calls only)
             _drawCallsCollector.Clear();
             for (int i = 0; i < Viewport.Gizmos.Count; i++)
             {
                 Viewport.Gizmos[i].Draw(_drawCallsCollector);
             }
-
-            // Draw selected objects debug shapes and visuals
-            if (DrawDebugDraw && (task.View.Flags & ViewFlags.DebugDraw) == ViewFlags.DebugDraw)
-            {
-                var debugDrawData = Viewport.DebugDrawData;
-                DebugDraw.Draw(task, debugDrawData.ActorsPtrs, target, context, targetDepth, true);
-            }
+            Viewport.DrawEditorPrimitives(context, task, target, targetDepth, _drawCallsCollector);
 
             // Draw gizmos (actual drawing)
-            _drawCallsCollector.ExecuteDrawCalls(context, task, target, DrawPass.Forward);
             _drawCallsCollector.ExecuteDrawCalls(context, task, target, DrawPass.GBuffer);
+            _drawCallsCollector.ExecuteDrawCalls(context, task, target, DrawPass.Forward);
 
             // Resolve MSAA texture
             if (enableMsaa)

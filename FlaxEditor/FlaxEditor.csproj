@@ -59,6 +59,8 @@
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
     <Compile Include="API\Static\TerrainTools.cs" />
     <Compile Include="API\Static\TerrainTools.Gen.cs" />
+    <Compile Include="API\Static\ViewportIconsRenderer.cs" />
+    <Compile Include="API\Static\ViewportIconsRenderer.Gen.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.cs" />
     <Compile Include="API\TextureBases\PreviewsCache.Gen.cs" />
     <Compile Include="ContentDomain.cs" />
