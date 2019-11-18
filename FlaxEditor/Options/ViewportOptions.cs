@@ -37,7 +37,7 @@ namespace FlaxEditor.Options
         /// </summary>
         [DefaultValue(10000.0f), Limit(10.0f)]
         [EditorDisplay("Defaults"), EditorOrder(130), Tooltip("The default far clipping plane distance for the viewport camera.")]
-        public float DefaultFarPlane { get; set; } = 10000.0f;
+        public float DefaultFarPlane { get; set; } = 40000.0f;
 
         /// <summary>
         /// Gets or sets the default field of view angle (in degrees) for the viewport camera.

@@ -718,7 +718,7 @@ namespace FlaxEditor.Modules
             }
         }
 
-        private void CreateTerrain()
+        internal void CreateTerrain()
         {
             new Tools.Terrain.CreateTerrainDialog().Show(Editor.Windows.MainWindow);
         }
