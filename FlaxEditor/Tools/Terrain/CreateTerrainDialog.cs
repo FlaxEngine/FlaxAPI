@@ -61,8 +61,8 @@ namespace FlaxEditor.Tools.Terrain
             [EditorOrder(330), EditorDisplay("Import Data"), DefaultValue(null), Tooltip("Custom terrain splat map used as a source of the terrain layers weights. Each channel from RGBA is used as an independent layer weight for terrain layers compositing.")]
             public Texture Splatmap2;
 
-            [EditorOrder(400), EditorDisplay("Transform", "Position"), DefaultValue(typeof(Vector3), "0,-4000,0"), Tooltip("Position of the terrain")]
-            public Vector3 Position = new Vector3(0.0f, -4000.0f, 0.0f);
+            [EditorOrder(400), EditorDisplay("Transform", "Position"), DefaultValue(typeof(Vector3), "0,0,0"), Tooltip("Position of the terrain (importer offset it on the Y axis.)")]
+            public Vector3 Position = new Vector3(0.0f, 0.0f, 0.0f);
 
             [EditorOrder(410), EditorDisplay("Transform", "Rotation"), DefaultValue(typeof(Quaternion), "0,0,0,1"), Tooltip("Orientation of the terrain")]
             public Quaternion Orientation = Quaternion.Identity;
@@ -151,6 +151,8 @@ namespace FlaxEditor.Tools.Terrain
             terrain.Material = _options.Material;
             terrain.PhysicalMaterial = _options.PhysicalMaterial;
             terrain.CollisionLOD = _options.CollisionLOD;
+            if (_options.Heightmap)
+                terrain.Position -= new Vector3(0, _options.HeightmapScale * 0.5f, 0);
 
             // Add to scene (even if generation fails user gets a terrain in the scene)
             terrain.Parent = scene;
