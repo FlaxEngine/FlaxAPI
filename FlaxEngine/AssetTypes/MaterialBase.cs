@@ -81,8 +81,6 @@ namespace FlaxEngine
                 // Get next hash #hashtag
                 _parametersHash = Internal_GetParametersHash(unmanagedPtr);
 
-                Debug.Log("cache parameters for hash " + _parametersHash + " for " + this);
-
                 // Get parameters metadata from the backend
                 var parameters = Internal_CacheParameters(unmanagedPtr);
                 if (parameters != null && parameters.Length > 0)

@@ -155,8 +155,6 @@ namespace FlaxEngine.Rendering
             {
                 // Validate the hash
                 if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
-                    Debug.Log("Cached hash: " + _hash + ", actual: " + MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr));
-                if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
 
                 IntPtr ptr;
