@@ -205,6 +205,8 @@ namespace FlaxEditor.Tools.Terrain
         {
             if (_isDone)
             {
+                Editor.Instance.SceneEditing.Select(_terrain);
+
                 _terrain = null;
                 _isDone = false;
                 Close(DialogResult.OK);
