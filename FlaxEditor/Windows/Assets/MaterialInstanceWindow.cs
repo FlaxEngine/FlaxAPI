@@ -8,6 +8,7 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
@@ -24,6 +25,39 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class MaterialInstanceWindow : AssetEditorWindowBase<MaterialInstance>
     {
+        private sealed class EditParamOverrideAction : IUndoAction
+        {
+            public MaterialInstanceWindow Window;
+            public int Index;
+            public bool Before;
+
+            /// <inheritdoc />
+            public string ActionString => "Edit Override";
+
+            private void Set(bool value)
+            {
+                Window.Asset.Parameters[Index].Override = value;
+            }
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(!Before);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+            }
+        }
+
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
@@ -211,11 +245,11 @@ namespace FlaxEditor.Windows.Assets
                 if (parameters.Length != 0)
                 {
                     var parametersGroup = layout.Group("Parameters");
-                    InitializeProperties(parametersGroup, parameters, material.BaseMaterial);
+                    InitializeProperties(proxy.Window, parametersGroup, parameters, material.BaseMaterial);
                 }
             }
 
-            private void InitializeProperties(LayoutElementsContainer layout, MaterialParameter[] parameters, MaterialBase baseMaterial)
+            private void InitializeProperties(MaterialInstanceWindow window, LayoutElementsContainer layout, MaterialParameter[] parameters, MaterialBase baseMaterial)
             {
                 var baseMaterialParameters = baseMaterial?.Parameters;
                 for (int i = 0; i < parameters.Length; i++)
@@ -280,7 +314,22 @@ namespace FlaxEditor.Windows.Assets
                         propertyValue.SetDefaultValue(defaultValue);
                     }
 
-                    layout.Property(p.Name, propertyValue);
+                    // Add label with checkbox for parameter value override
+                    var label = new CheckablePropertyNameLabel(p.Name);
+                    label.CheckBox.Checked = p.Override;
+                    label.CheckBox.Tag = window._properties;
+                    label.CheckChanged += nameLabel =>
+                    {
+                        var proxy = (PropertiesProxy)nameLabel.CheckBox.Tag;
+                        proxy.Window.Asset.Parameters[pIndex].Override = nameLabel.CheckBox.Checked;
+                        proxy.Window._undo.AddAction(new EditParamOverrideAction
+                        {
+                            Window = proxy.Window,
+                            Index = pIndex,
+                            Before = !nameLabel.CheckBox.Checked,
+                        });
+                    };
+                    layout.Property(label, propertyValue);
                 }
             }
 

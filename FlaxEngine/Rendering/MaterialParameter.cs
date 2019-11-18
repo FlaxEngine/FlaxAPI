@@ -138,6 +138,15 @@ namespace FlaxEngine.Rendering
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the parameter overrides the default value (from the base).
+        /// </summary>
+        public bool Override
+        {
+            get => MaterialBase.Internal_GetParamOverride(_material.unmanagedPtr, _index);
+            set => MaterialBase.Internal_SetParamOverride(_material.unmanagedPtr, _index, value);
+        }
+
+        /// <summary>
         /// Gets or sets the parameter value.
         /// </summary>
         public unsafe object Value

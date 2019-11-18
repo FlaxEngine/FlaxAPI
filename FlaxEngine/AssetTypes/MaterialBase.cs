@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using FlaxEngine.Rendering;
 
@@ -182,6 +181,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetParamIndexByName(IntPtr obj, string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetParamOverride(IntPtr obj, int index, bool value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetParamOverride(IntPtr obj, int index);
 #endif
 
         #endregion
