@@ -42,7 +42,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetActor(unmanagedPtr); }
-            set { Internal_SetActor(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetActor(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

@@ -347,7 +347,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Draw(Object.GetUnmanagedPtr(task), selectedActors, Object.GetUnmanagedPtr(target), Object.GetUnmanagedPtr(context), Object.GetUnmanagedPtr(depthBuffer), enableDepthTest);
+            Internal_Draw(FlaxEngine.Object.GetUnmanagedPtr(task), selectedActors, FlaxEngine.Object.GetUnmanagedPtr(target), FlaxEngine.Object.GetUnmanagedPtr(context), FlaxEngine.Object.GetUnmanagedPtr(depthBuffer), enableDepthTest);
 #endif
         }
 

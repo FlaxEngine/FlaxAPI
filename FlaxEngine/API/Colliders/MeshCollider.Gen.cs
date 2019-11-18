@@ -52,7 +52,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetCollisionData(unmanagedPtr); }
-            set { Internal_SetCollisionData(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetCollisionData(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

@@ -80,7 +80,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetMaterial(unmanagedPtr); }
-            set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetMaterial(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -95,7 +95,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetFont(unmanagedPtr); }
-            set { Internal_SetFont(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetFont(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

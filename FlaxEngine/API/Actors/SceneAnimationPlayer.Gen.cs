@@ -49,7 +49,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetAnimation(unmanagedPtr); }
-            set { Internal_SetAnimation(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetAnimation(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

@@ -46,7 +46,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetParent(unmanagedPtr); }
-            set { Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(value), false); }
+            set { Internal_SetParent(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value), false); }
 #endif
         }
 
@@ -64,7 +64,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(newParent), worldPositionLock);
+            Internal_SetParent(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(newParent), worldPositionLock);
 #endif
         }
 
@@ -619,7 +619,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_AddScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
+            Internal_AddScript(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(script));
 #endif
         }
 
@@ -636,7 +636,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_RemoveScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
+            Internal_RemoveScript(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(script));
 #endif
         }
 

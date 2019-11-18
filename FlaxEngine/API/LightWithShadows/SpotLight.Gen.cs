@@ -139,7 +139,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetIESTexture(unmanagedPtr); }
-            set { Internal_SetIESTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetIESTexture(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

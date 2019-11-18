@@ -98,7 +98,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetMaterial(unmanagedPtr); }
-            set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetMaterial(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -176,7 +176,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetPhysicalMaterial(unmanagedPtr); }
-            set { Internal_SetPhysicalMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetPhysicalMaterial(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

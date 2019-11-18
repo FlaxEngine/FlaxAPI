@@ -50,7 +50,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetParticleSystem(unmanagedPtr); }
-            set { Internal_SetParticleSystem(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetParticleSystem(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -188,7 +188,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetCustomViewRenderTask(unmanagedPtr); }
-            set { Internal_SetCustomViewRenderTask(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetCustomViewRenderTask(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

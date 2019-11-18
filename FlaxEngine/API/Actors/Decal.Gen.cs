@@ -49,7 +49,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetMaterial(unmanagedPtr); }
-            set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetMaterial(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

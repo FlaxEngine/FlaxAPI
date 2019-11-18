@@ -98,7 +98,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetModel(unmanagedPtr); }
-            set { Internal_SetModel(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetModel(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

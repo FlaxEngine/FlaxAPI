@@ -49,7 +49,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetCubeTexture(unmanagedPtr); }
-            set { Internal_SetCubeTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetCubeTexture(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -64,7 +64,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetCustomMaterial(unmanagedPtr); }
-            set { Internal_SetCustomMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetCustomMaterial(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

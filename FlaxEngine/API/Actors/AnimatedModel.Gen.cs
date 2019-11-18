@@ -50,7 +50,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetSkinnedModel(unmanagedPtr); }
-            set { Internal_SetSkinnedModel(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetSkinnedModel(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -65,7 +65,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetAnimationGraph(unmanagedPtr); }
-            set { Internal_SetAnimationGraph(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetAnimationGraph(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -200,7 +200,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetRootMotionTarget(unmanagedPtr); }
-            set { Internal_SetRootMotionTarget(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetRootMotionTarget(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

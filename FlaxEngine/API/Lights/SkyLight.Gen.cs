@@ -109,7 +109,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetCustomTexture(unmanagedPtr); }
-            set { Internal_SetCustomTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetCustomTexture(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

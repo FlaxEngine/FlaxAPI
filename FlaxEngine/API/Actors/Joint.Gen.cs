@@ -25,7 +25,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetTarget(unmanagedPtr); }
-            set { Internal_SetTarget(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetTarget(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

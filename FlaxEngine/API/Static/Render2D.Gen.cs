@@ -95,7 +95,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawText1(Object.GetUnmanagedPtr(font), text, ref color, ref layout);
+            Internal_DrawText1(FlaxEngine.Object.GetUnmanagedPtr(font), text, ref color, ref layout);
 #endif
         }
 
@@ -116,7 +116,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawText2(Object.GetUnmanagedPtr(font), Object.GetUnmanagedPtr(customMaterial), text, ref color, ref layout);
+            Internal_DrawText2(FlaxEngine.Object.GetUnmanagedPtr(font), FlaxEngine.Object.GetUnmanagedPtr(customMaterial), text, ref color, ref layout);
 #endif
         }
 
@@ -215,7 +215,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawRenderTarget(Object.GetUnmanagedPtr(rt), ref rect, ref color);
+            Internal_DrawRenderTarget(FlaxEngine.Object.GetUnmanagedPtr(rt), ref rect, ref color);
 #endif
         }
 
@@ -234,7 +234,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawTexture1(Object.GetUnmanagedPtr(t), ref rect, ref color);
+            Internal_DrawTexture1(FlaxEngine.Object.GetUnmanagedPtr(t), ref rect, ref color);
 #endif
         }
 
@@ -253,7 +253,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawTexture2(Object.GetUnmanagedPtr(t), ref rect, ref color);
+            Internal_DrawTexture2(FlaxEngine.Object.GetUnmanagedPtr(t), ref rect, ref color);
 #endif
         }
 
@@ -272,7 +272,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawTexture3(Object.GetUnmanagedPtr(t), ref rect, ref color);
+            Internal_DrawTexture3(FlaxEngine.Object.GetUnmanagedPtr(t), ref rect, ref color);
 #endif
         }
 
@@ -291,7 +291,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawTexture4(Object.GetUnmanagedPtr(t), ref rect, ref color);
+            Internal_DrawTexture4(FlaxEngine.Object.GetUnmanagedPtr(t), ref rect, ref color);
 #endif
         }
 
@@ -372,7 +372,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawMaterial1(Object.GetUnmanagedPtr(material), ref rect);
+            Internal_DrawMaterial1(FlaxEngine.Object.GetUnmanagedPtr(material), ref rect);
 #endif
         }
 
@@ -391,7 +391,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawMaterial2(Object.GetUnmanagedPtr(material), ref rect, ref color);
+            Internal_DrawMaterial2(FlaxEngine.Object.GetUnmanagedPtr(material), ref rect, ref color);
 #endif
         }
 

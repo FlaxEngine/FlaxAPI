@@ -151,7 +151,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_SpawnActor(Object.GetUnmanagedPtr(actor), Object.GetUnmanagedPtr(parent));
+            Internal_SpawnActor(FlaxEngine.Object.GetUnmanagedPtr(actor), FlaxEngine.Object.GetUnmanagedPtr(parent));
 #endif
         }
 
@@ -169,7 +169,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_SaveScene(Object.GetUnmanagedPtr(scene));
+            return Internal_SaveScene(FlaxEngine.Object.GetUnmanagedPtr(scene));
 #endif
         }
 
@@ -188,7 +188,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_SaveSceneToBytes(Object.GetUnmanagedPtr(scene), prettyJson);
+            return Internal_SaveSceneToBytes(FlaxEngine.Object.GetUnmanagedPtr(scene), prettyJson);
 #endif
         }
 
@@ -205,7 +205,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_SaveSceneAsync(Object.GetUnmanagedPtr(scene));
+            Internal_SaveSceneAsync(FlaxEngine.Object.GetUnmanagedPtr(scene));
 #endif
         }
 
@@ -310,7 +310,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_UnloadScene(Object.GetUnmanagedPtr(scene));
+            return Internal_UnloadScene(FlaxEngine.Object.GetUnmanagedPtr(scene));
 #endif
         }
 
@@ -327,7 +327,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_UnloadSceneAsync(Object.GetUnmanagedPtr(scene));
+            Internal_UnloadSceneAsync(FlaxEngine.Object.GetUnmanagedPtr(scene));
 #endif
         }
 

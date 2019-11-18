@@ -109,7 +109,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetCustomProbe(unmanagedPtr); }
-            set { Internal_SetCustomProbe(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetCustomProbe(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

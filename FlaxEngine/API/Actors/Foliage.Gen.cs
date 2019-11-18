@@ -183,7 +183,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_SetFoliageTypeModel(unmanagedPtr, index, Object.GetUnmanagedPtr(model));
+            Internal_SetFoliageTypeModel(unmanagedPtr, index, FlaxEngine.Object.GetUnmanagedPtr(model));
 #endif
         }
 
@@ -200,7 +200,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_AddFoliageType(unmanagedPtr, Object.GetUnmanagedPtr(model));
+            Internal_AddFoliageType(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(model));
 #endif
         }
 

@@ -76,7 +76,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetMaterial(unmanagedPtr); }
-            set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetMaterial(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -111,7 +111,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ComputePenetration(Object.GetUnmanagedPtr(colliderA), Object.GetUnmanagedPtr(colliderB), out direction, out distance);
+            return Internal_ComputePenetration(FlaxEngine.Object.GetUnmanagedPtr(colliderA), FlaxEngine.Object.GetUnmanagedPtr(colliderB), out direction, out distance);
 #endif
         }
 

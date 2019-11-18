@@ -52,7 +52,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetClip(unmanagedPtr); }
-            set { Internal_SetClip(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetClip(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

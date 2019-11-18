@@ -49,7 +49,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetSunLight(unmanagedPtr); }
-            set { Internal_SetSunLight(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetSunLight(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

@@ -77,7 +77,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Init(unmanagedPtr, Object.GetUnmanagedPtr(emitter), duration, fps);
+            Internal_Init(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(emitter), duration, fps);
 #endif
         }
 

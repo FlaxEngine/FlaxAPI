@@ -52,7 +52,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_ClearDepth(unmanagedPtr, Object.GetUnmanagedPtr(depthBuffer), depthValue);
+            Internal_ClearDepth(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(depthBuffer), depthValue);
 #endif
         }
 
@@ -73,7 +73,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_ResolveMultisample(unmanagedPtr, Object.GetUnmanagedPtr(sourceMultisampleTexture), Object.GetUnmanagedPtr(destTexture), sourceSubResource, destSubResource, format);
+            Internal_ResolveMultisample(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(sourceMultisampleTexture), FlaxEngine.Object.GetUnmanagedPtr(destTexture), sourceSubResource, destSubResource, format);
 #endif
         }
 
@@ -91,7 +91,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Draw1(unmanagedPtr, Object.GetUnmanagedPtr(dst), Object.GetUnmanagedPtr(src));
+            Internal_Draw1(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dst), FlaxEngine.Object.GetUnmanagedPtr(src));
 #endif
         }
 
@@ -109,7 +109,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Draw2(unmanagedPtr, Object.GetUnmanagedPtr(dst), Object.GetUnmanagedPtr(src));
+            Internal_Draw2(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dst), FlaxEngine.Object.GetUnmanagedPtr(src));
 #endif
         }
 
@@ -130,7 +130,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial1(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input), ref view, Object.GetUnmanagedPtr(buffers));
+            Internal_DrawPostFxMaterial1(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(material), FlaxEngine.Object.GetUnmanagedPtr(output), FlaxEngine.Object.GetUnmanagedPtr(input), ref view, FlaxEngine.Object.GetUnmanagedPtr(buffers));
 #endif
         }
 
@@ -149,7 +149,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial2(unmanagedPtr, Object.GetUnmanagedPtr(material), view, Object.GetUnmanagedPtr(input));
+            Internal_DrawPostFxMaterial2(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(material), view, FlaxEngine.Object.GetUnmanagedPtr(input));
 #endif
         }
 
@@ -169,7 +169,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial3(unmanagedPtr, Object.GetUnmanagedPtr(material), view, ref viewport, Object.GetUnmanagedPtr(input));
+            Internal_DrawPostFxMaterial3(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(material), view, ref viewport, FlaxEngine.Object.GetUnmanagedPtr(input));
 #endif
         }
 
@@ -192,7 +192,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_CopyTextureRegion1(unmanagedPtr, Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, Object.GetUnmanagedPtr(srcResource), srcSubresource);
+            Internal_CopyTextureRegion1(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, FlaxEngine.Object.GetUnmanagedPtr(srcResource), srcSubresource);
 #endif
         }
 
@@ -215,7 +215,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_CopyTextureRegion2(unmanagedPtr, Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, Object.GetUnmanagedPtr(srcResource), srcSubresource);
+            Internal_CopyTextureRegion2(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, FlaxEngine.Object.GetUnmanagedPtr(srcResource), srcSubresource);
 #endif
         }
 
@@ -238,7 +238,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_CopyTextureRegion3(unmanagedPtr, Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, Object.GetUnmanagedPtr(srcResource), srcSubresource);
+            Internal_CopyTextureRegion3(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, FlaxEngine.Object.GetUnmanagedPtr(srcResource), srcSubresource);
 #endif
         }
 
@@ -261,7 +261,7 @@ namespace FlaxEngine.Rendering
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_CopyTextureRegion4(unmanagedPtr, Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, Object.GetUnmanagedPtr(srcResource), srcSubresource);
+            Internal_CopyTextureRegion4(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, FlaxEngine.Object.GetUnmanagedPtr(srcResource), srcSubresource);
 #endif
         }
 

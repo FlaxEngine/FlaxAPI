@@ -34,7 +34,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_RayCastChunk(Object.GetUnmanagedPtr(terrain), ref ray, out resultHitDistance, out resultPatchCoord, out resultChunkCoord, maxDistance);
+            return Internal_RayCastChunk(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref ray, out resultHitDistance, out resultPatchCoord, out resultChunkCoord, maxDistance);
 #endif
         }
 
@@ -53,7 +53,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_SerializePatch(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+            return Internal_SerializePatch(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord);
 #endif
         }
 
@@ -72,7 +72,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DeserializePatch(Object.GetUnmanagedPtr(terrain), ref patchCoord, value);
+            Internal_DeserializePatch(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord, value);
 #endif
         }
 
@@ -92,7 +92,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_TryGetPatchCoordToAdd(Object.GetUnmanagedPtr(terrain), ref ray, out patchCoord);
+            return Internal_TryGetPatchCoordToAdd(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref ray, out patchCoord);
 #endif
         }
 
@@ -111,7 +111,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_InitializePatch(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+            return Internal_InitializePatch(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord);
 #endif
         }
 
@@ -133,7 +133,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ModifyHeightMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
+            return Internal_ModifyHeightMap(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
 #endif
         }
 
@@ -155,7 +155,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ModifyHolesMask(Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
+            return Internal_ModifyHolesMask(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord, samples, ref offset, ref size);
 #endif
         }
 
@@ -178,7 +178,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ModifySplatMap(Object.GetUnmanagedPtr(terrain), ref patchCoord, index, samples, ref offset, ref size);
+            return Internal_ModifySplatMap(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord, index, samples, ref offset, ref size);
 #endif
         }
 
@@ -197,7 +197,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GetHeightmapData(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+            return Internal_GetHeightmapData(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord);
 #endif
         }
 
@@ -216,7 +216,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GetHolesMaskData(Object.GetUnmanagedPtr(terrain), ref patchCoord);
+            return Internal_GetHolesMaskData(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord);
 #endif
         }
 
@@ -236,7 +236,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GetSplatMapData(Object.GetUnmanagedPtr(terrain), ref patchCoord, index);
+            return Internal_GetSplatMapData(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref patchCoord, index);
 #endif
         }
 
@@ -259,7 +259,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GenerateTerrain(Object.GetUnmanagedPtr(terrain), ref numberOfPatches, Object.GetUnmanagedPtr(heightmap), heightmapScale, Object.GetUnmanagedPtr(splatmap1), Object.GetUnmanagedPtr(splatmap2));
+            return Internal_GenerateTerrain(FlaxEngine.Object.GetUnmanagedPtr(terrain), ref numberOfPatches, FlaxEngine.Object.GetUnmanagedPtr(heightmap), heightmapScale, FlaxEngine.Object.GetUnmanagedPtr(splatmap1), FlaxEngine.Object.GetUnmanagedPtr(splatmap2));
 #endif
         }
 
@@ -278,7 +278,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_ExportTerrain(Object.GetUnmanagedPtr(terrain), outputFolder);
+            return Internal_ExportTerrain(FlaxEngine.Object.GetUnmanagedPtr(terrain), outputFolder);
 #endif
         }
 

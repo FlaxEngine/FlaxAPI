@@ -101,7 +101,7 @@ namespace FlaxEditor
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Sprite resultAsRef;
-            Internal_OccupySlot(unmanagedPtr, Object.GetUnmanagedPtr(renderTarget), ref assetId, out resultAsRef);
+            Internal_OccupySlot(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(renderTarget), ref assetId, out resultAsRef);
             return resultAsRef;
 #endif
         }

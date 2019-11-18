@@ -160,7 +160,7 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetDirectionalInscatteringLight(unmanagedPtr); }
-            set { Internal_SetDirectionalInscatteringLight(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetDirectionalInscatteringLight(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
