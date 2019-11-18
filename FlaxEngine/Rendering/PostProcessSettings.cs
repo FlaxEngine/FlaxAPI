@@ -1672,10 +1672,21 @@ namespace FlaxEngine.Rendering
             TemporalResponse = 1 << 12,
 
             /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.FadeOutDistance"/> property.
+            /// </summary>
+            FadeOutDistance = 1 << 13,
+
+            /// <summary>
+            /// Overrides <see cref="ScreenSpaceReflectionsSettings.FadeDistance"/> property.
+            /// </summary>
+            FadeDistance = 1 << 14,
+
+            /// <summary>
             /// All properties.
             /// </summary>
             All = Intensity | DepthResolution | RayTracePassResolution | BRDFBias | RoughnessThreshold | WorldAntiSelfOcclusionBias |
-                  ResolvePassResolution | ResolveSamples | EdgeFadeFactor | UseColorBufferMips | TemporalEffect | TemporalScale | TemporalResponse,
+                  ResolvePassResolution | ResolveSamples | EdgeFadeFactor | UseColorBufferMips | TemporalEffect | TemporalScale | TemporalResponse |
+                  FadeOutDistance | FadeDistance,
         };
 
         /// <summary>
@@ -1758,10 +1769,26 @@ namespace FlaxEngine.Rendering
         public float EdgeFadeFactor;
 
         /// <summary>
+        /// The effect fade out end distance from camera (in world units).
+        /// </summary>
+        [DefaultValue(5000.0f), Limit(0)]
+        [EditorOrder(9), PostProcessSetting((int)Override.FadeOutDistance)]
+        [Tooltip("The effect fade out end distance from camera (in world units).")]
+        public float FadeOutDistance;
+
+        /// <summary>
+        /// The effect fade distance (in world units). Defines the size of the effect fade from fully visible to fully invisible at FadeOutDistance.
+        /// </summary>
+        [DefaultValue(500.0f), Limit(0)]
+        [EditorOrder(10), PostProcessSetting((int)Override.FadeDistance)]
+        [Tooltip("The effect fade distance (in world units). Defines the size of the effect fade from fully visible to fully invisible at FadeOutDistance.")]
+        public float FadeDistance;
+
+        /// <summary>
         /// "The input color buffer downscale mode that uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.
         /// </summary>
         [DefaultValue(true)]
-        [EditorOrder(9), PostProcessSetting((int)Override.UseColorBufferMips)]
+        [EditorOrder(11), PostProcessSetting((int)Override.UseColorBufferMips)]
         [EditorDisplay(null, "Use Color Buffer Mips")]
         [Tooltip("The input color buffer downscale mode that uses blurred mipmaps when resolving the reflection color. Produces more realistic results by blurring distant parts of reflections in rough (low-gloss) materials. It also improves performance on most platforms but uses more memory.")]
         public bool UseColorBufferMips;
@@ -1770,7 +1797,7 @@ namespace FlaxEngine.Rendering
         /// If checked, enables the temporal pass. Reduces noise, but produces an animated "jittering" effect that's sometimes noticeable. If disabled, the properties below have no effect.
         /// </summary>
         [DefaultValue(true)]
-        [EditorOrder(10), PostProcessSetting((int)Override.TemporalEffect)]
+        [EditorOrder(12), PostProcessSetting((int)Override.TemporalEffect)]
         [EditorDisplay(null, "Enable Temporal Effect")]
         [Tooltip("If checked, enables the temporal pass. Reduces noise, but produces an animated \"jittering\" effect that's sometimes noticeable. If disabled, the properties below have no effect.")]
         public bool TemporalEffect;
@@ -1779,7 +1806,7 @@ namespace FlaxEngine.Rendering
         /// The intensity of the temporal effect. Lower values produce reflections faster, but more noise. The default value is 8.
         /// </summary>
         [DefaultValue(8.0f), Limit(0, 20.0f, 0.5f)]
-        [EditorOrder(11), PostProcessSetting((int)Override.TemporalScale)]
+        [EditorOrder(13), PostProcessSetting((int)Override.TemporalScale)]
         [Tooltip("The intensity of the temporal effect. Lower values produce reflections faster, but more noise. The default value is 8.")]
         public float TemporalScale;
 
@@ -1787,7 +1814,7 @@ namespace FlaxEngine.Rendering
         /// Defines how quickly reflections blend between the reflection in the current frame and the history buffer. Lower values produce reflections faster, but with more jittering. If the camera in your game doesn't move much, we recommend values closer to 1. The default value is 0.8.
         /// </summary>
         [DefaultValue(0.8f), Limit(0.05f, 1.0f, 0.01f)]
-        [EditorOrder(12), PostProcessSetting((int)Override.TemporalResponse)]
+        [EditorOrder(14), PostProcessSetting((int)Override.TemporalResponse)]
         [Tooltip("How quickly reflections blend between the reflection in the current frame and the history buffer. Lower values produce reflections faster, but with more jittering. If the camera in your game doesn't move much, we recommend values closer to 1. The default value is 0.8.")]
         public float TemporalResponse;
     }
