@@ -130,7 +130,7 @@ namespace FlaxEngine.Rendering
             get
             {
                 // Validate the hash
-                if (_hash != _material._parametersHash)
+                if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
 
                 return MaterialBase.Internal_GetParamName(_material.unmanagedPtr, _index);
@@ -154,7 +154,9 @@ namespace FlaxEngine.Rendering
             get
             {
                 // Validate the hash
-                if (_material._parametersHash != _hash)
+                if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
+                    Debug.Log("Cached hash: " + _hash + ", actual: " + MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr));
+                if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
 
                 IntPtr ptr;
@@ -237,7 +239,7 @@ namespace FlaxEngine.Rendering
             set
             {
                 // Validate the hash
-                if (_material._parametersHash != _hash)
+                if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
                 if (!_isPublic)
                     throw new InvalidOperationException("Cannot set private material parameters.");
