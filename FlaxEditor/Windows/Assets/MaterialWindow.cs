@@ -7,7 +7,6 @@ using FlaxEditor.Content;
 using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global

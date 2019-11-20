@@ -5,14 +5,13 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using FlaxEngine.Rendering;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
-    /// Graphics Device is a basic GPU work manager that is responsible to manage graphics resources as well as perform scene rendering and submit frames to the user.
+    /// Graphics device object that handles rendering using GPU.
     /// </summary>
-    public static partial class GraphicsDevice
+    public static partial class GPUDevice
     {
         /// <summary>
         /// Gets the graphics device limits description.

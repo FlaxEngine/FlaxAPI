@@ -85,7 +85,7 @@ namespace FlaxEditor.Content.Create
             typeof(TimeSettings),
             typeof(LayersAndTagsSettings),
             typeof(PhysicsSettings),
-            typeof(GraphicsSettings),
+            typeof(FlaxEditor.Content.Settings.GraphicsSettings),
             typeof(NavigationSettings),
             typeof(BuildSettings),
             typeof(InputSettings),

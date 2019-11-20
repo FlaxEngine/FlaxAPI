@@ -2,7 +2,7 @@
 
 using System;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// GPU texture usage flags.

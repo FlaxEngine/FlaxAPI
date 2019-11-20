@@ -2,12 +2,12 @@
 
 using System;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Provides ability to perform custom rendering using <see cref="GPUContext"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.Rendering.RenderTask" />
+    /// <seealso cref="FlaxEngine.RenderTask" />
     public class CustomRenderTask : RenderTask
     {
         /// <summary>

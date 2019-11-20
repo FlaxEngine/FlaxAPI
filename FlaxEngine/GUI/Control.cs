@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine.GUI
 {

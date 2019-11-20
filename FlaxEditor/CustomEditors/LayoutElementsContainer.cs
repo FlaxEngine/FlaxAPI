@@ -7,7 +7,6 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.CustomEditors
 {

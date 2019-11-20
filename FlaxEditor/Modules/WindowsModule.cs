@@ -16,7 +16,6 @@ using FlaxEditor.Windows.Profiler;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using FlaxEngine.Utilities;
 using DockPanel = FlaxEditor.GUI.Docking.DockPanel;
 using DockState = FlaxEditor.GUI.Docking.DockState;

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// The main game rendering task used by the engine.
@@ -12,7 +12,7 @@ namespace FlaxEngine.Rendering
     /// This allows to increase game rendering performance (reduced memory usage and data transfer).
     /// User should use post effects pipeline to modify the final frame.
     /// </remarks>
-    /// <seealso cref="FlaxEngine.Rendering.SceneRenderTask" />
+    /// <seealso cref="FlaxEngine.SceneRenderTask" />
     public sealed class MainRenderTask : SceneRenderTask
     {
         /// <summary>

@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine.Utilities
 {

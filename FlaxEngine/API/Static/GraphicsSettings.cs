@@ -2,7 +2,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     public static partial class GraphicsSettings
     {

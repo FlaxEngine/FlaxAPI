@@ -210,7 +210,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawRenderTarget(Rendering.RenderTarget rt, Rectangle rect, Color color)
+        public static void DrawRenderTarget(RenderTarget rt, Rectangle rect, Color color)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");

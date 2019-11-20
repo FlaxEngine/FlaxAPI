@@ -1,12 +1,12 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Draw method within this interface is used for <see cref="Render2D"/>.CallDrawing single DrawCall
     /// <remarks>Each frame new Queue is sent to GPU from this CPU bound method</remarks>
     /// </summary>
-    /// <seealso cref="Render2D.CallDrawing(FlaxEngine.Rendering.IDrawable,FlaxEngine.Rendering.GPUContext,FlaxEngine.Rendering.RenderTarget)"/>
+    /// <seealso cref="Render2D.CallDrawing(FlaxEngine.IDrawable,FlaxEngine.GPUContext,FlaxEngine.RenderTarget)"/>
     /// <seealso cref="PostProcessEffect.Render"/>
     public interface IDrawable
     {

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// The objects drawing pass types. Used as a flags for objects drawing masking.

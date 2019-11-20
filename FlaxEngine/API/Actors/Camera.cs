@@ -10,7 +10,7 @@ namespace FlaxEngine
         private static Camera _overrideMainCamera;
 
         /// <summary>
-        /// Gets the current main camera used for scene rendering by <see cref="FlaxEngine.Rendering.MainRenderTask"/>. May be null if no camera is available.
+        /// Gets the current main camera used for scene rendering by <see cref="FlaxEngine.MainRenderTask"/>. May be null if no camera is available.
         /// </summary>
         /// <remarks>If you override the main camera remember to remove the reference on object destroy or scene unload to prevent leaks and crashes.</remarks>
         [UnmanagedCall]

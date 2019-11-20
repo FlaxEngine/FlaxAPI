@@ -4,7 +4,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Describes lightmap generation options

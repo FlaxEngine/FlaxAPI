@@ -7,7 +7,6 @@ using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Content

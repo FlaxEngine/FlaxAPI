@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Render task which draws scene actors into the output buffer.
     /// </summary>
-    /// <seealso cref="FlaxEngine.Rendering.RenderTask" />
+    /// <seealso cref="FlaxEngine.RenderTask" />
     public class SceneRenderTask : RenderTask
     {
         /// <summary>

@@ -8,7 +8,6 @@ using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Viewport

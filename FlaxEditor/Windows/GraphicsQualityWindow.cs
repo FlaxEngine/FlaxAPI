@@ -3,7 +3,6 @@
 using FlaxEditor.CustomEditors;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Windows
 {

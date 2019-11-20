@@ -1,11 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using FlaxEngine.Rendering;
-
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Implementation of <see cref="IBrush"/> for <see cref="FlaxEngine.Rendering.RenderTarget"/>.
+    /// Implementation of <see cref="IBrush"/> for <see cref="FlaxEngine.RenderTarget"/>.
     /// </summary>
     /// <seealso cref="IBrush" />
     public sealed class RenderTargetBrush : IBrush

@@ -2,7 +2,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// The features exposed for a particular format.

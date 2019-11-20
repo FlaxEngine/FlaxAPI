@@ -5,7 +5,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -182,7 +181,7 @@ namespace FlaxEngine
         /// </summary>
         [UnmanagedCall]
         [NoSerialize, HideInEditor]
-        public FlaxEngine.Rendering.RenderTask CustomViewRenderTask
+        public FlaxEngine.RenderTask CustomViewRenderTask
         {
 #if UNIT_TEST_COMPILANT
             get; set;
@@ -310,7 +309,7 @@ namespace FlaxEngine
         internal static extern void Internal_SetTime(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern FlaxEngine.Rendering.RenderTask Internal_GetCustomViewRenderTask(IntPtr obj);
+        internal static extern FlaxEngine.RenderTask Internal_GetCustomViewRenderTask(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetCustomViewRenderTask(IntPtr obj, IntPtr val);

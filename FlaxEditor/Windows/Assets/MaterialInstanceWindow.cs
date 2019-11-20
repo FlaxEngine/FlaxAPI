@@ -13,7 +13,6 @@ using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Windows.Assets
 {

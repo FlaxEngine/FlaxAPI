@@ -6,7 +6,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Allows to perform custom graphics commands using GPU device and rendering pipeline.

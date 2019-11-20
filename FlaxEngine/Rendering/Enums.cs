@@ -2,7 +2,7 @@
 
 // ReSharper disable InconsistentNaming
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Graphics rendering backend system types.

@@ -1,14 +1,13 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content.Settings
 {
     /// <summary>
-    /// The graphics rendering settings container. Allows to edit asset via editor. To modify those settings at runtime use <see cref="FlaxEngine.Rendering.GraphicsSettings"/>.
+    /// The graphics rendering settings container. Allows to edit asset via editor. To modify those settings at runtime use <see cref="FlaxEngine.GraphicsSettings"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.Rendering.GraphicsSettings"/>
+    /// <seealso cref="FlaxEngine.GraphicsSettings"/>
     public sealed class GraphicsSettings : SettingsBase
     {
         /// <summary>

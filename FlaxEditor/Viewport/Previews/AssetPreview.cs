@@ -4,7 +4,6 @@ using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews

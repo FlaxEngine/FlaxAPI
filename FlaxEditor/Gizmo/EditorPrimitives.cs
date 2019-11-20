@@ -2,7 +2,6 @@
 
 using System;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
@@ -48,7 +47,7 @@ namespace FlaxEditor.Gizmo
 
             // Check if use MSAA
             var format = output.Format;
-            GraphicsDevice.GetFeatures(format, out var formatSupport);
+            GPUDevice.GetFeatures(format, out var formatSupport);
             bool enableMsaa = formatSupport.MSAALevelMax >= MSAALevel.X4 && Editor.Instance.Options.Options.Visual.EnableMSAAForDebugDraw;
 
             // Prepare

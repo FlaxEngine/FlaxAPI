@@ -4,7 +4,6 @@ using FlaxEditor.Gizmo;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Viewport
 {

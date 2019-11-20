@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using FlaxEditor.Options;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {

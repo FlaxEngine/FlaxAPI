@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 // ReSharper disable EnumUnderlyingTypeIsInt
 // ReSharper disable ShiftExpressionRealShiftCountIsZero
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Tone mapping effect rendering modes.

@@ -16,7 +16,6 @@ using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using DockHintWindow = FlaxEditor.GUI.Docking.DockHintWindow;
 using MasterDockPanel = FlaxEditor.GUI.Docking.MasterDockPanel;
 
@@ -622,7 +621,7 @@ namespace FlaxEditor.Modules
                 return;
 
             var c = (ContextMenu)control;
-            bool canBakeLightmaps = GraphicsDevice.Limits.IsComputeSupported;
+            bool canBakeLightmaps = GPUDevice.Limits.IsComputeSupported;
             bool canEdit = SceneManager.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
             bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive;
             _menuToolsBakeLightmaps.Enabled = (canEdit && canBakeLightmaps) || isBakingLightmaps;

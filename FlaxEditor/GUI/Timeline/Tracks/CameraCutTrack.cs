@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.GUI.Timeline.Tracks

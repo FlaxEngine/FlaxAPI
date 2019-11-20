@@ -7,7 +7,6 @@ using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Tools.Foliage.Undo;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Foliage
 {

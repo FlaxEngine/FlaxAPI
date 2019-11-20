@@ -881,7 +881,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<TimeSettings>());
             Proxy.Add(new SettingsProxy<LayersAndTagsSettings>());
             Proxy.Add(new SettingsProxy<PhysicsSettings>());
-            Proxy.Add(new SettingsProxy<GraphicsSettings>());
+            Proxy.Add(new SettingsProxy<FlaxEditor.Content.Settings.GraphicsSettings>());
             Proxy.Add(new SettingsProxy<NavigationSettings>());
             Proxy.Add(new SettingsProxy<BuildSettings>());
             Proxy.Add(new SettingsProxy<InputSettings>());

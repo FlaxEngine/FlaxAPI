@@ -6,7 +6,6 @@ using System.IO;
 using FlaxEditor.Modules;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Content.Thumbnails

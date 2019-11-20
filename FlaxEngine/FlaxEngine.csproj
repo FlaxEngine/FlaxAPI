@@ -207,6 +207,8 @@
     </Compile>
     <Compile Include="API\Objects\Window.cs" />
     <Compile Include="API\Objects\Window.Gen.cs" />
+    <Compile Include="API\Static\GPUDevice.cs" />
+    <Compile Include="API\Static\GPUDevice.Gen.cs" />
     <Compile Include="API\Static\Platform.cs" />
     <Compile Include="API\Static\Audio.cs" />
     <Compile Include="API\Static\Audio.Gen.cs" />
@@ -218,8 +220,6 @@
     <Compile Include="API\Static\DebugDraw.Gen.cs" />
     <Compile Include="API\Static\Globals.cs" />
     <Compile Include="API\Static\Globals.Gen.cs" />
-    <Compile Include="API\Static\GraphicsDevice.cs" />
-    <Compile Include="API\Static\GraphicsDevice.Gen.cs" />
     <Compile Include="API\Static\GraphicsSettings.cs" />
     <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
     <Compile Include="API\Static\Input.cs" />

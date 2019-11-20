@@ -4,7 +4,6 @@ using System;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Surface.Archetypes
 {

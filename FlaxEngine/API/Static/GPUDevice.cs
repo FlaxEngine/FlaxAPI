@@ -2,9 +2,9 @@
 
 using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
-    public static partial class GraphicsDevice
+    public static partial class GPUDevice
     {
         /// <summary>
         /// Graphics device limits description.

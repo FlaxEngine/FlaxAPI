@@ -2,7 +2,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Rendering view description object. Contains information about viewport location and orientation in space.

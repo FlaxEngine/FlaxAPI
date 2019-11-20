@@ -3,7 +3,6 @@
 using System;
 using FlaxEditor.Gizmo;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Foliage
 {

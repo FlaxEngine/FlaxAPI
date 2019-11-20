@@ -5,7 +5,6 @@ using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Tools.Terrain

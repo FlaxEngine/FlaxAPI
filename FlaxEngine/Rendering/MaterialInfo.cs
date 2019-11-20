@@ -3,7 +3,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Material domain type. Material domain defines the target usage of the material shader.

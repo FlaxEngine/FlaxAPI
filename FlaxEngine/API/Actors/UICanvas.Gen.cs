@@ -3,7 +3,6 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
-using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {

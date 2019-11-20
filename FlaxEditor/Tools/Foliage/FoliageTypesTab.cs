@@ -150,8 +150,8 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
-            [EditorOrder(120), DefaultValue(FlaxEngine.Rendering.DrawPass.Default), EditorDisplay("Instance Options"), Tooltip("The draw passes to use for rendering this foliage type.")]
-            public FlaxEngine.Rendering.DrawPass DrawModes
+            [EditorOrder(120), DefaultValue(FlaxEngine.DrawPass.Default), EditorDisplay("Instance Options"), Tooltip("The draw passes to use for rendering this foliage type.")]
+            public FlaxEngine.DrawPass DrawModes
             {
                 get => _options.DrawModes;
                 set

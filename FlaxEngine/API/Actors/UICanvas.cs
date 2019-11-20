@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Newtonsoft.Json;
 
 namespace FlaxEngine
@@ -33,7 +32,7 @@ namespace FlaxEngine
     /// <summary>
     /// PostFx used to render the <see cref="UICanvas"/>. Used when render mode is <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.Rendering.PostProcessEffect" />
+    /// <seealso cref="FlaxEngine.PostProcessEffect" />
     public sealed class CanvasRenderer : PostProcessEffect
     {
         /// <summary>

@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Helper class to collect GPU drawing requests and send them back to the Engine.

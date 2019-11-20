@@ -4,7 +4,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {

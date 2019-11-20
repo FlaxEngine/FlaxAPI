@@ -6,8 +6,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using FlaxEngine;
-using FlaxEngine.Rendering;
-using Object = FlaxEngine.Object;
 
 namespace FlaxEditor
 {

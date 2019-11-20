@@ -6,7 +6,6 @@ using System.Reflection;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.GUI;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.CustomEditors.Dedicated
 {
