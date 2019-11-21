@@ -153,6 +153,8 @@
     <Compile Include="API\Colliders\SphereCollider.cs" />
     <Compile Include="API\Colliders\SphereCollider.Gen.cs" />
     <Compile Include="API\CreateWindowSettings.cs" />
+    <Compile Include="API\GPUResources\GPUTexture.cs" />
+    <Compile Include="API\GPUResources\GPUTexture.Gen.cs" />
     <Compile Include="API\Joints\D6Joint.cs" />
     <Compile Include="API\Joints\D6Joint.Gen.cs" />
     <Compile Include="API\Joints\DistanceJoint.cs" />
@@ -195,6 +197,8 @@
     </Compile>
     <Compile Include="API\Objects\GPUContext.cs" />
     <Compile Include="API\Objects\GPUContext.Gen.cs" />
+    <Compile Include="API\Objects\GPUResource.cs" />
+    <Compile Include="API\Objects\GPUResource.Gen.cs" />
     <Compile Include="API\Objects\RenderBuffers.cs" />
     <Compile Include="API\Objects\RenderBuffers.Gen.cs" />
     <Compile Include="API\Objects\RenderTarget.cs" />
