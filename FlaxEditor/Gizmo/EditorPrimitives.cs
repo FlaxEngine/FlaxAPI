@@ -54,8 +54,8 @@ namespace FlaxEditor.Gizmo
             var msaaLevel = enableMsaa ? MSAALevel.X4 : MSAALevel.None;
             var width = output.Width;
             var height = output.Height;
-            var target = RenderTarget.GetTemporary(format, width, height, TextureFlags.RenderTarget | TextureFlags.ShaderResource, msaaLevel);
-            var targetDepth = RenderTarget.GetTemporary(PixelFormat.D24_UNorm_S8_UInt, width, height, TextureFlags.DepthStencil, msaaLevel);
+            var target = RenderTarget.GetTemporary(format, width, height, GPUTextureFlags.RenderTarget | GPUTextureFlags.ShaderResource, msaaLevel);
+            var targetDepth = RenderTarget.GetTemporary(PixelFormat.D24_UNorm_S8_UInt, width, height, GPUTextureFlags.DepthStencil, msaaLevel);
 
             // Copy frame and clear depth
             context.Draw(target, input);

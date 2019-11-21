@@ -8,7 +8,7 @@ namespace FlaxEngine
     /// GPU texture usage flags.
     /// </summary>
     [Flags]
-    public enum TextureFlags
+    public enum GPUTextureFlags
     {
         /// <summary>
         /// No texture flags.

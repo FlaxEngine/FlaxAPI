@@ -63,7 +63,7 @@ namespace FlaxEngine
         /// Gets the view to the surface at index in an array.
         /// </summary>
         /// <remarks>
-        /// To use per depth/array slice view you need to specify the TextureFlags.PerSliceHandles when creating the resource.
+        /// To use per depth/array slice view you need to specify the GPUTextureFlags.PerSliceHandles when creating the resource.
         /// </remarks>
         /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
         /// <returns>The view for the render target.</returns>
@@ -76,7 +76,7 @@ namespace FlaxEngine
         /// Gets the view to the surface at index in an array.
         /// </summary>
         /// <remarks>
-        /// To use per mip map view you need to specify the TextureFlags.PerMipHandles when creating the resource.
+        /// To use per mip map view you need to specify the GPUTextureFlags.PerMipHandles when creating the resource.
         /// </remarks>
         /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
         /// <param name="mipMapIndex">The index of the mip level.</param>
@@ -116,13 +116,13 @@ namespace FlaxEngine
             public bool IsFree;
             public float LastUsage;
 
-            public Temporary(PixelFormat format, int width, int height, TextureFlags flags, MSAALevel msaa)
+            public Temporary(PixelFormat format, int width, int height, GPUTextureFlags flags, MSAALevel msaa)
             {
                 Texture = New();
                 Texture.Init(format, width, height, flags, 1, msaa);
             }
 
-            public bool TryReuse(PixelFormat format, int width, int height, TextureFlags flags, MSAALevel msaa)
+            public bool TryReuse(PixelFormat format, int width, int height, GPUTextureFlags flags, MSAALevel msaa)
             {
                 return IsFree
                        && Texture.Format == format
@@ -157,7 +157,7 @@ namespace FlaxEngine
         /// <param name="flags">The texture usage flags.</param>
         /// <param name="msaa">The texture multisampling level.</param>
         /// <returns>Created texture.</returns>
-        public static RenderTarget GetTemporary(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, MSAALevel msaa = MSAALevel.None)
+        public static RenderTarget GetTemporary(PixelFormat format, int width, int height, GPUTextureFlags flags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, MSAALevel msaa = MSAALevel.None)
         {
             // Try reuse
             for (int i = 0; i < Pool.Count; i++)
@@ -247,7 +247,7 @@ namespace FlaxEngine
         /// <param name="flags">The surface usage flags.</param>
         /// <param name="mipMaps">Number of mipmaps for the texture. Default is 1. Use 0 to allocate full mip chain.</param>
         /// <param name="multiSampleLevel">The surface multisampling level.</param>
-        public void Init(PixelFormat format, Vector2 size, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None)
+        public void Init(PixelFormat format, Vector2 size, GPUTextureFlags flags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None)
         {
             Init(format, (int)size.X, (int)size.Y, flags, mipMaps, multiSampleLevel);
         }

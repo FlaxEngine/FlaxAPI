@@ -93,7 +93,7 @@ namespace FlaxEngine
         /// Gets the texture surface flags.
         /// </summary>
         [UnmanagedCall]
-        public TextureFlags Flags
+        public GPUTextureFlags Flags
         {
 #if UNIT_TEST_COMPILANT
             get; set;
@@ -211,7 +211,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Init(PixelFormat format, int width, int height, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None, int arraySize = 1)
+        public void Init(PixelFormat format, int width, int height, GPUTextureFlags flags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, int mipMaps = 1, MSAALevel multiSampleLevel = MSAALevel.None, int arraySize = 1)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -231,7 +231,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void InitCube(PixelFormat format, int size, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1)
+        public void InitCube(PixelFormat format, int size, GPUTextureFlags flags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, int mipMaps = 1)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -253,7 +253,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Init3D(PixelFormat format, int width, int height, int depth, TextureFlags flags = TextureFlags.ShaderResource | TextureFlags.RenderTarget, int mipMaps = 1)
+        public void Init3D(PixelFormat format, int width, int height, int depth, GPUTextureFlags flags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, int mipMaps = 1)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -294,7 +294,7 @@ namespace FlaxEngine
         internal static extern int Internal_GetMipLevels(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern TextureFlags Internal_GetFlags(IntPtr obj);
+        internal static extern GPUTextureFlags Internal_GetFlags(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetIsAllocated(IntPtr obj);
@@ -330,13 +330,13 @@ namespace FlaxEngine
         internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Init(IntPtr obj, PixelFormat format, int width, int height, TextureFlags flags, int mipMaps, MSAALevel multiSampleLevel, int arraySize);
+        internal static extern void Internal_Init(IntPtr obj, PixelFormat format, int width, int height, GPUTextureFlags flags, int mipMaps, MSAALevel multiSampleLevel, int arraySize);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_InitCube(IntPtr obj, PixelFormat format, int size, TextureFlags flags, int mipMaps);
+        internal static extern void Internal_InitCube(IntPtr obj, PixelFormat format, int size, GPUTextureFlags flags, int mipMaps);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Init3D(IntPtr obj, PixelFormat format, int width, int height, int depth, TextureFlags flags, int mipMaps);
+        internal static extern void Internal_Init3D(IntPtr obj, PixelFormat format, int width, int height, int depth, GPUTextureFlags flags, int mipMaps);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Dispose(IntPtr obj);

@@ -474,7 +474,7 @@
     <Compile Include="Rendering\SceneRenderTask.cs" />
     <Compile Include="Rendering\TessellationMethod.cs" />
     <Compile Include="Rendering\TextureDimensions.cs" />
-    <Compile Include="Rendering\TextureFlags.cs" />
+    <Compile Include="Rendering\GPUTextureFlags.cs" />
     <Compile Include="Rendering\ViewFlags.cs" />
     <Compile Include="Rendering\ViewMode.cs" />
     <Compile Include="Utilities\PerlinNoise.cs" />
