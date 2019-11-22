@@ -799,7 +799,7 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, RenderTarget target, RenderTarget targetDepth, DrawCallsCollector collector)
+        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, GPUTexture target, GPUTexture targetDepth, DrawCallsCollector collector)
         {
         }
     }

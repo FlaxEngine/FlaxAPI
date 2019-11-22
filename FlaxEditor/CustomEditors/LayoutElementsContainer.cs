@@ -177,14 +177,14 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
-        /// Adds render target image to the layout.
+        /// Adds GPU texture image to the layout.
         /// </summary>
-        /// <param name="renderTarget">The render target.</param>
+        /// <param name="texture">The GPU texture.</param>
         /// <returns>The created element.</returns>
-        public ImageElement Image(RenderTarget renderTarget)
+        public ImageElement Image(GPUTexture texture)
         {
             ImageElement element = new ImageElement();
-            element.Image.Brush = new RenderTargetBrush(renderTarget);
+            element.Image.Brush = new GPUTextureBrush(texture);
             OnAddElement(element);
             return element;
         }

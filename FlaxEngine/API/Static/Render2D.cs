@@ -117,7 +117,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void CallDrawing(IDrawable drawableElement, GPUContext context, RenderTarget output)
+        public static void CallDrawing(IDrawable drawableElement, GPUContext context, GPUTexture output)
         {
             if (context == null || output == null || drawableElement == null)
                 throw new ArgumentNullException();
@@ -152,14 +152,14 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void CallDrawing(IDrawable drawableElement, GPUContext context, RenderTarget output, RenderTarget depthBuffer, ref Matrix viewProjection)
+        public static void CallDrawing(IDrawable drawableElement, GPUContext context, GPUTexture output, GPUTexture depthBuffer, ref Matrix viewProjection)
         {
             if (context == null || output == null || drawableElement == null)
                 throw new ArgumentNullException();
             if (depthBuffer != null)
             {
                 if (!depthBuffer.IsAllocated)
-                    throw new InvalidOperationException("Depth buffer is not allocated. Use RenderTarget.Init before rendering.");
+                    throw new InvalidOperationException("Depth buffer is not allocated. Use GPUTexture.Init before rendering.");
                 if (output.Size != depthBuffer.Size)
                     throw new InvalidOperationException("Output buffer and depth buffer dimensions must be equal.");
             }

@@ -209,7 +209,7 @@ namespace FlaxEngine
         /// <param name="task">The render task.</param>
         /// <param name="output">The output texture.</param>
         /// <param name="pass">The rendering pass mode.</param>
-        public void ExecuteDrawCalls(GPUContext context, RenderTask task, RenderTarget output, DrawPass pass)
+        public void ExecuteDrawCalls(GPUContext context, RenderTask task, GPUTexture output, DrawPass pass)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
@@ -229,7 +229,7 @@ namespace FlaxEngine
         /// <param name="output">The output texture.</param>
         /// <param name="outputDepth">The output depth texture.</param>
         /// <param name="pass">The rendering pass mode.</param>
-        public void ExecuteDrawCalls(GPUContext context, RenderTask task, RenderTarget output, RenderTarget outputDepth, DrawPass pass)
+        public void ExecuteDrawCalls(GPUContext context, RenderTask task, GPUTexture output, GPUTexture outputDepth, DrawPass pass)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));

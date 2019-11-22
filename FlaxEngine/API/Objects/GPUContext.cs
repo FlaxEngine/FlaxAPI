@@ -128,7 +128,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Draw(RenderTarget dst, SpriteAtlas src)
+        public void Draw(GPUTexture dst, SpriteAtlas src)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -153,7 +153,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, ref RenderView view, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
+        public void DrawScene(RenderTask task, GPUTexture output, RenderBuffers buffers, ref RenderView view, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -184,7 +184,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawScene(RenderTask task, RenderTarget output, RenderBuffers buffers, ref RenderView view, List<Actor> customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
+        public void DrawScene(RenderTask task, GPUTexture output, RenderBuffers buffers, ref RenderView view, List<Actor> customActors = null, ActorsSources actorsSource = ActorsSources.ScenesAndCustomActors, HashSet<PostProcessEffect> customPostFx = null)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -210,7 +210,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawSceneDepth(SceneRenderTask task, RenderTarget output, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.Scenes)
+        public void DrawSceneDepth(SceneRenderTask task, GPUTexture output, Actor[] customActors = null, ActorsSources actorsSource = ActorsSources.Scenes)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -225,20 +225,20 @@ namespace FlaxEngine
         /// <summary>
         /// Clears texture surface with a color.
         /// </summary>
-        /// <param name="renderTarget">The render target to clear. Must be valid and created.</param>
+        /// <param name="texture">The render target to clear. Must be valid and created.</param>
         /// <param name="color">Clear color.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Clear(RenderTarget renderTarget, Color color)
+        public void Clear(GPUTexture texture, Color color)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            if (renderTarget == null)
-                throw new ArgumentNullException(nameof(renderTarget));
-            Internal_Clear(unmanagedPtr, renderTarget.View(), ref color);
+            if (texture == null)
+                throw new ArgumentNullException(nameof(texture));
+            Internal_Clear(unmanagedPtr, texture.View(), ref color);
 #endif
         }
 
@@ -253,7 +253,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawSceneDepth(SceneRenderTask task, RenderTarget output, List<Actor> customActors = null, ActorsSources actorsSource = ActorsSources.Scenes)
+        public void DrawSceneDepth(SceneRenderTask task, GPUTexture output, List<Actor> customActors = null, ActorsSources actorsSource = ActorsSources.Scenes)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -272,7 +272,7 @@ namespace FlaxEngine
         /// <param name="output">The output texture. Must be valid and created.</param>
         /// <param name="input">The input texture. It's optional.</param>
         /// <param name="sceneRenderTask">Render task to use it's view description and the render buffers.</param>
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input, SceneRenderTask sceneRenderTask)
+        public void DrawPostFxMaterial(MaterialBase material, GPUTexture output, GPUTexture input, SceneRenderTask sceneRenderTask)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -287,7 +287,7 @@ namespace FlaxEngine
         /// <param name="material">The material to render. It must be a post fx material.</param>
         /// <param name="output">The output texture. Must be valid and created.</param>
         /// <param name="input">The input texture. It's optional.</param>
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input = null)
+        public void DrawPostFxMaterial(MaterialBase material, GPUTexture output, GPUTexture input = null)
         {
             DrawPostFxMaterial(material, output.View(), input);
         }

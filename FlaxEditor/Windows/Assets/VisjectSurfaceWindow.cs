@@ -174,11 +174,11 @@ namespace FlaxEditor.Windows.Assets
                     case ParameterType.NormalMap:
                         pType = typeof(Texture);
                         break;
-                    case ParameterType.RenderTarget:
-                    case ParameterType.RenderTargetArray:
-                    case ParameterType.RenderTargetCube:
-                    case ParameterType.RenderTargetVolume:
-                        pType = typeof(RenderTarget);
+                    case ParameterType.GPUTexture:
+                    case ParameterType.GPUTextureArray:
+                    case ParameterType.GPUTextureCube:
+                    case ParameterType.GPUTextureVolume:
+                        pType = typeof(GPUTexture);
                         break;
                     default:
                         pType = p.Value.GetType();
@@ -478,10 +478,10 @@ namespace FlaxEditor.Windows.Assets
             case ParameterType.CubeTexture:
             case ParameterType.Texture:
             case ParameterType.NormalMap:
-            case ParameterType.RenderTarget:
-            case ParameterType.RenderTargetArray:
-            case ParameterType.RenderTargetCube:
-            case ParameterType.RenderTargetVolume:
+            case ParameterType.GPUTexture:
+            case ParameterType.GPUTextureArray:
+            case ParameterType.GPUTextureCube:
+            case ParameterType.GPUTextureVolume:
                 valueToSet = (value as FlaxEngine.Object)?.ID ?? Guid.Empty;
                 break;
             }

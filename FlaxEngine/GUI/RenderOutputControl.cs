@@ -29,9 +29,9 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The back buffer.
         /// </summary>
-        protected RenderTarget _backBuffer;
+        protected GPUTexture _backBuffer;
 
-        private RenderTarget _backBufferOld;
+        private GPUTexture _backBufferOld;
         private int _oldBackbufferLiveTimeLeft;
         private float _resizeTime;
 
@@ -70,7 +70,7 @@ namespace FlaxEngine.GUI
             if (task == null)
                 throw new ArgumentNullException();
 
-            _backBuffer = RenderTarget.New();
+            _backBuffer = GPUDevice.CreateTexture();
             _resizeTime = ResizeCheckTime;
 
             _task = task;
@@ -173,7 +173,7 @@ namespace FlaxEngine.GUI
             // Draw backbuffer texture
             var buffer = _backBufferOld ? _backBufferOld : _backBuffer;
             var color = TintColor.RGBMultiplied(Brightness);
-            Render2D.DrawRenderTarget(buffer, new Rectangle(Vector2.Zero, Size), color);
+            Render2D.DrawTexture(buffer, new Rectangle(Vector2.Zero, Size), color);
 
             base.Draw();
         }
@@ -190,7 +190,7 @@ namespace FlaxEngine.GUI
                 return;
             if (width < 1 || height < 1)
             {
-                _backBuffer.Dispose();
+                _backBuffer.ReleaseGPU();
                 Object.Destroy(ref _backBufferOld);
                 return;
             }
@@ -199,14 +199,15 @@ namespace FlaxEngine.GUI
             if (_backBufferOld == null && _backBuffer.IsAllocated)
             {
                 _backBufferOld = _backBuffer;
-                _backBuffer = RenderTarget.New();
+                _backBuffer = GPUDevice.CreateTexture();
             }
 
             // Set timeout to remove old buffer
             _oldBackbufferLiveTimeLeft = 3;
 
             // Resize backbuffer
-            _backBuffer.Init(BackBufferFormat, width, height);
+            var desc = GPUTextureDescription.New2D(width, height, BackBufferFormat, GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget);
+            _backBuffer.Init(ref desc);
             _task.Output = _backBuffer;
         }
 

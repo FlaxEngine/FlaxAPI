@@ -72,7 +72,7 @@ namespace FlaxEngine
         /// <param name="task">The current rendering task.</param>
         /// <param name="input">The input texture.</param>
         /// <param name="output">The output texture.</param>
-        public abstract void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output);
+        public abstract void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output);
 
         internal static void FetchInfo(PostProcessEffect obj, out PostProcessEffectLocation location, out bool useSingleTarget)
         {

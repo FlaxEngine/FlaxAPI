@@ -19,7 +19,7 @@ namespace FlaxEditor.Gizmo
         /// <param name="target">The output texture to render to.</param>
         /// <param name="targetDepth">The scene depth buffer that can be used to z-buffering.</param>
         /// <param name="collector">The draw calls collector.</param>
-        void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, RenderTarget target, RenderTarget targetDepth, DrawCallsCollector collector);
+        void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, GPUTexture target, GPUTexture targetDepth, DrawCallsCollector collector);
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ namespace FlaxEditor.Gizmo
         public override int Order => -100;
 
         /// <inheritdoc />
-        public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+        public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
         {
             if (Viewport == null)
                 throw new NullReferenceException();

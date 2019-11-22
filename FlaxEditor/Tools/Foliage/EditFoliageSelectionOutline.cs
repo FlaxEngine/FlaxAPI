@@ -37,7 +37,7 @@ namespace FlaxEditor.Tools.Foliage
         }
 
         /// <inheritdoc />
-        protected override void DrawSelectionDepth(GPUContext context, SceneRenderTask task, RenderTarget customDepth)
+        protected override void DrawSelectionDepth(GPUContext context, SceneRenderTask task, GPUTexture customDepth)
         {
             var foliage = GizmoMode.SelectedFoliage;
             if (!foliage)

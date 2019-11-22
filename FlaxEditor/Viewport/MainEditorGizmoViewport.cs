@@ -72,7 +72,7 @@ namespace FlaxEditor.Viewport
             public override bool CanRender => (Task.View.Flags & ViewFlags.EditorSprites) == ViewFlags.EditorSprites && SceneManager.ScenesCount != 0 && base.CanRender;
 
             /// <inheritdoc />
-            public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+            public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
             {
                 Profiler.BeginEventGPU("Editor Primitives");
 
@@ -379,7 +379,7 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, RenderTarget target, RenderTarget targetDepth, DrawCallsCollector collector)
+        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, GPUTexture target, GPUTexture targetDepth, DrawCallsCollector collector)
         {
             // Draw selected objects debug shapes and visuals
             if (DrawDebugDraw && (task.View.Flags & ViewFlags.DebugDraw) == ViewFlags.DebugDraw)
@@ -932,7 +932,7 @@ namespace FlaxEditor.Viewport
         }
 
         private RenderTask _savedTask;
-        private RenderTarget _savedBackBuffer;
+        private GPUTexture _savedBackBuffer;
 
         internal void SaveProjectIcon()
         {

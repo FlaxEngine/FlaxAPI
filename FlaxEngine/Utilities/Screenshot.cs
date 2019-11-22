@@ -17,7 +17,7 @@ namespace FlaxEngine.Utilities
         /// <param name="target">The target render target to capture it's contents.</param>
         /// <param name="path">The custom file location. Use null or empty to use default one.</param>
         [UnmanagedCall]
-        public static void Capture(RenderTarget target, string path = null)
+        public static void Capture(GPUTexture target, string path = null)
         {
             if (target == null)
                 throw new ArgumentNullException();

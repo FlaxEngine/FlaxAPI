@@ -342,7 +342,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void Draw(FlaxEngine.RenderTask task, IntPtr[] selectedActors, FlaxEngine.RenderTarget target = null, GPUContext context = null, FlaxEngine.RenderTarget depthBuffer = null, bool enableDepthTest = false)
+        public static void Draw(RenderTask task, IntPtr[] selectedActors, GPUTexture target = null, GPUContext context = null, GPUTexture depthBuffer = null, bool enableDepthTest = false)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");

@@ -27,7 +27,7 @@ namespace FlaxEditor.Tools.Foliage
         /// <param name="color">The brush position.</param>
         /// <param name="sceneDepth">The scene depth buffer (used for manual brush pixels clipping with rendered scene).</param>
         /// <returns>The ready to render material for terrain chunks overlay on top of the terrain.</returns>
-        public MaterialInstance GetBrushMaterial(ref Vector3 position, ref Color color, RenderTarget sceneDepth)
+        public MaterialInstance GetBrushMaterial(ref Vector3 position, ref Color color, GPUTexture sceneDepth)
         {
             if (!_material)
             {

@@ -799,11 +799,11 @@ namespace FlaxEditor.Surface
             case ParameterType.Rectangle: return typeof(Rectangle);
             case ParameterType.CubeTexture: return typeof(CubeTexture);
             case ParameterType.SceneTexture: return typeof(int);
-            case ParameterType.RenderTarget: return typeof(bool);
+            case ParameterType.GPUTexture: return typeof(bool);
             case ParameterType.Matrix: return typeof(Matrix);
-            case ParameterType.RenderTargetArray: return typeof(bool);
-            case ParameterType.RenderTargetVolume: return typeof(bool);
-            case ParameterType.RenderTargetCube: return typeof(Matrix);
+            case ParameterType.GPUTextureArray: return typeof(bool);
+            case ParameterType.GPUTextureVolume: return typeof(bool);
+            case ParameterType.GPUTextureCube: return typeof(bool);
             default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }

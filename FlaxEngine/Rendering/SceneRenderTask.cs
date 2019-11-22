@@ -62,7 +62,7 @@ namespace FlaxEngine
         /// The rendering output surface.
         /// It needs to be assigned by the user to perform rendering.
         /// </summary>
-        public RenderTarget Output;
+        public GPUTexture Output;
 
         /// <summary>
         /// The frame rendering buffers.
@@ -130,7 +130,7 @@ namespace FlaxEngine
         public override void Dispose()
         {
             if (Output)
-                Output.Dispose();
+                Output.ReleaseGPU();
             CustomActors.Clear();
             CustomPostFx.Clear();
 

@@ -29,7 +29,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Clear(RenderTargetView view, Color color)
+        public void Clear(GPUTextureView view, Color color)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -47,7 +47,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void ClearDepth(RenderTarget depthBuffer, float depthValue = 1.0f)
+        public void ClearDepth(GPUTexture depthBuffer, float depthValue = 1.0f)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -68,7 +68,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void ResolveMultisample(RenderTarget sourceMultisampleTexture, RenderTarget destTexture, int sourceSubResource = 0, int destSubResource = 0, PixelFormat format = PixelFormat.Unknown)
+        public void ResolveMultisample(GPUTexture sourceMultisampleTexture, GPUTexture destTexture, int sourceSubResource = 0, int destSubResource = 0, PixelFormat format = PixelFormat.Unknown)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -86,7 +86,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Draw(RenderTarget dst, RenderTarget src)
+        public void Draw(GPUTexture dst, GPUTexture src)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -104,7 +104,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Draw(RenderTarget dst, Texture src)
+        public void Draw(GPUTexture dst, Texture src)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -125,7 +125,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input, RenderView view, RenderBuffers buffers = null)
+        public void DrawPostFxMaterial(MaterialBase material, GPUTexture output, GPUTexture input, RenderView view, RenderBuffers buffers = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -144,7 +144,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTargetView view, RenderTarget input = null)
+        public void DrawPostFxMaterial(MaterialBase material, GPUTextureView view, GPUTexture input = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -164,7 +164,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTargetView view, ref Viewport viewport, RenderTarget input = null)
+        public void DrawPostFxMaterial(MaterialBase material, GPUTextureView view, ref Viewport viewport, GPUTexture input = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -210,7 +210,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CopyTexture(RenderTarget dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
+        public void CopyTexture(GPUTexture dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -233,7 +233,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CopyTexture(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, RenderTarget srcResource, uint srcSubresource)
+        public void CopyTexture(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, GPUTexture srcResource, uint srcSubresource)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -256,7 +256,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CopyTexture(RenderTarget dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, RenderTarget srcResource, uint srcSubresource)
+        public void CopyTexture(GPUTexture dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, GPUTexture srcResource, uint srcSubresource)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -269,7 +269,7 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Clear(IntPtr obj, RenderTargetView view, ref Color color);
+        internal static extern void Internal_Clear(IntPtr obj, GPUTextureView view, ref Color color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ClearDepth(IntPtr obj, IntPtr depthBuffer, float depthValue);
@@ -287,10 +287,10 @@ namespace FlaxEngine
         internal static extern void Internal_DrawPostFxMaterial1(IntPtr obj, IntPtr material, IntPtr output, IntPtr input, ref RenderView view, IntPtr buffers);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawPostFxMaterial2(IntPtr obj, IntPtr material, RenderTargetView view, IntPtr input);
+        internal static extern void Internal_DrawPostFxMaterial2(IntPtr obj, IntPtr material, GPUTextureView view, IntPtr input);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawPostFxMaterial3(IntPtr obj, IntPtr material, RenderTargetView view, ref Viewport viewport, IntPtr input);
+        internal static extern void Internal_DrawPostFxMaterial3(IntPtr obj, IntPtr material, GPUTextureView view, ref Viewport viewport, IntPtr input);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_CopyTextureRegion1(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);

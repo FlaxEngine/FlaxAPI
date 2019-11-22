@@ -369,7 +369,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private List<Request> _queue;
         private SceneRenderTask _task;
-        private RenderTarget _output;
+        private GPUTexture _output;
         private List<Atlas> _atlases;
 
         /// <summary>
@@ -458,8 +458,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 _atlases = new List<Atlas>(4);
             if (_output == null)
             {
-                _output = RenderTarget.New();
-                _output.Init(PixelFormat.R8G8B8A8_UNorm, Width, Height);
+                _output = GPUDevice.CreateTexture();
+                var desc = GPUTextureDescription.New2D(Width, Height, PixelFormat.R8G8B8A8_UNorm, GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget);
+                _output.Init(ref desc);
             }
             if (_task == null)
             {

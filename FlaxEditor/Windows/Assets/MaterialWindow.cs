@@ -34,10 +34,10 @@ namespace FlaxEditor.Windows.Assets
             Texture = ParameterType.Texture,
             CubeTexture = ParameterType.CubeTexture,
             NormalMap = ParameterType.NormalMap,
-            RenderTarget = ParameterType.RenderTarget,
-            RenderTargetArray = ParameterType.RenderTargetArray,
-            RenderTargetCube = ParameterType.RenderTargetCube,
-            RenderTargetVolume = ParameterType.RenderTargetVolume,
+            GPUTexture = ParameterType.GPUTexture,
+            GPUTextureArray = ParameterType.GPUTextureArray,
+            GPUTextureCube = ParameterType.GPUTextureCube,
+            GPUTextureVolume = ParameterType.GPUTextureVolume,
             Matrix = ParameterType.Matrix,
         }
 

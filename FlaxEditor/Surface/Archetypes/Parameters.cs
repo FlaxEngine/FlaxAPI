@@ -137,7 +137,7 @@ namespace FlaxEditor.Surface.Archetypes
                     }
                 },
                 {
-                    ParameterType.RenderTarget,
+                    ParameterType.GPUTexture,
                     new[]
                     {
                         NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector2, 0, -1),
@@ -150,7 +150,7 @@ namespace FlaxEditor.Surface.Archetypes
                     }
                 },
                 {
-                    ParameterType.RenderTargetArray,
+                    ParameterType.GPUTextureArray,
                     new[]
                     {
                         NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector3, 0, -1),
@@ -163,7 +163,7 @@ namespace FlaxEditor.Surface.Archetypes
                     }
                 },
                 {
-                    ParameterType.RenderTargetCube,
+                    ParameterType.GPUTextureCube,
                     new[]
                     {
                         NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector3, 0, -1),
@@ -176,7 +176,7 @@ namespace FlaxEditor.Surface.Archetypes
                     }
                 },
                 {
-                    ParameterType.RenderTargetVolume,
+                    ParameterType.GPUTextureVolume,
                     new[]
                     {
                         NodeElementArchetype.Factory.Input(1, "UVs", true, ConnectionType.Vector3, 0, -1),
@@ -470,28 +470,28 @@ namespace FlaxEditor.Surface.Archetypes
                     }
                 },
                 {
-                    ParameterType.RenderTarget,
+                    ParameterType.GPUTexture,
                     new[]
                     {
                         NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),
                     }
                 },
                 {
-                    ParameterType.RenderTargetArray,
+                    ParameterType.GPUTextureArray,
                     new[]
                     {
                         NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),
                     }
                 },
                 {
-                    ParameterType.RenderTargetCube,
+                    ParameterType.GPUTextureCube,
                     new[]
                     {
                         NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),
                     }
                 },
                 {
-                    ParameterType.RenderTargetVolume,
+                    ParameterType.GPUTextureVolume,
                     new[]
                     {
                         NodeElementArchetype.Factory.Output(1, string.Empty, ConnectionType.Object, 0),

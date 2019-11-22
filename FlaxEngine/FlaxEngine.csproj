@@ -201,8 +201,7 @@
     <Compile Include="API\Objects\GPUResource.Gen.cs" />
     <Compile Include="API\Objects\RenderBuffers.cs" />
     <Compile Include="API\Objects\RenderBuffers.Gen.cs" />
-    <Compile Include="API\Objects\RenderTarget.cs" />
-    <Compile Include="API\Objects\RenderTarget.Gen.cs" />
+    <Compile Include="Rendering\RenderTarget.cs" />
     <Compile Include="API\Objects\RenderTask.cs" />
     <Compile Include="API\Objects\RenderTask.Gen.cs" />
     <Compile Include="API\Objects\Script.cs" />
@@ -335,7 +334,7 @@
     <Compile Include="Enums\WindowEnums.cs" />
     <Compile Include="GUI\Brushes\LinearGradientBrush.cs" />
     <Compile Include="GUI\Brushes\MaterialBrush.cs" />
-    <Compile Include="GUI\Brushes\RenderTargetBrush.cs" />
+    <Compile Include="GUI\Brushes\GPUTextureBrush.cs" />
     <Compile Include="GUI\Brushes\SolidColorBrush.cs" />
     <Compile Include="GUI\Brushes\SpriteBrush.cs" />
     <Compile Include="GUI\Brushes\TextureBrush.cs" />

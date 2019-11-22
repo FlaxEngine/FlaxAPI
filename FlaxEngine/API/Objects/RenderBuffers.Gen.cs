@@ -94,7 +94,7 @@ namespace FlaxEngine
         /// Gets the depth buffer render target allocated within this render buffers collection (read only).
         /// </summary>
         [UnmanagedCall]
-        public RenderTarget DepthBuffer
+        public GPUTexture DepthBuffer
         {
 #if UNIT_TEST_COMPILANT
             get; set;
@@ -110,7 +110,7 @@ namespace FlaxEngine
         /// Texture ca be null or not initialized if motion blur is disabled or not yet rendered.
         /// </remarks>
         [UnmanagedCall]
-        public RenderTarget MotionVectors
+        public GPUTexture MotionVectors
         {
 #if UNIT_TEST_COMPILANT
             get; set;
@@ -172,10 +172,10 @@ namespace FlaxEngine
         internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern RenderTarget Internal_GetDepthBuffer(IntPtr obj);
+        internal static extern GPUTexture Internal_GetDepthBuffer(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern RenderTarget Internal_GetMotionVectors(IntPtr obj);
+        internal static extern GPUTexture Internal_GetMotionVectors(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Init(IntPtr obj, int width, int height);

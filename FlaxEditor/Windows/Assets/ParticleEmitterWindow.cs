@@ -31,9 +31,9 @@ namespace FlaxEditor.Windows.Assets
             Vector4 = ParameterType.Vector4,
             Color = ParameterType.Color,
             Texture = ParameterType.Texture,
-            RenderTarget = ParameterType.RenderTarget,
-            RenderTargetArray = ParameterType.RenderTargetArray,
-            RenderTargetVolume = ParameterType.RenderTargetVolume,
+            GPUTexture = ParameterType.GPUTexture,
+            GPUTextureArray = ParameterType.GPUTextureArray,
+            GPUTextureVolume = ParameterType.GPUTextureVolume,
             Matrix = ParameterType.Matrix,
         }
 

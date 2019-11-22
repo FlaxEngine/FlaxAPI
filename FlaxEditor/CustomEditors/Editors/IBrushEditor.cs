@@ -18,7 +18,7 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             new OptionType("Texture", typeof(TextureBrush)),
             new OptionType("Sprite", typeof(SpriteBrush)),
-            new OptionType("Render Target", typeof(RenderTargetBrush)),
+            new OptionType("GPU Texture", typeof(GPUTextureBrush)),
             new OptionType("Material", typeof(MaterialBrush)),
             new OptionType("Solid Color", typeof(SolidColorBrush)),
             new OptionType("Linear Gradient", typeof(LinearGradientBrush)),

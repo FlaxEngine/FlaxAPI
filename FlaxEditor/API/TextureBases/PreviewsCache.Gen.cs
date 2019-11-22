@@ -86,20 +86,20 @@ namespace FlaxEditor
         /// <summary>
         /// Occupies the atlas slot.
         /// </summary>
-        /// <param name="renderTarget">The source texture to insert.</param>
+        /// <param name="texture">The source texture to insert.</param>
         /// <param name="assetId">The asset identifier.</param>
         /// <returns>Created sprite or Sprite.Invalid if failed.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public Sprite OccupySlot(RenderTarget renderTarget, Guid assetId)
+        public Sprite OccupySlot(GPUTexture texture, Guid assetId)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Sprite resultAsRef;
-            Internal_OccupySlot(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(renderTarget), ref assetId, out resultAsRef);
+            Internal_OccupySlot(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(texture), ref assetId, out resultAsRef);
             return resultAsRef;
 #endif
         }
@@ -156,7 +156,7 @@ namespace FlaxEditor
         internal static extern void Internal_FindSlot(IntPtr obj, ref Guid assetId, out Sprite resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_OccupySlot(IntPtr obj, IntPtr renderTarget, ref Guid assetId, out Sprite resultAsRef);
+        internal static extern void Internal_OccupySlot(IntPtr obj, IntPtr texture, ref Guid assetId, out Sprite resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ReleaseSlot(IntPtr obj, ref Guid assetId);

@@ -116,7 +116,7 @@ namespace FlaxEditor.Gizmo
         public override bool CanRender => _enabled && _material && _outlineMaterial.IsLoaded && SelectionGetter().Count > 0;
 
         /// <inheritdoc />
-        public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+        public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
         {
             Profiler.BeginEventGPU("Selection Outline");
 
@@ -155,7 +155,7 @@ namespace FlaxEditor.Gizmo
         /// <param name="context">The context.</param>
         /// <param name="task">The task.</param>
         /// <param name="customDepth">The custom depth (output).</param>
-        protected virtual void DrawSelectionDepth(GPUContext context, SceneRenderTask task, RenderTarget customDepth)
+        protected virtual void DrawSelectionDepth(GPUContext context, SceneRenderTask task, GPUTexture customDepth)
         {
             // Get selected actors
             var selection = SelectionGetter();

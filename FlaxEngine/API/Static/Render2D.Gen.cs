@@ -203,19 +203,19 @@ namespace FlaxEngine
         /// <summary>
         /// Draws a texture.
         /// </summary>
-        /// <param name="rt">The render target to draw.</param>
+        /// <param name="t">The GPU texture to draw.</param>
         /// <param name="rect">The rectangle to draw.</param>
         /// <param name="color">The color to use.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawRenderTarget(RenderTarget rt, Rectangle rect, Color color)
+        public static void DrawTexture(GPUTexture t, Rectangle rect, Color color)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawRenderTarget(FlaxEngine.Object.GetUnmanagedPtr(rt), ref rect, ref color);
+            Internal_DrawTexture0(FlaxEngine.Object.GetUnmanagedPtr(t), ref rect, ref color);
 #endif
         }
 
@@ -447,7 +447,7 @@ namespace FlaxEngine
         internal static extern void Internal_DrawRectangle2(ref Rectangle rect, ref Color color1, ref Color color2, ref Color color3, ref Color color4, float thickness);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawRenderTarget(IntPtr rt, ref Rectangle rect, ref Color color);
+        internal static extern void Internal_DrawTexture0(IntPtr t, ref Rectangle rect, ref Color color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawTexture1(IntPtr t, ref Rectangle rect, ref Color color);

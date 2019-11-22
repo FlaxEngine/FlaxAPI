@@ -271,11 +271,11 @@ namespace FlaxEditor.Windows.Assets
                     case MaterialParameterType.NormalMap:
                         pType = typeof(Texture);
                         break;
-                    case MaterialParameterType.RenderTarget:
-                    case MaterialParameterType.RenderTargetArray:
-                    case MaterialParameterType.RenderTargetCube:
-                    case MaterialParameterType.RenderTargetVolume:
-                        pType = typeof(RenderTarget);
+                    case MaterialParameterType.GPUTexture:
+                    case MaterialParameterType.GPUTextureArray:
+                    case MaterialParameterType.GPUTextureCube:
+                    case MaterialParameterType.GPUTextureVolume:
+                        pType = typeof(GPUTexture);
                         break;
                     default:
                         pType = p.Value.GetType();

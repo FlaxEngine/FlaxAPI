@@ -98,9 +98,9 @@ namespace FlaxEditor.Surface
         SceneTexture = 17,
 
         /// <summary>
-        /// The render target (created from code).
+        /// The GPU texture (created from code).
         /// </summary>
-        RenderTarget = 18,
+        GPUTexture = 18,
 
         /// <summary>
         /// The matrix.
@@ -108,18 +108,18 @@ namespace FlaxEditor.Surface
         Matrix = 19,
 
         /// <summary>
-        /// The render target array (created from code).
+        /// The GPU texture array (created from code).
         /// </summary>
-        RenderTargetArray = 20,
+        GPUTextureArray = 20,
 
         /// <summary>
-        /// The volume render target (created from code).
+        /// The GPU volume texture (created from code).
         /// </summary>
-        RenderTargetVolume = 21,
+        GPUTextureVolume = 21,
 
         /// <summary>
-        /// The cube render target (created from code).
+        /// The GPU cube texture (created from code).
         /// </summary>
-        RenderTargetCube = 22,
+        GPUTextureCube = 22,
     }
 }

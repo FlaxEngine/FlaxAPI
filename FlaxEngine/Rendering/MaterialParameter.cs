@@ -70,9 +70,9 @@ namespace FlaxEngine
         SceneTexture = 11,
 
         /// <summary>
-        /// The render target (created from code).
+        /// The GPU texture (created from code).
         /// </summary>
-        RenderTarget = 12,
+        GPUTexture = 12,
 
         /// <summary>
         /// The matrix.
@@ -80,19 +80,19 @@ namespace FlaxEngine
         Matrix = 13,
 
         /// <summary>
-        /// The render target array (created from code).
+        /// The GPU texture array (created from code).
         /// </summary>
-        RenderTargetArray = 14,
+        GPUTextureArray = 14,
 
         /// <summary>
-        /// The volume render target (created from code).
+        /// The GPU volume texture (created from code).
         /// </summary>
-        RenderTargetVolume = 15,
+        GPUTextureVolume = 15,
 
         /// <summary>
-        /// The cube render target (created from code).
+        /// The GPU cube texture (created from code).
         /// </summary>
-        RenderTargetCube = 16,
+        GPUTextureCube = 16,
     }
 
     /// <summary>
@@ -199,10 +199,10 @@ namespace FlaxEngine
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:
-                case MaterialParameterType.RenderTarget:
-                case MaterialParameterType.RenderTargetArray:
-                case MaterialParameterType.RenderTargetCube:
-                case MaterialParameterType.RenderTargetVolume:
+                case MaterialParameterType.GPUTexture:
+                case MaterialParameterType.GPUTextureArray:
+                case MaterialParameterType.GPUTextureCube:
+                case MaterialParameterType.GPUTextureVolume:
                     ptr = new IntPtr(&vGuid);
                     break;
 
@@ -226,10 +226,10 @@ namespace FlaxEngine
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap: return Object.Find<Object>(ref vGuid);
-                case MaterialParameterType.RenderTargetArray:
-                case MaterialParameterType.RenderTargetCube:
-                case MaterialParameterType.RenderTargetVolume:
-                case MaterialParameterType.RenderTarget: return Object.TryFind<Object>(ref vGuid);
+                case MaterialParameterType.GPUTextureArray:
+                case MaterialParameterType.GPUTextureCube:
+                case MaterialParameterType.GPUTextureVolume:
+                case MaterialParameterType.GPUTexture: return Object.TryFind<Object>(ref vGuid);
 
                 default: throw new ArgumentOutOfRangeException();
                 }
@@ -295,10 +295,10 @@ namespace FlaxEngine
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:
-                case MaterialParameterType.RenderTarget:
-                case MaterialParameterType.RenderTargetArray:
-                case MaterialParameterType.RenderTargetCube:
-                case MaterialParameterType.RenderTargetVolume:
+                case MaterialParameterType.GPUTexture:
+                case MaterialParameterType.GPUTextureArray:
+                case MaterialParameterType.GPUTextureCube:
+                case MaterialParameterType.GPUTextureVolume:
                     ptr = Object.GetUnmanagedPtr(value as Object);
                     break;
 

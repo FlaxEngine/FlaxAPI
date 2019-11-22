@@ -50,7 +50,7 @@ namespace FlaxEngine
         public override int Order => Canvas.Order;
 
         /// <inheritdoc />
-        public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+        public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
         {
             // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
 
@@ -65,7 +65,7 @@ namespace FlaxEngine
             Matrix.Multiply(ref view, ref task.View.Projection, out viewProjection);
 
             // Pick a depth buffer
-            RenderTarget depthBuffer = Canvas.IgnoreDepth ? null : task.Buffers.DepthBuffer;
+            GPUTexture depthBuffer = Canvas.IgnoreDepth ? null : task.Buffers.DepthBuffer;
 
             // Render GUI in 3D
             Render2D.CallDrawing(Canvas.GUI, context, input, depthBuffer, ref viewProjection);

@@ -6,7 +6,7 @@ namespace FlaxEngine
     /// Draw method within this interface is used for <see cref="Render2D"/>.CallDrawing single DrawCall
     /// <remarks>Each frame new Queue is sent to GPU from this CPU bound method</remarks>
     /// </summary>
-    /// <seealso cref="Render2D.CallDrawing(FlaxEngine.IDrawable,FlaxEngine.GPUContext,FlaxEngine.RenderTarget)"/>
+    /// <seealso cref="Render2D.CallDrawing(IDrawable,GPUContext,GPUTexture)"/>
     /// <seealso cref="PostProcessEffect.Render"/>
     public interface IDrawable
     {
