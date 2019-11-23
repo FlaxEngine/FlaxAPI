@@ -769,6 +769,24 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Determines whether this actor has tag assigned.
+        /// </summary>
+        /// <param name="tag">The tag to check</param>
+        /// <returns><c>true</c> if this actor has given tag; otherwise, <c>false</c>.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public bool HasTag(string tag)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_HasTag(unmanagedPtr, tag);
+#endif
+        }
+
+        /// <summary>
         /// Determines whether the specified object is in a hierarchy (one of the children or lower).
         /// </summary>
         /// <param name="actor">The actor to check,</param>
@@ -1010,6 +1028,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BreakPrefabLink(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasTag(IntPtr obj, string tag);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ContainsInHierarchy(IntPtr obj, Actor actor);
