@@ -720,6 +720,31 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Tests whether one vector is near another vector.
+        /// </summary>
+        /// <param name="left">The left vector.</param>
+        /// <param name="right">The right vector.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns><c>true</c> if left and right are near, <c>false</c> otherwise</returns>
+        public static bool NearEqual(Vector2 left, Vector2 right, float epsilon = Mathf.Epsilon)
+        {
+            return NearEqual(ref left, ref right, epsilon);
+        }
+
+        /// <summary>
+        /// Tests whether one vector is near another vector.
+        /// </summary>
+        /// <param name="left">The left vector.</param>
+        /// <param name="right">The right vector.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns><c>true</c> if left and right are near another, <c>false</c> otherwise</returns>
+        public static bool NearEqual(ref Vector2 left, ref Vector2 right, float epsilon = Mathf.Epsilon)
+        {
+            return Mathf.WithinEpsilon(left.X, right.X, epsilon) &&
+                   Mathf.WithinEpsilon(left.Y, right.Y, epsilon);
+        }
+
+        /// <summary>
         /// Calculates the dot product of two vectors.
         /// </summary>
         /// <param name="left">First source vector.</param>
