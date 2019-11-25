@@ -181,6 +181,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets texture description structure.
+        /// </summary>
+        [UnmanagedCall]
+        public GPUTextureDescription Description
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { GPUTextureDescription resultAsRef; Internal_GetDescription(unmanagedPtr, out resultAsRef); return resultAsRef; }
+#endif
+        }
+
+        /// <summary>
         /// Initializes a texture resource (allocates the GPU memory and performs the resource setup).
         /// </summary>
         /// <param name="desc">The texture description.</param>
@@ -264,6 +277,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetSize(IntPtr obj, ref Vector2 val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetDescription(IntPtr obj, out GPUTextureDescription resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Init(IntPtr obj, ref GPUTextureDescription desc);
