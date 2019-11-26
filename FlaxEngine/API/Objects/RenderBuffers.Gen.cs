@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Allows to perform custom rendering to texture.
+    /// The scene rendering buffers container.
     /// </summary>
     public sealed partial class RenderBuffers : Object
     {
