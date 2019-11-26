@@ -12,7 +12,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Tools.Foliage
 {
     /// <summary>
-    /// Foliage editing tab. Supports different modes for foliage editing including: spawning, removing, and managing tools.
+    /// Foliage editing tab. Supports different modes for foliage editing including spawning, removing, and managing tools.
     /// </summary>
     /// <seealso cref="Tab" />
     public class FoliageTab : Tab

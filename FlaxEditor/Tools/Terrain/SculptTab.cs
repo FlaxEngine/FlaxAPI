@@ -8,7 +8,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Tools.Terrain
 {
     /// <summary>
-    /// Carve tab related to terrain carving. Allows to modify terrain height and visibility using brush.
+    /// Carve tab related to terrain carving. Allows modifying terrain height and visibility using a brush.
     /// </summary>
     /// <seealso cref="Tab" />
     public class SculptTab : Tab
