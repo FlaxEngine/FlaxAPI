@@ -459,7 +459,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (_output == null)
             {
                 _output = GPUDevice.CreateTexture();
-                var desc = GPUTextureDescription.New2D(Width, Height, PixelFormat.R8G8B8A8_UNorm, GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget);
+                var desc = GPUTextureDescription.New2D(Width, Height, PixelFormat.R8G8B8A8_UNorm);
                 _output.Init(ref desc);
             }
             if (_task == null)

@@ -142,19 +142,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates a new 1D <see cref="GPUTextureDescription" /> with a single level of mipmap.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="format">Describes the format to use.</param>
-        /// <param name="textureFlags">true if the texture needs to support unordered read write.</param>
-        /// <returns>A new instance of 1D <see cref="GPUTextureDescription" /> class.</returns>
-        /// <remarks>The first dimension of mipMapTextures describes the number of array (Texture1D Array), second dimension is the mipmap, the third is the texture data for a particular mipmap.</remarks>
-        public static GPUTextureDescription New1D(int width, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource)
-        {
-            return New1D(width, format, textureFlags, 1, 1);
-        }
-
-        /// <summary>
         /// Creates a new 1D <see cref="GPUTextureDescription" /> with a single mipmap.
         /// </summary>
         /// <param name="width">The width.</param>
@@ -162,7 +149,7 @@ namespace FlaxEngine
         /// <param name="textureFlags">true if the texture needs to support unordered read write.</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>A new instance of 1D <see cref="GPUTextureDescription" /> class.</returns>
-        public static GPUTextureDescription New1D(int width, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource, int arraySize = 1)
+        public static GPUTextureDescription New1D(int width, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, int arraySize = 1)
         {
             return New1D(width, format, textureFlags, 1, arraySize);
         }
@@ -176,7 +163,7 @@ namespace FlaxEngine
         /// <param name="textureFlags">true if the texture needs to support unordered read write.</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>A new instance of 1D <see cref="GPUTextureDescription" /> class.</returns>
-        public static GPUTextureDescription New1D(int width, int mipCount, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource, int arraySize = 1)
+        public static GPUTextureDescription New1D(int width, int mipCount, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, int arraySize = 1)
         {
             return New1D(width, format, textureFlags, mipCount, arraySize);
         }
@@ -216,7 +203,7 @@ namespace FlaxEngine
         /// <param name="textureFlags">true if the texture needs to support unordered read write.</param>
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <returns>A new instance of <see cref="GPUTextureDescription" /> class.</returns>
-        public static GPUTextureDescription New2D(int width, int height, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource, int arraySize = 1)
+        public static GPUTextureDescription New2D(int width, int height, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, int arraySize = 1)
         {
             return New2D(width, height, 1, format, textureFlags, arraySize);
         }
@@ -232,7 +219,7 @@ namespace FlaxEngine
         /// <param name="arraySize">Size of the texture 2D array, default to 1.</param>
         /// <param name="msaaLevel">The MSAA Level.</param>
         /// <returns>A new instance of <see cref="GPUTextureDescription" /> class.</returns>
-        public static GPUTextureDescription New2D(int width, int height, int mipCount, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource, int arraySize = 1, MSAALevel msaaLevel = MSAALevel.None)
+        public static GPUTextureDescription New2D(int width, int height, int mipCount, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget, int arraySize = 1, MSAALevel msaaLevel = MSAALevel.None)
         {
             return New2D(width, height, format, textureFlags, mipCount, arraySize, msaaLevel);
         }
@@ -268,13 +255,25 @@ namespace FlaxEngine
         /// <summary>
         /// Creates a new <see cref="GPUTextureDescription" /> with a single mipmap.
         /// </summary>
+        /// <param name="size">The size (width, height and depth).</param>
+        /// <param name="format">Describes the format to use.</param>
+        /// <param name="textureFlags">true if the texture needs to support unordered read write.</param>
+        /// <returns>A new instance of <see cref="GPUTextureDescription" /> class.</returns>
+        public static GPUTextureDescription New3D(Vector3 size, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget)
+        {
+            return New3D((int)size.X, (int)size.Y, (int)size.Z, 1, format, textureFlags);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="GPUTextureDescription" /> with a single mipmap.
+        /// </summary>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="depth">The depth.</param>
         /// <param name="format">Describes the format to use.</param>
         /// <param name="textureFlags">true if the texture needs to support unordered read write.</param>
         /// <returns>A new instance of <see cref="GPUTextureDescription" /> class.</returns>
-        public static GPUTextureDescription New3D(int width, int height, int depth, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource)
+        public static GPUTextureDescription New3D(int width, int height, int depth, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget)
         {
             return New3D(width, height, depth, 1, format, textureFlags);
         }
@@ -289,7 +288,7 @@ namespace FlaxEngine
         /// <param name="format">Describes the format to use.</param>
         /// <param name="textureFlags">true if the texture needs to support unordered read write.</param>
         /// <returns>A new instance of <see cref="GPUTextureDescription" /> class.</returns>
-        public static GPUTextureDescription New3D(int width, int height, int depth, int mipCount, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource)
+        public static GPUTextureDescription New3D(int width, int height, int depth, int mipCount, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget)
         {
             return New3D(width, height, depth, format, textureFlags, mipCount);
         }
@@ -328,7 +327,7 @@ namespace FlaxEngine
         /// <param name="format">Describes the format to use.</param>
         /// <param name="textureFlags">The texture flags.</param>
         /// <returns>A new instance of <see cref="GPUTextureDescription" /> class.</returns>
-        public static GPUTextureDescription NewCube(int size, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource)
+        public static GPUTextureDescription NewCube(int size, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget)
         {
             return NewCube(size, 1, format, textureFlags);
         }
@@ -341,7 +340,7 @@ namespace FlaxEngine
         /// <param name="format">Describes the format to use.</param>
         /// <param name="textureFlags">The texture flags.</param>
         /// <returns>A new instance of <see cref="GPUTextureDescription"/> class.</returns>
-        public static GPUTextureDescription NewCube(int size, int mipCount, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource)
+        public static GPUTextureDescription NewCube(int size, int mipCount, PixelFormat format, GPUTextureFlags textureFlags = GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget)
         {
             return NewCube(size, format, textureFlags, mipCount);
         }

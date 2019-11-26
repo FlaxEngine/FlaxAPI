@@ -121,7 +121,8 @@ namespace FlaxEditor.Gizmo
             Profiler.BeginEventGPU("Selection Outline");
 
             // Pick a temporary depth buffer
-            var customDepth = RenderTarget.GetTemporary(PixelFormat.R32_Typeless, input.Width, input.Height, GPUTextureFlags.DepthStencil | GPUTextureFlags.ShaderResource);
+            var desc = GPUTextureDescription.New2D(input.Width, input.Height, PixelFormat.R32_Typeless, GPUTextureFlags.DepthStencil | GPUTextureFlags.ShaderResource);
+            var customDepth = RenderTargetPool.Get(ref desc);
             context.ClearDepth(customDepth);
 
             // Draw objects to depth buffer
@@ -144,7 +145,7 @@ namespace FlaxEditor.Gizmo
             context.DrawPostFxMaterial(_material, output, input, task);
 
             // Cleanup
-            RenderTarget.ReleaseTemporary(customDepth);
+            RenderTargetPool.Release(customDepth);
 
             Profiler.EndEventGPU();
         }

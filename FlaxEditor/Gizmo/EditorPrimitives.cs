@@ -54,8 +54,10 @@ namespace FlaxEditor.Gizmo
             var msaaLevel = enableMsaa ? MSAALevel.X4 : MSAALevel.None;
             var width = output.Width;
             var height = output.Height;
-            var target = RenderTarget.GetTemporary(format, width, height, GPUTextureFlags.RenderTarget | GPUTextureFlags.ShaderResource, msaaLevel);
-            var targetDepth = RenderTarget.GetTemporary(PixelFormat.D24_UNorm_S8_UInt, width, height, GPUTextureFlags.DepthStencil, msaaLevel);
+            var desc = GPUTextureDescription.New2D(width, height, format, GPUTextureFlags.RenderTarget | GPUTextureFlags.ShaderResource, 1, 1, msaaLevel);
+            var target = RenderTargetPool.Get(ref desc);
+            desc = GPUTextureDescription.New2D(width, height, PixelFormat.D24_UNorm_S8_UInt, GPUTextureFlags.DepthStencil, 1, 1, msaaLevel);
+            var targetDepth = RenderTargetPool.Get(ref desc);
 
             // Copy frame and clear depth
             context.Draw(target, input);
@@ -80,8 +82,8 @@ namespace FlaxEditor.Gizmo
                 context.Draw(output, target);
 
             // Cleanup
-            RenderTarget.ReleaseTemporary(targetDepth);
-            RenderTarget.ReleaseTemporary(target);
+            RenderTargetPool.Release(targetDepth);
+            RenderTargetPool.Release(target);
 
             Profiler.EndEventGPU();
         }

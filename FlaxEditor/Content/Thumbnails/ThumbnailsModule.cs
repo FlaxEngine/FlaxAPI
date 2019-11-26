@@ -206,7 +206,7 @@ namespace FlaxEditor.Content.Thumbnails
 
             // Create render task but disabled for now
             _output = GPUDevice.CreateTexture("ThumbnailsOutput");
-            var desc = GPUTextureDescription.New2D(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconsAtlasFormat, GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget);
+            var desc = GPUTextureDescription.New2D(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconsAtlasFormat);
             _output.Init(ref desc);
             _task = Object.New<CustomRenderTask>();
             _task.Order = 50; // Render this task later

@@ -206,7 +206,7 @@ namespace FlaxEngine.GUI
             _oldBackbufferLiveTimeLeft = 3;
 
             // Resize backbuffer
-            var desc = GPUTextureDescription.New2D(width, height, BackBufferFormat, GPUTextureFlags.ShaderResource | GPUTextureFlags.RenderTarget);
+            var desc = GPUTextureDescription.New2D(width, height, BackBufferFormat);
             _backBuffer.Init(ref desc);
             _task.Output = _backBuffer;
         }
