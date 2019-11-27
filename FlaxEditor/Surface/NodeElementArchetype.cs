@@ -358,8 +358,33 @@ namespace FlaxEditor.Surface
                     var name = CustomEditorsUtil.GetPropertyNameUI(field.Name);
                     values.Add(name);
                 }
-
                 return ComboBox(x, y, width, valueIndex, values.ToArray());
+            }
+
+            /// <summary>
+            /// Creates new Combo Box element description for enum editing.
+            /// </summary>
+            /// <param name="x">The x location (in node area space).</param>
+            /// <param name="y">The y location (in node area space).</param>
+            /// <param name="width">The width of the element.</param>
+            /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
+            /// <param name="enumType">The enum type to present all it's values.</param>
+            /// <returns>The archetype.</returns>
+            public static NodeElementArchetype Enum(float x, float y, int width, int valueIndex, Type enumType)
+            {
+                if (enumType == null || !enumType.IsEnum)
+                    throw new ArgumentException();
+
+                return new NodeElementArchetype
+                {
+                    Type = NodeElementType.EnumValue,
+                    Position = new Vector2(x, y),
+                    Size = new Vector2(width, 0),
+                    Text = enumType.FullName,
+                    Single = false,
+                    ValueIndex = valueIndex,
+                    ConnectionsType = ConnectionType.Invalid
+                };
             }
 
             /// <summary>

@@ -87,6 +87,7 @@
     <Compile Include="GUI\ActorSearchPopup.cs" />
     <Compile Include="GUI\CurveEditor.cs" />
     <Compile Include="GUI\Drag\DragNames.cs" />
+    <Compile Include="GUI\EnumComboBox.cs" />
     <Compile Include="GUI\NavigationBar.cs" />
     <Compile Include="GUI\NavigationButton.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
@@ -446,6 +447,7 @@
     <Compile Include="Surface\Elements\BoxValue.cs" />
     <Compile Include="Surface\Elements\ColorValue.cs" />
     <Compile Include="Surface\Elements\ComboBoxElement.cs" />
+    <Compile Include="Surface\Elements\EnumValue.cs" />
     <Compile Include="Surface\Elements\FloatValue.cs" />
     <Compile Include="Surface\Elements\InputBox.cs" />
     <Compile Include="Surface\Elements\IntegerValue.cs" />

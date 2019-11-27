@@ -76,5 +76,10 @@ namespace FlaxEditor.Surface
         /// The bounding box value.
         /// </summary>
         BoxValue = 16,
+
+        /// <summary>
+        /// The enum value (as int).
+        /// </summary>
+        EnumValue = 17,
     }
 }

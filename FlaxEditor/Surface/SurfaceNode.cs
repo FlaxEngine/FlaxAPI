@@ -184,6 +184,9 @@ namespace FlaxEditor.Surface
             case NodeElementType.BoxValue:
                 element = new BoxValue(this, arch);
                 break;
+            case NodeElementType.EnumValue:
+                element = new EnumValue(this, arch);
+                break;
             }
             if (element != null)
             {
