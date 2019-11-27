@@ -360,9 +360,6 @@
     <Compile Include="GUI\DragDataText.cs" />
     <Compile Include="GUI\Enums.cs" />
     <Compile Include="GUI\Common\TextBox.cs" />
-    <Compile Include="GUI\Common\TextBox.Keys.cs">
-      <DependentUpon>TextBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Margin.cs" />
     <Compile Include="GUI\Panels\BlurPanel.cs" />
     <Compile Include="GUI\Panels\DropPanel.cs" />

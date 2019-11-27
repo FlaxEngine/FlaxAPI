@@ -9,7 +9,7 @@ namespace FlaxEngine.GUI
     /// <summary>
     /// Text Box control which can gather text input from the user
     /// </summary>
-    public partial class TextBox : Control
+    public class TextBox : Control
     {
         private static readonly char[] Separators =
         {
@@ -1052,6 +1052,155 @@ namespace FlaxEngine.GUI
             base.SetSizeInternal(ref size);
 
             _layout.Bounds = TextRectangle;
+        }
+
+        /// <inheritdoc />
+        public override bool OnCharInput(char c)
+        {
+            Insert(c);
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            var window = Root;
+            bool shiftDown = window.GetKey(Keys.Shift);
+            bool ctrDown = window.GetKey(Keys.Control);
+
+            switch (key)
+            {
+            case Keys.ArrowRight:
+                MoveRight(shiftDown, ctrDown);
+                return true;
+            case Keys.ArrowLeft:
+                MoveLeft(shiftDown, ctrDown);
+                return true;
+            case Keys.ArrowUp:
+                MoveUp(shiftDown, ctrDown);
+                return true;
+            case Keys.ArrowDown:
+                MoveDown(shiftDown, ctrDown);
+                return true;
+            case Keys.C:
+                if (ctrDown)
+                {
+                    Copy();
+                    return true;
+                }
+                break;
+            case Keys.V:
+                if (ctrDown)
+                {
+                    Paste();
+                    return true;
+                }
+                break;
+            case Keys.D:
+                if (ctrDown)
+                {
+                    Duplicate();
+                    return true;
+                }
+                break;
+            case Keys.X:
+                if (ctrDown)
+                {
+                    Cut();
+                    return true;
+                }
+                break;
+            case Keys.A:
+                if (ctrDown)
+                {
+                    SelectAll();
+                    return true;
+                }
+                break;
+            case Keys.Backspace:
+            {
+                if (IsReadOnly)
+                    return true;
+
+                int left = SelectionLeft;
+                if (HasSelection)
+                {
+                    _text = _text.Remove(left, SelectionLength);
+                    SetSelection(left);
+                    OnTextChanged();
+                }
+                else if (CaretPosition > 0)
+                {
+                    left -= 1;
+                    _text = _text.Remove(left, 1);
+                    SetSelection(left);
+                    OnTextChanged();
+                }
+
+                return true;
+            }
+            case Keys.Delete:
+            {
+                if (IsReadOnly)
+                    return true;
+
+                int left = SelectionLeft;
+                if (HasSelection)
+                {
+                    _text = _text.Remove(left, SelectionLength);
+                    SetSelection(left);
+                    OnTextChanged();
+                }
+                else if (TextLength > 0 && left < TextLength)
+                {
+                    _text = _text.Remove(left, 1);
+                    SetSelection(left);
+                    OnTextChanged();
+                }
+
+                return true;
+            }
+            case Keys.Escape:
+            {
+                // Restore text from start
+                SetSelection(-1);
+                _text = _onStartEditValue;
+
+                Defocus();
+                OnTextChanged();
+
+                return true;
+            }
+            case Keys.Return:
+            {
+                if (IsMultiline)
+                {
+                    // Insert new line
+                    Insert('\n');
+                }
+                else
+                {
+                    // End editing
+                    Defocus();
+                }
+
+                return true;
+            }
+            case Keys.Home:
+            {
+                // Move caret to the first character
+                SetSelection(0);
+                return true;
+            }
+            case Keys.End:
+            {
+                // Move caret after last character
+                SetSelection(TextLength);
+                return true;
+            }
+            }
+
+            return false;
         }
 
         #endregion
