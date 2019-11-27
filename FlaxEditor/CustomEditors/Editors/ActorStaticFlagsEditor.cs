@@ -23,7 +23,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         protected override void OnValueChanged()
         {
-            var value = (StaticFlags)element.EnumTypeValue;
+            var value = (StaticFlags)element.EnumComboBox.EnumTypeValue;
 
             // If selected is single actor that has children, ask if apply flags to the sub objects as well
             if (Values.IsSingleObject && (StaticFlags)Values[0] != value && ParentEditor.Values[0] is Actor actor && actor.HasChildren)

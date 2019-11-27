@@ -215,9 +215,9 @@ namespace FlaxEditor.Windows.Assets
                         layout.Space(10);
 
                     var paramType = layout.Enum(newParameterTypes);
-                    paramType.Value = (int)ParameterType.Float;
+                    paramType.EnumComboBox.Value = (int)ParameterType.Float;
                     var newParam = layout.Button("Add parameter");
-                    newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.Value);
+                    newParam.Button.Clicked += () => AddParameter((ParameterType)paramType.EnumComboBox.Value);
                 }
             }
 

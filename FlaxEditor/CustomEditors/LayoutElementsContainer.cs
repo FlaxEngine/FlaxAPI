@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEditor.CustomEditors.GUI;
+using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -419,7 +420,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="customBuildEntriesDelegate">The custom entries layout builder. Allows to hide existing or add different enum values to editor.</param>
         /// <param name="formatMode">The formatting mode.</param>
         /// <returns>The created element.</returns>
-        public EnumElement Enum(Type type, EnumElement.BuildEntriesDelegate customBuildEntriesDelegate = null, EnumDisplayAttribute.FormatMode formatMode = EnumDisplayAttribute.FormatMode.Default)
+        public EnumElement Enum(Type type, EnumComboBox.BuildEntriesDelegate customBuildEntriesDelegate = null, EnumDisplayAttribute.FormatMode formatMode = EnumDisplayAttribute.FormatMode.Default)
         {
             EnumElement element = new EnumElement(type, customBuildEntriesDelegate, formatMode);
             OnAddElement(element);
@@ -435,7 +436,7 @@ namespace FlaxEditor.CustomEditors
         /// <param name="tooltip">The property label tooltip text.</param>
         /// <param name="formatMode">The formatting mode.</param>
         /// <returns>The created element.</returns>
-        public EnumElement Enum(string name, Type type, EnumElement.BuildEntriesDelegate customBuildEntriesDelegate = null, string tooltip = null, EnumDisplayAttribute.FormatMode formatMode = EnumDisplayAttribute.FormatMode.Default)
+        public EnumElement Enum(string name, Type type, EnumComboBox.BuildEntriesDelegate customBuildEntriesDelegate = null, string tooltip = null, EnumDisplayAttribute.FormatMode formatMode = EnumDisplayAttribute.FormatMode.Default)
         {
             var property = AddPropertyItem(name, tooltip);
             return property.Enum(type, customBuildEntriesDelegate, formatMode);
