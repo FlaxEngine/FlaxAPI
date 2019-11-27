@@ -596,7 +596,7 @@ namespace FlaxEngine.GUI
             {
                 int position;
                 if (ctrl)
-                    position = FindtNextWordBegin();
+                    position = FindNextWordBegin();
                 else
                     position = _selectionEnd + 1;
 
@@ -621,7 +621,7 @@ namespace FlaxEngine.GUI
             {
                 int position;
                 if (ctrl)
-                    position = FindtPrevWordBegin();
+                    position = FindPrevWordBegin();
                 else
                     position = _selectionEnd - 1;
 
@@ -697,7 +697,7 @@ namespace FlaxEngine.GUI
             _animateTime = 0.0f;
         }
 
-        private int FindtNextWordBegin()
+        private int FindNextWordBegin()
         {
             int textLength = TextLength;
             int caretPos = CaretPosition;
@@ -715,7 +715,7 @@ namespace FlaxEngine.GUI
             return spaceLoc;
         }
 
-        private int FindtPrevWordBegin()
+        private int FindPrevWordBegin()
         {
             int caretPos = CaretPosition;
 
