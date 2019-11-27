@@ -1443,18 +1443,23 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Sprite Rendering",
                 Description = "Draws quad-shaped sprite for every particle",
                 Flags = DefaultModuleFlags,
-                Size = new Vector2(200, 80),
+                Size = new Vector2(200, 100),
                 DefaultValues = new object[]
                 {
                     true,
                     (int)ModuleType.Render,
-                    Guid.Empty,
+                    Guid.Empty, // Material
+                    (int)DrawPass.Default, // Draw Modes
                 },
                 Elements = new[]
                 {
                     // Material
                     NodeElementArchetype.Factory.Text(0, -10, "Material", 80.0f, 16.0f, "The material used for sprites rendering (quads). It must have Domain set to Particle."),
-                    NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Material),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, ContentDomain.Material),
+
+                    // Draw Modes
+                    NodeElementArchetype.Factory.Text(0, -10 + 70, "Draw Modes:", 40),
+                    NodeElementArchetype.Factory.Enum(100.0f, -10 + 70, 140, 3, typeof(DrawPass)),
                 },
             },
             new NodeArchetype
@@ -1509,22 +1514,28 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Model Rendering",
                 Description = "Draws model for every particle",
                 Flags = DefaultModuleFlags,
-                Size = new Vector2(200, 160),
+                Size = new Vector2(200, 180),
                 DefaultValues = new object[]
                 {
                     true,
                     (int)ModuleType.Render,
-                    Guid.Empty,
-                    Guid.Empty,
+                    Guid.Empty, // Model
+                    Guid.Empty, // Material
+                    (int)DrawPass.Default, // Draw Modes
                 },
                 Elements = new[]
                 {
                     // Model
                     NodeElementArchetype.Factory.Text(0, -10, "Model", 80.0f, 16.0f, "model material used for rendering."),
-                    NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Model),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, ContentDomain.Model),
+
                     // Material
                     NodeElementArchetype.Factory.Text(0, -10 + 70, "Material", 80.0f, 16.0f, "The material used for models rendering. It must have Domain set to Particle."),
-                    NodeElementArchetype.Factory.Asset(80, -10 + 70, 3, ContentDomain.Material),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10 + 70, 3, ContentDomain.Material),
+
+                    // Draw Modes
+                    NodeElementArchetype.Factory.Text(0, -10 + 140, "Draw Modes:", 40),
+                    NodeElementArchetype.Factory.Enum(100.0f, -10 + 140, 140, 4, typeof(DrawPass)),
                 },
             },
             new NodeArchetype
@@ -1534,7 +1545,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Ribbon Rendering",
                 Description = "Draws a a ribbon connecting all particles in order by particle age.",
                 Flags = DefaultModuleFlags,
-                Size = new Vector2(200, 150),
+                Size = new Vector2(200, 170),
                 DefaultValues = new object[]
                 {
                     true,
@@ -1543,6 +1554,7 @@ namespace FlaxEditor.Surface.Archetypes
                     0.0f, // UV Tiling Distance
                     Vector2.One, // UV Scale
                     Vector2.Zero, // UV Offset
+                    (int)DrawPass.Default, // Draw Modes
                 },
                 Elements = new[]
                 {
@@ -1559,6 +1571,10 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Text(0.0f, 5.0f * Surface.Constants.LayoutOffsetY, "UV Offset"),
                     NodeElementArchetype.Factory.Vector_X(100.0f, 5.0f * Surface.Constants.LayoutOffsetY, 5),
                     NodeElementArchetype.Factory.Vector_Y(155.0f, 5.0f * Surface.Constants.LayoutOffsetY, 5),
+
+                    // Draw Modes
+                    NodeElementArchetype.Factory.Text(0, 6.0f * Surface.Constants.LayoutOffsetY, "Draw Modes:", 40),
+                    NodeElementArchetype.Factory.Enum(100.0f, 6.0f * Surface.Constants.LayoutOffsetY, 140, 6, typeof(DrawPass)),
                 },
             },
         };
