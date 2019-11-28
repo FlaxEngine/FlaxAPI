@@ -96,7 +96,7 @@ namespace FlaxEditor.Options
         /// Use native title bar. Restart needed !
         /// </summary>
         [DefaultValue(true)]
-        [EditorDisplay("Window"), EditorOrder(640), Tooltip("Use or not the native window system. Restart needed !")]
+        [EditorDisplay("Window"), EditorOrder(640), Tooltip("Use or not the native title bar. Restart needed !")]
         public bool UseNativeWindowSystem { get; set; } = true;
 
         /// <summary>
