@@ -68,7 +68,7 @@ namespace FlaxEngine
         public TextAlignment VerticalAlignment;
 
         /// <summary>
-        /// The text wrapping mode/
+        /// The text wrapping mode.
         /// </summary>
         public TextWrapping TextWrapping;
 
