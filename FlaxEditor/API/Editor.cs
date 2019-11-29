@@ -577,7 +577,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void Log(string msg)
         {
-            Debug.Logger.LogHandler.LogWrite(LogType.Log, msg);
+            Debug.Logger.LogHandler.LogWrite(LogType.Info, msg);
         }
 
         /// <summary>

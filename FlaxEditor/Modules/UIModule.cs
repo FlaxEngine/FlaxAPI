@@ -444,7 +444,7 @@ namespace FlaxEditor.Modules
             cm.AddButton("Properties", Editor.Windows.PropertiesWin.FocusOrShow);
             cm.AddButton("Game", Editor.Windows.GameWin.FocusOrShow);
             cm.AddButton("Editor", Editor.Windows.EditWin.FocusOrShow);
-            cm.AddButton("Debug Log", Editor.Windows.DebugWin.FocusOrShow);
+            cm.AddButton("Debug Info", Editor.Windows.DebugWin.FocusOrShow);
             cm.AddButton("Graphics Quality", Editor.Windows.GraphicsQualityWin.FocusOrShow);
             cm.AddButton("Game Cooker", Editor.Windows.GameCookerWin.FocusOrShow);
             cm.AddButton("Profiler", Editor.Windows.ProfilerWin.FocusOrShow);

@@ -64,7 +64,7 @@ namespace FlaxEditor
             /*protected set
             {
                 _data = JsonConvert.SerializeObject(value, Formatting.Indented, JsonSerializer.Settings);
-                Debug.Log(_data);
+                Debug.Info(_data);
             }*/
         }
 

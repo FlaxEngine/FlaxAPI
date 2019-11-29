@@ -196,9 +196,9 @@ namespace FlaxEditor.Utilities
             List<object> values;
             var members = GetMembers(obj, type, out values);
 
-            //Debug.Log("-------------- CaptureSnapshot:  " + obj.GetType() + "  --------------");
+            //Debug.Info("-------------- CaptureSnapshot:  " + obj.GetType() + "  --------------");
             //for (int i = 0; i < values.Count; i++)
-            //    Debug.Log(members[i].Path.Path + " = " + (values[i] ?? "<null>"));
+            //    Debug.Info(members[i].Path.Path + " = " + (values[i] ?? "<null>"));
 
             return new ObjectSnapshot(type, values, members);
         }
@@ -226,7 +226,7 @@ namespace FlaxEditor.Utilities
 
                 if (!JsonSerializer.ValueEquals(xValue, yValue))
                 {
-                    //Debug.Log("Diff on: " + (new MemberComparison(m.Path, xValue, yValue)));
+                    //Debug.Info("Diff on: " + (new MemberComparison(m.Path, xValue, yValue)));
 
                     list.Add(new MemberComparison(m.Path, xValue, yValue));
 

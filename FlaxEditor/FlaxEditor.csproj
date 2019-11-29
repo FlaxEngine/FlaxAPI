@@ -624,6 +624,7 @@
     <Compile Include="Windows\GameCookerWindow.cs" />
     <Compile Include="Windows\GameWindow.cs" />
     <Compile Include="Windows\GraphicsQualityWindow.cs" />
+    <Compile Include="Windows\OutputLogWindow.cs" />
     <Compile Include="Windows\PluginExporterDialog.cs" />
     <Compile Include="Windows\PluginsWindow.cs" />
     <Compile Include="Windows\Profiler\CPU.cs" />

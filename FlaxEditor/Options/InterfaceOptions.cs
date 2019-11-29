@@ -12,9 +12,9 @@ namespace FlaxEditor.Options
     public class InterfaceOptions
     {
         /// <summary>
-        /// The debug log window timestamp modes.
+        /// The log timestamp modes.
         /// </summary>
-        public enum DebugLogTimestampsFormats
+        public enum TimestampsFormats
         {
             /// <summary>
             /// No prefix.
@@ -54,9 +54,9 @@ namespace FlaxEditor.Options
         /// <summary>
         /// Gets or sets the timestamps prefix mode for debug log messages.
         /// </summary>
-        [DefaultValue(DebugLogTimestampsFormats.None)]
+        [DefaultValue(TimestampsFormats.None)]
         [EditorDisplay("Interface"), EditorOrder(210), Tooltip("The timestamps prefix mode for debug log messages.")]
-        public DebugLogTimestampsFormats DebugLogTimestampsFormat { get; set; } = DebugLogTimestampsFormats.None;
+        public TimestampsFormats DebugLogTimestampsFormat { get; set; } = TimestampsFormats.None;
 
         /// <summary>
         /// Gets or sets a value indicating whether auto-focus game window on play mode start.
