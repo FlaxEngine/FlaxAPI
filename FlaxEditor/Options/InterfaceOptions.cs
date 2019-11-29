@@ -59,6 +59,20 @@ namespace FlaxEditor.Options
         public TimestampsFormats DebugLogTimestampsFormat { get; set; } = TimestampsFormats.None;
 
         /// <summary>
+        /// Gets or sets the timestamps prefix mode for output log messages.
+        /// </summary>
+        [DefaultValue(TimestampsFormats.TimeSinceStartup)]
+        [EditorDisplay("Interface"), EditorOrder(220), Tooltip("The timestamps prefix mode for output log messages.")]
+        public TimestampsFormats OutputLogTimestampsFormat { get; set; } = TimestampsFormats.TimeSinceStartup;
+
+        /// <summary>
+        /// Gets or sets the timestamps prefix mode for output log messages.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Interface"), EditorOrder(230), Tooltip("Determines whether show log type prefix in output log messages.")]
+        public bool OutputLogShowLogType { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets a value indicating whether auto-focus game window on play mode start.
         /// </summary>
         [DefaultValue(true)]

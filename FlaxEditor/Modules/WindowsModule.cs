@@ -80,7 +80,12 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// The debug log window.
         /// </summary>
-        public DebugLogWindow DebugWin;
+        public DebugLogWindow DebugLogWin;
+
+        /// <summary>
+        /// The output log window.
+        /// </summary>
+        public OutputLogWindow OutputLogWin;
 
         /// <summary>
         /// The toolbox window.
@@ -711,7 +716,8 @@ namespace FlaxEditor.Modules
             GameWin = new GameWindow(Editor);
             PropertiesWin = new PropertiesWindow(Editor);
             SceneWin = new SceneTreeWindow(Editor);
-            DebugWin = new DebugLogWindow(Editor);
+            DebugLogWin = new DebugLogWindow(Editor);
+            OutputLogWin = new OutputLogWindow(Editor);
             ToolboxWin = new ToolboxWindow(Editor);
             GraphicsQualityWin = new GraphicsQualityWindow(Editor);
             GameCookerWin = new GameCookerWindow(Editor);
