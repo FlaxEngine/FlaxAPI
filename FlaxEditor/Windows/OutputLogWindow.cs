@@ -46,6 +46,7 @@ namespace FlaxEditor.Windows
         private string[] _outMessages = new string[OutCapacity];
         private byte[] _outLogTypes = new byte[OutCapacity];
         private long[] _outLogTimes = new long[OutCapacity];
+        private int _textBufferCount = 0;
         private StringBuilder _textBuffer = new StringBuilder();
         private DateTime _startupTime;
 
@@ -85,11 +86,15 @@ namespace FlaxEditor.Windows
         {
             _entries?.Clear();
             _isDirty = true;
+            _textBufferCount = 0;
+            _textBuffer.Clear();
         }
 
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
+            FlaxEngine.Profiler.BeginEvent("OutputLogWindow.Update");
+
             // Read the incoming log messages
             int logCount;
             do
@@ -115,9 +120,8 @@ namespace FlaxEditor.Windows
                 _isDirty = false;
 
                 // Generate the output log
-                _textBuffer.Clear();
                 var entries = Utils.ExtractArrayFromList(_entries);
-                for (int i = 0; i < _entries.Count; i++)
+                for (int i = _textBufferCount; i < _entries.Count; i++)
                 {
                     ref var entry = ref entries[i];
                     if (((int)entry.Level & _logTypeShowMask) == 0)
@@ -147,10 +151,12 @@ namespace FlaxEditor.Windows
 
                 // Update the output
                 _output.Text = _textBuffer.ToString();
-                _textBuffer.Clear();
+                _textBufferCount = _entries.Count;
             }
 
             base.Update(deltaTime);
+
+            FlaxEngine.Profiler.EndEvent();
         }
 
         /// <inheritdoc />
