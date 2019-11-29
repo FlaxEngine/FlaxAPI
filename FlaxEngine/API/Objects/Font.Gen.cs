@@ -296,6 +296,28 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Calculates character position for given text and character index.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <param name="index">The text position to get it's coordinates.</param>
+        /// <returns>The character position (upper left corner which can be used for a caret position).</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Vector2 GetCharPosition(string text, ref GUI.TextRange textRange, int index)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Vector2 resultAsRef;
+            Internal_GetCharPosition3(unmanagedPtr, text, ref textRange, index, out resultAsRef);
+            return resultAsRef;
+#endif
+        }
+
+        /// <summary>
         /// Calculates hit character index at given location.
         /// </summary>
         /// <param name="text">The input text to test.</param>
@@ -420,6 +442,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCharPosition2(IntPtr obj, string text, int index, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetCharPosition3(IntPtr obj, string text, ref GUI.TextRange textRange, int index, out Vector2 resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_HitTestText1(IntPtr obj, string text, ref Vector2 location, ref TextLayoutOptions layout);
