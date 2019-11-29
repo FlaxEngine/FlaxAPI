@@ -90,7 +90,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override Vector2 GetCharPosition(int index, out float height)
         {
-            var font = Font?.GetFont();
+            var font = Font.GetFont();
             if (font == null)
             {
                 height = Height;
@@ -104,7 +104,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override int HitTestText(Vector2 location)
         {
-            var font = Font?.GetFont();
+            var font = Font.GetFont();
             if (font == null)
             {
                 return 0;

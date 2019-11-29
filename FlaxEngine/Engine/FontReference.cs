@@ -5,7 +5,7 @@ namespace FlaxEngine
     /// <summary>
     /// Font reference that defines the font asset and font size to use.
     /// </summary>
-    public class FontReference
+    public struct FontReference
     {
         [NoSerialize]
         private FontAsset _font;
@@ -15,16 +15,6 @@ namespace FlaxEngine
 
         [NoSerialize]
         private Font _cachedFont;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FontReference"/> class.
-        /// </summary>
-        public FontReference()
-        {
-            _font = null;
-            _size = 30;
-            _cachedFont = null;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FontReference"/> struct.
