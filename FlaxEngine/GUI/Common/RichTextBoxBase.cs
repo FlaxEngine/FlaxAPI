@@ -81,7 +81,7 @@ namespace FlaxEngine.GUI
                     if (!font)
                         break;
                     height = font.Height;
-                    return font.GetCharPosition(_text, index);
+                    return textBlock.Bounds.Location + font.GetCharPosition(_text, ref textBlock.Range, index - textBlock.Range.StartIndex);
                 }
             }
 

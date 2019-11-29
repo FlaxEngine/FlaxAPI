@@ -40,6 +40,8 @@ namespace FlaxEngine.GUI
             }
 
             var font = _textStyle.Font.GetFont();
+            if (!font)
+                return;
             var lines = font.ProcessText(_text);
             _textBlocks.Capacity = Math.Max(_textBlocks.Capacity, lines.Length);
 
