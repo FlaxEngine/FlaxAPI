@@ -692,7 +692,12 @@ namespace FlaxEditor.Modules
             settings.Title = "Flax Editor";
             settings.Size = new Vector2(1300, 900);
             settings.StartPosition = WindowStartPosition.CenterScreen;
+            
+            if (!Editor.Instance.Options.Options.Interface.UseNativeWindowSystem)
+                settings.HasBorder = false;
+            
             MainWindow = Window.Create(settings);
+            
             if (MainWindow == null)
             {
                 // Error
