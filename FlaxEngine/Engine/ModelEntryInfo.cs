@@ -43,17 +43,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the scale in lightmap (per mesh).
-        /// Final mesh scale in lightmap is also multiplied by <see cref="StaticModel.ScaleInLightmap"/> and global scene scale parameter.
-        /// </summary>
-        [EditorOrder(20), EditorDisplay(null, "Scale In Lightmap"), Limit(0, 10000, 0.1f), Tooltip("Per mesh scale factor in lightmap charts. Higher value increases the quality but reduces baking performance.")]
-        public float ScaleInLightmap
-        {
-            get => Internal_GetMeshScaleInLightmap(_actor.unmanagedPtr, _index);
-            set => Internal_SetMeshScaleInLightmap(_actor.unmanagedPtr, _index, value);
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether this <see cref="ModelEntryInfo"/> is visible.
         /// </summary>
         [EditorOrder(30), Tooltip("Determines whenever this mesh is visible.")]
@@ -162,12 +151,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetMeshMaterial(IntPtr obj, int index, IntPtr value);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetMeshScaleInLightmap(IntPtr obj, int index);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetMeshScaleInLightmap(IntPtr obj, int index, float value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetMeshVisible(IntPtr obj, int index);
