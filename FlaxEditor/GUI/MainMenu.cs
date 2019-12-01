@@ -40,9 +40,14 @@ namespace FlaxEditor.GUI
                 FontAsset windowIconsFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.WindowIconsFont);
                 Font iconFont = windowIconsFont?.CreateFont(9);
 
+                _window = mainWindow.RootWindow.Window;
+                _window.HitTest += OnHitTest;
+                _window.Closed += OnWindowClosed;
+
                 _icon = new Image
                 {
                     Brush = new TextureBrush(windowIcon),
+                    TooltipText = string.Format("{0}\nVersion {1}\nGraphics {2}", _window.Title, Globals.Version, GPUDevice.RendererType),
                     Parent = this,
                 };
 
@@ -97,10 +102,6 @@ namespace FlaxEditor.GUI
                     else
                         _window.Maximize();
                 };
-
-                _window = mainWindow.RootWindow.Window;
-                _window.HitTest += OnHitTest;
-                _window.Closed += OnWindowClosed;
             }
             else
             {
