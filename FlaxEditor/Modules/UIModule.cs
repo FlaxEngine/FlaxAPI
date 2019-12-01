@@ -257,6 +257,31 @@ namespace FlaxEditor.Modules
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
+
+            // Add dummy control for drawing the main window borders if using a custom style
+            if (!Editor.Options.Options.Interface.UseNativeWindowSystem)
+            {
+                mainWindow.AddChild(new CustomWindowBorderControl
+                {
+                    Size = Vector2.Zero,
+                });
+            }
+        }
+
+        private class CustomWindowBorderControl : Control
+        {
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                var win = RootWindow.Window;
+                if (win.IsMaximized)
+                    return;
+
+                var style = Style.Current;
+                var rect = new Rectangle(0.5f, 28.0f, Parent.Width - 1.0f, Parent.Height - 28.0f - StatusBar.DefaultHeight);
+                Render2D.DrawLine(rect.UpperLeft, rect.BottomLeft, style.BackgroundSelected);
+                Render2D.DrawLine(rect.UpperRight, rect.BottomRight, style.BackgroundSelected);
+            }
         }
 
         /// <inheritdoc />

@@ -62,6 +62,7 @@ namespace FlaxEngine.GUI
         internal WindowRootControl(Window window)
         {
             _window = window ?? throw new ArgumentNullException(nameof(window));
+            ClipChildren = false;
 
             if (Style.Current != null)
                 BackgroundColor = Style.Current.Background;
