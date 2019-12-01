@@ -98,6 +98,11 @@ namespace FlaxEngine
         public static readonly Vector4 UnitW = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
         /// <summary>
+        /// A <see cref="Vector4" /> with all of its components set to half.
+        /// </summary>
+        public static readonly Vector4 Half = new Vector4(0.5f, 0.5f, 0.5f, 0.5f);
+
+        /// <summary>
         /// A <see cref="Vector4" /> with all of its components set to one.
         /// </summary>
         public static readonly Vector4 One = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
