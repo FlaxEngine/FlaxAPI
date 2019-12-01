@@ -257,7 +257,7 @@ namespace FlaxEditor.Modules
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
-
+            
             // Cache hint windows
             DockHintWindow.Proxy.InitHitProxy();
         }
@@ -353,6 +353,7 @@ namespace FlaxEditor.Modules
         private void InitMainMenu(FlaxEngine.GUI.RootControl mainWindow)
         {
             MainMenu = new MainMenu();
+            MainMenu.Init(mainWindow);
             MainMenu.Parent = mainWindow;
 
             // File

@@ -2,6 +2,7 @@
 
 using System.ComponentModel;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Options
 {
@@ -90,5 +91,18 @@ namespace FlaxEditor.Options
         /// </summary>
         [EditorDisplay("Fonts"), EditorOrder(530), Tooltip("The small font for editor UI.")]
         public FontReference SmallFont { get; set; } = new FontReference(DefaultFont, 9);
+
+        /// <summary>
+        /// Use native title bar. Restart needed !
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Window"), EditorOrder(640), Tooltip("Use or not the native title bar. Restart needed !")]
+        public bool UseNativeWindowSystem { get; set; } = true;
+
+        /// <summary>
+        /// The title bar color.
+        /// </summary>
+        [EditorDisplay("Window"), EditorOrder(650), Tooltip("The title bar color.")]
+        public Color TitleBarColor { get; set; } = Color.FromBgra(0xFF007ACC); // Can't use Style.Current.
     }
 }

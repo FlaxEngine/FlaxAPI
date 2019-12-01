@@ -43,7 +43,7 @@ namespace FlaxEditor.GUI
 
             // Draw background
             if (enabled && hasChildItems && (isOpened || IsMouseOver))
-                Render2D.FillRectangle(clientRect, isOpened ? style.Background : style.BackgroundHighlighted);
+                Render2D.FillRectangle(clientRect, style.BackgroundSelected * 1.3f);
 
             // Draw text
             Render2D.DrawText(style.FontMedium, Text, clientRect, enabled && hasChildItems ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
@@ -61,7 +61,7 @@ namespace FlaxEditor.GUI
         public override void PerformLayout(bool force)
         {
             var style = Style.Current;
-            float width = 12;
+            float width = 18;
 
             if (style.FontMedium)
                 width += style.FontMedium.MeasureText(Text).X;
