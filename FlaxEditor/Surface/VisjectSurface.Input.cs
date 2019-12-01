@@ -30,6 +30,7 @@ namespace FlaxEditor.Surface
             public Vector2 EndBracketPosition { get; }
             public List<SurfaceNode> Nodes { get; } = new List<SurfaceNode>();
             public Rectangle Area { get; private set; }
+
             public InputBracket(Box box, Vector2 nodePosition)
             {
                 Box = box;
@@ -141,7 +142,7 @@ namespace FlaxEditor.Surface
             }
         }
 
-        private void OnSurfaceControlAdded(SurfaceControl control)
+        private void OnSurfaceControlSpawned(SurfaceControl control)
         {
             if (_inputBrackets.Count > 0 && control is SurfaceNode node)
             {
@@ -150,7 +151,7 @@ namespace FlaxEditor.Surface
             }
         }
 
-        private void OnSurfaceControlRemoved(SurfaceControl control)
+        private void OnSurfaceControlDeleted(SurfaceControl control)
         {
             if (_inputBrackets.Count > 0 && control is SurfaceNode node)
             {
@@ -556,12 +557,6 @@ namespace FlaxEditor.Surface
             return false;
         }
 
-        /// <inheritdoc />
-        public override void OnKeyUp(Keys key)
-        {
-            base.OnKeyUp(key);
-        }
-
         private void ResetInput()
         {
             InputText = "";
@@ -623,6 +618,7 @@ namespace FlaxEditor.Surface
             if (currentInputText.StartsWith("("))
             {
                 InputText = InputText.Substring(1);
+
                 // Opening bracket
                 if (!selectedBox.IsOutput)
                 {
@@ -634,6 +630,7 @@ namespace FlaxEditor.Surface
             else if (currentInputText.StartsWith(")"))
             {
                 InputText = InputText.Substring(1);
+
                 // Closing bracket
                 if (_inputBrackets.Count > 0)
                 {
@@ -649,6 +646,7 @@ namespace FlaxEditor.Surface
             else
             {
                 InputText = "";
+
                 // Add a new node
                 ConnectingStart(selectedBox);
                 Cursor = CursorType.Default; // Do I need this?
@@ -659,7 +657,8 @@ namespace FlaxEditor.Surface
 
         private Box GetSelectedBox(List<SurfaceNode> selection)
         {
-            if (selection.Count != 1) return null; // TODO: Handle multiple selected nodes
+            if (selection.Count != 1)
+                return null; // TODO: Handle multiple selected nodes
 
             SurfaceNode selectedNode = selection[0];
 
@@ -725,7 +724,7 @@ namespace FlaxEditor.Surface
                     boxIndex++;
                 }
             }
-            //TODO: Dodge the other nodes
+            // TODO: Dodge the other nodes
 
             Vector2 DistanceBetweenNodes = new Vector2(40, 20);
             const float NodeHeight = 120;
@@ -733,10 +732,10 @@ namespace FlaxEditor.Surface
             float direction = box.IsOutput ? 1 : -1;
 
             Vector2 newNodeLocation = node.Location +
-                new Vector2(
-                    (node.Width + DistanceBetweenNodes.X) * direction,
-                    boxIndex * (NodeHeight + DistanceBetweenNodes.Y)
-                );
+                                      new Vector2(
+                                          (node.Width + DistanceBetweenNodes.X) * direction,
+                                          boxIndex * (NodeHeight + DistanceBetweenNodes.Y)
+                                      );
 
             return newNodeLocation;
         }

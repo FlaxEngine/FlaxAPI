@@ -1,8 +1,5 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using System;
-using System.Collections.Generic;
-using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -40,7 +37,11 @@ namespace FlaxEditor.Surface
         public bool IsSelected
         {
             get => _isSelected;
-            internal set { _isSelected = value; OnSelectionChanged(); }
+            internal set
+            {
+                _isSelected = value;
+                OnSelectionChanged();
+            }
         }
 
         /// <summary>
@@ -98,7 +99,6 @@ namespace FlaxEditor.Surface
         /// </summary>
         protected virtual void OnSelectionChanged()
         {
-
         }
 
         /// <summary>

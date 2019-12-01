@@ -553,7 +553,7 @@ namespace FlaxEditor.Surface
         public virtual void OnControlSpawned(SurfaceControl control)
         {
             control.OnSpawned();
-            ControlAdded?.Invoke(control);
+            ControlSpawned?.Invoke(control);
         }
 
         /// <summary>
@@ -562,7 +562,7 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public virtual void OnControlDeleted(SurfaceControl control)
         {
-            ControlRemoved?.Invoke(control);
+            ControlDeleted?.Invoke(control);
             control.OnDeleted();
         }
 

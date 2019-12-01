@@ -50,33 +50,21 @@ namespace FlaxEditor.Surface.Elements
         /// <summary>
         /// Gets a value indicating whether this box has any connection.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this box has any connection; otherwise, <c>false</c>.
-        /// </value>
         public bool HasAnyConnection => Connections.Count > 0;
 
         /// <summary>
         /// Gets a value indicating whether this box has single connection.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this box has single connection; otherwise, <c>false</c>.
-        /// </value>
         public bool HasSingleConnection => Connections.Count == 1;
 
         /// <summary>
         /// Gets a value indicating whether this instance is output box.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is output; otherwise, <c>false</c>.
-        /// </value>
         public abstract bool IsOutput { get; }
 
         /// <summary>
         /// Gets or sets the current type of the box connections.
         /// </summary>
-        /// <value>
-        /// The current type.
-        /// </value>
         public ConnectionType CurrentType
         {
             get => _currentType;
@@ -138,7 +126,11 @@ namespace FlaxEditor.Surface.Elements
         public bool IsSelected
         {
             get => _isSelected;
-            internal set { _isSelected = value; OnSelectionChanged(); }
+            internal set
+            {
+                _isSelected = value;
+                OnSelectionChanged();
+            }
         }
 
         /// <inheritdoc />
@@ -155,9 +147,7 @@ namespace FlaxEditor.Surface.Elements
         /// Determines whether this box can use the specified type as a connection.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>
-        ///   <c>true</c> if this box can use the specified type; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if this box can use the specified type; otherwise, <c>false</c>.</returns>
         public bool CanUseType(ConnectionType type)
         {
             // Check direct connection
@@ -403,11 +393,13 @@ namespace FlaxEditor.Surface.Elements
                 icon = hasConnections ? style.Icons.BoxClose : style.Icons.BoxOpen;
             Render2D.DrawSprite(icon, rect, color);
 
-            if (IsSelected)
+            // Draw selection hint
+            if (_isSelected)
             {
-                float outlineWidth = 2;
+                float outlineAlpha = Mathf.Sin(Time.TimeSinceStartup * 4.0f) * 0.5f + 0.5f;
+                float outlineWidth = Mathf.Lerp(1.5f, 4.0f, outlineAlpha);
                 var outlineRect = new Rectangle(rect.X - outlineWidth, rect.Y - outlineWidth, rect.Width + outlineWidth * 2, rect.Height + outlineWidth * 2);
-                Render2D.DrawSprite(icon, outlineRect, FlaxEngine.GUI.Style.Current.BorderSelected);
+                Render2D.DrawSprite(icon, outlineRect, FlaxEngine.GUI.Style.Current.BorderSelected.RGBMultiplied(1.0f + outlineAlpha * 0.4f));
             }
         }
 

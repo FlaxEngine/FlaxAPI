@@ -60,7 +60,7 @@ namespace FlaxEditor.GUI
                     BackgroundColorSelected = Color.Red.RGBMultiplied(1.3f),
                     Parent = this,
                 };
-                _closeButton.Clicked += () => _window.Close();
+                _closeButton.Clicked += () => _window.Close(ClosingReason.User);
 
                 _minimizeButton = new Button
                 {

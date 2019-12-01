@@ -356,8 +356,8 @@ namespace FlaxEditor.Surface
                 new InputActionsContainer.Binding(options => options.Duplicate, Duplicate),
             });
 
-            Context.ControlAdded += OnSurfaceControlAdded;
-            Context.ControlRemoved += OnSurfaceControlRemoved;
+            Context.ControlSpawned += OnSurfaceControlSpawned;
+            Context.ControlDeleted += OnSurfaceControlDeleted;
 
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));

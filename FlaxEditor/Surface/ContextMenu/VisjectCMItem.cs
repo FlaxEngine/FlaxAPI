@@ -24,33 +24,21 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <summary>
         /// Gets the item's group
         /// </summary>
-        /// <value>
-        /// The group of the item
-        /// </value>
         public VisjectCMGroup Group { get; }
 
         /// <summary>
         /// Gets the group archetype.
         /// </summary>
-        /// <value>
-        /// The group archetype.
-        /// </value>
         public GroupArchetype GroupArchetype => _groupArchetype;
 
         /// <summary>
         /// Gets the node archetype.
         /// </summary>
-        /// <value>
-        /// The node archetype.
-        /// </value>
         public NodeArchetype NodeArchetype => _archetype;
 
         /// <summary>
         /// Gets and sets the data of the node.
         /// </summary>
-        /// <value>
-        /// The data of the node.
-        /// </value>
         public object[] Data { get; set; }
 
         /// <summary>
