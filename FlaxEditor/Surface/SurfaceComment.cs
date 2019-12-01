@@ -94,13 +94,13 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool CanSelect(ref Vector2 location)
         {
-            return _headerRect.MakeOffseted(Location).Contains(ref location) && !_resizeButtonRect.MakeOffseted(Location).Contains(ref location);
+            return _headerRect.MakeOffsetted(Location).Contains(ref location) && !_resizeButtonRect.MakeOffsetted(Location).Contains(ref location);
         }
 
         /// <inheritdoc />
         public override bool IsSelectionIntersecting(ref Rectangle selectionRect)
         {
-            return _headerRect.MakeOffseted(Location).Intersects(ref selectionRect);
+            return _headerRect.MakeOffsetted(Location).Intersects(ref selectionRect);
         }
 
         /// <inheritdoc />
@@ -248,13 +248,18 @@ namespace FlaxEditor.Surface
             // Rename
             if (_headerRect.Contains(ref location))
             {
-                Surface.Select(this);
-                var dialog = RenamePopup.Show(this, _headerRect, Title, false);
-                dialog.Renamed += OnRenamed;
+                StartRenaming();
                 return true;
             }
 
             return false;
+        }
+
+        public void StartRenaming()
+        {
+            Surface.Select(this);
+            var dialog = RenamePopup.Show(this, _headerRect, Title, false);
+            dialog.Renamed += OnRenamed;
         }
 
         private void OnRenamed(RenamePopup renamePopup)

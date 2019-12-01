@@ -15,6 +15,8 @@ namespace FlaxEditor.Surface.Elements
     /// <seealso cref="IConnectionInstigator" />
     public abstract class Box : SurfaceNodeElementControl, IConnectionInstigator
     {
+        private bool _isMouseDown;
+
         /// <summary>
         /// The current connection type. It's subset or equal to <see cref="DefaultType"/>.
         /// </summary>
@@ -24,6 +26,11 @@ namespace FlaxEditor.Surface.Elements
         /// The cached color for the current box type.
         /// </summary>
         protected Color _currentTypeColor;
+
+        /// <summary>
+        /// The is selected flag for the box.
+        /// </summary>
+        protected bool _isSelected;
 
         /// <summary>
         /// Unique box ID within single node.
@@ -124,6 +131,15 @@ namespace FlaxEditor.Surface.Elements
         /// Event called when the current type of the box gets changed.
         /// </summary>
         public Action<Box> CurrentTypeChanged;
+
+        /// <summary>
+        /// Gets a value indicating whether this box is selected.
+        /// </summary>
+        public bool IsSelected
+        {
+            get => _isSelected;
+            internal set { _isSelected = value; OnSelectionChanged(); }
+        }
 
         /// <inheritdoc />
         protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location)
@@ -352,6 +368,14 @@ namespace FlaxEditor.Surface.Elements
         {
         }
 
+        protected virtual void OnSelectionChanged()
+        {
+            if (IsSelected && !ParentNode.IsSelected)
+            {
+                ParentNode.Surface.AddToSelection(ParentNode);
+            }
+        }
+
         /// <summary>
         /// Draws the box GUI using <see cref="Render2D"/>.
         /// </summary>
@@ -378,17 +402,38 @@ namespace FlaxEditor.Surface.Elements
             else
                 icon = hasConnections ? style.Icons.BoxClose : style.Icons.BoxOpen;
             Render2D.DrawSprite(icon, rect, color);
+
+            if (IsSelected)
+            {
+                float outlineWidth = 2;
+                var outlineRect = new Rectangle(rect.X - outlineWidth, rect.Y - outlineWidth, rect.Width + outlineWidth * 2, rect.Height + outlineWidth * 2);
+                Render2D.DrawSprite(icon, outlineRect, FlaxEngine.GUI.Style.Current.BorderSelected);
+            }
         }
 
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
             if (buttons == MouseButton.Left)
             {
+                _isMouseDown = true;
+                Focus();
+                return true;
+            }
+            return false;
+        }
+
+        public override void OnMouseLeave()
+        {
+            if (_isMouseDown)
+            {
+                _isMouseDown = false;
                 Surface.ConnectingStart(this);
             }
-
-            return true;
+            base.OnMouseLeave();
         }
 
         /// <inheritdoc />
@@ -401,15 +446,40 @@ namespace FlaxEditor.Surface.Elements
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            bool result = false;
+            if (base.OnMouseUp(location, buttons))
+                return true;
 
             if (buttons == MouseButton.Left)
             {
-                Surface.ConnectingEnd(this);
-                result = true;
+                _isMouseDown = false;
+                if (Surface.IsConnecting)
+                {
+                    Surface.ConnectingEnd(this);
+                }
+                else
+                {
+                    // Click
+
+                    if (Root.GetKey(Keys.Control))
+                    {
+                        // Add to selection
+                        if (!ParentNode.IsSelected)
+                        {
+                            ParentNode.Surface.AddToSelection(ParentNode);
+                        }
+                        ParentNode.AddBoxToSelection(this);
+                    }
+                    else
+                    {
+                        // Forcibly select the node
+                        ParentNode.Surface.Select(ParentNode);
+                        ParentNode.SelectBox(this);
+                    }
+                }
+                return true;
             }
 
-            return result;
+            return false;
         }
 
         /// <inheritdoc />

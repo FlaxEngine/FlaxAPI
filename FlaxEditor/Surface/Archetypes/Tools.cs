@@ -727,6 +727,23 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 11,
                 Title = "Comment",
+                AlternativeTitles = new string[] { "//" },
+                TryParseText = (string filterText, out object[] data) => {
+                    data = null;
+                    if(filterText.StartsWith("//"))
+                    {
+                        data = new object[] {
+                            filterText.Substring(2),
+                            new Color(1.0f, 1.0f, 1.0f, 0.2f),
+                            new Vector2(400.0f, 400.0f),
+                        };
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                },
                 Create = (id, context, arch, groupArch) => new SurfaceComment(id, context, arch, groupArch),
                 Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(400.0f, 400.0f),

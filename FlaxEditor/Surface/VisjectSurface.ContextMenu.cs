@@ -18,6 +18,7 @@ namespace FlaxEditor.Surface
         private ContextMenuButton _cmDeleteButton;
         private ContextMenuButton _cmRemoveNodeConnectionsButton;
         private ContextMenuButton _cmRemoveBoxConnectionsButton;
+        private readonly Vector2 ContextMenuOffset = new Vector2(5);
 
         /// <summary>
         /// Gets a value indicating whether the primary surface context menu is being opened (eg. user is adding nodes).
@@ -71,8 +72,10 @@ namespace FlaxEditor.Surface
         /// Shows the primary menu.
         /// </summary>
         /// <param name="location">The location in the Surface Space.</param>
-        public virtual void ShowPrimaryMenu(Vector2 location)
+        public virtual void ShowPrimaryMenu(Vector2 location, string input = null)
         {
+            // TODO: If the menu is not fully visible, move the surface a bit
+
             // Check if need to create default context menu (no override specified)
             if (_activeVisjectCM == null && _cmPrimaryMenu == null)
             {
@@ -82,10 +85,21 @@ namespace FlaxEditor.Surface
                 _activeVisjectCM.VisibleChanged += OnPrimaryMenuVisibleChanged;
             }
 
-            // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
-            location += new Vector2(5);
-            _activeVisjectCM.Show(this, location, _connectionInstigator as Box);
+            // Show primary menu
             _cmStartPos = location;
+            // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
+            _activeVisjectCM.Show(this, location + ContextMenuOffset, _connectionInstigator as Box);
+
+            if (!string.IsNullOrEmpty(input))
+            {
+                foreach (char character in input)
+                {
+                    // OnKeyDown-- > VisjectCM focuses on the text-thingy
+                    _activeVisjectCM.OnKeyDown(Keys.None);
+                    _activeVisjectCM.OnCharInput(character);
+                    _activeVisjectCM.OnKeyUp(Keys.None);
+                }
+            }
         }
 
         /// <summary>
@@ -136,114 +150,97 @@ namespace FlaxEditor.Surface
             if (node == null)
                 return;
 
-            // And, if the user is patiently waiting for his box to get connected to the newly created one fulfill his wish!
-            if (selectedBox is Box startBox)
+            // If the user entered a comment
+            if (node is SurfaceComment surfaceComment && HasNodesSelection)
             {
-                _connectionInstigator = startBox;
-                Box alternativeBox = null;
+                // Note how the user input exactly mimics the other comment creation way. This is very much desired.
+                // Select node --> Type // --> Type the comment text --> Hit Enter
+                string title = surfaceComment.Title;
+                Delete(node);
+                CommentSelection(title);
+                return;
+            }
+
+            // Auto select new node
+            Select(node);
+
+            if (selectedBox != null)
+            {
+                Box endBox = null;
                 foreach (var box in node.GetBoxes().Where(box => box.IsOutput != selectedBox.IsOutput))
                 {
                     if ((selectedBox.CurrentType & box.CurrentType) != 0)
                     {
-                        ConnectingEnd(box);
-                        return;
+                        endBox = box;
+                        break;
                     }
 
-                    if (alternativeBox == null && selectedBox.CanUseType(box.CurrentType))
+                    if (endBox == null && selectedBox.CanUseType(box.CurrentType))
                     {
-                        alternativeBox = box;
+                        endBox = box;
                     }
                 }
+                TryConnect(selectedBox, endBox);
+            }
+        }
 
-                if (alternativeBox != null)
-                {
-                    ConnectingEnd(alternativeBox);
-                }
-                else
+        private void TryConnect(Box startBox, Box endBox)
+        {
+            if (startBox == null || endBox == null)
+            {
+                if (IsConnecting)
                 {
                     ConnectingEnd(null);
                 }
+                return;
             }
 
-            // Disable intelligent connecting for now
-            /*
-            var toBeDeselected = new System.Collections.Generic.List<SurfaceNode>();
+            // If the user is patiently waiting for his box to get connected to the newly created one fulfill his wish!
 
-            using (var outputBoxes = Selection
-                                     .OrderBy(n => n.Top)
-                                     .SelectMany(n => n.GetBoxes())
-                                     .Where(b => b.IsOutput && !b.HasAnyConnection)
-                                     .GetEnumerator())
+            _connectionInstigator = startBox;
+
+            if (!IsConnecting)
             {
-                // For each input box (I'm assuming that they are sorted properly)
-                foreach (var inputBox in node.GetBoxes().Where(box => !box.IsOutput))
+                ConnectingStart(startBox);
+            }
+            ConnectingEnd(endBox);
+
+
+            // Smart-Select next box
+            /*
+             * Output and Output => undefined
+             * Output and Input => Connect and move to next on input-node
+             * Input and Output => Connect and move to next on input-node
+             * Input and Input => undefined, cannot happen
+             */
+            Box inputBox = endBox.IsOutput ? startBox : endBox;
+            Box nextBox = inputBox.ParentNode.GetNextBox(inputBox);
+
+            // If we are going backwards and the end-node has an input box
+            //   we want to edit backwards
+            if (!startBox.IsOutput)
+            {
+                Box endNodeInputBox = endBox.ParentNode.GetBoxes().DefaultIfEmpty(null).FirstOrDefault(b => !b.IsOutput);
+                if (endNodeInputBox != null)
                 {
-                    Box connectWith = null;
-
-                    // Find the next decent output box and connect them
-                    while (connectWith == null && outputBoxes.MoveNext())
-                    {
-                        var outputBox = outputBoxes.Current;
-                        bool connectAnyways = true;
-
-                        // Can I rely on the box indices?
-                        // If it's a constant node, it needs some special handling (either connect the first box or the other ones, never both)
-                        if (outputBox.ParentNode.GroupArchetype.Name == "Constants")
-                        {
-                            // Don't always connect this sort of box
-                            connectAnyways = false;
-
-                            // If it's the first box, everything is fine?
-                            if (outputBox.ID == 0)
-                            {
-                                // Everything is fine
-                                // If this one doesn't have any alternatives, I can just connect it regardless of the consequences
-                                if (outputBox.ParentNode.Elements.Count(e => e is Box) <= 1)
-                                {
-                                    connectAnyways = true;
-                                }
-                            }
-                            // It's an alternative box
-                            else
-                            {
-                                // The first one is already connected => skip this one!
-                                if (outputBox.ParentNode.Get(0).HasAnyConnection)
-                                {
-                                    continue;
-                                }
-                                else
-                                {
-                                    // It's an actual alternative
-                                }
-                            }
-                        }
-
-                        // If they can easily be connected, just do it ✔
-                        if ((inputBox.CurrentType & outputBox.CurrentType) != 0)
-                        {
-                            connectWith = outputBox;
-                        }
-                        else if (connectAnyways && inputBox.CanUseType(outputBox.CurrentType))
-                        {
-                            connectWith = outputBox;
-                        }
-                    }
-                    if (connectWith != null)
-                    {
-                        // Connect them
-                        connectWith.CreateConnection(inputBox);
-                        toBeDeselected.Add(connectWith.ParentNode);
-                    }
+                    nextBox = endNodeInputBox;
                 }
             }
 
-            foreach (var toDeselect in toBeDeselected)
-            {
-                Deselect(toDeselect);
-            }
+            // TODO: What if we reached the end (nextBox == null)? Do we travel along the nodes?
+            /*
+             * while (nextBox == null && _inputBoxStack.Count > 0)
+                {
+                    // We found the last box on this node but there are still boxes on previous nodes on the stack
+                    nextBox = GetNextBox(_inputBoxStack.Pop());
+                }
+                */
 
-            AddToSelection(node);
-            */
+            if (nextBox != null)
+            {
+                Select(nextBox.ParentNode);
+                nextBox.ParentNode.SelectBox(nextBox);
+            }
         }
     }
 }

@@ -31,7 +31,6 @@ namespace FlaxEditor.Surface
 
         private float _targetScale = 1.0f;
         private float _moveViewWithMouseDragSpeed = 1.0f;
-        private bool _wasMouseDownSinceCommentCreatingStart;
         private bool _isReleasing;
         private VisjectCM _activeVisjectCM;
         private GroupArchetype _customNodesGroup;
@@ -46,11 +45,6 @@ namespace FlaxEditor.Surface
         /// The right mouse down flag.
         /// </summary>
         protected bool _rightMouseDown;
-
-        /// <summary>
-        /// The flag for keyboard key down for comment creating.
-        /// </summary>
-        protected bool _isCommentCreateKeyDown;
 
         /// <summary>
         /// The left mouse down position.
@@ -106,6 +100,11 @@ namespace FlaxEditor.Surface
         /// The context menu start position.
         /// </summary>
         protected Vector2 _cmStartPos = Vector2.Minimum;
+
+        /// <summary>
+        /// Occurs when selection gets changed.
+        /// </summary>
+        protected event Action SelectionChanged;
 
         /// <summary>
         /// The surface owner.
@@ -176,22 +175,17 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether user is selecting nodes.
         /// </summary>
-        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _connectionInstigator == null && !_isCommentCreateKeyDown;
+        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Gets a value indicating whether user is moving selected nodes.
         /// </summary>
-        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _connectionInstigator == null && !_isCommentCreateKeyDown;
+        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Gets a value indicating whether user is connecting nodes.
         /// </summary>
         public bool IsConnecting => _connectionInstigator != null;
-
-        /// <summary>
-        /// Gets a value indicating whether user is creating comment.
-        /// </summary>
-        public bool IsCreatingComment => _isCommentCreateKeyDown && _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Gets a value indicating whether the left mouse button is down.
@@ -362,6 +356,9 @@ namespace FlaxEditor.Surface
                 new InputActionsContainer.Binding(options => options.Duplicate, Duplicate),
             });
 
+            Context.ControlAdded += OnSurfaceControlAdded;
+            Context.ControlRemoved += OnSurfaceControlRemoved;
+
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
             DragHandlers.Add(_dragParameters = new DragNames<DragDropEventArgs>(SurfaceParameter.DragPrefix, ValidateDragParameter));
@@ -508,13 +505,12 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void SelectAll()
         {
-            _hasInputSelectionChanged = true;
-
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceControl control)
                     control.IsSelected = true;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -522,13 +518,12 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void ClearSelection()
         {
-            _hasInputSelectionChanged = true;
-
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceControl control)
                     control.IsSelected = false;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -537,9 +532,8 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void AddToSelection(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             control.IsSelected = true;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -548,11 +542,9 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Select(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             ClearSelection();
-
             control.IsSelected = true;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -561,14 +553,12 @@ namespace FlaxEditor.Surface
         /// <param name="controls">The controls.</param>
         public void Select(IEnumerable<SurfaceControl> controls)
         {
-            _hasInputSelectionChanged = true;
-
             ClearSelection();
-
             foreach (var control in controls)
             {
                 control.IsSelected = true;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -577,27 +567,34 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Deselect(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             control.IsSelected = false;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
         /// Creates the comment around the selected nodes.
         /// </summary>
-        public void CommentSelection()
+        public SurfaceComment CommentSelection(string text = "")
         {
             var selection = SelectedNodes;
             if (selection.Count == 0)
-                return;
+                return null;
+            Rectangle surfaceArea = GetNodesBounds(selection).MakeExpanded(80.0f);
 
-            Rectangle surfaceArea = selection[0].Bounds.MakeExpanded(80.0f);
-            for (int i = 1; i < selection.Count; i++)
+            return _context.CreateComment(ref surfaceArea, string.IsNullOrEmpty(text) ? "Comment" : text, new Color(1.0f, 1.0f, 1.0f, 0.2f));
+        }
+
+        private static Rectangle GetNodesBounds(List<SurfaceNode> nodes)
+        {
+            if (nodes.Count == 0) return Rectangle.Empty;
+
+            Rectangle surfaceArea = nodes[0].Bounds;
+            for (int i = 1; i < nodes.Count; i++)
             {
-                surfaceArea = Rectangle.Union(surfaceArea, selection[i].Bounds.MakeExpanded(80.0f));
+                surfaceArea = Rectangle.Union(surfaceArea, nodes[i].Bounds);
             }
 
-            _context.CreateComment(ref surfaceArea, "Comment", new Color(1.0f, 1.0f, 1.0f, 0.2f));
+            return surfaceArea;
         }
 
         /// <summary>
@@ -606,12 +603,11 @@ namespace FlaxEditor.Surface
         /// <param name="controls">The controls.</param>
         public void Delete(IEnumerable<SurfaceControl> controls)
         {
-            _hasInputSelectionChanged = true;
-
             foreach (var control in controls)
             {
                 Delete(control);
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -620,8 +616,6 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Delete(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             if (control is SurfaceNode node)
             {
                 if ((node.Archetype.Flags & NodeFlags.NoRemove) != 0)
@@ -632,6 +626,7 @@ namespace FlaxEditor.Surface
 
             Context.OnControlDeleted(control);
             MarkAsEdited();
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -639,8 +634,6 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void Delete()
         {
-            _hasInputSelectionChanged = true;
-
             bool edited = false;
 
             List<SurfaceNode> nodes = null;
@@ -702,7 +695,11 @@ namespace FlaxEditor.Surface
             }
 
             if (edited)
+            {
                 MarkAsEdited();
+            }
+
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>

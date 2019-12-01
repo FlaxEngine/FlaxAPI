@@ -120,6 +120,16 @@ namespace FlaxEditor.Surface
         public event ContextModifiedDelegate Modified;
 
         /// <summary>
+        /// Occurs when node gets added
+        /// </summary>
+        public event Action<SurfaceControl> ControlAdded;
+
+        /// <summary>
+        /// Occurs when node gets removed
+        /// </summary>
+        public event Action<SurfaceControl> ControlRemoved;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurfaceContext"/> class.
         /// </summary>
         /// <param name="surface">The Visject surface using this context.</param>

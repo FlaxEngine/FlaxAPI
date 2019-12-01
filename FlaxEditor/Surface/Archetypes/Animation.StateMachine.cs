@@ -361,7 +361,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override bool CanSelect(ref Vector2 location)
             {
-                return _dragAreaRect.MakeOffseted(Location).Contains(ref location);
+                return _dragAreaRect.MakeOffsetted(Location).Contains(ref location);
             }
 
             /// <inheritdoc />
@@ -1156,7 +1156,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override bool CanSelect(ref Vector2 location)
             {
-                return _dragAreaRect.MakeOffseted(Location).Contains(ref location);
+                return _dragAreaRect.MakeOffsetted(Location).Contains(ref location);
             }
 
             /// <inheritdoc />
