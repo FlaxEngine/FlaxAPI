@@ -52,9 +52,14 @@ namespace FlaxEditor
         public static string PrimaryFont = "Editor/Roboto-Regular";
 
         /// <summary>
+        /// The window icon.
+        /// </summary>
+        public static string WindowIcon = "Editor/EditorIcon";
+
+        /// <summary>
         /// The window icons font.
         /// </summary>
-        public static string WindowIconsFont = "/Icons/SegMDL2.flax";
+        public static string WindowIconsFont = "Editor/SegMDL2";
         
         /// <summary>
         /// The default font material.

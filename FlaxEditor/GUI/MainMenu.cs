@@ -1,8 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Security.Permissions;
-using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -14,125 +12,151 @@ namespace FlaxEditor.GUI
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public sealed class MainMenu : ContainerControl
     {
+        private bool _useCustomWindowSystem;
         private Image _icon;
         private MainMenuButton _selected;
         private Button _closeButton;
         private Button _minimizeButton;
         private Button _maximizeButton;
-        private Rectangle _moveRect;
+        private Window _window;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainMenu"/> class.
         /// </summary>
-        public MainMenu()
-        : base(0, 0, 1, 28)
+        /// <param name="mainWindow">The main window.</param>
+        public MainMenu(RootControl mainWindow)
+        : base(0, 0, 1, 20)
         {
+            _useCustomWindowSystem = !Editor.Instance.Options.Options.Interface.UseNativeWindowSystem;
             AutoFocus = false;
             DockStyle = DockStyle.Top;
 
-            if (!Editor.Instance.Options.Options.Interface.UseNativeWindowSystem)
+            if (_useCustomWindowSystem)
             {
-                BackgroundColor = Editor.Instance.Options.Options.Interface.TitleBarColor;
-                _icon = new Image();
-                _closeButton = new Button();
-                _closeButton.Text = ((char)0xE711).ToString();
-                _closeButton.BackgroundColor = Color.Transparent;
-                _closeButton.BorderColor = Color.Transparent;
-                _closeButton.BorderColorHighlighted = Color.Transparent;
-                _closeButton.BorderColorSelected = Color.Transparent;
-                _closeButton.TextColor = Style.Current.Foreground;
-                _closeButton.Width = 46;
-                _closeButton.TextColor = Color.White;
-                _closeButton.BackgroundColorHighlighted = Color.Red;
-                _closeButton.BackgroundColorSelected = _closeButton.BackgroundColorHighlighted.RGBMultiplied(1.3f);
-                _closeButton.Clicked += () => { Editor.Instance.Exit(); };
+                BackgroundColor = Style.Current.BackgroundSelected;
+                Height = 28;
 
-                _minimizeButton = new Button();
-                _minimizeButton.Text = ((char)0xE738).ToString();
-                _minimizeButton.BackgroundColor = Color.Transparent;
-                _minimizeButton.BorderColor = Color.Transparent;
-                _minimizeButton.BorderColorHighlighted = Color.Transparent;
-                _minimizeButton.BorderColorSelected = Color.Transparent;
-                _minimizeButton.TextColor = Style.Current.Foreground;
-                _minimizeButton.Width = 46;
-                _minimizeButton.TextColor = Color.White;
-                _minimizeButton.BackgroundColorHighlighted = Style.Current.BackgroundSelected.RGBMultiplied(1.3f);
-                _minimizeButton.Clicked += () => { Editor.Instance.Windows.MainWindow.Minimize(); };
+                var windowIcon = FlaxEngine.Content.LoadInternal<Texture>(EditorAssets.WindowIcon);
+                FontAsset windowIconsFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.WindowIconsFont);
+                Font iconFont = windowIconsFont?.CreateFont(9);
 
-                _maximizeButton = new Button();
-                _maximizeButton.Text = ((char)0xE923).ToString();
-                _maximizeButton.BackgroundColor = Color.Transparent;
-                _maximizeButton.BorderColor = Color.Transparent;
-                _maximizeButton.BorderColorHighlighted = Color.Transparent;
-                _maximizeButton.BorderColorSelected = Color.Transparent;
-                _maximizeButton.TextColor = Style.Current.Foreground;
-                _maximizeButton.Width = 46;
-                _maximizeButton.TextColor = Color.White;
-                _maximizeButton.BackgroundColorHighlighted = Style.Current.BackgroundSelected.RGBMultiplied(1.3f);
+                _icon = new Image
+                {
+                    Brush = new TextureBrush(windowIcon),
+                    Parent = this,
+                };
+
+                _closeButton = new Button
+                {
+                    Text = ((char)0xE711).ToString(),
+                    Font = new FontReference(iconFont),
+                    BackgroundColor = Color.Transparent,
+                    BorderColor = Color.Transparent,
+                    BorderColorHighlighted = Color.Transparent,
+                    BorderColorSelected = Color.Transparent,
+                    TextColor = Color.White,
+                    Width = 46,
+                    BackgroundColorHighlighted = Color.Red,
+                    BackgroundColorSelected = Color.Red.RGBMultiplied(1.3f),
+                    Parent = this,
+                };
+                _closeButton.Clicked += () => _window.Close();
+
+                _minimizeButton = new Button
+                {
+                    Text = ((char)0xE738).ToString(),
+                    Font = new FontReference(iconFont),
+                    BackgroundColor = Color.Transparent,
+                    BorderColor = Color.Transparent,
+                    BorderColorHighlighted = Color.Transparent,
+                    BorderColorSelected = Color.Transparent,
+                    TextColor = Color.White,
+                    Width = 46,
+                    BackgroundColorHighlighted = Style.Current.BackgroundSelected.RGBMultiplied(1.3f),
+                    Parent = this,
+                };
+                _minimizeButton.Clicked += () => _window.Minimize();
+
+                _maximizeButton = new Button
+                {
+                    Text = ((char)0xE923).ToString(),
+                    Font = new FontReference(iconFont),
+                    BackgroundColor = Color.Transparent,
+                    BorderColor = Color.Transparent,
+                    BorderColorHighlighted = Color.Transparent,
+                    BorderColorSelected = Color.Transparent,
+                    TextColor = Color.White,
+                    Width = 46,
+                    BackgroundColorHighlighted = Style.Current.BackgroundSelected.RGBMultiplied(1.3f),
+                    Parent = this,
+                };
                 _maximizeButton.Clicked += () =>
                 {
-                    if (Editor.Instance.Windows.MainWindow.IsMaximized)
-                        Editor.Instance.Windows.MainWindow.Restore();
+                    if (_window.IsMaximized)
+                        _window.Restore();
                     else
-                        Editor.Instance.Windows.MainWindow.Maximize();
+                        _window.Maximize();
                 };
-            }
-        }
 
-        /// <summary>
-        /// Initializes custom title bar system.
-        /// </summary>
-        public void Init(RootControl mainWindow)
-        {
-            if (!Editor.Instance.Options.Options.Interface.UseNativeWindowSystem)
+                _window = mainWindow.RootWindow.Window;
+                _window.HitTest += OnHitTest;
+                _window.Closed += OnWindowClosed;
+            }
+            else
             {
-                AddChild(_icon);
-                var tb = FlaxEngine.Content.Load<Texture>(Globals.EditorFolder + "/Icons/Textures/Flax.flax");
-                _icon.Brush = new TextureBrush(tb);
-
-                FontAsset fontAsset = FlaxEngine.Content.Load<FontAsset>(Globals.EditorFolder + EditorAssets.WindowIconsFont);
-                Font iconFont = fontAsset.CreateFont(9);
-                _closeButton.Font = new FontReference(iconFont);
-                Font iconFont2 = fontAsset.CreateFont(8);
-                _maximizeButton.Font = new FontReference(iconFont2);
-                _minimizeButton.Font = new FontReference(iconFont);
-                AddChild(_closeButton);
-                AddChild(_maximizeButton);
-                AddChild(_minimizeButton);
-
-                mainWindow.RootWindow.Window.HitTest += HitTest;
+                BackgroundColor = Style.Current.LightBackground;
             }
         }
 
-        private WindowHitCodes HitTest(ref Vector2 mouse)
+        private void OnWindowClosed()
         {
-            Vector2 mpos = RootWindow.Window.ScreenToClient(mouse);
+            if (_window != null)
+            {
+                _window.HitTest = null;
+                _window = null;
+            }
+        }
 
-            if (mpos.Y > RootWindow.Height - 5 && mpos.X < 5)
-                return WindowHitCodes.BottomLeft;
+        private WindowHitCodes OnHitTest(ref Vector2 mouse)
+        {
+            var pos = _window.ScreenToClient(mouse);
 
-            if (mpos.X > RootWindow.Width - 5 && mpos.Y > RootWindow.Height - 5)
-                return WindowHitCodes.BottomRight;
-            
-            if (mpos.Y < 5 && mpos.X < 5)
-                return WindowHitCodes.TopLeft;
+            if (_window.IsMinimized)
+            {
+                return WindowHitCodes.NoWhere;
+            }
 
-            if (mpos.Y < 5 && mpos.X > RootWindow.Width - 5)
-                return WindowHitCodes.TopRight;
+            if (!_window.IsMaximized)
+            {
+                var rootWindow = RootWindow;
 
-            if (mpos.X > RootWindow.Width - 5)
-                return WindowHitCodes.Right;
+                if (pos.Y > rootWindow.Height - 5 && pos.X < 5)
+                    return WindowHitCodes.BottomLeft;
 
-            if (mpos.X < 5)
-                return WindowHitCodes.Left;
+                if (pos.X > rootWindow.Width - 5 && pos.Y > rootWindow.Height - 5)
+                    return WindowHitCodes.BottomRight;
 
-            if (mpos.Y < 5)
-                return WindowHitCodes.Top;
+                if (pos.Y < 5 && pos.X < 5)
+                    return WindowHitCodes.TopLeft;
 
-            if (mpos.Y > RootWindow.Height - 5)
-                return WindowHitCodes.Bottom;
+                if (pos.Y < 5 && pos.X > rootWindow.Width - 5)
+                    return WindowHitCodes.TopRight;
 
-            if (_moveRect.Contains(mpos))
+                if (pos.X > rootWindow.Width - 5)
+                    return WindowHitCodes.Right;
+
+                if (pos.X < 5)
+                    return WindowHitCodes.Left;
+
+                if (pos.Y < 5)
+                    return WindowHitCodes.Top;
+
+                if (pos.Y > rootWindow.Height - 5)
+                    return WindowHitCodes.Bottom;
+            }
+
+            var menuPos = PointFromWindow(pos);
+            if (new Rectangle(Vector2.Zero, Size).Contains(ref menuPos) && GetChildAt(menuPos) == null)
                 return WindowHitCodes.Caption;
 
             return WindowHitCodes.Client;
@@ -194,19 +218,28 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        protected override void PerformLayoutSelf()
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
         {
-            Width = RootWindow.Width;
+            if (base.OnMouseDoubleClick(location, buttons))
+                return true;
+
+            if (_useCustomWindowSystem)
+            {
+                if (_window.IsMaximized)
+                    _window.Restore();
+                else
+                    _window.Maximize();
+            }
+
+            return true;
         }
 
         /// <inheritdoc />
-        public override void PerformLayout(bool force = false)
+        protected override void PerformLayoutSelf()
         {
-            base.PerformLayout(force);
-
             float x = 0;
 
-            if (!Editor.Instance.Options.Options.Interface.UseNativeWindowSystem)
+            if (_useCustomWindowSystem)
             {
                 // Icon
                 _icon.X = x;
@@ -216,9 +249,9 @@ namespace FlaxEditor.GUI
                 _icon.Height = Height;
                 x += _icon.Width;
             }
-            
+
             // Arrange controls
-            MainMenuButton _rightestButton = null;
+            MainMenuButton rightMostButton = null;
             for (int i = 0; i < _children.Count; i++)
             {
                 var c = _children[i];
@@ -227,16 +260,16 @@ namespace FlaxEditor.GUI
                     b.Height = Height;
                     b.Location = new Vector2(x, 0);
 
-                    if (_rightestButton == null)
-                        _rightestButton = b;
-                    else if (_rightestButton.X < b.X)
-                        _rightestButton = b;
+                    if (rightMostButton == null)
+                        rightMostButton = b;
+                    else if (rightMostButton.X < b.X)
+                        rightMostButton = b;
 
                     x += b.Width;
                 }
             }
 
-            if (!Editor.Instance.Options.Options.Interface.UseNativeWindowSystem)
+            if (_useCustomWindowSystem)
             {
                 _closeButton.Height = Height;
                 _closeButton.X = Width - _closeButton.Width;
@@ -246,8 +279,18 @@ namespace FlaxEditor.GUI
 
                 _minimizeButton.Height = Height;
                 _minimizeButton.X = _maximizeButton.X - _minimizeButton.Width;
+            }
+        }
 
-                _moveRect = new Rectangle(_rightestButton?.Right ?? _icon.Right, 0, _minimizeButton.X - _rightestButton?.Right ?? _icon.Right, Height);
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (_window != null)
+            {
+                _window.Closed -= OnWindowClosed;
+                OnWindowClosed();
             }
         }
     }

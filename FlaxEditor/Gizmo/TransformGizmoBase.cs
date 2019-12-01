@@ -370,7 +370,7 @@ namespace FlaxEditor.Gizmo
             bool isLeftBtnDown = Owner.IsLeftMouseButtonDown;
 
             // Snap to ground
-            if (_activeAxis == Axis.None && Owner.SnapToGround && SelectionCount != 0)
+            if (_activeAxis == Axis.None && SelectionCount != 0 && Owner.SnapToGround)
             {
                 if (Physics.RayCast(Position, Vector3.Down, out var hit, float.MaxValue, int.MaxValue, false))
                 {

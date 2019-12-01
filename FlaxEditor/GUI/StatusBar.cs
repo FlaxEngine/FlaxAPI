@@ -19,9 +19,6 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets or sets the color of the status strip.
         /// </summary>
-        /// <value>
-        /// The color of the status strip.
-        /// </value>
         public Color StatusColor
         {
             get => BackgroundColor;
@@ -31,9 +28,6 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Gets or sets the status text.
         /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
         public string Text { get; set; }
 
         /// <summary>

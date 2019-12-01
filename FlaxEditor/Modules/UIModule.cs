@@ -164,9 +164,9 @@ namespace FlaxEditor.Modules
             _toolStripRedo.Enabled = canEditScene && undoRedo.CanRedo;
             //
             var gizmoMode = gizmo.ActiveMode;
-            _toolStripTranslate.Checked = gizmoMode == TransformGizmo.Mode.Translate;
-            _toolStripRotate.Checked = gizmoMode == TransformGizmo.Mode.Rotate;
-            _toolStripScale.Checked = gizmoMode == TransformGizmo.Mode.Scale;
+            _toolStripTranslate.Checked = gizmoMode == TransformGizmoBase.Mode.Translate;
+            _toolStripRotate.Checked = gizmoMode == TransformGizmoBase.Mode.Rotate;
+            _toolStripScale.Checked = gizmoMode == TransformGizmoBase.Mode.Scale;
             //
             var play = _toolStripPlay;
             var pause = _toolStripPause;
@@ -257,7 +257,7 @@ namespace FlaxEditor.Modules
             InitToolstrip(mainWindow);
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
-            
+
             // Cache hint windows
             DockHintWindow.Proxy.InitHitProxy();
         }
@@ -350,10 +350,9 @@ namespace FlaxEditor.Modules
             return dialog;
         }
 
-        private void InitMainMenu(FlaxEngine.GUI.RootControl mainWindow)
+        private void InitMainMenu(RootControl mainWindow)
         {
-            MainMenu = new MainMenu();
-            MainMenu.Init(mainWindow);
+            MainMenu = new MainMenu(mainWindow);
             MainMenu.Parent = mainWindow;
 
             // File
@@ -469,7 +468,7 @@ namespace FlaxEditor.Modules
             cm.AddButton("Information about Flax", () => new AboutDialog().Show());
         }
 
-        private void InitToolstrip(FlaxEngine.GUI.RootControl mainWindow)
+        private void InitToolstrip(RootControl mainWindow)
         {
             ToolStrip = new ToolStrip();
             ToolStrip.Parent = mainWindow;
@@ -479,9 +478,9 @@ namespace FlaxEditor.Modules
             _toolStripUndo = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Undo32, Editor.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
             _toolStripRedo = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Redo32, Editor.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
             ToolStrip.AddSeparator();
-            _toolStripTranslate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Translate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
-            _toolStripRotate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Rotate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
-            _toolStripScale = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Scale32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
+            _toolStripTranslate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Translate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
+            _toolStripRotate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Rotate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
+            _toolStripScale = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Scale32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
             ToolStrip.AddSeparator();
             _toolStripPlay = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Play32, Editor.Simulation.RequestPlayOrStopPlay).LinkTooltip("Start/Stop simulation (F5)");
             _toolStripPause = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Pause32, Editor.Simulation.RequestResumeOrPause).LinkTooltip("Pause/Resume simulation(F6)");
@@ -490,7 +489,7 @@ namespace FlaxEditor.Modules
             UpdateToolstrip();
         }
 
-        private void InitStatusBar(FlaxEngine.GUI.RootControl mainWindow)
+        private void InitStatusBar(RootControl mainWindow)
         {
             // Status Bar
             StatusBar = new StatusBar
@@ -529,7 +528,7 @@ namespace FlaxEditor.Modules
             UpdateStatusBar();
         }
 
-        private void InitDockPanel(FlaxEngine.GUI.RootControl mainWindow)
+        private void InitDockPanel(RootControl mainWindow)
         {
             // Dock Panel
             MasterPanel.Parent = mainWindow;

@@ -22,6 +22,16 @@ namespace FlaxEditor.GUI
         public readonly ContextMenu.ContextMenu ContextMenu = new ContextMenu.ContextMenu();
 
         /// <summary>
+        /// The background color when mouse is over.
+        /// </summary>
+        public Color BackgroundColorMouseOver;
+
+        /// <summary>
+        /// The background color when mouse is over and context menu is opened.
+        /// </summary>
+        public Color BackgroundColorMouseOverOpened;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MainMenuButton"/> class.
         /// </summary>
         /// <param name="text">The text.</param>
@@ -29,6 +39,17 @@ namespace FlaxEditor.GUI
         : base(0, 0, 32, 16)
         {
             Text = text;
+
+            var style = Style.Current;
+            if (Editor.Instance.Options.Options.Interface.UseNativeWindowSystem)
+            {
+                BackgroundColorMouseOver = style.BackgroundHighlighted;
+                BackgroundColorMouseOverOpened = style.Background;
+            }
+            else
+            {
+                BackgroundColorMouseOver = BackgroundColorMouseOverOpened = style.BackgroundSelected * 1.3f;
+            }
         }
 
         /// <inheritdoc />
@@ -43,7 +64,9 @@ namespace FlaxEditor.GUI
 
             // Draw background
             if (enabled && hasChildItems && (isOpened || IsMouseOver))
-                Render2D.FillRectangle(clientRect, style.BackgroundSelected * 1.3f);
+            {
+                Render2D.FillRectangle(clientRect, isOpened ? BackgroundColorMouseOverOpened : BackgroundColorMouseOver);
+            }
 
             // Draw text
             Render2D.DrawText(style.FontMedium, Text, clientRect, enabled && hasChildItems ? style.Foreground : style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
@@ -58,7 +81,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void PerformLayout(bool force)
+        public override void PerformLayout(bool force = false)
         {
             var style = Style.Current;
             float width = 18;
