@@ -65,6 +65,8 @@ namespace FlaxEditor.Windows
             // Setup UI
             _output = new RichTextBox
             {
+                IsReadOnly = true,
+                IsMultiline = true,
                 DockStyle = DockStyle.Fill,
                 Parent = this,
             };
