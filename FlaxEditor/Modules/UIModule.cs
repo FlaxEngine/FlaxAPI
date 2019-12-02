@@ -278,9 +278,11 @@ namespace FlaxEditor.Modules
                     return;
 
                 var style = Style.Current;
-                var rect = new Rectangle(0.5f, 28.0f, Parent.Width - 1.0f, Parent.Height - 28.0f - StatusBar.DefaultHeight);
-                Render2D.DrawLine(rect.UpperLeft, rect.BottomLeft, style.BackgroundSelected);
-                Render2D.DrawLine(rect.UpperRight, rect.BottomRight, style.BackgroundSelected);
+                var color = style.BackgroundSelected;
+                var rect = new Rectangle(0.5f, 0.5f, Parent.Width - 1.0f, Parent.Height - 1.0f - StatusBar.DefaultHeight);
+                Render2D.DrawLine(rect.UpperLeft, rect.UpperRight, color);
+                Render2D.DrawLine(rect.UpperLeft, rect.BottomLeft, color);
+                Render2D.DrawLine(rect.UpperRight, rect.BottomRight, color);
             }
         }
 

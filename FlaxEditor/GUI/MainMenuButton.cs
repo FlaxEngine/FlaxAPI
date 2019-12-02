@@ -48,7 +48,7 @@ namespace FlaxEditor.GUI
             }
             else
             {
-                BackgroundColorMouseOver = BackgroundColorMouseOverOpened = style.BackgroundSelected * 1.3f;
+                BackgroundColorMouseOver = BackgroundColorMouseOverOpened = style.LightBackground * 1.3f;
             }
         }
 

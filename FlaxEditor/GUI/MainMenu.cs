@@ -33,7 +33,7 @@ namespace FlaxEditor.GUI
 
             if (_useCustomWindowSystem)
             {
-                BackgroundColor = Style.Current.BackgroundSelected;
+                BackgroundColor = Style.Current.LightBackground;
                 Height = 28;
 
                 var windowIcon = FlaxEngine.Content.LoadInternal<Texture>(EditorAssets.WindowIcon);
@@ -77,7 +77,7 @@ namespace FlaxEditor.GUI
                     BorderColorSelected = Color.Transparent,
                     TextColor = Color.White,
                     Width = 46,
-                    BackgroundColorHighlighted = Style.Current.BackgroundSelected.RGBMultiplied(1.3f),
+                    BackgroundColorHighlighted = Style.Current.LightBackground.RGBMultiplied(1.3f),
                     Parent = this,
                 };
                 _minimizeButton.Clicked += () => _window.Minimize();
@@ -92,7 +92,7 @@ namespace FlaxEditor.GUI
                     BorderColorSelected = Color.Transparent,
                     TextColor = Color.White,
                     Width = 46,
-                    BackgroundColorHighlighted = Style.Current.BackgroundSelected.RGBMultiplied(1.3f),
+                    BackgroundColorHighlighted = Style.Current.LightBackground.RGBMultiplied(1.3f),
                     Parent = this,
                 };
                 _maximizeButton.Clicked += () =>
