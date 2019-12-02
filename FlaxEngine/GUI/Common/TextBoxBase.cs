@@ -42,7 +42,7 @@ namespace FlaxEngine.GUI
         // State
         protected string _onStartEditValue;
         protected bool _isEditing;
-        protected Vector2 _viewOffset, _targetViewOffset;
+        protected Vector2 _viewOffset, _targetViewOffset, _textSize;
 
         // Options
         protected bool _isMultiline, _isReadOnly;
@@ -663,6 +663,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Calculates total text size. Called by <see cref="OnTextChanged"/> to cache the text size.
+        /// </summary>
+        /// <returns>The total text size.</returns>
+        public abstract Vector2 GetTextSize();
+
+        /// <summary>
         /// Calculates character position for given character index.
         /// </summary>
         /// <param name="index">The text position to get it's coordinates.</param>
@@ -761,6 +767,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         protected virtual void OnTextChanged()
         {
+            _textSize = GetTextSize();
             TextChanged?.Invoke();
         }
 
@@ -796,13 +803,6 @@ namespace FlaxEngine.GUI
         {
             // Clear flag
             _isSelecting = false;
-        }
-
-        /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
-        {
-            SelectAll();
-            return base.OnMouseDoubleClick(location, buttons);
         }
 
         /// <inheritdoc />
@@ -871,8 +871,7 @@ namespace FlaxEngine.GUI
             // Multiline scroll
             if (IsMultiline && _text.Length != 0)
             {
-                Vector2 endLocation = GetCharPosition(_text.Length, out var height);
-                _targetViewOffset = Vector2.Clamp(_targetViewOffset - new Vector2(0, delta * 10.0f), Vector2.Zero, new Vector2(_targetViewOffset.X, endLocation.Y));
+                _targetViewOffset = Vector2.Clamp(_targetViewOffset - new Vector2(0, delta * 10.0f), Vector2.Zero, new Vector2(_targetViewOffset.X, _textSize.Y));
                 return true;
             }
 

@@ -63,18 +63,51 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void OnTextChanged()
         {
-            base.OnTextChanged();
-
             UpdateTextBlocks();
+
+            base.OnTextChanged();
+        }
+
+        /// <inheritdoc />
+        public override Vector2 GetTextSize()
+        {
+            var count = _textBlocks.Count;
+            var textBlocks = Utils.ExtractArrayFromList(_textBlocks);
+            var max = Vector2.Zero;
+            for (int i = 0; i < count; i++)
+            {
+                ref TextBlock textBlock = ref textBlocks[i];
+                max = Vector2.Max(max, textBlock.Bounds.BottomRight);
+            }
+            return max;
         }
 
         /// <inheritdoc />
         public override Vector2 GetCharPosition(int index, out float height)
         {
+            var count = _textBlocks.Count;
             var textBlocks = Utils.ExtractArrayFromList(_textBlocks);
-            for (int i = 0; i < _textBlocks.Count; i++)
+
+            if (count == 0)
+            {
+                height = 0;
+                return Vector2.Zero;
+            }
+            if (index == 0)
+            {
+                ref TextBlock textBlock = ref textBlocks[0];
+                var font = textBlock.Style.Font.GetFont();
+                if (font)
+                {
+                    height = font.Height;
+                    return textBlock.Bounds.UpperLeft;
+                }
+            }
+
+            for (int i = 0; i < count; i++)
             {
                 ref TextBlock textBlock = ref textBlocks[i];
+
                 if (textBlock.Range.Contains(index))
                 {
                     var font = textBlock.Style.Font.GetFont();
@@ -85,6 +118,17 @@ namespace FlaxEngine.GUI
                 }
             }
 
+            if (count != 0)
+            {
+                ref TextBlock textBlock = ref textBlocks[count - 1];
+                var font = textBlock.Style.Font.GetFont();
+                if (font)
+                {
+                    height = font.Height;
+                    return textBlock.Bounds.UpperLeft;
+                }
+            }
+
             height = 0;
             return Vector2.Zero;
         }
@@ -92,11 +136,18 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override int HitTestText(Vector2 location)
         {
+            location = Vector2.Clamp(location, Vector2.Zero, _textSize);
+
             var textBlocks = Utils.ExtractArrayFromList(_textBlocks);
-            for (int i = 0; i < _textBlocks.Count; i++)
+            var count = _textBlocks.Count;
+            for (int i = 0; i < count; i++)
             {
                 ref TextBlock textBlock = ref textBlocks[i];
-                if (textBlock.Bounds.Contains(ref location))
+
+                var containsX = location.X >= textBlock.Bounds.Location.X && location.X <= textBlock.Bounds.Location.X + textBlock.Bounds.Size.X;
+                var containsY = location.Y >= textBlock.Bounds.Location.Y && location.Y <= textBlock.Bounds.Location.Y + textBlock.Bounds.Size.Y;
+
+                if (containsY && (containsX || (i + 1 < count && textBlocks[i + 1].Bounds.Location.Y > textBlock.Bounds.Location.Y + 1.0f)))
                 {
                     var font = textBlock.Style.Font.GetFont();
                     if (!font)
@@ -105,7 +156,7 @@ namespace FlaxEngine.GUI
                 }
             }
 
-            return 0;
+            return _text.Length;
         }
 
         /// <inheritdoc />

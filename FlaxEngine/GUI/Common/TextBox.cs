@@ -88,6 +88,18 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
+        public override Vector2 GetTextSize()
+        {
+            var font = Font.GetFont();
+            if (font == null)
+            {
+                return Vector2.Zero;
+            }
+
+            return font.MeasureText(_text, ref _layout);
+        }
+
+        /// <inheritdoc />
         public override Vector2 GetCharPosition(int index, out float height)
         {
             var font = Font.GetFont();
@@ -209,6 +221,13 @@ namespace FlaxEngine.GUI
             if (useViewOffset)
                 Render2D.PopTransform();
             Render2D.PopClip();
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        {
+            SelectAll();
+            return base.OnMouseDoubleClick(location, buttons);
         }
 
         /// <inheritdoc />
