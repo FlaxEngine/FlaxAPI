@@ -29,12 +29,6 @@ namespace FlaxEngine
         public static string EngineFolder { get; private set; }
 
         /// <summary>
-        /// Gets the development files folder path.
-        /// Valid only in development builds.
-        /// </summary>
-        public static string DevelopmentFolder { get; private set; }
-
-        /// <summary>
         /// Gets the Editor private data folder path.
         /// Valid only in Editor.
         /// </summary>
@@ -66,18 +60,17 @@ namespace FlaxEngine
         {
             // Initialize paths
             var paths = GetPaths();
-            if (paths == null || paths.Length != 10)
+            if (paths == null || paths.Length != 9)
                 throw new InvalidOperationException("Invalid Globals.");
             StartupPath = paths[0];
             TemporaryFolder = paths[1];
             ProjectFolder = paths[2];
             EngineFolder = paths[3];
-            DevelopmentFolder = paths[4];
+            MonoPath = paths[4];
             EditorFolder = paths[5];
             ContentFolder = paths[6];
             SourceFolder = paths[7];
             ProjectCacheFolder = paths[8];
-            MonoPath = paths[9];
         }
     }
 }
