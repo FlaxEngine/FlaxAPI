@@ -183,9 +183,16 @@ namespace FlaxEngine.GUI
             var textBlocks = Utils.ExtractArrayFromList(_textBlocks);
             var hasSelection = HasSelection;
             var selection = new TextRange(SelectionLeft, SelectionRight);
+            var viewRect = new Rectangle(_viewOffset, Size);
             for (int i = 0; i < _textBlocks.Count; i++)
             {
                 ref TextBlock textBlock = ref textBlocks[i];
+
+                // Skip blocks not in the view
+                if (!textBlock.Bounds.Intersects(ref viewRect))
+                    continue;
+
+                // Pick font
                 var font = textBlock.Style.Font.GetFont();
                 if (!font)
                     continue;
