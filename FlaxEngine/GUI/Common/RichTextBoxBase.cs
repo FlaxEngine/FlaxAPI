@@ -218,10 +218,8 @@ namespace FlaxEngine.GUI
                 // Selection
                 if (hasSelection && textBlock.Style.BackgroundSelectedBrush != null && textBlock.Range.Intersect(ref selection))
                 {
-                    var selectionLeft = Math.Max(selection.StartIndex, textBlock.Range.StartIndex);
-                    var selectionEnd = Math.Min(selection.EndIndex, textBlock.Range.EndIndex);
-                    Vector2 leftEdge = font.GetCharPosition(_text, selectionLeft);
-                    Vector2 rightEdge = font.GetCharPosition(_text, selectionEnd);
+                    Vector2 leftEdge = selection.StartIndex <= textBlock.Range.StartIndex ? textBlock.Bounds.UpperLeft : font.GetCharPosition(_text, selection.StartIndex);
+                    Vector2 rightEdge = selection.EndIndex >= textBlock.Range.EndIndex ? textBlock.Bounds.UpperRight : font.GetCharPosition(_text, selection.EndIndex);
                     float alpha = Mathf.Min(1.0f, Mathf.Cos(_animateTime * BackgroundSelectedFlashSpeed) * 0.5f + 1.3f);
                     alpha = alpha * alpha;
                     if (!IsFocused)
