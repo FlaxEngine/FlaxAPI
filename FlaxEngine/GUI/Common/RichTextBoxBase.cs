@@ -204,7 +204,7 @@ namespace FlaxEngine.GUI
                     var selectionEnd = Math.Min(selection.EndIndex, textBlock.Range.EndIndex);
                     Vector2 leftEdge = font.GetCharPosition(_text, selectionLeft);
                     Vector2 rightEdge = font.GetCharPosition(_text, selectionEnd);
-                    float alpha = Mathf.Min(1.0f, Mathf.Cos(_animateTime * 6.0f) * 0.5f + 1.3f);
+                    float alpha = Mathf.Min(1.0f, Mathf.Cos(_animateTime * BackgroundSelectedFlashSpeed) * 0.5f + 1.3f);
                     alpha = alpha * alpha;
                     if (!IsFocused)
                         alpha = 0.1f;
@@ -241,7 +241,7 @@ namespace FlaxEngine.GUI
             // Caret
             if (IsFocused && CaretPosition > -1)
             {
-                float alpha = Mathf.Saturate(Mathf.Cos(_animateTime * Mathf.TwoPi) * 0.5f + 0.7f);
+                float alpha = Mathf.Saturate(Mathf.Cos(_animateTime * CaretFlashSpeed) * 0.5f + 0.7f);
                 alpha = alpha * alpha * alpha * alpha * alpha * alpha;
                 Render2D.FillRectangle(CaretBounds, CaretColor * alpha);
             }

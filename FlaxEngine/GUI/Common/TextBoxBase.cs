@@ -144,6 +144,18 @@ namespace FlaxEngine.GUI
         public Color CaretColor { get; set; }
 
         /// <summary>
+        /// Gets or sets the speed of the caret flashing animation.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The speed of the caret flashing animation.")]
+        public float CaretFlashSpeed { get; set; } = 6.0f;
+
+        /// <summary>
+        /// Gets or sets the speed of the selection background flashing animation.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The speed of the selection background flashing animation.")]
+        public float BackgroundSelectedFlashSpeed { get; set; } = 6.0f;
+
+        /// <summary>
         /// Gets or sets the color of the border (Transparent if not used).
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000), Tooltip("The color of the border (Transparent if not used).")]
