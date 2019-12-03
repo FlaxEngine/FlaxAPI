@@ -179,18 +179,36 @@ namespace FlaxEngine.GUI
             if (useViewOffset)
                 Render2D.PushTransform(Matrix3x3.Translation2D(-_viewOffset));
 
-            // Text Blocks
+            // Calculate text blocks for drawing
             var textBlocks = Utils.ExtractArrayFromList(_textBlocks);
             var hasSelection = HasSelection;
             var selection = new TextRange(SelectionLeft, SelectionRight);
             var viewRect = new Rectangle(_viewOffset, Size);
+            var firstTextBlock = _textBlocks.Count;
             for (int i = 0; i < _textBlocks.Count; i++)
             {
                 ref TextBlock textBlock = ref textBlocks[i];
-
-                // Skip blocks not in the view
+                if (textBlock.Bounds.Intersects(ref viewRect))
+                {
+                    firstTextBlock = i;
+                    break;
+                }
+            }
+            var endTextBlock = -1;
+            for (int i = firstTextBlock + 1; i < _textBlocks.Count; i++)
+            {
+                ref TextBlock textBlock = ref textBlocks[i];
                 if (!textBlock.Bounds.Intersects(ref viewRect))
-                    continue;
+                {
+                    endTextBlock = i;
+                    break;
+                }
+            }
+
+            // Draw selection background
+            for (int i = firstTextBlock; i < endTextBlock; i++)
+            {
+                ref TextBlock textBlock = ref textBlocks[i];
 
                 // Pick font
                 var font = textBlock.Style.Font.GetFont();
@@ -212,6 +230,17 @@ namespace FlaxEngine.GUI
                     Rectangle selectionRect = new Rectangle(leftEdge.X, leftEdge.Y, rightEdge.X - leftEdge.X, font.Height);
                     textBlock.Style.BackgroundSelectedBrush.Draw(selectionRect, selectionColor);
                 }
+            }
+
+            // Draw text
+            for (int i = firstTextBlock; i < endTextBlock; i++)
+            {
+                ref TextBlock textBlock = ref textBlocks[i];
+
+                // Pick font
+                var font = textBlock.Style.Font.GetFont();
+                if (!font)
+                    continue;
 
                 // Shadow
                 Color color;
@@ -228,6 +257,17 @@ namespace FlaxEngine.GUI
                 if (!enabled)
                     color *= 0.6f;
                 Render2D.DrawText(font, _text, ref textBlock.Range, color, textBlock.Bounds.Location, textBlock.Style.CustomMaterial);
+            }
+
+            // Draw underline
+            for (int i = firstTextBlock; i < endTextBlock; i++)
+            {
+                ref TextBlock textBlock = ref textBlocks[i];
+
+                // Pick font
+                var font = textBlock.Style.Font.GetFont();
+                if (!font)
+                    continue;
 
                 // Underline
                 if (textBlock.Style.UnderlineBrush != null)
