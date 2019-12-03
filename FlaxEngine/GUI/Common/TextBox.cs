@@ -165,8 +165,6 @@ namespace FlaxEngine.GUI
                 // Draw selection background
                 float alpha = Mathf.Min(1.0f, Mathf.Cos(_animateTime * BackgroundSelectedFlashSpeed) * 0.5f + 1.3f);
                 alpha = alpha * alpha;
-                if (!IsFocused)
-                    alpha = 0.1f;
                 Color selectionColor = SelectionColor * alpha;
                 //
                 int selectedLinesCount = 1 + Mathf.FloorToInt((rightEdge.Y - leftEdge.Y) / fontHeight);
