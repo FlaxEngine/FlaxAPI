@@ -69,6 +69,7 @@ namespace FlaxEngine.GUI
                             DockStyle = DockStyle.Right,
                             Parent = this
                         };
+                        VScrollBar.ValueChanged += () => SetViewOffset(Orientation.Vertical, VScrollBar.Value);
                     }
                 }
                 else if (VScrollBar != null)
@@ -88,6 +89,7 @@ namespace FlaxEngine.GUI
                             DockStyle = DockStyle.Bottom,
                             Parent = this
                         };
+                        HScrollBar.ValueChanged += () => SetViewOffset(Orientation.Horizontal, HScrollBar.Value);
                     }
                 }
                 else if (HScrollBar != null)
