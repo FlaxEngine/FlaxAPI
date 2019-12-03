@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -53,6 +54,7 @@ namespace FlaxEditor.Windows
         private HScrollBar _hScroll;
         private VScrollBar _vScroll;
         private RichTextBox _output;
+        private ContextMenu _contextMenu;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebugLogWindow"/> class.
@@ -88,6 +90,10 @@ namespace FlaxEditor.Windows
             };
             _output.TargetViewOffsetChanged += OnOutputTargetViewOffsetChanged;
             _output.TextChanged += OnOutputTextChanged;
+
+            // Setup context menu
+            _contextMenu = new ContextMenu();
+            _contextMenu.AddButton("Clear log", Clear);
 
             // Bind events
             Editor.Options.OptionsChanged += OnEditorOptionsChanged;
@@ -134,6 +140,7 @@ namespace FlaxEditor.Windows
             _isDirty = true;
             _textBufferCount = 0;
             _textBuffer.Clear();
+            _output.Clear();
         }
 
         /// <inheritdoc />
@@ -145,6 +152,21 @@ namespace FlaxEditor.Windows
             {
                 _output.Size = new Vector2(_vScroll.X - 2, _hScroll.Y - 2);
             }
+        }
+
+        /// <inheritdoc />
+        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        {
+            if (base.OnMouseUp(location, buttons))
+                return true;
+
+            if (buttons == MouseButton.Right)
+            {
+                _contextMenu.Show(this, location);
+                return true;
+            }
+
+            return false;
         }
 
         /// <inheritdoc />
@@ -244,6 +266,7 @@ namespace FlaxEditor.Windows
             _hScroll = null;
             _vScroll = null;
             _output = null;
+            _contextMenu = null;
 
             base.OnDestroy();
         }

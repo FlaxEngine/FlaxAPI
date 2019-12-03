@@ -342,6 +342,7 @@ namespace FlaxEngine.GUI
             _isMultiline = isMultiline;
             _maxLength = 32000;
             _selectionStart = _selectionEnd = -1;
+            AutoFocus = false;
 
             var style = Style.Current;
             CaretColor = style.Foreground;
@@ -875,6 +876,7 @@ namespace FlaxEngine.GUI
         {
             if (buttons == MouseButton.Left && _text.Length > 0)
             {
+                Focus();
                 OnSelectingBegin();
 
                 // Calculate char index under the mouse location
@@ -892,11 +894,11 @@ namespace FlaxEngine.GUI
                 {
                     SetSelection(hitPos);
                 }
+
+                return true;
             }
 
-            // Base
-            base.OnMouseDown(location, buttons);
-            return true;
+            return false;
         }
 
         /// <inheritdoc />
@@ -905,17 +907,15 @@ namespace FlaxEngine.GUI
             if (buttons == MouseButton.Left)
             {
                 OnSelectingEnd();
+                return true;
             }
 
-            // Base
-            base.OnMouseUp(location, buttons);
-            return true;
+            return false;
         }
 
         /// <inheritdoc />
         public override bool OnMouseWheel(Vector2 location, float delta)
         {
-            // Base
             if (base.OnMouseWheel(location, delta))
                 return true;
 
