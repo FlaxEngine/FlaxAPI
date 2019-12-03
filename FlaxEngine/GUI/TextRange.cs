@@ -55,5 +55,11 @@ namespace FlaxEngine.GUI
         /// <param name="other">The other text range.</param>
         /// <returns><c>true</c> if range intersects with the specified range index;, <c>false</c>.</returns>
         public bool Intersect(ref TextRange other) => Math.Min(EndIndex, other.EndIndex) > Math.Max(StartIndex, other.StartIndex);
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return string.Format("Range: [{0}, {1}), Length: {2}", StartIndex, EndIndex, Length);
+        }
     }
 }
