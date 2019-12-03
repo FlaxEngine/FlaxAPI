@@ -800,6 +800,9 @@ namespace FlaxEngine.GUI
         public override void OnGotFocus()
         {
             base.OnGotFocus();
+
+            if (IsReadOnly)
+                return;
             OnEditBegin();
         }
 
@@ -807,6 +810,7 @@ namespace FlaxEngine.GUI
         public override void OnLostFocus()
         {
             base.OnLostFocus();
+
             OnEditEnd();
         }
 
