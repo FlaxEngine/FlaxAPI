@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 
 namespace FlaxEngine.GUI
@@ -183,7 +182,7 @@ namespace FlaxEngine.GUI
             var textBlocks = Utils.ExtractArrayFromList(_textBlocks);
             var hasSelection = HasSelection;
             var selection = new TextRange(SelectionLeft, SelectionRight);
-            var viewRect = new Rectangle(_viewOffset, Size);
+            var viewRect = new Rectangle(_viewOffset, Size).MakeExpanded(10.0f);
             var firstTextBlock = _textBlocks.Count;
             for (int i = 0; i < _textBlocks.Count; i++)
             {
@@ -194,7 +193,7 @@ namespace FlaxEngine.GUI
                     break;
                 }
             }
-            var endTextBlock = -1;
+            var endTextBlock = _textBlocks.Count;
             for (int i = firstTextBlock + 1; i < _textBlocks.Count; i++)
             {
                 ref TextBlock textBlock = ref textBlocks[i];
