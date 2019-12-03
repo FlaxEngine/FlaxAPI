@@ -67,6 +67,7 @@ namespace FlaxEditor.Windows
             {
                 IsReadOnly = true,
                 IsMultiline = true,
+                BackgroundSelectedFlashSpeed = 0.0f,
                 DockStyle = DockStyle.Fill,
                 Parent = this,
             };
