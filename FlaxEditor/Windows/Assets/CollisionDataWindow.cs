@@ -217,6 +217,8 @@ namespace FlaxEditor.Windows.Assets
             Editor.Internal_GetCollisionWires(Asset.unmanagedPtr, out var triangles, out var indices);
             if (triangles != null && indices != null)
                 _collisionWiresModel.LODs[0].Meshes[0].UpdateMesh(triangles, indices);
+            else
+                Editor.LogWarning("Failed to get collision wires for " + Asset);
             if (_collisionWiresShowActor == null)
             {
                 _collisionWiresShowActor = StaticModel.New();
