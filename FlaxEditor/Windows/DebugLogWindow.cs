@@ -285,7 +285,7 @@ namespace FlaxEditor.Windows
         public DebugLogWindow(Editor editor)
         : base(editor, true, ScrollBars.None)
         {
-            Title = "Debug Info";
+            Title = "Debug Log";
             OnEditorOptionsChanged(Editor.Options.Options);
 
             // Toolstrip

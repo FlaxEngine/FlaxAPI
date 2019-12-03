@@ -46,10 +46,12 @@ namespace FlaxEditor.Windows
         private string[] _outMessages = new string[OutCapacity];
         private byte[] _outLogTypes = new byte[OutCapacity];
         private long[] _outLogTimes = new long[OutCapacity];
-        private int _textBufferCount = 0;
+        private int _textBufferCount;
         private StringBuilder _textBuffer = new StringBuilder();
         private DateTime _startupTime;
 
+        private HScrollBar _hScroll;
+        private VScrollBar _vScroll;
         private RichTextBox _output;
 
         /// <summary>
@@ -59,21 +61,62 @@ namespace FlaxEditor.Windows
         public OutputLogWindow(Editor editor)
         : base(editor, true, ScrollBars.None)
         {
-            Title = "Output Info";
+            Title = "Output Log";
+            ClipChildren = false;
             OnEditorOptionsChanged(Editor.Options.Options);
 
             // Setup UI
+            _hScroll = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+            {
+                AnchorStyle = AnchorStyle.Bottom,
+                Parent = this,
+            };
+            _hScroll.ValueChanged += OnHScrollValueChanged;
+            _vScroll = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+            {
+                AnchorStyle = AnchorStyle.Right,
+                Parent = this,
+            };
+            _vScroll.ValueChanged += OnVScrollValueChanged;
             _output = new RichTextBox
             {
                 IsReadOnly = true,
                 IsMultiline = true,
                 BackgroundSelectedFlashSpeed = 0.0f,
-                DockStyle = DockStyle.Fill,
+                Location = new Vector2(2, 2),
                 Parent = this,
             };
+            _output.TargetViewOffsetChanged += OnOutputTargetViewOffsetChanged;
+            _output.TextChanged += OnOutputTextChanged;
 
             // Bind events
             Editor.Options.OptionsChanged += OnEditorOptionsChanged;
+        }
+
+        private void OnHScrollValueChanged()
+        {
+            var viewOffset = _output.ViewOffset;
+            viewOffset.X = _hScroll.Value;
+            _output.TargetViewOffset = viewOffset;
+        }
+
+        private void OnVScrollValueChanged()
+        {
+            var viewOffset = _output.ViewOffset;
+            viewOffset.Y = _vScroll.Value;
+            _output.TargetViewOffset = viewOffset;
+        }
+
+        private void OnOutputTargetViewOffsetChanged()
+        {
+            _hScroll.TargetValue = _output.TargetViewOffset.X;
+            _vScroll.TargetValue = _output.TargetViewOffset.Y;
+        }
+
+        private void OnOutputTextChanged()
+        {
+            _hScroll.Maximum = _output.TextSize.X;
+            _vScroll.Maximum = _output.TextSize.Y;
         }
 
         private void OnEditorOptionsChanged(EditorOptions options)
@@ -91,6 +134,17 @@ namespace FlaxEditor.Windows
             _isDirty = true;
             _textBufferCount = 0;
             _textBuffer.Clear();
+        }
+
+        /// <inheritdoc />
+        protected override void PerformLayoutSelf()
+        {
+            base.PerformLayoutSelf();
+
+            if (_output != null)
+            {
+                _output.Size = new Vector2(_vScroll.X - 2, _hScroll.Y - 2);
+            }
         }
 
         /// <inheritdoc />
@@ -185,6 +239,11 @@ namespace FlaxEditor.Windows
             _outMessages = null;
             _outLogTypes = null;
             _outLogTimes = null;
+
+            // Unlink controls
+            _hScroll = null;
+            _vScroll = null;
+            _output = null;
 
             base.OnDestroy();
         }
