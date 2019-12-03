@@ -29,6 +29,11 @@ namespace FlaxEditor.Viewport.Previews
         public StaticModel PreviewStaticModel => _previewModel;
 
         /// <summary>
+        /// Gets or sets a value indicating whether scale the model to the normalized bounds.
+        /// </summary>
+        public bool ScaleToFit { get; set; } = true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ModelPreview"/> class.
         /// </summary>
         /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
@@ -58,6 +63,12 @@ namespace FlaxEditor.Viewport.Previews
 
         private void OnBegin(SceneRenderTask task, GPUContext context)
         {
+            if (!ScaleToFit)
+            {
+                _previewModel.Scale = Vector3.One;
+                return;
+            }
+
             // Update preview model scale to fit the preview
             var model = Model;
             if (model && model.IsLoaded)

@@ -52,8 +52,8 @@ namespace FlaxEditor.Windows.Assets
 
                 // Enable shadows
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
-                PreviewLight.CascadeCount = 2;
-                PreviewLight.ShadowsDistance = 1000.0f;
+                PreviewLight.CascadeCount = 3;
+                PreviewLight.ShadowsDistance = 2000.0f;
                 Task.View.Flags |= ViewFlags.Shadows;
             }
 
@@ -425,6 +425,7 @@ namespace FlaxEditor.Windows.Assets
             _preview = new Preview(this)
             {
                 ViewportCamera = new FPSCamera(),
+                ScaleToFit = false,
                 Parent = _split.Panel1
             };
 
@@ -560,6 +561,7 @@ namespace FlaxEditor.Windows.Assets
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
             _refreshOnLODsLoaded = true;
+            _preview.ViewportCamera.SerArcBallView(Asset.Box);
 
             // TODO: disable streaming for this model
 

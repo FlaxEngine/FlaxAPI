@@ -53,8 +53,8 @@ namespace FlaxEditor.Windows.Assets
 
                 // Enable shadows
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
-                PreviewLight.CascadeCount = 2;
-                PreviewLight.ShadowsDistance = 1000.0f;
+                PreviewLight.CascadeCount = 3;
+                PreviewLight.ShadowsDistance = 2000.0f;
                 Task.View.Flags |= ViewFlags.Shadows;
             }
 
@@ -603,6 +603,7 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnLoad(this);
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
+            _preview.ViewportCamera.SerArcBallView(Asset.Box);
 
             // Reset any root motion
             _preview.PreviewActor.ResetLocalTransform();

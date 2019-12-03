@@ -82,6 +82,12 @@ namespace FlaxEditor.Viewport.Previews
 
         private void OnBegin(SceneRenderTask task, GPUContext context)
         {
+            if (!ScaleToFit)
+            {
+                _previewModel.Scale = Vector3.One;
+                return;
+            }
+
             // Update preview model scale to fit the preview
             var skinnedModel = SkinnedModel;
             if (skinnedModel && skinnedModel.IsLoaded)
