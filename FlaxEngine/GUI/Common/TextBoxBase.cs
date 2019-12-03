@@ -168,6 +168,38 @@ namespace FlaxEngine.GUI
         public Color BorderSelectedColor { get; set; }
 
         /// <summary>
+        /// Gets the size of the text (cached).
+        /// </summary>
+        public Vector2 TextSize => _textSize;
+
+        /// <summary>
+        /// Occurs when target view offset gets changed.
+        /// </summary>
+        public event Action TargetViewOffsetChanged;
+
+        /// <summary>
+        /// Gets the current view offset (text scrolling offset). Includes the smoothing.
+        /// </summary>
+        public Vector2 ViewOffset => _viewOffset;
+
+        /// <summary>
+        /// Gets or sets the target view offset (text scrolling offset).
+        /// </summary>
+        [NoAnimate, NoSerialize]
+        public Vector2 TargetViewOffset
+        {
+            get => _targetViewOffset;
+            set
+            {
+                if (Vector2.NearEqual(ref value, ref _targetViewOffset))
+                    return;
+
+                _targetViewOffset = _viewOffset = value;
+                OnTargetViewOffsetChanged();
+            }
+        }
+
+        /// <summary>
         /// Gets or sets text property.
         /// </summary>
         [EditorOrder(0), MultilineText, Tooltip("The entered text.")]
@@ -290,11 +322,6 @@ namespace FlaxEngine.GUI
         protected virtual Rectangle TextClipRectangle => new Rectangle(1, 1, Width - 2, Height - 2);
 
         /// <summary>
-        /// Gets the current view offset.
-        /// </summary>
-        protected Vector2 ViewOffset => _viewOffset;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TextBoxBase"/> class.
         /// </summary>
         public TextBoxBase()
@@ -346,7 +373,15 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void ResetViewOffset()
         {
-            _viewOffset = _targetViewOffset = Vector2.Zero;
+            TargetViewOffset = Vector2.Zero;
+        }
+
+        /// <summary>
+        /// Called when target view offset gets changed.
+        /// </summary>
+        protected virtual void OnTargetViewOffsetChanged()
+        {
+            TargetViewOffsetChanged?.Invoke();
         }
 
         /// <summary>
@@ -428,7 +463,7 @@ namespace FlaxEngine.GUI
             // If it's empty
             if (_text.Length == 0)
             {
-                _targetViewOffset = Vector2.Zero;
+                TargetViewOffset = Vector2.Zero;
                 return;
             }
 
@@ -438,7 +473,7 @@ namespace FlaxEngine.GUI
             // Update view offset (caret needs to be in a view)
             Vector2 caretInView = caretBounds.Location - _targetViewOffset;
             Vector2 clampedCaretInView = Vector2.Clamp(caretInView, textArea.UpperLeft, textArea.BottomRight);
-            _targetViewOffset += caretInView - clampedCaretInView;
+            TargetViewOffset += caretInView - clampedCaretInView;
         }
 
         /// <summary>
@@ -887,7 +922,7 @@ namespace FlaxEngine.GUI
             // Multiline scroll
             if (IsMultiline && _text.Length != 0)
             {
-                _targetViewOffset = Vector2.Clamp(_targetViewOffset - new Vector2(0, delta * 10.0f), Vector2.Zero, new Vector2(_targetViewOffset.X, _textSize.Y));
+                TargetViewOffset = Vector2.Clamp(_targetViewOffset - new Vector2(0, delta * 10.0f), Vector2.Zero, new Vector2(_targetViewOffset.X, _textSize.Y));
                 return true;
             }
 
