@@ -94,6 +94,8 @@ namespace FlaxEditor.Windows
             // Setup context menu
             _contextMenu = new ContextMenu();
             _contextMenu.AddButton("Clear log", Clear);
+            _contextMenu.AddButton("Copy selection", _output.Copy);
+            _contextMenu.AddButton("Select All", _output.SelectAll);
 
             // Bind events
             Editor.Options.OptionsChanged += OnEditorOptionsChanged;
