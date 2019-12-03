@@ -144,15 +144,15 @@ namespace FlaxEngine.GUI
             {
                 ref TextBlock textBlock = ref textBlocks[i];
 
-                var containsX = location.X >= textBlock.Bounds.Location.X && location.X <= textBlock.Bounds.Location.X + textBlock.Bounds.Size.X;
-                var containsY = location.Y >= textBlock.Bounds.Location.Y && location.Y <= textBlock.Bounds.Location.Y + textBlock.Bounds.Size.Y;
+                var containsX = location.X >= textBlock.Bounds.Location.X && location.X < textBlock.Bounds.Location.X + textBlock.Bounds.Size.X;
+                var containsY = location.Y >= textBlock.Bounds.Location.Y && location.Y < textBlock.Bounds.Location.Y + textBlock.Bounds.Size.Y;
 
                 if (containsY && (containsX || (i + 1 < count && textBlocks[i + 1].Bounds.Location.Y > textBlock.Bounds.Location.Y + 1.0f)))
                 {
                     var font = textBlock.Style.Font.GetFont();
                     if (!font)
                         break;
-                    return font.HitTestText(_text, ref textBlock.Range, location) + textBlock.Range.StartIndex;
+                    return font.HitTestText(_text, ref textBlock.Range, location - textBlock.Bounds.Location) + textBlock.Range.StartIndex;
                 }
             }
 
