@@ -129,8 +129,23 @@ namespace FlaxEditor.Windows
 
         private void OnEditorOptionsChanged(EditorOptions options)
         {
+            if (options.Interface.OutputLogTimestampsFormat == _timestampsFormats &&
+                options.Interface.OutputLogShowLogType == _showLogType)
+                return;
+
             _timestampsFormats = options.Interface.OutputLogTimestampsFormat;
             _showLogType = options.Interface.OutputLogShowLogType;
+            Refresh();
+        }
+
+        /// <summary>
+        /// Refreshes the log output.
+        /// </summary>
+        private void Refresh()
+        {
+            _textBufferCount = 0;
+            _textBuffer.Clear();
+            _isDirty = true;
         }
 
         /// <summary>
@@ -139,10 +154,7 @@ namespace FlaxEditor.Windows
         public void Clear()
         {
             _entries?.Clear();
-            _isDirty = true;
-            _textBufferCount = 0;
-            _textBuffer.Clear();
-            _output.Clear();
+            Refresh();
         }
 
         /// <inheritdoc />
