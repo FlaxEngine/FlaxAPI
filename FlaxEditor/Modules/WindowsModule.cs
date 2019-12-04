@@ -585,7 +585,7 @@ namespace FlaxEditor.Modules
             if (Editor.IsHeadlessMode)
                 return;
 
-            Editor.Log(string.Format("Saving editor windows layout to \'{0}\'", path));
+            //Editor.Log(string.Format("Saving editor windows layout to \'{0}\'", path));
 
             var settings = new XmlWriterSettings
             {
