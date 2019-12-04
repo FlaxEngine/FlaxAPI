@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Options;
 using FlaxEngine;
@@ -89,12 +88,14 @@ namespace FlaxEditor.Windows
             _hScroll = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
             {
                 AnchorStyle = AnchorStyle.Bottom,
+                Maximum = 0,
                 Parent = this,
             };
             _hScroll.ValueChanged += OnHScrollValueChanged;
             _vScroll = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
             {
                 AnchorStyle = AnchorStyle.Right,
+                Maximum = 0,
                 Parent = this,
             };
             _vScroll.ValueChanged += OnVScrollValueChanged;
@@ -114,6 +115,7 @@ namespace FlaxEditor.Windows
             _contextMenu.AddButton("Clear log", Clear);
             _contextMenu.AddButton("Copy selection", _output.Copy);
             _contextMenu.AddButton("Select All", _output.SelectAll);
+            _contextMenu.AddButton("Scroll to bottom", () => { _vScroll.TargetValue = _vScroll.Maximum; });
 
             // Bind events
             Editor.Options.OptionsChanged += OnEditorOptionsChanged;
@@ -172,14 +174,16 @@ namespace FlaxEditor.Windows
 
         private void OnOutputTargetViewOffsetChanged()
         {
-            _hScroll.TargetValue = _output.TargetViewOffset.X;
-            _vScroll.TargetValue = _output.TargetViewOffset.Y;
+            if (!_hScroll.IsThumbClicked)
+                _hScroll.TargetValue = _output.TargetViewOffset.X;
+            if (!_vScroll.IsThumbClicked)
+                _vScroll.TargetValue = _output.TargetViewOffset.Y;
         }
 
         private void OnOutputTextChanged()
         {
             _hScroll.Maximum = _output.TextSize.X;
-            _vScroll.Maximum = _output.TextSize.Y;
+            _vScroll.Maximum = Mathf.Max(_output.TextSize.Y - _output.Height, _vScroll.Minimum);
         }
 
         private void OnEditorOptionsChanged(EditorOptions options)
@@ -312,6 +316,15 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
+        protected override void SetSizeInternal(ref Vector2 size)
+        {
+            base.SetSizeInternal(ref size);
+
+            // Update scroll range
+            OnOutputTextChanged();
+        }
+
+        /// <inheritdoc />
         public override void Update(float deltaTime)
         {
             FlaxEngine.Profiler.BeginEvent("OutputLogWindow.Update");
@@ -374,8 +387,14 @@ namespace FlaxEditor.Windows
                 }
 
                 // Update the output
+                var cachedScrollValue = _vScroll.Value;
+                var cachedSelection = _output.SelectionRange;
+                var isBottomScroll = _vScroll.Value >= _vScroll.Maximum - 20.0f;
                 _output.Text = _textBuffer.ToString();
                 _textBufferCount = _entries.Count;
+                if (!_vScroll.IsThumbClicked)
+                    _vScroll.TargetValue = isBottomScroll ? _vScroll.Maximum : cachedScrollValue;
+                _output.SelectionRange = cachedSelection;
             }
 
             base.Update(deltaTime);

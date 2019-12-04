@@ -119,7 +119,7 @@ namespace FlaxEngine.GUI
         [EditorOrder(60), Tooltip("If checked, text in the text box is read-only.")]
         public bool IsReadOnly
         {
-            get { return _isReadOnly; }
+            get => _isReadOnly;
             set
             {
                 if (_isReadOnly != value)
@@ -191,6 +191,7 @@ namespace FlaxEngine.GUI
             get => _targetViewOffset;
             set
             {
+                value = Vector2.Round(value);
                 if (Vector2.NearEqual(ref value, ref _targetViewOffset))
                     return;
 
@@ -270,9 +271,18 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the number of characters selected in the text box.
+        /// Gets the number of characters selected in the text box.
         /// </summary>
         public int SelectionLength => Mathf.Abs(_selectionEnd - _selectionStart);
+
+        /// <summary>
+        /// Gets or sets the selection range.
+        /// </summary>
+        public TextRange SelectionRange
+        {
+            get => new TextRange(SelectionLeft, SelectionRight);
+            set => SetSelection(value.StartIndex, value.EndIndex, false);
+        }
 
         /// <summary>
         /// Returns true if any text is selected, otherwise false
@@ -639,18 +649,21 @@ namespace FlaxEngine.GUI
             SetSelection(caret, caret);
         }
 
-        private void SetSelection(int start, int end)
+        private void SetSelection(int start, int end, bool withScroll = true)
         {
             // Update parameters
             int textLength = _text.Length;
             _selectionStart = Mathf.Clamp(start, -1, textLength);
             _selectionEnd = Mathf.Clamp(end, -1, textLength);
 
-            // Update view on caret modified
-            ScrollToCaret();
+            if (withScroll)
+            {
+                // Update view on caret modified
+                ScrollToCaret();
 
-            // Reset caret and selection animation
-            _animateTime = 0.0f;
+                // Reset caret and selection animation
+                _animateTime = 0.0f;
+            }
         }
 
         private int FindNextWordBegin()
