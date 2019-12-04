@@ -97,7 +97,7 @@ namespace FlaxEngine.GUI
             get => _maxLength;
             set
             {
-                if (_maxLength <= 0 || _maxLength > 1000000)
+                if (_maxLength <= 0)
                     throw new ArgumentOutOfRangeException(nameof(MaxLength));
 
                 if (_maxLength != value)
@@ -340,7 +340,7 @@ namespace FlaxEngine.GUI
         : base(x, y, width, DefaultHeight)
         {
             _isMultiline = isMultiline;
-            _maxLength = 32000;
+            _maxLength = 2147483646;
             _selectionStart = _selectionEnd = -1;
             AutoFocus = false;
 
