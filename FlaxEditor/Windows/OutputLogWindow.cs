@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Options;
 using FlaxEngine;
@@ -51,6 +52,8 @@ namespace FlaxEditor.Windows
         private StringBuilder _textBuffer = new StringBuilder();
         private DateTime _startupTime;
 
+        private Button _viewDropdown;
+        private TextBox _searchBox;
         private HScrollBar _hScroll;
         private VScrollBar _vScroll;
         private RichTextBox _output;
@@ -68,6 +71,13 @@ namespace FlaxEditor.Windows
             OnEditorOptionsChanged(Editor.Options.Options);
 
             // Setup UI
+            _viewDropdown = new Button(2, 2, 40.0f, TextBoxBase.DefaultHeight)
+            {
+                TooltipText = "Change output log view options",
+                Text = "View",
+                Parent = this,
+            };
+            _viewDropdown.Clicked += OnViewButtonClicked;
             _hScroll = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
             {
                 AnchorStyle = AnchorStyle.Bottom,
@@ -85,7 +95,7 @@ namespace FlaxEditor.Windows
                 IsReadOnly = true,
                 IsMultiline = true,
                 BackgroundSelectedFlashSpeed = 0.0f,
-                Location = new Vector2(2, 2),
+                Location = new Vector2(2, _viewDropdown.Bottom + 2),
                 Parent = this,
             };
             _output.TargetViewOffsetChanged += OnOutputTargetViewOffsetChanged;
@@ -99,6 +109,34 @@ namespace FlaxEditor.Windows
 
             // Bind events
             Editor.Options.OptionsChanged += OnEditorOptionsChanged;
+        }
+
+        private void OnViewButtonClicked()
+        {
+            var menu = new ContextMenu();
+
+            var infoLogButton = menu.AddButton("Info");
+            infoLogButton.AutoCheck = true;
+            infoLogButton.Checked = (_logTypeShowMask & (int)LogType.Info) != 0;
+            infoLogButton.Clicked += () => ToggleLogTypeShow(LogType.Info);
+
+            var warningLogButton = menu.AddButton("Warning");
+            warningLogButton.AutoCheck = true;
+            warningLogButton.Checked = (_logTypeShowMask & (int)LogType.Warning) != 0;
+            warningLogButton.Clicked += () => ToggleLogTypeShow(LogType.Warning);
+
+            var errorLogButton = menu.AddButton("Error");
+            errorLogButton.AutoCheck = true;
+            errorLogButton.Checked = (_logTypeShowMask & (int)LogType.Error) != 0;
+            errorLogButton.Clicked += () => ToggleLogTypeShow(LogType.Error);
+
+            menu.Show(_viewDropdown.Parent, _viewDropdown.BottomLeft);
+        }
+
+        private void ToggleLogTypeShow(LogType type)
+        {
+            _logTypeShowMask ^= (int)type;
+            Refresh();
         }
 
         private void OnHScrollValueChanged()
@@ -164,7 +202,7 @@ namespace FlaxEditor.Windows
 
             if (_output != null)
             {
-                _output.Size = new Vector2(_vScroll.X - 2, _hScroll.Y - 2);
+                _output.Size = new Vector2(_vScroll.X - 2, _hScroll.Y - 4 - _viewDropdown.Bottom);
             }
         }
 
@@ -277,6 +315,8 @@ namespace FlaxEditor.Windows
             _outLogTimes = null;
 
             // Unlink controls
+            _viewDropdown = null;
+            _searchBox = null;
             _hScroll = null;
             _vScroll = null;
             _output = null;
