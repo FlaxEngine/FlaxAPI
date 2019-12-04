@@ -109,6 +109,8 @@ namespace FlaxEditor.Windows
                 {
                     Font = new FontReference(FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.InconsolataRegularFont), 10),
                     Color = Color.White,
+                    ShadowOffset = new Vector2(1),
+                    ShadowColor = Color.Black.AlphaMultiplied(0.5f),
                     BackgroundSelectedBrush = new SolidColorBrush(Style.Current.BackgroundSelected),
                 },
                 Parent = this,
