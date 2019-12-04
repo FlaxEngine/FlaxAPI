@@ -78,6 +78,12 @@ namespace FlaxEditor.Windows
                 Parent = this,
             };
             _viewDropdown.Clicked += OnViewButtonClicked;
+            _searchBox = new TextBox(false, _viewDropdown.Right + 2, 2, Width - _viewDropdown.Right - 2 - ScrollBar.DefaultSize)
+            {
+                WatermarkText = "Search...",
+                Parent = this,
+            };
+            _searchBox.TextChanged += OnSearchBoxTextChanged;
             _hScroll = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
             {
                 AnchorStyle = AnchorStyle.Bottom,
@@ -131,6 +137,11 @@ namespace FlaxEditor.Windows
             errorLogButton.Clicked += () => ToggleLogTypeShow(LogType.Error);
 
             menu.Show(_viewDropdown.Parent, _viewDropdown.BottomLeft);
+        }
+
+        private void OnSearchBoxTextChanged()
+        {
+            Refresh();
         }
 
         private void ToggleLogTypeShow(LogType type)
@@ -202,6 +213,7 @@ namespace FlaxEditor.Windows
 
             if (_output != null)
             {
+                _searchBox.Width = Width - _viewDropdown.Right - 2 - ScrollBar.DefaultSize;
                 _output.Size = new Vector2(_vScroll.X - 2, _hScroll.Y - 4 - _viewDropdown.Bottom);
             }
         }
@@ -252,10 +264,13 @@ namespace FlaxEditor.Windows
 
                 // Generate the output log
                 var entries = Utils.ExtractArrayFromList(_entries);
+                var searchQuery = _searchBox.Text;
                 for (int i = _textBufferCount; i < _entries.Count; i++)
                 {
                     ref var entry = ref entries[i];
                     if (((int)entry.Level & _logTypeShowMask) == 0)
+                        continue;
+                    if (searchQuery.Length != 0 && entry.Message.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) == -1)
                         continue;
 
                     switch (_timestampsFormats)
