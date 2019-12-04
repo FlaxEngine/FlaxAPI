@@ -105,6 +105,12 @@ namespace FlaxEditor.Windows
                 IsMultiline = true,
                 BackgroundSelectedFlashSpeed = 0.0f,
                 Location = new Vector2(2, _viewDropdown.Bottom + 2),
+                TextStyle = new TextBlockStyle
+                {
+                    Font = new FontReference(FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.InconsolataRegularFont), 10),
+                    Color = Color.White,
+                    BackgroundSelectedBrush = new SolidColorBrush(Style.Current.BackgroundSelected),
+                },
                 Parent = this,
             };
             _output.TargetViewOffsetChanged += OnOutputTargetViewOffsetChanged;
