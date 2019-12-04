@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Options;
@@ -136,6 +138,10 @@ namespace FlaxEditor.Windows
             errorLogButton.Checked = (_logTypeShowMask & (int)LogType.Error) != 0;
             errorLogButton.Clicked += () => ToggleLogTypeShow(LogType.Error);
 
+            menu.AddSeparator();
+
+            menu.AddButton("Load log file...", LoadLogFile);
+
             menu.Show(_viewDropdown.Parent, _viewDropdown.BottomLeft);
         }
 
@@ -204,6 +210,78 @@ namespace FlaxEditor.Windows
         {
             _entries?.Clear();
             Refresh();
+        }
+
+        /// <summary>
+        /// Loads the log from the file selected by the user with the file pickup dialog.
+        /// </summary>
+        public void LoadLogFile()
+        {
+            var result = MessageBox.OpenFileDialog(null, Path.Combine(Globals.ProjectFolder, "Logs"), null, false, "Pick a log file to load");
+            if (result != null && result.Length > 0)
+            {
+                LoadLogFile(result[0]);
+            }
+        }
+
+        /// <summary>
+        /// Loads the log file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        public void LoadLogFile(string path)
+        {
+            using (var file = File.OpenRead(path))
+            using (var stream = new StreamReader(file))
+            {
+                _entries.Clear();
+                var regex = new Regex(@"\[ (\d\d:\d\d:\d\d.\d\d\d) \]\: \[(\w*)\]");
+
+                while (!stream.EndOfStream)
+                {
+                    // Read next line
+                    var line = stream.ReadLine();
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+
+                    // Parse with regex
+                    var match = regex.Match(line);
+                    if (!match.Success || match.Groups.Count != 3)
+                    {
+                        // Try to add the line for multi-line logs
+                        if (_entries.Count != 0 && !line.StartsWith("======"))
+                        {
+                            ref var last = ref Utils.ExtractArrayFromList(_entries)[_entries.Count - 1];
+                            last.Message += '\n';
+                            last.Message += line;
+                        }
+
+                        continue;
+                    }
+
+                    // Parse log time and type
+                    var time = match.Groups[1].Value;
+                    var level = match.Groups[2].Value;
+                    if (time.Length != 12)
+                        continue;
+                    int hours = int.Parse(time.Substring(0, 2));
+                    int minutes = int.Parse(time.Substring(3, 2));
+                    int seconds = int.Parse(time.Substring(6, 2));
+                    int milliseconds = int.Parse(time.Substring(9, 3));
+                    var timeSinceStartup = new TimeSpan(0, hours, minutes, seconds, milliseconds);
+                    var logType = (LogType)Enum.Parse(typeof(LogType), level);
+
+                    // Add new entry
+                    var e = new Entry
+                    {
+                        Time = _startupTime + timeSinceStartup,
+                        Level = logType,
+                        Message = line.Substring(match.Index + match.Length)
+                    };
+                    _entries.Add(e);
+                }
+
+                Refresh();
+            }
         }
 
         /// <inheritdoc />
@@ -283,7 +361,7 @@ namespace FlaxEditor.Windows
                         break;
                     case InterfaceOptions.TimestampsFormats.TimeSinceStartup:
                         var diff = entry.Time - _startupTime;
-                        _textBuffer.AppendFormat("[ {0:000}:{1:00}:{2:00}.{3:000} ]: ", diff.Hours, diff.Minutes, diff.Seconds, diff.Milliseconds);
+                        _textBuffer.AppendFormat("[ {0:00}:{1:00}:{2:00}.{3:000} ]: ", diff.Hours, diff.Minutes, diff.Seconds, diff.Milliseconds);
                         break;
                     }
 
