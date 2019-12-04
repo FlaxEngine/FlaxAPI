@@ -898,6 +898,12 @@ namespace FlaxEngine.GUI
                 return true;
             }
 
+            if (buttons == MouseButton.Left && !IsFocused)
+            {
+                Focus();
+                return true;
+            }
+
             return false;
         }
 
