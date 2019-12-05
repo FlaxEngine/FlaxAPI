@@ -65,22 +65,6 @@ namespace FlaxEditor.Windows
             /// </summary>
             public TextBlockStyle ErrorStyle;
 
-            public OutputTextBox()
-            {
-                DefaultStyle = new TextBlockStyle
-                {
-                    Font = new FontReference(FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.InconsolataRegularFont), 10),
-                    Color = Color.White,
-                    ShadowOffset = new Vector2(1),
-                    ShadowColor = Color.Black.AlphaMultiplied(0.5f),
-                    BackgroundSelectedBrush = new SolidColorBrush(Style.Current.BackgroundSelected),
-                };
-                WarningStyle = DefaultStyle;
-                WarningStyle.Color = Color.Yellow;
-                ErrorStyle = DefaultStyle;
-                ErrorStyle.Color = Color.Red;
-            }
-
             /// <inheritdoc />
             protected override void OnParseTextBlocks()
             {
@@ -127,7 +111,6 @@ namespace FlaxEditor.Windows
         {
             Title = "Output Log";
             ClipChildren = false;
-            OnEditorOptionsChanged(Editor.Options.Options);
 
             // Setup UI
             _viewDropdown = new Button(2, 2, 40.0f, TextBoxBase.DefaultHeight)
@@ -176,8 +159,9 @@ namespace FlaxEditor.Windows
             _contextMenu.AddButton("Select All", _output.SelectAll);
             _contextMenu.AddButton("Scroll to bottom", () => { _vScroll.TargetValue = _vScroll.Maximum; });
 
-            // Bind events
+            // Setup editor options
             Editor.Options.OptionsChanged += OnEditorOptionsChanged;
+            OnEditorOptionsChanged(Editor.Options.Options);
         }
 
         private void OnViewButtonClicked()
@@ -248,11 +232,29 @@ namespace FlaxEditor.Windows
         private void OnEditorOptionsChanged(EditorOptions options)
         {
             if (options.Interface.OutputLogTimestampsFormat == _timestampsFormats &&
-                options.Interface.OutputLogShowLogType == _showLogType)
+                options.Interface.OutputLogShowLogType == _showLogType &&
+                _output.DefaultStyle.Font == options.Interface.OutputLogTextFont &&
+                _output.DefaultStyle.Color == options.Interface.OutputLogTextColor &&
+                _output.DefaultStyle.ShadowColor == options.Interface.OutputLogTextShadowColor &&
+                _output.DefaultStyle.ShadowOffset == options.Interface.OutputLogTextShadowOffset)
                 return;
+
+            _output.DefaultStyle = new TextBlockStyle
+            {
+                Font = options.Interface.OutputLogTextFont,
+                Color = options.Interface.OutputLogTextColor,
+                ShadowColor = options.Interface.OutputLogTextShadowColor,
+                ShadowOffset = options.Interface.OutputLogTextShadowOffset,
+                BackgroundSelectedBrush = new SolidColorBrush(Style.Current.BackgroundSelected),
+            };
+            _output.WarningStyle = _output.DefaultStyle;
+            _output.WarningStyle.Color = Color.Yellow;
+            _output.ErrorStyle = _output.DefaultStyle;
+            _output.ErrorStyle.Color = Color.Red;
 
             _timestampsFormats = options.Interface.OutputLogTimestampsFormat;
             _showLogType = options.Interface.OutputLogShowLogType;
+
             Refresh();
         }
 
@@ -485,6 +487,9 @@ namespace FlaxEditor.Windows
                     var lines = font.ProcessText(entryText);
                     for (int j = 0; j < lines.Length; j++)
                     {
+                        // TODO: parsing hyperlinks with link
+                        // TODO: parsing file paths with link
+
                         ref var line = ref lines[j];
                         textBlock.Range.StartIndex = startIndex + line.FirstCharIndex;
                         textBlock.Range.EndIndex = startIndex + line.LastCharIndex;

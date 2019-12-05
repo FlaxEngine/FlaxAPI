@@ -62,15 +62,42 @@ namespace FlaxEditor.Options
         /// Gets or sets the timestamps prefix mode for output log messages.
         /// </summary>
         [DefaultValue(TimestampsFormats.TimeSinceStartup)]
-        [EditorDisplay("Interface"), EditorOrder(220), Tooltip("The timestamps prefix mode for output log messages.")]
+        [EditorDisplay("Output Log", "Timestamps Format"), EditorOrder(300), Tooltip("The timestamps prefix mode for output log messages.")]
         public TimestampsFormats OutputLogTimestampsFormat { get; set; } = TimestampsFormats.TimeSinceStartup;
 
         /// <summary>
         /// Gets or sets the timestamps prefix mode for output log messages.
         /// </summary>
         [DefaultValue(true)]
-        [EditorDisplay("Interface"), EditorOrder(230), Tooltip("Determines whether show log type prefix in output log messages.")]
+        [EditorDisplay("Output Log", "Show Log Type"), EditorOrder(310), Tooltip("Determines whether show log type prefix in output log messages.")]
         public bool OutputLogShowLogType { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the output log text font.
+        /// </summary>
+        [EditorDisplay("Output Log", "Text Font"), EditorOrder(320), Tooltip("The output log text font.")]
+        public FontReference OutputLogTextFont { get; set; } = new FontReference(FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.InconsolataRegularFont), 10);
+
+        /// <summary>
+        /// Gets or sets the output log text color.
+        /// </summary>
+        [DefaultValue(typeof(Color), "1,1,1,1")]
+        [EditorDisplay("Output Log", "Text Color"), EditorOrder(330), Tooltip("The output log text color.")]
+        public Color OutputLogTextColor { get; set; } = Color.White;
+
+        /// <summary>
+        /// Gets or sets the output log text shadow color.
+        /// </summary>
+        [DefaultValue(typeof(Color), "0,0,0,0.5")]
+        [EditorDisplay("Output Log", "Text Shadow Color"), EditorOrder(340), Tooltip("The output log text shadow color.")]
+        public Color OutputLogTextShadowColor { get; set; } = new Color(0, 0, 0, 0.5f);
+
+        /// <summary>
+        /// Gets or sets the output log text shadow offset. Set to 0 to disable this feature.
+        /// </summary>
+        [DefaultValue(typeof(Vector2), "1,1")]
+        [EditorDisplay("Output Log", "Text Shadow Offset"), EditorOrder(340), Tooltip("The output log text shadow offset. Set to 0 to disable this feature.")]
+        public Vector2 OutputLogTextShadowOffset { get; set; } = new Vector2(1);
 
         /// <summary>
         /// Gets or sets a value indicating whether auto-focus game window on play mode start.
