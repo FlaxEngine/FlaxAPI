@@ -52,6 +52,11 @@ namespace FlaxEditor
         public static string PrimaryFont = "Editor/Roboto-Regular";
 
         /// <summary>
+        /// The Inconsolata Regular font.
+        /// </summary>
+        public static string InconsolataRegularFont = "Editor/Fonts/Inconsolata-Regular";
+
+        /// <summary>
         /// The window icon.
         /// </summary>
         public static string WindowIcon = "Editor/EditorIcon";
@@ -60,7 +65,7 @@ namespace FlaxEditor
         /// The window icons font.
         /// </summary>
         public static string WindowIconsFont = "Editor/SegMDL2";
-        
+
         /// <summary>
         /// The default font material.
         /// </summary>

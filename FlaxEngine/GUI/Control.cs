@@ -384,7 +384,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         ///     Delete control (will unlink from the parent and start to dispose)
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
             if (_isDisposing)
                 return;

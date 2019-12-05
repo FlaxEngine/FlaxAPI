@@ -149,7 +149,49 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Vector2 resultAsRef;
-            Internal_MeasureText(unmanagedPtr, text, out resultAsRef);
+            Internal_MeasureText1(unmanagedPtr, text, out resultAsRef);
+            return resultAsRef;
+#endif
+        }
+
+        /// <summary>
+        /// Measures minimum size of the rectangle that will be needed to draw given text.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="layout">The layout properties.</param>
+        /// <returns>The minimum size for that text and fot to render properly.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Vector2 MeasureText(string text, ref TextLayoutOptions layout)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Vector2 resultAsRef;
+            Internal_MeasureText2(unmanagedPtr, text, ref layout, out resultAsRef);
+            return resultAsRef;
+#endif
+        }
+
+        /// <summary>
+        /// Measures minimum size of the rectangle that will be needed to draw given text.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <returns>The minimum size for that text and fot to render properly.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Vector2 MeasureText(string text, ref GUI.TextRange textRange)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Vector2 resultAsRef;
+            Internal_MeasureText3(unmanagedPtr, text, ref textRange, out resultAsRef);
             return resultAsRef;
 #endif
         }
@@ -188,6 +230,25 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             return Internal_ProcessText2(unmanagedPtr, text, ref layout);
+#endif
+        }
+
+        /// <summary>
+        /// Processes text to get cached lines for rendering.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <returns>The output lines cache.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public FontLineCache[] ProcessText(string text, ref GUI.TextRange textRange)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ProcessText3(unmanagedPtr, text, ref textRange);
 #endif
         }
 
@@ -235,6 +296,28 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Calculates character position for given text and character index.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <param name="index">The text position to get it's coordinates.</param>
+        /// <returns>The character position (upper left corner which can be used for a caret position).</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Vector2 GetCharPosition(string text, ref GUI.TextRange textRange, int index)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Vector2 resultAsRef;
+            Internal_GetCharPosition3(unmanagedPtr, text, ref textRange, index, out resultAsRef);
+            return resultAsRef;
+#endif
+        }
+
+        /// <summary>
         /// Calculates hit character index at given location.
         /// </summary>
         /// <param name="text">The input text to test.</param>
@@ -270,6 +353,26 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             return Internal_HitTestText2(unmanagedPtr, text, ref location);
+#endif
+        }
+
+        /// <summary>
+        /// Calculates hit character index at given location.
+        /// </summary>
+        /// <param name="text">The input text to test.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <param name="location">The location to test.</param>
+        /// <returns>The selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public int HitTestText(string text, ref GUI.TextRange textRange, Vector2 location)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_HitTestText3(unmanagedPtr, text, ref textRange, ref location);
 #endif
         }
 
@@ -317,7 +420,13 @@ namespace FlaxEngine
         internal static extern void Internal_CacheText(IntPtr obj, string text);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_MeasureText(IntPtr obj, string text, out Vector2 resultAsRef);
+        internal static extern void Internal_MeasureText1(IntPtr obj, string text, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_MeasureText2(IntPtr obj, string text, ref TextLayoutOptions layout, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_MeasureText3(IntPtr obj, string text, ref GUI.TextRange textRange, out Vector2 resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern FontLineCache[] Internal_ProcessText1(IntPtr obj, string text);
@@ -326,16 +435,25 @@ namespace FlaxEngine
         internal static extern FontLineCache[] Internal_ProcessText2(IntPtr obj, string text, ref TextLayoutOptions layout);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern FontLineCache[] Internal_ProcessText3(IntPtr obj, string text, ref GUI.TextRange textRange);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCharPosition1(IntPtr obj, string text, int index, ref TextLayoutOptions layout, out Vector2 resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCharPosition2(IntPtr obj, string text, int index, out Vector2 resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetCharPosition3(IntPtr obj, string text, ref GUI.TextRange textRange, int index, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_HitTestText1(IntPtr obj, string text, ref Vector2 location, ref TextLayoutOptions layout);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_HitTestText2(IntPtr obj, string text, ref Vector2 location);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_HitTestText3(IntPtr obj, string text, ref GUI.TextRange textRange, ref Vector2 location);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Invalidate(IntPtr obj);

@@ -59,9 +59,9 @@ namespace FlaxEngine
         internal static void Init(int flags, PlatformType platform)
         {
 #if DEBUG
-            Debug.Logger.LogHandler.LogWrite(LogType.Log, "Using FlaxAPI in Debug");
+            Debug.Logger.LogHandler.LogWrite(LogType.Info, "Using FlaxAPI in Debug");
 #else
-            Debug.Logger.LogHandler.LogWrite(LogType.Log, "Using FlaxAPI in Release");
+            Debug.Logger.LogHandler.LogWrite(LogType.Info, "Using FlaxAPI in Release");
 #endif
 
             Platform._is64Bit = (flags & 0x01) != 0;

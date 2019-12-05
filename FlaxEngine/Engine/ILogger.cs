@@ -5,7 +5,7 @@ using System;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Log message delegate.
+    /// Info message delegate.
     /// </summary>
     /// <param name="level">The log level.</param>
     /// <param name="msg">The message.</param>
@@ -14,7 +14,7 @@ namespace FlaxEngine
     public delegate void LogDelegate(LogType level, string msg, Object obj, string stackTrace);
 
     /// <summary>
-    /// Log exception delegate.
+    /// Info exception delegate.
     /// </summary>
     /// <param name="exception">The exception.</param>
     /// <param name="obj">The object.</param>
@@ -103,14 +103,14 @@ namespace FlaxEngine
         void Log(string tag, object message, Object context);
 
         /// <summary>
-        /// <para>A variant of ILogger.Log that logs an error message.</para>
+        /// <para>A variant of ILogger.Info that logs an error message.</para>
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="message"></param>
         void LogError(string tag, object message);
 
         /// <summary>
-        /// <para>A variant of ILogger.Log that logs an error message.</para>
+        /// <para>A variant of ILogger.Info that logs an error message.</para>
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="message"></param>
@@ -118,7 +118,7 @@ namespace FlaxEngine
         void LogError(string tag, object message, Object context);
 
         /// <summary>
-        /// <para>A variant of ILogger.Log that logs an exception message.</para>
+        /// <para>A variant of ILogger.Info that logs an exception message.</para>
         /// </summary>
         /// <param name="exception"></param>
         void LogException(Exception exception);
@@ -132,14 +132,14 @@ namespace FlaxEngine
         void LogFormat(LogType logType, string format, params object[] args);
 
         /// <summary>
-        /// <para>A variant of Logger.Log that logs an warning message.</para>
+        /// <para>A variant of Logger.Info that logs an warning message.</para>
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="message"></param>
         void LogWarning(string tag, object message);
 
         /// <summary>
-        /// <para>A variant of Logger.Log that logs an warning message.</para>
+        /// <para>A variant of Logger.Info that logs an warning message.</para>
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="message"></param>

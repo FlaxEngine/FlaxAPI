@@ -349,7 +349,13 @@
     <Compile Include="GUI\Common\Image.cs" />
     <Compile Include="GUI\Common\Label.cs" />
     <Compile Include="GUI\Common\ProgressBar.cs" />
+    <Compile Include="GUI\Common\RichTextBox.cs" />
+    <Compile Include="GUI\Common\RichTextBoxBase.cs" />
     <Compile Include="GUI\Common\Spacer.cs" />
+    <Compile Include="GUI\TextBlock.cs" />
+    <Compile Include="GUI\Common\TextBoxBase.cs" />
+    <Compile Include="GUI\TextBlockStyle.cs" />
+    <Compile Include="GUI\TextRange.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
     <Compile Include="GUI\Control.Bounds.cs">
       <DependentUpon>Control.cs</DependentUpon>
@@ -360,9 +366,6 @@
     <Compile Include="GUI\DragDataText.cs" />
     <Compile Include="GUI\Enums.cs" />
     <Compile Include="GUI\Common\TextBox.cs" />
-    <Compile Include="GUI\Common\TextBox.Keys.cs">
-      <DependentUpon>TextBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Margin.cs" />
     <Compile Include="GUI\Panels\BlurPanel.cs" />
     <Compile Include="GUI\Panels\DropPanel.cs" />

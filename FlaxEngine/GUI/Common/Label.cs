@@ -18,6 +18,11 @@ namespace FlaxEngine.GUI
         private Vector2 _autoFitTextRange = new Vector2(0.1f, 100.0f);
 
         /// <summary>
+        /// The font.
+        /// </summary>
+        protected FontReference _font;
+
+        /// <summary>
         /// Gets or sets the text.
         /// </summary>
         [EditorOrder(10), MultilineText, Tooltip("The label text.")]
@@ -69,7 +74,11 @@ namespace FlaxEngine.GUI
         /// Gets or sets the font.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
-        public FontReference Font { get; set; }
+        public FontReference Font
+        {
+            get => _font;
+            set => _font = value;
+        }
 
         /// <summary>
         /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
@@ -159,7 +168,7 @@ namespace FlaxEngine.GUI
         {
             AutoFocus = false;
             var style = Style.Current;
-            Font = new FontReference(style.FontMedium);
+            _font = new FontReference(style.FontMedium);
         }
 
         /// <inheritdoc />
@@ -168,7 +177,7 @@ namespace FlaxEngine.GUI
         {
             AutoFocus = false;
             var style = Style.Current;
-            Font = new FontReference(style.FontMedium);
+            _font = new FontReference(style.FontMedium);
         }
 
         /// <inheritdoc />
@@ -201,7 +210,7 @@ namespace FlaxEngine.GUI
             }
 
             Render2D.DrawText(
-                Font.GetFont(),
+                _font.GetFont(),
                 Material,
                 Text,
                 rect,
@@ -222,7 +231,7 @@ namespace FlaxEngine.GUI
         {
             if (_autoWidth || _autoHeight || _autoFitText)
             {
-                var font = Font.GetFont();
+                var font = _font.GetFont();
                 if (font)
                 {
                     // Calculate text size

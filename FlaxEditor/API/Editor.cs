@@ -577,7 +577,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void Log(string msg)
         {
-            Debug.Logger.LogHandler.LogWrite(LogType.Log, msg);
+            Debug.Logger.LogHandler.LogWrite(LogType.Info, msg);
         }
 
         /// <summary>
@@ -1151,6 +1151,9 @@ namespace FlaxEditor
         }
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_ReadOutputLogs(string[] outMessages, byte[] outLogTypes, long[] outLogTimes);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetPlayMode(bool value);
 

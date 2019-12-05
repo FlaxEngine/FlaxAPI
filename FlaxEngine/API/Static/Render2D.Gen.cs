@@ -80,7 +80,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draws a text.
+        /// Draws a text with formatting.
         /// </summary>
         /// <param name="font">The font to use.</param>
         /// <param name="text">The text to render.</param>
@@ -100,7 +100,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Draws a text using a custom material shader. Given material must have GUI domain and a public parameter named Font (texture parameter used for a font atlas sampling).
+        /// Draws a text with formatting using a custom material shader. Given material must have GUI domain and a public parameter named Font (texture parameter used for a font atlas sampling).
         /// </summary>
         /// <param name="font">The font to use.</param>
         /// <param name="customMaterial">The custom material for font characters rendering. It must contain texture parameter named Font used to sample font texture.</param>
@@ -117,6 +117,49 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Internal_DrawText2(FlaxEngine.Object.GetUnmanagedPtr(font), FlaxEngine.Object.GetUnmanagedPtr(customMaterial), text, ref color, ref layout);
+#endif
+        }
+
+        /// <summary>
+        /// Draws a text.
+        /// </summary>
+        /// <param name="font">The font to use.</param>
+        /// <param name="text">The text to render.</param>
+        /// <param name="color">The text color.</param>
+        /// <param name="location">The text location.</param>
+        /// <param name="customMaterial">The custom material for font characters rendering. It must contain texture parameter named Font used to sample font texture.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawText(Font font, string text, Color color, Vector2 location, MaterialBase customMaterial = null)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawText3(FlaxEngine.Object.GetUnmanagedPtr(font), text, ref color, ref location, FlaxEngine.Object.GetUnmanagedPtr(customMaterial));
+#endif
+        }
+
+        /// <summary>
+        /// Draws a text.
+        /// </summary>
+        /// <param name="font">The font to use.</param>
+        /// <param name="text">The text to render.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <param name="color">The text color.</param>
+        /// <param name="location">The text location.</param>
+        /// <param name="customMaterial">The custom material for font characters rendering. It must contain texture parameter named Font used to sample font texture.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void DrawText(Font font, string text, ref GUI.TextRange textRange, Color color, Vector2 location, MaterialBase customMaterial = null)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_DrawText4(FlaxEngine.Object.GetUnmanagedPtr(font), text, ref textRange, ref color, ref location, FlaxEngine.Object.GetUnmanagedPtr(customMaterial));
 #endif
         }
 
@@ -433,6 +476,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawText2(IntPtr font, IntPtr customMaterial, string text, ref Color color, ref TextLayoutOptions layout);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawText3(IntPtr font, string text, ref Color color, ref Vector2 location, IntPtr customMaterial);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_DrawText4(IntPtr font, string text, ref GUI.TextRange textRange, ref Color color, ref Vector2 location, IntPtr customMaterial);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_FillRectangle1(ref Rectangle rect, ref Color color);

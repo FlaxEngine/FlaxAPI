@@ -99,7 +99,7 @@ namespace FlaxEditor.Windows
                     Group = LogGroup.Warning;
                     Icon = _window.IconWarning;
                     break;
-                case LogType.Log:
+                case LogType.Info:
                     Group = LogGroup.Info;
                     Icon = _window.IconInfo;
                     break;
@@ -264,7 +264,7 @@ namespace FlaxEditor.Windows
         private LogEntry _selected;
         private readonly int[] _logCountPerGroup = new int[(int)LogGroup.Max];
         private readonly Regex _logRegex = new Regex("at(.*) in (.*):(\\d*)");
-        private InterfaceOptions.DebugLogTimestampsFormats _timestampsFormats;
+        private InterfaceOptions.TimestampsFormats _timestampsFormats;
 
         private readonly object _locker = new object();
         private bool _hasCompilationStarted;
@@ -285,7 +285,7 @@ namespace FlaxEditor.Windows
         public DebugLogWindow(Editor editor)
         : base(editor, true, ScrollBars.None)
         {
-            Title = "Debug";
+            Title = "Debug Log";
             OnEditorOptionsChanged(Editor.Options.Options);
 
             // Toolstrip
@@ -308,7 +308,7 @@ namespace FlaxEditor.Windows
                 Parent = this
             };
 
-            // Log detail info
+            // Info detail info
             _logInfo = new Label(0, 0, 120, 1)
             {
                 Parent = _split.Panel2,
@@ -365,13 +365,13 @@ namespace FlaxEditor.Windows
             // Create new entry
             switch (_timestampsFormats)
             {
-            case InterfaceOptions.DebugLogTimestampsFormats.Utc:
+            case InterfaceOptions.TimestampsFormats.Utc:
                 desc.Title = string.Format("[{0}] ", DateTime.UtcNow) + desc.Title;
                 break;
-            case InterfaceOptions.DebugLogTimestampsFormats.LocalTime:
+            case InterfaceOptions.TimestampsFormats.LocalTime:
                 desc.Title = string.Format("[{0}] ", DateTime.Now) + desc.Title;
                 break;
-            case InterfaceOptions.DebugLogTimestampsFormats.TimeSinceStartup:
+            case InterfaceOptions.TimestampsFormats.TimeSinceStartup:
                 desc.Title = string.Format("[{0:g}] ", TimeSpan.FromSeconds(Time.TimeSinceStartup)) + desc.Title;
                 break;
             }
@@ -464,7 +464,7 @@ namespace FlaxEditor.Windows
                         }
                         fineStackTrace.AppendLine(match.Groups[0].Value);
                     }
-                    else if (match.Groups[1].Value.Trim().StartsWith("FlaxEngine.Debug.Log", StringComparison.Ordinal))
+                    else if (match.Groups[1].Value.Trim().StartsWith("FlaxEngine.Debug.Info", StringComparison.Ordinal))
                     {
                         foundStart = true;
                     }
@@ -479,7 +479,7 @@ namespace FlaxEditor.Windows
         {
             LogEntryDescription desc = new LogEntryDescription
             {
-                Level = LogType.Exception,
+                Level = LogType.Error,
                 Title = exception.Message,
                 Description = exception.StackTrace,
                 ContextObject = o?.ID ?? Guid.Empty,

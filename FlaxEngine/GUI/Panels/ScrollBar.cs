@@ -121,7 +121,8 @@ namespace FlaxEngine.GUI
                     // Check if skip smoothing
                     if (!UseSmoothing)
                     {
-                        SetValue(value);
+                        _value = value;
+                        OnValueChanged();
                     }
                     else
                     {
@@ -143,7 +144,8 @@ namespace FlaxEngine.GUI
                 if (!Mathf.NearEqual(value, _targetValue))
                 {
                     _targetValue = value;
-                    SetValue(value);
+                    _value = value;
+                    OnValueChanged();
                 }
             }
         }
@@ -157,6 +159,11 @@ namespace FlaxEngine.GUI
         /// Gets a value indicating whether thumb is being clicked (scroll bar is in use).
         /// </summary>
         public bool IsThumbClicked => _thumbClicked;
+
+        /// <summary>
+        /// Occurs when value gets changed.
+        /// </summary>
+        public event Action ValueChanged;
 
         /// <summary>
         /// Gets the size of the track.
@@ -238,15 +245,14 @@ namespace FlaxEngine.GUI
             _value = _targetValue = 0;
         }
 
-        private void SetValue(float value)
+        /// <summary>
+        /// Called when value gets changed.
+        /// </summary>
+        protected virtual void OnValueChanged()
         {
-            _value = value;
-
             UpdateThumb();
 
-            // Change parent panel view offset
-            if (Parent is Panel panel)
-                panel.SetViewOffset(_orientation, Mathf.FloorToInt(_value));
+            ValueChanged?.Invoke();
         }
 
         private void OnUpdate(float deltaTime)
@@ -270,7 +276,8 @@ namespace FlaxEngine.GUI
                         value = Mathf.Lerp(_value, _targetValue, deltaTime * 20.0f * SmoothingScale);
                     else
                         value = _targetValue;
-                    SetValue(value);
+                    _value = value;
+                    OnValueChanged();
                     needUpdate = true;
                 }
             }
@@ -327,7 +334,7 @@ namespace FlaxEngine.GUI
             if (_thumbClicked)
             {
                 Vector2 slidePosition = location + Root.TrackingMouseOffset;
-                if (Parent is Panel panel)
+                if (Parent is ScrollableControl panel)
                     slidePosition += panel.ViewOffset; // Hardcoded fix
                 float mousePosition = _orientation == Orientation.Vertical ? slidePosition.Y : slidePosition.X;
 
@@ -350,8 +357,8 @@ namespace FlaxEngine.GUI
             if (buttons == MouseButton.Left)
             {
                 // Remove focus
-                var parentWin = Root;
-                parentWin.FocusedControl?.Defocus();
+                var root = Root;
+                root.FocusedControl?.Defocus();
 
                 float mousePosition = _orientation == Orientation.Vertical ? location.Y : location.X;
 

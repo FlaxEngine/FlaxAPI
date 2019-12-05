@@ -407,6 +407,8 @@ namespace FlaxEditor.Windows
         public override void OnLayoutSerialize(XmlWriter writer)
         {
             writer.WriteAttributeString("GridEnabled", Viewport.Grid.Enabled.ToString());
+            writer.WriteAttributeString("ShowFpsCounter", Viewport.ShowFpsCounter.ToString());
+            writer.WriteAttributeString("ShowNavigation", Viewport.ShowNavigation.ToString());
             writer.WriteAttributeString("NearPlane", Viewport.NearPlane.ToString());
             writer.WriteAttributeString("FarPlane", Viewport.FarPlane.ToString());
             writer.WriteAttributeString("FieldOfView", Viewport.FieldOfView.ToString());
@@ -423,6 +425,10 @@ namespace FlaxEditor.Windows
 
             if (bool.TryParse(node.GetAttribute("GridEnabled"), out value1))
                 Viewport.Grid.Enabled = value1;
+            if (bool.TryParse(node.GetAttribute("ShowFpsCounter"), out value1))
+                Viewport.ShowFpsCounter = value1;
+            if (bool.TryParse(node.GetAttribute("ShowNavigation"), out value1))
+                Viewport.ShowNavigation = value1;
             if (float.TryParse(node.GetAttribute("NearPlane"), out value2))
                 Viewport.NearPlane = value2;
             if (float.TryParse(node.GetAttribute("FarPlane"), out value2))

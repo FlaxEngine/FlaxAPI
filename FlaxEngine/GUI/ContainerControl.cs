@@ -697,24 +697,14 @@ namespace FlaxEngine.GUI
         #region Control
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             // Steal focus from children
             if (ContainsFocus)
             {
                 Focus();
             }
 
-            // Base
-            base.Dispose();
-        }
-
-        /// <inheritdoc />
-        public override void OnDestroy()
-        {
             base.OnDestroy();
 
             // Pass event further

@@ -215,7 +215,7 @@ namespace FlaxEditor
             var plugin = PluginManager.GamePlugins.FirstOrDefault(x => x.GetType().Assembly == assembly);
             if (plugin == null)
             {
-                Debug.Write(LogType.Log, "No loaded game plugins from assembly " + assembly.FullName);
+                Debug.Write(LogType.Info, "No loaded game plugins from assembly " + assembly.FullName);
                 result = true;
                 return;
             }
@@ -225,12 +225,12 @@ namespace FlaxEditor
             var platform = GetPlatformType(buildPlatform);
             if (desc.SupportedPlatforms != null && !desc.SupportedPlatforms.Contains(platform))
             {
-                Debug.Write(LogType.Log, "Skip game plugin from assembly " + assembly.FullName);
+                Debug.Write(LogType.Info, "Skip game plugin from assembly " + assembly.FullName);
                 result = false;
                 return;
             }
 
-            Debug.Write(LogType.Log, "Use game plugin from assembly " + assembly.FullName);
+            Debug.Write(LogType.Info, "Use game plugin from assembly " + assembly.FullName);
             result = true;
         }
 
