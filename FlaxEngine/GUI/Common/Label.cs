@@ -55,13 +55,13 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the horizontal text alignment within the control bounds.
         /// </summary>
-        [EditorDisplay("Style"), EditorOrder(2010), Tooltip("The horizontal text aligment within the control bounds.")]
+        [EditorDisplay("Style"), EditorOrder(2010), Tooltip("The horizontal text alignment within the control bounds.")]
         public TextAlignment HorizontalAlignment { get; set; } = TextAlignment.Center;
 
         /// <summary>
         /// Gets or sets the vertical text alignment within the control bounds.
         /// </summary>
-        [EditorDisplay("Style"), EditorOrder(2020), Tooltip("The vertical text aligment within the control bounds.")]
+        [EditorDisplay("Style"), EditorOrder(2020), Tooltip("The vertical text alignment within the control bounds.")]
         public TextAlignment VerticalAlignment { get; set; } = TextAlignment.Center;
 
         /// <summary>
