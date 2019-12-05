@@ -14,6 +14,7 @@ namespace FlaxEditor.GUI
     {
         private bool _useCustomWindowSystem;
         private Image _icon;
+        private Label _title;
         private MainMenuButton _selected;
         private Button _closeButton;
         private Button _minimizeButton;
@@ -46,8 +47,21 @@ namespace FlaxEditor.GUI
 
                 _icon = new Image
                 {
+                    Margin = new Margin(6, 6, 6, 6),
                     Brush = new TextureBrush(windowIcon),
+                    KeepAspectRatio = false,
                     TooltipText = string.Format("{0}\nVersion {1}\nGraphics {2}", _window.Title, Globals.Version, GPUDevice.RendererType),
+                    Parent = this,
+                };
+
+                _title = new Label(0, 0, Width, Height)
+                {
+                    Text = _window.Title,
+                    HorizontalAlignment = TextAlignment.Center,
+                    VerticalAlignment = TextAlignment.Center,
+                    ClipText = true,
+                    TextColor = new Color(0.7f, 0.7f, 0.7f, 1.0f),
+                    TextColorHighlighted = new Color(0.7f, 0.7f, 0.7f, 1.0f),
                     Parent = this,
                 };
 
@@ -157,7 +171,9 @@ namespace FlaxEditor.GUI
             }
 
             var menuPos = PointFromWindow(pos);
-            if (new Rectangle(Vector2.Zero, Size).Contains(ref menuPos) && GetChildAt(menuPos) == null)
+            var controlUnderMouse = GetChildAt(menuPos);
+            var isMouseOverSth = controlUnderMouse != null && controlUnderMouse != _title;
+            if (new Rectangle(Vector2.Zero, Size).Contains(ref menuPos) && !isMouseOverSth)
                 return WindowHitCodes.Caption;
 
             return WindowHitCodes.Client;
@@ -244,10 +260,7 @@ namespace FlaxEditor.GUI
             {
                 // Icon
                 _icon.X = x;
-                _icon.KeepAspectRatio = false;
-                _icon.Margin = new Margin(6, 6, 6, 6);
-                _icon.Width = Height;
-                _icon.Height = Height;
+                _icon.Size = new Vector2(Height);
                 x += _icon.Width;
             }
 
@@ -272,14 +285,17 @@ namespace FlaxEditor.GUI
 
             if (_useCustomWindowSystem)
             {
+                // Buttons
                 _closeButton.Height = Height;
                 _closeButton.X = Width - _closeButton.Width;
-
                 _maximizeButton.Height = Height;
                 _maximizeButton.X = _closeButton.X - _maximizeButton.Width;
-
                 _minimizeButton.Height = Height;
                 _minimizeButton.X = _maximizeButton.X - _minimizeButton.Width;
+
+                // Title
+                _title.Bounds = new Rectangle(x + 2, 0, _minimizeButton.Left - x - 4, Height);
+                //_title.Text = _title.Width < 300.0f ? Editor.Instance.ProjectInfo.Name : _window.Title;
             }
         }
 
