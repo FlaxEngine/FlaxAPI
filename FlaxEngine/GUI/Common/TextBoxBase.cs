@@ -334,19 +334,19 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="TextBoxBase"/> class.
         /// </summary>
-        public TextBoxBase()
+        protected TextBoxBase()
         : this(false, 0, 0)
         {
         }
 
         /// <summary>
-        /// Init
+        /// Initializes a new instance of the <see cref="TextBoxBase"/> class.
         /// </summary>
-        /// <param name="isMultiline">Enable/disable multiline text input support</param>
-        /// <param name="x">Position X coordinate</param>
-        /// <param name="y">Position Y coordinate</param>
-        /// <param name="width">Width</param>
-        public TextBoxBase(bool isMultiline, float x, float y, float width = 120)
+        /// <param name="isMultiline">Enable/disable multiline text input support.</param>
+        /// <param name="x">The control position X coordinate.</param>
+        /// <param name="y">The control position Y coordinate.</param>
+        /// <param name="width">The control width.</param>
+        protected TextBoxBase(bool isMultiline, float x, float y, float width = 120)
         : base(x, y, width, DefaultHeight)
         {
             _isMultiline = isMultiline;
@@ -499,24 +499,37 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Sets selection to empty value
+        /// Sets the selection to empty value.
         /// </summary>
         public void Deselect()
         {
             SetSelection(-1);
         }
 
-        private int CharIndexAtPoint(ref Vector2 location)
+        /// <summary>
+        /// Gets the character the index at point (eg. mouse location in control-space).
+        /// </summary>
+        /// <param name="location">The location (in control-space).</param>
+        /// <returns>The character index under the location</returns>
+        public int CharIndexAtPoint(ref Vector2 location)
         {
             return HitTestText(location + _viewOffset);
         }
 
-        private void Insert(char c)
+        /// <summary>
+        /// Inserts the specified character (at the current selection).
+        /// </summary>
+        /// <param name="c">The character.</param>
+        public void Insert(char c)
         {
             Insert(c.ToString());
         }
 
-        private void Insert(string str)
+        /// <summary>
+        /// Inserts the specified text (at the current selection).
+        /// </summary>
+        /// <param name="str">The string.</param>
+        public void Insert(string str)
         {
             if (IsReadOnly)
                 return;
@@ -644,12 +657,23 @@ namespace FlaxEngine.GUI
             }
         }
 
-        private void SetSelection(int caret)
+        /// <summary>
+        /// Sets the caret position.
+        /// </summary>
+        /// <param name="start">The caret position.</param>
+        /// <param name="withScroll">If set to <c>true</c> with auto-scroll.</param>
+        protected void SetSelection(int caret, bool withScroll = true)
         {
             SetSelection(caret, caret);
         }
 
-        private void SetSelection(int start, int end, bool withScroll = true)
+        /// <summary>
+        /// Sets the selection.
+        /// </summary>
+        /// <param name="start">The selection start character.</param>
+        /// <param name="end">The selection end character.</param>
+        /// <param name="withScroll">If set to <c>true</c> with auto-scroll.</param>
+        protected void SetSelection(int start, int end, bool withScroll = true)
         {
             // Update parameters
             int textLength = _text.Length;
@@ -674,7 +698,7 @@ namespace FlaxEngine.GUI
             if (caretPos + 1 >= textLength)
                 return textLength;
 
-            int spaceLoc = Text.IndexOfAny(Separators, caretPos + 1);
+            int spaceLoc = _text.IndexOfAny(Separators, caretPos + 1);
 
             if (spaceLoc == -1)
                 spaceLoc = textLength;
