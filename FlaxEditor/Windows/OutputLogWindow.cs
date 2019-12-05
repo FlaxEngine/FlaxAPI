@@ -39,6 +39,63 @@ namespace FlaxEditor.Windows
             public string Message;
         };
 
+        /// <summary>
+        /// The output log textbox.
+        /// </summary>
+        /// <seealso cref="FlaxEngine.GUI.RichTextBoxBase" />
+        private sealed class OutputTextBox : RichTextBoxBase
+        {
+            /// <summary>
+            /// The parent window.
+            /// </summary>
+            public OutputLogWindow Window;
+
+            /// <summary>
+            /// The default text style.
+            /// </summary>
+            public TextBlockStyle DefaultStyle;
+
+            /// <summary>
+            /// The warning text style.
+            /// </summary>
+            public TextBlockStyle WarningStyle;
+
+            /// <summary>
+            /// The error text style.
+            /// </summary>
+            public TextBlockStyle ErrorStyle;
+
+            public OutputTextBox()
+            {
+                DefaultStyle = new TextBlockStyle
+                {
+                    Font = new FontReference(FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.InconsolataRegularFont), 10),
+                    Color = Color.White,
+                    ShadowOffset = new Vector2(1),
+                    ShadowColor = Color.Black.AlphaMultiplied(0.5f),
+                    BackgroundSelectedBrush = new SolidColorBrush(Style.Current.BackgroundSelected),
+                };
+                WarningStyle = DefaultStyle;
+                WarningStyle.Color = Color.Yellow;
+                ErrorStyle = DefaultStyle;
+                ErrorStyle.Color = Color.Red;
+            }
+
+            /// <inheritdoc />
+            protected override void OnParseTextBlocks()
+            {
+                if (ParseTextBlocks != null)
+                {
+                    ParseTextBlocks(_text, _textBlocks);
+                    return;
+                }
+
+                // Use cached text blocks
+                _textBlocks.Clear();
+                _textBlocks.AddRange(Window._textBlocks);
+            }
+        }
+
         private InterfaceOptions.TimestampsFormats _timestampsFormats;
         private bool _showLogType;
 
@@ -51,13 +108,14 @@ namespace FlaxEditor.Windows
         private long[] _outLogTimes = new long[OutCapacity];
         private int _textBufferCount;
         private StringBuilder _textBuffer = new StringBuilder();
+        private List<TextBlock> _textBlocks = new List<TextBlock>();
         private DateTime _startupTime;
 
         private Button _viewDropdown;
         private TextBox _searchBox;
         private HScrollBar _hScroll;
         private VScrollBar _vScroll;
-        private RichTextBox _output;
+        private OutputTextBox _output;
         private ContextMenu _contextMenu;
 
         /// <summary>
@@ -99,20 +157,13 @@ namespace FlaxEditor.Windows
                 Parent = this,
             };
             _vScroll.ValueChanged += OnVScrollValueChanged;
-            _output = new RichTextBox
+            _output = new OutputTextBox
             {
+                Window = this,
                 IsReadOnly = true,
                 IsMultiline = true,
                 BackgroundSelectedFlashSpeed = 0.0f,
                 Location = new Vector2(2, _viewDropdown.Bottom + 2),
-                TextStyle = new TextBlockStyle
-                {
-                    Font = new FontReference(FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.InconsolataRegularFont), 10),
-                    Color = Color.White,
-                    ShadowOffset = new Vector2(1),
-                    ShadowColor = Color.Black.AlphaMultiplied(0.5f),
-                    BackgroundSelectedBrush = new SolidColorBrush(Style.Current.BackgroundSelected),
-                },
                 Parent = this,
             };
             _output.TargetViewOffsetChanged += OnOutputTargetViewOffsetChanged;
@@ -212,6 +263,7 @@ namespace FlaxEditor.Windows
         {
             _textBufferCount = 0;
             _textBuffer.Clear();
+            _textBlocks.Clear();
             _isDirty = true;
         }
 
@@ -372,6 +424,8 @@ namespace FlaxEditor.Windows
                     if (searchQuery.Length != 0 && entry.Message.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) == -1)
                         continue;
 
+                    var startIndex = _textBuffer.Length;
+
                     switch (_timestampsFormats)
                     {
                     case InterfaceOptions.TimestampsFormats.Utc:
@@ -391,7 +445,53 @@ namespace FlaxEditor.Windows
                         _textBuffer.AppendFormat("[{0}] ", entry.Level);
                     }
 
-                    _textBuffer.AppendLine(entry.Message);
+                    if (entry.Message.IndexOf('\r') != -1)
+                        entry.Message = entry.Message.Replace("\r", "");
+                    _textBuffer.Append(entry.Message);
+                    var endIndex = _textBuffer.Length;
+                    _textBuffer.Append('\n');
+
+                    var textBlock = new TextBlock
+                    {
+                        Range = new TextRange
+                        {
+                            StartIndex = startIndex,
+                            EndIndex = endIndex - 1,
+                        },
+                    };
+                    switch (entry.Level)
+                    {
+                    case LogType.Info:
+                        _output.DefaultStyle.Font.GetFont(); // Cache font
+                        textBlock.Style = _output.DefaultStyle;
+                        break;
+                    case LogType.Warning:
+                        _output.WarningStyle.Font.GetFont(); // Cache font
+                        textBlock.Style = _output.WarningStyle;
+                        break;
+                    case LogType.Error:
+                    case LogType.Fatal:
+                        _output.ErrorStyle.Font.GetFont(); // Cache font
+                        textBlock.Style = _output.ErrorStyle;
+                        break;
+                    default: throw new ArgumentOutOfRangeException();
+                    }
+
+                    var prevBlockBottom = _textBlocks.Count == 0 ? 0.0f : _textBlocks[_textBlocks.Count - 1].Bounds.Bottom;
+                    var entryText = _textBuffer.ToString(startIndex, endIndex - startIndex);
+                    var font = textBlock.Style.Font.GetFont();
+                    if (!font)
+                        continue;
+                    var lines = font.ProcessText(entryText);
+                    for (int j = 0; j < lines.Length; j++)
+                    {
+                        ref var line = ref lines[j];
+                        textBlock.Range.StartIndex = startIndex + line.FirstCharIndex;
+                        textBlock.Range.EndIndex = startIndex + line.LastCharIndex;
+                        textBlock.Bounds = new Rectangle(new Vector2(0.0f, prevBlockBottom), line.Size);
+                        prevBlockBottom += line.Size.Y;
+                        _textBlocks.Add(textBlock);
+                    }
                 }
 
                 // Update the output
@@ -428,6 +528,8 @@ namespace FlaxEditor.Windows
             // Cleanup
             _textBuffer.Clear();
             _textBuffer = null;
+            _textBlocks.Clear();
+            _textBlocks = null;
             _entries.Clear();
             _entries = null;
             _outMessages = null;
