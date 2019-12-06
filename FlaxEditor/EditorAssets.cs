@@ -59,7 +59,7 @@ namespace FlaxEditor
         /// <summary>
         /// The window icon.
         /// </summary>
-        public static string WindowIcon = "Editor/Fonts/EditorIcon";
+        public static string WindowIcon = "Editor/EditorIcon";
 
         /// <summary>
         /// The window icons font.
