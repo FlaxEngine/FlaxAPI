@@ -102,6 +102,17 @@ namespace FlaxEditor.Utilities
             membersPath.Pop();
         }
 
+        private static Type GetMemberType(Type memberType, object memberValue)
+        {
+            // Try using the type of the actual value (eg. Control property that has value set to Button - capture all button properties, not just control properties)
+            if (memberValue != null)
+            {
+                return memberValue.GetType();
+            }
+
+            return memberType;
+        }
+
         private static void GetEntries(object instance, Stack<MemberInfoPath.Entry> membersPath, Type type, List<TypeEntry> result, List<object> values, Stack<object> refStack)
         {
             // Note: this should match Flax serialization rules and attributes (see ExtendedDefaultContractResolver)
@@ -133,7 +144,7 @@ namespace FlaxEditor.Utilities
 
                 var memberType = f.FieldType;
                 var memberValue = f.GetValue(instance);
-                GetEntries(new MemberInfoPath.Entry(f), membersPath, type, result, values, refStack, memberType, memberValue);
+                GetEntries(new MemberInfoPath.Entry(f), membersPath, type, result, values, refStack, GetMemberType(memberType, memberValue), memberValue);
             }
 
             for (int i = 0; i < properties.Length; i++)
@@ -165,7 +176,7 @@ namespace FlaxEditor.Utilities
 
                 var memberType = p.PropertyType;
                 var memberValue = p.GetValue(instance, null);
-                GetEntries(new MemberInfoPath.Entry(p), membersPath, type, result, values, refStack, memberType, memberValue);
+                GetEntries(new MemberInfoPath.Entry(p), membersPath, type, result, values, refStack, GetMemberType(memberType, memberValue), memberValue);
             }
         }
 
@@ -196,9 +207,9 @@ namespace FlaxEditor.Utilities
             List<object> values;
             var members = GetMembers(obj, type, out values);
 
-            //Debug.Info("-------------- CaptureSnapshot:  " + obj.GetType() + "  --------------");
+            //Debug.Log("-------------- CaptureSnapshot:  " + obj.GetType() + "  --------------");
             //for (int i = 0; i < values.Count; i++)
-            //    Debug.Info(members[i].Path.Path + " = " + (values[i] ?? "<null>"));
+            //    Debug.Log(members[i].Path.Path + " = " + (values[i] ?? "<null>"));
 
             return new ObjectSnapshot(type, values, members);
         }
@@ -226,7 +237,7 @@ namespace FlaxEditor.Utilities
 
                 if (!JsonSerializer.ValueEquals(xValue, yValue))
                 {
-                    //Debug.Info("Diff on: " + (new MemberComparison(m.Path, xValue, yValue)));
+                    //Debug.Log("Diff on: " + (new MemberComparison(m.Path, xValue, yValue)));
 
                     list.Add(new MemberComparison(m.Path, xValue, yValue));
 
