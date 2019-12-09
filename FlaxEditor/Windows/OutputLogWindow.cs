@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Options;
 using FlaxEngine;
@@ -519,6 +520,24 @@ namespace FlaxEditor.Windows
         public override void OnInit()
         {
             _startupTime = Time.StartupTime;
+        }
+
+        /// <inheritdoc />
+        public override bool UseLayoutData => true;
+
+        /// <inheritdoc />
+        public override void OnLayoutSerialize(XmlWriter writer)
+        {
+            writer.WriteAttributeString("LogTypeShowMask", _logTypeShowMask.ToString());
+        }
+
+        /// <inheritdoc />
+        public override void OnLayoutDeserialize(XmlElement node)
+        {
+            int value1;
+
+            if (int.TryParse(node.GetAttribute("LogTypeShowMask"), out value1))
+                _logTypeShowMask = value1;
         }
 
         /// <inheritdoc />
