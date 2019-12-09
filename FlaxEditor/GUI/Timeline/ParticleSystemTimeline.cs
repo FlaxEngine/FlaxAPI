@@ -1,11 +1,13 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FlaxEditor.Content;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.GUI.Timeline.Tracks;
+using FlaxEditor.Utilities;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 
@@ -28,6 +30,8 @@ namespace FlaxEditor.GUI.Timeline
 
         private ParticleSystemPreview _preview;
 
+        internal List<ParticleEmitterTrack> Emitters;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ParticleSystemTimeline"/> class.
         /// </summary>
@@ -43,6 +47,14 @@ namespace FlaxEditor.GUI.Timeline
             // Setup track types
             TrackArchetypes.Add(ParticleEmitterTrack.GetArchetype());
             TrackArchetypes.Add(FolderTrack.GetArchetype());
+        }
+
+        /// <summary>
+        /// Called when emitters parameters overrides collection gets edited.
+        /// </summary>
+        public void OnEmittersParametersOverridesEdited()
+        {
+            _isModified = true;
         }
 
         /// <inheritdoc />
@@ -151,8 +163,6 @@ namespace FlaxEditor.GUI.Timeline
             int emittersCount = stream.ReadInt32();
         }
 
-        internal List<ParticleEmitterTrack> Emitters;
-
         /// <inheritdoc />
         protected override void SaveTimelineData(BinaryWriter stream)
         {
@@ -162,6 +172,60 @@ namespace FlaxEditor.GUI.Timeline
             Emitters = Tracks.Where(track => track is ParticleEmitterTrack).Cast<ParticleEmitterTrack>().ToList();
             int emittersCount = Emitters.Count;
             stream.Write(emittersCount);
+        }
+
+        /// <inheritdoc />
+        protected override void LoadTimelineCustomData(int version, BinaryReader stream)
+        {
+            base.LoadTimelineCustomData(version, stream);
+
+            Emitters = Tracks.Where(track => track is ParticleEmitterTrack).Cast<ParticleEmitterTrack>().ToList();
+
+            // Load parameters overrides
+            int overridesCount = stream.BaseStream.Position != stream.BaseStream.Length ? stream.ReadInt32() : 0;
+            if (overridesCount != 0)
+            {
+                for (int i = 0; i < overridesCount; i++)
+                {
+                    var idx = stream.ReadInt32();
+                    var id = stream.ReadGuid();
+                    object value = null;
+                    stream.ReadCommonValue(ref value);
+
+                    Emitters[idx].ParametersOverrides.Add(id, value);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void SaveTimelineCustomData(BinaryWriter stream)
+        {
+            base.SaveTimelineCustomData(stream);
+
+            // Save parameters overrides
+            var emittersParametersOverrides = new Dictionary<KeyValuePair<int, Guid>, object>();
+            for (var i = 0; i < Emitters.Count; i++)
+            {
+                var emitterTrack = Emitters[i];
+                if (emitterTrack.ParametersOverrides.Count != 0)
+                {
+                    foreach (var e in emitterTrack.ParametersOverrides)
+                    {
+                        emittersParametersOverrides.Add(new KeyValuePair<int, Guid>(i, e.Key), e.Value);
+                    }
+                }
+            }
+            if (emittersParametersOverrides.Count != 0)
+            {
+                stream.Write(emittersParametersOverrides.Count);
+                foreach (var e in emittersParametersOverrides)
+                {
+                    var id = e.Key.Value;
+                    stream.Write(e.Key.Key);
+                    stream.WriteGuid(ref id);
+                    stream.WriteCommonValue(e.Value);
+                }
+            }
         }
 
         /// <inheritdoc />

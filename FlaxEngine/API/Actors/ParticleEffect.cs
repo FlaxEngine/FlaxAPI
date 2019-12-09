@@ -189,6 +189,22 @@ namespace FlaxEngine
             public bool IsPublic => _isPublic;
 
             /// <summary>
+            /// Gets the parameter ID.
+            /// </summary>
+            public Guid ID
+            {
+                get
+                {
+                    // Validate the hash
+                    if (_hash != _effect._parametersHash)
+                        throw new InvalidOperationException("Cannot use invalid particle effect parameter.");
+
+                    Internal_GetParamID(_effect.unmanagedPtr, _emitterIndex, _paramIndex, out var id);
+                    return id;
+                }
+            }
+
+            /// <summary>
             /// Gets the parameter name.
             /// </summary>
             public string Name
@@ -463,6 +479,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ParticleEmitter Internal_GetParamEmitter(IntPtr obj, int emitterIndex);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetParamID(IntPtr obj, int emitterIndex, int paramIndex, out Guid id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetParamName(IntPtr obj, int emitterIndex, int paramIndex);

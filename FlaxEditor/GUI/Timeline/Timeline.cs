@@ -242,7 +242,7 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         public static readonly float StartOffset = 50.0f;
 
-        private bool _isModified;
+        protected bool _isModified;
         private bool _isChangingFps;
         private float _framesPerSecond = 30.0f;
         private int _durationFrames = 30 * 5;
@@ -1139,6 +1139,23 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Loads the timeline data after reading the timeline tracks.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <param name="stream">The input stream.</param>
+        protected virtual void LoadTimelineCustomData(int version, BinaryReader stream)
+        {
+        }
+
+        /// <summary>
+        /// Saves the timeline data after saving the timeline tracks.
+        /// </summary>
+        /// <param name="stream">The output stream.</param>
+        protected virtual void SaveTimelineCustomData(BinaryWriter stream)
+        {
+        }
+
+        /// <summary>
         /// Loads the timeline from the specified data.
         /// </summary>
         /// <param name="data">The data.</param>
@@ -1154,7 +1171,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                 case 1:
                 {
-                    // [Deprecated on 23.07.2019, expires on 27.04.2020]
+                    // [Deprecated on 23.07.2019, expires on 27.04.2021]
 
                     // Load properties
                     FramesPerSecond = stream.ReadSingle();
@@ -1244,6 +1261,8 @@ namespace FlaxEditor.GUI.Timeline
                 default: throw new Exception("Unknown timeline version " + version);
                 }
 
+                LoadTimelineCustomData(version, stream);
+
                 for (int i = 0; i < _tracks.Count; i++)
                 {
                     var parentIndex = (int)_tracks[i].Tag;
@@ -1297,6 +1316,8 @@ namespace FlaxEditor.GUI.Timeline
                     stream.Write((Color32)track.Color);
                     track.Archetype.Save(track, stream);
                 }
+
+                SaveTimelineCustomData(stream);
 
                 return memory.ToArray();
             }

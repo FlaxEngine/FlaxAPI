@@ -1207,6 +1207,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawNavMesh();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetPParticleEmitterParamValue(IntPtr effect, ref Guid paramId, IntPtr ptr);
 #endif
 
         #endregion

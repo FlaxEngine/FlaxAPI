@@ -1,8 +1,8 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using FlaxEditor.Content;
 using FlaxEngine;
 
 namespace FlaxEditor.GUI.Timeline.Tracks
@@ -96,6 +96,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <summary>
+        /// The overriden values for the emitters parameters. Key is parameter ID, value is the custom value.
+        /// </summary>
+        public Dictionary<Guid, object> ParametersOverrides = new Dictionary<Guid, object>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ParticleEmitterTrack"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
@@ -104,9 +109,13 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
         }
 
-        private bool IsValid(AssetItem item)
+        /// <inheritdoc />
+        public override void OnDestroy()
         {
-            return item is BinaryAssetItem binaryItem && typeof(ParticleEmitter).IsAssignableFrom(binaryItem.Type);
+            ParametersOverrides.Clear();
+            ParametersOverrides = null;
+
+            base.OnDestroy();
         }
     }
 }

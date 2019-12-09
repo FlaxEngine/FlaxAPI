@@ -6,6 +6,7 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Timeline;
 using FlaxEditor.GUI.Timeline.Tracks;
@@ -52,6 +53,7 @@ namespace FlaxEditor.Windows.Assets
         {
             private readonly ParticleSystemWindow _window;
             private readonly ParticleEffect _effect;
+            private readonly int _emitterIndex;
             private readonly ParticleEmitterTrack _track;
 
             [EditorDisplay("Particle Emitter"), EditorOrder(0), Tooltip("The name text.")]
@@ -93,15 +95,95 @@ namespace FlaxEditor.Windows.Assets
                 set => _track.TrackMedia.DurationFrames = value;
             }
 
-            public EmitterTrackProxy(ParticleSystemWindow window, ParticleEffect effect, ParticleEmitterTrack track)
+            public EmitterTrackProxy(ParticleSystemWindow window, ParticleEffect effect, ParticleEmitterTrack track, int emitterIndex)
             {
                 _window = window;
                 _effect = effect;
+                _emitterIndex = emitterIndex;
                 _track = track;
             }
 
             private sealed class EmitterTrackProxyEditor : GenericEditor
             {
+                private static unsafe object GetParticleEmitterParamValue(ParticleEffect.Parameter p)
+                {
+                    IntPtr ptr;
+                    bool vBool = false;
+                    int vInt = 0;
+                    float vFloat = 0;
+                    Vector2 vVector2 = new Vector2();
+                    Vector3 vVector3 = new Vector3();
+                    Vector4 vVector4 = new Vector4();
+                    Color vColor = new Color();
+                    Guid vGuid = new Guid();
+                    Matrix vMatrix = new Matrix();
+
+                    switch (p.Type)
+                    {
+                    case ParticleEffect.ParameterType.Bool:
+                        ptr = new IntPtr(&vBool);
+                        break;
+                    case ParticleEffect.ParameterType.Integer:
+                        ptr = new IntPtr(&vInt);
+                        break;
+                    case ParticleEffect.ParameterType.Float:
+                        ptr = new IntPtr(&vFloat);
+                        break;
+                    case ParticleEffect.ParameterType.Vector2:
+                        ptr = new IntPtr(&vVector2);
+                        break;
+                    case ParticleEffect.ParameterType.Vector3:
+                        ptr = new IntPtr(&vVector3);
+                        break;
+                    case ParticleEffect.ParameterType.Vector4:
+                        ptr = new IntPtr(&vVector4);
+                        break;
+                    case ParticleEffect.ParameterType.Color:
+                        ptr = new IntPtr(&vColor);
+                        break;
+                    case ParticleEffect.ParameterType.Matrix:
+                        ptr = new IntPtr(&vMatrix);
+                        break;
+
+                    case ParticleEffect.ParameterType.CubeTexture:
+                    case ParticleEffect.ParameterType.Texture:
+                    case ParticleEffect.ParameterType.NormalMap:
+                    case ParticleEffect.ParameterType.GPUTexture:
+                    case ParticleEffect.ParameterType.GPUTextureArray:
+                    case ParticleEffect.ParameterType.GPUTextureCube:
+                    case ParticleEffect.ParameterType.GPUTextureVolume:
+                        ptr = new IntPtr(&vGuid);
+                        break;
+
+                    default: throw new ArgumentOutOfRangeException();
+                    }
+
+                    var id = p.ID;
+                    Editor.Internal_GetPParticleEmitterParamValue(p.Emitter.unmanagedPtr, ref id, ptr);
+
+                    switch (p.Type)
+                    {
+                    case ParticleEffect.ParameterType.Bool: return vBool;
+                    case ParticleEffect.ParameterType.Integer: return vInt;
+                    case ParticleEffect.ParameterType.Float: return vFloat;
+                    case ParticleEffect.ParameterType.Vector2: return vVector2;
+                    case ParticleEffect.ParameterType.Vector3: return vVector3;
+                    case ParticleEffect.ParameterType.Vector4: return vVector4;
+                    case ParticleEffect.ParameterType.Color: return vColor;
+                    case ParticleEffect.ParameterType.Matrix: return vMatrix;
+
+                    case ParticleEffect.ParameterType.CubeTexture:
+                    case ParticleEffect.ParameterType.Texture:
+                    case ParticleEffect.ParameterType.NormalMap: return FlaxEngine.Object.Find<FlaxEngine.Object>(ref vGuid);
+                    case ParticleEffect.ParameterType.GPUTextureArray:
+                    case ParticleEffect.ParameterType.GPUTextureCube:
+                    case ParticleEffect.ParameterType.GPUTextureVolume:
+                    case ParticleEffect.ParameterType.GPUTexture: return FlaxEngine.Object.TryFind<FlaxEngine.Object>(ref vGuid);
+
+                    default: throw new ArgumentOutOfRangeException();
+                    }
+                }
+
                 /// <inheritdoc />
                 public override void Initialize(LayoutElementsContainer layout)
                 {
@@ -111,8 +193,8 @@ namespace FlaxEditor.Windows.Assets
                     if (value?._effect?.Parameters == null)
                         return;
 
-                    var group = layout.Group("Parameters (instanced)");
-                    var parameters = value._effect.Parameters.Where(x => x.Emitter == value.Emitter && x.IsPublic);
+                    var group = layout.Group("Parameters");
+                    var parameters = value._effect.Parameters.Where(x => x.EmitterIndex == value._emitterIndex && x.Emitter == value.Emitter && x.IsPublic).ToArray();
 
                     if (!parameters.Any())
                     {
@@ -120,16 +202,47 @@ namespace FlaxEditor.Windows.Assets
                         return;
                     }
 
-                    foreach (var parameter in parameters)
+                    foreach (var p in parameters)
                     {
-                        var type = VisjectSurface.GetParameterValueType((ParameterType)parameter.Type);
-                        var propertyValue = new CustomValueContainer(type, parameter.Value, (instance, index) => parameter.Value, (instance, index, _) =>
-                        {
-                            value._window._isEditingInstancedParameterValue = true;
-                            parameter.Value = _;
-                        });
+                        var type = VisjectSurface.GetParameterValueType((ParameterType)p.Type);
+                        var defaultValue = p.Value;
 
-                        group.Property(parameter.Name, propertyValue);
+                        // Parameter value accessor
+                        var propertyValue = new CustomValueContainer(type, defaultValue, (instance, index) => p.Value, (instance, index, _) =>
+                        {
+                            if (p.Value == _)
+                                return;
+
+                            value._window._isEditingInstancedParameterValue = true;
+                            p.Value = _;
+
+                            var id = p.ID;
+                            if (value._track.ParametersOverrides.ContainsKey(id))
+                            {
+                                value._track.ParametersOverrides[id] = _;
+                                value._window.Timeline.OnEmittersParametersOverridesEdited();
+                                value._window.MarkAsEdited();
+                            }
+                        });
+                        propertyValue.SetDefaultValue(GetParticleEmitterParamValue(p));
+
+                        // Use label with parameter value override checkbox
+                        var label = new CheckablePropertyNameLabel(p.Name);
+                        label.CheckBox.Checked = value._track.ParametersOverrides.ContainsKey(p.ID);
+                        label.CheckBox.Tag = value;
+                        label.CheckChanged += nameLabel =>
+                        {
+                            var proxy = (EmitterTrackProxy)nameLabel.CheckBox.Tag;
+                            if (nameLabel.CheckBox.Checked)
+                                proxy._track.ParametersOverrides.Add(p.ID, p.Value);
+                            else
+                                proxy._track.ParametersOverrides.Remove(p.ID);
+                            value._window.Timeline.OnEmittersParametersOverridesEdited();
+                            proxy._window.Timeline.MarkAsEdited();
+                        };
+
+                        group.Property(label, propertyValue);
+                        label.UpdateStyle();
                     }
                 }
             }
@@ -264,12 +377,13 @@ namespace FlaxEditor.Windows.Assets
             }
 
             var tracks = new object[_timeline.SelectedTracks.Count];
+            var emitterTracks = _timeline.Tracks.Where(track => track is ParticleEmitterTrack).Cast<ParticleEmitterTrack>().ToList();
             for (var i = 0; i < _timeline.SelectedTracks.Count; i++)
             {
                 var track = _timeline.SelectedTracks[i];
                 if (track is ParticleEmitterTrack particleEmitterTrack)
                 {
-                    tracks[i] = new EmitterTrackProxy(this, Preview.PreviewActor, particleEmitterTrack);
+                    tracks[i] = new EmitterTrackProxy(this, Preview.PreviewActor, particleEmitterTrack, emitterTracks.IndexOf(particleEmitterTrack));
                 }
                 else if (track is FolderTrack folderTrack)
                 {

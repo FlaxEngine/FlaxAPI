@@ -510,7 +510,19 @@ namespace FlaxEditor.Utilities
             stream.Write(bytes);
         }
 
-        internal static void ReadCommonValue(BinaryReader stream, ref object value)
+        internal static Guid ReadGuid(this BinaryReader stream)
+        {
+            // TODO: use static bytes array to reduce dynamic allocs
+            return new Guid(stream.ReadBytes(16));
+        }
+
+        internal static void WriteGuid(this BinaryWriter stream, ref Guid value)
+        {
+            // TODO: use static bytes array to reduce dynamic allocs
+            stream.Write(value.ToByteArray());
+        }
+
+        internal static void ReadCommonValue(this BinaryReader stream, ref object value)
         {
             byte type = stream.ReadByte();
 
@@ -551,7 +563,7 @@ namespace FlaxEditor.Utilities
                 break;
             case 7: // CommonType::Guid:
             {
-                value = new Guid(stream.ReadBytes(16));
+                value = stream.ReadGuid();
             }
                 break;
             case 8: // CommonType::String:
@@ -621,7 +633,7 @@ namespace FlaxEditor.Utilities
             }
         }
 
-        internal static void WriteCommonValue(BinaryWriter stream, object value)
+        internal static void WriteCommonValue(this BinaryWriter stream, object value)
         {
             if (value is bool asBool)
             {
@@ -675,7 +687,7 @@ namespace FlaxEditor.Utilities
             else if (value is Guid asGuid)
             {
                 stream.Write((byte)7);
-                stream.Write(asGuid.ToByteArray());
+                stream.WriteGuid(ref asGuid);
             }
             else if (value is string asString)
             {
@@ -764,7 +776,7 @@ namespace FlaxEditor.Utilities
             }
         }
 
-        internal static void WriteCommonValue(JsonWriter stream, object value)
+        internal static void WriteCommonValue(this JsonWriter stream, object value)
         {
             if (value is bool asBool)
             {
