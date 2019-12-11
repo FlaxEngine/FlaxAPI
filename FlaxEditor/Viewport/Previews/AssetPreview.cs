@@ -1,9 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
@@ -14,6 +14,8 @@ namespace FlaxEditor.Viewport.Previews
     /// <seealso cref="FlaxEditor.Viewport.EditorViewport" />
     public abstract class AssetPreview : EditorViewport
     {
+        private ContextMenuButton _showDefaultSceneButton;
+
         /// <summary>
         /// The preview light. Allows to modify rendering settings.
         /// </summary>
@@ -53,6 +55,9 @@ namespace FlaxEditor.Viewport.Previews
                     EnvProbe.IsActive = value;
                     Sky.IsActive = value;
                     SkyLight.IsActive = value;
+
+                    if (_showDefaultSceneButton != null)
+                        _showDefaultSceneButton.Checked = value;
                 }
             }
         }
@@ -60,16 +65,37 @@ namespace FlaxEditor.Viewport.Previews
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetPreview"/> class.
         /// </summary>
-        /// <param name="useWidgets">if set to <c>true</c> use widgets.</param>
-        protected AssetPreview(bool useWidgets)
-        : base(RenderTask.Create<SceneRenderTask>(), new ArcBallCamera(Vector3.Zero, 50), useWidgets)
+        /// <param name="useWidgets">If set to <c>true</c> use widgets for viewport, otherwise hide them.</param>
+        /// <param name="orbitRadius">The initial orbit radius.</param>
+        protected AssetPreview(bool useWidgets, float orbitRadius = 50.0f)
+        : this(useWidgets, new ArcBallCamera(Vector3.Zero, orbitRadius))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssetPreview"/> class.
+        /// </summary>
+        /// <param name="useWidgets">If set to <c>true</c> use widgets for viewport, otherwise hide them.</param>
+        /// <param name="camera">The camera controller.</param>
+        protected AssetPreview(bool useWidgets, ViewportCamera camera)
+        : base(Object.New<SceneRenderTask>(), camera, useWidgets)
         {
             DockStyle = DockStyle.Fill;
 
-            Task.Flags = ViewFlags.DefaultAssetPreview;
+            Task.View.Flags = ViewFlags.DefaultAssetPreview;
             Task.AllowGlobalCustomPostFx = false;
 
-            ((ArcBallCamera)ViewportCamera).SetView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f));
+            var orbitRadius = 200.0f;
+            if (camera is ArcBallCamera arcBallCamera)
+                orbitRadius = arcBallCamera.OrbitRadius;
+            camera.SerArcBallView(new Quaternion(0.424461186f, -0.0940724313f, 0.0443938486f, 0.899451137f), Vector3.Zero, orbitRadius);
+
+            if (useWidgets)
+            {
+                // Show Default Scene
+                _showDefaultSceneButton = ViewWidgetShowMenu.AddButton("Default Scene", () => ShowDefaultSceneActors = !ShowDefaultSceneActors);
+                _showDefaultSceneButton.Checked = true;
+            }
 
             // Setup preview scene
             PreviewLight = DirectionalLight.New();
@@ -92,7 +118,6 @@ namespace FlaxEditor.Viewport.Previews
             //
             PostFxVolume = PostFxVolume.New();
             PostFxVolume.IsBounded = false;
-            PostFxVolume.Settings.Eye_MinLuminance = 0.1f;
 
             // Link actors for rendering
             Task.ActorsSource = ActorsSources.CustomActors;

@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -30,7 +31,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_Show(Object.GetUnmanagedPtr(parent), text, caption, buttons, icon);
+            return Internal_Show(FlaxEngine.Object.GetUnmanagedPtr(parent), text, caption, buttons, icon);
 #endif
         }
 
@@ -52,7 +53,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_OpenFileDialog(Object.GetUnmanagedPtr(parent), initialDirectory, filter, multiselect, title);
+            return Internal_OpenFileDialog(FlaxEngine.Object.GetUnmanagedPtr(parent), initialDirectory, filter, multiselect, title);
 #endif
         }
 
@@ -72,7 +73,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_BrowseFolderDialog(Object.GetUnmanagedPtr(parent), initialDirectory, title);
+            return Internal_BrowseFolderDialog(FlaxEngine.Object.GetUnmanagedPtr(parent), initialDirectory, title);
 #endif
         }
 

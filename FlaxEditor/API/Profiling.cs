@@ -33,7 +33,7 @@ namespace FlaxEditor.Profiling
         /// <summary>
         /// The CPU memory stats. Total amount of virtual memory in bytes.
         /// </summary>
-        public ulong MemoryCPU_TotalVrtualMemory;
+        public ulong MemoryCPU_TotalVirtualMemory;
 
         /// <summary>
         /// The CPU memory stats. Amount of used virtual memory in bytes.
@@ -68,7 +68,17 @@ namespace FlaxEditor.Profiling
         /// <summary>
         /// The draw time on CPU (in milliseconds).
         /// </summary>
-        public float DrawTimeMs;
+        public float DrawCPUTimeMs;
+
+        /// <summary>
+        /// The draw time on GPU (in milliseconds).
+        /// </summary>
+        public float DrawGPUTimeMs;
+
+        /// <summary>
+        /// The last rendered frame stats.
+        /// </summary>
+        public RenderStatsData DrawStats;
     }
 
     /// <summary>
@@ -93,9 +103,14 @@ namespace FlaxEditor.Profiling
         public int Depth;
 
         /// <summary>
-        /// The dynamic memory allocation size during this event (excluding the child events). Given value is in bytes.
+        /// The native dynamic memory allocation size during this event (excluding the child events). Given value is in bytes.
         /// </summary>
-        public int MemoryAllocation;
+        public int NativeMemoryAllocation;
+
+        /// <summary>
+        /// The managed memory allocation size during this event (excluding the child events). Given value is in bytes.
+        /// </summary>
+        public int ManagedMemoryAllocation;
 
         /// <summary>
         /// The event name.

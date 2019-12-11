@@ -77,8 +77,9 @@ namespace FlaxEditor.GUI
         public ToolStrip(float height = DefaultHeight)
         : base(0, 0, 100, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
             DockStyle = DockStyle.Top;
+            BackgroundColor = Style.Current.LightBackground;
         }
 
         /// <summary>
@@ -147,13 +148,6 @@ namespace FlaxEditor.GUI
         internal void OnButtonClicked(ToolStripButton button)
         {
             ButtonClicked?.Invoke(button);
-        }
-
-        /// <inheritdoc />
-        public override void Draw()
-        {
-            BackgroundColor = Style.Current.LightBackground;
-            base.Draw();
         }
 
         /// <inheritdoc />

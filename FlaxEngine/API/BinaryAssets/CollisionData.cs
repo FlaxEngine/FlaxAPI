@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -111,7 +112,83 @@ namespace FlaxEngine
             if (type == CollisionDataType.None)
                 throw new ArgumentException(nameof(type));
 
-            if (Internal_CookCollision(type, model.unmanagedPtr, modelLodIndex, convexFlags, convexVertexLimit))
+            if (Internal_CookCollisionModel(unmanagedPtr, type, model.unmanagedPtr, modelLodIndex, convexFlags, convexVertexLimit))
+                throw new FlaxException("Mesh cooking failed. See log to learn more.");
+        }
+
+        /// <summary>
+        /// Cooks the mesh collision data and updates the virtual asset. action cannot be performed on a main thread.
+        /// </summary>
+        /// <remarks>
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// </remarks>
+        /// <param name="type">The collision data type.</param>
+        /// <param name="model">The source geometry vertex buffer with vertices positions. Cannot be null.</param>
+        /// <param name="triangles">The source data index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
+        /// <param name="convexFlags">The convex mesh generation flags.</param>
+        /// <param name="convexVertexLimit">The convex mesh vertex limit. Use values in range [8;255]</param>
+        public void CookCollision(CollisionDataType type, Vector3[] vertices, int[] triangles, ConvexMeshGenerationFlags convexFlags = ConvexMeshGenerationFlags.None, int convexVertexLimit = 255)
+        {
+            // Validate state and input
+            if (!IsVirtual)
+                throw new InvalidOperationException("Only virtual assets can be updated at runtime.");
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Length == 0 || triangles.Length % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+            if (type == CollisionDataType.None)
+                throw new ArgumentException(nameof(type));
+
+            if (Internal_CookCollisionDataInt(
+                unmanagedPtr,
+                type,
+                vertices.Length,
+                triangles.Length / 3,
+                vertices,
+                triangles,
+                convexFlags,
+                convexVertexLimit
+            ))
+                throw new FlaxException("Mesh cooking failed. See log to learn more.");
+        }
+
+        /// <summary>
+        /// Cooks the mesh collision data and updates the virtual asset. action cannot be performed on a main thread.
+        /// </summary>
+        /// <remarks>
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// </remarks>
+        /// <param name="type">The collision data type.</param>
+        /// <param name="model">The source geometry vertex buffer with vertices positions. Cannot be null.</param>
+        /// <param name="triangles">The source data index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
+        /// <param name="convexFlags">The convex mesh generation flags.</param>
+        /// <param name="convexVertexLimit">The convex mesh vertex limit. Use values in range [8;255]</param>
+        public void CookCollision(CollisionDataType type, List<Vector3> vertices, List<int> triangles, ConvexMeshGenerationFlags convexFlags = ConvexMeshGenerationFlags.None, int convexVertexLimit = 255)
+        {
+            // Validate state and input
+            if (!IsVirtual)
+                throw new InvalidOperationException("Only virtual assets can be updated at runtime.");
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Count == 0 || triangles.Count % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+            if (type == CollisionDataType.None)
+                throw new ArgumentException(nameof(type));
+
+            if (Internal_CookCollisionDataInt(
+                unmanagedPtr,
+                type,
+                vertices.Count,
+                triangles.Count / 3,
+                Utils.ExtractArrayFromList(vertices),
+                Utils.ExtractArrayFromList(triangles),
+                convexFlags,
+                convexVertexLimit
+            ))
                 throw new FlaxException("Mesh cooking failed. See log to learn more.");
         }
 
@@ -120,7 +197,10 @@ namespace FlaxEngine
         internal static extern void Internal_GetCookOptions(IntPtr obj, out int modelLodIndex, out ConvexMeshGenerationFlags convexFlags, out int convexVertexLimit);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_CookCollision(CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
+        internal static extern bool Internal_CookCollisionModel(IntPtr obj, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CookCollisionDataInt(IntPtr obj, CollisionDataType type, int vertexCount, int triangleCount, Vector3[] vertices, int[] triangles, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
 #endif
     }
 }

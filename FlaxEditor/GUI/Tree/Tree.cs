@@ -7,7 +7,7 @@ using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI
+namespace FlaxEditor.GUI.Tree
 {
     /// <summary>
     /// Tree control.
@@ -106,7 +106,7 @@ namespace FlaxEditor.GUI
         {
             _performChildrenLayoutFirst = true;
             IsScrollable = true;
-            CanFocus = false;
+            AutoFocus = false;
 
             _supportMultiSelect = supportMultiSelect;
             _keyUpdateTime = KeyUpdateTimeout * 10;

@@ -23,7 +23,7 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         protected override void OnValueChanged()
         {
-            var value = (StaticFlags)element.EnumTypeValue;
+            var value = (StaticFlags)element.EnumComboBox.EnumTypeValue;
 
             // If selected is single actor that has children, ask if apply flags to the sub objects as well
             if (Values.IsSingleObject && (StaticFlags)Values[0] != value && ParentEditor.Values[0] is Actor actor && actor.HasChildren)
@@ -41,7 +41,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     // But it's the easiest way to set value for selected actor and its children with one undo action
                     List<Actor> actors = new List<Actor>(32);
                     GetActorsTree(actors, actor);
-                    if (Presenter.Undo != null)
+                    if (Presenter.Undo != null && Presenter.Undo.Enabled)
                     {
                         using (new UndoMultiBlock(Presenter.Undo, actors.ToArray(), "Change static flags"))
                         {
@@ -59,6 +59,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         }
                     }
 
+                    OnUnDirty();
                     return;
                 }
             }

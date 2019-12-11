@@ -62,6 +62,7 @@ namespace FlaxEngine.GUI
         internal WindowRootControl(Window window)
         {
             _window = window ?? throw new ArgumentNullException(nameof(window));
+            ClipChildren = false;
 
             if (Style.Current != null)
                 BackgroundColor = Style.Current.Background;
@@ -162,8 +163,8 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override Vector2 MousePosition
         {
-            get => _window.MousePosition;
-            set => _window.MousePosition = value;
+            get => _window.MousePosition / _window._dpiScale;
+            set => _window.MousePosition = value * _window._dpiScale;
         }
 
         /// <inheritdoc />
@@ -177,7 +178,7 @@ namespace FlaxEngine.GUI
             if (_trackingControl != null)
                 EndTrackingMouse();
 
-            if (control.CanFocus)
+            if (control.AutoFocus)
                 Focus(control);
 
             _trackingControl = control;

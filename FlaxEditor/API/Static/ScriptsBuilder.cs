@@ -16,13 +16,14 @@ namespace FlaxEditor.Scripting
         internal enum InBuildEditorTypes
         {
             Custom,
-            Text,
+            SystemDefault,
             VS2008,
             VS2010,
             VS2012,
             VS2013,
             VS2015,
             VS2017,
+            VS2019,
 
             MAX
         };

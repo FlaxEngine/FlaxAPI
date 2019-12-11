@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -23,13 +24,13 @@ namespace FlaxEngine
         /// Gets or sets the base material. If value gets changed parameters collection is restored to the default values of the new material.
         /// </summary>
         [UnmanagedCall]
-        public Material BaseMaterial
+        public MaterialBase BaseMaterial
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetBaseMaterial(unmanagedPtr); }
-            set { Internal_SetBaseMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetBaseMaterial(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -54,7 +55,7 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Material Internal_GetBaseMaterial(IntPtr obj);
+        internal static extern MaterialBase Internal_GetBaseMaterial(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetBaseMaterial(IntPtr obj, IntPtr val);

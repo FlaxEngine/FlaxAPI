@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -14,6 +15,8 @@ namespace FlaxEditor.Surface.Elements
     /// <seealso cref="IConnectionInstigator" />
     public abstract class Box : SurfaceNodeElementControl, IConnectionInstigator
     {
+        private bool _isMouseDown;
+
         /// <summary>
         /// The current connection type. It's subset or equal to <see cref="DefaultType"/>.
         /// </summary>
@@ -23,6 +26,11 @@ namespace FlaxEditor.Surface.Elements
         /// The cached color for the current box type.
         /// </summary>
         protected Color _currentTypeColor;
+
+        /// <summary>
+        /// The is selected flag for the box.
+        /// </summary>
+        protected bool _isSelected;
 
         /// <summary>
         /// Unique box ID within single node.
@@ -42,33 +50,21 @@ namespace FlaxEditor.Surface.Elements
         /// <summary>
         /// Gets a value indicating whether this box has any connection.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this box has any connection; otherwise, <c>false</c>.
-        /// </value>
         public bool HasAnyConnection => Connections.Count > 0;
 
         /// <summary>
         /// Gets a value indicating whether this box has single connection.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this box has single connection; otherwise, <c>false</c>.
-        /// </value>
         public bool HasSingleConnection => Connections.Count == 1;
 
         /// <summary>
         /// Gets a value indicating whether this instance is output box.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is output; otherwise, <c>false</c>.
-        /// </value>
         public abstract bool IsOutput { get; }
 
         /// <summary>
         /// Gets or sets the current type of the box connections.
         /// </summary>
-        /// <value>
-        /// The current type.
-        /// </value>
         public ConnectionType CurrentType
         {
             get => _currentType;
@@ -119,6 +115,24 @@ namespace FlaxEditor.Surface.Elements
             }
         }
 
+        /// <summary>
+        /// Event called when the current type of the box gets changed.
+        /// </summary>
+        public Action<Box> CurrentTypeChanged;
+
+        /// <summary>
+        /// Gets a value indicating whether this box is selected.
+        /// </summary>
+        public bool IsSelected
+        {
+            get => _isSelected;
+            internal set
+            {
+                _isSelected = value;
+                OnSelectionChanged();
+            }
+        }
+
         /// <inheritdoc />
         protected Box(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location)
         : base(parentNode, archetype, location, new Vector2(Constants.BoxSize), false)
@@ -133,9 +147,7 @@ namespace FlaxEditor.Surface.Elements
         /// Determines whether this box can use the specified type as a connection.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>
-        ///   <c>true</c> if this box can use the specified type; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if this box can use the specified type; otherwise, <c>false</c>.</returns>
         public bool CanUseType(ConnectionType type)
         {
             // Check direct connection
@@ -336,6 +348,7 @@ namespace FlaxEditor.Surface.Elements
         {
             Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
             TooltipText = CurrentType.ToString();
+            CurrentTypeChanged?.Invoke(this);
         }
 
         /// <summary>
@@ -343,6 +356,14 @@ namespace FlaxEditor.Surface.Elements
         /// </summary>
         public virtual void OnConnectionsChanged()
         {
+        }
+
+        protected virtual void OnSelectionChanged()
+        {
+            if (IsSelected && !ParentNode.IsSelected)
+            {
+                ParentNode.Surface.AddToSelection(ParentNode);
+            }
         }
 
         /// <summary>
@@ -371,17 +392,40 @@ namespace FlaxEditor.Surface.Elements
             else
                 icon = hasConnections ? style.Icons.BoxClose : style.Icons.BoxOpen;
             Render2D.DrawSprite(icon, rect, color);
+
+            // Draw selection hint
+            if (_isSelected)
+            {
+                float outlineAlpha = Mathf.Sin(Time.TimeSinceStartup * 4.0f) * 0.5f + 0.5f;
+                float outlineWidth = Mathf.Lerp(1.5f, 4.0f, outlineAlpha);
+                var outlineRect = new Rectangle(rect.X - outlineWidth, rect.Y - outlineWidth, rect.Width + outlineWidth * 2, rect.Height + outlineWidth * 2);
+                Render2D.DrawSprite(icon, outlineRect, FlaxEngine.GUI.Style.Current.BorderSelected.RGBMultiplied(1.0f + outlineAlpha * 0.4f));
+            }
         }
 
         /// <inheritdoc />
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
+            if (base.OnMouseDown(location, buttons))
+                return true;
+
             if (buttons == MouseButton.Left)
             {
+                _isMouseDown = true;
+                Focus();
+                return true;
+            }
+            return false;
+        }
+
+        public override void OnMouseLeave()
+        {
+            if (_isMouseDown)
+            {
+                _isMouseDown = false;
                 Surface.ConnectingStart(this);
             }
-
-            return true;
+            base.OnMouseLeave();
         }
 
         /// <inheritdoc />
@@ -394,15 +438,40 @@ namespace FlaxEditor.Surface.Elements
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            bool result = false;
+            if (base.OnMouseUp(location, buttons))
+                return true;
 
             if (buttons == MouseButton.Left)
             {
-                Surface.ConnectingEnd(this);
-                result = true;
+                _isMouseDown = false;
+                if (Surface.IsConnecting)
+                {
+                    Surface.ConnectingEnd(this);
+                }
+                else
+                {
+                    // Click
+
+                    if (Root.GetKey(Keys.Control))
+                    {
+                        // Add to selection
+                        if (!ParentNode.IsSelected)
+                        {
+                            ParentNode.Surface.AddToSelection(ParentNode);
+                        }
+                        ParentNode.AddBoxToSelection(this);
+                    }
+                    else
+                    {
+                        // Forcibly select the node
+                        ParentNode.Surface.Select(ParentNode);
+                        ParentNode.SelectBox(this);
+                    }
+                }
+                return true;
             }
 
-            return result;
+            return false;
         }
 
         /// <inheritdoc />
@@ -508,15 +577,6 @@ namespace FlaxEditor.Surface.Elements
                 return;
             }
 
-            // Check if they are already connected
-            if (areConnected)
-            {
-                // Break link
-                start.BreakConnection(end);
-                Surface.MarkAsEdited();
-                return;
-            }
-
             // Cache Input and Output box (since connection may be made in a different way)
             InputBox iB;
             OutputBox oB;
@@ -529,6 +589,25 @@ namespace FlaxEditor.Surface.Elements
             {
                 iB = (InputBox)start;
                 oB = (OutputBox)end;
+            }
+
+            // Check if they are already connected
+            if (areConnected)
+            {
+                // Break link
+                if (Surface.Undo != null)
+                {
+                    var action = new ConnectBoxesAction(iB, oB, false);
+                    start.BreakConnection(end);
+                    action.End();
+                    Surface.Undo.AddAction(action);
+                }
+                else
+                {
+                    start.BreakConnection(end);
+                }
+                Surface.MarkAsEdited();
+                return;
             }
 
             // Validate connection type (also check if any of boxes parent can manage that connections types)
@@ -551,7 +630,17 @@ namespace FlaxEditor.Surface.Elements
             else
             {
                 // Connect directly
-                iB.CreateConnection(oB);
+                if (Surface.Undo != null)
+                {
+                    var action = new ConnectBoxesAction(iB, oB, true);
+                    iB.CreateConnection(oB);
+                    action.End();
+                    Surface.Undo?.AddAction(action);
+                }
+                else
+                {
+                    iB.CreateConnection(oB);
+                }
                 Surface.MarkAsEdited();
             }
         }

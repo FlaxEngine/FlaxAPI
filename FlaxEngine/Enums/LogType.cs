@@ -3,33 +3,28 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// The type of the log message in <see cref="Debug"/>.
+    /// The log message types.
     /// </summary>
     public enum LogType
     {
         /// <summary>
-        /// LogType used for Errors.
+        /// The log message.
         /// </summary>
-        Error = 0,
+        Info = 1,
 
         /// <summary>
-        /// LogType used for Asserts. (These could also indicate an error inside Flax itself.)
-        /// </summary>
-        Assert = 1,
-
-        /// <summary>
-        /// LogType used for Warnings.
+        /// The warning message.
         /// </summary>
         Warning = 2,
 
         /// <summary>
-        /// LogType used for regular log messages.
+        /// The error message.
         /// </summary>
-        Log = 3,
+        Error = 4,
 
         /// <summary>
-        /// LogType used for Exceptions.
+        /// The fatal error.
         /// </summary>
-        Exception = 4
-    }
+        Fatal = 8,
+    };
 }

@@ -2,8 +2,10 @@
 
 using System;
 using System.Globalization;
+using FlaxEditor.Utilities;
+using FlaxEngine;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Double precision floating point value editor.
@@ -145,10 +147,14 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void TryGetValue()
         {
-            var text = Text.Replace(',', '.');
-            if (double.TryParse(text, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var value))
+            try
             {
-                Value = value;
+                Value = ShuntingYard.Parse(Text);
+            }
+            catch (Exception ex)
+            {
+                // Fall back to previous value
+                Editor.LogWarning(ex);
             }
         }
 

@@ -2,14 +2,17 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
+    class SceneAsset
+    {
+    }
+
     public sealed partial class Scene
     {
         /// <summary>
-        /// The scene asset typename. Type of the serialized scene asset data. Hidden class for the scene assets. Actors deserialization rules are strictly controlled under the hood by the C++ core parts. Mostly because scene asset has the same ID as scene root actor so loading both managed objects for scene asset and scene will crash (due to object ids conflict). This type does not exist in the engine assembly.
+        /// The scene asset typename. Type of the serialized scene asset data. Hidden class for the scene assets. Actors deserialization rules are strictly controlled under the hood by the C++ core parts. Mostly because scene asset has the same ID as scene root actor so loading both managed objects for scene asset and scene will crash (due to object ids conflict).
         /// </summary>
         public const string AssetTypename = "FlaxEngine.SceneAsset";
 

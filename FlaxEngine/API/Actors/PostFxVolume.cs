@@ -1,42 +1,29 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using System;
-using System.Runtime.InteropServices;
-using FlaxEngine.Rendering;
-
 namespace FlaxEngine
 {
     public sealed partial class PostFxVolume
     {
         /// <summary>
-        /// Gets the post processing settings.
+        /// Adds the post fx material to the settings.
         /// </summary>
-        [EditorDisplay("PostFx Settings"), EditorOrder(100)]
-        public PostProcessSettings Settings;
-
-        /// <summary>
-        /// Updates cached Settings.data from unmanaged data
-        /// </summary>
-        /// <param name="ptr">The unmanaged data pointer.</param>
-        internal void Internal_SetData(IntPtr ptr)
+        /// <param name="material">The material.</param>
+        public void AddPostFxMaterial(MaterialBase material)
         {
-            Settings.data = (PostProcessSettings.Data)Marshal.PtrToStructure(ptr, typeof(PostProcessSettings.Data));
+            var materials = PostFxMaterials;
+            materials.AddMaterial(material);
+            PostFxMaterials = materials;
         }
 
         /// <summary>
-        /// Sends cached Settings.data to unmanaged data
+        /// Removes the post fx material from the settings.
         /// </summary>
-        /// <param name="ptr">The unmanaged data pointer.</param>
-        /// <param name="forceGet">True if get data by force, even if no change has been registered.</param>
-        /// <returns>True if data has been modified, otherwise false.</returns>
-        internal bool Internal_GetData(IntPtr ptr, bool forceGet)
+        /// <param name="material">The material.</param>
+        public void RemovePostFxMaterial(MaterialBase material)
         {
-            if (!Settings.isDataDirty && !forceGet)
-                return false;
-
-            Settings.isDataDirty = false;
-            Marshal.StructureToPtr(Settings.data, ptr, false);
-            return true;
+            var materials = PostFxMaterials;
+            materials.RemoveMaterial(material);
+            PostFxMaterials = materials;
         }
     }
 }

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -16,6 +17,7 @@ namespace FlaxEngine
         public long UnscaledDeltaTimeTicks;
         public float UnscaledTime;
         public long UnscaledTimeTicks;
+        public long StartupTimeTicks;
         public float TimeSinceStartup;
         public long TimeSinceStartupTicks;
         public float TimeSinceLevelLoad;
@@ -90,6 +92,11 @@ namespace FlaxEngine
         /// Gets timeScale-independent time at the beginning of this frame in ticks. This is the time in seconds since the start of the game.
         /// </summary>
         public static long UnscaledGameTimeTicks => data.UnscaledTimeTicks;
+
+        /// <summary>
+        /// Gets time at which the game started (UTC local).
+        /// </summary>
+        public static DateTime StartupTime => new DateTime(data.StartupTimeTicks);
 
         #region Internal Calls
 

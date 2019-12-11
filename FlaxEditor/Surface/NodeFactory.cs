@@ -103,53 +103,21 @@ namespace FlaxEditor.Surface
                 Archetypes = Archetypes.Comparisons.Nodes
             },
             // GroupID = 13 -> Custom Nodes provided externally
-        };
-
-#if DEBUG
-        static NodeFactory()
-        {
-            // Validate all archetypes (reduce mistakes)
-            for (int groupIndex = 0; groupIndex < DefaultGroups.Count; groupIndex++)
+            new GroupArchetype
             {
-                var group = DefaultGroups[groupIndex];
-
-                // Unique group id
-                for (int i = groupIndex + 1; i < DefaultGroups.Count; i++)
-                {
-                    if(group.GroupID == DefaultGroups[i].GroupID)
-                        throw new System.AccessViolationException("Invalid group ID.");
-                }
-
-                for (int nodeIndex = 0; nodeIndex < group.Archetypes.Length; nodeIndex++)
-                {
-                    var node = group.Archetypes[nodeIndex];
-
-                    // Unique node ids
-                    for (int i = nodeIndex + 1; i < group.Archetypes.Length; i++)
-                    {
-                        if (node.TypeID == group.Archetypes[i].TypeID)
-                            throw new System.AccessViolationException("Invalid node ID.");
-                    }
-
-                    // Unique box ids
-                    for (int i = 0; i < node.Elements.Length; i++)
-                    {
-                        if (node.Elements[i].Type == NodeElementType.Input || node.Elements[i].Type == NodeElementType.Output)
-                        {
-                            for (int j = i + 1; j < node.Elements.Length; j++)
-                            {
-                                if (node.Elements[j].Type == NodeElementType.Input || node.Elements[j].Type == NodeElementType.Output)
-                                {
-                                    if (node.Elements[i].BoxID == node.Elements[j].BoxID)
-                                        throw new System.AccessViolationException("Invalid box ID.");
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-#endif
+                GroupID = 14,
+                Name = "Particles",
+                Color = new Color(121, 210, 176),
+                Archetypes = Archetypes.Particles.Nodes
+            },
+            new GroupArchetype
+            {
+                GroupID = 15,
+                Name = "Particle Modules",
+                Color = new Color(221, 110, 176),
+                Archetypes = Archetypes.ParticleModules.Nodes
+            },
+        };
 
         /// <summary>
         /// Gets the archetypes for the node.

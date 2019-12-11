@@ -1,8 +1,8 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -205,7 +205,67 @@ namespace FlaxEngine
             if (colors != null && colors.Length != vertices.Length)
                 throw new ArgumentOutOfRangeException(nameof(colors));
 
-            if (Internal_UpdateMeshInt(_model.unmanagedPtr, _lodIndex, _meshIndex, vertices, triangles, normals, tangents, uv, colors))
+            if (Internal_UpdateMeshInt(
+                _model.unmanagedPtr,
+                _lodIndex,
+                _meshIndex,
+                vertices.Length,
+                triangles.Length / 3,
+                vertices, triangles,
+                normals,
+                tangents,
+                uv,
+                colors
+            ))
+                throw new FlaxException("Failed to update mesh data.");
+        }
+
+        /// <summary>
+        /// Updates the model mesh vertex and index buffer data.
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// </summary>
+        /// <param name="vertices">The mesh vertices positions. Cannot be null.</param>
+        /// <param name="triangles">The mesh index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
+        /// <param name="normals">The normal vectors (per vertex).</param>
+        /// <param name="tangents">The normal vectors (per vertex). Use null to compute them from normal vectors.</param>
+        /// <param name="uv">The texture coordinates (per vertex).</param>
+        /// <param name="colors">The vertex colors (per vertex).</param>
+        public void UpdateMesh(List<Vector3> vertices, List<int> triangles, List<Vector3> normals = null, List<Vector3> tangents = null, List<Vector2> uv = null, List<Color32> colors = null)
+        {
+            // Validate state and input
+            if (!_model.IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Count == 0 || triangles.Count % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+            if (normals != null && normals.Count != vertices.Count)
+                throw new ArgumentOutOfRangeException(nameof(normals));
+            if (tangents != null && tangents.Count != vertices.Count)
+                throw new ArgumentOutOfRangeException(nameof(tangents));
+            if (tangents != null && normals == null)
+                throw new ArgumentException("If you specify tangents then you need to also provide normals for the mesh.");
+            if (uv != null && uv.Count != vertices.Count)
+                throw new ArgumentOutOfRangeException(nameof(uv));
+            if (colors != null && colors.Count != vertices.Count)
+                throw new ArgumentOutOfRangeException(nameof(colors));
+
+            if (Internal_UpdateMeshInt(
+                _model.unmanagedPtr,
+                _lodIndex,
+                _meshIndex,
+                vertices.Count,
+                triangles.Count / 3,
+                Utils.ExtractArrayFromList(vertices),
+                Utils.ExtractArrayFromList(triangles),
+                Utils.ExtractArrayFromList(normals),
+                Utils.ExtractArrayFromList(tangents),
+                Utils.ExtractArrayFromList(uv),
+                Utils.ExtractArrayFromList(colors)
+            ))
                 throw new FlaxException("Failed to update mesh data.");
         }
 
@@ -242,7 +302,68 @@ namespace FlaxEngine
             if (colors != null && colors.Length != vertices.Length)
                 throw new ArgumentOutOfRangeException(nameof(colors));
 
-            if (Internal_UpdateMeshUShort(_model.unmanagedPtr, _lodIndex, _meshIndex, vertices, triangles, normals, tangents, uv, colors))
+            if (Internal_UpdateMeshUShort(
+                _model.unmanagedPtr,
+                _lodIndex,
+                _meshIndex,
+                vertices.Length,
+                triangles.Length / 3,
+                vertices,
+                triangles,
+                normals,
+                tangents,
+                uv,
+                colors
+            ))
+                throw new FlaxException("Failed to update mesh data.");
+        }
+
+        /// <summary>
+        /// Updates the model mesh vertex and index buffer data.
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// </summary>
+        /// <param name="vertices">The mesh vertices positions. Cannot be null.</param>
+        /// <param name="triangles">The mesh index buffer (triangles). Uses 16-bit stride buffer. Cannot be null.</param>
+        /// <param name="normals">The normal vectors (per vertex).</param>
+        /// <param name="tangents">The tangent vectors (per vertex). Use null to compute them from normal vectors.</param>
+        /// <param name="uv">The texture coordinates (per vertex).</param>
+        /// <param name="colors">The vertex colors (per vertex).</param>
+        public void UpdateMesh(List<Vector3> vertices, List<ushort> triangles, List<Vector3> normals = null, List<Vector3> tangents = null, List<Vector2> uv = null, List<Color32> colors = null)
+        {
+            // Validate state and input
+            if (!_model.IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Count == 0 || triangles.Count % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+            if (normals != null && normals.Count != vertices.Count)
+                throw new ArgumentOutOfRangeException(nameof(normals));
+            if (tangents != null && tangents.Count != vertices.Count)
+                throw new ArgumentOutOfRangeException(nameof(tangents));
+            if (tangents != null && normals == null)
+                throw new ArgumentException("If you specify tangents then you need to also provide normals for the mesh.");
+            if (uv != null && uv.Count != vertices.Count)
+                throw new ArgumentOutOfRangeException(nameof(uv));
+            if (colors != null && colors.Count != vertices.Count)
+                throw new ArgumentOutOfRangeException(nameof(colors));
+
+            if (Internal_UpdateMeshUShort(
+                _model.unmanagedPtr,
+                _lodIndex,
+                _meshIndex,
+                vertices.Count,
+                triangles.Count / 3,
+                Utils.ExtractArrayFromList(vertices),
+                Utils.ExtractArrayFromList(triangles),
+                Utils.ExtractArrayFromList(normals),
+                Utils.ExtractArrayFromList(tangents),
+                Utils.ExtractArrayFromList(uv),
+                Utils.ExtractArrayFromList(colors)
+            ))
                 throw new FlaxException("Failed to update mesh data.");
         }
 
@@ -262,7 +383,39 @@ namespace FlaxEngine
             if (triangles.Length == 0 || triangles.Length % 3 != 0)
                 throw new ArgumentOutOfRangeException(nameof(triangles));
 
-            if (Internal_UpdateTrianglesInt(_model.unmanagedPtr, _lodIndex, _meshIndex, triangles))
+            if (Internal_UpdateTrianglesInt(
+                _model.unmanagedPtr,
+                _lodIndex,
+                _meshIndex,
+                triangles.Length / 3,
+                triangles
+            ))
+                throw new FlaxException("Failed to update mesh data.");
+        }
+
+        /// <summary>
+        /// Updates the model mesh index buffer data.
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// </summary>
+        /// <param name="triangles">The mesh index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
+        public void UpdateTriangles(List<int> triangles)
+        {
+            // Validate state and input
+            if (!_model.IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Count == 0 || triangles.Count % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+
+            if (Internal_UpdateTrianglesInt(
+                _model.unmanagedPtr,
+                _lodIndex,
+                _meshIndex,
+                triangles.Count / 3,
+                Utils.ExtractArrayFromList(triangles)
+            ))
                 throw new FlaxException("Failed to update mesh data.");
         }
 
@@ -282,7 +435,39 @@ namespace FlaxEngine
             if (triangles.Length == 0 || triangles.Length % 3 != 0)
                 throw new ArgumentOutOfRangeException(nameof(triangles));
 
-            if (Internal_UpdateTrianglesUShort(_model.unmanagedPtr, _lodIndex, _meshIndex, triangles))
+            if (Internal_UpdateTrianglesUShort(
+                _model.unmanagedPtr,
+                _lodIndex,
+                _meshIndex,
+                triangles.Length / 3,
+                triangles
+            ))
+                throw new FlaxException("Failed to update mesh data.");
+        }
+
+        /// <summary>
+        /// Updates the model mesh index buffer data.
+        /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
+        /// Mesh data will be cached and uploaded to the GPU with a delay.
+        /// </summary>
+        /// <param name="triangles">The mesh index buffer (triangles). Uses 16-bit stride buffer. Cannot be null.</param>
+        public void UpdateTriangles(List<ushort> triangles)
+        {
+            // Validate state and input
+            if (!_model.IsVirtual)
+                throw new InvalidOperationException("Only virtual models can be updated at runtime.");
+            if (triangles == null)
+                throw new ArgumentNullException(nameof(triangles));
+            if (triangles.Count == 0 || triangles.Count % 3 != 0)
+                throw new ArgumentOutOfRangeException(nameof(triangles));
+
+            if (Internal_UpdateTrianglesUShort(
+                _model.unmanagedPtr,
+                _lodIndex,
+                _meshIndex,
+                triangles.Count / 3,
+                Utils.ExtractArrayFromList(triangles)
+            ))
                 throw new FlaxException("Failed to update mesh data.");
         }
 
@@ -296,7 +481,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Downloads the first vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// Downloads the first vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Platform.IsInMainThread"/>).
         /// </summary>
         /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
         /// <returns>The gathered data.</returns>
@@ -310,7 +495,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Downloads the second vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// Downloads the second vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Platform.IsInMainThread"/>).
         /// </summary>
         /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
         /// <returns>The gathered data.</returns>
@@ -324,7 +509,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Downloads the third vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// Downloads the third vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Platform.IsInMainThread"/>).
         /// </summary>
         /// <remarks>
         /// If mesh has no vertex colors (stored in vertex buffer 2) the the returned value is null.
@@ -344,7 +529,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Downloads the raw vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// Downloads the raw vertex buffer that contains mesh vertices data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Platform.IsInMainThread"/>).
         /// </summary>
         /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
         /// <returns>The gathered data.</returns>
@@ -384,7 +569,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Downloads the index buffer that contains mesh triangles data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// Downloads the index buffer that contains mesh triangles data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Platform.IsInMainThread"/>).
         /// </summary>
         /// <remarks>If mesh index buffer format (see <see cref="IndexBufferFormat"/>) is <see cref="PixelFormat.R16_UInt"/> then it's faster to call .</remarks>
         /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
@@ -399,7 +584,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Downloads the index buffer that contains mesh triangles data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Application.IsInMainThread"/>).
+        /// Downloads the index buffer that contains mesh triangles data. To download data from GPU set <paramref name="forceGpu"/> to true and call this method from the thread other than main thread (see <see cref="Platform.IsInMainThread"/>).
         /// </summary>
         /// <remarks>If mesh index buffer format (see <see cref="IndexBufferFormat"/>) is <see cref="PixelFormat.R32_UInt"/> then data won't be downloaded.</remarks>
         /// <param name="forceGpu">If set to <c>true</c> the data will be downloaded from the GPU, otherwise it can be loaded from the drive (source asset file) or from memory (if cached). Downloading mesh from GPU requires this call to be made from the other thread than main thread. Virtual assets are always downloaded from GPU memory due to lack of dedicated storage container for the asset data.</param>
@@ -436,16 +621,16 @@ namespace FlaxEngine
         internal static extern int Internal_GetVertexCount(IntPtr obj, int lodIndex, int meshIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateMeshInt(IntPtr obj, int lodIndex, int meshIndex, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector3[] tangents, Vector2[] uv, Color32[] colors);
+        internal static extern bool Internal_UpdateMeshInt(IntPtr obj, int lodIndex, int meshIndex, int vertexCount, int triangleCount, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector3[] tangents, Vector2[] uv, Color32[] colors);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateMeshUShort(IntPtr obj, int lodIndex, int meshIndex, Vector3[] vertices, ushort[] triangles, Vector3[] normals, Vector3[] tangents, Vector2[] uv, Color32[] colors);
+        internal static extern bool Internal_UpdateMeshUShort(IntPtr obj, int lodIndex, int meshIndex, int vertexCount, int triangleCount, Vector3[] vertices, ushort[] triangles, Vector3[] normals, Vector3[] tangents, Vector2[] uv, Color32[] colors);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateTrianglesInt(IntPtr obj, int lodIndex, int meshIndex, int[] triangles);
+        internal static extern bool Internal_UpdateTrianglesInt(IntPtr obj, int lodIndex, int meshIndex, int triangleCount, int[] triangles);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_UpdateTrianglesUShort(IntPtr obj, int lodIndex, int meshIndex, ushort[] triangles);
+        internal static extern bool Internal_UpdateTrianglesUShort(IntPtr obj, int lodIndex, int meshIndex, int triangleCount, ushort[] triangles);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_DownloadBuffer(IntPtr obj, int lodIndex, int meshIndex, bool forceGpu, Array result, InternalBufferType type);

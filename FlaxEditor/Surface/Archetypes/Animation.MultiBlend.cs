@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -28,7 +29,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// <seealso cref="FlaxEngine.GUI.Control" />
         protected class BlendPoint : Control
         {
-            private static Matrix3x3 _transform = Matrix3x3.RotationZ(45.0f * Mathf.Deg2Rad) * Matrix3x3.Translation2D(4.0f, 0.5f);
+            private static Matrix3x3 _transform = Matrix3x3.RotationZ(45.0f * Mathf.DegreesToRadians) * Matrix3x3.Translation2D(4.0f, 0.5f);
             private readonly BlendPointsEditor _editor;
             private readonly int _index;
             private bool _isMouseDown;
@@ -536,9 +537,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
                 UpdateUI();
             }

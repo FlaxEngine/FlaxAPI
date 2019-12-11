@@ -2,7 +2,7 @@
 
 using System;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Material parameters types.
@@ -70,9 +70,9 @@ namespace FlaxEngine.Rendering
         SceneTexture = 11,
 
         /// <summary>
-        /// The render target (created from code).
+        /// The GPU texture (created from code).
         /// </summary>
-        RenderTarget = 12,
+        GPUTexture = 12,
 
         /// <summary>
         /// The matrix.
@@ -80,19 +80,19 @@ namespace FlaxEngine.Rendering
         Matrix = 13,
 
         /// <summary>
-        /// The render target array (created from code).
+        /// The GPU texture array (created from code).
         /// </summary>
-        RenderTargetArray = 14,
+        GPUTextureArray = 14,
 
         /// <summary>
-        /// The volume render target (created from code).
+        /// The GPU volume texture (created from code).
         /// </summary>
-        RenderTargetVolume = 15,
+        GPUTextureVolume = 15,
 
         /// <summary>
-        /// The cube render target (created from code).
+        /// The GPU cube texture (created from code).
         /// </summary>
-        RenderTargetCube = 16,
+        GPUTextureCube = 16,
     }
 
     /// <summary>
@@ -130,11 +130,20 @@ namespace FlaxEngine.Rendering
             get
             {
                 // Validate the hash
-                if (_hash != _material._parametersHash)
+                if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
 
                 return MaterialBase.Internal_GetParamName(_material.unmanagedPtr, _index);
             }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the parameter overrides the default value (from the base).
+        /// </summary>
+        public bool Override
+        {
+            get => MaterialBase.Internal_GetParamOverride(_material.unmanagedPtr, _index);
+            set => MaterialBase.Internal_SetParamOverride(_material.unmanagedPtr, _index, value);
         }
 
         /// <summary>
@@ -145,7 +154,7 @@ namespace FlaxEngine.Rendering
             get
             {
                 // Validate the hash
-                if (_material._parametersHash != _hash)
+                if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
 
                 IntPtr ptr;
@@ -164,6 +173,7 @@ namespace FlaxEngine.Rendering
                 case MaterialParameterType.Bool:
                     ptr = new IntPtr(&vBool);
                     break;
+                case MaterialParameterType.SceneTexture:
                 case MaterialParameterType.Integer:
                     ptr = new IntPtr(&vInt);
                     break;
@@ -189,10 +199,10 @@ namespace FlaxEngine.Rendering
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:
-                case MaterialParameterType.RenderTarget:
-                case MaterialParameterType.RenderTargetArray:
-                case MaterialParameterType.RenderTargetCube:
-                case MaterialParameterType.RenderTargetVolume:
+                case MaterialParameterType.GPUTexture:
+                case MaterialParameterType.GPUTextureArray:
+                case MaterialParameterType.GPUTextureCube:
+                case MaterialParameterType.GPUTextureVolume:
                     ptr = new IntPtr(&vGuid);
                     break;
 
@@ -204,6 +214,7 @@ namespace FlaxEngine.Rendering
                 switch (_type)
                 {
                 case MaterialParameterType.Bool: return vBool;
+                case MaterialParameterType.SceneTexture:
                 case MaterialParameterType.Integer: return vInt;
                 case MaterialParameterType.Float: return vFloat;
                 case MaterialParameterType.Vector2: return vVector2;
@@ -214,11 +225,11 @@ namespace FlaxEngine.Rendering
 
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
-                case MaterialParameterType.NormalMap:
-                case MaterialParameterType.RenderTargetArray:
-                case MaterialParameterType.RenderTargetCube:
-                case MaterialParameterType.RenderTargetVolume:
-                case MaterialParameterType.RenderTarget: return Object.Find<Object>(ref vGuid);
+                case MaterialParameterType.NormalMap: return Object.Find<Object>(ref vGuid);
+                case MaterialParameterType.GPUTextureArray:
+                case MaterialParameterType.GPUTextureCube:
+                case MaterialParameterType.GPUTextureVolume:
+                case MaterialParameterType.GPUTexture: return Object.TryFind<Object>(ref vGuid);
 
                 default: throw new ArgumentOutOfRangeException();
                 }
@@ -226,7 +237,7 @@ namespace FlaxEngine.Rendering
             set
             {
                 // Validate the hash
-                if (_material._parametersHash != _hash)
+                if (_hash != MaterialBase.Internal_GetParametersHash(_material.unmanagedPtr))
                     throw new InvalidOperationException("Cannot use invalid material parameter.");
                 if (!_isPublic)
                     throw new InvalidOperationException("Cannot set private material parameters.");
@@ -247,6 +258,7 @@ namespace FlaxEngine.Rendering
                     vBool = Convert.ToBoolean(value);
                     ptr = new IntPtr(&vBool);
                     break;
+                case MaterialParameterType.SceneTexture:
                 case MaterialParameterType.Integer:
                 {
                     vInt = Convert.ToInt32(value);
@@ -283,10 +295,10 @@ namespace FlaxEngine.Rendering
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:
-                case MaterialParameterType.RenderTarget:
-                case MaterialParameterType.RenderTargetArray:
-                case MaterialParameterType.RenderTargetCube:
-                case MaterialParameterType.RenderTargetVolume:
+                case MaterialParameterType.GPUTexture:
+                case MaterialParameterType.GPUTextureArray:
+                case MaterialParameterType.GPUTextureCube:
+                case MaterialParameterType.GPUTextureVolume:
                     ptr = Object.GetUnmanagedPtr(value as Object);
                     break;
 

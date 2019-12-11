@@ -2,7 +2,7 @@
 
 using System;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Frame rendering flags used to switch between graphics features.
@@ -15,7 +15,10 @@ namespace FlaxEngine.Rendering
         /// </summary>
         None = 0,
 
-        //DynamicActors = 1 << 0,
+        /// <summary>
+        /// Shows/hides the debug shapes rendered using Debug Draw.
+        /// </summary>
+        DebugDraw = 1,
 
         /// <summary>
         /// Shows/hides Editor sprites
@@ -135,22 +138,21 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// Default flags for Game
         /// </summary>
-        DefaultGame = Reflections | DepthOfField | Fog | Decals | MotionBlur
-                      | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
-                      | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
+        DefaultGame = Reflections | DepthOfField | Fog | Decals | MotionBlur | SSR | AO | GI |
+                      DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight |
+                      AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
 
         /// <summary>
         /// Default flags for Editor
         /// </summary>
-        DefaultEditor = Reflections | Fog | Decals
-                        | SSR | AO | GI | DirectionalLights | PointLights | SpotLights | SkyLights | Shadows | SpecularLight
-                        | AntiAliasing | CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares | EditorSprites,
+        DefaultEditor = Reflections | Fog | Decals | DebugDraw | SSR | AO | GI | DirectionalLights |
+                        PointLights | SpotLights | SkyLights | Shadows | SpecularLight | AntiAliasing |
+                        CustomPostProcess | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares | EditorSprites,
 
         /// <summary>
         /// Default flags for materials/models previews generating
         /// </summary>
-        DefaultAssetPreview = Reflections | Decals
-                              | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight
-                              | AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
+        DefaultAssetPreview = Reflections | Decals | GI | DirectionalLights | PointLights | SpotLights | SkyLights | SpecularLight |
+                              AntiAliasing | Bloom | ToneMapping | EyeAdaptation | CameraArtifacts | LensFlares,
     }
 }

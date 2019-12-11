@@ -11,16 +11,25 @@ namespace FlaxEditor.Actions
     /// Implementation of <see cref="IUndoAction"/> used to delete a selection of <see cref="ActorNode"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
+    [Serializable]
     public class DeleteActorsAction : IUndoAction
     {
+        [Serialize]
         private byte[] _data;
+
+        [Serialize]
         private Guid[] _prefabIds;
+
+        [Serialize]
         private Guid[] _prefabObjectIds;
+
+        [Serialize]
         private bool _isInverted;
 
         /// <summary>
         /// The node parents.
         /// </summary>
+        [Serialize]
         protected List<ActorNode> _nodeParents;
 
         /// <summary>

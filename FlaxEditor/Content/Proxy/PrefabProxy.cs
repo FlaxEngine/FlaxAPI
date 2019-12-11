@@ -7,7 +7,6 @@ using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Content
@@ -100,9 +99,12 @@ namespace FlaxEditor.Content
                 _preview = new PrefabPreview(false);
                 _preview.RenderOnlyWithWindow = false;
                 _preview.Task.Enabled = false;
-                _preview.PostFxVolume.Settings.Eye_Technique = EyeAdaptationTechnique.None;
-                _preview.PostFxVolume.Settings.Eye_Exposure = 0.1f;
-                _preview.PostFxVolume.Settings.data.Flags4 |= 0b1001;
+
+                var eyeAdaptation = _preview.PostFxVolume.EyeAdaptation;
+                eyeAdaptation.Mode = EyeAdaptationMode.None;
+                eyeAdaptation.OverrideFlags |= EyeAdaptationSettings.Override.Mode;
+                _preview.PostFxVolume.EyeAdaptation = eyeAdaptation;
+
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
                 _preview.SyncBackbufferSize();
             }
@@ -139,19 +141,36 @@ namespace FlaxEditor.Content
         {
             _preview.Prefab = (Prefab)request.Asset;
             _preview.Parent = guiRoot;
+            _preview.Scale = Vector2.One;
+            _preview.ShowDefaultSceneActors = true;
 
-            // Update some actors data (some actor types update bounds/data later but its required to be done before rendering)
-            Prepare(_preview.Instance);
+            // Special case for UI prefabs
+            if (_preview.Instance is UIControl uiControl && uiControl.HasControl)
+            {
+                // Ensure to place UI in a proper way
+                uiControl.Control.Location = Vector2.Zero;
+                uiControl.Control.Scale *= PreviewsCache.AssetIconSize / uiControl.Control.Size.MaxValue;
+                uiControl.Control.DockStyle = DockStyle.None;
+                uiControl.Control.AnchorStyle = AnchorStyle.Center;
 
-            // Auto fit
-            float targetSize = 30.0f;
-            BoundingBox bounds;
-            Editor.GetActorEditorBox(_preview.Instance, out bounds);
-            float maxSize = Mathf.Max(0.001f, bounds.Size.MaxValue);
-            _preview.Instance.Scale = new Vector3(targetSize / maxSize);
-            _preview.Instance.Position = Vector3.Zero;
+                // Tweak preview
+                _preview.ShowDefaultSceneActors = false;
+            }
+            else
+            {
+                // Update some actors data (some actor types update bounds/data later but its required to be done before rendering)
+                Prepare(_preview.Instance);
 
-            _preview.Task.Internal_Render(context);
+                // Auto fit actor to camera
+                float targetSize = 30.0f;
+                BoundingBox bounds;
+                Editor.GetActorEditorBox(_preview.Instance, out bounds);
+                float maxSize = Mathf.Max(0.001f, bounds.Size.MaxValue);
+                _preview.Instance.Scale = new Vector3(targetSize / maxSize);
+                _preview.Instance.Position = Vector3.Zero;
+            }
+
+            _preview.Task.OnRender(context);
         }
 
         /// <inheritdoc />

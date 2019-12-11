@@ -246,10 +246,10 @@ namespace FlaxEngine
         internal static extern string Internal_GetParamName(IntPtr obj, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_SetParamValue(IntPtr obj, int index, IntPtr ptr);
+        internal static extern void Internal_SetParamValue(IntPtr obj, int index, IntPtr ptr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetParamValue(IntPtr obj, int index, IntPtr ptr);
+        internal static extern void Internal_GetParamValue(IntPtr obj, int index, IntPtr ptr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetParamIndexByName(IntPtr obj, string name);

@@ -4,7 +4,7 @@ using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI
+namespace FlaxEditor.GUI.Tree
 {
     /// <summary>
     /// Tree node control.
@@ -866,6 +866,14 @@ namespace FlaxEditor.GUI
             if (_opened)
                 return base.OnKeyDown(key);
             return false;
+        }
+
+        /// <inheritdoc />
+        public override void OnKeyUp(Keys key)
+        {
+            // Base
+            if (_opened)
+                base.OnKeyUp(key);
         }
 
         /// <inheritdoc />

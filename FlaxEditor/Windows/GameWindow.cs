@@ -3,7 +3,6 @@
 using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Windows
@@ -55,7 +54,7 @@ namespace FlaxEditor.Windows
 
         private class GameRoot : ContainerControl
         {
-            public bool EnableEvents => SceneManager.IsGameLogicRunning;
+            public bool EnableEvents => !Time.GamePaused;
 
             public override bool OnCharInput(char c)
             {
@@ -178,7 +177,7 @@ namespace FlaxEditor.Windows
         : base(editor, true, ScrollBars.None)
         {
             Title = "Game";
-            CanFocus = true;
+            AutoFocus = true;
 
             var task = MainRenderTask.Instance;
 
@@ -186,7 +185,7 @@ namespace FlaxEditor.Windows
             _viewport = new RenderOutputControl(task)
             {
                 DockStyle = DockStyle.Fill,
-                CanFocus = false,
+                AutoFocus = false,
                 Parent = this
             };
 
@@ -195,7 +194,7 @@ namespace FlaxEditor.Windows
             {
                 DockStyle = DockStyle.Fill,
                 //Visible = false,
-                CanFocus = false,
+                AutoFocus = false,
                 Parent = _viewport
             };
             RootControl.GameRoot = _guiRoot;
@@ -240,9 +239,12 @@ namespace FlaxEditor.Windows
         {
             if (Root is WindowRootControl win && win.Window.IsFocused && win.ContainsFocus && Viewport.IsMouseOver)
             {
-                win.MousePosition = Viewport.PointToWindow(val);
+                win.MousePosition = Vector2.Round(Viewport.PointToWindow(val));
             }
         }
+
+        /// <inheritdoc />
+        protected override bool CanOpenContentFinder => false;
 
         /// <inheritdoc />
         public override void OnPlayBegin()
@@ -272,7 +274,7 @@ namespace FlaxEditor.Windows
                 float animTime = time - timeout;
                 if (animTime < 0)
                 {
-                    float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
+                    float alpha = Mathf.Saturate(-animTime / fadeOutTime);
                     Rectangle rect = new Rectangle(new Vector2(6), Size - 12);
                     Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect + new Vector2(1.0f), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
                     Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect, Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
@@ -283,7 +285,7 @@ namespace FlaxEditor.Windows
                 animTime = time - timeout;
                 if (animTime < 0)
                 {
-                    float alpha = Mathf.Clamp01(-animTime / fadeOutTime);
+                    float alpha = Mathf.Saturate(-animTime / fadeOutTime);
                     Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha);
                 }
             }

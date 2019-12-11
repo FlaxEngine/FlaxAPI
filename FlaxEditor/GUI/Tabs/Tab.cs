@@ -4,7 +4,7 @@ using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
-namespace FlaxEditor.GUI
+namespace FlaxEditor.GUI.Tabs
 {
     /// <summary>
     /// Single tab control used by <see cref="Tabs"/>.
@@ -21,7 +21,7 @@ namespace FlaxEditor.GUI
         /// Gets or sets the icon.
         /// </summary>
         public Sprite Icon;
-        
+
         /// <summary>
         /// Occurs when tab gets selected.
         /// </summary>

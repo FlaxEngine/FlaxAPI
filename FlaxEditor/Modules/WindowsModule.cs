@@ -9,7 +9,6 @@ using System.Text;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.GUI.Dialogs;
-using FlaxEditor.GUI.Docking;
 using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
@@ -17,7 +16,6 @@ using FlaxEditor.Windows.Profiler;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using FlaxEngine.Utilities;
 using DockPanel = FlaxEditor.GUI.Docking.DockPanel;
 using DockState = FlaxEditor.GUI.Docking.DockState;
@@ -82,7 +80,12 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// The debug log window.
         /// </summary>
-        public DebugLogWindow DebugWin;
+        public DebugLogWindow DebugLogWin;
+
+        /// <summary>
+        /// The output log window.
+        /// </summary>
+        public OutputLogWindow OutputLogWin;
 
         /// <summary>
         /// The toolbox window.
@@ -122,7 +125,6 @@ namespace FlaxEditor.Modules
         internal WindowsModule(Editor editor)
         : base(editor)
         {
-            // Init windows module first
             InitOrder = -100;
         }
 
@@ -157,7 +159,7 @@ namespace FlaxEditor.Modules
             if (mainWindow)
             {
                 var projectPath = Globals.ProjectFolder.Replace('/', '\\');
-                var platformBit = Application.Is64bitApp ? "64" : "32";
+                var platformBit = Platform.Is64bitApp ? "64" : "32";
                 var title = string.Format("Flax Editor - \'{0}\' ({1}-bit)", projectPath, platformBit);
                 mainWindow.Title = title;
             }
@@ -260,7 +262,7 @@ namespace FlaxEditor.Modules
 
                 // Get metadata
                 int version = int.Parse(root.Attributes["Version"].Value, CultureInfo.InvariantCulture);
-                var virtualDesktopBounds = Application.VirtualDesktopBounds;
+                var virtualDesktopBounds = Platform.VirtualDesktopBounds;
                 var virtualDesktopSafeLeftCorner = virtualDesktopBounds.Location + new Vector2(0, 23); // 23 is a window strip size
                 var virtualDesktopSafeRightCorner = virtualDesktopBounds.BottomRight - new Vector2(50, 50); // apply some safe area
 
@@ -583,7 +585,7 @@ namespace FlaxEditor.Modules
             if (Editor.IsHeadlessMode)
                 return;
 
-            Editor.Log(string.Format("Saving editor windows layout to \'{0}\'", path));
+            //Editor.Log(string.Format("Saving editor windows layout to \'{0}\'", path));
 
             var settings = new XmlWriterSettings
             {
@@ -690,11 +692,20 @@ namespace FlaxEditor.Modules
             _windowsLayoutPath = StringUtils.CombinePaths(Globals.ProjectCacheFolder, "WindowsLayout.xml");
 
             // Create main window
+            var dpiScale = Platform.DpiScale;
             var settings = CreateWindowSettings.Default;
             settings.Title = "Flax Editor";
-            settings.Size = new Vector2(1300, 900);
+            settings.Size = new Vector2(1300 * dpiScale, 900 * dpiScale);
             settings.StartPosition = WindowStartPosition.CenterScreen;
+
+            if (!Editor.Instance.Options.Options.Interface.UseNativeWindowSystem)
+            {
+                settings.HasBorder = false;
+                settings.HasSizingFrame = false;
+            }
+
             MainWindow = Window.Create(settings);
+
             if (MainWindow == null)
             {
                 // Error
@@ -713,7 +724,8 @@ namespace FlaxEditor.Modules
             GameWin = new GameWindow(Editor);
             PropertiesWin = new PropertiesWindow(Editor);
             SceneWin = new SceneTreeWindow(Editor);
-            DebugWin = new DebugLogWindow(Editor);
+            DebugLogWin = new DebugLogWindow(Editor);
+            OutputLogWin = new OutputLogWindow(Editor);
             ToolboxWin = new ToolboxWindow(Editor);
             GraphicsQualityWin = new GraphicsQualityWindow(Editor);
             GameCookerWin = new GameCookerWindow(Editor);
@@ -840,7 +852,7 @@ namespace FlaxEditor.Modules
             else
             {
                 // Close editor
-                Application.Exit();
+                Platform.Exit();
             }
         }
 
@@ -890,7 +902,7 @@ namespace FlaxEditor.Modules
             {
                 Editor.Log("Closing Editor after project icon screenshot");
                 EditWin.Viewport.SaveProjectIconEnd();
-                Application.Exit();
+                Platform.Exit();
             }
 
             // Update editor windows
@@ -905,10 +917,6 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnExit()
         {
-            // Shutdown windows
-            for (int i = 0; i < Windows.Count; i++)
-                Windows[i].OnExit();
-
             // Unbind events
             SceneManager.SceneSaveError -= OnSceneSaveError;
             SceneManager.SceneLoaded -= OnSceneLoaded;

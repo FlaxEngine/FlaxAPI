@@ -161,7 +161,7 @@ namespace FlaxEngine.GUI
         : base(x, y, size, size)
         {
             _state = isChecked ? CheckBoxState.Checked : CheckBoxState.Default;
-            _boxSize = 16.0f;
+            _boxSize = Mathf.Min(16.0f, size);
 
             var style = Style.Current;
             ImageColor = style.BorderSelected * 1.2f;
@@ -199,7 +199,7 @@ namespace FlaxEngine.GUI
                 borderColor *= 0.5f;
             else if (_mouseDown || _mouseOverBox)
                 borderColor = BorderColorHighlighted;
-            Render2D.DrawRectangle(_box, borderColor);
+            Render2D.DrawRectangle(_box.MakeExpanded(-2.0f), borderColor);
 
             // Icon
             if (_state != CheckBoxState.Default)

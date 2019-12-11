@@ -12,6 +12,34 @@ namespace FlaxEditor.Options
     public sealed class GeneralOptions
     {
         /// <summary>
+        /// The editor startup scene modes.
+        /// </summary>
+        public enum StartupSceneModes
+        {
+            /// <summary>
+            /// Don't open scene on startup.
+            /// </summary>
+            None,
+
+            /// <summary>
+            /// The project default scene.
+            /// </summary>
+            ProjectDefault,
+
+            /// <summary>
+            /// The last opened scene in the editor.
+            /// </summary>
+            LastOpened,
+        }
+
+        /// <summary>
+        /// Gets or sets the scene to load on editor startup.
+        /// </summary>
+        [DefaultValue(StartupSceneModes.LastOpened)]
+        [EditorDisplay("General"), EditorOrder(10), Tooltip("The scene to load on editor startup")]
+        public StartupSceneModes StartupSceneMode { get; set; } = StartupSceneModes.LastOpened;
+
+        /// <summary>
         /// Gets or sets a limit for the editor undo actions. Higher values may increase memory usage but also improve changes rollback history length.
         /// </summary>
         [DefaultValue(500)]
@@ -24,6 +52,13 @@ namespace FlaxEditor.Options
         [DefaultValue(true)]
         [EditorDisplay("Scripting", "Auto Reload Scripts On Main Window Focus"), EditorOrder(500), Tooltip("Determines whether reload scripts after a change on main window focus.")]
         public bool AutoReloadScriptsOnMainWindowFocus { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether automatically compile game scripts before starting the editor.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Scripting", "Force Script Compilation On Startup"), EditorOrder(501), Tooltip("Determines whether automatically compile game scripts before starting the editor.")]
+        public bool ForceScriptCompilationOnStartup { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether perform automatic CSG rebuild on brush change.
@@ -52,6 +87,34 @@ namespace FlaxEditor.Options
         [DefaultValue(100.0f), Range(0, 1000)]
         [EditorDisplay("Navigation Mesh", "Auto Rebuild Nav Mesh Timeout"), EditorOrder(701), Tooltip("Auto NavMesh rebuilding timeout (in milliseconds). Use lower value for more frequent and responsive updates but higher complexity.")]
         public float AutoRebuildNavMeshTimeoutMs { get; set; } = 100.0f;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether enable auto saves.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Auto Save", "Enable Auto Save"), EditorOrder(800), Tooltip("Enables or disables auto saving changes in edited scenes and content")]
+        public bool EnableAutoSave { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating auto saves interval (in minutes).
+        /// </summary>
+        [DefaultValue(5), Limit(1)]
+        [EditorDisplay("Auto Save", "Auto Save Frequency"), EditorOrder(801), Tooltip("The interval between auto saves (in minutes)")]
+        public int AutoSaveFrequency { get; set; } = 5;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether enable auto saves for scenes.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Auto Save", "Auto Save Scenes"), EditorOrder(802), Tooltip("Enables or disables auto saving opened scenes")]
+        public bool AutoSaveScenes { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether enable auto saves for content.
+        /// </summary>
+        [DefaultValue(true)]
+        [EditorDisplay("Auto Save", "Auto Save Content"), EditorOrder(803), Tooltip("Enables or disables auto saving content")]
+        public bool AutoSaveContent { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether enable editor analytics service.

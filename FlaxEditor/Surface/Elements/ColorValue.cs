@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
-using FlaxEngine.GUI;
 
 namespace FlaxEditor.Surface.Elements
 {
@@ -32,6 +32,13 @@ namespace FlaxEditor.Surface.Elements
         {
             ParentNode = parentNode;
             Archetype = archetype;
+
+            ParentNode.ValuesChanged += OnNodeValuesChanged;
+        }
+        
+        private void OnNodeValuesChanged()
+        {
+            Value = Get(ParentNode, Archetype);
         }
 
         /// <inheritdoc />

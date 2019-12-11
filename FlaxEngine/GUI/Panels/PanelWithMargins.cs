@@ -146,7 +146,7 @@ namespace FlaxEngine.GUI
         protected PanelWithMargins()
         : base(0, 0, 64, 64)
         {
-            CanFocus = false;
+            AutoFocus = false;
             _performChildrenLayoutFirst = true;
         }
 

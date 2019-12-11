@@ -568,19 +568,19 @@ namespace FlaxEngine
         /// <param name="t">Float for combining a and b</param>
         public static Color Lerp(Color a, Color b, float t)
         {
-            t = Mathf.Clamp01(t);
             return new Color(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t, a.A + (b.A - a.A) * t);
         }
 
         /// <summary>
         /// Linearly interpolates between colors a and b by t.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static Color LerpUnclamped(Color a, Color b, float t)
+        /// <param name="a">Color a</param>
+        /// <param name="b">Color b</param>
+        /// <param name="t">Float for combining a and b</param>
+        /// <param name="result">The result.</param>
+        public static void Lerp(ref Color a, ref Color b, float t, out Color result)
         {
-            return new Color(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t, a.A + (b.A - a.A) * t);
+            result = new Color(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t, a.A + (b.A - a.A) * t);
         }
 
         /// <summary>
@@ -719,12 +719,22 @@ namespace FlaxEngine
             return new Color(a.R - b.R, a.G - b.G, a.B - b.B, a.A - b.A);
         }
 
-        internal Color RGBMultiplied(float multiplier)
+        /// <summary>
+        /// Returns the color with RGB channels multiplied by the given scale factor. The alpha channels remains the same.
+        /// </summary>
+        /// <param name="multiplier">The multiplier.</param>
+        /// <returns>The modified color.</returns>
+        public Color RGBMultiplied(float multiplier)
         {
             return new Color(R * multiplier, G * multiplier, B * multiplier, A);
         }
 
-        internal Color RGBMultiplied(Color multiplier)
+        /// <summary>
+        /// Returns the color with RGB channels multiplied by the given color. The alpha channels remains the same.
+        /// </summary>
+        /// <param name="multiplier">The multiplier.</param>
+        /// <returns>The modified color.</returns>
+        public Color RGBMultiplied(Color multiplier)
         {
             return new Color(R * multiplier.R, G * multiplier.G, B * multiplier.B, A);
         }

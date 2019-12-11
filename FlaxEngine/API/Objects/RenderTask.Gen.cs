@@ -3,9 +3,10 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Allows to perform custom rendering using graphics pipeline.
@@ -63,24 +64,6 @@ namespace FlaxEngine.Rendering
 #endif
         }
 
-        /// <summary>
-        /// Creates the new task object.
-        /// </summary>
-        /// <typeparam name="T">Type of the render task to create. Includes any task derived from the type.</typeparam>
-        /// <returns>Created task object or null if cannot do it.</returns>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
-        public static T Create<T>() where T : RenderTask
-        {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            return (T)Internal_CreateTask(typeof(T));
-#endif
-        }
-
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -98,9 +81,6 @@ namespace FlaxEngine.Rendering
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_CameraCut(IntPtr obj);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern RenderTask Internal_CreateTask(Type type);
 #endif
 
         #endregion

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
@@ -59,7 +58,7 @@ namespace FlaxEditor.Gizmo
 
             // Get mouse ray and try to hit any object
             var ray = Owner.MouseRay;
-            bool selectColliders = (Owner.RenderTask.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
+            bool selectColliders = (Owner.RenderTask.View.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
             SceneGraphNode.RayCastData.FlagTypes rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.None;
             if (!selectColliders)
                 rayCastFlags |= SceneGraphNode.RayCastData.FlagTypes.SkipColliders;

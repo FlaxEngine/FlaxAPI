@@ -2,7 +2,6 @@
 
 using System;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {

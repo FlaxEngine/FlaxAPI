@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using FlaxEditor.Actions;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.GUI.Tree;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Json;

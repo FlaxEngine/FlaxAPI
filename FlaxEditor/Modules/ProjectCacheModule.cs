@@ -84,6 +84,17 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
+        /// Tries to get the custom data by the key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found; otherwise, the default value for the type of the <paramref name="value" /> parameter. This parameter is passed uninitialized.</param>
+        /// <returns>The custom data.</returns>
+        public bool TryGetCustomData(string key, out string value)
+        {
+            return _customData.TryGetValue(key, out value);
+        }
+
+        /// <summary>
         /// Sets the custom data.
         /// </summary>
         /// <param name="key">The key.</param>

@@ -1,6 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-namespace FlaxEngine.GUI
+using FlaxEngine;
+using FlaxEngine.GUI;
+
+namespace FlaxEditor.GUI.ContextMenu
 {
     /// <summary>
     /// Context Menu child control.
@@ -45,7 +48,7 @@ namespace FlaxEngine.GUI
         protected ContextMenuItem(ContextMenu parent, float width, float height)
         : base(0, 0, width, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
             ParentContextMenu = parent;
         }
 

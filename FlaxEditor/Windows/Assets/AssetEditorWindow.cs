@@ -3,6 +3,7 @@
 using System;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -46,6 +47,8 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip = new ToolStrip();
             _toolstrip.AddButton(editor.Icons.Find32, () => Editor.Windows.ContentWin.Select(_item)).LinkTooltip("Show and select in Content Window");
             _toolstrip.Parent = this;
+
+            InputActions.Add(options => options.Save, Save);
 
             UpdateTitle();
         }
@@ -96,27 +99,6 @@ namespace FlaxEditor.Windows.Assets
         public override bool IsEditingItem(ContentItem item)
         {
             return item == _item;
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            // Base
-            bool result = base.OnKeyDown(key);
-            if (!result)
-            {
-                if (Root.GetKey(Keys.Control))
-                {
-                    switch (key)
-                    {
-                    case Keys.S:
-                        Save();
-                        return true;
-                    }
-                }
-            }
-
-            return result;
         }
 
         /// <inheritdoc />
@@ -412,7 +394,12 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public abstract class ClonedAssetEditorWindowBase<T> : AssetEditorWindowBase<T> where T : Asset
     {
-        // TODO: maybe delete cloned asset on usage end?
+        // TODO: delete cloned asset on usage end?
+
+        /// <summary>
+        /// Gets the original asset. Note: <see cref="AssetEditorWindowBase{T}.Asset"/> is the cloned asset for local editing. Use <see cref="SaveToOriginal"/> to apply changes to the original asset.
+        /// </summary>
+        public T OriginalAsset => FlaxEngine.Content.GetAsset<T>(_item.ID);
 
         /// <inheritdoc />
         protected ClonedAssetEditorWindowBase(Editor editor, AssetItem item)
@@ -424,7 +411,7 @@ namespace FlaxEditor.Windows.Assets
         /// Saves the copy of the asset to the original location. This action cannot be undone!
         /// </summary>
         /// <returns>True if failed, otherwise false.</returns>
-        protected bool SaveToOriginal()
+        protected virtual bool SaveToOriginal()
         {
             // Wait until temporary asset file be fully loaded
             if (_asset.WaitForLoaded())
@@ -453,7 +440,7 @@ namespace FlaxEditor.Windows.Assets
             }
 
             // Copy temporary material to the final destination (and restore ID)
-            if (Editor.ContentEditing.CloneAssetFile(destinationPath, sourcePath, id))
+            if (Editor.ContentEditing.CloneAssetFile(sourcePath, destinationPath, id))
             {
                 // Error
                 Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, destinationPath));

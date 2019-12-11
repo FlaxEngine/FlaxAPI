@@ -2,7 +2,6 @@
 
 using System;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Surface.Archetypes
 {
@@ -47,7 +46,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Texture",
                 Description = "Two dimensional texture object",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -56,7 +55,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
                     NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
@@ -69,8 +68,9 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 2,
                 Title = "Texcoords",
+                AlternativeTitles = new string[] { "UV", "UVs" },
                 Description = "Texture coordinates",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(110, 30),
                 Elements = new[]
                 {
@@ -82,7 +82,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Cube Texture",
                 Description = "Set of 6 textures arranged in a cube",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -91,7 +91,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector3, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
                     NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
@@ -105,7 +105,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Normal Map",
                 Description = "Two dimensional texture object sampled as a normal map",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 120),
                 DefaultValues = new object[]
                 {
@@ -114,7 +114,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Vector", ConnectionType.Vector3, 1),
                     NodeElementArchetype.Factory.Output(2, "X", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Y", ConnectionType.Float, 3),
@@ -127,7 +127,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Parallax Occlusion Mapping",
                 Description = "Parallax occlusion mapping",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(260, 120),
                 DefaultValues = new object[]
                 {
@@ -159,7 +159,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Scene Texture",
                 Description = "Graphics pipeline textures lookup node",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(170, 120),
                 DefaultValues = new object[]
                 {
@@ -168,7 +168,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
                     NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
@@ -182,12 +182,12 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Scene Color",
                 Description = "Scene color texture lookup node",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(140, 120),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Color", ConnectionType.Vector4, 1),
                     NodeElementArchetype.Factory.Output(2, "R", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
@@ -200,12 +200,12 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 8,
                 Title = "Scene Depth",
                 Description = "Scene depth buffer texture lookup node",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(140, 60),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Object, 6),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 6),
                     NodeElementArchetype.Factory.Output(1, "Depth", ConnectionType.Float, 1),
                 }
             },
@@ -214,7 +214,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 9,
                 Title = "Sample Texture",
                 Description = "Custom texture sampling",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(160, 110),
                 DefaultValues = new object[]
                 {
@@ -230,6 +230,78 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Color", ConnectionType.Vector4, 4),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4 + 4, "Sampler"),
                     NodeElementArchetype.Factory.ComboBox(50, Surface.Constants.LayoutOffsetY * 4, 100, 0, typeof(CommonSamplerType))
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 10,
+                Title = "Flipbook",
+                Description = "Texture sheet animation",
+                Flags = NodeFlags.MaterialGraph,
+                Size = new Vector2(160, 110),
+                DefaultValues = new object[]
+                {
+                    0.0f,
+                    new Vector2(4, 4),
+                    false,
+                    false
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Input(1, "Frame", true, ConnectionType.Float, 1, 0),
+                    NodeElementArchetype.Factory.Input(2, "Frames X&Y", true, ConnectionType.Vector2, 2, 1),
+                    NodeElementArchetype.Factory.Input(3, "Invert X", true, ConnectionType.Bool, 3, 2),
+                    NodeElementArchetype.Factory.Input(4, "Invert Y", true, ConnectionType.Bool, 4, 3),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector2, 5),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 11,
+                Title = "Texture",
+                Description = "Two dimensional texture object",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(140, 80),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 0),
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.Texture)
+                }
+            },
+            /*new NodeArchetype
+            {
+                TypeID = 12,
+                Title = "Cube Texture",
+                Description = "Set of 6 textures arranged in a cube",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(140, 80),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 0),
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.CubeTexture)
+                }
+            },*/
+            new NodeArchetype
+            {
+                TypeID = 13,
+                Title = "Load Texture",
+                Description = "Reads data from the texture at the given location (unsigned integer in range [0; size-1] per axis, last component is a mipmap level)",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(160, 60),
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Vector4, 0),
+                    NodeElementArchetype.Factory.Input(0, "Texture", true, ConnectionType.Object, 1),
+                    NodeElementArchetype.Factory.Input(1, "Location", true, ConnectionType.Vector, 2),
                 }
             },
         };

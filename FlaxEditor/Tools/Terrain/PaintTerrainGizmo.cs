@@ -6,7 +6,6 @@ using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Tools.Terrain.Paint;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Terrain
 {

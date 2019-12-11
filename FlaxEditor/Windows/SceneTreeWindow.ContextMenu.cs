@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -39,6 +40,11 @@ namespace FlaxEditor.Windows
             b = contextMenu.AddButton("Collapse All", OnCollapseAllClicked);
             b.Enabled = hasSthSelected;
 
+            if (hasSthSelected)
+            {
+                contextMenu.AddButton(Editor.Windows.EditWin.IsPilotActorActive ? "Stop piloting actor" : "Pilot actor", Editor.UI.PilotActor);
+            }
+
             contextMenu.AddSeparator();
 
             // Basic editing options
@@ -53,6 +59,7 @@ namespace FlaxEditor.Windows
             b.Enabled = hasSthSelected;
 
             contextMenu.AddSeparator();
+
             b = contextMenu.AddButton("Copy", Editor.SceneEditing.Copy);
 
             b.Enabled = hasSthSelected;
@@ -81,6 +88,7 @@ namespace FlaxEditor.Windows
             // Spawning actors options
 
             contextMenu.AddSeparator();
+
             var spawnMenu = contextMenu.AddChildMenu("New");
             var newActorCm = spawnMenu.ContextMenu;
             for (int i = 0; i < SpawnActorsGroups.Length; i++)

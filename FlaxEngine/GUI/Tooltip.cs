@@ -23,13 +23,18 @@ namespace FlaxEngine.GUI
         public float TimeToShow { get; set; } = 0.3f; // 300ms by default
 
         /// <summary>
+        /// Gets or sets the maximum width of the tooltip. Used to wrap text that overflows and ensure that tooltip stays readable.
+        /// </summary>
+        public float MaxWidth { get; set; } = 500.0f;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Tooltip"/> class.
         /// </summary>
         public Tooltip()
         : base(0, 0, 300, 24)
         {
             Visible = false;
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <summary>
@@ -54,19 +59,21 @@ namespace FlaxEngine.GUI
             var parentWin = target.Root;
             if (parentWin == null)
                 return;
+            float dpiScale = Platform.DpiScale;
+            Vector2 dpiSize = Size * dpiScale;
             Vector2 locationWS = target.PointToWindow(location);
-            Vector2 locationSS = parentWin.ClientToScreen(locationWS);
-            Vector2 screenSize = Application.VirtualDesktopSize;
-            Vector2 rightBottomLocationSS = locationSS + Size;
+            Vector2 locationSS = parentWin.ClientToScreen(locationWS * dpiScale);
+            Vector2 screenSize = Platform.VirtualDesktopSize;
+            Vector2 rightBottomLocationSS = locationSS + dpiSize;
             if (screenSize.Y < rightBottomLocationSS.Y)
             {
                 // Direction: up
-                locationSS.Y -= Height;
+                locationSS.Y -= dpiSize.Y;
             }
             if (screenSize.X < rightBottomLocationSS.X)
             {
                 // Direction: left
-                locationSS.X -= Width;
+                locationSS.X -= dpiSize.X;
             }
             _showTarget = target;
 
@@ -74,7 +81,7 @@ namespace FlaxEngine.GUI
             var desc = CreateWindowSettings.Default;
             desc.StartPosition = WindowStartPosition.Manual;
             desc.Position = locationSS;
-            desc.Size = Size;
+            desc.Size = dpiSize;
             desc.Fullscreen = false;
             desc.HasBorder = false;
             desc.SupportsTransparency = false;
@@ -87,7 +94,7 @@ namespace FlaxEngine.GUI
             desc.IsTopmost = true;
             desc.IsRegularWindow = false;
             desc.HasSizingFrame = false;
-            _window = FlaxEngine.Window.Create(desc);
+            _window = Window.Create(desc);
             if (_window == null)
                 throw new InvalidOperationException("Failed to create tooltip window.");
 
@@ -168,7 +175,7 @@ namespace FlaxEngine.GUI
         {
             if (_window)
             {
-                _window.ClientSize = Size;
+                _window.ClientSize = Size * Platform.DpiScale;
             }
         }
 
@@ -176,8 +183,8 @@ namespace FlaxEngine.GUI
         public override void Update(float deltaTime)
         {
             // Auto hide if mouse leaves control area
-            Vector2 mousePos = Application.MousePosition;
-            Vector2 location = _showTarget.ScreenToClient(mousePos);
+            Vector2 mousePos = Platform.MousePosition;
+            Vector2 location = _showTarget.ScreenToClient(mousePos / Platform.DpiScale);
             if (!_showTarget.OnTestTooltipOverControl(ref location))
             {
                 // Mouse left or sth
@@ -197,7 +204,15 @@ namespace FlaxEngine.GUI
             Render2D.FillRectangle(new Rectangle(1.1f, 1.1f, Width - 2, Height - 2), style.Background);
 
             // Tooltip text
-            Render2D.DrawText(style.FontMedium, _currentText, GetClientArea(), Color.White, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(
+                style.FontMedium,
+                _currentText,
+                GetClientArea(),
+                Color.White,
+                TextAlignment.Center,
+                TextAlignment.Center,
+                TextWrapping.WrapWords
+            );
 
             base.Draw();
         }
@@ -210,10 +225,23 @@ namespace FlaxEngine.GUI
             var style = Style.Current;
 
             // Calculate size of the tooltip
-            float width = 24.0f;
-            if (style.FontMedium)
-                width += style.FontMedium.MeasureText(_currentText).X;
-            Size = new Vector2(width, 24);
+            var size = Vector2.Zero;
+            if (style.FontMedium && !string.IsNullOrEmpty(_currentText))
+            {
+                var layout = TextLayoutOptions.Default;
+                layout.Bounds = new Rectangle(0, 0, MaxWidth, 10000000);
+                layout.HorizontalAlignment = TextAlignment.Center;
+                layout.VerticalAlignment = TextAlignment.Center;
+                layout.TextWrapping = TextWrapping.WrapWords;
+                var items = style.FontMedium.ProcessText(_currentText, ref layout);
+                for (int i = 0; i < items.Length; i++)
+                {
+                    size.X = Mathf.Max(size.X, items[i].Size.X);
+                    size.Y += items[i].Size.Y;
+                }
+                //size.X += style.FontMedium.MeasureText(_currentText).X;
+            }
+            Size = size + new Vector2(24.0f);
 
             // Check if is visible size get changed
             if (Visible && prevSize != Size)

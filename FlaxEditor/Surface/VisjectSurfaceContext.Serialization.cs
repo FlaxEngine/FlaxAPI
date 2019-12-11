@@ -70,7 +70,7 @@ namespace FlaxEditor.Surface
                     CachedSurfaceMeta.Scale = 1.0f;
                 }
 
-                // Load surface comments
+                // [Deprecated on 04.07.2019] Load surface comments
                 var commentsData = _meta.GetEntry(666);
                 if (commentsData.Data != null)
                 {
@@ -85,12 +85,9 @@ namespace FlaxEditor.Surface
                             var color = new Color(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                             var bounds = new Rectangle(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
-                            var comment = SpawnComment(ref bounds);
+                            var comment = SpawnComment(ref bounds, title, color);
                             if (comment == null)
                                 throw new InvalidOperationException("Failed to create comment.");
-
-                            comment.Title = title;
-                            comment.Color = color;
 
                             OnControlLoaded(comment);
                         }
@@ -161,34 +158,6 @@ namespace FlaxEditor.Surface
 
             // Save surface meta
             _meta.AddEntry(10, Utils.StructureToByteArray(ref CachedSurfaceMeta));
-
-            // Save surface comments (in surface meta container)
-            var comments = Comments;
-            if (comments.Count > 0)
-            {
-                using (var stream = new MemoryStream())
-                using (var writer = new BinaryWriter(stream))
-                {
-                    writer.Write(comments.Count);
-
-                    for (int i = 0; i < comments.Count; i++)
-                    {
-                        var comment = comments[i];
-
-                        Utils.WriteStr(writer, comment.Title, 71);
-                        writer.Write(comment.Color.R);
-                        writer.Write(comment.Color.G);
-                        writer.Write(comment.Color.B);
-                        writer.Write(comment.Color.A);
-                        writer.Write(comment.X);
-                        writer.Write(comment.Y);
-                        writer.Write(comment.Width);
-                        writer.Write(comment.Height);
-                    }
-
-                    _meta.AddEntry(666, stream.ToArray());
-                }
-            }
 
             // Save all nodes meta
             VisjectSurface.Meta11 meta11;
@@ -279,10 +248,8 @@ namespace FlaxEditor.Surface
                 stream.Write((byte)(param.IsUIVisible ? 1 : 0));
                 stream.Write((byte)(param.IsUIEditable ? 1 : 0));
 
-                // References
-                stream.Write(param.ReferencedBy.Count);
-                for (int j = 0; j < param.ReferencedBy.Count; j++)
-                    stream.Write(param.ReferencedBy[j].ID);
+                // References [Deprecated]
+                stream.Write(0);
 
                 // Value
                 Utils.WriteCommonValue(stream, param.Value);
@@ -421,22 +388,11 @@ namespace FlaxEditor.Surface
                     param.IsUIVisible = stream.ReadByte() != 0;
                     param.IsUIEditable = stream.ReadByte() != 0;
 
-                    // References
+                    // References [Deprecated]
                     int refsCount = stream.ReadInt32();
-                    param.ReferencedBy.Capacity = refsCount;
                     for (int j = 0; j < refsCount; j++)
                     {
                         uint refID = stream.ReadUInt32();
-                        var node = FindNode(refID);
-                        if (node == null)
-                        {
-                            // Error
-                            Editor.LogWarning($"Invalid node reference id (param: {param.Name}, node ref: {refID})");
-                        }
-                        else
-                        {
-                            param.ReferencedBy.Add(node);
-                        }
                     }
 
                     // Value
@@ -450,7 +406,7 @@ namespace FlaxEditor.Surface
                 for (int i = 0; i < nodesCount; i++)
                 {
                     var node = Nodes[i];
-                    
+
                     int valuesCnt = stream.ReadInt32();
                     int firstValueReadIdx = 0;
 
@@ -469,7 +425,7 @@ namespace FlaxEditor.Surface
                         firstValueReadIdx = 1;
                         if (string.IsNullOrEmpty(typeName as string))
                             throw new Exception("Missing custom node typename.");
-                        
+
                         // Find custom node archetype that matches this node type (it must be unique)
                         var customNodes = _surface.GetCustomNodes();
                         if (customNodes?.Archetypes == null)
@@ -512,7 +468,17 @@ namespace FlaxEditor.Surface
 
                         object dummy = null;
                         for (int j = firstValueReadIdx; j < valuesCnt; j++)
+                        {
                             Utils.ReadCommonValue(stream, ref dummy);
+
+                            if (j < nodeValuesCnt &&
+                                dummy != null &&
+                                node.Values[j] != null &&
+                                node.Values[j].GetType() == dummy.GetType())
+                            {
+                                node.Values[j] = dummy;
+                            }
+                        }
                     }
 
                     // Boxes
@@ -531,7 +497,7 @@ namespace FlaxEditor.Surface
                         {
                             uint targetNodeID = stream.ReadUInt32();
                             byte targetBoxID = stream.ReadByte();
-                            
+
                             hint.NodeA = targetNodeID;
                             hint.BoxA = targetBoxID;
 
@@ -587,6 +553,17 @@ namespace FlaxEditor.Surface
         public virtual void OnControlSpawned(SurfaceControl control)
         {
             control.OnSpawned();
+            ControlSpawned?.Invoke(control);
+        }
+
+        /// <summary>
+        /// Called when control gets removed from the surface as delete/cut operation (eg. remove comment or cut node).
+        /// </summary>
+        /// <param name="control">The control.</param>
+        public virtual void OnControlDeleted(SurfaceControl control)
+        {
+            ControlDeleted?.Invoke(control);
+            control.OnDeleted();
         }
 
         /// <summary>
@@ -623,49 +600,7 @@ namespace FlaxEditor.Surface
             for (int i = 0; i < elementsCount; i++)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                var arch = node.Archetype.Elements[i];
-                ISurfaceNodeElement element = null;
-                switch (arch.Type)
-                {
-                case NodeElementType.Input:
-                    element = new InputBox(node, arch);
-                    break;
-                case NodeElementType.Output:
-                    element = new OutputBox(node, arch);
-                    break;
-                case NodeElementType.BoolValue:
-                    element = new BoolValue(node, arch);
-                    break;
-                case NodeElementType.FloatValue:
-                    element = new FloatValue(node, arch);
-                    break;
-                case NodeElementType.IntegerValue:
-                    element = new IntegerValue(node, arch);
-                    break;
-                case NodeElementType.ColorValue:
-                    element = new ColorValue(node, arch);
-                    break;
-                case NodeElementType.ComboBox:
-                    element = new ComboBoxElement(node, arch);
-                    break;
-                case NodeElementType.Asset:
-                    element = new AssetSelect(node, arch);
-                    break;
-                case NodeElementType.Text:
-                    element = new TextView(node, arch);
-                    break;
-                case NodeElementType.TextBox:
-                    element = new TextBoxView(node, arch);
-                    break;
-                case NodeElementType.SkeletonNodeSelect:
-                    element = new SkeletonNodeSelectElement(node, arch);
-                    break;
-                }
-                if (element != null)
-                {
-                    // Link element
-                    node.AddElement(element);
-                }
+                node.AddElement(node.Archetype.Elements[i]);
             }
 
             // Load metadata

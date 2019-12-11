@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.Options;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -97,7 +99,7 @@ namespace FlaxEditor.Windows
                     Group = LogGroup.Warning;
                     Icon = _window.IconWarning;
                     break;
-                case LogType.Log:
+                case LogType.Info:
                     Group = LogGroup.Info;
                     Icon = _window.IconInfo;
                     break;
@@ -201,7 +203,7 @@ namespace FlaxEditor.Windows
             /// </summary>
             public void Copy()
             {
-                Application.ClipboardText = Info.Replace("\n", Environment.NewLine);
+                Platform.ClipboardText = Info.Replace("\n", Environment.NewLine);
             }
 
             public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
@@ -262,6 +264,7 @@ namespace FlaxEditor.Windows
         private LogEntry _selected;
         private readonly int[] _logCountPerGroup = new int[(int)LogGroup.Max];
         private readonly Regex _logRegex = new Regex("at(.*) in (.*):(\\d*)");
+        private InterfaceOptions.TimestampsFormats _timestampsFormats;
 
         private readonly object _locker = new object();
         private bool _hasCompilationStarted;
@@ -282,7 +285,8 @@ namespace FlaxEditor.Windows
         public DebugLogWindow(Editor editor)
         : base(editor, true, ScrollBars.None)
         {
-            Title = "Debug";
+            Title = "Debug Log";
+            OnEditorOptionsChanged(Editor.Options.Options);
 
             // Toolstrip
             var toolstrip = new ToolStrip(22);
@@ -297,32 +301,38 @@ namespace FlaxEditor.Windows
             UpdateCount();
 
             // Split panel
-            _split = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
+            _split = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Both)
             {
                 DockStyle = DockStyle.Fill,
                 SplitterValue = 0.8f,
                 Parent = this
             };
 
-            // Log detail info
+            // Info detail info
             _logInfo = new Label(0, 0, 120, 1)
             {
                 Parent = _split.Panel2,
+                AutoWidth = true,
                 AutoHeight = true,
                 Margin = new Margin(4),
-                HorizontalAlignment = TextAlignment.Near
             };
 
             // Entries panel
             _entriesPanel = _split.Panel1;
 
             // Bind events
+            Editor.Options.OptionsChanged += OnEditorOptionsChanged;
             Debug.Logger.LogHandler.SendLog += LogHandlerOnSendLog;
             Debug.Logger.LogHandler.SendExceptionLog += LogHandlerOnSendExceptionLog;
             ScriptsBuilder.CompilationBegin += OnCompilationBegin;
             ScriptsBuilder.CompilationError += OnCompilationError;
             ScriptsBuilder.CompilationWarning += OnCompilationWarning;
             GameCooker.Event += OnGameCookerEvent;
+        }
+
+        private void OnEditorOptionsChanged(EditorOptions options)
+        {
+            _timestampsFormats = options.Interface.DebugLogTimestampsFormat;
         }
 
         private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
@@ -353,6 +363,18 @@ namespace FlaxEditor.Windows
                 return;
 
             // Create new entry
+            switch (_timestampsFormats)
+            {
+            case InterfaceOptions.TimestampsFormats.Utc:
+                desc.Title = string.Format("[{0}] ", DateTime.UtcNow) + desc.Title;
+                break;
+            case InterfaceOptions.TimestampsFormats.LocalTime:
+                desc.Title = string.Format("[{0}] ", DateTime.Now) + desc.Title;
+                break;
+            case InterfaceOptions.TimestampsFormats.TimeSinceStartup:
+                desc.Title = string.Format("[{0:g}] ", TimeSpan.FromSeconds(Time.TimeSinceStartup)) + desc.Title;
+                break;
+            }
             var newEntry = new LogEntry(this, ref desc);
 
             // Enqueue
@@ -442,7 +464,7 @@ namespace FlaxEditor.Windows
                         }
                         fineStackTrace.AppendLine(match.Groups[0].Value);
                     }
-                    else if (match.Groups[1].Value.Trim().StartsWith("FlaxEngine.Debug.Log", StringComparison.Ordinal))
+                    else if (match.Groups[1].Value.Trim().StartsWith("FlaxEngine.Debug.Info", StringComparison.Ordinal))
                     {
                         foundStart = true;
                     }
@@ -457,7 +479,7 @@ namespace FlaxEditor.Windows
         {
             LogEntryDescription desc = new LogEntryDescription
             {
-                Level = LogType.Exception,
+                Level = LogType.Error,
                 Title = exception.Message,
                 Description = exception.StackTrace,
                 ContextObject = o?.ID ?? Guid.Empty,
@@ -609,7 +631,11 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnDestroy()
         {
+            if (IsDisposing)
+                return;
+
             // Unbind events
+            Editor.Options.OptionsChanged -= OnEditorOptionsChanged;
             Debug.Logger.LogHandler.SendLog -= LogHandlerOnSendLog;
             Debug.Logger.LogHandler.SendExceptionLog -= LogHandlerOnSendExceptionLog;
             ScriptsBuilder.CompilationBegin -= OnCompilationBegin;

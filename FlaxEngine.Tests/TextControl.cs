@@ -11,22 +11,22 @@ namespace FlaxEngine.Tests
     {
         public class SimpleControl : Control
         {
-            public SimpleControl(bool canFocus, float x, float y, float width, float height)
+            public SimpleControl(bool autoFocus, float x, float y, float width, float height)
             : base(x, y, width, height)
             {
-                CanFocus = canFocus;
+                AutoFocus = autoFocus;
             }
 
-            public SimpleControl(bool canFocus, Vector2 location, Vector2 size)
+            public SimpleControl(bool autoFocus, Vector2 location, Vector2 size)
             : base(location, size)
             {
-                CanFocus = canFocus;
+                AutoFocus = autoFocus;
             }
 
-            public SimpleControl(bool canFocus, Rectangle bounds)
+            public SimpleControl(bool autoFocus, Rectangle bounds)
             : base(bounds)
             {
-                CanFocus = canFocus;
+                AutoFocus = autoFocus;
             }
         }
 
@@ -42,9 +42,9 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(testRect.Location, vec2.Location);
             Assert.AreEqual(testRect.Location, rect.Location);
 
-            Assert.AreEqual(true, basic.CanFocus);
-            Assert.AreEqual(true, vec2.CanFocus);
-            Assert.AreEqual(true, rect.CanFocus);
+            Assert.AreEqual(true, basic.AutoFocus);
+            Assert.AreEqual(true, vec2.AutoFocus);
+            Assert.AreEqual(true, rect.AutoFocus);
 
             Assert.AreEqual(testRect.Size, basic.Size);
             Assert.AreEqual(testRect.Size, vec2.Size);

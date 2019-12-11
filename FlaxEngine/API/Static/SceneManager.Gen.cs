@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -111,20 +112,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets value indicating whenever game logic is running (physics, script updates, etc.).
-        /// </summary>
-        [UnmanagedCall]
-        public static bool IsGameLogicRunning
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_IsGameLogicRunning(); }
-            set { Internal_SetGameLogicRunning(value); }
-#endif
-        }
-
-        /// <summary>
         /// Checks if any scene action is pending.
         /// </summary>
         [UnmanagedCall]
@@ -164,7 +151,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_SpawnActor(Object.GetUnmanagedPtr(actor), Object.GetUnmanagedPtr(parent));
+            Internal_SpawnActor(FlaxEngine.Object.GetUnmanagedPtr(actor), FlaxEngine.Object.GetUnmanagedPtr(parent));
 #endif
         }
 
@@ -182,7 +169,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_SaveScene(Object.GetUnmanagedPtr(scene));
+            return Internal_SaveScene(FlaxEngine.Object.GetUnmanagedPtr(scene));
 #endif
         }
 
@@ -201,7 +188,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_SaveSceneToBytes(Object.GetUnmanagedPtr(scene), prettyJson);
+            return Internal_SaveSceneToBytes(FlaxEngine.Object.GetUnmanagedPtr(scene), prettyJson);
 #endif
         }
 
@@ -218,7 +205,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_SaveSceneAsync(Object.GetUnmanagedPtr(scene));
+            Internal_SaveSceneAsync(FlaxEngine.Object.GetUnmanagedPtr(scene));
 #endif
         }
 
@@ -323,7 +310,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_UnloadScene(Object.GetUnmanagedPtr(scene));
+            return Internal_UnloadScene(FlaxEngine.Object.GetUnmanagedPtr(scene));
 #endif
         }
 
@@ -340,7 +327,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_UnloadSceneAsync(Object.GetUnmanagedPtr(scene));
+            Internal_UnloadSceneAsync(FlaxEngine.Object.GetUnmanagedPtr(scene));
 #endif
         }
 
@@ -413,12 +400,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Scene Internal_FindScene(ref Guid id);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_IsGameLogicRunning();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetGameLogicRunning(bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_IsAnyActionPending();

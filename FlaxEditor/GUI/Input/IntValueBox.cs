@@ -1,8 +1,10 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.Utilities;
+using FlaxEngine;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Integer value editor.
@@ -138,12 +140,15 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void TryGetValue()
         {
-            // Try to parse int
-            int value;
-            if (int.TryParse(Text, out value))
+            try
             {
-                // Set value
-                Value = value;
+                var value = ShuntingYard.Parse(Text);
+                Value = (int)value;
+            }
+            catch (Exception ex)
+            {
+                // Fall back to previous value
+                Editor.LogWarning(ex);
             }
         }
 

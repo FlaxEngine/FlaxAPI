@@ -11,12 +11,22 @@ namespace FlaxEditor.Actions
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
     /// <seealso cref="FlaxEditor.ISceneEditAction" />
+    [Serializable]
     public class ChangeScriptAction : IUndoAction, ISceneEditAction
     {
+        [Serialize]
         private Guid _scriptId;
+
+        [Serialize]
         private bool _enableA;
+
+        [Serialize]
         private int _orderA;
+
+        [Serialize]
         private bool _enableB;
+
+        [Serialize]
         private int _orderB;
 
         private ChangeScriptAction(Script script, bool enable, int order)
@@ -43,11 +53,11 @@ namespace FlaxEditor.Actions
         /// Creates new undo action that enables/disables script.
         /// </summary>
         /// <param name="script">The script to enable or disable.</param>
-        /// <param name="newEnaled">New enable state.</param>
+        /// <param name="newEnabled">New enable state.</param>
         /// <returns>The action (not performed yet).</returns>
-        public static ChangeScriptAction ChangeEnabled(Script script, bool newEnaled)
+        public static ChangeScriptAction ChangeEnabled(Script script, bool newEnabled)
         {
-            return new ChangeScriptAction(script, newEnaled, script.OrderInParent);
+            return new ChangeScriptAction(script, newEnabled, script.OrderInParent);
         }
 
         /// <inheritdoc />

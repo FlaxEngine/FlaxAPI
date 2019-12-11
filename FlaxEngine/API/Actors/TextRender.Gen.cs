@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets text to render.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(0), MultilineText, EditorDisplay("Text"), Tooltip("Text to render")]
+        [EditorOrder(0), DefaultValue(""), MultilineText, EditorDisplay("Text"), Tooltip("Text to render")]
         public string Text
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets text color.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("Text"), Tooltip("Color of the text")]
+        [EditorOrder(10), DefaultValue(typeof(Color), "1,1,1,1"), EditorDisplay("Text"), Tooltip("Color of the text")]
         public Color Color
         {
 #if UNIT_TEST_COMPILANT
@@ -71,14 +72,14 @@ namespace FlaxEngine
         /// Gets or sets the material used for the text rendering.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), AssetReference(true), EditorDisplay("Text"), Tooltip("Material to use for rendering. It must contain texture parameter named Font used to sample font texture.")]
+        [EditorOrder(20), DefaultValue(null), AssetReference(true), EditorDisplay("Text"), Tooltip("Material to use for rendering. It must contain texture parameter named Font used to sample font texture.")]
         public MaterialBase Material
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetMaterial(unmanagedPtr); }
-            set { Internal_SetMaterial(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetMaterial(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -86,14 +87,14 @@ namespace FlaxEngine
         /// Gets or sets the font asset used as a text characters source.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), AssetReference(true), EditorDisplay("Text"), Tooltip("Font to use for rendering")]
+        [EditorOrder(30), DefaultValue(null), AssetReference(true), EditorDisplay("Text"), Tooltip("Font to use for rendering")]
         public FontAsset Font
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetFont(unmanagedPtr); }
-            set { Internal_SetFont(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetFont(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -101,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the font characters size.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), Limit(1, 1000), EditorDisplay("Text"), Tooltip("Size of the font characters")]
+        [EditorOrder(40), DefaultValue(32), Limit(1, 1000), EditorDisplay("Text"), Tooltip("Size of the font characters")]
         public int FontSize
         {
 #if UNIT_TEST_COMPILANT
@@ -113,10 +114,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the draw passes to use for rendering this object.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(75), DefaultValue(DrawPass.Default), EditorDisplay("Text"), Tooltip("The draw passes to use for rendering this object.")]
+        public DrawPass DrawModes
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetDrawModes(unmanagedPtr); }
+            set { Internal_SetDrawModes(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the shadows casting mode by this visual element.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(80), EditorDisplay("Text"), Tooltip("Shadows casting mode by this visual element")]
+        [EditorOrder(80), DefaultValue(ShadowsCastingMode.All), EditorDisplay("Text"), Tooltip("Shadows casting mode by this visual element")]
         public ShadowsCastingMode ShadowsMode
         {
 #if UNIT_TEST_COMPILANT
@@ -149,7 +165,7 @@ namespace FlaxEngine
         /// Gets or sets the text horizontal alignment inside the layout rectangle.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(130), EditorDisplay("Layout"), Tooltip("Text horizontal alignment inside the layout rectangle")]
+        [EditorOrder(130), DefaultValue(TextAlignment.Center), EditorDisplay("Layout"), Tooltip("Text horizontal alignment inside the layout rectangle")]
         public TextAlignment HorizontalAlignment
         {
 #if UNIT_TEST_COMPILANT
@@ -164,7 +180,7 @@ namespace FlaxEngine
         /// Gets or sets the text vertical alignment inside the layout rectangle.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(130), EditorDisplay("Layout"), Tooltip("Text vertical alignment inside the layout rectangle")]
+        [EditorOrder(130), DefaultValue(TextAlignment.Center), EditorDisplay("Layout"), Tooltip("Text vertical alignment inside the layout rectangle")]
         public TextAlignment VerticalAlignment
         {
 #if UNIT_TEST_COMPILANT
@@ -179,7 +195,7 @@ namespace FlaxEngine
         /// Gets or sets the text wrapping mode inside the layout bounds.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(130), EditorDisplay("Layout"), Tooltip("Text wrapping mode inside the layout bounds")]
+        [EditorOrder(130), DefaultValue(TextWrapping.NoWrap), EditorDisplay("Layout"), Tooltip("Text wrapping mode inside the layout bounds")]
         public TextWrapping TextWrapping
         {
 #if UNIT_TEST_COMPILANT
@@ -194,7 +210,7 @@ namespace FlaxEngine
         /// Gets or sets the scale parameter for lines gap size
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(140), Limit(-1000, 1000, 0.01f), EditorDisplay("Layout"), Tooltip("Scale parameter for the lines gap")]
+        [EditorOrder(140), DefaultValue(1.0f), Limit(-1000, 1000, 0.01f), EditorDisplay("Layout"), Tooltip("Scale parameter for the lines gap")]
         public float BaseLinesGapScale
         {
 #if UNIT_TEST_COMPILANT
@@ -266,6 +282,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetFontSize(IntPtr obj, int val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern DrawPass Internal_GetDrawModes(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetDrawModes(IntPtr obj, DrawPass val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ShadowsCastingMode Internal_GetShadowsMode(IntPtr obj);

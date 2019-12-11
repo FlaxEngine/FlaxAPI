@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
@@ -11,7 +12,7 @@ namespace FlaxEditor.Tools.Terrain
     /// <summary>
     /// Carve tab related to terrain editing. Allows to pick a terrain patch and remove it or add new patches. Can be used to modify selected chunk properties.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="Tab" />
     public class EditTab : Tab
     {
         /// <summary>
@@ -27,6 +28,7 @@ namespace FlaxEditor.Tools.Terrain
         private readonly ComboBox _modeComboBox;
         private readonly Label _selectionInfoLabel;
         private readonly Button _deletePatchButton;
+        private readonly Button _exportTerrainButton;
         private readonly ContainerControl _chunkProperties;
         private readonly AssetPicker _chunkOverrideMaterial;
         private bool _isUpdatingUI;
@@ -65,6 +67,7 @@ namespace FlaxEditor.Tools.Terrain
             _modeComboBox.AddItem("Edit Chunk");
             _modeComboBox.AddItem("Add Patch");
             _modeComboBox.AddItem("Remove Patch");
+            _modeComboBox.AddItem("Export terrain");
             _modeComboBox.SelectedIndex = 0;
             _modeComboBox.SelectedIndexChanged += (combobox) => Gizmo.EditMode = (EditTerrainGizmoMode.Modes)combobox.SelectedIndex;
             Gizmo.ModeChanged += OnGizmoModeChanged;
@@ -105,27 +108,39 @@ namespace FlaxEditor.Tools.Terrain
             };
             _deletePatchButton.Clicked += OnDeletePatchButtonClicked;
 
+            // Export terrain
+            _exportTerrainButton = new Button(_selectionInfoLabel.X, _selectionInfoLabel.Bottom + 4)
+            {
+                Text = "Export terrain",
+                Parent = panel,
+            };
+            _exportTerrainButton.Clicked += OnExportTerrainButtonClicked;
+
             // Update UI to match the current state
             OnSelectionChanged();
             OnGizmoModeChanged();
         }
 
+        [Serializable]
         private class DeletePatchAction : IUndoAction
         {
-            private readonly Editor _editor;
+            [Serialize]
             private Guid _terrainId;
+
+            [Serialize]
             private Int2 _patchCoord;
+
+            [Serialize]
             private string _data;
 
             /// <inheritdoc />
             public string ActionString => "Delete terrain patch";
 
-            public DeletePatchAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord)
+            public DeletePatchAction(FlaxEngine.Terrain terrain, ref Int2 patchCoord)
             {
                 if (terrain == null)
                     throw new ArgumentException(nameof(terrain));
 
-                _editor = editor ?? throw new ArgumentException(nameof(editor));
                 _terrainId = terrain.ID;
                 _patchCoord = patchCoord;
                 _data = TerrainTools.SerializePatch(terrain, ref patchCoord);
@@ -141,9 +156,9 @@ namespace FlaxEditor.Tools.Terrain
                     return;
                 }
 
+                terrain.GetPatchBounds(terrain.GetPatchIndex(ref _patchCoord), out var patchBounds);
                 terrain.RemovePatch(ref _patchCoord);
-
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+                OnPatchEdit(terrain, ref patchBounds);
             }
 
             /// <inheritdoc />
@@ -158,8 +173,25 @@ namespace FlaxEditor.Tools.Terrain
 
                 terrain.AddPatch(ref _patchCoord);
                 TerrainTools.DeserializePatch(terrain, ref _patchCoord, _data);
+                terrain.GetPatchBounds(terrain.GetPatchIndex(ref _patchCoord), out var patchBounds);
+                OnPatchEdit(terrain, ref patchBounds);
+            }
 
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+            private void OnPatchEdit(FlaxEngine.Terrain terrain, ref BoundingBox patchBounds)
+            {
+                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
+
+                var editorOptions = Editor.Instance.Options.Options;
+                bool isPlayMode = Editor.Instance.StateMachine.IsPlayMode;
+
+                // Auto NavMesh rebuild
+                if (!isPlayMode && editorOptions.General.AutoRebuildNavMesh)
+                {
+                    if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
+                    {
+                        terrain.Scene.BuildNavMesh(patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                    }
+                }
             }
 
             /// <inheritdoc />
@@ -178,29 +210,37 @@ namespace FlaxEditor.Tools.Terrain
             if (!CarveTab.SelectedTerrain.HasPatch(ref patchCoord))
                 return;
 
-            var action = new DeletePatchAction(CarveTab.Editor, CarveTab.SelectedTerrain, ref patchCoord);
+            var action = new DeletePatchAction(CarveTab.SelectedTerrain, ref patchCoord);
             action.Do();
             CarveTab.Editor.Undo.AddAction(action);
         }
 
+        [Serializable]
         private class EditChunkMaterialAction : IUndoAction
         {
-            private readonly Editor _editor;
+            [Serialize]
             private Guid _terrainId;
+
+            [Serialize]
             private Int2 _patchCoord;
+
+            [Serialize]
             private Int2 _chunkCoord;
+
+            [Serialize]
             private Guid _beforeMaterial;
+
+            [Serialize]
             private Guid _afterMaterial;
 
             /// <inheritdoc />
             public string ActionString => "Edit terrain chunk material";
 
-            public EditChunkMaterialAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord, ref Int2 chunkCoord, MaterialBase toSet)
+            public EditChunkMaterialAction(FlaxEngine.Terrain terrain, ref Int2 patchCoord, ref Int2 chunkCoord, MaterialBase toSet)
             {
                 if (terrain == null)
                     throw new ArgumentException(nameof(terrain));
 
-                _editor = editor ?? throw new ArgumentException(nameof(editor));
                 _terrainId = terrain.ID;
                 _patchCoord = patchCoord;
                 _chunkCoord = chunkCoord;
@@ -236,7 +276,7 @@ namespace FlaxEditor.Tools.Terrain
 
                 terrain.SetChunkOverrideMaterial(ref _patchCoord, ref _chunkCoord, FlaxEngine.Content.LoadAsync<MaterialBase>(ref id));
 
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
             }
         }
 
@@ -247,9 +287,18 @@ namespace FlaxEditor.Tools.Terrain
 
             var patchCoord = Gizmo.SelectedPatchCoord;
             var chunkCoord = Gizmo.SelectedChunkCoord;
-            var action = new EditChunkMaterialAction(CarveTab.Editor, CarveTab.SelectedTerrain, ref patchCoord, ref chunkCoord, _chunkOverrideMaterial.SelectedAsset as MaterialBase);
+            var action = new EditChunkMaterialAction(CarveTab.SelectedTerrain, ref patchCoord, ref chunkCoord, _chunkOverrideMaterial.SelectedAsset as MaterialBase);
             action.Do();
             CarveTab.Editor.Undo.AddAction(action);
+        }
+
+        private void OnExportTerrainButtonClicked()
+        {
+            if (_isUpdatingUI)
+                return;
+
+            string outputFolder = MessageBox.BrowseFolderDialog(null, null, "Select the output folder");
+            TerrainTools.ExportTerrain(CarveTab.SelectedTerrain, outputFolder);
         }
 
         private void OnSelectionChanged()
@@ -260,6 +309,7 @@ namespace FlaxEditor.Tools.Terrain
                 _selectionInfoLabel.Text = "Select a terrain to modify its properties.";
                 _chunkProperties.Visible = false;
                 _deletePatchButton.Visible = false;
+                _exportTerrainButton.Visible = false;
             }
             else
             {
@@ -277,9 +327,19 @@ namespace FlaxEditor.Tools.Terrain
                     );
                     _chunkProperties.Visible = true;
                     _deletePatchButton.Visible = false;
+                    _exportTerrainButton.Visible = false;
 
                     _isUpdatingUI = true;
-                    _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
+                    if (terrain.HasPatch(ref patchCoord))
+                    {
+                        _chunkOverrideMaterial.SelectedAsset = terrain.GetChunkOverrideMaterial(ref patchCoord, ref chunkCoord);
+                        _chunkOverrideMaterial.Enabled = true;
+                    }
+                    else
+                    {
+                        _chunkOverrideMaterial.SelectedAsset = null;
+                        _chunkOverrideMaterial.Enabled = false;
+                    }
                     _isUpdatingUI = false;
                     break;
                 }
@@ -302,6 +362,7 @@ namespace FlaxEditor.Tools.Terrain
                     }
                     _chunkProperties.Visible = false;
                     _deletePatchButton.Visible = false;
+                    _exportTerrainButton.Visible = false;
                     break;
                 }
                 case EditTerrainGizmoMode.Modes.Remove:
@@ -313,6 +374,18 @@ namespace FlaxEditor.Tools.Terrain
                     );
                     _chunkProperties.Visible = false;
                     _deletePatchButton.Visible = true;
+                    _exportTerrainButton.Visible = false;
+                    break;
+                }
+                case EditTerrainGizmoMode.Modes.Export:
+                {
+                    _selectionInfoLabel.Text = string.Format(
+                        "Selected terrain: {0}",
+                        terrain.Name
+                    );
+                    _chunkProperties.Visible = false;
+                    _deletePatchButton.Visible = false;
+                    _exportTerrainButton.Visible = true;
                     break;
                 }
                 }

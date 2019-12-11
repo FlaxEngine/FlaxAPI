@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Input;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -19,7 +21,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         /// <seealso cref="FlaxEditor.Surface.ISurfaceContext" />
-        public class StateMachine : SurfaceNode, ISurfaceContext
+        internal class StateMachine : SurfaceNode, ISurfaceContext
         {
             private IntValueBox _maxTransitionsPerUpdate;
             private CheckBox _reinitializeOnBecomingRelevant;
@@ -127,7 +129,18 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 Surface.Select(this);
                 var dialog = RenamePopup.Show(this, _headerRect, Title, false);
+                dialog.Validate += OnRenameValidate;
                 dialog.Renamed += OnRenamed;
+            }
+
+            private bool OnRenameValidate(RenamePopup popup, string value)
+            {
+                return Context.Nodes.All(node =>
+                {
+                    if (node != this && node is StateMachine stateMachine)
+                        return stateMachine.StateMachineTitle != value;
+                    return true;
+                });
             }
 
             private void OnRenamed(RenamePopup renamePopup)
@@ -165,13 +178,25 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSpawned();
 
+                // Ensure to have unique name
+                var title = StateMachineTitle;
+                var value = title;
+                int count = 1;
+                while (!OnRenameValidate(null, value))
+                {
+                    value = title + " " + count++;
+                }
+                Values[0] = value;
+                Title = value;
+
+                // Let user pick a name
                 StartRenaming();
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
                 UpdateUI();
             }
@@ -192,15 +217,15 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
-                if (IsDisposing)
-                    return;
-
-                // Remove from cache
                 Surface.RemoveContext(this);
 
-                base.Dispose();
+                _maxTransitionsPerUpdate = null;
+                _reinitializeOnBecomingRelevant = null;
+                _skipFirstUpdateTransition = null;
+
+                base.OnDestroy();
             }
 
             /// <inheritdoc />
@@ -210,7 +235,7 @@ namespace FlaxEditor.Surface.Archetypes
             public byte[] SurfaceData
             {
                 get => (byte[])Values[1];
-                set => SetValue(1, value);
+                set => Values[1] = value;
             }
 
             /// <inheritdoc />
@@ -225,7 +250,19 @@ namespace FlaxEditor.Surface.Archetypes
                 var entryNode = context.FindNode(9, 19);
                 if (entryNode == null)
                 {
+                    var wasEnabled = true;
+                    if (Surface.Undo != null)
+                    {
+                        wasEnabled = Surface.Undo.Enabled;
+                        Surface.Undo.Enabled = false;
+                    }
+
                     entryNode = context.SpawnNode(9, 19, new Vector2(100.0f));
+
+                    if (Surface.Undo != null)
+                    {
+                        Surface.Undo.Enabled = wasEnabled;
+                    }
                 }
             }
         }
@@ -235,7 +272,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         /// <seealso cref="FlaxEditor.Surface.IConnectionInstigator" />
-        public class StateMachineEntry : SurfaceNode, IConnectionInstigator
+        class StateMachineEntry : SurfaceNode, IConnectionInstigator
         {
             private bool _isMouseDown;
             private Rectangle _textRect;
@@ -324,7 +361,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override bool CanSelect(ref Vector2 location)
             {
-                return _dragAreaRect.MakeOffseted(Location).Contains(ref location);
+                return _dragAreaRect.MakeOffsetted(Location).Contains(ref location);
             }
 
             /// <inheritdoc />
@@ -440,8 +477,114 @@ namespace FlaxEditor.Surface.Archetypes
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
         /// <seealso cref="FlaxEditor.Surface.IConnectionInstigator" />
         /// <seealso cref="FlaxEditor.Surface.ISurfaceContext" />
-        public class StateMachineState : SurfaceNode, ISurfaceContext, IConnectionInstigator
+        internal class StateMachineState : SurfaceNode, ISurfaceContext, IConnectionInstigator
         {
+            public class AddRemoveTransitionAction : IUndoAction
+            {
+                private readonly bool _isAdd;
+                private VisjectSurface _surface;
+                private ContextHandle _context;
+                private readonly uint _srcStateId;
+                private readonly uint _dstStateId;
+                private StateMachineTransition.Data _data;
+
+                public AddRemoveTransitionAction(StateMachineTransition transition)
+                {
+                    _surface = transition.SourceState.Surface;
+                    _context = new ContextHandle(transition.SourceState.Context);
+                    _srcStateId = transition.SourceState.ID;
+                    _dstStateId = transition.DestinationState.ID;
+                    _isAdd = false;
+                    transition.GetData(out _data);
+                }
+
+                public AddRemoveTransitionAction(SurfaceNode src, SurfaceNode dst)
+                {
+                    _surface = src.Surface;
+                    _context = new ContextHandle(src.Context);
+                    _srcStateId = src.ID;
+                    _dstStateId = dst.ID;
+                    _isAdd = true;
+                    _data = new StateMachineTransition.Data
+                    {
+                        Flags = StateMachineTransition.Data.FlagTypes.Enabled,
+                        Order = 0,
+                        BlendDuration = 0.1f,
+                        BlendMode = AlphaBlendMode.HermiteCubic,
+                    };
+                }
+
+                /// <inheritdoc />
+                public string ActionString => _isAdd ? "Add transition" : "Remove transition";
+
+                /// <inheritdoc />
+                public void Do()
+                {
+                    if (_isAdd)
+                        Add();
+                    else
+                        Remove();
+                }
+
+                /// <inheritdoc />
+                public void Undo()
+                {
+                    if (_isAdd)
+                        Remove();
+                    else
+                        Add();
+                }
+
+                private void Add()
+                {
+                    var context = _context.Get(_surface);
+                    var src = context.FindNode(_srcStateId) as StateMachineState;
+                    if (src == null)
+                        throw new Exception("Missing source state.");
+                    var dst = context.FindNode(_dstStateId) as StateMachineState;
+                    if (dst == null)
+                        throw new Exception("Missing destination state.");
+
+                    var transition = new StateMachineTransition(src, dst, ref _data);
+                    src.Transitions.Add(transition);
+
+                    src.UpdateTransitionsOrder();
+                    src.UpdateTransitions();
+                    src.UpdateTransitionsColors();
+
+                    src.SaveData();
+                }
+
+                private void Remove()
+                {
+                    var context = _context.Get(_surface);
+                    var src = context.FindNode(_srcStateId) as StateMachineState;
+                    if (src == null)
+                        throw new Exception("Missing source state.");
+                    var dst = context.FindNode(_dstStateId) as StateMachineState;
+                    if (dst == null)
+                        throw new Exception("Missing destination state.");
+                    var transition = src.Transitions.Find(x => x.DestinationState == dst);
+                    if (transition == null)
+                        throw new Exception("Missing transition.");
+
+                    _surface.RemoveContext(transition);
+                    src.Transitions.Remove(transition);
+
+                    src.UpdateTransitionsOrder();
+                    src.UpdateTransitions();
+                    src.UpdateTransitionsColors();
+
+                    src.SaveData();
+                }
+
+                /// <inheritdoc />
+                public void Dispose()
+                {
+                    _surface = null;
+                }
+            }
+
             private bool _isSavingData;
             private bool _isMouseDown;
             private Rectangle _textRect;
@@ -474,7 +617,7 @@ namespace FlaxEditor.Surface.Archetypes
             public byte[] StateData
             {
                 get => (byte[])Values[2];
-                set => SetValue(2, value);
+                set => Values[2] = value;
             }
 
             /// <summary>
@@ -516,7 +659,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                     endPos -= dir * 4.0f;
                 }
-                Render2D.DrawLine(startPos, endPos, color, 2.2f);
+                Render2D.DrawLine(startPos, endPos, color);
             }
 
             /// <summary>
@@ -535,21 +678,13 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override void SetValue(int index, object value)
+            public override void OnValuesChanged()
             {
-                base.SetValue(index, value);
+                base.OnValuesChanged();
 
-                // Check for external state data changes (eg. via undo)
-                if (!_isSavingData && index == 2)
-                {
-                    // Synchronize data
+                if (!_isSavingData)
                     LoadData();
-                }
-                else if (index == 0)
-                {
-                    // Update node title UI on change
-                    UpdateTitle();
-                }
+                UpdateTitle();
             }
 
             private void UpdateTitle()
@@ -646,7 +781,7 @@ namespace FlaxEditor.Surface.Archetypes
                     transition.Edit();
                     break;
                 case MouseButton.Right:
-                    var contextMenu = new FlaxEngine.GUI.ContextMenu();
+                    var contextMenu = new FlaxEditor.GUI.ContextMenu.ContextMenu();
                     contextMenu.AddButton("Edit").Clicked += transition.Edit;
                     contextMenu.AddSeparator();
                     contextMenu.AddButton("Delete").Clicked += transition.Delete;
@@ -665,6 +800,18 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.OnSpawned();
 
+                // Ensure to have unique name
+                var title = StateTitle;
+                var value = title;
+                int count = 1;
+                while (!OnRenameValidate(null, value))
+                {
+                    value = title + " " + count++;
+                }
+                Values[0] = value;
+                Title = value;
+
+                // Let user pick a name
                 StartRenaming();
             }
 
@@ -737,15 +884,17 @@ namespace FlaxEditor.Surface.Archetypes
             /// <summary>
             /// Saves the state data to the node value (writes transitions and related information).
             /// </summary>
-            public void SaveData()
+            /// <param name="withUndo">True if save data via node parameter editing via undo or without undo action.</param>
+            public void SaveData(bool withUndo = false)
             {
                 try
                 {
                     _isSavingData = true;
 
+                    byte[] value;
                     if (Transitions.Count == 0)
                     {
-                        StateData = Enumerable.Empty<byte>() as byte[];
+                        value = Utils.GetEmptyArray<byte>();
                     }
                     else
                     {
@@ -755,6 +904,7 @@ namespace FlaxEditor.Surface.Archetypes
                         {
                             writer.Write(1);
                             writer.Write(Transitions.Count);
+
                             for (int i = 0; i < Transitions.Count; i++)
                             {
                                 var t = Transitions[i];
@@ -781,9 +931,14 @@ namespace FlaxEditor.Surface.Archetypes
                                 }
                             }
 
-                            StateData = stream.ToArray();
+                            value = stream.ToArray();
                         }
                     }
+
+                    if (withUndo)
+                        SetValue(2, value);
+                    else
+                        Values[2] = value;
                 }
                 finally
                 {
@@ -927,7 +1082,18 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 Surface.Select(this);
                 var dialog = RenamePopup.Show(this, _textRect, Title, false);
+                dialog.Validate += OnRenameValidate;
                 dialog.Renamed += OnRenamed;
+            }
+
+            private bool OnRenameValidate(RenamePopup popup, string value)
+            {
+                return Context.Nodes.All(node =>
+                {
+                    if (node != this && node is StateMachineState state)
+                        return state.StateTitle != value;
+                    return true;
+                });
             }
 
             private void OnRenamed(RenamePopup renamePopup)
@@ -990,7 +1156,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override bool CanSelect(ref Vector2 location)
             {
-                return _dragAreaRect.MakeOffseted(Location).Contains(ref location);
+                return _dragAreaRect.MakeOffsetted(Location).Contains(ref location);
             }
 
             /// <inheritdoc />
@@ -1072,9 +1238,12 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 base.RemoveConnections();
 
-                Transitions.Clear();
-                UpdateTransitions();
-                SaveData();
+                if (Transitions.Count != 0)
+                {
+                    Transitions.Clear();
+                    UpdateTransitions();
+                    SaveData(true);
+                }
 
                 for (int i = 0; i < Surface.Nodes.Count; i++)
                 {
@@ -1098,21 +1267,20 @@ namespace FlaxEditor.Surface.Archetypes
                         if (modified)
                         {
                             state.UpdateTransitions();
-                            state.SaveData();
+                            state.SaveData(true);
                         }
                     }
                 }
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
-                if (IsDisposing)
-                    return;
+                Surface.RemoveContext(this);
 
                 ClearData();
 
-                base.Dispose();
+                base.OnDestroy();
             }
 
             /// <inheritdoc />
@@ -1122,7 +1290,7 @@ namespace FlaxEditor.Surface.Archetypes
             public byte[] SurfaceData
             {
                 get => (byte[])Values[1];
-                set => SetValue(1, value);
+                set => Values[1] = value;
             }
 
             /// <inheritdoc />
@@ -1137,7 +1305,19 @@ namespace FlaxEditor.Surface.Archetypes
                 var entryNode = context.FindNode(9, 21);
                 if (entryNode == null)
                 {
+                    var wasEnabled = true;
+                    if (Surface.Undo != null)
+                    {
+                        wasEnabled = Surface.Undo.Enabled;
+                        Surface.Undo.Enabled = false;
+                    }
+
                     entryNode = context.SpawnNode(9, 21, new Vector2(100.0f));
+
+                    if (Surface.Undo != null)
+                    {
+                        Surface.Undo.Enabled = wasEnabled;
+                    }
                 }
             }
 
@@ -1191,22 +1371,9 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 var state = (StateMachineState)other;
 
-                // Create a new transition
-                var data = new StateMachineTransition.Data
-                {
-                    Flags = StateMachineTransition.Data.FlagTypes.Enabled,
-                    Order = 0,
-                    BlendDuration = 0.1f,
-                    BlendMode = AlphaBlendMode.HermiteCubic,
-                };
-                var transition = new StateMachineTransition(this, state, ref data);
-                Transitions.Add(transition);
-
-                UpdateTransitionsOrder();
-                UpdateTransitions();
-                UpdateTransitionsColors();
-
-                SaveData();
+                var action = new AddRemoveTransitionAction(this, state);
+                Surface?.Undo.AddAction(action);
+                action.Do();
             }
         }
 
@@ -1215,7 +1382,7 @@ namespace FlaxEditor.Surface.Archetypes
         /// </summary>
         /// <seealso cref="StateMachineState"/>
         /// <seealso cref="ISurfaceContext"/>
-        public class StateMachineTransition : ISurfaceContext
+        internal class StateMachineTransition : ISurfaceContext
         {
             /// <summary>
             /// The packed data container for the transition data storage. Helps with serialization and versioning the data.
@@ -1343,7 +1510,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _data.SetFlag(Data.FlagTypes.Enabled, value);
                     SourceState.UpdateTransitionsColors();
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1358,7 +1525,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     _data.SetFlag(Data.FlagTypes.Solo, value);
                     SourceState.UpdateTransitionsColors();
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1372,7 +1539,7 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.SetFlag(Data.FlagTypes.UseDefaultRule, value);
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1388,7 +1555,7 @@ namespace FlaxEditor.Surface.Archetypes
                     _data.Order = value;
                     SourceState.UpdateTransitionsOrder();
                     SourceState.UpdateTransitionsColors();
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1402,7 +1569,7 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.BlendDuration = value;
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1416,7 +1583,7 @@ namespace FlaxEditor.Surface.Archetypes
                 set
                 {
                     _data.BlendMode = value;
-                    SourceState.SaveData();
+                    SourceState.SaveData(true);
                 }
             }
 
@@ -1429,7 +1596,7 @@ namespace FlaxEditor.Surface.Archetypes
                 get => _ruleGraph;
                 set
                 {
-                    _ruleGraph = value ?? Enumerable.Empty<byte>() as byte[];
+                    _ruleGraph = value ?? Utils.GetEmptyArray<byte>();
                     SourceState.SaveData();
                 }
             }
@@ -1471,7 +1638,7 @@ namespace FlaxEditor.Surface.Archetypes
                 DestinationState = destination;
                 _data = data;
                 _data.Destination = destination.ID;
-                _ruleGraph = ruleGraph ?? Enumerable.Empty<byte>() as byte[];
+                _ruleGraph = ruleGraph ?? Utils.GetEmptyArray<byte>();
             }
 
             /// <summary>
@@ -1506,9 +1673,22 @@ namespace FlaxEditor.Surface.Archetypes
                 var ruleOutputNode = context.FindNode(9, 22);
                 if (ruleOutputNode == null)
                 {
+                    var wasEnabled = true;
+                    var undo = SourceState.Surface.Undo;
+                    if (undo != null)
+                    {
+                        wasEnabled = undo.Enabled;
+                        undo.Enabled = false;
+                    }
+
                     ruleOutputNode = context.SpawnNode(9, 22, new Vector2(100.0f));
 
                     // TODO: add default rule nodes for easier usage
+
+                    if (undo != null)
+                    {
+                        undo.Enabled = wasEnabled;
+                    }
                 }
             }
 
@@ -1517,13 +1697,9 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             public void Delete()
             {
-                SourceState.Transitions.Remove(this);
-
-                SourceState.UpdateTransitionsOrder();
-                SourceState.UpdateTransitions();
-                SourceState.UpdateTransitionsColors();
-
-                SourceState.SaveData();
+                var action = new StateMachineState.AddRemoveTransitionAction(this);
+                SourceState.Surface?.Undo.AddAction(action);
+                action.Do();
             }
 
             /// <summary>

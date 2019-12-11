@@ -3,9 +3,9 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using FlaxEngine;
-using Object = FlaxEngine.Object;
 
 namespace FlaxEditor
 {
@@ -31,7 +31,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Paint(Object.GetUnmanagedPtr(foliage), foliageTypesIndices, ref brushPosition, brushRadius, additive);
+            Internal_Paint(FlaxEngine.Object.GetUnmanagedPtr(foliage), foliageTypesIndices, ref brushPosition, brushRadius, additive);
 #endif
         }
 
@@ -53,7 +53,7 @@ namespace FlaxEditor
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_Intersects(Object.GetUnmanagedPtr(foliage), ref ray, out distance, out normal, out instanceIndex);
+            return Internal_Intersects(FlaxEngine.Object.GetUnmanagedPtr(foliage), ref ray, out distance, out normal, out instanceIndex);
 #endif
         }
 

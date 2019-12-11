@@ -27,7 +27,8 @@ namespace FlaxEngine
             {
                 PlatformType.Windows,
                 PlatformType.WindowsStore,
-                PlatformType.XboxOne
+                PlatformType.XboxOne,
+                PlatformType.Linux,
             },
         };
 

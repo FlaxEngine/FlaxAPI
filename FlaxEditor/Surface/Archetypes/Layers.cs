@@ -20,7 +20,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 1,
                 Title = "Sample Layer",
                 Description = "Sample material or material instance",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(160, 100),
                 DefaultValues = new object[]
                 {
@@ -39,7 +39,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "Linear Layer Blend",
                 Description = "Create blended layer using linear math",
-                Flags = NodeFlags.MaterialOnly | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(170, 80),
                 Elements = new[]
                 {
@@ -54,7 +54,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "Pack Material Layer",
                 Description = "Pack material properties",
-                Flags = NodeFlags.MaterialOnly | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(200, 240),
                 Elements = new[]
                 {
@@ -77,7 +77,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Unpack Material Layer",
                 Description = "Unpack material properties",
-                Flags = NodeFlags.MaterialOnly | NodeFlags.NoSpawnViaGUI,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(210, 240),
                 Elements = new[]
                 {
@@ -100,7 +100,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Linear Layer Blend",
                 Description = "Create blended layer using linear math",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(170, 80),
                 DefaultValues = new object[]
                 {
@@ -119,7 +119,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Pack Material Layer",
                 Description = "Pack material properties",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(200, 280),
                 Elements = new[]
                 {
@@ -145,7 +145,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Unpack Material Layer",
                 Description = "Unpack material properties",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(210, 280),
                 Elements = new[]
                 {

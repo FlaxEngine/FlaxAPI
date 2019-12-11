@@ -15,13 +15,13 @@ namespace FlaxEngine
         internal readonly IntPtr unmanagedPtr = IntPtr.Zero;
 
         [NonSerialized]
-        internal Guid id = Guid.Empty;
+        internal Guid _internalId = Guid.Empty;
 
         /// <summary>
         /// Gets unique object ID
         /// </summary>
         [HideInEditor]
-        public Guid ID => id;
+        public Guid ID => _internalId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Object"/>.
@@ -75,7 +75,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Finds the object with the given ID.
+        /// Finds the object with the given ID. Searches registered scene objects and assets.
         /// </summary>
         /// <param name="id">Unique ID of the object.</param>
         /// <typeparam name="T">Type of the object.</typeparam>
@@ -86,6 +86,21 @@ namespace FlaxEngine
             return null;
 #else
             return Internal_FindObject(ref id) as T;
+#endif
+        }
+
+        /// <summary>
+        /// Tries to find the object by the given identifier. Searches only registered scene objects.
+        /// </summary>
+        /// <param name="id">Unique ID of the object.</param>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <returns>Found object or null if missing.</returns>
+        public static T TryFind<T>(ref Guid id) where T : Object
+        {
+#if UNIT_TEST_COMPILANT
+            return null;
+#else
+            return Internal_TryFindObject(ref id) as T;
 #endif
         }
 
@@ -126,14 +141,17 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Check if object exists
+        /// Checks if the object exists (reference is not null and the unmanaged object pointer is valid).
         /// </summary>
-        /// <param name="obj">Object to check</param>
+        /// <param name="obj">The object to check.</param>
+        /// <returns>True if object is valid, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator bool(Object obj)
         {
             return obj != null && obj.unmanagedPtr != IntPtr.Zero;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static IntPtr GetUnmanagedPtr(Object obj)
         {
             return obj?.unmanagedPtr ?? IntPtr.Zero;
@@ -162,6 +180,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Object Internal_FindObject(ref Guid id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Object Internal_TryFindObject(ref Guid id);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ChangeID(IntPtr obj, ref Guid id);

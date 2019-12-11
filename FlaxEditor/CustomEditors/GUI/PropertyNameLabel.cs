@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -14,7 +15,7 @@ namespace FlaxEditor.CustomEditors.GUI
         // TODO: if name is too long to show -> use tooltip to show it
 
         /// <summary>
-        /// Custom event delegate that can be sued to extend the property name label with an additional functionality.
+        /// Custom event delegate that can be used to extend the property name label with an additional functionality.
         /// </summary>
         /// <param name="label">The label.</param>
         /// <param name="menu">The menu.</param>
@@ -145,11 +146,11 @@ namespace FlaxEditor.CustomEditors.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             SetupContextMenu = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

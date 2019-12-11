@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets value indicating if camera should use perspective rendering mode, otherwise it will use orthographic projection.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Camera"), Tooltip("Enables perspective projection mode, otherwise uses ortho")]
+        [EditorOrder(20), DefaultValue(true), EditorDisplay("Camera"), Tooltip("Enables perspective projection mode, otherwise uses ortho")]
         public bool UsePerspective
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets camera's field of view (in degrees)
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), Limit(0, 179), EditorDisplay("Camera", "Field Of View"), Tooltip("Field of view angle in degrees")]
+        [EditorOrder(10), DefaultValue(60.0f), Limit(0, 179), EditorDisplay("Camera", "Field Of View"), Tooltip("Field of view angle in degrees")]
         public float FieldOfView
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets the custom aspect ratio. 0 if not use custom value.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(50), Limit(0, 10, 0.01f), EditorDisplay("Camera"), Tooltip("Custom aspect ratio to use. Set to 0 to disable.")]
+        [EditorOrder(50), DefaultValue(0.0f), Limit(0, 10, 0.01f), EditorDisplay("Camera"), Tooltip("Custom aspect ratio to use. Set to 0 to disable.")]
         public float CustomAspectRatio
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets camera's near plane distance
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), Limit(0, 1000, 0.05f), EditorDisplay("Camera"), Tooltip("Near clipping plane distance")]
+        [EditorOrder(30), DefaultValue(10.0f), Limit(0, 1000, 0.05f), EditorDisplay("Camera"), Tooltip("Near clipping plane distance")]
         public float NearPlane
         {
 #if UNIT_TEST_COMPILANT
@@ -101,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets camera's far plane distance
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), Limit(0, float.MaxValue, 5), EditorDisplay("Camera"), Tooltip("Far clipping plane distance")]
+        [EditorOrder(40), DefaultValue(40000.0f), Limit(0, float.MaxValue, 5), EditorDisplay("Camera"), Tooltip("Far clipping plane distance")]
         public float FarPlane
         {
 #if UNIT_TEST_COMPILANT
@@ -116,7 +117,7 @@ namespace FlaxEngine
         /// Gets or sets the orthographic projection scale
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(60), Limit(0.0001f, 1000, 0.01f), EditorDisplay("Camera"), Tooltip("Orthographic projection scale")]
+        [EditorOrder(60), DefaultValue(1.0f), Limit(0.0001f, 1000, 0.01f), EditorDisplay("Camera"), Tooltip("Orthographic projection scale")]
         public float OrthographicScale
         {
 #if UNIT_TEST_COMPILANT

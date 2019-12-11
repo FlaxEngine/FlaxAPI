@@ -243,7 +243,7 @@ namespace FlaxEngine
         /// <param name="x">X coordinate offset</param>
         /// <param name="y">Y coordinate offset</param>
         /// <returns>Offseted rectangle</returns>
-        public Rectangle MakeOffseted(float x, float y)
+        public Rectangle MakeOffsetted(float x, float y)
         {
             return new Rectangle(Location + new Vector2(x, y), Size);
         }
@@ -253,7 +253,7 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="offset">X and Y coordinate offset</param>
         /// <returns>Offseted rectangle</returns>
-        public Rectangle MakeOffseted(Vector2 offset)
+        public Rectangle MakeOffsetted(Vector2 offset)
         {
             return new Rectangle(Location + offset, Size);
         }

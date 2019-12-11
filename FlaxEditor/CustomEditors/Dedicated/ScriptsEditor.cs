@@ -7,6 +7,7 @@ using System.Linq;
 using FlaxEditor.Actions;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.Scripting;
 using FlaxEngine;
@@ -33,7 +34,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         public DragAreaControl()
         : base(0, 0, 120, 40)
         {
-            CanFocus = false;
+            AutoFocus = false;
 
             // Add script button
             float addScriptButtonWidth = 60.0f;
@@ -311,7 +312,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         public ScriptArrangeBar()
         : base(0, 0, 120, 6)
         {
-            CanFocus = false;
+            AutoFocus = false;
             Visible = false;
         }
 
@@ -392,6 +393,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
     /// <seealso cref="CustomEditor" />
     public sealed class ScriptsEditor : SyncPointEditor
     {
+        private CheckBox[] _scriptToggles;
+
         /// <summary>
         /// Delegate for script drag start and event events.
         /// </summary>
@@ -421,7 +424,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
             {
                 TooltipText = "Settings",
-                CanFocus = true,
+                AutoFocus = true,
                 AnchorStyle = AnchorStyle.UpperRight,
                 IsScrollable = false,
                 Color = new Color(0.7f),
@@ -539,6 +542,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var scripts = (Script[])Values[0];
             _scripts.AddRange(scripts);
             var elementType = typeof(Script);
+            _scriptToggles = new CheckBox[scripts.Length];
             for (int i = 0; i < scripts.Length; i++)
             {
                 var script = scripts[i];
@@ -576,13 +580,14 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     Parent = group.Panel
                 };
                 scriptToggle.StateChanged += ScriptToggleOnCheckChanged;
+                _scriptToggles[i] = scriptToggle;
 
                 // Add drag button to the group
                 const float dragIconSize = 14;
                 var scriptDrag = new ScriptDragIcon(this, script, scriptToggle.Right, 0.5f, dragIconSize)
                 {
                     TooltipText = "Script reference",
-                    CanFocus = true,
+                    AutoFocus = true,
                     IsScrollable = false,
                     Color = new Color(0.7f),
                     Margin = new Margin(1),
@@ -596,7 +601,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
                 {
                     TooltipText = "Settings",
-                    CanFocus = true,
+                    AutoFocus = true,
                     AnchorStyle = AnchorStyle.UpperRight,
                     IsScrollable = false,
                     Color = new Color(0.7f),
@@ -647,7 +652,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void ScriptToggleOnCheckChanged(CheckBox box)
         {
             var script = (Script)box.Tag;
-            script.Enabled = box.Checked;
+            if (script.Enabled == box.Checked)
+                return;
+
+            var action = ChangeScriptAction.ChangeEnabled(script, box.Checked);
+            action.Do();
+            Presenter?.Undo.AddAction(action);
         }
 
         private void SettingsButtonOnClicked(Image image, MouseButton mouseButton)
@@ -702,7 +712,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void OnClickCopyName(ContextMenuButton button)
         {
             var script = (Script)button.ParentContextMenu.Tag;
-            Application.ClipboardText = script.GetType().FullName;
+            Platform.ClipboardText = script.GetType().FullName;
         }
 
         private void OnClickEditScript(ContextMenuButton button)
@@ -732,9 +742,23 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     ParentEditor.RebuildLayout();
                     return;
                 }
+
+                for (int i = 0; i < _scriptToggles.Length; i++)
+                {
+                    if (_scriptToggles[i] != null)
+                        _scriptToggles[i].Checked = scripts[i].Enabled;
+                }
             }
 
             base.Refresh();
+        }
+
+        /// <inheritdoc />
+        protected override void Deinitialize()
+        {
+            _scriptToggles = null;
+
+            base.Deinitialize();
         }
     }
 }

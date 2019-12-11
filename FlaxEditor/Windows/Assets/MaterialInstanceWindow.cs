@@ -8,11 +8,11 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -24,17 +24,50 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public sealed class MaterialInstanceWindow : AssetEditorWindowBase<MaterialInstance>
     {
+        private sealed class EditParamOverrideAction : IUndoAction
+        {
+            public MaterialInstanceWindow Window;
+            public int Index;
+            public bool Before;
+
+            /// <inheritdoc />
+            public string ActionString => "Edit Override";
+
+            private void Set(bool value)
+            {
+                Window.Asset.Parameters[Index].Override = value;
+            }
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(!Before);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(Before);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Window = null;
+            }
+        }
+
         /// <summary>
         /// The material properties proxy object.
         /// </summary>
         [CustomEditor(typeof(ParametersEditor))]
         private sealed class PropertiesProxy
         {
-            private Material _restoreBase;
+            private MaterialBase _restoreBase;
             private Dictionary<string, object> _restoreParams;
 
             [EditorDisplay("General"), Tooltip("The base material used to override it's properties")]
-            public Material BaseMaterial
+            public MaterialBase BaseMaterial
             {
                 get => Window?.Asset?.BaseMaterial;
                 set
@@ -211,11 +244,11 @@ namespace FlaxEditor.Windows.Assets
                 if (parameters.Length != 0)
                 {
                     var parametersGroup = layout.Group("Parameters");
-                    InitializeProperties(parametersGroup, parameters, material.BaseMaterial);
+                    InitializeProperties(proxy.Window, parametersGroup, parameters, material.BaseMaterial);
                 }
             }
 
-            private void InitializeProperties(LayoutElementsContainer layout, MaterialParameter[] parameters, Material baseMaterial)
+            private void InitializeProperties(MaterialInstanceWindow window, LayoutElementsContainer layout, MaterialParameter[] parameters, MaterialBase baseMaterial)
             {
                 var baseMaterialParameters = baseMaterial?.Parameters;
                 for (int i = 0; i < parameters.Length; i++)
@@ -238,11 +271,11 @@ namespace FlaxEditor.Windows.Assets
                     case MaterialParameterType.NormalMap:
                         pType = typeof(Texture);
                         break;
-                    case MaterialParameterType.RenderTarget:
-                    case MaterialParameterType.RenderTargetArray:
-                    case MaterialParameterType.RenderTargetCube:
-                    case MaterialParameterType.RenderTargetVolume:
-                        pType = typeof(RenderTarget);
+                    case MaterialParameterType.GPUTexture:
+                    case MaterialParameterType.GPUTextureArray:
+                    case MaterialParameterType.GPUTextureCube:
+                    case MaterialParameterType.GPUTextureVolume:
+                        pType = typeof(GPUTexture);
                         break;
                     default:
                         pType = p.Value.GetType();
@@ -280,7 +313,22 @@ namespace FlaxEditor.Windows.Assets
                         propertyValue.SetDefaultValue(defaultValue);
                     }
 
-                    layout.Property(p.Name, propertyValue);
+                    // Add label with checkbox for parameter value override
+                    var label = new CheckablePropertyNameLabel(p.Name);
+                    label.CheckBox.Checked = p.Override;
+                    label.CheckBox.Tag = window._properties;
+                    label.CheckChanged += nameLabel =>
+                    {
+                        var proxy = (PropertiesProxy)nameLabel.CheckBox.Tag;
+                        proxy.Window.Asset.Parameters[pIndex].Override = nameLabel.CheckBox.Checked;
+                        proxy.Window._undo.AddAction(new EditParamOverrideAction
+                        {
+                            Window = proxy.Window,
+                            Index = pIndex,
+                            Before = !nameLabel.CheckBox.Checked,
+                        });
+                    };
+                    layout.Property(label, propertyValue);
                 }
             }
 
@@ -341,7 +389,7 @@ namespace FlaxEditor.Windows.Assets
             _undoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Undo32, _undo.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
             _redoButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Redo32, _undo.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/materials/instanced-materials/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/materials/instanced-materials/index.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
@@ -363,6 +411,10 @@ namespace FlaxEditor.Windows.Assets
             _properties = new PropertiesProxy();
             _editor.Select(_properties);
             _editor.Modified += OnMaterialPropertyEdited;
+
+            // Setup input actions
+            InputActions.Add(options => options.Undo, _undo.PerformUndo);
+            InputActions.Add(options => options.Redo, _undo.PerformRedo);
         }
 
         private void OnUndo(IUndoAction action)
@@ -459,30 +511,6 @@ namespace FlaxEditor.Windows.Assets
                 ClearEditedFlag();
                 _undo.Clear();
             }
-        }
-
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            // Base
-            bool result = base.OnKeyDown(key);
-            if (!result)
-            {
-                if (Root.GetKey(Keys.Control))
-                {
-                    switch (key)
-                    {
-                    case Keys.Z:
-                        _undo.PerformUndo();
-                        return true;
-                    case Keys.Y:
-                        _undo.PerformRedo();
-                        return true;
-                    }
-                }
-            }
-
-            return result;
         }
 
         /// <inheritdoc />

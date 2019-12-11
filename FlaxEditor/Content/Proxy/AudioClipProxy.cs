@@ -8,7 +8,6 @@ using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
@@ -59,6 +58,8 @@ namespace FlaxEditor.Content
                 // Create new preview control
                 preview = new AudioClipPreview
                 {
+                    DrawMode = AudioClipPreview.DrawModes.Fill,
+                    DockStyle = DockStyle.Fill,
                     Size = new Vector2(PreviewsCache.AssetIconSize)
                 };
             }

@@ -9,11 +9,11 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -40,7 +40,7 @@ namespace FlaxEditor.Windows.Assets
                 _window = window;
 
                 // Show floor widget
-                _showFloorButton = ViewWidgetButtonMenu.AddButton("Show floor", OnShowFloorModelClicked);
+                _showFloorButton = ViewWidgetShowMenu.AddButton("Floor", OnShowFloorModelClicked);
                 _showFloorButton.IndexInParent = 1;
 
                 // Floor model
@@ -53,9 +53,9 @@ namespace FlaxEditor.Windows.Assets
 
                 // Enable shadows
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
-                PreviewLight.CascadeCount = 2;
-                PreviewLight.ShadowsDistance = 1000.0f;
-                Task.Flags |= ViewFlags.Shadows;
+                PreviewLight.CascadeCount = 3;
+                PreviewLight.ShadowsDistance = 2000.0f;
+                Task.View.Flags |= ViewFlags.Shadows;
             }
 
             private void OnShowFloorModelClicked(ContextMenuButton obj)
@@ -77,12 +77,12 @@ namespace FlaxEditor.Windows.Assets
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
-                FlaxEngine.Object.Destroy(ref _floorModel);
+                Object.Destroy(ref _floorModel);
                 _showFloorButton = null;
 
-                base.Dispose();
+                base.OnDestroy();
             }
         }
 
@@ -333,6 +333,7 @@ namespace FlaxEditor.Windows.Assets
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
                         group.Label("Nodes: " + nodes.Length);
                         group.Label("Bones: " + bones.Length);
+                        group.Label("Size: " + proxy.Asset.Box.Size);
                     }
 
                     // Group per mesh
@@ -426,7 +427,7 @@ namespace FlaxEditor.Windows.Assets
                         }
                     }
                 }
-                
+
                 private void BuildSkeletonNodesTree(SkeletonNode[] nodes, TreeNodeElement layout, int nodeIndex)
                 {
                     for (int i = 0; i < nodes.Length; i++)
@@ -458,7 +459,7 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.Bone32, () => _preview.ShowBones = !_preview.ShowBones).SetAutoCheck(true).LinkTooltip("Show animated model bones debug view");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/skinned-model/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/skinned-model/index.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
@@ -507,7 +508,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 _highlightActor.IsActive = true;
 
-                var highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
+                var highlightMaterial = EditorAssets.Cache.HighlightMaterialInstance;
                 entries = _highlightActor.Entries;
                 if (entries != null)
                 {
@@ -602,6 +603,7 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnLoad(this);
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
+            _preview.ViewportCamera.SerArcBallView(Asset.Box);
 
             // Reset any root motion
             _preview.PreviewActor.ResetLocalTransform();

@@ -1,8 +1,10 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.ContextMenu
 {
     /// <summary>
     /// Context Menu button control.
@@ -31,7 +33,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The button short keys information (eg. 'Ctrl+C').
         /// </summary>
-        public string Shortkeys;
+        public string ShortKeys;
 
         /// <summary>
         /// Item icon (best is 16x16).
@@ -58,7 +60,7 @@ namespace FlaxEngine.GUI
         : base(parent, 8, 22)
         {
             Text = text;
-            Shortkeys = shortKeys;
+            ShortKeys = shortKeys;
         }
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace FlaxEngine.GUI
             // Cache data
             var style = Style.Current;
             var backgroundRect = new Rectangle(-X + 3, 0, Parent.Width - 6, Height);
-            var textRect = new Rectangle(0, 0, Width - 4, Height);
+            var textRect = new Rectangle(0, 0, Width - 8, Height);
             var textColor = Enabled ? style.Foreground : style.ForegroundDisabled;
 
             // Draw background
@@ -101,8 +103,11 @@ namespace FlaxEngine.GUI
             // Draw text
             Render2D.DrawText(style.FontMedium, Text, textRect, textColor, TextAlignment.Near, TextAlignment.Center);
 
-            // Draw short keys
-            Render2D.DrawText(style.FontMedium, Shortkeys, textRect, textColor, TextAlignment.Far, TextAlignment.Center);
+            if (!string.IsNullOrEmpty(ShortKeys))
+            {
+                // Draw short keys
+                Render2D.DrawText(style.FontMedium, ShortKeys, textRect, textColor, TextAlignment.Far, TextAlignment.Center);
+            }
 
             // Draw icon
             const float iconSize = 14;
@@ -186,9 +191,9 @@ namespace FlaxEngine.GUI
                 {
                     width += style.FontMedium.MeasureText(Text).X;
 
-                    if (Shortkeys.Length > 0)
+                    if (ShortKeys.Length > 0)
                     {
-                        width += 40 + style.FontMedium.MeasureText(Shortkeys).X;
+                        width += 40 + style.FontMedium.MeasureText(ShortKeys).X;
                     }
                 }
 

@@ -7,6 +7,7 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tree;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
@@ -20,6 +21,7 @@ namespace FlaxEditor.Windows
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public sealed partial class ContentWindow : EditorWindow
     {
+        private const string ProjectDataLastViewedFolder = "LastViewedFolder";
         private bool _isWorkspaceDirty;
         private SplitPanel _split;
         private ContentView _view;
@@ -28,7 +30,7 @@ namespace FlaxEditor.Windows
         private readonly ToolStripButton _importButton;
         private readonly ToolStripButton _navigateBackwardButton;
         private readonly ToolStripButton _navigateForwardButton;
-        private readonly ToolStripButton _nnavigateUpButton;
+        private readonly ToolStripButton _navigateUpButton;
 
         private NavigationBar _navigationBar;
         private Tree _tree;
@@ -73,7 +75,7 @@ namespace FlaxEditor.Windows
             _toolStrip.AddSeparator();
             _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowLeft32, NavigateBackward).LinkTooltip("Navigate backward");
             _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowRight32, NavigateForward).LinkTooltip("Navigate forward");
-            _nnavigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowUp32, NavigateUp).LinkTooltip("Navigate up");
+            _navigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowUp32, NavigateUp).LinkTooltip("Navigate up");
             _toolStrip.Parent = this;
 
             // Navigation bar
@@ -155,6 +157,7 @@ namespace FlaxEditor.Windows
             // Show rename popup
             var popup = RenamePopup.Show(item, item.TextRectangle, item.ShortName, true);
             popup.Tag = item;
+            popup.Validate += OnRenameValidate;
             popup.Renamed += renamePopup => Rename((ContentItem)renamePopup.Tag, renamePopup.Text);
             popup.Closed += renamePopup =>
             {
@@ -173,6 +176,12 @@ namespace FlaxEditor.Windows
             {
                 popup.InitialValue = "?";
             }
+        }
+
+        private bool OnRenameValidate(RenamePopup popup, string value)
+        {
+            string hint;
+            return Editor.ContentEditing.IsValidAssetName((ContentItem)popup.Tag, value, out hint);
         }
 
         /// <summary>
@@ -549,6 +558,9 @@ namespace FlaxEditor.Windows
         /// <param name="asset">The asset to select.</param>
         public void Select(Asset asset)
         {
+            if (asset == null)
+                throw new ArgumentNullException();
+
             var item = Editor.ContentDatabase.Find(asset.ID);
             if (item != null)
                 Select(item);
@@ -634,7 +646,7 @@ namespace FlaxEditor.Windows
             _importButton.Enabled = folder != null && folder.CanHaveAssets;
             _navigateBackwardButton.Enabled = _navigationUndo.Count > 0;
             _navigateForwardButton.Enabled = _navigationRedo.Count > 0;
-            _nnavigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
+            _navigateUpButton.Enabled = folder != null && _tree.SelectedNode != _root;
         }
 
         private void AddFolder2Root(MainContentTreeNode node)
@@ -677,7 +689,12 @@ namespace FlaxEditor.Windows
             UnlockChildrenRecursive();
             PerformLayout();
 
-            // TODO: load last viewed folder
+            // Load last viewed folder
+            if (Editor.ProjectCache.TryGetCustomData(ProjectDataLastViewedFolder, out var lastViewedFolder))
+            {
+                if (Editor.ContentDatabase.Find(lastViewedFolder) is ContentFolder folder)
+                    _tree.Select(folder.Node);
+            }
         }
 
         /// <inheritdoc />
@@ -696,7 +713,9 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void OnExit()
         {
-            // TODO: save last viewed folder
+            // Save last viewed folder
+            var lastViewedFolder = _tree.Selection.Count == 1 ? _tree.SelectedNode as ContentTreeNode : null;
+            Editor.ProjectCache.SetCustomData(ProjectDataLastViewedFolder, lastViewedFolder?.Path ?? string.Empty);
 
             // Clear view
             _view.ClearItems();
@@ -779,13 +798,13 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             _foldersSearchBox = null;
             _itemsSearchBox = null;
             _itemsFilterBox = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

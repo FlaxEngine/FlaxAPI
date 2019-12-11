@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -44,7 +45,7 @@ namespace FlaxEngine
         /// Kinematic rigidbodies are special dynamic actors that are not influenced by forces(such as gravity), and have no momentum. They are considered to have infinite mass and can push regular dynamic actors out of the way.Kinematics will not collide with static or other kinematic objects.<para>Kinematic rigidbodies are great for moving platforms or characters, where direct motion control is desired.</para><para>Kinematic rigidbodies are incompatible with CCD.</para>
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("Rigid Body"), Tooltip("Enables kinematic mode for the rigidbody.")]
+        [EditorOrder(10), DefaultValue(false), EditorDisplay("Rigid Body"), Tooltip("Enables kinematic mode for the rigidbody.")]
         public bool IsKinematic
         {
 #if UNIT_TEST_COMPILANT
@@ -59,7 +60,7 @@ namespace FlaxEngine
         /// If true simulation and collisions detection will be enabled for the rigidbody.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Rigid Body"), Tooltip("If true simulation and collisions detection will be enabled for the rigidbody.")]
+        [EditorOrder(20), DefaultValue(true), EditorDisplay("Rigid Body"), Tooltip("If true simulation and collisions detection will be enabled for the rigidbody.")]
         public bool EnableSimulation
         {
 #if UNIT_TEST_COMPILANT
@@ -74,7 +75,7 @@ namespace FlaxEngine
         /// If true Continuous Collision Detection (CCD) will be used for this object.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), EditorDisplay("Rigid Body", "Use CCD"), Tooltip("If true Continuous Collision Detection (CCD) will be used for this object.")]
+        [EditorOrder(30), DefaultValue(false), EditorDisplay("Rigid Body", "Use CCD"), Tooltip("If true Continuous Collision Detection (CCD) will be used for this object.")]
         public bool UseCCD
         {
 #if UNIT_TEST_COMPILANT
@@ -89,7 +90,7 @@ namespace FlaxEngine
         /// If object should have the force of gravity applied.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), EditorDisplay("Rigid Body"), Tooltip("If object should have the force of gravity applied.")]
+        [EditorOrder(40), DefaultValue(true), EditorDisplay("Rigid Body"), Tooltip("If object should have the force of gravity applied.")]
         public bool EnableGravity
         {
 #if UNIT_TEST_COMPILANT
@@ -104,7 +105,7 @@ namespace FlaxEngine
         /// If object should start awake, or if it should initially be sleeping.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(50), EditorDisplay("Rigid Body"), Tooltip("If object should start awake, or if it should initially be sleeping.")]
+        [EditorOrder(50), DefaultValue(true), EditorDisplay("Rigid Body"), Tooltip("If object should start awake, or if it should initially be sleeping.")]
         public bool StartAwake
         {
 #if UNIT_TEST_COMPILANT
@@ -122,7 +123,7 @@ namespace FlaxEngine
         /// Linear damping can be used to slow down an object. The higher the drag the more the object slows down.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(60), Limit(0), EditorDisplay("Rigid Body"), Tooltip("The 'drag' force added to reduce linear movement")]
+        [EditorOrder(60), DefaultValue(0.01f), Limit(0), EditorDisplay("Rigid Body"), Tooltip("The 'drag' force added to reduce linear movement")]
         public float LinearDamping
         {
 #if UNIT_TEST_COMPILANT
@@ -140,7 +141,7 @@ namespace FlaxEngine
         /// Angular damping can be used to slow down the rotation of an object. The higher the drag the more the rotation slows down.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(70), Limit(0), EditorDisplay("Rigid Body"), Tooltip("The 'drag' force added to reduce angular movement.")]
+        [EditorOrder(70), DefaultValue(0.05f), Limit(0), EditorDisplay("Rigid Body"), Tooltip("The 'drag' force added to reduce angular movement.")]
         public float AngularDamping
         {
 #if UNIT_TEST_COMPILANT
@@ -158,7 +159,7 @@ namespace FlaxEngine
         /// The angular velocity of rigidbodies is clamped to MaxAngularVelocity to avoid numerical instability with fast rotating bodies. Because this may prevent intentional fast rotations on objects such as wheels, you can override this value per rigidbody.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(90), Limit(0), EditorDisplay("Rigid Body"), Tooltip("The maximum angular velocity that a simulated object can achieve.")]
+        [EditorOrder(90), DefaultValue(7.0f), Limit(0), EditorDisplay("Rigid Body"), Tooltip("The maximum angular velocity that a simulated object can achieve.")]
         public float MaxAngularVelocity
         {
 #if UNIT_TEST_COMPILANT
@@ -209,7 +210,7 @@ namespace FlaxEngine
         /// Used only for auto computed mass, not the overriden value.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(120), Limit(0.001f, 100.0f), EditorDisplay("Rigid Body"), Tooltip("The per-instance scaling of the mass (only for auto computed mass).")]
+        [EditorOrder(120), DefaultValue(1.0f), Limit(0.001f, 100.0f), EditorDisplay("Rigid Body"), Tooltip("The per-instance scaling of the mass (only for auto computed mass).")]
         public float MassScale
         {
 #if UNIT_TEST_COMPILANT
@@ -227,7 +228,7 @@ namespace FlaxEngine
         /// Used only when mass is not being overriden.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(130), EditorDisplay("Rigid Body"), Tooltip("If true, it will update mass when actor scale changes.")]
+        [EditorOrder(130), DefaultValue(false), EditorDisplay("Rigid Body"), Tooltip("If true, it will update mass when actor scale changes.")]
         public bool UpdateMassWhenScaleChanges
         {
 #if UNIT_TEST_COMPILANT
@@ -242,7 +243,7 @@ namespace FlaxEngine
         /// Gets or sets the user specified offset for the center of mass of this object, from the calculated location.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(140), EditorDisplay("Rigid Body", "Center Of Mass Offset"), Tooltip("The user specified offset for the center of mass of this object, from the calculated location.")]
+        [EditorOrder(140), DefaultValue(typeof(Vector3), "0,0,0"), EditorDisplay("Rigid Body", "Center Of Mass Offset"), Tooltip("The user specified offset for the center of mass of this object, from the calculated location.")]
         public Vector3 CenterOfMassOffset
         {
 #if UNIT_TEST_COMPILANT
@@ -257,7 +258,7 @@ namespace FlaxEngine
         /// Gets or sets the object movement constraint flags that define degrees of freedom are allowed for the simulation of object.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(150), EditorDisplay("Rigid Body"), Tooltip("The object movement constraint flags that define degrees of freedom are allowed for the simulation of object.")]
+        [EditorOrder(150), DefaultValue(RigidbodyConstraints.None), EditorDisplay("Rigid Body"), Tooltip("The object movement constraint flags that define degrees of freedom are allowed for the simulation of object.")]
         public RigidbodyConstraints Constraints
         {
 #if UNIT_TEST_COMPILANT

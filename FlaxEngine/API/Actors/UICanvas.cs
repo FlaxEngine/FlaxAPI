@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Newtonsoft.Json;
 
 namespace FlaxEngine
@@ -33,7 +32,7 @@ namespace FlaxEngine
     /// <summary>
     /// PostFx used to render the <see cref="UICanvas"/>. Used when render mode is <see cref="CanvasRenderMode.CameraSpace"/> or <see cref="CanvasRenderMode.WorldSpace"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.Rendering.PostProcessEffect" />
+    /// <seealso cref="FlaxEngine.PostProcessEffect" />
     public sealed class CanvasRenderer : PostProcessEffect
     {
         /// <summary>
@@ -51,7 +50,7 @@ namespace FlaxEngine
         public override int Order => Canvas.Order;
 
         /// <inheritdoc />
-        public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+        public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
         {
             // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
 
@@ -66,7 +65,7 @@ namespace FlaxEngine
             Matrix.Multiply(ref view, ref task.View.Projection, out viewProjection);
 
             // Pick a depth buffer
-            RenderTarget depthBuffer = Canvas.IgnoreDepth ? null : task.Buffers.DepthBuffer;
+            GPUTexture depthBuffer = Canvas.IgnoreDepth ? null : task.Buffers.DepthBuffer;
 
             // Render GUI in 3D
             Render2D.CallDrawing(Canvas.GUI, context, input, depthBuffer, ref viewProjection);
@@ -270,23 +269,26 @@ namespace FlaxEngine
                 // In 3D world
                 GetLocalToWorldMatrix(out world);
             }
-            else if (_renderMode == CanvasRenderMode.CameraSpace && RenderCamera)
+            else if (_renderMode == CanvasRenderMode.CameraSpace)
             {
                 Matrix tmp1, tmp2;
 
+                // Use default camera is not specified
+                var camera = RenderCamera ?? Camera.MainCamera;
+
                 // Adjust GUI size to the viewport size at the given distance form the camera
-                var viewport = RenderCamera.Viewport;
-                if (RenderCamera.UsePerspective)
+                var viewport = camera.Viewport;
+                if (camera.UsePerspective)
                 {
                     Matrix tmp3;
-                    RenderCamera.GetMatrices(out tmp1, out tmp3, ref viewport);
+                    camera.GetMatrices(out tmp1, out tmp3, ref viewport);
                     Matrix.Multiply(ref tmp1, ref tmp3, out tmp2);
                     var frustum = new BoundingFrustum(tmp2);
                     _guiRoot.Size = new Vector2(frustum.GetWidthAtDepth(Distance), frustum.GetHeightAtDepth(Distance));
                 }
                 else
                 {
-                    _guiRoot.Size = viewport.Size * RenderCamera.OrthographicScale;
+                    _guiRoot.Size = viewport.Size * camera.OrthographicScale;
                 }
 
                 // Center viewport (and flip)
@@ -295,8 +297,8 @@ namespace FlaxEngine
                 Matrix.Multiply(ref world, ref tmp2, out tmp1);
 
                 // In front of the camera
-                var viewPos = RenderCamera.Position;
-                var viewRot = RenderCamera.Orientation;
+                var viewPos = camera.Position;
+                var viewRot = camera.Orientation;
                 var viewUp = Vector3.Up * viewRot;
                 var viewForward = Vector3.Forward * viewRot;
                 var pos = viewPos + viewForward * Distance;
@@ -340,6 +342,8 @@ namespace FlaxEngine
                 {
                     _renderer = New<CanvasRenderer>();
                     _renderer.Canvas = this;
+                    if (IsActiveInHierarchy && Scene)
+                        SceneRenderTask.GlobalCustomPostFx.Add(_renderer);
                 }
                 break;
             }

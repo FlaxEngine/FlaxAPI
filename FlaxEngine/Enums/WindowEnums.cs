@@ -312,4 +312,30 @@ namespace FlaxEngine
         /// </summary>
         Manual = 2,
     }
+
+    /// <summary>
+    /// Specifies the display mode of a game window.
+    /// </summary>
+    public enum GameWindowMode
+    {
+        /// <summary>
+        /// The window has borders and does not take up the full screen.
+        /// </summary>
+        Windowed = 0,
+
+        /// <summary>
+        /// The window exclusively takes up the full screen.
+        /// </summary>
+        Fullscreen = 1,
+
+        /// <summary>
+        /// The window behaves like in Windowed mode but has no borders.
+        /// </summary>
+        Borderless = 2,
+
+        /// <summary>
+        /// Same as in Borderless, but is of the size of the screen.
+        /// </summary>
+        FullscreenBorderless = 3,
+    }
 }

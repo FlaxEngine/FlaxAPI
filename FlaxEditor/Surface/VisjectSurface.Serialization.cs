@@ -62,9 +62,7 @@ namespace FlaxEditor.Surface
         /// </remarks>
         public void Save()
         {
-            var hasFocus = IsFocused;
             var wasEdited = IsEdited;
-            Enabled = false;
 
             // Update the current context meta
             _context.CachedSurfaceMeta.ViewCenterPosition = ViewCenterPosition;
@@ -72,10 +70,6 @@ namespace FlaxEditor.Surface
 
             // Save context (and every modified child context)
             bool failed = RootContext.Save();
-
-            Enabled = true;
-            if (hasFocus)
-                Focus();
 
             if (failed)
             {

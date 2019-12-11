@@ -36,7 +36,8 @@ namespace FlaxEditor.States
         /// <summary>
         /// Starts the Editor initialization process ending.
         /// </summary>
-        internal void StartInitEnding()
+        /// <param name="skipCompile">True if skip scripts compilation on startup.</param>
+        internal void StartInitEnding(bool skipCompile)
         {
             ScriptsBuilder.CompilationEnd += OnCompilationEnd;
 
@@ -50,7 +51,7 @@ namespace FlaxEditor.States
                     OnCompilationEnd(true);
                 }
             }
-            else
+            else if (Editor.Options.Options.General.ForceScriptCompilationOnStartup && !skipCompile)
             {
                 // Compile scripts before loading any scenes
                 ScriptsBuilder.Compile();
@@ -59,6 +60,11 @@ namespace FlaxEditor.States
                 // Here we wait for scripts compilation end
                 // Later we want to load scripts
                 // Finally enter normal state and load last opened scene
+            }
+            else
+            {
+                // Skip compilation on startup
+                OnCompilationEnd(true);
             }
         }
 

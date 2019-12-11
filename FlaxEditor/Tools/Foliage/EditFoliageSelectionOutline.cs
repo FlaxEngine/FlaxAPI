@@ -2,7 +2,6 @@
 
 using FlaxEditor.Gizmo;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Foliage
 {
@@ -38,7 +37,7 @@ namespace FlaxEditor.Tools.Foliage
         }
 
         /// <inheritdoc />
-        protected override void DrawSelectionDepth(GPUContext context, SceneRenderTask task, RenderTarget customDepth)
+        protected override void DrawSelectionDepth(GPUContext context, SceneRenderTask task, GPUTexture customDepth)
         {
             var foliage = GizmoMode.SelectedFoliage;
             if (!foliage)
@@ -64,7 +63,7 @@ namespace FlaxEditor.Tools.Foliage
                 _staticModel.Transform = instanceWorld;
                 _actors.Add(_staticModel);
 
-                context.DrawSceneDepth(task, customDepth, true, _actors, ActorsSources.CustomActors);
+                context.DrawSceneDepth(task, customDepth, _actors, ActorsSources.CustomActors);
             }
         }
     }

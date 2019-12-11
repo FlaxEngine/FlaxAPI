@@ -44,6 +44,10 @@ namespace FlaxEditor
         private bool _isAfterInit, _areModulesInited, _areModulesAfterInitEnd, _isHeadlessMode;
         private ProjectInfo _projectInfo;
         private string _projectToOpen;
+        private float _lastAutoSaveTimer;
+
+        private const string ProjectDataLastScene = "LastScene";
+        private const string ProjectDataLastSceneSpawn = "LastSceneSpawn";
 
         /// <summary>
         /// Gets a value indicating whether Flax Engine is the best in the world.
@@ -119,6 +123,11 @@ namespace FlaxEditor
         public readonly ContentImportingModule ContentImporting;
 
         /// <summary>
+        /// The content finder module.
+        /// </summary>
+        public readonly ContentFindingModule ContentFinding;
+
+        /// <summary>
         /// The content editing
         /// </summary>
         public readonly CodeEditingModule CodeEditing;
@@ -178,6 +187,11 @@ namespace FlaxEditor
         /// </summary>
         public event Action InitializationEnd;
 
+        /// <summary>
+        /// The custom data container that is stored in Editor instance. Can be used by plugins to store the state during editor session (state is preserved during scripts reloads).
+        /// </summary>
+        public Dictionary<string, string> CustomData = new Dictionary<string, string>();
+
         internal Editor()
         {
             Instance = this;
@@ -192,11 +206,11 @@ namespace FlaxEditor
             // Create common editor modules
             RegisterModule(Options = new OptionsModule(this));
             RegisterModule(ProjectCache = new ProjectCacheModule(this));
+            RegisterModule(Scene = new SceneModule(this));
             RegisterModule(Windows = new WindowsModule(this));
             RegisterModule(UI = new UIModule(this));
             RegisterModule(Thumbnails = new ThumbnailsModule(this));
             RegisterModule(Simulation = new SimulationModule(this));
-            RegisterModule(Scene = new SceneModule(this));
             RegisterModule(Prefabs = new PrefabsModule(this));
             RegisterModule(SceneEditing = new SceneEditingModule(this));
             RegisterModule(ContentEditing = new ContentEditingModule(this));
@@ -204,12 +218,27 @@ namespace FlaxEditor
             RegisterModule(ContentImporting = new ContentImportingModule(this));
             RegisterModule(CodeEditing = new CodeEditingModule(this));
             RegisterModule(ProgressReporting = new ProgressReportingModule(this));
+            RegisterModule(ContentFinding = new ContentFindingModule(this));
 
             StateMachine = new EditorStateMachine(this);
             Undo = new EditorUndo(this);
 
             ScriptsBuilder.ScriptsReloadBegin += ScriptsBuilder_ScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd += ScriptsBuilder_ScriptsReloadEnd;
+            UIControl.FallbackParentGetDelegate += OnUIControlFallbackParentGet;
+        }
+
+        private ContainerControl OnUIControlFallbackParentGet(UIControl control)
+        {
+            // Check if prefab root control is this UIControl
+            var loadingPreview = Viewport.Previews.PrefabPreview.LoadingPreview;
+            if (loadingPreview != null)
+            {
+                // Link it to the prefab preview to see it in the editor
+                loadingPreview.customControlLinked = control.Control;
+                return loadingPreview;
+            }
+            return null;
         }
 
         private void ScriptsBuilder_ScriptsReloadBegin()
@@ -237,7 +266,7 @@ namespace FlaxEditor
                 module.OnEndInit();
         }
 
-        internal void Init(bool isHeadless)
+        internal void Init(bool isHeadless, bool skipCompile)
         {
             EnsureState<LoadingState>();
             _isHeadlessMode = isHeadless;
@@ -257,7 +286,7 @@ namespace FlaxEditor
             _areModulesInited = true;
 
             // Start Editor initialization ending phrase (will wait for scripts compilation result)
-            StateMachine.LoadingState.StartInitEnding();
+            StateMachine.LoadingState.StartInitEnding(skipCompile);
 
             InitializationStart?.Invoke();
         }
@@ -284,6 +313,7 @@ namespace FlaxEditor
                 }
             }
             _areModulesAfterInitEnd = true;
+            _lastAutoSaveTimer = Time.UnscaledGameTime;
 
             InitializationEnd?.Invoke();
 
@@ -297,10 +327,18 @@ namespace FlaxEditor
             }
 
             // Load scene
-            // TODO: loading last open scenes from Editor Cache
+            var startupSceneMode = Options.Options.General.StartupSceneMode;
+            if (startupSceneMode == GeneralOptions.StartupSceneModes.LastOpened && !ProjectCache.HasCustomData(ProjectDataLastScene))
             {
-                var defaultSceneAsset = ContentDatabase.Find(_projectInfo.DefaultSceneId);
-                if (defaultSceneAsset is SceneItem)
+                // Fallback to default project scene if nothing saved in the cache
+                startupSceneMode = GeneralOptions.StartupSceneModes.ProjectDefault;
+            }
+            switch (startupSceneMode)
+            {
+            case GeneralOptions.StartupSceneModes.ProjectDefault:
+            {
+                var defaultScene = ContentDatabase.Find(_projectInfo.DefaultSceneId);
+                if (defaultScene is SceneItem)
                 {
                     Editor.Log("Loading default project scene");
                     Scene.OpenScene(_projectInfo.DefaultSceneId);
@@ -308,6 +346,25 @@ namespace FlaxEditor
                     // Use spawn point
                     Windows.EditWin.Viewport.ViewRay = _projectInfo.DefaultSceneSpawn;
                 }
+                break;
+            }
+            case GeneralOptions.StartupSceneModes.LastOpened:
+            {
+                if (ProjectCache.TryGetCustomData(ProjectDataLastScene, out var lastSceneIdName) && Guid.TryParse(lastSceneIdName, out var lastSceneId))
+                {
+                    var lastScene = ContentDatabase.Find(lastSceneId);
+                    if (lastScene is SceneItem)
+                    {
+                        Editor.Log("Loading last opened scene");
+                        Scene.OpenScene(lastSceneId);
+
+                        // Restore view
+                        if (ProjectCache.TryGetCustomData(ProjectDataLastSceneSpawn, out var lastSceneSpawnName))
+                            Windows.EditWin.Viewport.ViewRay = JsonSerializer.Deserialize<Ray>(lastSceneSpawnName);
+                    }
+                }
+                break;
+            }
             }
         }
 
@@ -317,13 +374,13 @@ namespace FlaxEditor
             {
                 Profiler.BeginEvent("Editor.Update");
 
-                // Update state machine
                 StateMachine.Update();
+                UpdateAutoSave();
 
                 // Drop performance if app has no focus (only when game is not running)
                 if (!StateMachine.IsPlayMode)
                 {
-                    bool isFocused = Application.HasFocus;
+                    bool isFocused = Platform.HasFocus;
                     Time.DrawFPS = isFocused ? 60 : 15;
                     Time.UpdateFPS = isFocused ? 60 : 15;
                     Time.PhysicsFPS = isFocused ? 30 : 20;
@@ -348,6 +405,38 @@ namespace FlaxEditor
             }
         }
 
+        private void UpdateAutoSave()
+        {
+            string msg = null;
+            var options = Options.Options.General;
+            var canSave = StateMachine.IsEditMode && options.EnableAutoSave;
+            if (canSave)
+            {
+                var timeSinceLastSave = Time.UnscaledGameTime - _lastAutoSaveTimer;
+                var timeToNextSave = options.AutoSaveFrequency * 60.0f - timeSinceLastSave;
+                var countDownDuration = 4.0f;
+
+                if (timeToNextSave <= 0.0f)
+                {
+                    Log("Auto save");
+                    _lastAutoSaveTimer = Time.UnscaledGameTime;
+                    if (options.AutoSaveScenes)
+                        Scene.SaveScenes();
+                    if (options.AutoSaveContent)
+                        SaveContent();
+                }
+                else if (timeToNextSave < countDownDuration)
+                {
+                    msg = string.Format("Auto save in {0}s...", Mathf.CeilToInt(timeToNextSave));
+                }
+            }
+            if (StateMachine.EditingSceneState.AutoSaveStatus != msg)
+            {
+                StateMachine.EditingSceneState.AutoSaveStatus = msg;
+                UI.UpdateStatusBar();
+            }
+        }
+
         internal void OnPlayBegin()
         {
             for (int i = 0; i < _modules.Count; i++)
@@ -366,6 +455,14 @@ namespace FlaxEditor
 
             // Start exit
             StateMachine.GoToState<ClosingState>();
+
+            // Cache last opened scene
+            {
+                var lastSceneId = SceneManager.ScenesCount > 0 ? SceneManager.Scenes[0].ID : Guid.Empty;
+                var lastSceneSpawn = Windows.EditWin.Viewport.ViewRay;
+                ProjectCache.SetCustomData(ProjectDataLastScene, lastSceneId.ToString());
+                ProjectCache.SetCustomData(ProjectDataLastSceneSpawn, JsonSerializer.Serialize(lastSceneSpawn));
+            }
 
             // Cleanup
             Scene.ClearRefsToSceneObjects(true);
@@ -389,7 +486,7 @@ namespace FlaxEditor
                 string editorExePath = Globals.StartupPath + "/Win64/FlaxEditor.exe";
                 string args = string.Format("-project \"{0}\"", _projectToOpen);
                 _projectToOpen = null;
-                Application.StartProcess(editorExePath, args);
+                Platform.StartProcess(editorExePath, args);
             }
         }
 
@@ -416,13 +513,16 @@ namespace FlaxEditor
         /// </summary>
         public void SaveAll()
         {
-            // Layout
             Windows.SaveCurrentLayout();
-
-            // Scenes
             Scene.SaveScenes();
+            SaveContent();
+        }
 
-            // Assets
+        /// <summary>
+        /// Saves all content (assets, etc.).
+        /// </summary>
+        public void SaveContent()
+        {
             for (int i = 0; i < Windows.Windows.Count; i++)
             {
                 if (Windows.Windows[i] is AssetEditorWindow win)
@@ -477,7 +577,7 @@ namespace FlaxEditor
         /// <param name="msg">The message.</param>
         public static void Log(string msg)
         {
-            Debug.Logger.LogHandler.LogWrite(LogType.Log, msg);
+            Debug.Logger.LogHandler.LogWrite(LogType.Info, msg);
         }
 
         /// <summary>
@@ -537,6 +637,21 @@ namespace FlaxEditor
             /// The skeleton mask. See <see cref="FlaxEngine.SkeletonMask"/>.
             /// </summary>
             SkeletonMask = 4,
+
+            /// <summary>
+            /// The particle emitter. See <see cref="FlaxEngine.ParticleEmitter"/>.
+            /// </summary>
+            ParticleEmitter = 5,
+
+            /// <summary>
+            /// The particle emitter. See <see cref="FlaxEngine.ParticleSystem"/>.
+            /// </summary>
+            ParticleSystem = 6,
+
+            /// <summary>
+            /// The particle emitter. See <see cref="FlaxEngine.SceneAnimation"/>.
+            /// </summary>
+            SceneAnimation = 7,
         }
 
         /// <summary>
@@ -681,14 +796,29 @@ namespace FlaxEditor
         /// <returns>The generated source code.</returns>
         public static string GetMaterialShaderSourceCode(Material asset)
         {
+            return GetShaderSourceCode(asset);
+        }
+
+        /// <summary>
+        /// Gets the particle emitter GPU simulation shader source code (HLSL shader code).
+        /// </summary>
+        /// <param name="asset">The particle emitter asset.</param>
+        /// <returns>The generated source code.</returns>
+        public static string GetParticleEmitterShaderSourceCode(ParticleEmitter asset)
+        {
+            return GetShaderSourceCode(asset);
+        }
+
+        private static string GetShaderSourceCode(Asset asset)
+        {
             if (asset == null)
                 throw new ArgumentNullException(nameof(asset));
             if (asset.WaitForLoaded())
                 throw new FlaxException("Failed to load asset.");
 
-            var source = Internal_GetMaterialShaderSourceCode(asset.unmanagedPtr);
+            var source = Internal_GetShaderSourceCode(asset.unmanagedPtr);
             if (source == null)
-                throw new FlaxException("Failed to get material source code.");
+                throw new FlaxException("Failed to get source code.");
 
             return source;
         }
@@ -879,6 +1009,7 @@ namespace FlaxEditor
         internal struct InternalOptions
         {
             public byte AutoReloadScriptsOnMainWindowFocus;
+            public byte ForceScriptCompilationOnStartup;
             public byte AutoRebuildCSG;
             public float AutoRebuildCSGTimeoutMs;
             public byte AutoRebuildNavMesh;
@@ -888,7 +1019,7 @@ namespace FlaxEditor
         internal void BuildCommand(string arg)
         {
             if (TryBuildCommand(arg))
-                Application.Exit();
+                Platform.Exit();
         }
 
         private bool TryBuildCommand(string arg)
@@ -968,7 +1099,7 @@ namespace FlaxEditor
             {
                 var win = Windows.GameWin.Root;
                 if (win != null)
-                    resultAsRef = Windows.GameWin.Viewport.PointFromWindow(win.MousePosition);
+                    resultAsRef = Vector2.Round(Windows.GameWin.Viewport.PointFromWindow(win.MousePosition));
             }
         }
 
@@ -1003,6 +1134,7 @@ namespace FlaxEditor
                     resultAsRef = dockedTo.SelectedTab.Size;
                 else
                     resultAsRef = gameWin.Size;
+                resultAsRef = Vector2.Round(resultAsRef);
             }
         }
 
@@ -1019,6 +1151,9 @@ namespace FlaxEditor
         }
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_ReadOutputLogs(string[] outMessages, byte[] outLogTypes, long[] outLogTimes);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetPlayMode(bool value);
 
@@ -1053,7 +1188,7 @@ namespace FlaxEditor
         internal static extern void Internal_BakeLightmaps(bool cancel);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetMaterialShaderSourceCode(IntPtr obj);
+        internal static extern string Internal_GetShaderSourceCode(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_CookMeshCollision(string path, CollisionDataType type, IntPtr model, int modelLodIndex, ConvexMeshGenerationFlags convexFlags, int convexVertexLimit);
@@ -1072,6 +1207,9 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_DrawNavMesh();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetPParticleEmitterParamValue(IntPtr effect, ref Guid paramId, IntPtr ptr);
 #endif
 
         #endregion

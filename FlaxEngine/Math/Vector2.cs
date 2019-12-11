@@ -88,6 +88,11 @@ namespace FlaxEngine
         public static readonly Vector2 UnitY = new Vector2(0.0f, 1.0f);
 
         /// <summary>
+        /// A <see cref="Vector2" /> with all of its components set to half.
+        /// </summary>
+        public static readonly Vector2 Half = new Vector2(0.5f, 0.5f);
+
+        /// <summary>
         /// A <see cref="Vector2" /> with all of its components set to one.
         /// </summary>
         public static readonly Vector2 One = new Vector2(1.0f, 1.0f);
@@ -635,6 +640,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Calculates the distance between two vectors.
+        /// </summary>
+        /// <param name="value1">The first vector.</param>
+        /// <param name="value2">The second vector.</param>
+        /// <returns>The distance between the two vectors.</returns>
+        /// <remarks>
+        /// <see cref="Vector2.DistanceSquared(ref Vector2, ref Vector2, out float)" /> may be preferred when only the relative
+        /// distance is needed
+        /// and speed is of the essence.
+        /// </remarks>
+        public static float Distance(ref Vector2 value1, ref Vector2 value2)
+        {
+            float x = value1.X - value2.X;
+            float y = value1.Y - value2.Y;
+
+            return (float)Math.Sqrt(x * x + y * y);
+        }
+
+        /// <summary>
         /// Calculates the squared distance between two vectors.
         /// </summary>
         /// <param name="value1">The first vector.</param>
@@ -698,6 +722,31 @@ namespace FlaxEngine
             float y = value1.Y - value2.Y;
 
             return x * x + y * y;
+        }
+
+        /// <summary>
+        /// Tests whether one vector is near another vector.
+        /// </summary>
+        /// <param name="left">The left vector.</param>
+        /// <param name="right">The right vector.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns><c>true</c> if left and right are near, <c>false</c> otherwise</returns>
+        public static bool NearEqual(Vector2 left, Vector2 right, float epsilon = Mathf.Epsilon)
+        {
+            return NearEqual(ref left, ref right, epsilon);
+        }
+
+        /// <summary>
+        /// Tests whether one vector is near another vector.
+        /// </summary>
+        /// <param name="left">The left vector.</param>
+        /// <param name="right">The right vector.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns><c>true</c> if left and right are near another, <c>false</c> otherwise</returns>
+        public static bool NearEqual(ref Vector2 left, ref Vector2 right, float epsilon = Mathf.Epsilon)
+        {
+            return Mathf.WithinEpsilon(left.X, right.X, epsilon) &&
+                   Mathf.WithinEpsilon(left.Y, right.Y, epsilon);
         }
 
         /// <summary>
@@ -850,6 +899,41 @@ namespace FlaxEngine
         {
             Vector2 result;
             Lerp(ref start, ref end, amount, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Performs a linear interpolation between two vectors.
+        /// </summary>
+        /// <param name="start">Start vector.</param>
+        /// <param name="end">End vector.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end" />.</param>
+        /// <param name="result">When the method completes, contains the linear interpolation of the two vectors.</param>
+        /// <remarks>
+        /// Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
+        /// will cause <paramref name="end" /> to be returned.
+        /// </remarks>
+        public static void Lerp(ref Vector2 start, ref Vector2 end, ref Vector2 amount, out Vector2 result)
+        {
+            result.X = Mathf.Lerp(start.X, end.X, amount.X);
+            result.Y = Mathf.Lerp(start.Y, end.Y, amount.Y);
+        }
+
+        /// <summary>
+        /// Performs a linear interpolation between two vectors.
+        /// </summary>
+        /// <param name="start">Start vector.</param>
+        /// <param name="end">End vector.</param>
+        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end" />.</param>
+        /// <returns>The linear interpolation of the two vectors.</returns>
+        /// <remarks>
+        /// Passing <paramref name="amount" /> a value of 0 will cause <paramref name="start" /> to be returned; a value of 1
+        /// will cause <paramref name="end" /> to be returned.
+        /// </remarks>
+        public static Vector2 Lerp(Vector2 start, Vector2 end, Vector2 amount)
+        {
+            Vector2 result;
+            Lerp(ref start, ref end, ref amount, out result);
             return result;
         }
 
@@ -1588,6 +1672,39 @@ namespace FlaxEngine
         public static Vector2 operator /(Vector2 value, Vector2 scale)
         {
             return new Vector2(value.X / scale.X, value.Y / scale.Y);
+        }
+
+        /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector2 operator %(Vector2 value, float scale)
+        {
+            return new Vector2(value.X % scale, value.Y % scale);
+        }
+
+        /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The amount by which to scale the vector.</param>
+        /// <param name="scale">The vector to scale.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector2 operator %(float value, Vector2 scale)
+        {
+            return new Vector2(value % scale.X, value % scale.Y);
+        }
+
+        /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector2 operator %(Vector2 value, Vector2 scale)
+        {
+            return new Vector2(value.X % scale.X, value.Y % scale.Y);
         }
 
         /// <summary>

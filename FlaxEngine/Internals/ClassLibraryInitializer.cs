@@ -1,13 +1,56 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Threading;
+using System.Threading.Tasks;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
+    /// <summary>
+    /// The hidden class used in the Engine.
+    /// </summary>
+    class PhysicsActor
+    {
+    }
+
+    /// <summary>
+    /// The hidden class used in the Engine.
+    /// </summary>
+    class PhysicsColliderActor
+    {
+    }
+
+    /// <summary>
+    /// The hidden class used in the Engine.
+    /// </summary>
+    class ModelInstanceActor
+    {
+    }
+
     internal static class ClassLibraryInitializer
     {
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception exception)
+            {
+                Debug.LogError("Unhandled Exception: " + exception.Message);
+                Debug.LogException(exception);
+            }
+        }
+
+        private static void OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            if (e.Exception != null)
+            {
+                foreach (var ex in e.Exception.InnerExceptions)
+                {
+                    Debug.LogError("Unhandled Task Exception: " + ex.Message);
+                    Debug.LogException(ex);
+                }
+            }
+        }
+
         /// <summary>
         /// Initializes Flax API. Called before everything else from native code.
         /// </summary>
@@ -15,20 +58,28 @@ namespace FlaxEngine
         /// <param name="platform">The runtime platform.</param>
         internal static void Init(int flags, PlatformType platform)
         {
-            Application._is64Bit = (flags & 0x01) != 0;
-            Application._isEditor = (flags & 0x02) != 0;
-            Application._mainThreadId = Thread.CurrentThread.ManagedThreadId;
-            Application._platform = platform;
+#if DEBUG
+            Debug.Logger.LogHandler.LogWrite(LogType.Info, "Using FlaxAPI in Debug");
+#else
+            Debug.Logger.LogHandler.LogWrite(LogType.Info, "Using FlaxAPI in Release");
+#endif
 
-            UnhandledExceptionHandler.RegisterCatcher();
+            Platform._is64Bit = (flags & 0x01) != 0;
+            Platform._isEditor = (flags & 0x02) != 0;
+            Platform._mainThreadId = Thread.CurrentThread.ManagedThreadId;
+            Platform._platform = platform;
+
+            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+            TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+
             Globals.Init();
 
-            if (!Application.IsEditor)
+            if (!Platform.IsEditor)
             {
                 CreateGuiStyle();
             }
 
-            MainRenderTask.Instance = RenderTask.Create<MainRenderTask>();
+            MainRenderTask.Instance = Object.New<MainRenderTask>();
         }
 
         /// <summary>

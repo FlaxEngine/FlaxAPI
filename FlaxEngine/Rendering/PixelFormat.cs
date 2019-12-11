@@ -2,7 +2,7 @@
 
 // ReSharper disable InconsistentNaming
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Enumeration with all pixel formats used by the graphics pipeline.

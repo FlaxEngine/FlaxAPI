@@ -9,7 +9,7 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Windows
 {
     /// <summary>
-    ///     About this product dialog window.
+    /// About this product dialog window.
     /// </summary>
     /// <seealso cref="FlaxEditor.GUI.Dialogs.Dialog" />
     internal sealed class AboutDialog : Dialog
@@ -26,7 +26,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        ///     Create header with Flax engine icon and version number
+        /// Create header with Flax engine icon and version number
         /// </summary>
         /// <returns>Returns icon controller (most top left)</returns>
         private Control CreateHeader()
@@ -57,7 +57,7 @@ namespace FlaxEditor.Windows
                 TooltipText = "Copies the current engine version information to system clipboard.",
                 Parent = this
             };
-            copyVersionButton.Clicked += () => Application.ClipboardText = Globals.Version;
+            copyVersionButton.Clicked += () => Platform.ClipboardText = Globals.Version;
             return icon;
         }
 
@@ -77,10 +77,10 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        ///     Authors labels generation and show
+        /// Generates authors labels.
         /// </summary>
-        /// <param name="topParentControl">Top element that this labels should be put under</param>
-        /// <returns>Authors control</returns>
+        /// <param name="topParentControl">The top element that this labels should be put under.</param>
+        /// <returns>The created control</returns>
         private Control CreateAuthorsLabels(Control topParentControl)
         {
             var authors = new List<string>(new[]
@@ -88,6 +88,7 @@ namespace FlaxEditor.Windows
                 "Wojciech Figat",
                 "Tomasz Juszczak",
                 "Damian Korczowski",
+                "Michał Winiarski",
             });
             authors.Sort();
             var authorsLabel = new Label(4, topParentControl.Bottom + 20, Width - 8, 50)
@@ -95,21 +96,22 @@ namespace FlaxEditor.Windows
                 Text = "People who made it:\n" + string.Join(", ", authors),
                 HorizontalAlignment = TextAlignment.Near,
                 VerticalAlignment = TextAlignment.Near,
+                Wrapping = TextWrapping.WrapWords,
                 Parent = this
             };
             return authorsLabel;
         }
 
         /// <summary>
-        ///     3rdParty software and other licenses labels
+        /// Generates 3rdParty software and other licenses labels.
         /// </summary>
-        /// <param name="authorsLabel"></param>
-        /// <returns></returns>
-        private Panel GenerateThirdPartyLabels(Control authorsLabel)
+        /// <param name="topParentControl">The top element that this labels should be put under.</param>
+        /// <returns>The created control</returns>
+        private Panel GenerateThirdPartyLabels(Control topParentControl)
         {
             var thirdPartyPanel = new Panel(ScrollBars.Vertical)
             {
-                Bounds = new Rectangle(0, authorsLabel.Bottom + 4, Width, Height - authorsLabel.Bottom - 24),
+                Bounds = new Rectangle(0, topParentControl.Bottom + 4, Width, Height - topParentControl.Bottom - 24),
                 Parent = this
             };
             var thirdPartyEntries = new[]

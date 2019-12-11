@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -11,6 +10,11 @@ namespace FlaxEditor.Surface
     /// </summary>
     public class SurfaceParameter
     {
+        /// <summary>
+        /// The default prefix for drag data used for <see cref="FlaxEditor.Surface.SurfaceParameter"/>.
+        /// </summary>
+        public const string DragPrefix = "SURFPARAM!?";
+
         /// <summary>
         /// Parameter type
         /// </summary>
@@ -47,11 +51,6 @@ namespace FlaxEditor.Surface
         public bool IsUIEditable;
 
         /// <summary>
-        /// List of nodes referencing to that parameter
-        /// </summary>
-        public readonly List<SurfaceNode> ReferencedBy = new List<SurfaceNode>();
-
-        /// <summary>
         /// Parameter value
         /// </summary>
         public object Value;
@@ -59,6 +58,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The metadata.
         /// </summary>
+        [NoSerialize, HideInEditor]
         public readonly SurfaceMeta Meta = new SurfaceMeta();
 
         /// <summary>
@@ -130,10 +130,10 @@ namespace FlaxEditor.Surface
             case ParameterType.CubeTexture:
             case ParameterType.Texture:
             case ParameterType.NormalMap:
-            case ParameterType.RenderTarget:
-            case ParameterType.RenderTargetArray:
-            case ParameterType.RenderTargetCube:
-            case ParameterType.RenderTargetVolume:
+            case ParameterType.GPUTexture:
+            case ParameterType.GPUTextureArray:
+            case ParameterType.GPUTextureCube:
+            case ParameterType.GPUTextureVolume:
                 param.Value = Guid.Empty;
                 break;
             default: throw new IndexOutOfRangeException();

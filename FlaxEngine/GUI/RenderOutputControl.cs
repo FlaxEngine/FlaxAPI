@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine.GUI
 {
@@ -15,7 +14,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The default back buffer format used by the GUI controls presenting rendered frames.
         /// </summary>
-        public const PixelFormat DefaultBackBufferFormat = PixelFormat.R8G8B8A8_UNorm;
+        public static PixelFormat BackBufferFormat = PixelFormat.R8G8B8A8_UNorm;
 
         /// <summary>
         /// The resize check timeout (in seconds).
@@ -30,9 +29,9 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The back buffer.
         /// </summary>
-        protected RenderTarget _backBuffer;
+        protected GPUTexture _backBuffer;
 
-        private RenderTarget _backBufferOld;
+        private GPUTexture _backBufferOld;
         private int _oldBackbufferLiveTimeLeft;
         private float _resizeTime;
 
@@ -57,6 +56,11 @@ namespace FlaxEngine.GUI
         public float Brightness { get; set; } = 1.0f;
 
         /// <summary>
+        /// Gets or sets the rendering resolution scale. Can be sued to upscale image or to downscale the rendering to save the performance.
+        /// </summary>
+        public float ResolutionScale { get; set; } = 1.0f;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RenderOutputControl"/> class.
         /// </summary>
         /// <param name="task">The task. Cannot be null.</param>
@@ -66,7 +70,7 @@ namespace FlaxEngine.GUI
             if (task == null)
                 throw new ArgumentNullException();
 
-            _backBuffer = RenderTarget.New();
+            _backBuffer = GPUDevice.CreateTexture();
             _resizeTime = ResizeCheckTime;
 
             _task = task;
@@ -168,8 +172,8 @@ namespace FlaxEngine.GUI
         {
             // Draw backbuffer texture
             var buffer = _backBufferOld ? _backBufferOld : _backBuffer;
-            var color = TintColor * Brightness;
-            Render2D.DrawRenderTarget(buffer, new Rectangle(Vector2.Zero, Size), color);
+            var color = TintColor.RGBMultiplied(Brightness);
+            Render2D.DrawTexture(buffer, new Rectangle(Vector2.Zero, Size), color);
 
             base.Draw();
         }
@@ -179,13 +183,14 @@ namespace FlaxEngine.GUI
         /// </summary>
         public void SyncBackbufferSize()
         {
-            int width = Mathf.CeilToInt(Width);
-            int height = Mathf.CeilToInt(Height);
+            float scale = ResolutionScale * Platform.DpiScale;
+            int width = Mathf.CeilToInt(Width * scale);
+            int height = Mathf.CeilToInt(Height * scale);
             if (_backBuffer == null || _backBuffer.Width == width && _backBuffer.Height == height)
                 return;
             if (width < 1 || height < 1)
             {
-                _backBuffer.Dispose();
+                _backBuffer.ReleaseGPU();
                 Object.Destroy(ref _backBufferOld);
                 return;
             }
@@ -194,14 +199,15 @@ namespace FlaxEngine.GUI
             if (_backBufferOld == null && _backBuffer.IsAllocated)
             {
                 _backBufferOld = _backBuffer;
-                _backBuffer = RenderTarget.New();
+                _backBuffer = GPUDevice.CreateTexture();
             }
 
             // Set timeout to remove old buffer
             _oldBackbufferLiveTimeLeft = 3;
 
             // Resize backbuffer
-            _backBuffer.Init(DefaultBackBufferFormat, width, height);
+            var desc = GPUTextureDescription.New2D(width, height, BackBufferFormat);
+            _backBuffer.Init(ref desc);
             _task.Output = _backBuffer;
         }
 

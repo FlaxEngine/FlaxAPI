@@ -3,9 +3,10 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Allows to perform custom graphics commands using GPU device and rendering pipeline.
@@ -28,7 +29,7 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Clear(RenderTargetView view, Color color)
+        public void Clear(GPUTextureView view, Color color)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -46,12 +47,12 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void ClearDepth(RenderTarget depthBuffer, float depthValue = 1.0f)
+        public void ClearDepth(GPUTexture depthBuffer, float depthValue = 1.0f)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_ClearDepth(unmanagedPtr, Object.GetUnmanagedPtr(depthBuffer), depthValue);
+            Internal_ClearDepth(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(depthBuffer), depthValue);
 #endif
         }
 
@@ -67,12 +68,12 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void ResolveMultisample(RenderTarget sourceMultisampleTexture, RenderTarget destTexture, int sourceSubResource = 0, int destSubResource = 0, PixelFormat format = PixelFormat.Unknown)
+        public void ResolveMultisample(GPUTexture sourceMultisampleTexture, GPUTexture destTexture, int sourceSubResource = 0, int destSubResource = 0, PixelFormat format = PixelFormat.Unknown)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_ResolveMultisample(unmanagedPtr, Object.GetUnmanagedPtr(sourceMultisampleTexture), Object.GetUnmanagedPtr(destTexture), sourceSubResource, destSubResource, format);
+            Internal_ResolveMultisample(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(sourceMultisampleTexture), FlaxEngine.Object.GetUnmanagedPtr(destTexture), sourceSubResource, destSubResource, format);
 #endif
         }
 
@@ -85,12 +86,12 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Draw(RenderTarget dst, RenderTarget src)
+        public void Draw(GPUTexture dst, GPUTexture src)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Draw1(unmanagedPtr, Object.GetUnmanagedPtr(dst), Object.GetUnmanagedPtr(src));
+            Internal_Draw1(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dst), FlaxEngine.Object.GetUnmanagedPtr(src));
 #endif
         }
 
@@ -103,12 +104,12 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void Draw(RenderTarget dst, Texture src)
+        public void Draw(GPUTexture dst, Texture src)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Draw2(unmanagedPtr, Object.GetUnmanagedPtr(dst), Object.GetUnmanagedPtr(src));
+            Internal_Draw2(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dst), FlaxEngine.Object.GetUnmanagedPtr(src));
 #endif
         }
 
@@ -124,12 +125,12 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTarget output, RenderTarget input, RenderView view, RenderBuffers buffers = null)
+        public void DrawPostFxMaterial(MaterialBase material, GPUTexture output, GPUTexture input, RenderView view, RenderBuffers buffers = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial1(unmanagedPtr, Object.GetUnmanagedPtr(material), Object.GetUnmanagedPtr(output), Object.GetUnmanagedPtr(input), ref view, Object.GetUnmanagedPtr(buffers));
+            Internal_DrawPostFxMaterial1(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(material), FlaxEngine.Object.GetUnmanagedPtr(output), FlaxEngine.Object.GetUnmanagedPtr(input), ref view, FlaxEngine.Object.GetUnmanagedPtr(buffers));
 #endif
         }
 
@@ -143,12 +144,12 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTargetView view, RenderTarget input = null)
+        public void DrawPostFxMaterial(MaterialBase material, GPUTextureView view, GPUTexture input = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial2(unmanagedPtr, Object.GetUnmanagedPtr(material), view, Object.GetUnmanagedPtr(input));
+            Internal_DrawPostFxMaterial2(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(material), view, FlaxEngine.Object.GetUnmanagedPtr(input));
 #endif
         }
 
@@ -163,12 +164,104 @@ namespace FlaxEngine.Rendering
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void DrawPostFxMaterial(MaterialBase material, RenderTargetView view, ref Viewport viewport, RenderTarget input = null)
+        public void DrawPostFxMaterial(MaterialBase material, GPUTextureView view, ref Viewport viewport, GPUTexture input = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_DrawPostFxMaterial3(unmanagedPtr, Object.GetUnmanagedPtr(material), view, ref viewport, Object.GetUnmanagedPtr(input));
+            Internal_DrawPostFxMaterial3(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(material), view, ref viewport, FlaxEngine.Object.GetUnmanagedPtr(input));
+#endif
+        }
+
+        /// <summary>
+        /// Copies region of the texture.
+        /// </summary>
+        /// <param name="dstResource">The destination resource.</param>
+        /// <param name="dstSubresource">The destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="srcResource">The source resource.</param>
+        /// <param name="srcSubresource">The source subresource index.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CopyTexture(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CopyTextureRegion1(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, FlaxEngine.Object.GetUnmanagedPtr(srcResource), srcSubresource);
+#endif
+        }
+
+        /// <summary>
+        /// Copies region of the texture.
+        /// </summary>
+        /// <param name="dstResource">The destination resource.</param>
+        /// <param name="dstSubresource">The destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="srcResource">The source resource.</param>
+        /// <param name="srcSubresource">The source subresource index.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CopyTexture(GPUTexture dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, TextureBase srcResource, uint srcSubresource)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CopyTextureRegion2(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, FlaxEngine.Object.GetUnmanagedPtr(srcResource), srcSubresource);
+#endif
+        }
+
+        /// <summary>
+        /// Copies region of the texture.
+        /// </summary>
+        /// <param name="dstResource">The destination resource.</param>
+        /// <param name="dstSubresource">The destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="srcResource">The source resource.</param>
+        /// <param name="srcSubresource">The source subresource index.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CopyTexture(TextureBase dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, GPUTexture srcResource, uint srcSubresource)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CopyTextureRegion3(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, FlaxEngine.Object.GetUnmanagedPtr(srcResource), srcSubresource);
+#endif
+        }
+
+        /// <summary>
+        /// Copies region of the texture.
+        /// </summary>
+        /// <param name="dstResource">The destination resource.</param>
+        /// <param name="dstSubresource">The destination subresource index.</param>
+        /// <param name="dstX">The x-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstY">The y-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="dstZ">The z-coordinate of the upper left corner of the destination region.</param>
+        /// <param name="srcResource">The source resource.</param>
+        /// <param name="srcSubresource">The source subresource index.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void CopyTexture(GPUTexture dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, GPUTexture srcResource, uint srcSubresource)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CopyTextureRegion4(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(dstResource), dstSubresource, dstX, dstY, dstZ, FlaxEngine.Object.GetUnmanagedPtr(srcResource), srcSubresource);
 #endif
         }
 
@@ -176,7 +269,7 @@ namespace FlaxEngine.Rendering
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Clear(IntPtr obj, RenderTargetView view, ref Color color);
+        internal static extern void Internal_Clear(IntPtr obj, GPUTextureView view, ref Color color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ClearDepth(IntPtr obj, IntPtr depthBuffer, float depthValue);
@@ -194,10 +287,22 @@ namespace FlaxEngine.Rendering
         internal static extern void Internal_DrawPostFxMaterial1(IntPtr obj, IntPtr material, IntPtr output, IntPtr input, ref RenderView view, IntPtr buffers);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawPostFxMaterial2(IntPtr obj, IntPtr material, RenderTargetView view, IntPtr input);
+        internal static extern void Internal_DrawPostFxMaterial2(IntPtr obj, IntPtr material, GPUTextureView view, IntPtr input);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawPostFxMaterial3(IntPtr obj, IntPtr material, RenderTargetView view, ref Viewport viewport, IntPtr input);
+        internal static extern void Internal_DrawPostFxMaterial3(IntPtr obj, IntPtr material, GPUTextureView view, ref Viewport viewport, IntPtr input);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyTextureRegion1(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyTextureRegion2(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyTextureRegion3(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CopyTextureRegion4(IntPtr obj, IntPtr dstResource, uint dstSubresource, uint dstX, uint dstY, uint dstZ, IntPtr srcResource, uint srcSubresource);
 #endif
 
         #endregion

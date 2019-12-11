@@ -7,6 +7,7 @@ using System.Linq;
 using FlaxEditor.Content.Settings;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -36,8 +37,9 @@ namespace FlaxEditor.Windows
             public Dictionary<PlatformType, Platform> PerPlatformOptions = new Dictionary<PlatformType, Platform>
             {
                 { PlatformType.Windows, new Windows() },
-                { PlatformType.XboxOne, new Xbox() },
-                { PlatformType.WindowsStore, new WPA() },
+                { PlatformType.XboxOne, new XboxOne() },
+                { PlatformType.WindowsStore, new WindowsStore() },
+                { PlatformType.Linux, new Linux() },
             };
 
             public BuildTabProxy(GameCookerWindow win, PlatformSelector platformSelector)
@@ -48,6 +50,7 @@ namespace FlaxEditor.Windows
                 PerPlatformOptions[PlatformType.Windows].Init("Output/Windows", "Win");
                 PerPlatformOptions[PlatformType.XboxOne].Init("Output/XboxOne", "XboxOne");
                 PerPlatformOptions[PlatformType.WindowsStore].Init("Output/WindowsStore", "UWP");
+                PerPlatformOptions[PlatformType.Linux].Init("Output/Linux", "Linux");
             }
 
             public abstract class Platform
@@ -89,7 +92,7 @@ namespace FlaxEditor.Windows
                     // TODO: restore build settings from the Editor cache!
 
                     // Check if can find installed tools for this platform
-                    IsAvailable = Directory.Exists(Path.Combine(Globals.EditorFolder, "PlatformData", platformDataSubDir));
+                    IsAvailable = Directory.Exists(Path.Combine(Globals.StartupPath, "FlaxDeps", platformDataSubDir, "Bin"));
                 }
 
                 public virtual void OnNotAvailableLayout(LayoutElementsContainer layout)
@@ -139,7 +142,7 @@ namespace FlaxEditor.Windows
                 protected abstract Arch CPUArch { get; }
             }
 
-            public class WPA : UWP
+            public class WindowsStore : UWP
             {
                 /// <summary>
                 /// The architecture.
@@ -152,11 +155,16 @@ namespace FlaxEditor.Windows
                 protected override Arch CPUArch => Architecture;
             }
 
-            public class Xbox : UWP
+            public class XboxOne : UWP
             {
                 protected override Arch CPUArch => Arch.x64;
 
                 protected override BuildPlatform BuildPlatform => BuildPlatform.XboxOne;
+            }
+
+            public class Linux : Platform
+            {
+                protected override BuildPlatform BuildPlatform => BuildPlatform.LinuxX64;
             }
 
             public class Editor : CustomEditor
@@ -183,6 +191,9 @@ namespace FlaxEditor.Windows
                             break;
                         case PlatformType.WindowsStore:
                             name = "Windows Store";
+                            break;
+                        case PlatformType.Linux:
+                            name = "Linux";
                             break;
                         default:
                             name = CustomEditorsUtil.GetPropertyNameUI(_platform.ToString());
@@ -338,7 +349,7 @@ namespace FlaxEditor.Windows
                     AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
                 };
-                helpButton.Clicked += () => Application.StartProcess(Constants.DocsUrl + "manual/editor/game-cooker/");
+                helpButton.Clicked += () => Platform.StartProcess(Constants.DocsUrl + "manual/editor/game-cooker/");
                 var buildAllButton = new Button
                 {
                     Text = "Build All",
@@ -461,7 +472,7 @@ namespace FlaxEditor.Windows
             {
                 var tmpBat = StringUtils.CombinePaths(Globals.TemporaryFolder, Guid.NewGuid().ToString("N") + ".bat");
                 File.WriteAllText(tmpBat, command);
-                Application.StartProcess(tmpBat, null, true, true);
+                Platform.StartProcess(tmpBat, null, true, true);
                 File.Delete(tmpBat);
             }
             catch (Exception ex)
@@ -782,7 +793,7 @@ namespace FlaxEditor.Windows
                 else if (_exitOnBuildEnd)
                 {
                     _exitOnBuildEnd = false;
-                    Application.Exit();
+                    Platform.Exit();
                 }
             }
         }

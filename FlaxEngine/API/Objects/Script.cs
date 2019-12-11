@@ -27,7 +27,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the world space transformation of the actors owning this script.
         /// </summary>
-        [HideInEditor, NoSerialize]
+        [HideInEditor, NoSerialize, NoAnimate]
         public Transform Transform
         {
             get => Actor.Transform;
@@ -37,7 +37,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the local space transformation of the actors owning this script.
         /// </summary>
-        [HideInEditor, NoSerialize]
+        [HideInEditor, NoSerialize, NoAnimate]
         public Transform LocalTransform
         {
             get => Actor.LocalTransform;
@@ -60,6 +60,86 @@ namespace FlaxEngine
 #else
             return Internal_FindByType(typeof(T)) as T;
 #endif
+        }
+
+        /// <summary>
+        /// Called after the object is loaded.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnAwake()
+        {
+        }
+
+        /// <summary>
+        /// Called when object becomes enabled and active.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnEnable()
+        {
+        }
+
+        /// <summary>
+        /// Called when object becomes disabled and inactive.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnDisable()
+        {
+        }
+
+        /// <summary>
+        /// Called before the object will be destroyed..
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnDestroy()
+        {
+        }
+
+        /// <summary>
+        /// Called when a script is enabled just before any of the Update methods is called for the first time.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnStart()
+        {
+        }
+
+        /// <summary>
+        /// Called every frame if object is enabled.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnUpdate()
+        {
+        }
+
+        /// <summary>
+        /// Called every frame (after gameplay Update) if object is enabled.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnLateUpdate()
+        {
+        }
+
+        /// <summary>
+        /// Called every fixed framerate frame if object is enabled.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnFixedUpdate()
+        {
+        }
+
+        /// <summary>
+        /// Called during drawing debug shapes in editor. Use <see cref="DebugDraw"/> to draw debug shapes and other visualization.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnDebugDraw()
+        {
+        }
+
+        /// <summary>
+        /// Called during drawing debug shapes in editor when object is selected. Use <see cref="DebugDraw"/> to draw debug shapes and other visualization.
+        /// </summary>
+        [NoAnimate]
+        public virtual void OnDebugDrawSelected()
+        {
         }
 
         #region Internal Calls

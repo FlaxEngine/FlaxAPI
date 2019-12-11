@@ -8,7 +8,7 @@ namespace FlaxEngine
     /// <summary>
     /// A collection of common math functions.
     /// </summary>
-    public struct Mathf
+    public static class Mathf
     {
         /// <summary>
         /// The value for which all absolute numbers smaller than are considered equal to zero.
@@ -34,26 +34,6 @@ namespace FlaxEngine
         /// A value specifying the approximation of π/4 which is 45 degrees.
         /// </summary>
         public const float PiOverFour = (float)(Math.PI / 4);
-
-        /// <summary>
-        /// A representation of positive infinity (Read Only).
-        /// </summary>
-        public const float Infinity = float.PositiveInfinity;
-
-        /// <summary>
-        /// A representation of negative infinity (Read Only).
-        /// </summary>
-        public const float NegativeInfinity = float.NegativeInfinity;
-
-        /// <summary>
-        /// Degrees-to-radians conversion constant (Read Only).
-        /// </summary>
-        public const float Deg2Rad = 0.0174532924f;
-
-        /// <summary>
-        /// Radians-to-degrees conversion constant (Read Only).
-        /// </summary>
-        public const float Rad2Deg = 57.29578f;
 
         /// <summary>
         /// Returns the absolute value of f.
@@ -143,18 +123,6 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="value">Value to clamp</param>
         /// <returns>Result value</returns>
-        public static float Clamp01(float value)
-        {
-            if (value < 0f)
-                return 0f;
-            return value > 1f ? 1f : value;
-        }
-
-        /// <summary>
-        /// Clamps value between 0 and 1 and returns value.
-        /// </summary>
-        /// <param name="value">Value to clamp</param>
-        /// <returns>Result value</returns>
         public static float Saturate(float value)
         {
             if (value < 0f)
@@ -231,7 +199,7 @@ namespace FlaxEngine
         {
             if (a == b)
                 return 0f;
-            return Clamp01((value - a) / (b - a));
+            return Saturate((value - a) / (b - a));
         }
 
         /// <summary>
@@ -245,18 +213,7 @@ namespace FlaxEngine
             float single = Repeat(b - a, 360f);
             if (single > 180f)
                 single = single - 360f;
-            return a + single * Clamp01(t);
-        }
-
-        /// <summary>
-        /// Linearly interpolates between a and b by t.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static float LerpUnclamped(float a, float b, float t)
-        {
-            return a + (b - a) * t;
+            return a + single * Saturate(t);
         }
 
         /// <summary>
@@ -614,7 +571,7 @@ namespace FlaxEngine
         /// <param name="t"></param>
         public static float SmoothStep(float from, float to, float t)
         {
-            t = Clamp01(t);
+            t = Saturate(t);
             t = -2f * t * t * t + 3f * t * t;
             return to * t + from * (1f - t);
         }
@@ -1174,7 +1131,7 @@ namespace FlaxEngine
         /// <returns>The result of linear interpolation of values based on the amount.</returns>
         public static double Lerp(double from, double to, double amount)
         {
-            return (1 - amount) * from + amount * to;
+            return from + (to - from) * amount;
         }
 
         /// <summary>
@@ -1190,7 +1147,23 @@ namespace FlaxEngine
         /// <returns>The result of linear interpolation of values based on the amount.</returns>
         public static float Lerp(float from, float to, float amount)
         {
-            return (1 - amount) * from + amount * to;
+            return from + (to - from) * amount;
+        }
+
+        /// <summary>
+        /// Interpolates between two values using a linear function by a given amount.
+        /// </summary>
+        /// <remarks>
+        /// See http://www.encyclopediaofmath.org/index.php/Linear_interpolation and
+        /// http://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
+        /// </remarks>
+        /// <param name="from">Value to interpolate from.</param>
+        /// <param name="to">Value to interpolate to.</param>
+        /// <param name="amount">Interpolation amount.</param>
+        /// <returns>The result of linear interpolation of values based on the amount.</returns>
+        public static int Lerp(int from, int to, float amount)
+        {
+            return (int)(from + (to - from) * amount);
         }
 
         /// <summary>
@@ -1206,7 +1179,7 @@ namespace FlaxEngine
         /// <returns>The result of linear interpolation of values based on the amount.</returns>
         public static byte Lerp(byte from, byte to, float amount)
         {
-            return (byte)Lerp(from, (float)to, amount);
+            return (byte)(from + (to - from) * amount);
         }
 
         /// <summary>

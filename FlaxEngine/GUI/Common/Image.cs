@@ -35,6 +35,12 @@ namespace FlaxEngine.GUI
         public Color MouseOverColor { get; set; } = Color.White;
 
         /// <summary>
+        /// Gets or sets the color used to multiply the image pixels when control is disabled.
+        /// </summary>
+        [EditorDisplay("Style"), EditorOrder(2000)]
+        public Color DisabledTint { get; set; } = Color.Gray;
+
+        /// <summary>
         /// Gets or sets a value indicating whether keep aspect ratio when drawing the image.
         /// </summary>
         [EditorOrder(60), Tooltip("If checked, control will keep aspect ratio of the image.")]
@@ -49,28 +55,28 @@ namespace FlaxEngine.GUI
         public Image()
         : base(0, 0, 64, 64)
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <inheritdoc />
         public Image(float x, float y, float width, float height)
         : base(x, y, width, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <inheritdoc />
         public Image(Vector2 location, Vector2 size)
         : base(location, size)
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <inheritdoc />
         public Image(Rectangle bounds)
         : base(bounds)
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <inheritdoc />
@@ -108,7 +114,10 @@ namespace FlaxEngine.GUI
 
             Margin.ShrinkRectangle(ref rect);
 
-            Brush.Draw(rect, IsMouseOver ? MouseOverColor : Color);
+            var color = IsMouseOver ? MouseOverColor : Color;
+            if (!Enabled)
+                color *= DisabledTint;
+            Brush.Draw(rect, color);
         }
 
         /// <inheritdoc />

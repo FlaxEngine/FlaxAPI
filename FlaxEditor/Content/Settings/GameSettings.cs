@@ -25,6 +25,12 @@ namespace FlaxEditor.Content.Settings
         public string CompanyName;
 
         /// <summary>
+        /// The copyright note used for content signing (eg. source code header).
+        /// </summary>
+        [EditorOrder(15), EditorDisplay("General"), Tooltip("The copyright note used for content signing (eg. source code header).")]
+        public string CopyrightNotice;
+
+        /// <summary>
         /// The product version. Separated with dots: major.minor.build.revision.
         /// </summary>
         [EditorOrder(20), EditorDisplay("General"), Tooltip("The product version. Separated with dots: major.minor.build.revision.")]
@@ -40,7 +46,6 @@ namespace FlaxEditor.Content.Settings
         /// Reference to the first scene to load on a game startup.
         /// </summary>
         [EditorOrder(900), EditorDisplay("Startup"), Tooltip("Reference to the first scene to load on a game startup")]
-        //[EditorOrder(900), EditorDisplay("Startup"), AssetReference(Scene.EditorPickerTypename), Tooltip("Reference to the first scene to load on a game startup")]
         public SceneReference FirstScene;
 
         /// <summary>
@@ -116,6 +121,12 @@ namespace FlaxEditor.Content.Settings
         public JsonAsset UWPPlatform;
 
         /// <summary>
+        /// Reference to <see cref="LinuxPlatformSettings"/> asset. Used to apply configuration on Linux platform.
+        /// </summary>
+        [EditorOrder(2030), EditorDisplay("Platform Settings", "Linux"), AssetReference(typeof(LinuxPlatformSettings), true), Tooltip("Reference to Linux Platform Settings asset")]
+        public JsonAsset LinuxPlatform;
+
+        /// <summary>
         /// Gets the absolute path to the game settings asset file.
         /// </summary>
         public static string GameSettingsAssetPath
@@ -185,6 +196,8 @@ namespace FlaxEditor.Content.Settings
                 return LoadAsset<WindowsPlatformSettings>(gameSettings.WindowsPlatform) as T;
             if (type == typeof(UWPPlatformSettings))
                 return LoadAsset<UWPPlatformSettings>(gameSettings.UWPPlatform) as T;
+            if (type == typeof(LinuxPlatformSettings))
+                return LoadAsset<LinuxPlatformSettings>(gameSettings.LinuxPlatform) as T;
             if (type == typeof(AudioSettings))
                 return LoadAsset<AudioSettings>(gameSettings.Audio) as T;
 
@@ -262,6 +275,8 @@ namespace FlaxEditor.Content.Settings
                 return SaveAsset(gameSettings, ref gameSettings.WindowsPlatform, obj);
             if (type == typeof(UWPPlatformSettings))
                 return SaveAsset(gameSettings, ref gameSettings.UWPPlatform, obj);
+            if (type == typeof(LinuxPlatformSettings))
+                return SaveAsset(gameSettings, ref gameSettings.LinuxPlatform, obj);
             if (type == typeof(AudioSettings))
                 return SaveAsset(gameSettings, ref gameSettings.Audio, obj);
 

@@ -37,7 +37,7 @@ namespace FlaxEditor.GUI.Docking
             window.Focus();
 
             // Calculate dragging offset and move window to the destination position
-            Vector2 mouse = Application.MousePosition;
+            Vector2 mouse = Platform.MousePosition;
             Vector2 baseWinPos = window.Position;
             _dragOffset = mouse - baseWinPos;
 
@@ -91,7 +91,7 @@ namespace FlaxEditor.GUI.Docking
             if (_toSet == DockState.Float)
             {
                 var window = _toMove.Window.Window;
-                Vector2 mouse = Application.MousePosition;
+                Vector2 mouse = Platform.MousePosition;
 
                 // Move base window
                 window.Position = mouse - _dragOffset;
@@ -169,7 +169,7 @@ namespace FlaxEditor.GUI.Docking
 
             // Move window to the mouse position (with some offset for caption bar)
             var window = (WindowRootControl)toMove.Root;
-            Vector2 mouse = Application.MousePosition;
+            Vector2 mouse = Platform.MousePosition;
             window.Window.Position = mouse - new Vector2(8, 8);
 
             // Get floating panel
@@ -214,10 +214,12 @@ namespace FlaxEditor.GUI.Docking
         private void UpdateRects()
         {
             // Cache mouse position
-            _mouse = Application.MousePosition;
+            _mouse = Platform.MousePosition;
 
             // Check intersection with any dock panel
-            _toDock = _toMove.MasterPanel.HitTest(ref _mouse, _toMove);
+            var dpiScale = Platform.DpiScale;
+            var uiMouse = _mouse / dpiScale;
+            _toDock = _toMove.MasterPanel.HitTest(ref uiMouse, _toMove);
 
             // Check dock state to use
             bool showProxyHints = _toDock != null;
@@ -225,19 +227,13 @@ namespace FlaxEditor.GUI.Docking
             bool showCenterHint = showProxyHints;
             if (showProxyHints)
             {
-                // For master panel disable docking at sides
-                //if (_toDock->IsMaster())
-                //	showBorderHints = false;
-
                 // If moved window has not only tabs but also child panels disable docking as tab
                 if (_toMove.ChildPanelsCount > 0)
                     showCenterHint = false;
 
-                /////
-                // disable docking windows with one or more dock panels inside
+                // Disable docking windows with one or more dock panels inside
                 if (_toMove.ChildPanelsCount > 0)
                     showBorderHints = false;
-                /////
 
                 // Get dock area
                 _rectDock = _toDock.DockAreaBounds;

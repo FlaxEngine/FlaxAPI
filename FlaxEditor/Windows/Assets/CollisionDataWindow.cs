@@ -161,7 +161,7 @@ namespace FlaxEditor.Windows.Assets
         {
             // Toolstrip
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Application.StartProcess(Utilities.Constants.DocsUrl + "manual/physics/colliders/collision-data.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/physics/colliders/collision-data.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
@@ -203,7 +203,7 @@ namespace FlaxEditor.Windows.Assets
         private void UpdateWiresModel()
         {
             // Don't update on a importer/worker thread
-            if (!Application.IsInMainThread)
+            if (!Platform.IsInMainThread)
             {
                 _updateWireMesh = true;
                 return;
@@ -217,6 +217,8 @@ namespace FlaxEditor.Windows.Assets
             Editor.Internal_GetCollisionWires(Asset.unmanagedPtr, out var triangles, out var indices);
             if (triangles != null && indices != null)
                 _collisionWiresModel.LODs[0].Meshes[0].UpdateMesh(triangles, indices);
+            else
+                Editor.LogWarning("Failed to get collision wires for " + Asset);
             if (_collisionWiresShowActor == null)
             {
                 _collisionWiresShowActor = StaticModel.New();

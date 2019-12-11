@@ -12,15 +12,22 @@ namespace FlaxEditor.Actions
     /// Implementation of <see cref="IUndoAction"/> used to paste a set of <see cref="ActorNode"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
+    [Serializable]
     public class PasteActorsAction : IUndoAction
     {
+        [Serialize]
         private Dictionary<Guid, Guid> _idsMapping;
+
+        [Serialize]
         private byte[] _data;
+
+        [Serialize]
         private Guid _pasteParent;
 
         /// <summary>
         /// The node parents.
         /// </summary>
+        [Serialize]
         protected List<Guid> _nodeParents;
 
         /// <summary>
@@ -171,7 +178,7 @@ namespace FlaxEditor.Actions
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public virtual void Dispose()
         {
             _nodeParents?.Clear();
             _idsMapping?.Clear();

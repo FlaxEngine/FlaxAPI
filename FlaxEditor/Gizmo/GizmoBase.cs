@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using FlaxEditor.SceneGraph;
-using FlaxEngine.Rendering;
+using FlaxEngine;
 
 namespace FlaxEditor.Gizmo
 {

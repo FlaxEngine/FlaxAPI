@@ -55,7 +55,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public TilesPanel()
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <inheritdoc />

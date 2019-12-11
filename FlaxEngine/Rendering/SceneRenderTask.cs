@@ -2,13 +2,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Render task which draws scene actors into the output buffer.
     /// </summary>
-    /// <seealso cref="FlaxEngine.Rendering.RenderTask" />
+    /// <seealso cref="FlaxEngine.RenderTask" />
     public class SceneRenderTask : RenderTask
     {
         /// <summary>
@@ -21,6 +22,7 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="task">The task.</param>
         /// <param name="context">The GPU execution context.</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void BeginDelegate(SceneRenderTask task, GPUContext context);
 
         /// <summary>
@@ -28,13 +30,22 @@ namespace FlaxEngine.Rendering
         /// </summary>
         /// <param name="task">The task.</param>
         /// <param name="context">The GPU execution context.</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void EndDelegate(SceneRenderTask task, GPUContext context);
 
         /// <summary>
         /// Action delegate called during rendering scene part to the view. Should submit custom draw calls using <see cref="DrawCallsCollector"/>.
         /// </summary>
         /// <param name="collector">The draw calls collector.</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void DrawDelegate(DrawCallsCollector collector);
+
+        /// <summary>
+        /// The custom event to can skip rendering if need to. Returns true if should skip rendering a frame.
+        /// </summary>
+        /// <returns>True if skip rendering, otherwise false.</returns>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool CanSkipRenderingDelegate();
 
         /// <summary>
         /// The actors source to use during rendering.
@@ -51,7 +62,7 @@ namespace FlaxEngine.Rendering
         /// The rendering output surface.
         /// It needs to be assigned by the user to perform rendering.
         /// </summary>
-        public RenderTarget Output;
+        public GPUTexture Output;
 
         /// <summary>
         /// The frame rendering buffers.
@@ -59,16 +70,6 @@ namespace FlaxEngine.Rendering
         /// Size of the buffers always equals size of the output.
         /// </summary>
         public RenderBuffers Buffers;
-
-        /// <summary>
-        /// The view flags.
-        /// </summary>
-        public ViewFlags Flags = ViewFlags.DefaultGame;
-
-        /// <summary>
-        /// The view mode.
-        /// </summary>
-        public ViewMode Mode = ViewMode.Default;
 
         /// <summary>
         /// The rendering view description.
@@ -84,7 +85,7 @@ namespace FlaxEngine.Rendering
         /// <summary>
         /// The custom event to can skip rendering if need to. Returns true if should skip rendering a frame.
         /// </summary>
-        public Func<bool> CanSkipRendering;
+        public CanSkipRenderingDelegate CanSkipRendering;
 
         /// <summary>
         /// The custom post processing effects.
@@ -122,24 +123,23 @@ namespace FlaxEngine.Rendering
 
         internal SceneRenderTask()
         {
-            // Init view defaults
-            View.MaxShadowsQuality = Quality.Ultra;
-            View.ModelLODDistanceFactor = 1.0f;
-            View.ShadowModelLODDistanceFactor = 1.0f;
+            View.Init();
         }
 
         /// <inheritdoc />
         public override void Dispose()
         {
             if (Output)
-                Output.Dispose();
+                Output.ReleaseGPU();
+            CustomActors.Clear();
+            CustomPostFx.Clear();
 
             base.Dispose();
         }
 
-        internal override bool Internal_Begin(out IntPtr outputPtr)
+        internal override bool OnBegin(out IntPtr outputPtr)
         {
-            base.Internal_Begin(out outputPtr);
+            base.OnBegin(out outputPtr);
 
             if (CanSkipRendering != null && CanSkipRendering())
                 return false;
@@ -150,12 +150,8 @@ namespace FlaxEngine.Rendering
             return Output && Output.IsAllocated;
         }
 
-        internal override void Internal_Render(GPUContext context)
+        internal override void OnRender(GPUContext context)
         {
-            // Copy flags
-            View.Flags = Flags;
-            View.Mode = Mode;
-
             // Create buffers if missing
             if (Buffers == null)
                 Buffers = RenderBuffers.New();
@@ -187,7 +183,7 @@ namespace FlaxEngine.Rendering
             }
 
             // Call scene rendering
-            context.DrawScene(this, Output, Buffers, ref View, Flags, Mode, CustomActors, ActorsSource, _postFx);
+            context.DrawScene(this, Output, Buffers, ref View, CustomActors, ActorsSource, _postFx);
             FrameCount++;
 
             // Finish
@@ -216,7 +212,7 @@ namespace FlaxEngine.Rendering
             End?.Invoke(this, context);
         }
 
-        internal override DrawCall[] Internal_Draw()
+        internal override DrawCall[] OnDraw()
         {
             if (Draw != null)
             {

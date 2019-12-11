@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.Content;
+using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using DockWindow = FlaxEditor.GUI.Docking.DockWindow;
@@ -20,6 +21,16 @@ namespace FlaxEditor.Windows
         public readonly Editor Editor;
 
         /// <summary>
+        /// The input actions collection to processed during user input.
+        /// </summary>
+        public InputActionsContainer InputActions = new InputActionsContainer();
+
+        /// <summary>
+        /// Gets a value indicating whether this window can open content finder popup.
+        /// </summary>
+        protected virtual bool CanOpenContentFinder => true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EditorWindow"/> class.
         /// </summary>
         /// <param name="editor">The editor.</param>
@@ -29,6 +40,14 @@ namespace FlaxEditor.Windows
         : base(editor.UI.MasterPanel, hideOnClose, scrollBars)
         {
             Editor = editor;
+
+            InputActions.Add(options => options.ContentFinder, () =>
+            {
+                if (CanOpenContentFinder)
+                {
+                    Editor.ContentFinding.ShowFinder(RootWindow);
+                }
+            });
 
             // Register
             Editor.Windows.Windows.Add(this);
@@ -160,8 +179,21 @@ namespace FlaxEditor.Windows
         #endregion
 
         /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            // Base
+            if (base.OnKeyDown(key))
+                return true;
+
+            // Custom input events
+            return InputActions.Process(Editor, this, key);
+        }
+
+        /// <inheritdoc />
         public override void OnDestroy()
         {
+            OnExit();
+
             // Unregister
             Editor.Windows.Windows.Remove(this);
 

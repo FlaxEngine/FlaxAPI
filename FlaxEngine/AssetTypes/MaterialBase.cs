@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using FlaxEngine.Rendering;
 
 namespace FlaxEngine
 {
@@ -40,59 +39,46 @@ namespace FlaxEngine
         /// <summary>
         /// Gets a value indicating whether this material is a surface shader (can be used with a normal meshes).
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this material is a surface shader; otherwise, <c>false</c>.
-        /// </value>
         public bool IsSurface => Info.Domain == MaterialDomain.Surface;
 
         /// <summary>
         /// Gets a value indicating whether this material is post fx (cannot be used with a normal meshes).
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this material is post fx; otherwise, <c>false</c>.
-        /// </value>
         public bool IsPostFx => Info.Domain == MaterialDomain.PostProcess;
 
         /// <summary>
         /// Gets a value indicating whether this material is decal (cannot be used with a normal meshes).
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this material is decal; otherwise, <c>false</c>.
-        /// </value>
         public bool IsDecal => Info.Domain == MaterialDomain.Decal;
 
         /// <summary>
         /// Gets a value indicating whether this material is a GUI shader (cannot be used with a normal meshes).
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this material is a GUI shader; otherwise, <c>false</c>.
-        /// </value>
         public bool IsGUI => Info.Domain == MaterialDomain.GUI;
 
         /// <summary>
         /// Gets a value indicating whether this material is a terrain shader (cannot be used with a normal meshes).
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this material is a terrain shader; otherwise, <c>false</c>.
-        /// </value>
         public bool IsTerrain => Info.Domain == MaterialDomain.Terrain;
 
         /// <summary>
-        /// Gets or sets the material parameters collection.
+        /// Gets a value indicating whether this material is a particle shader (cannot be used with a normal meshes).
         /// </summary>
-        /// <value>
-        /// The parameters.
-        /// </value>
+        public bool IsParticle => Info.Domain == MaterialDomain.Particle;
+
+        /// <summary>
+        /// Gets the material parameters collection.
+        /// </summary>
         public MaterialParameter[] Parameters
         {
             get
             {
                 // Check if has cached value or is not loaded
-                if (_parameters != null || !IsLoaded)
+                if ((_parameters != null && Internal_GetParametersHash(unmanagedPtr) == _parametersHash) || WaitForLoaded())
                     return _parameters;
 
                 // Get next hash #hashtag
-                _parametersHash++;
+                _parametersHash = Internal_GetParametersHash(unmanagedPtr);
 
                 // Get parameters metadata from the backend
                 var parameters = Internal_CacheParameters(unmanagedPtr);
@@ -115,7 +101,7 @@ namespace FlaxEngine
                 else
                 {
                     // No parameters at all
-                    _parameters = new MaterialParameter[0];
+                    _parameters = Utils.GetEmptyArray<MaterialParameter>();
                 }
 
                 return _parameters;
@@ -150,15 +136,12 @@ namespace FlaxEngine
         /// <returns>The created virtual material instance asset.</returns>
         public abstract MaterialInstance CreateVirtualInstance();
 
-        internal void Internal_ClearParams()
-        {
-            _parametersHash++;
-            _parameters = null;
-        }
-
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetParametersHash(IntPtr obj);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetInfo(IntPtr obj, out MaterialInfo resultAsRef);
 
@@ -169,13 +152,19 @@ namespace FlaxEngine
         internal static extern string Internal_GetParamName(IntPtr obj, int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_SetParamValue(IntPtr obj, int index, IntPtr ptr);
+        internal static extern void Internal_SetParamValue(IntPtr obj, int index, IntPtr ptr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetParamValue(IntPtr obj, int index, IntPtr ptr);
+        internal static extern void Internal_GetParamValue(IntPtr obj, int index, IntPtr ptr);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetParamIndexByName(IntPtr obj, string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetParamOverride(IntPtr obj, int index, bool value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetParamOverride(IntPtr obj, int index);
 #endif
 
         #endregion

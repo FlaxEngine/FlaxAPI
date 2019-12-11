@@ -40,7 +40,7 @@ namespace FlaxEditor.Windows.Assets
             }
 
             // Copy data
-            Application.ClipboardRawData = data;
+            Platform.ClipboardRawData = data;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace FlaxEditor.Windows.Assets
         public void Paste(Actor pasteTargetActor)
         {
             // Get clipboard data
-            var data = Application.ClipboardRawData;
+            var data = Platform.ClipboardRawData;
 
             // Set paste target if only one actor is selected and no target provided
             if (pasteTargetActor == null && Selection.Count == 1 && Selection[0] is ActorNode actorNode)
@@ -70,7 +70,7 @@ namespace FlaxEditor.Windows.Assets
             var pasteAction = CustomPasteActorsAction.CustomPaste(this, data, pasteTargetActor?.ID ?? Guid.Empty);
             if (pasteAction != null)
             {
-                OnPasteAcction(pasteAction);
+                OnPasteAction(pasteAction);
             }
         }
 
@@ -97,11 +97,11 @@ namespace FlaxEditor.Windows.Assets
             var pasteAction = CustomPasteActorsAction.CustomDuplicate(this, data, Guid.Empty);
             if (pasteAction != null)
             {
-                OnPasteAcction(pasteAction);
+                OnPasteAction(pasteAction);
             }
         }
 
-        private void OnPasteAcction(PasteActorsAction pasteAction)
+        private void OnPasteAction(PasteActorsAction pasteAction)
         {
             pasteAction.Do(out _, out var nodeParents);
 
@@ -199,6 +199,14 @@ namespace FlaxEditor.Windows.Assets
                 }
 
                 _nodeParents.Clear();
+            }
+
+            /// <inheritdoc />
+            public override void Dispose()
+            {
+                base.Dispose();
+
+                _window = null;
             }
         }
 

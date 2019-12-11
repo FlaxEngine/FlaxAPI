@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
@@ -13,7 +12,7 @@ namespace FlaxEditor.Gizmo
     public abstract partial class TransformGizmoBase : GizmoBase
     {
         /// <summary>
-        /// The start transforms list cached for selected objects before transformation apply. Can be sued to create undo operations.
+        /// The start transforms list cached for selected objects before transformation apply. Can be used to create undo operations.
         /// </summary>
         protected readonly List<Transform> _startTransforms = new List<Transform>();
 
@@ -135,7 +134,7 @@ namespace FlaxEditor.Gizmo
             Position += _translationDelta;
         }
 
-        private void UpdateMatricies()
+        private void UpdateMatrices()
         {
             // Check there is no need to perform update
             if (SelectionCount == 0)
@@ -146,7 +145,8 @@ namespace FlaxEditor.Gizmo
 
             // Scale Gizmo to fit on-screen
             Vector3 vLength = Owner.ViewPosition - Position;
-            _screenScale = vLength.Length / GizmoScaleFactor;
+            float gizmoSize = Editor.Instance.Options.Options.Visual.GizmoSize;
+            _screenScale = vLength.Length / GizmoScaleFactor * gizmoSize;
             Matrix.Scaling(_screenScale, out _screenScaleMatrix);
 
             Matrix rotation;
@@ -187,7 +187,7 @@ namespace FlaxEditor.Gizmo
 
         private void UpdateTranslateScale()
         {
-            bool isScalling = _activeMode == Mode.Scale;
+            bool isScaling = _activeMode == Mode.Scale;
 
             Vector3 delta = Vector3.Zero;
             Ray ray = Owner.MouseRay;
@@ -282,20 +282,15 @@ namespace FlaxEditor.Gizmo
             }
             }
 
-            if (isScalling)
+            if (isScaling)
                 delta *= 0.01f;
 
             if (Owner.IsAltKeyDown)
                 delta *= 0.5f;
 
-            if ((isScalling ? ScaleSnapEnabled : TranslationSnapEnable) || Owner.UseSnapping)
+            if ((isScaling ? ScaleSnapEnabled : TranslationSnapEnable) || Owner.UseSnapping)
             {
-                float snapValue = isScalling ? ScaleSnapValue : TranslationSnapValue;
-                if (_precisionModeEnabled)
-                {
-                    delta *= PrecisionModeScale;
-                    snapValue *= PrecisionModeScale;
-                }
+                float snapValue = isScaling ? ScaleSnapValue : TranslationSnapValue;
 
                 _translationScaleSnapDelta += delta;
 
@@ -305,10 +300,6 @@ namespace FlaxEditor.Gizmo
                     (int)(_translationScaleSnapDelta.Z / snapValue) * snapValue);
 
                 _translationScaleSnapDelta -= delta;
-            }
-            else if (_precisionModeEnabled)
-            {
-                delta *= PrecisionModeScale;
             }
 
             if (_activeMode == Mode.Translate)
@@ -331,22 +322,12 @@ namespace FlaxEditor.Gizmo
             if (RotationSnapEnabled || Owner.UseSnapping)
             {
                 float snapValue = RotationSnapValue * Mathf.DegreesToRadians;
-                if (_precisionModeEnabled)
-                {
-                    delta *= PrecisionModeScale;
-                    snapValue *= PrecisionModeScale;
-                }
-
                 _rotationSnapDelta += delta;
 
                 float snapped = Mathf.Round(_rotationSnapDelta / snapValue) * snapValue;
                 _rotationSnapDelta -= snapped;
 
                 delta = snapped;
-            }
-            else if (_precisionModeEnabled)
-            {
-                delta *= PrecisionModeScale;
             }
 
             switch (_activeAxis)
@@ -389,7 +370,7 @@ namespace FlaxEditor.Gizmo
             bool isLeftBtnDown = Owner.IsLeftMouseButtonDown;
 
             // Snap to ground
-            if (_activeAxis == Axis.None && Owner.SnapToGround && SelectionCount != 0)
+            if (_activeAxis == Axis.None && SelectionCount != 0 && Owner.SnapToGround)
             {
                 if (Physics.RayCast(Position, Vector3.Down, out var hit, float.MaxValue, int.MaxValue, false))
                 {
@@ -508,7 +489,7 @@ namespace FlaxEditor.Gizmo
             _isActive = true;
 
             // Update
-            UpdateMatricies();
+            UpdateMatrices();
         }
 
         /// <summary>

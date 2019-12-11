@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -38,10 +39,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the fog density factor. Range: 0-0.6.
+        /// Gets or sets the fog density factor.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), Limit(0.000001f, 0.8f, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Fog density factor. Range: 0-0.6")]
+        [EditorOrder(10), DefaultValue(0.02f), Limit(0.000001f, 0.8f, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Fog density factor.")]
         public float FogDensity
         {
 #if UNIT_TEST_COMPILANT
@@ -53,10 +54,25 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the fog height density factor that controls how the density increases as height decreases. The smaller values produce more visible transition larger.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(20), DefaultValue(0.2f), Limit(0.001f, 2.0f, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("The fog height density factor that controls how the density increases as height decreases. The smaller values produce more visible transition larger.")]
+        public float FogHeightFalloff
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetFogHeightFalloff(unmanagedPtr); }
+            set { Internal_SetFogHeightFalloff(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the color of the fog.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Exponential Height Fog"), Tooltip("Fog color")]
+        [EditorOrder(30), DefaultValue(typeof(Color), "0.448,0.634,1.0"), EditorDisplay("Exponential Height Fog"), Tooltip("Fog color.")]
         public Color FogInscatteringColor
         {
 #if UNIT_TEST_COMPILANT
@@ -68,46 +84,10 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the offset from the fog object height where fog starts.
-        /// </summary>
-        /// <remarks>
-        /// It's a bottom level of the fog where it has density equal 1 (fully dense). This parameter controls the height of the fog.
-        /// </remarks>
-        [UnmanagedCall]
-        [EditorOrder(30), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Offset from the fog object height where fog starts.")]
-        public float FogBaseHeightOffset
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_GetFogBaseHeightOffset(unmanagedPtr); }
-            set { Internal_SetFogBaseHeightOffset(unmanagedPtr, value); }
-#endif
-        }
-
-        /// <summary>
-        /// Gets or sets the fog density factor at top height level.
-        /// </summary>
-        /// <remarks>
-        /// Should be close to 0. It get's scaled by the global density parameter.
-        /// </remarks>
-        [UnmanagedCall]
-        [EditorOrder(35), Limit(0, 1, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Fog density factor at top height level. Should be close to 0. It get's scaled by the global density parameter.")]
-        public float FogTopHeightDensity
-        {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
-            get { return Internal_GetFogTopHeightDensity(unmanagedPtr); }
-            set { Internal_SetFogTopHeightDensity(unmanagedPtr, value); }
-#endif
-        }
-
-        /// <summary>
         /// Gets or sets the maximum opacity of the fog.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(40), Limit(0, 1, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Maximum opacity of the fog.")]
+        [EditorOrder(40), DefaultValue(1.0f), Limit(0, 1, 0.001f), EditorDisplay("Exponential Height Fog"), Tooltip("Maximum opacity of the fog.")]
         public float FogMaxOpacity
         {
 #if UNIT_TEST_COMPILANT
@@ -122,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the distance from the camera that the fog will start, in world units.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(50), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Distance from the camera that the fog will start, in world units.")]
+        [EditorOrder(50), DefaultValue(0.0f), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Distance from the camera that the fog will start, in world units.")]
         public float StartDistance
         {
 #if UNIT_TEST_COMPILANT
@@ -137,7 +117,7 @@ namespace FlaxEngine
         /// Gets or sets the distance past which scene elements will have no fog applied. Use value 0 to disable it.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(60), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Scene elements past this distance will not have fog applied. Value 0 disables it.")]
+        [EditorOrder(60), DefaultValue(0.0f), Limit(0), EditorDisplay("Exponential Height Fog"), Tooltip("Scene elements past this distance will not have fog applied. Value 0 disables it.")]
         public float FogCutoffDistance
         {
 #if UNIT_TEST_COMPILANT
@@ -152,14 +132,14 @@ namespace FlaxEngine
         /// Gets or sets the light used for Directional Inscattering.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(200), EditorDisplay("Directional Inscattering", "Light"), Tooltip("Directional light actor used for Directional Inscattering.")]
+        [EditorOrder(200), DefaultValue(null), EditorDisplay("Directional Inscattering", "Light"), Tooltip("Directional light actor used for Directional Inscattering.")]
         public DirectionalLight DirectionalInscatteringLight
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetDirectionalInscatteringLight(unmanagedPtr); }
-            set { Internal_SetDirectionalInscatteringLight(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetDirectionalInscatteringLight(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -170,7 +150,7 @@ namespace FlaxEngine
         /// Note: there must be a directional light enabled for Directional Inscattering to be used.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(210), Limit(2, 64, 0.1f), EditorDisplay("Directional Inscattering", "Exponent"), Tooltip("Controls the size of the directional inscattering cone used to approximate inscattering.")]
+        [EditorOrder(210), DefaultValue(4.0f), Limit(2, 64, 0.1f), EditorDisplay("Directional Inscattering", "Exponent"), Tooltip("Controls the size of the directional inscattering cone used to approximate inscattering.")]
         public float DirectionalInscatteringExponent
         {
 #if UNIT_TEST_COMPILANT
@@ -188,7 +168,7 @@ namespace FlaxEngine
         /// Note: there must be a directional light enabled for Directional Inscattering to be used.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(220), Limit(0), EditorDisplay("Directional Inscattering", "Start Distance"), Tooltip("Controls the start distance from the viewer of the directional inscattering, which is used to approximate inscattering.")]
+        [EditorOrder(220), DefaultValue(10000.0f), Limit(0), EditorDisplay("Directional Inscattering", "Start Distance"), Tooltip("Controls the start distance from the viewer of the directional inscattering, which is used to approximate inscattering.")]
         public float DirectionalInscatteringStartDistance
         {
 #if UNIT_TEST_COMPILANT
@@ -206,7 +186,7 @@ namespace FlaxEngine
         /// Note: there must be a directional light enabled for Directional Inscattering to be used.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(230), EditorDisplay("Directional Inscattering", "Color"), Tooltip("Controls the color of the directional inscattering, which is used to approximate inscattering from a directional light.")]
+        [EditorOrder(230), DefaultValue(typeof(Color), "0.25,0.25,0.125"), EditorDisplay("Directional Inscattering", "Color"), Tooltip("Controls the color of the directional inscattering, which is used to approximate inscattering from a directional light.")]
         public Color DirectionalInscatteringColor
         {
 #if UNIT_TEST_COMPILANT
@@ -224,7 +204,7 @@ namespace FlaxEngine
         /// Graphics quality settings control the resolution of the fog simulation.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(300), EditorDisplay("Volumetric Fog", "Enable"), Tooltip("Whether to enable Volumetric fog. Graphics quality settings control the resolution of the fog simulation.")]
+        [EditorOrder(300), DefaultValue(false), EditorDisplay("Volumetric Fog", "Enable"), Tooltip("Whether to enable Volumetric fog. Graphics quality settings control the resolution of the fog simulation.")]
         public bool VolumetricFogEnable
         {
 #if UNIT_TEST_COMPILANT
@@ -242,7 +222,7 @@ namespace FlaxEngine
         /// A distribution value of 0 scatters equally in all directions, while 0.9 scatters predominantly in the light direction. In order to have visible volumetric fog light shafts from the side, the distribution will need to be closer to 0. Range: -0.9-0.9.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(310), Limit(-0.9f, 0.9f, 0.001f), EditorDisplay("Volumetric Fog", "Scattering Distribution"), Tooltip("Controls the scattering phase function - how much incoming light scatters in various directions.")]
+        [EditorOrder(310), DefaultValue(0.2f), Limit(-0.9f, 0.9f, 0.001f), EditorDisplay("Volumetric Fog", "Scattering Distribution"), Tooltip("Controls the scattering phase function - how much incoming light scatters in various directions.")]
         public float VolumetricFogScatteringDistribution
         {
 #if UNIT_TEST_COMPILANT
@@ -260,7 +240,7 @@ namespace FlaxEngine
         /// Water particles in air have an albedo near white, while dust has slightly darker value.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(320), EditorDisplay("Volumetric Fog", "Albedo"), Tooltip("The height fog particle reflectiveness used by volumetric fog. Water particles in air have an albedo near white, while dust has slightly darker value.")]
+        [EditorOrder(320), DefaultValue(typeof(Color), "1,1,1,1"), EditorDisplay("Volumetric Fog", "Albedo"), Tooltip("The height fog particle reflectiveness used by volumetric fog. Water particles in air have an albedo near white, while dust has slightly darker value.")]
         public Color VolumetricFogAlbedo
         {
 #if UNIT_TEST_COMPILANT
@@ -278,7 +258,7 @@ namespace FlaxEngine
         /// This is a density so more light is emitted the further you are looking through the fog. In most cases using a Skylight is a better choice, however, it may be useful in certain scenarios.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(330), EditorDisplay("Volumetric Fog", "Emissive"), Tooltip("Light emitted by height fog. This is a density so more light is emitted the further you are looking through the fog.")]
+        [EditorOrder(330), DefaultValue(typeof(Color), "0,0,0,1"), EditorDisplay("Volumetric Fog", "Emissive"), Tooltip("Light emitted by height fog. This is a density so more light is emitted the further you are looking through the fog.")]
         public Color VolumetricFogEmissive
         {
 #if UNIT_TEST_COMPILANT
@@ -296,7 +276,7 @@ namespace FlaxEngine
         /// Values larger than 1 cause fog particles everywhere absorb more light. Range: 0.1-10.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(340), Limit(0.1f, 10, 0.1f), EditorDisplay("Volumetric Fog", "Extinction Scale"), Tooltip("Scales the height fog particle extinction amount used by volumetric fog. Values larger than 1 cause fog particles everywhere absorb more light.")]
+        [EditorOrder(340), DefaultValue(1.0f), Limit(0.1f, 10, 0.1f), EditorDisplay("Volumetric Fog", "Extinction Scale"), Tooltip("Scales the height fog particle extinction amount used by volumetric fog. Values larger than 1 cause fog particles everywhere absorb more light.")]
         public float VolumetricFogExtinctionScale
         {
 #if UNIT_TEST_COMPILANT
@@ -314,7 +294,7 @@ namespace FlaxEngine
         /// Larger values extend the effect into the distance but expose under-sampling artifacts in details.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(350), Limit(0), EditorDisplay("Volumetric Fog", "Distance"), Tooltip("Distance over which volumetric fog should be computed. Larger values extend the effect into the distance but expose under-sampling artifacts in details.")]
+        [EditorOrder(350), DefaultValue(6000.0f), Limit(0), EditorDisplay("Volumetric Fog", "Distance"), Tooltip("Distance over which volumetric fog should be computed. Larger values extend the effect into the distance but expose under-sampling artifacts in details.")]
         public float VolumetricFogDistance
         {
 #if UNIT_TEST_COMPILANT
@@ -335,22 +315,16 @@ namespace FlaxEngine
         internal static extern void Internal_SetFogDensity(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetFogHeightFalloff(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetFogHeightFalloff(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetFogInscatteringColor(IntPtr obj, out Color resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetFogInscatteringColor(IntPtr obj, ref Color val);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetFogBaseHeightOffset(IntPtr obj);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetFogBaseHeightOffset(IntPtr obj, float val);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetFogTopHeightDensity(IntPtr obj);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetFogTopHeightDensity(IntPtr obj, float val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetFogMaxOpacity(IntPtr obj);

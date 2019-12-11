@@ -4,7 +4,6 @@ using System;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Surface.Archetypes
 {
@@ -155,6 +154,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                 case MaterialDomain.Surface:
                 case MaterialDomain.Terrain:
+                case MaterialDomain.Particle:
                 {
                     bool isNotUnlit = info.ShadingModel != MaterialShadingModel.Unlit;
                     bool isTransparent = info.BlendMode == MaterialBlendMode.Transparent;
@@ -268,7 +268,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Create = (id, context, arch, groupArch) => new SurfaceNodeMaterial(id, context, arch, groupArch),
                 Title = "Material",
                 Description = "Main material node",
-                Flags = NodeFlags.MaterialOnly | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
+                Flags = NodeFlags.MaterialGraph | NodeFlags.NoRemove | NodeFlags.NoSpawnViaGUI | NodeFlags.NoCloseButton,
                 Size = new Vector2(150, 300),
                 Elements = new[]
                 {
@@ -294,7 +294,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 2,
                 Title = "World Position",
                 Description = "Absolute world space position",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(150, 30),
                 Elements = new[]
                 {
@@ -306,7 +306,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 3,
                 Title = "View",
                 Description = "View properties",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(150, 60),
                 Elements = new[]
                 {
@@ -320,7 +320,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 4,
                 Title = "Normal Vector",
                 Description = "World space normal vector",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
@@ -332,7 +332,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 5,
                 Title = "Camera Vector",
                 Description = "Calculates camera vector",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(150, 30),
                 Elements = new[]
                 {
@@ -344,8 +344,8 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 6,
                 Title = "Screen Position",
                 Description = "Gathers screen position or texcoord",
-                Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(140, 40),
+                Flags = NodeFlags.MaterialGraph,
+                Size = new Vector2(150, 40),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "Position", ConnectionType.Vector2, 0),
@@ -357,8 +357,8 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 7,
                 Title = "Screen Size",
                 Description = "Gathers screen size",
-                Flags = NodeFlags.MaterialOnly,
-                Size = new Vector2(120, 40),
+                Flags = NodeFlags.MaterialGraph,
+                Size = new Vector2(150, 40),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, "Size", ConnectionType.Vector2, 0),
@@ -370,7 +370,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 8,
                 Title = "Custom Code",
                 Description = "Custom HLSL shader code expression",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(300, 200),
                 DefaultValues = new object[]
                 {
@@ -400,7 +400,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 9,
                 Title = "Object Position",
                 Description = "Absolute world space object position",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(150, 30),
                 Elements = new[]
                 {
@@ -412,7 +412,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 10,
                 Title = "Two Sided Sign",
                 Description = "Scalar value with surface side sign. 1 for normal facing, -1 for inverted",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(150, 30),
                 Elements = new[]
                 {
@@ -424,11 +424,11 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 11,
                 Title = "Camera Depth Fade",
                 Description = "Creates a gradient of 0 near the camera to white at fade length. Useful for preventing particles from camera clipping.",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(200, 60),
                 DefaultValues = new object[]
                 {
-                    500.0f,
+                    200.0f,
                     24.0f
                 },
                 Elements = new[]
@@ -443,7 +443,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 12,
                 Title = "Vertex Color",
                 Description = "Per vertex color",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
@@ -455,7 +455,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 13,
                 Title = "Pre-skinned Local Position",
                 Description = "Per vertex local position (before skinning)",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(230, 40),
                 Elements = new[]
                 {
@@ -467,7 +467,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 14,
                 Title = "Pre-skinned Local Normal",
                 Description = "Per vertex local normal (before skinning)",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(230, 40),
                 Elements = new[]
                 {
@@ -479,7 +479,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 15,
                 Title = "Depth",
                 Description = "Current pixel/vertex linear distance to the camera",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(100, 30),
                 Elements = new[]
                 {
@@ -491,7 +491,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 16,
                 Title = "Tangent Vector",
                 Description = "World space tangent vector",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(160, 40),
                 Elements = new[]
                 {
@@ -503,7 +503,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 17,
                 Title = "Bitangent Vector",
                 Description = "World space bitangent vector",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(160, 40),
                 Elements = new[]
                 {
@@ -515,7 +515,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 18,
                 Title = "Camera Position",
                 Description = "World space camera location",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(160, 40),
                 Elements = new[]
                 {
@@ -527,7 +527,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 19,
                 Title = "Per Instance Random",
                 Description = "Per object instance random value (normalized to range 0-1)",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(200, 40),
                 Elements = new[]
                 {
@@ -539,7 +539,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 20,
                 Title = "Interpolate VS To PS",
                 Description = "Helper node used to pass data from Vertex Shader to Pixel Shader",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(220, 40),
                 Elements = new[]
                 {
@@ -552,7 +552,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 21,
                 Title = "Terrain Holes Mask",
                 Description = "Scalar terrain visibility mask used mostly for creating holes in terrain",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(200, 30),
                 Elements = new[]
                 {
@@ -564,7 +564,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 22,
                 Title = "Terrain Layer Weight",
                 Description = "Terrain layer weight mask used for blending terrain layers",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(220, 30),
                 DefaultValues = new object[]
                 {
@@ -574,6 +574,23 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.ComboBox(0, 0, 70.0f, 0, FlaxEditor.Tools.Terrain.PaintTerrainGizmoMode.TerrainLayerNames),
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Float, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 23,
+                Title = "Depth Fade",
+                Description = "Creates a gradient of 0 near the scene depth geometry. Useful for preventing particles from clipping with geometry (use it for soft particles).",
+                Flags = NodeFlags.MaterialGraph,
+                Size = new Vector2(200, 40),
+                DefaultValues = new object[]
+                {
+                    10.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, "Fade Distance", true, ConnectionType.Float, 0, 0),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 1),
                 }
             },
         };

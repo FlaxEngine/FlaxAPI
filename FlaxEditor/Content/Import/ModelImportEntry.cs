@@ -222,7 +222,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// The custom node name to be used as a root motion source. If not specified the actual root node will be used.
         /// </summary>
-        [EditorOrder(1070), DefaultValue(null), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
+        [EditorOrder(1070), DefaultValue(typeof(string), ""), EditorDisplay("Animation"), Tooltip("The custom node name to be used as a root motion source. If not specified the actual root node will be used.")]
         public string RootNodeName { get; set; }
 
         /// <summary>
@@ -234,8 +234,8 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// If checked, the importer will try to restore the model material slots.
         /// </summary>
-        [EditorOrder(1100), DefaultValue(false), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the model material slots.")]
-        public bool RestoreMaterialsOnReimport { get; set; }
+        [EditorOrder(1100), DefaultValue(true), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the assigned materials to the model slots.")]
+        public bool RestoreMaterialsOnReimport { get; set; } = true;
 
         [StructLayout(LayoutKind.Sequential)]
         internal struct InternalOptions

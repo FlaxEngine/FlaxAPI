@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -117,6 +118,16 @@ namespace FlaxEditor.Surface
         /// Occurs when surface gets modified (graph edited, node moved, comment resized).
         /// </summary>
         public event ContextModifiedDelegate Modified;
+
+        /// <summary>
+        /// Occurs when node gets added to the surface as spawn operation (eg. add new comment or add new node).
+        /// </summary>
+        public event Action<SurfaceControl> ControlSpawned;
+
+        /// <summary>
+        /// Occurs when node gets removed from the surface as delete/cut operation (eg. remove comment or cut node).
+        /// </summary>
+        public event Action<SurfaceControl> ControlDeleted;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisjectSurfaceContext"/> class.
@@ -265,22 +276,32 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Spawns the comment object. Used by the <see cref="CreateComment"/> and loading method. Can be overriden to provide custom comment object implementations.
         /// </summary>
-        /// <param name="surfaceArea">The surface area.</param>
+        /// <param name="surfaceArea">The surface area to create comment.</param>
+        /// <param name="title">The comment title.</param>
+        /// <param name="color">The comment color.</param>
         /// <returns>The comment object</returns>
-        public virtual SurfaceComment SpawnComment(ref Rectangle surfaceArea)
+        public virtual SurfaceComment SpawnComment(ref Rectangle surfaceArea, string title, Color color)
         {
-            return new SurfaceComment(_surface, ref surfaceArea);
+            var values = new object[]
+            {
+                title, // Title
+                color, // Color
+                surfaceArea.Size, // Size
+            };
+            return (SurfaceComment)SpawnNode(7, 11, surfaceArea.Location, values);
         }
 
         /// <summary>
         /// Creates the comment.
         /// </summary>
         /// <param name="surfaceArea">The surface area to create comment.</param>
+        /// <param name="title">The comment title.</param>
+        /// <param name="color">The comment color.</param>
         /// <returns>The comment object</returns>
-        public SurfaceComment CreateComment(ref Rectangle surfaceArea)
+        public SurfaceComment CreateComment(ref Rectangle surfaceArea, string title, Color color)
         {
             // Create comment
-            var comment = SpawnComment(ref surfaceArea);
+            var comment = SpawnComment(ref surfaceArea, title, color);
             if (comment == null)
             {
                 Editor.LogWarning("Failed to create comment.");
@@ -332,7 +353,7 @@ namespace FlaxEditor.Surface
 
             if (!_surface.CanSpawnNodeType(nodeArchetype))
             {
-                Editor.LogWarning("Cannot spawn given node type.");
+                Editor.LogWarning("Cannot spawn given node type. Title: " + nodeArchetype.Title);
                 return null;
             }
 
@@ -355,10 +376,13 @@ namespace FlaxEditor.Surface
                 else
                     throw new InvalidOperationException("Invalid node custom values.");
             }
+            node.Location = location;
             OnControlLoaded(node);
             node.OnSurfaceLoaded();
-            node.Location = location;
             OnControlSpawned(node);
+
+            // Undo action
+            Surface.Undo?.AddAction(new AddRemoveNodeAction(node, true));
 
             MarkAsModified();
 

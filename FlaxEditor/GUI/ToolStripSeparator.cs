@@ -18,7 +18,7 @@ namespace FlaxEditor.GUI
         public ToolStripSeparator(float height)
         : base(0, 0, 4, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
         }
 
         /// <inheritdoc />

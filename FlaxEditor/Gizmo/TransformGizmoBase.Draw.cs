@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
@@ -46,7 +45,7 @@ namespace FlaxEditor.Gizmo
             )
             {
                 // Error
-                Application.Fatal("Failed to load Transform Gizmo resources.");
+                Platform.Fatal("Failed to load Transform Gizmo resources.");
             }
         }
 

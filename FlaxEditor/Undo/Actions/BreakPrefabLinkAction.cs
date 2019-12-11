@@ -14,11 +14,19 @@ namespace FlaxEditor.Actions
     /// This action assumes that all objects in the given actor hierarchy are using the same prefab asset.
     /// </remarks>
     /// <seealso cref="IUndoAction" />
+    [Serializable]
     public sealed class BreakPrefabLinkAction : IUndoAction
     {
+        [Serialize]
         private readonly bool _isBreak;
+
+        [Serialize]
         private Guid _actorId;
+
+        [Serialize]
         private Guid _prefabId;
+
+        [Serialize]
         private Dictionary<Guid, Guid> _prefabObjectIds;
 
         private BreakPrefabLinkAction(bool isBreak, Guid actorId, Guid prefabId)
@@ -47,7 +55,7 @@ namespace FlaxEditor.Actions
         {
             if (actor == null)
                 throw new ArgumentNullException(nameof(actor));
-            return new BreakPrefabLinkAction(true, actor.id, Guid.Empty);
+            return new BreakPrefabLinkAction(true, actor._internalId, Guid.Empty);
         }
 
         /// <summary>

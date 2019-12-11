@@ -51,7 +51,6 @@ namespace FlaxEngine
         /// <summary>
         /// Gets the length of the audio clip (in seconds).
         /// </summary>
-        /// <returns>The value.</returns>
         public float Length
         {
             get

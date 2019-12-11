@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Gizmo;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
@@ -13,7 +14,6 @@ using FlaxEditor.Viewport.Widgets;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Viewport
 {
@@ -26,6 +26,7 @@ namespace FlaxEditor.Viewport
     public class PrefabWindowViewport : PrefabPreview, IEditorPrimitivesOwner
     {
         private readonly PrefabWindow _window;
+        private UpdateDelegate _update;
 
         private readonly ViewportWidgetButton _gizmoModeTranslate;
         private readonly ViewportWidgetButton _gizmoModeRotate;
@@ -68,7 +69,7 @@ namespace FlaxEditor.Viewport
 
             // Prepare rendering task
             Task.ActorsSource = ActorsSources.CustomActors;
-            Task.Flags = ViewFlags.DefaultEditor & ~ViewFlags.EditorSprites;
+            Task.View.Flags = ViewFlags.DefaultEditor & ~ViewFlags.EditorSprites;
             Task.End += RenderTaskOnEnd;
 
             // Create post effects
@@ -76,7 +77,6 @@ namespace FlaxEditor.Viewport
             SelectionOutline.SelectionGetter = () => _window.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
-            EditorPrimitives.DrawDebugDraw = false;
             EditorPrimitives.Viewport = this;
             Task.CustomPostFx.Add(EditorPrimitives);
 
@@ -95,7 +95,7 @@ namespace FlaxEditor.Viewport
                 TooltipText = "Gizmo transform space (world or local)",
                 Parent = transformSpaceWidget
             };
-            transformSpaceToggle.OnToggle += OnTransformSpaceToggle;
+            transformSpaceToggle.Toggled += OnTransformSpaceToggle;
             transformSpaceWidget.Parent = this;
 
             // Scale snapping widget
@@ -106,7 +106,7 @@ namespace FlaxEditor.Viewport
                 TooltipText = "Enable scale snapping",
                 Parent = scaleSnappingWidget
             };
-            enableScaleSnapping.OnToggle += OnScaleSnappingToggle;
+            enableScaleSnapping.Toggled += OnScaleSnappingToggle;
             var scaleSnappingCM = new ContextMenu();
             _scaleSnapping = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid, scaleSnappingCM);
             _scaleSnapping.TooltipText = "Scale snapping values";
@@ -129,7 +129,7 @@ namespace FlaxEditor.Viewport
                 TooltipText = "Enable rotation snapping",
                 Parent = rotateSnappingWidget
             };
-            enableRotateSnapping.OnToggle += OnRotateSnappingToggle;
+            enableRotateSnapping.Toggled += OnRotateSnappingToggle;
             var rotateSnappingCM = new ContextMenu();
             _rotateSnapping = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), Sprite.Invalid, rotateSnappingCM);
             _rotateSnapping.TooltipText = "Rotation snapping values";
@@ -152,7 +152,7 @@ namespace FlaxEditor.Viewport
                 TooltipText = "Enable position snapping",
                 Parent = translateSnappingWidget
             };
-            enableTranslateSnapping.OnToggle += OnTranslateSnappingToggle;
+            enableTranslateSnapping.Toggled += OnTranslateSnappingToggle;
             var translateSnappingCM = new ContextMenu();
             _translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
             _translateSnappng.TooltipText = "Position snapping values";
@@ -176,31 +176,47 @@ namespace FlaxEditor.Viewport
                 Checked = true,
                 Parent = gizmoMode
             };
-            _gizmoModeTranslate.OnToggle += OnGizmoModeToggle;
+            _gizmoModeTranslate.Toggled += OnGizmoModeToggle;
             _gizmoModeRotate = new ViewportWidgetButton(string.Empty, window.Editor.Icons.Rotate16, null, true)
             {
                 Tag = TransformGizmo.Mode.Rotate,
                 TooltipText = "Rotate gizmo mode",
                 Parent = gizmoMode
             };
-            _gizmoModeRotate.OnToggle += OnGizmoModeToggle;
+            _gizmoModeRotate.Toggled += OnGizmoModeToggle;
             _gizmoModeScale = new ViewportWidgetButton(string.Empty, window.Editor.Icons.Scale16, null, true)
             {
                 Tag = TransformGizmo.Mode.Scale,
                 TooltipText = "Scale gizmo mode",
                 Parent = gizmoMode
             };
-            _gizmoModeScale.OnToggle += OnGizmoModeToggle;
+            _gizmoModeScale.Toggled += OnGizmoModeToggle;
             gizmoMode.Parent = this;
 
             _dragHandlers.Add(_dragActorType);
             _dragHandlers.Add(_dragAssets);
+
+            // Setup input actions
+            InputActions.Add(options => options.TranslateMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate);
+            InputActions.Add(options => options.RotateMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate);
+            InputActions.Add(options => options.ScaleMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale);
+            InputActions.Add(options => options.FocusSelection, ShowSelectedActors);
+
+            SetUpdate(ref _update, OnUpdate);
+        }
+
+        private void OnUpdate(float deltaTime)
+        {
+            for (int i = 0; i < Gizmos.Count; i++)
+            {
+                Gizmos[i].Update(deltaTime);
+            }
         }
 
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
         {
             // Render editor primitives, gizmo and debug shapes in debug view modes
-            if (task.Mode != ViewMode.Default)
+            if (task.View.Mode != ViewMode.Default)
             {
                 // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
                 EditorPrimitives.Render(context, task, task.Output, task.Output);
@@ -252,14 +268,19 @@ namespace FlaxEditor.Viewport
         public Undo Undo { get; }
 
         /// <inheritdoc />
-        public override void Update(float deltaTime)
+        protected override void AddUpdateCallbacks(RootControl root)
         {
-            base.Update(deltaTime);
+            base.AddUpdateCallbacks(root);
 
-            for (int i = 0; i < Gizmos.Count; i++)
-            {
-                Gizmos[i].Update(deltaTime);
-            }
+            root.UpdateCallbacksToAdd.Add(_update);
+        }
+
+        /// <inheritdoc />
+        protected override void RemoveUpdateCallbacks(RootControl root)
+        {
+            base.RemoveUpdateCallbacks(root);
+
+            root.UpdateCallbacksToRemove.Add(_update);
         }
 
         private void OnGizmoModeToggle(ViewportWidgetButton button)
@@ -538,33 +559,6 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            if (key == Keys.Alpha1)
-            {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Translate;
-                return true;
-            }
-            if (key == Keys.Alpha2)
-            {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate;
-                return true;
-            }
-            if (key == Keys.Alpha3)
-            {
-                TransformGizmo.ActiveMode = TransformGizmo.Mode.Scale;
-                return true;
-            }
-            if (key == Keys.F)
-            {
-                ShowSelectedActors();
-                return true;
-            }
-
-            return base.OnKeyDown(key);
-        }
-
-        /// <inheritdoc />
         public override DragDropEffect OnDragEnter(ref Vector2 location, DragData data)
         {
             var result = base.OnDragEnter(ref location, data);
@@ -576,6 +570,12 @@ namespace FlaxEditor.Viewport
 
         private static bool ValidateDragItem(ContentItem contentItem)
         {
+            if (contentItem is BinaryAssetItem binaryAssetItem)
+            {
+                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                    return true;
+            }
+
             switch (contentItem.ItemDomain)
             {
             case ContentDomain.Material:
@@ -632,6 +632,23 @@ namespace FlaxEditor.Viewport
 
         private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector3 hitLocation)
         {
+            // TODO: refactor this and dont use ContentDomain but only asset Type for matching
+
+            if (item is BinaryAssetItem binaryAssetItem)
+            {
+                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                {
+                    var particleSystem = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
+                    var actor = ParticleEffect.New();
+                    actor.Name = item.ShortName;
+                    actor.ParticleSystem = particleSystem;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Spawn(actor);
+
+                    return;
+                }
+            }
+
             switch (item.ItemDomain)
             {
             case ContentDomain.Material:
@@ -782,6 +799,8 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public ViewportDebugDrawData DebugDrawData => null;
+        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, GPUTexture target, GPUTexture targetDepth, DrawCallsCollector collector)
+        {
+        }
     }
 }

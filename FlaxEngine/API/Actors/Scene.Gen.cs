@@ -3,12 +3,13 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
     /// <summary>
-    /// Scene root actor object
+    /// The scene root object that contains a hierarchy of actors.
     /// </summary>
     [Serializable]
     public sealed partial class Scene : Actor

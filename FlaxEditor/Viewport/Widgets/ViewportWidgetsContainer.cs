@@ -54,7 +54,7 @@ namespace FlaxEditor.Viewport.Widgets
         public ViewportWidgetsContainer(ViewportWidgetLocation location)
         : base(0, WidgetsMargin, 64, WidgetsHeight + 2)
         {
-            CanFocus = false;
+            AutoFocus = false;
             WidgetLocation = location;
         }
 

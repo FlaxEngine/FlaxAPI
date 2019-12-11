@@ -1,8 +1,10 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Base class for text boxes for float/int value editing. Supports slider and range clamping.
@@ -85,7 +87,7 @@ namespace FlaxEngine.GUI
         public event Action SlidingEnd;
 
         /// <summary>
-        /// Gets or sets the slider speed.
+        /// Gets or sets the slider speed. Use value 0 to disable and hide slider UI.
         /// </summary>
         public float SlideSpeed
         {
@@ -206,7 +208,6 @@ namespace FlaxEngine.GUI
                 base.OnLostFocus();
 
                 // Update
-                TryGetValue();
                 UpdateText();
             }
 

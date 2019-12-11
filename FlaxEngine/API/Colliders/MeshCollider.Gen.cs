@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -44,14 +45,14 @@ namespace FlaxEngine
         /// Linked collision data asset that contains convex mesh or triangle mesh used to represent a mesh collider shape.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(100), EditorDisplay("Collider"), Tooltip("Linked collision data asset that contains convex mesh or triangle mesh used to represent a mesh collider shape.")]
+        [EditorOrder(100), DefaultValue(null), EditorDisplay("Collider"), Tooltip("Linked collision data asset that contains convex mesh or triangle mesh used to represent a mesh collider shape.")]
         public CollisionData CollisionData
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetCollisionData(unmanagedPtr); }
-            set { Internal_SetCollisionData(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetCollisionData(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 

@@ -17,9 +17,14 @@ namespace FlaxEngine.GUI
         public const int DefaultSize = 16;
 
         /// <summary>
-        /// The default thickness.
+        /// The default thumb rectangle thickness.
         /// </summary>
-        public const int DefaultThickness = 6;
+        public const int DefaultThumbThickness = 6;
+
+        /// <summary>
+        /// The default track line thickness.
+        /// </summary>
+        public const int DefaultTrackThickness = 1;
 
         /// <summary>
         /// The default minimum opacity.
@@ -45,7 +50,7 @@ namespace FlaxEngine.GUI
 
         // Thumb data
 
-        private Rectangle _thumbRect;
+        private Rectangle _thumbRect, _trackRect;
         private bool _thumbClicked;
         private float _thumbCenter, _thumbSize;
 
@@ -116,7 +121,8 @@ namespace FlaxEngine.GUI
                     // Check if skip smoothing
                     if (!UseSmoothing)
                     {
-                        SetValue(value);
+                        _value = value;
+                        OnValueChanged();
                     }
                     else
                     {
@@ -129,12 +135,35 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the target value (target, not smooth).
         /// </summary>
-        public float TargetValue => _targetValue;
+        public float TargetValue
+        {
+            get => _targetValue;
+            set
+            {
+                value = Mathf.Clamp(value, _minimum, _maximum);
+                if (!Mathf.NearEqual(value, _targetValue))
+                {
+                    _targetValue = value;
+                    _value = value;
+                    OnValueChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the value slow down.
         /// </summary>
         public float ValueSlowDown => _targetValue - _value;
+
+        /// <summary>
+        /// Gets a value indicating whether thumb is being clicked (scroll bar is in use).
+        /// </summary>
+        public bool IsThumbClicked => _thumbClicked;
+
+        /// <summary>
+        /// Occurs when value gets changed.
+        /// </summary>
+        public event Action ValueChanged;
 
         /// <summary>
         /// Gets the size of the track.
@@ -152,7 +181,7 @@ namespace FlaxEngine.GUI
         protected ScrollBar(Orientation orientation, float x, float y, float width, float height)
         : base(x, y, width, height)
         {
-            CanFocus = false;
+            AutoFocus = false;
 
             _orientation = orientation;
         }
@@ -181,18 +210,21 @@ namespace FlaxEngine.GUI
         private void UpdateThumb()
         {
             // Cache data
+            var width = Width;
+            var height = Height;
             float trackSize = TrackSize;
             float range = _maximum - _minimum;
             _thumbSize = Mathf.Min(trackSize, Mathf.Max(trackSize / range * 10.0f, 30.0f));
             float pixelRange = trackSize - _thumbSize;
-            float perc = (_value - _minimum) / range;
-            float thumbPosition = (int)(perc * pixelRange);
+            float percentage = (_value - _minimum) / range;
+            float thumbPosition = (int)(percentage * pixelRange);
             _thumbCenter = thumbPosition + _thumbSize / 2;
-
-            if (_orientation == Orientation.Vertical)
-                _thumbRect = new Rectangle((Width - DefaultThickness) / 2, thumbPosition + 4, DefaultThickness, _thumbSize - 8);
-            else
-                _thumbRect = new Rectangle(thumbPosition + 4, (Height - DefaultThickness) / 2, _thumbSize - 8, DefaultThickness);
+            _thumbRect = _orientation == Orientation.Vertical
+                         ? new Rectangle((width - DefaultThumbThickness) / 2, thumbPosition + 4, DefaultThumbThickness, _thumbSize - 8)
+                         : new Rectangle(thumbPosition + 4, (height - DefaultThumbThickness) / 2, _thumbSize - 8, DefaultThumbThickness);
+            _trackRect = _orientation == Orientation.Vertical
+                         ? new Rectangle((width - DefaultTrackThickness) / 2, 4, DefaultTrackThickness, height - 8)
+                         : new Rectangle(4, (height - DefaultTrackThickness) / 2, width - 8, DefaultTrackThickness);
         }
 
         private void EndTracking()
@@ -213,16 +245,14 @@ namespace FlaxEngine.GUI
             _value = _targetValue = 0;
         }
 
-        private void SetValue(float value)
+        /// <summary>
+        /// Called when value gets changed.
+        /// </summary>
+        protected virtual void OnValueChanged()
         {
-            _value = value;
-
-            // Update
             UpdateThumb();
 
-            // Change parent panel view offset
-            if (Parent is Panel panel)
-                panel.SetViewOffset(_orientation, _value);
+            ValueChanged?.Invoke();
         }
 
         private void OnUpdate(float deltaTime)
@@ -246,7 +276,8 @@ namespace FlaxEngine.GUI
                         value = Mathf.Lerp(_value, _targetValue, deltaTime * 20.0f * SmoothingScale);
                     else
                         value = _targetValue;
-                    SetValue(value);
+                    _value = value;
+                    OnValueChanged();
                     needUpdate = true;
                 }
             }
@@ -258,18 +289,34 @@ namespace FlaxEngine.GUI
             }
         }
 
+        /// <summary>
+        /// Sets the scroll range (min and max at once).
+        /// </summary>
+        /// <param name="minimum">The minimum scroll range value (see <see cref="Minimum"/>).</param>
+        /// <param name="maximum">The maximum scroll range value (see <see cref="Minimum"/>).</param>
+        public void SetScrollRange(float minimum, float maximum)
+        {
+            if (minimum > maximum)
+                throw new ArgumentOutOfRangeException();
+
+            _minimum = minimum;
+            _maximum = maximum;
+
+            if (Value < minimum)
+                Value = minimum;
+            else if (Value > maximum)
+                Value = maximum;
+
+            UpdateThumb();
+        }
+
         /// <inheritdoc />
         public override void Draw()
         {
             base.Draw();
 
             var style = Style.Current;
-
-            // Draw track line
-            var lineRect = _orientation == Orientation.Vertical ? new Rectangle(Width / 2, 4, 1, Height - 8) : new Rectangle(4, Height / 2, Width - 8, 1);
-            Render2D.FillRectangle(lineRect, style.BackgroundHighlighted * _thumbOpacity);
-
-            // Draw thumb
+            Render2D.FillRectangle(_trackRect, style.BackgroundHighlighted * _thumbOpacity);
             Render2D.FillRectangle(_thumbRect, (_thumbClicked ? style.BackgroundSelected : style.BackgroundNormal) * _thumbOpacity);
         }
 
@@ -287,12 +334,12 @@ namespace FlaxEngine.GUI
             if (_thumbClicked)
             {
                 Vector2 slidePosition = location + Root.TrackingMouseOffset;
-                if (Parent is Panel panel)
+                if (Parent is ScrollableControl panel)
                     slidePosition += panel.ViewOffset; // Hardcoded fix
                 float mousePosition = _orientation == Orientation.Vertical ? slidePosition.Y : slidePosition.X;
 
                 float percentage = (mousePosition - _mouseOffset - _thumbSize / 2) / (TrackSize - _thumbSize);
-                Value = percentage * _maximum;
+                Value = _minimum + percentage * (_maximum - _minimum);
             }
         }
 
@@ -310,8 +357,8 @@ namespace FlaxEngine.GUI
             if (buttons == MouseButton.Left)
             {
                 // Remove focus
-                var parentWin = Root;
-                parentWin.FocusedControl?.Defocus();
+                var root = Root;
+                root.FocusedControl?.Defocus();
 
                 float mousePosition = _orientation == Orientation.Vertical ? location.Y : location.X;
 

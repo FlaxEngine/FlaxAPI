@@ -2,12 +2,12 @@
 
 using System;
 using FlaxEditor.Content.Thumbnails;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Viewport.Previews;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {
@@ -105,9 +105,12 @@ namespace FlaxEditor.Content
                 _preview = new MaterialPreview(false);
                 _preview.RenderOnlyWithWindow = false;
                 _preview.Task.Enabled = false;
-                _preview.PostFxVolume.Settings.Eye_Technique = EyeAdaptationTechnique.None;
-                _preview.PostFxVolume.Settings.Eye_Exposure = 0.1f;
-                _preview.PostFxVolume.Settings.data.Flags4 |= 0b1001;
+
+                var eyeAdaptation = _preview.PostFxVolume.EyeAdaptation;
+                eyeAdaptation.Mode = EyeAdaptationMode.None;
+                eyeAdaptation.OverrideFlags |= EyeAdaptationSettings.Override.Mode;
+                _preview.PostFxVolume.EyeAdaptation = eyeAdaptation;
+
                 _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
                 _preview.SyncBackbufferSize();
             }
@@ -127,7 +130,7 @@ namespace FlaxEditor.Content
             _preview.Material = (Material)request.Asset;
             _preview.Parent = guiRoot;
 
-            _preview.Task.Internal_Render(context);
+            _preview.Task.OnRender(context);
         }
 
         /// <inheritdoc />

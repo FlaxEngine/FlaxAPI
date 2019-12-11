@@ -15,18 +15,15 @@ namespace FlaxEditor.Surface
     public class MaterialSurface : VisjectSurface
     {
         /// <inheritdoc />
-        public MaterialSurface(IVisjectSurfaceOwner owner, Action onSave)
-        : base(owner, onSave)
+        public MaterialSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo)
+        : base(owner, onSave, undo)
         {
         }
 
         /// <inheritdoc />
         public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
-            if ((nodeArchetype.Flags & NodeFlags.AnimGraphOnly) != 0 || (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
-                return false;
-
-            return base.CanSpawnNodeType(nodeArchetype);
+            return (nodeArchetype.Flags & NodeFlags.MaterialGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />

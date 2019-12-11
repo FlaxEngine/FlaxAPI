@@ -1,8 +1,10 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEngine;
 using FlaxEngine.Assertions;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.ContextMenu
 {
     /// <summary>
     /// Context menu popup directions.
@@ -122,23 +124,25 @@ namespace FlaxEngine.GUI
             PerformLayout();
 
             // Calculate popup direction and initial location (fit on a single monitor)
+            var dpiScale = Platform.DpiScale;
+            Vector2 dpiSize = Size * dpiScale;
             Vector2 locationWS = parent.PointToWindow(location);
-            Vector2 locationSS = parentWin.ClientToScreen(locationWS);
+            Vector2 locationSS = parentWin.ClientToScreen(locationWS * dpiScale);
             Location = Vector2.Zero;
-            Rectangle monitorBounds = Application.GetMonitorBounds(locationSS);
-            Vector2 rightBottomLocationSS = locationSS + Size;
+            Rectangle monitorBounds = Platform.GetMonitorBounds(locationSS);
+            Vector2 rightBottomLocationSS = locationSS + dpiSize;
             bool isUp = false, isLeft = false;
             if (monitorBounds.Bottom < rightBottomLocationSS.Y)
             {
                 // Direction: up
                 isUp = true;
-                locationSS.Y -= Height;
+                locationSS.Y -= dpiSize.Y;
             }
             if (monitorBounds.Right < rightBottomLocationSS.X)
             {
                 // Direction: left
                 isLeft = true;
-                locationSS.X -= Width;
+                locationSS.X -= dpiSize.X;
             }
 
             // Update direction flag
@@ -151,7 +155,7 @@ namespace FlaxEngine.GUI
             var desc = CreateWindowSettings.Default;
             desc.Position = locationSS;
             desc.StartPosition = WindowStartPosition.Manual;
-            desc.Size = Size;
+            desc.Size = dpiSize;
             desc.Fullscreen = false;
             desc.HasBorder = false;
             desc.SupportsTransparency = false;
@@ -255,7 +259,7 @@ namespace FlaxEngine.GUI
         {
             if (_window != null)
             {
-                _window.ClientSize = Size;
+                _window.ClientSize = Size * Platform.DpiScale;
             }
         }
 
@@ -286,7 +290,7 @@ namespace FlaxEngine.GUI
             if (_parentCM != null)
             {
                 // Skip if user clicked over the parent popup
-                var mouse = _parentCM.ScreenToClient(Application.MousePosition);
+                var mouse = _parentCM.ScreenToClient(Platform.MousePosition / Platform.Dpi);
                 if (!_parentCM.ContainsPoint(ref mouse))
                 {
                     root.Hide();
@@ -327,8 +331,9 @@ namespace FlaxEngine.GUI
         {
             // Draw background
             var style = Style.Current;
-            Render2D.FillRectangle(new Rectangle(0, 0, Width, Height), style.Background);
-            Render2D.DrawRectangle(new Rectangle(0, 0, Width - 1f, Height - 1f), Color.LerpUnclamped(style.BackgroundSelected, style.Background, 0.6f));
+            var bounds = new Rectangle(Vector2.Zero, Size);
+            Render2D.FillRectangle(bounds, style.Background);
+            Render2D.DrawRectangle(bounds, Color.Lerp(style.BackgroundSelected, style.Background, 0.6f));
 
             base.Draw();
         }

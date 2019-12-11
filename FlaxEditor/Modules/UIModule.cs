@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Dialogs;
+using FlaxEditor.GUI.Input;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEditor.Scripting;
@@ -13,9 +15,7 @@ using FlaxEditor.Utilities;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Windows;
 using FlaxEngine;
-using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using DockHintWindow = FlaxEditor.GUI.Docking.DockHintWindow;
 using MasterDockPanel = FlaxEditor.GUI.Docking.MasterDockPanel;
 
@@ -41,7 +41,8 @@ namespace FlaxEditor.Modules
         private ContextMenuButton _menuEditSelectAll;
         private ContextMenuButton _menuSceneMoveActorToViewport;
         private ContextMenuButton _menuSceneAlignActorWithViewport;
-        private ContextMenuButton _menuSceneAlignViewportWtihActor;
+        private ContextMenuButton _menuSceneAlignViewportWithActor;
+        private ContextMenuButton _menuScenePilotActor;
         private ContextMenuButton _menuSceneCreateTerrain;
         private ContextMenuButton _menuGamePlay;
         private ContextMenuButton _menuGamePause;
@@ -127,7 +128,6 @@ namespace FlaxEditor.Modules
         : base(editor)
         {
             InitOrder = -90;
-
             SetupStyle();
         }
 
@@ -165,9 +165,9 @@ namespace FlaxEditor.Modules
             _toolStripRedo.Enabled = canEditScene && undoRedo.CanRedo;
             //
             var gizmoMode = gizmo.ActiveMode;
-            _toolStripTranslate.Checked = gizmoMode == TransformGizmo.Mode.Translate;
-            _toolStripRotate.Checked = gizmoMode == TransformGizmo.Mode.Rotate;
-            _toolStripScale.Checked = gizmoMode == TransformGizmo.Mode.Scale;
+            _toolStripTranslate.Checked = gizmoMode == TransformGizmoBase.Mode.Translate;
+            _toolStripRotate.Checked = gizmoMode == TransformGizmoBase.Mode.Rotate;
+            _toolStripScale.Checked = gizmoMode == TransformGizmoBase.Mode.Scale;
             //
             var play = _toolStripPlay;
             var pause = _toolStripPause;
@@ -260,8 +260,32 @@ namespace FlaxEditor.Modules
             InitStatusBar(mainWindow);
             InitDockPanel(mainWindow);
 
-            // Cache hint windows
-            DockHintWindow.Proxy.InitHitProxy();
+            // Add dummy control for drawing the main window borders if using a custom style
+            if (!Editor.Options.Options.Interface.UseNativeWindowSystem)
+            {
+                mainWindow.AddChild(new CustomWindowBorderControl
+                {
+                    Size = Vector2.Zero,
+                });
+            }
+        }
+
+        private class CustomWindowBorderControl : Control
+        {
+            /// <inheritdoc />
+            public override void Draw()
+            {
+                var win = RootWindow.Window;
+                if (win.IsMaximized)
+                    return;
+
+                var style = Style.Current;
+                var color = style.BackgroundSelected;
+                var rect = new Rectangle(0.5f, 0.5f, Parent.Width - 1.0f, Parent.Height - 1.0f - StatusBar.DefaultHeight);
+                Render2D.DrawLine(rect.UpperLeft, rect.UpperRight, color);
+                Render2D.DrawLine(rect.UpperLeft, rect.BottomLeft, color);
+                Render2D.DrawLine(rect.UpperRight, rect.BottomRight, color);
+            }
         }
 
         /// <inheritdoc />
@@ -323,8 +347,6 @@ namespace FlaxEditor.Modules
         {
             var style = new Style();
 
-            // Note: we pre-create editor style in constructor and load icons/fonts during editor init.
-
             // Metro Style colors
             style.Background = Color.FromBgra(0xFF1C1C1C);
             style.LightBackground = Color.FromBgra(0xFF2D2D30);
@@ -341,27 +363,15 @@ namespace FlaxEditor.Modules
             style.DragWindow = style.BackgroundSelected * 0.7f;
             style.ProgressNormal = Color.FromBgra(0xFF0ad328);
 
-            // Font
-            var primaryFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
-            if (primaryFont)
-            {
-                primaryFont.WaitForLoaded();
+            // Color picking
+            ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
 
-                // Create fonts
-                style.FontTitle = primaryFont.CreateFont(18);
-                style.FontLarge = primaryFont.CreateFont(14);
-                style.FontMedium = primaryFont.CreateFont(9);
-                style.FontSmall = primaryFont.CreateFont(9);
-
-                Assert.IsNotNull(style.FontTitle, "Missing Title font.");
-                Assert.IsNotNull(style.FontLarge, "Missing Large font.");
-                Assert.IsNotNull(style.FontMedium, "Missing Medium font.");
-                Assert.IsNotNull(style.FontSmall, "Missing Small font.");
-            }
-            else
-            {
-                Editor.LogError("Cannot load primary GUI Style font " + EditorAssets.PrimaryFont);
-            }
+            // Fonts
+            var options = Editor.Options.Options;
+            style.FontTitle = options.Interface.TitleFont.GetFont();
+            style.FontLarge = options.Interface.LargeFont.GetFont();
+            style.FontMedium = options.Interface.MediumFont.GetFont();
+            style.FontSmall = options.Interface.SmallFont.GetFont();
 
             // Icons
             style.ArrowDown = Editor.Icons.ArrowDown12;
@@ -388,9 +398,9 @@ namespace FlaxEditor.Modules
             return dialog;
         }
 
-        private void InitMainMenu(FlaxEngine.GUI.RootControl mainWindow)
+        private void InitMainMenu(RootControl mainWindow)
         {
-            MainMenu = new MainMenu();
+            MainMenu = new MainMenu(mainWindow);
             MainMenu.Parent = mainWindow;
 
             // File
@@ -438,7 +448,8 @@ namespace FlaxEditor.Modules
             cm.VisibleChanged += OnMenuSceneShowHide;
             _menuSceneMoveActorToViewport = cm.AddButton("Move actor to viewport", MoveActorToViewport);
             _menuSceneAlignActorWithViewport = cm.AddButton("Align actor with viewport", AlignActorWithViewport);
-            _menuSceneAlignViewportWtihActor = cm.AddButton("Align viewport with actor", AlignViewportWithActor);
+            _menuSceneAlignViewportWithActor = cm.AddButton("Align viewport with actor", AlignViewportWithActor);
+            _menuScenePilotActor = cm.AddButton("Pilot actor", PilotActor);
             cm.AddSeparator();
             _menuSceneCreateTerrain = cm.AddButton("Create terrain", CreateTerrain);
 
@@ -481,7 +492,8 @@ namespace FlaxEditor.Modules
             cm.AddButton("Properties", Editor.Windows.PropertiesWin.FocusOrShow);
             cm.AddButton("Game", Editor.Windows.GameWin.FocusOrShow);
             cm.AddButton("Editor", Editor.Windows.EditWin.FocusOrShow);
-            cm.AddButton("Debug Log", Editor.Windows.DebugWin.FocusOrShow);
+            cm.AddButton("Debug Log", Editor.Windows.DebugLogWin.FocusOrShow);
+            cm.AddButton("Output Log", Editor.Windows.OutputLogWin.FocusOrShow);
             cm.AddButton("Graphics Quality", Editor.Windows.GraphicsQualityWin.FocusOrShow);
             cm.AddButton("Game Cooker", Editor.Windows.GameCookerWin.FocusOrShow);
             cm.AddButton("Profiler", Editor.Windows.ProfilerWin.FocusOrShow);
@@ -493,19 +505,19 @@ namespace FlaxEditor.Modules
             // Help
             MenuHelp = MainMenu.AddButton("Help");
             cm = MenuHelp.ContextMenu;
-            cm.AddButton("Discord", () => Application.StartProcess(Constants.DiscordUrl));
-            cm.AddButton("Documentation", () => Application.StartProcess(Constants.DocsUrl));
-            cm.AddButton("Report an issue", () => Application.StartProcess(Constants.BugTrackerUrl));
+            cm.AddButton("Discord", () => Platform.StartProcess(Constants.DiscordUrl));
+            cm.AddButton("Documentation", () => Platform.StartProcess(Constants.DocsUrl));
+            cm.AddButton("Report an issue", () => Platform.StartProcess(Constants.BugTrackerUrl));
             cm.AddSeparator();
-            cm.AddButton("Official Website", () => Application.StartProcess(Constants.WebsiteUrl));
-            cm.AddButton("Facebook Fanpage", () => Application.StartProcess(Constants.FacebookUrl));
-            cm.AddButton("Youtube Channel", () => Application.StartProcess(Constants.YoutubeUrl));
-            cm.AddButton("Twitter", () => Application.StartProcess(Constants.TwitterUrl));
+            cm.AddButton("Official Website", () => Platform.StartProcess(Constants.WebsiteUrl));
+            cm.AddButton("Facebook Fanpage", () => Platform.StartProcess(Constants.FacebookUrl));
+            cm.AddButton("Youtube Channel", () => Platform.StartProcess(Constants.YoutubeUrl));
+            cm.AddButton("Twitter", () => Platform.StartProcess(Constants.TwitterUrl));
             cm.AddSeparator();
             cm.AddButton("Information about Flax", () => new AboutDialog().Show());
         }
 
-        private void InitToolstrip(FlaxEngine.GUI.RootControl mainWindow)
+        private void InitToolstrip(RootControl mainWindow)
         {
             ToolStrip = new ToolStrip();
             ToolStrip.Parent = mainWindow;
@@ -515,9 +527,9 @@ namespace FlaxEditor.Modules
             _toolStripUndo = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Undo32, Editor.PerformUndo).LinkTooltip("Undo (Ctrl+Z)");
             _toolStripRedo = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Redo32, Editor.PerformRedo).LinkTooltip("Redo (Ctrl+Y)");
             ToolStrip.AddSeparator();
-            _toolStripTranslate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Translate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
-            _toolStripRotate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Rotate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
-            _toolStripScale = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Scale32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmo.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
+            _toolStripTranslate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Translate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate).LinkTooltip("Change Gizmo tool mode to Translate (1)");
+            _toolStripRotate = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Rotate32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate).LinkTooltip("Change Gizmo tool mode to Rotate (2)");
+            _toolStripScale = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Scale32, () => Editor.MainTransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale).LinkTooltip("Change Gizmo tool mode to Scale (3)");
             ToolStrip.AddSeparator();
             _toolStripPlay = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Play32, Editor.Simulation.RequestPlayOrStopPlay).LinkTooltip("Start/Stop simulation (F5)");
             _toolStripPause = (ToolStripButton)ToolStrip.AddButton(Editor.Icons.Pause32, Editor.Simulation.RequestResumeOrPause).LinkTooltip("Pause/Resume simulation(F6)");
@@ -526,7 +538,7 @@ namespace FlaxEditor.Modules
             UpdateToolstrip();
         }
 
-        private void InitStatusBar(FlaxEngine.GUI.RootControl mainWindow)
+        private void InitStatusBar(RootControl mainWindow)
         {
             // Status Bar
             StatusBar = new StatusBar
@@ -565,7 +577,7 @@ namespace FlaxEditor.Modules
             UpdateStatusBar();
         }
 
-        private void InitDockPanel(FlaxEngine.GUI.RootControl mainWindow)
+        private void InitDockPanel(RootControl mainWindow)
         {
             // Dock Panel
             MasterPanel.Parent = mainWindow;
@@ -627,10 +639,13 @@ namespace FlaxEditor.Modules
 
             var selection = Editor.SceneEditing;
             bool hasActorSelected = selection.HasSthSelected && selection.Selection[0] is ActorNode;
+            bool isPilotActorActive = Editor.Windows.EditWin.IsPilotActorActive;
 
             _menuSceneMoveActorToViewport.Enabled = hasActorSelected;
             _menuSceneAlignActorWithViewport.Enabled = hasActorSelected;
-            _menuSceneAlignViewportWtihActor.Enabled = hasActorSelected;
+            _menuSceneAlignViewportWithActor.Enabled = hasActorSelected;
+            _menuScenePilotActor.Enabled = hasActorSelected || isPilotActorActive;
+            _menuScenePilotActor.Text = isPilotActorActive ? "Stop piloting actor" : "Pilot actor";
             _menuSceneCreateTerrain.Enabled = SceneManager.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
 
             control.PerformLayout();
@@ -655,7 +670,7 @@ namespace FlaxEditor.Modules
                 return;
 
             var c = (ContextMenu)control;
-            bool canBakeLightmaps = GraphicsDevice.Limits.IsComputeSupported;
+            bool canBakeLightmaps = GPUDevice.Limits.IsComputeSupported;
             bool canEdit = SceneManager.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
             bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive;
             _menuToolsBakeLightmaps.Enabled = (canEdit && canBakeLightmaps) || isBakingLightmaps;
@@ -735,7 +750,23 @@ namespace FlaxEditor.Modules
             }
         }
 
-        private void CreateTerrain()
+        internal void PilotActor()
+        {
+            if (Editor.Windows.EditWin.IsPilotActorActive)
+            {
+                Editor.Windows.EditWin.EndPilot();
+            }
+            else
+            {
+                var selection = Editor.SceneEditing;
+                if (selection.HasSthSelected && selection.Selection[0] is ActorNode node)
+                {
+                    Editor.Windows.EditWin.PilotActor(node.Actor);
+                }
+            }
+        }
+
+        internal void CreateTerrain()
         {
             new Tools.Terrain.CreateTerrainDialog().Show(Editor.Windows.MainWindow);
         }

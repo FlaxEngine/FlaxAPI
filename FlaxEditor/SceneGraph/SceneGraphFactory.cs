@@ -73,6 +73,8 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(Foliage), typeof(FoliageNode));
             CustomNodesTypes.Add(typeof(NavMeshBoundsVolume), typeof(NavMeshBoundsVolumeNode));
             CustomNodesTypes.Add(typeof(NavLink), typeof(NavLinkNode));
+            CustomNodesTypes.Add(typeof(ParticleEffect), typeof(ParticleEffectNode));
+            CustomNodesTypes.Add(typeof(SceneAnimationPlayer), typeof(SceneAnimationPlayerNode));
         }
 
         /// <summary>
@@ -99,11 +101,11 @@ namespace FlaxEditor.SceneGraph
         public static ActorNode BuildActorNode(Actor actor)
         {
             ActorNode result = null;
+            Type customType;
 
             try
             {
                 // Try to pick custom node type for that actor object
-                Type customType;
                 if (CustomNodesTypes.TryGetValue(actor.GetType(), out customType))
                 {
                     // Use custom type
@@ -123,6 +125,10 @@ namespace FlaxEditor.SceneGraph
             {
                 // Error
                 Editor.LogWarning($"Failed to create scene graph node for actor {actor.Name} (type: {actor.GetType()}).");
+                if (CustomNodesTypes.TryGetValue(actor.GetType(), out customType))
+                {
+                    Editor.LogWarning($"Custom node type: {customType}");
+                }
                 Editor.LogWarning(ex);
             }
 
@@ -135,6 +141,9 @@ namespace FlaxEditor.SceneGraph
             for (int i = 0; i < childrenCount; i++)
             {
                 var child = node.Actor.GetChild(i);
+                if (child == null)
+                    continue;
+
                 var childNode = BuildActorNode(child);
                 if (childNode != null)
                     childNode.ParentNode = node;

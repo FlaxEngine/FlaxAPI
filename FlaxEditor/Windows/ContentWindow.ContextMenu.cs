@@ -2,9 +2,10 @@
 
 using System;
 using FlaxEditor.Content;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.Assertions;
-using FlaxEngine.GUI;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.Windows
 {
@@ -56,7 +57,7 @@ namespace FlaxEditor.Windows
                 b = cm.AddButton("Open", () => Open(item));
                 b.Enabled = proxy != null || isFolder;
 
-                cm.AddButton("Show in explorer", () => Application.StartProcess(System.IO.Path.GetDirectoryName(item.Path)));
+                cm.AddButton("Show in explorer", () => Platform.StartProcess(System.IO.Path.GetDirectoryName(item.Path)));
 
                 if (item.HasDefaultThumbnail == false)
                 {
@@ -76,9 +77,14 @@ namespace FlaxEditor.Windows
                             string importLocation = System.IO.Path.GetDirectoryName(importPath);
                             if (!string.IsNullOrEmpty(importLocation) && System.IO.Directory.Exists(importLocation))
                             {
-                                cm.AddButton("Show import location", () => Application.StartProcess(importLocation));
+                                cm.AddButton("Show import location", () => Platform.StartProcess(importLocation));
                             }
                         }
+                    }
+
+                    if (item is AssetItem assetItem)
+                    {
+                        cm.AddButton("Copy asset ID", () => Platform.ClipboardText = JsonSerializer.GetStringID(assetItem.ID));
                     }
 
                     if (Editor.CanExport(item.Path))
@@ -105,13 +111,13 @@ namespace FlaxEditor.Windows
                 ContextMenuShow?.Invoke(cm, item);
                 proxy?.OnContentWindowContextMenu(cm, item);
 
-                cm.AddButton("Copy name to Clipboard", () => Application.ClipboardText = item.NamePath);
+                cm.AddButton("Copy name to Clipboard", () => Platform.ClipboardText = item.NamePath);
 
-                cm.AddButton("Copy path to Clipboard", () => Application.ClipboardText = item.Path);
+                cm.AddButton("Copy path to Clipboard", () => Platform.ClipboardText = item.Path);
             }
             else
             {
-                cm.AddButton("Show in explorer", () => Application.StartProcess(CurrentViewFolder.Path));
+                cm.AddButton("Show in explorer", () => Platform.StartProcess(CurrentViewFolder.Path));
 
                 b = cm.AddButton("Paste", _view.Paste);
                 b.Enabled = _view.CanPaste();

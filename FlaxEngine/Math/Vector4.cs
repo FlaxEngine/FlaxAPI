@@ -98,6 +98,11 @@ namespace FlaxEngine
         public static readonly Vector4 UnitW = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
         /// <summary>
+        /// A <see cref="Vector4" /> with all of its components set to half.
+        /// </summary>
+        public static readonly Vector4 Half = new Vector4(0.5f, 0.5f, 0.5f, 0.5f);
+
+        /// <summary>
         /// A <see cref="Vector4" /> with all of its components set to one.
         /// </summary>
         public static readonly Vector4 One = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -265,14 +270,10 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                case 0:
-                    return X;
-                case 1:
-                    return Y;
-                case 2:
-                    return Z;
-                case 3:
-                    return W;
+                case 0: return X;
+                case 1: return Y;
+                case 2: return Z;
+                case 3: return W;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector4 run from 0 to 3, inclusive.");
@@ -294,8 +295,7 @@ namespace FlaxEngine
                 case 3:
                     W = value;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector4 run from 0 to 3, inclusive.");
+                default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector4 run from 0 to 3, inclusive.");
                 }
             }
         }
@@ -745,6 +745,32 @@ namespace FlaxEngine
             float w = value1.W - value2.W;
 
             return x * x + y * y + z * z + w * w;
+        }
+
+        /// <summary>
+        /// Tests whether one vector is near another vector.
+        /// </summary>
+        /// <param name="left">The left vector.</param>
+        /// <param name="right">The right vector.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns><c>true</c> if left and right are near another, <c>false</c> otherwise</returns>
+        public static bool NearEqual(Vector4 left, Vector4 right, float epsilon = Mathf.Epsilon)
+        {
+            return NearEqual(ref left, ref right, epsilon);
+        }
+
+        /// <summary>
+        /// Tests whether one vector is near another vector.
+        /// </summary>
+        /// <param name="left">The left vector.</param>
+        /// <param name="right">The right vector.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns><c>true</c> if left and right are near another, <c>false</c> otherwise</returns>
+        public static bool NearEqual(ref Vector4 left, ref Vector4 right, float epsilon = Mathf.Epsilon)
+        {
+            return Mathf.WithinEpsilon(left.X, right.X, epsilon) &&
+                   Mathf.WithinEpsilon(left.Y, right.Y, epsilon) &&
+                   Mathf.WithinEpsilon(left.Z, right.Z, epsilon);
         }
 
         /// <summary>
@@ -1374,6 +1400,39 @@ namespace FlaxEngine
         public static Vector4 operator /(Vector4 value, Vector4 scale)
         {
             return new Vector4(value.X / scale.X, value.Y / scale.Y, value.Z / scale.Z, value.W / scale.W);
+        }
+
+        /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector4 operator %(Vector4 value, float scale)
+        {
+            return new Vector4(value.X % scale, value.Y % scale, value.Z % scale, value.W % scale);
+        }
+
+        /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The amount by which to scale the vector.</param>
+        /// <param name="scale">The vector to scale.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector4 operator %(float value, Vector4 scale)
+        {
+            return new Vector4(value % scale.X, value % scale.Y, value % scale.Z, value % scale.W);
+        }
+
+        /// <summary>
+        /// Remainder of value divided by scale.
+        /// </summary>
+        /// <param name="value">The vector to scale.</param>
+        /// <param name="scale">The amount by which to scale the vector.</param>
+        /// <returns>The remained vector.</returns>
+        public static Vector4 operator %(Vector4 value, Vector4 scale)
+        {
+            return new Vector4(value.X % scale.X, value.Y % scale.Y, value.Z % scale.Z, value.W % scale.W);
         }
 
         /// <summary>

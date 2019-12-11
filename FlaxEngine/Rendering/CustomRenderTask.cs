@@ -2,34 +2,34 @@
 
 using System;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Provides ability to perform custom rendering using <see cref="GPUContext"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.Rendering.RenderTask" />
+    /// <seealso cref="FlaxEngine.RenderTask" />
     public class CustomRenderTask : RenderTask
     {
         /// <summary>
         /// The custom action to perform during rendering.
         /// </summary>
-        public Action<GPUContext> OnRender;
+        public Action<GPUContext> Render;
 
         internal CustomRenderTask()
         {
         }
 
-        internal override bool Internal_Begin(out IntPtr outputPtr)
+        internal override bool OnBegin(out IntPtr outputPtr)
         {
-            base.Internal_Begin(out outputPtr);
+            base.OnBegin(out outputPtr);
 
             // Allow to render only if has linked callback
-            return OnRender != null;
+            return Render != null;
         }
 
-        internal override void Internal_Render(GPUContext context)
+        internal override void OnRender(GPUContext context)
         {
-            OnRender(context);
+            Render(context);
         }
     }
 }

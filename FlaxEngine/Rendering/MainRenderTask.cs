@@ -2,7 +2,7 @@
 
 using System;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// The main game rendering task used by the engine.
@@ -12,15 +12,13 @@ namespace FlaxEngine.Rendering
     /// This allows to increase game rendering performance (reduced memory usage and data transfer).
     /// User should use post effects pipeline to modify the final frame.
     /// </remarks>
-    /// <seealso cref="FlaxEngine.Rendering.SceneRenderTask" />
+    /// <seealso cref="FlaxEngine.SceneRenderTask" />
     public sealed class MainRenderTask : SceneRenderTask
     {
         /// <summary>
         /// Gets the main game rendering task. Use it to plug custom rendering logic for your game.
         /// </summary>
         public static MainRenderTask Instance { get; internal set; }
-
-        // TODO: add API to override main camera
 
         internal MainRenderTask()
         {
@@ -32,7 +30,7 @@ namespace FlaxEngine.Rendering
             // Use the main camera for the game
             Camera = Camera.MainCamera;
 
-            if (!Application.IsEditor)
+            if (!Platform.IsEditor)
             {
                 // Sync render buffers size with the backbuffer
                 Buffers.Size = Screen.Size;
@@ -41,11 +39,11 @@ namespace FlaxEngine.Rendering
             base.OnBegin(context);
         }
 
-        internal override bool Internal_Begin(out IntPtr outputPtr)
+        internal override bool OnBegin(out IntPtr outputPtr)
         {
-            bool result = base.Internal_Begin(out outputPtr);
+            bool result = base.OnBegin(out outputPtr);
 
-            if (!Application.IsEditor)
+            if (!Platform.IsEditor)
             {
                 // Standalone build uses hidden, internal output (native window backbuffer in most cases)
                 // So pass rendering even with missing output

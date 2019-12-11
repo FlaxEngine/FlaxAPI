@@ -21,16 +21,20 @@ namespace FlaxEngine.GUI
             // Sort controls from top to bottom
             float y = _margin.Top;
             float w = Width - _margin.Width;
+            bool hasAnyItem = false;
             for (int i = 0; i < _children.Count; i++)
             {
                 Control c = _children[i];
                 if (c.Visible)
                 {
                     var h = c.Height;
-                    c.Bounds = new Rectangle(_margin.Left + _offset.X, y + _spacing + _offset.Y, w, h);
-                    y = c.Bottom;
+                    c.Bounds = new Rectangle(_margin.Left + _offset.X, y + _offset.Y, w, h);
+                    y = c.Bottom + _spacing;
+                    hasAnyItem = true;
                 }
             }
+            if (hasAnyItem)
+                y -= _spacing;
             y += _margin.Bottom;
 
             // Update size

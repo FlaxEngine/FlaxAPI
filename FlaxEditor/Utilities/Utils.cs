@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
+using FlaxEngine.GUI;
 using Newtonsoft.Json;
 using Object = System.Object;
 
@@ -60,6 +61,30 @@ namespace FlaxEditor.Utilities
 
             return string.Format("{0:0.##} {1}", bytes, MemorySizePostfixes[order]);
         }
+
+        /// <summary>
+        /// The colors for the keyframes used by the curve editor.
+        /// </summary>
+        internal static readonly Color[] CurveKeyframesColors =
+        {
+            Color.OrangeRed,
+            Color.ForestGreen,
+            Color.CornflowerBlue,
+            Color.White,
+        };
+
+        /// <summary>
+        /// The time/value axes tick steps for editors with timeline.
+        /// </summary>
+        internal static readonly float[] CurveTickSteps =
+        {
+            0.0000001f, 0.0000005f, 0.000001f, 0.000005f, 0.00001f,
+            0.00005f, 0.0001f, 0.0005f, 0.001f, 0.005f,
+            0.01f, 0.05f, 0.1f, 0.5f, 1,
+            5, 10, 50, 100, 500,
+            1000, 5000, 10000, 50000, 100000,
+            500000, 1000000, 5000000, 10000000, 100000000
+        };
 
         /// <summary>
         /// Determines whether the specified path string contains any invalid character.
@@ -155,7 +180,8 @@ namespace FlaxEditor.Utilities
         /// <returns>True if type is from gae or editor assembly, otherwise false.</returns>
         public static bool IsTypeFromGameScripts(Type type)
         {
-            return type.Assembly.GetName().Name.StartsWith("Assembly");
+            var name = type.Assembly.GetName().Name;
+            return name == "Game" || name == "Game.Editor";
         }
 
         /// <summary>
@@ -281,6 +307,9 @@ namespace FlaxEditor.Utilities
         /// <returns>The type or null if failed.</returns>
         public static Type GetType(string typeName)
         {
+            if (string.IsNullOrEmpty(typeName))
+                return null;
+
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             for (int i = 0; i < assemblies.Length; i++)
             {
@@ -481,7 +510,19 @@ namespace FlaxEditor.Utilities
             stream.Write(bytes);
         }
 
-        internal static void ReadCommonValue(BinaryReader stream, ref object value)
+        internal static Guid ReadGuid(this BinaryReader stream)
+        {
+            // TODO: use static bytes array to reduce dynamic allocs
+            return new Guid(stream.ReadBytes(16));
+        }
+
+        internal static void WriteGuid(this BinaryWriter stream, ref Guid value)
+        {
+            // TODO: use static bytes array to reduce dynamic allocs
+            stream.Write(value.ToByteArray());
+        }
+
+        internal static void ReadCommonValue(this BinaryReader stream, ref object value)
         {
             byte type = stream.ReadByte();
 
@@ -502,27 +543,27 @@ namespace FlaxEditor.Utilities
                 break;
             case 3: // CommonType::Vector2:
             {
-                value = new Vector2(stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadVector2();
             }
                 break;
             case 4: // CommonType::Vector3:
             {
-                value = new Vector3(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadVector3();
             }
                 break;
             case 5: // CommonType::Vector4:
             {
-                value = new Vector4(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadVector4();
             }
                 break;
             case 6: // CommonType::Color:
             {
-                value = new Color(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadColor();
             }
                 break;
             case 7: // CommonType::Guid:
             {
-                value = new Guid(stream.ReadBytes(16));
+                value = stream.ReadGuid();
             }
                 break;
             case 8: // CommonType::String:
@@ -552,7 +593,7 @@ namespace FlaxEditor.Utilities
                 break;
             case 10: // CommonType::Rotation:
             {
-                value = new Quaternion(stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle(), stream.ReadSingle());
+                value = stream.ReadQuaternion();
             }
                 break;
             case 11: // CommonType::Transform:
@@ -592,7 +633,7 @@ namespace FlaxEditor.Utilities
             }
         }
 
-        internal static void WriteCommonValue(BinaryWriter stream, object value)
+        internal static void WriteCommonValue(this BinaryWriter stream, object value)
         {
             if (value is bool asBool)
             {
@@ -646,7 +687,7 @@ namespace FlaxEditor.Utilities
             else if (value is Guid asGuid)
             {
                 stream.Write((byte)7);
-                stream.Write(asGuid.ToByteArray());
+                stream.WriteGuid(ref asGuid);
             }
             else if (value is string asString)
             {
@@ -731,11 +772,11 @@ namespace FlaxEditor.Utilities
             }
             else
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException(string.Format("Invalid Common Value type {0}", value != null ? value.GetType().ToString() : "null"));
             }
         }
 
-        internal static void WriteCommonValue(JsonWriter stream, object value)
+        internal static void WriteCommonValue(this JsonWriter stream, object value)
         {
             if (value is bool asBool)
             {
@@ -860,8 +901,44 @@ namespace FlaxEditor.Utilities
             }
             else
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException(string.Format("Invalid Common Value type {0}", value != null ? value.GetType().ToString() : "null"));
             }
+        }
+
+        /// <summary>
+        /// Shows the source code window.
+        /// </summary>
+        /// <param name="material">The material asset.</param>
+        public static void ShowSourceCode(string source, string title)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                MessageBox.Show("No generated shader source code.", "No source.");
+                return;
+            }
+
+            CreateWindowSettings settings = CreateWindowSettings.Default;
+            settings.ActivateWhenFirstShown = true;
+            settings.AllowMaximize = false;
+            settings.AllowMinimize = false;
+            settings.HasSizingFrame = false;
+            settings.StartPosition = WindowStartPosition.CenterScreen;
+            settings.Size = new Vector2(500, 600) * Platform.DpiScale;
+            settings.Title = title;
+            var dialog = Window.Create(settings);
+
+            var copyButton = new Button(4, 4, 100);
+            copyButton.Text = "Copy";
+            copyButton.Clicked += () => Platform.ClipboardText = source;
+            copyButton.Parent = dialog.GUI;
+
+            var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);
+            sourceTextBox.Height = settings.Size.Y - sourceTextBox.Top - 2;
+            sourceTextBox.Text = source;
+            sourceTextBox.Parent = dialog.GUI;
+
+            dialog.Show();
+            dialog.Focus();
         }
     }
 }

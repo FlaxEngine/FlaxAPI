@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using FlaxEditor.Options;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Gizmo
 {
@@ -18,6 +17,7 @@ namespace FlaxEditor.Gizmo
         private MaterialInstance _material;
         private Color _color0, _color1;
         private bool _enabled;
+        private bool _useEditorOptions;
 
         /// <summary>
         /// The cached actors list used for drawing (reusable to reduce memory allocations). Always cleared before and after objects rendering.
@@ -28,6 +28,56 @@ namespace FlaxEditor.Gizmo
         /// The selection getter.
         /// </summary>
         public Func<List<SceneGraphNode>> SelectionGetter;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether show selection outline effect.
+        /// </summary>
+        public bool ShowSelectionOutline
+        {
+            get => _enabled;
+            set => _enabled = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the selection outline first color (top of the screen-space gradient).
+        /// </summary>
+        public Color SelectionOutlineColor0
+        {
+            get => _color0;
+            set => _color0 = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the selection outline second color (bottom of the screen-space gradient).
+        /// </summary>
+        public Color SelectionOutlineColor1
+        {
+            get => _color1;
+            set => _color1 = value;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether use editor options for selection outline color and visibility. Otherwise, if disabled it can be controlled from code.
+        /// </summary>
+        public bool UseEditorOptions
+        {
+            get => _useEditorOptions;
+            set
+            {
+                if (_useEditorOptions != value)
+                {
+                    var options = Editor.Instance.Options;
+
+                    if (_useEditorOptions)
+                        options.OptionsChanged -= OnOptionsChanged;
+
+                    _useEditorOptions = value;
+
+                    if (_useEditorOptions)
+                        options.OptionsChanged += OnOptionsChanged;
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectionOutline"/> class.
@@ -44,6 +94,7 @@ namespace FlaxEditor.Gizmo
                 Editor.LogWarning("Failed to load gizmo selection outline material");
             }
 
+            _useEditorOptions = true;
             var options = Editor.Instance.Options;
             options.OptionsChanged += OnOptionsChanged;
             OnOptionsChanged(options.Options);
@@ -65,12 +116,13 @@ namespace FlaxEditor.Gizmo
         public override bool CanRender => _enabled && _material && _outlineMaterial.IsLoaded && SelectionGetter().Count > 0;
 
         /// <inheritdoc />
-        public override void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output)
+        public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
         {
             Profiler.BeginEventGPU("Selection Outline");
 
             // Pick a temporary depth buffer
-            var customDepth = RenderTarget.GetTemporary(PixelFormat.R32_Typeless, input.Width, input.Height, TextureFlags.DepthStencil | TextureFlags.ShaderResource);
+            var desc = GPUTextureDescription.New2D(input.Width, input.Height, PixelFormat.R32_Typeless, GPUTextureFlags.DepthStencil | GPUTextureFlags.ShaderResource);
+            var customDepth = RenderTargetPool.Get(ref desc);
             context.ClearDepth(customDepth);
 
             // Draw objects to depth buffer
@@ -93,7 +145,7 @@ namespace FlaxEditor.Gizmo
             context.DrawPostFxMaterial(_material, output, input, task);
 
             // Cleanup
-            RenderTarget.ReleaseTemporary(customDepth);
+            RenderTargetPool.Release(customDepth);
 
             Profiler.EndEventGPU();
         }
@@ -104,7 +156,7 @@ namespace FlaxEditor.Gizmo
         /// <param name="context">The context.</param>
         /// <param name="task">The task.</param>
         /// <param name="customDepth">The custom depth (output).</param>
-        protected virtual void DrawSelectionDepth(GPUContext context, SceneRenderTask task, RenderTarget customDepth)
+        protected virtual void DrawSelectionDepth(GPUContext context, SceneRenderTask task, GPUTexture customDepth)
         {
             // Get selected actors
             var selection = SelectionGetter();
@@ -116,7 +168,7 @@ namespace FlaxEditor.Gizmo
             }
 
             // Render selected objects depth
-            context.DrawSceneDepth(task, customDepth, true, _actors, ActorsSources.CustomActors);
+            context.DrawSceneDepth(task, customDepth, _actors, ActorsSources.CustomActors);
         }
     }
 }

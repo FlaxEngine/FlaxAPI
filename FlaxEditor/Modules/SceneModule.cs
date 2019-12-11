@@ -35,7 +35,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// The root tree node for the whole scene graph.
         /// </summary>
-        public readonly ScenesRootNode Root = new ScenesRootNode();
+        public ScenesRootNode Root;
 
         /// <summary>
         /// Occurs when actor gets removed. Editor and all submodules should remove references to that actor.
@@ -45,6 +45,8 @@ namespace FlaxEditor.Modules
         internal SceneModule(Editor editor)
         : base(editor)
         {
+            // After editor cache but before the windows
+            InitOrder = -900;
         }
 
         /// <summary>
@@ -156,7 +158,7 @@ namespace FlaxEditor.Modules
             sky.StaticFlags = StaticFlags.FullyStatic;
             //
             sun.Name = "Sun";
-            sun.Brightness = 4.0f;
+            sun.Brightness = 10.0f;
             sun.LocalPosition = new Vector3(40, 160, 0);
             sun.LocalEulerAngles = new Vector3(45, 0, 0);
             sun.StaticFlags = StaticFlags.FullyStatic;
@@ -295,9 +297,6 @@ namespace FlaxEditor.Modules
         /// <returns>True if action has been canceled, otherwise false</returns>
         public bool CheckSaveBeforeClose(SceneNode scene)
         {
-            // Suspend auto saves
-            SuspendAutoSave();
-
             // Check if scene was edited after last saving
             if (scene.IsEdited)
             {
@@ -331,9 +330,6 @@ namespace FlaxEditor.Modules
         /// <returns>True if action has been canceled, otherwise false</returns>
         public bool CheckSaveBeforeClose()
         {
-            // Suspend auto saves
-            SuspendAutoSave();
-
             // Check if scene was edited after last saving
             if (IsEdited())
             {
@@ -363,14 +359,6 @@ namespace FlaxEditor.Modules
         }
 
         /// <summary>
-        /// Suspends auto saving for a while.
-        /// </summary>
-        public void SuspendAutoSave()
-        {
-            // TODO: finish auto save from old c++ editor code
-        }
-
-        /// <summary>
         /// Clears references to the scene objects by the editor. Deselects objects.
         /// </summary>
         /// <param name="fullCleanup">True if cleanup all data (including serialized and cached data). Otherwise will just clear living references to the scene objects.</param>
@@ -384,18 +372,6 @@ namespace FlaxEditor.Modules
             {
                 Undo.Clear();
             }
-        }
-
-        /// <summary>
-        /// Saves the opened scenes collection to editor cache.
-        /// </summary>
-        private void saveOpeneScenes()
-        {
-            //throw new NotImplementedException();
-            // TODO: save collection of last scenes instead of single scene, use scene IDs
-            /*MemoryWriteStream lastSceneStream(PLATFORM_MAX_FILEPATH_LENGTH);
-	        lastSceneStream.WriteString(SceneManager::Instance()->GetLastScenePath());
-	        EditorCache::Instance()->Set(TEXT("LastScene"), false, &lastSceneStream);*/
         }
 
         private void OnSceneLoaded(Scene scene, Guid sceneId)
@@ -525,6 +501,10 @@ namespace FlaxEditor.Modules
             }
             else
             {
+                // Check if actor is selected in editor
+                if (Editor.SceneEditing.Selection.Contains(node))
+                    Editor.SceneEditing.Deselect();
+
                 // Remove node (user may unlink actor from the scene but not destroy the actor)
                 node.Dispose();
             }
@@ -585,6 +565,8 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnInit()
         {
+            Root = new ScenesRootNode();
+
             // Bind events
             SceneManager.SceneLoaded += OnSceneLoaded;
             SceneManager.SceneUnloading += OnSceneUnloading;
@@ -594,35 +576,6 @@ namespace FlaxEditor.Modules
             SceneManager.ActorOrderInParentChanged += OnActorOrderInParentChanged;
             SceneManager.ActorNameChanged += OnActorNameChanged;
             SceneManager.ActorActiveChanged += OnActorActiveChanged;
-        }
-
-        /// <inheritdoc />
-        public override void OnEndInit()
-        {
-            //throw new NotImplementedException();
-            // Check last opened scenes
-            // TODO: load collection of last scenes instead of single scene, use scene IDs
-            /*MemoryReadStream lastSceneStream;
-            if (EditorCache::Instance()->Get(TEXT("LastScene"), false, &lastSceneStream))
-            {
-                // Get scene name and try to load
-                String lastScene;
-                lastSceneStream.ReadString(&lastScene);
-                if (lastScene.HasChars())
-                {
-                    // Check if file slit exists
-                    if (FileSystem::FileExists(lastScene))
-                    {
-                        // Change scene
-                        CEditor->StateMachine->ChangingSceneState.LoadScene(lastScene);
-                    }
-                    else
-                    {
-                        // Warning
-                        LOG(Warning, 121, lastScene);
-                    }
-                }
-            }*/
         }
 
         /// <inheritdoc />

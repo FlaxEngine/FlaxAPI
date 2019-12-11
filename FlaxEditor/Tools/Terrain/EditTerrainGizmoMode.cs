@@ -31,7 +31,12 @@ namespace FlaxEditor.Tools.Terrain
             /// <summary>
             /// Terrain patches removing mode.
             /// </summary>
-            Remove
+            Remove,
+
+            /// <summary>
+            /// Terrain exporting mode.
+            /// </summary>
+            Export,
         }
 
         private Modes _mode;

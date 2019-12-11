@@ -99,5 +99,14 @@ namespace FlaxEditor.SceneGraph.Actors
             normal = Vector3.Up;
             return false;
         }
+
+        /// <inheritdoc />
+        public override void OnDispose()
+        {
+            var modelActor = (StaticModel)Actor;
+            modelActor.EntriesChanged -= BuildNodes;
+
+            base.OnDispose();
+        }
     }
 }

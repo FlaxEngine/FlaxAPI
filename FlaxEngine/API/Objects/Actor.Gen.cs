@@ -3,8 +3,8 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
-using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
@@ -39,14 +39,14 @@ namespace FlaxEngine
         /// Gets or sets parent actor (or null if actor has no parent)
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public Actor Parent
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetParent(unmanagedPtr); }
-            set { Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(value), false); }
+            set { Internal_SetParent(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value), false); }
 #endif
         }
 
@@ -64,7 +64,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_SetParent(unmanagedPtr, Object.GetUnmanagedPtr(newParent), worldPositionLock);
+            Internal_SetParent(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(newParent), worldPositionLock);
 #endif
         }
 
@@ -72,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets zero-based index in parent actor children list.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public int OrderInParent
         {
 #if UNIT_TEST_COMPILANT
@@ -87,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets object hide flags.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public HideFlags HideFlags
         {
 #if UNIT_TEST_COMPILANT
@@ -102,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the actor name.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-100), Tooltip("Custom name of the actor")]
+        [NoAnimate, EditorDisplay("General"), EditorOrder(-100), Tooltip("Custom name of the actor")]
         public string Name
         {
 #if UNIT_TEST_COMPILANT
@@ -117,7 +117,7 @@ namespace FlaxEngine
         /// Gets or sets actor static fags
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-80), Tooltip("Static flags describe type of the object")]
+        [NoAnimate, EditorDisplay("General"), EditorOrder(-80), Tooltip("Static flags describe type of the object")]
         public StaticFlags StaticFlags
         {
 #if UNIT_TEST_COMPILANT
@@ -132,7 +132,7 @@ namespace FlaxEngine
         /// Gets or sets the layer actor is in. Can be used for selective rendering or ignoring raycasts.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-69), Tooltip("The layer object is in")]
+        [NoAnimate, EditorDisplay("General"), EditorOrder(-69), Tooltip("The layer object is in")]
         public int Layer
         {
 #if UNIT_TEST_COMPILANT
@@ -147,7 +147,7 @@ namespace FlaxEngine
         /// Gets or sets the object tag. Can be used to identify the objects.
         /// </summary>
         [UnmanagedCall]
-        [EditorDisplay("General"), EditorOrder(-68), Tooltip("The object tag. Can be used to identify it.")]
+        [NoAnimate, EditorDisplay("General"), EditorOrder(-68), Tooltip("The object tag. Can be used to identify it.")]
         public string Tag
         {
 #if UNIT_TEST_COMPILANT
@@ -236,7 +236,7 @@ namespace FlaxEngine
         /// Gets or sets actor's world a three dimensional mathematical transformation
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor, NoSerialize]
+        [HideInEditor, NoSerialize, NoAnimate]
         public Transform Transform
         {
 #if UNIT_TEST_COMPILANT
@@ -296,7 +296,7 @@ namespace FlaxEngine
         /// Gets or sets actor's world a three dimensional mathematical transformation
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public Transform LocalTransform
         {
 #if UNIT_TEST_COMPILANT
@@ -619,7 +619,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_AddScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
+            Internal_AddScript(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(script));
 #endif
         }
 
@@ -636,7 +636,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_RemoveScript(unmanagedPtr, Object.GetUnmanagedPtr(script));
+            Internal_RemoveScript(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(script));
 #endif
         }
 
@@ -648,6 +648,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
+        [NoAnimate]
         public void DeleteScript(int index)
         {
 #if UNIT_TEST_COMPILANT
@@ -757,12 +758,31 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
+        [NoAnimate]
         public void BreakPrefabLink()
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Internal_BreakPrefabLink(unmanagedPtr);
+#endif
+        }
+
+        /// <summary>
+        /// Determines whether this actor has tag assigned.
+        /// </summary>
+        /// <param name="tag">The tag to check</param>
+        /// <returns><c>true</c> if this actor has given tag; otherwise, <c>false</c>.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public bool HasTag(string tag)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_HasTag(unmanagedPtr, tag);
 #endif
         }
 
@@ -1008,6 +1028,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_BreakPrefabLink(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_HasTag(IntPtr obj, string tag);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_ContainsInHierarchy(IntPtr obj, Actor actor);

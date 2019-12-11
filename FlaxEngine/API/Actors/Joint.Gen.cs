@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -17,14 +18,14 @@ namespace FlaxEngine
         /// Gets or sets the target actor for the joint. It has to be RigidBody or CharacterController.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(0), EditorDisplay("Joint"), Tooltip("The target actor for the joint. It has to be RigidBody or CharacterController")]
+        [EditorOrder(0), DefaultValue(null), EditorDisplay("Joint"), Tooltip("The target actor for the joint. It has to be RigidBody or CharacterController")]
         public Actor Target
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetTarget(unmanagedPtr); }
-            set { Internal_SetTarget(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetTarget(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -32,7 +33,7 @@ namespace FlaxEngine
         /// Gets or sets the break force. Determines the maximum force the joint can apply before breaking. Broken joints no longer participate in physics simulation.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(10), EditorDisplay("Joint"), Tooltip("Determines the maximum force the joint can apply before breaking. Broken joints no longer participate in physics simulation.")]
+        [EditorOrder(10), DefaultValue(float.MaxValue), EditorDisplay("Joint"), Tooltip("Determines the maximum force the joint can apply before breaking. Broken joints no longer participate in physics simulation.")]
         public float BreakForce
         {
 #if UNIT_TEST_COMPILANT
@@ -47,7 +48,7 @@ namespace FlaxEngine
         /// Gets or sets the break torque. Determines the maximum torque the joint can apply before breaking. Broken joints no longer participate in physics simulation.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(20), EditorDisplay("Joint"), Tooltip("Determines the maximum torque the joint can apply before breaking. Broken joints no longer participate in physics simulation.")]
+        [EditorOrder(20), DefaultValue(float.MaxValue), EditorDisplay("Joint"), Tooltip("Determines the maximum torque the joint can apply before breaking. Broken joints no longer participate in physics simulation.")]
         public float BreakTorque
         {
 #if UNIT_TEST_COMPILANT
@@ -62,7 +63,7 @@ namespace FlaxEngine
         /// Determines whether collisions between the two bodies managed by the joint are enabled.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(30), EditorDisplay("Joint"), Tooltip("Determines whether collisions between the two bodies managed by the joint are enabled.")]
+        [EditorOrder(30), DefaultValue(true), EditorDisplay("Joint"), Tooltip("Determines whether collisions between the two bodies managed by the joint are enabled.")]
         public bool EnableCollision
         {
 #if UNIT_TEST_COMPILANT
@@ -80,7 +81,7 @@ namespace FlaxEngine
         /// This is the relative pose which locates the joint frame relative to the target actor.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(40), EditorDisplay("Joint"), Tooltip("This is the relative pose which locates the joint frame relative to the target actor.")]
+        [EditorOrder(40), DefaultValue(typeof(Vector3), "0,0,0"), EditorDisplay("Joint"), Tooltip("This is the relative pose which locates the joint frame relative to the target actor.")]
         public Vector3 TargetAnchor
         {
 #if UNIT_TEST_COMPILANT
@@ -98,7 +99,7 @@ namespace FlaxEngine
         /// This is the relative pose rotation which locates the joint frame relative to the target actor.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(50), EditorDisplay("Joint"), Tooltip("This is the relative pose rotation which locates the joint frame relative to the target actor.")]
+        [EditorOrder(50), DefaultValue(typeof(Quaternion), "0,0,0,1"), EditorDisplay("Joint"), Tooltip("This is the relative pose rotation which locates the joint frame relative to the target actor.")]
         public Quaternion TargetAnchorRotation
         {
 #if UNIT_TEST_COMPILANT

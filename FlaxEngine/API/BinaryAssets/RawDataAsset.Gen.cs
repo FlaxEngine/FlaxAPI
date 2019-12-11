@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -20,19 +21,37 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the bytes array stored by this data container asset.
+        /// Gets or sets the bytes array stored by this data container asset.
         /// </summary>
-        /// <returns>The loaded bytes.</returns>
+        [UnmanagedCall]
+        public byte[] Data
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetData(unmanagedPtr); }
+            set { Internal_SetData(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Saves asset to the file. It must be fully loaded.
+        /// </summary>
+        /// <remarks>
+        /// Supported only in Editor.
+        /// </remarks>
+        /// <param name="path">The custom asset path to use for the saving. Use empty value to save this asset to its own storage location. Can be used to duplicate model asset.</param>
+        /// <returns>True if cannot save data, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public byte[] GetData()
+        public bool Save(string path = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_GetData(unmanagedPtr);
+            return Internal_Save(unmanagedPtr, path);
 #endif
         }
 
@@ -41,6 +60,12 @@ namespace FlaxEngine
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern byte[] Internal_GetData(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetData(IntPtr obj, byte[] val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Save(IntPtr obj, string path);
 #endif
 
         #endregion

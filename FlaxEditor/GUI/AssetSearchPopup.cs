@@ -64,7 +64,7 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override void Dispose()
+            public override void OnDestroy()
             {
                 if (_asset != null)
                 {
@@ -72,7 +72,7 @@ namespace FlaxEditor.GUI
                     _asset = null;
                 }
 
-                base.Dispose();
+                base.OnDestroy();
             }
 
             /// <inheritdoc />
@@ -104,12 +104,12 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="asset">The asset.</param>
         /// <returns>True if is valid.</returns>
-        public delegate bool IsAssetItemValidDelegate(AssetItem asset);
+        public delegate bool IsValidDelegate(AssetItem asset);
 
-        private IsAssetItemValidDelegate _isValid;
+        private IsValidDelegate _isValid;
         private Action<AssetItem> _selected;
 
-        private AssetSearchPopup(IsAssetItemValidDelegate isValid, Action<AssetItem> selected)
+        private AssetSearchPopup(IsValidDelegate isValid, Action<AssetItem> selected)
         {
             _isValid = isValid;
             _selected = selected;
@@ -153,7 +153,7 @@ namespace FlaxEditor.GUI
         /// <param name="isValid">Event called to check if a given asset item is valid to be used.</param>
         /// <param name="selected">Event called on asset item pick.</param>
         /// <returns>The dialog.</returns>
-        public static AssetSearchPopup Show(Control showTarget, Vector2 showTargetLocation, IsAssetItemValidDelegate isValid, Action<AssetItem> selected)
+        public static AssetSearchPopup Show(Control showTarget, Vector2 showTargetLocation, IsValidDelegate isValid, Action<AssetItem> selected)
         {
             var popup = new AssetSearchPopup(isValid, selected);
             popup.Show(showTarget, showTargetLocation);
@@ -161,12 +161,12 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             _isValid = null;
             _selected = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

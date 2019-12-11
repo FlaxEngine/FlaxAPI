@@ -36,7 +36,7 @@ namespace FlaxEngine
         /// </remarks>
         [UnmanagedCall]
         [HideInEditor]
-        [NoSerialize]
+        [NoSerialize, NoAnimate]
         public Vector3 EulerAngles
         {
 #if UNIT_TEST_COMPILANT
@@ -68,7 +68,7 @@ namespace FlaxEngine
         /// </remarks>
         [UnmanagedCall]
         [HideInEditor]
-        [NoSerialize]
+        [NoSerialize, NoAnimate]
         public Vector3 LocalEulerAngles
         {
 #if UNIT_TEST_COMPILANT
@@ -94,16 +94,22 @@ namespace FlaxEngine
         /// Gets or sets the actor direction vector (aka forward direction).
         /// </summary>
         [HideInEditor]
-        [NoSerialize]
+        [NoSerialize, NoAnimate]
         public Vector3 Direction
         {
             get => Vector3.Forward * Orientation;
             set
             {
-                Vector3 right = Vector3.Cross(value, Vector3.Up);
-                Vector3 up = Vector3.Cross(right, value);
-                //up = Vector3.Up;
-                Orientation = Quaternion.LookRotation(value, up);
+                if (Vector3.Dot(value, Vector3.Up) >= 0.999f)
+                {
+                    Orientation = Quaternion.RotationAxis(Vector3.Left, Mathf.PiOverTwo);
+                }
+                else
+                {
+                    Vector3 right = Vector3.Cross(value, Vector3.Up);
+                    Vector3 up = Vector3.Cross(right, value);
+                    Orientation = Quaternion.LookRotation(value, up);
+                }
             }
         }
 
@@ -112,7 +118,7 @@ namespace FlaxEngine
         /// collection.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         [EditorDisplay("Scripts", EditorDisplayAttribute.InlineStyle)]
         [EditorOrder(-5)]
         [MemberCollection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]
@@ -124,7 +130,7 @@ namespace FlaxEngine
             get
             {
                 if (Internal_GetScriptsCount(unmanagedPtr) == 0)
-                    return Enumerable.Empty<Script>() as Script[];
+                    return Utils.GetEmptyArray<Script>();
                 return Internal_GetScripts(unmanagedPtr);
             }
             internal set { }
@@ -627,6 +633,7 @@ namespace FlaxEngine
         /// Destroys the children. Calls Object.Destroy on every child actor and unlink them for the parent.
         /// </summary>
         /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
+        [NoAnimate]
         public void DestroyChildren(float timeLeft = 0.0f)
         {
             Actor[] children = GetChildren();

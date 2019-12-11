@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Dialogs;
+using FlaxEditor.GUI.Tree;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -159,7 +161,7 @@ namespace FlaxEditor.Content.Import
         private void OnShowInExplorerClicked(ContextMenuButton button)
         {
             var node = (ItemNode)button.ParentContextMenu.Tag;
-            Application.StartProcess(Path.GetDirectoryName(node.Entry.SourceUrl));
+            Platform.StartProcess(Path.GetDirectoryName(node.Entry.SourceUrl));
         }
 
         private class ItemNode : TreeNode
@@ -198,6 +200,7 @@ namespace FlaxEditor.Content.Import
             {
                 var entry = (ImportFileEntry)Tag;
                 entry.ModifyResultFilename(popup.Text);
+                Text = string.Format("{0} ({1})", Path.GetFileName(entry.SourceUrl), popup.Text);
             }
         }
 

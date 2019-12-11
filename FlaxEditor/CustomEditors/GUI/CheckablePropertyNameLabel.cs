@@ -46,7 +46,7 @@ namespace FlaxEditor.CustomEditors.GUI
         /// <summary>
         /// Updates the label style.
         /// </summary>
-        protected virtual void UpdateStyle()
+        public virtual void UpdateStyle()
         {
             bool check = CheckBox.Checked;
 

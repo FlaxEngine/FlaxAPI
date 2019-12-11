@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -20,7 +21,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets parent font asset that contains font family used by this font.
+        /// Gets the parent font asset that contains font family used by this font.
         /// </summary>
         [UnmanagedCall]
         public FontAsset Asset
@@ -33,7 +34,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets font size.
+        /// Gets the font size.
         /// </summary>
         [UnmanagedCall]
         public int Size
@@ -46,7 +47,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets characters height.
+        /// Gets the font characters height.
         /// </summary>
         [UnmanagedCall]
         public int Height
@@ -117,27 +118,27 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates font object of given characters size.
+        /// Caches the given text to prepared for the rendering.
         /// </summary>
-        /// <param name="size">Characters size.</param>
+        /// <param name="text">The text witch characters to cache.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public void CacheText(int size)
+        public void CacheText(string text)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_CacheText(unmanagedPtr, size);
+            Internal_CacheText(unmanagedPtr, text);
 #endif
         }
 
         /// <summary>
         /// Measures minimum size of the rectangle that will be needed to draw given text.
         /// </summary>
-        /// <param name="text">Input text.</param>
-        /// <returns>Minimum size for that text and fot to render properly.</returns>
+        /// <param name="text">The input text.</param>
+        /// <returns>The minimum size for that text and fot to render properly.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -148,18 +149,116 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             Vector2 resultAsRef;
-            Internal_MeasureText(unmanagedPtr, text, out resultAsRef);
+            Internal_MeasureText1(unmanagedPtr, text, out resultAsRef);
             return resultAsRef;
+#endif
+        }
+
+        /// <summary>
+        /// Measures minimum size of the rectangle that will be needed to draw given text.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="layout">The layout properties.</param>
+        /// <returns>The minimum size for that text and fot to render properly.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Vector2 MeasureText(string text, ref TextLayoutOptions layout)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Vector2 resultAsRef;
+            Internal_MeasureText2(unmanagedPtr, text, ref layout, out resultAsRef);
+            return resultAsRef;
+#endif
+        }
+
+        /// <summary>
+        /// Measures minimum size of the rectangle that will be needed to draw given text.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <returns>The minimum size for that text and fot to render properly.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Vector2 MeasureText(string text, ref GUI.TextRange textRange)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Vector2 resultAsRef;
+            Internal_MeasureText3(unmanagedPtr, text, ref textRange, out resultAsRef);
+            return resultAsRef;
+#endif
+        }
+
+        /// <summary>
+        /// Processes text to get cached lines for rendering.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <returns>The output lines cache.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public FontLineCache[] ProcessText(string text)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ProcessText1(unmanagedPtr, text);
+#endif
+        }
+
+        /// <summary>
+        /// Processes text to get cached lines for rendering.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="layout">The layout properties.</param>
+        /// <returns>The output lines cache.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public FontLineCache[] ProcessText(string text, ref TextLayoutOptions layout)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ProcessText2(unmanagedPtr, text, ref layout);
+#endif
+        }
+
+        /// <summary>
+        /// Processes text to get cached lines for rendering.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <returns>The output lines cache.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public FontLineCache[] ProcessText(string text, ref GUI.TextRange textRange)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_ProcessText3(unmanagedPtr, text, ref textRange);
 #endif
         }
 
         /// <summary>
         /// Calculates character position for given text and character index.
         /// </summary>
-        /// <param name="text">Input text.</param>
+        /// <param name="text">The input text.</param>
         /// <param name="index">The text position to get it's coordinates.</param>
-        /// <param name="layout">Layout properties.</param>
-        /// <returns>Character position (upper left corner which can be used for a caret position).</returns>
+        /// <param name="layout">The layout properties.</param>
+        /// <returns>The character position (upper left corner which can be used for a caret position).</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -178,9 +277,9 @@ namespace FlaxEngine
         /// <summary>
         /// Calculates character position for given text and character index.
         /// </summary>
-        /// <param name="text">Input text.</param>
+        /// <param name="text">The input text.</param>
         /// <param name="index">The text position to get it's coordinates.</param>
-        /// <returns>Character position (upper left corner which can be used for a caret position).</returns>
+        /// <returns>The character position (upper left corner which can be used for a caret position).</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -197,12 +296,34 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Calculates character position for given text and character index.
+        /// </summary>
+        /// <param name="text">The input text.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <param name="index">The text position to get it's coordinates.</param>
+        /// <returns>The character position (upper left corner which can be used for a caret position).</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Vector2 GetCharPosition(string text, ref GUI.TextRange textRange, int index)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Vector2 resultAsRef;
+            Internal_GetCharPosition3(unmanagedPtr, text, ref textRange, index, out resultAsRef);
+            return resultAsRef;
+#endif
+        }
+
+        /// <summary>
         /// Calculates hit character index at given location.
         /// </summary>
-        /// <param name="text">Input text to test.</param>
-        /// <param name="location">Location to test.</param>
+        /// <param name="text">The input text to test.</param>
+        /// <param name="location">The location to test.</param>
         /// <param name="layout">Layout properties.</param>
-        /// <returns>Selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
+        /// <returns>The selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -219,9 +340,9 @@ namespace FlaxEngine
         /// <summary>
         /// Calculates hit character index at given location.
         /// </summary>
-        /// <param name="text">Input text to test.</param>
-        /// <param name="location">Location to test.</param>
-        /// <returns>Selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
+        /// <param name="text">The input text to test.</param>
+        /// <param name="location">The location to test.</param>
+        /// <returns>The selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -232,6 +353,42 @@ namespace FlaxEngine
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             return Internal_HitTestText2(unmanagedPtr, text, ref location);
+#endif
+        }
+
+        /// <summary>
+        /// Calculates hit character index at given location.
+        /// </summary>
+        /// <param name="text">The input text to test.</param>
+        /// <param name="textRange">The text range to render.</param>
+        /// <param name="location">The location to test.</param>
+        /// <returns>The selected character position index (can be equal to text length if location is outside of the layout rectangle).</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public int HitTestText(string text, ref GUI.TextRange textRange, Vector2 location)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_HitTestText3(unmanagedPtr, text, ref textRange, ref location);
+#endif
+        }
+
+        /// <summary>
+        /// Invalidates all cached dynamic font atlases using this font. Can be used to reload font characters after changing font asset options.
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public void Invalidate()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_Invalidate(unmanagedPtr);
 #endif
         }
 
@@ -260,10 +417,25 @@ namespace FlaxEngine
         internal static extern int Internal_GetKerning(IntPtr obj, char first, char second);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_CacheText(IntPtr obj, int size);
+        internal static extern void Internal_CacheText(IntPtr obj, string text);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_MeasureText(IntPtr obj, string text, out Vector2 resultAsRef);
+        internal static extern void Internal_MeasureText1(IntPtr obj, string text, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_MeasureText2(IntPtr obj, string text, ref TextLayoutOptions layout, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_MeasureText3(IntPtr obj, string text, ref GUI.TextRange textRange, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern FontLineCache[] Internal_ProcessText1(IntPtr obj, string text);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern FontLineCache[] Internal_ProcessText2(IntPtr obj, string text, ref TextLayoutOptions layout);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern FontLineCache[] Internal_ProcessText3(IntPtr obj, string text, ref GUI.TextRange textRange);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetCharPosition1(IntPtr obj, string text, int index, ref TextLayoutOptions layout, out Vector2 resultAsRef);
@@ -272,10 +444,19 @@ namespace FlaxEngine
         internal static extern void Internal_GetCharPosition2(IntPtr obj, string text, int index, out Vector2 resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetCharPosition3(IntPtr obj, string text, ref GUI.TextRange textRange, int index, out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_HitTestText1(IntPtr obj, string text, ref Vector2 location, ref TextLayoutOptions layout);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_HitTestText2(IntPtr obj, string text, ref Vector2 location);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_HitTestText3(IntPtr obj, string text, ref GUI.TextRange textRange, ref Vector2 location);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Invalidate(IntPtr obj);
 #endif
 
         #endregion

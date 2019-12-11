@@ -20,6 +20,11 @@ namespace FlaxEngine.GUI
         protected bool _mouseDown;
 
         /// <summary>
+        /// The font.
+        /// </summary>
+        protected FontReference _font;
+
+        /// <summary>
         /// Button text property.
         /// </summary>
         [EditorOrder(10), Tooltip("The buton label text.")]
@@ -29,7 +34,11 @@ namespace FlaxEngine.GUI
         /// Gets or sets the font used to draw button text.
         /// </summary>
         [EditorDisplay("Style"), EditorOrder(2000)]
-        public FontReference Font { get; set; }
+        public FontReference Font
+        {
+            get => _font;
+            set => _font = value;
+        }
 
         /// <summary>
         /// Gets or sets the custom material used to render the text. It must has domain set to GUI and have a public texture parameter named Font used to sample font atlas texture with font characters data.
@@ -102,7 +111,7 @@ namespace FlaxEngine.GUI
         : base(x, y, width, height)
         {
             var style = Style.Current;
-            Font = new FontReference(style.FontMedium);
+            _font = new FontReference(style.FontMedium);
             TextColor = style.Foreground;
             BackgroundColor = style.BackgroundNormal;
             BorderColor = style.BorderNormal;
@@ -168,7 +177,7 @@ namespace FlaxEngine.GUI
             Render2D.DrawRectangle(clientRect, borderColor);
 
             // Draw text
-            Render2D.DrawText(Font.GetFont(), TextMaterial, Text, clientRect, textColor, TextAlignment.Center, TextAlignment.Center);
+            Render2D.DrawText(_font.GetFont(), TextMaterial, Text, clientRect, textColor, TextAlignment.Center, TextAlignment.Center);
         }
 
         /// <inheritdoc />

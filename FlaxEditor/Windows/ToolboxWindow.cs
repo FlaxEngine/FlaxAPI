@@ -1,7 +1,8 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
+using FlaxEditor.GUI.Tree;
 using FlaxEditor.Tools.Foliage;
 using FlaxEditor.Tools.Terrain;
 using FlaxEditor.Viewport.Modes;
@@ -99,6 +100,7 @@ namespace FlaxEditor.Windows
             groupVisuals.AddChild(CreateActorItem("Exponential Height Fog", typeof(ExponentialHeightFog)));
             groupVisuals.AddChild(CreateActorItem("PostFx Volume", typeof(PostFxVolume)));
             groupVisuals.AddChild(CreateActorItem("Decal", typeof(Decal)));
+            groupVisuals.AddChild(CreateActorItem("Particle Effect", typeof(ParticleEffect)));
 
             var groupPhysics = CreateGroupWithList(actorGroups, "Physics");
             groupPhysics.AddChild(CreateActorItem("Rigid Body", typeof(RigidBody)));
@@ -121,6 +123,7 @@ namespace FlaxEditor.Windows
             groupOther.AddChild(CreateActorItem("Audio Source", typeof(AudioSource)));
             groupOther.AddChild(CreateActorItem("Audio Listener", typeof(AudioListener)));
             groupOther.AddChild(CreateActorItem("Empty Actor", typeof(EmptyActor)));
+            groupOther.AddChild(CreateActorItem("Scene Animation", typeof(SceneAnimationPlayer)));
             groupOther.AddChild(CreateActorItem("Nav Mesh Bounds Volume", typeof(NavMeshBoundsVolume)));
             groupOther.AddChild(CreateActorItem("Nav Mesh Link", typeof(NavLink)));
 

@@ -14,9 +14,13 @@ namespace FlaxEditor.CustomEditors.Dedicated
     /// <seealso cref="FlaxEditor.CustomEditors.Editors.GenericEditor" />
     public sealed class UIControlControlEditor : GenericEditor
     {
+        private Type _cachedType;
+
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
+            _cachedType = null;
+
             // Set control type button
             var space = layout.Space(20);
             float setTypeButtonWidth = 60.0f;
@@ -40,12 +44,27 @@ namespace FlaxEditor.CustomEditors.Dedicated
             // Add control type helper label
             {
                 var type = Values[0].GetType();
+                _cachedType = type;
                 var label = layout.AddPropertyItem("Type", "The type of the created control.");
                 label.Label(type.FullName);
             }
 
             // Show control properties
             base.Initialize(layout);
+        }
+
+        /// <inheritdoc />
+        public override void Refresh()
+        {
+            // Automatic layout rebuild if control type gets changed
+            var type = Values.HasNull ? null : Values[0].GetType();
+            if (type != _cachedType)
+            {
+                RebuildLayout();
+                return;
+            }
+
+            base.Refresh();
         }
 
         private void OnSetTypeButtonClicked(Button button)

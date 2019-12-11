@@ -178,7 +178,7 @@ namespace FlaxEditor.Windows
             }
 
             // Show the output folder
-            Application.StartProcess(_options.OutputPath);
+            Platform.StartProcess(_options.OutputPath);
 
             Close(DialogResult.OK);
         }
@@ -196,7 +196,7 @@ namespace FlaxEditor.Windows
             // Validate data
             if (string.IsNullOrEmpty(options.ShortName))
                 return "Missing short name.";
-            if (options.ShortName == "Assembly")
+            if (options.ShortName == "Game" || options.ShortName == "Game.Editor")
                 return "Invalid short name. Don't use restricted names.";
             if (options.ShortName.Contains(' ') || options.ShortName.Contains('\n') || options.ShortName.Contains('\r') || options.ShortName.Contains('\t'))
                 return "Invalid short name. It cannot contain whitespace characters.";
@@ -217,8 +217,8 @@ namespace FlaxEditor.Windows
                 RemoveStartsWith(files, "FlaxEngine");
                 RemoveStartsWith(files, "FlaxEditor");
                 RemoveStartsWith(files, "Newtonsoft.Json");
-                Remove(files, "Assembly");
-                Remove(files, "Assembly.Editor");
+                Remove(files, "Game");
+                Remove(files, "Game.Editor");
                 Remove(files, assemblyName);
                 Remove(files, assemblyName + ".Editor");
                 
@@ -286,8 +286,8 @@ namespace FlaxEditor.Windows
                 }
 
                 // Don't copy previous game assembly
-                Remove(files, "Assembly");
-                Remove(files, "Assembly.Editor");
+                Remove(files, "Game");
+                Remove(files, "Game.Editor");
 
                 Editor.Log(files.Count + " files");
                 for (int i = 0; i < files.Count; i++)

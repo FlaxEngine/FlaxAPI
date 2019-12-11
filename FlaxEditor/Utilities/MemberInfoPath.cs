@@ -29,9 +29,6 @@ namespace FlaxEditor.Utilities
             /// <summary>
             /// Gets the member type (field or property type).
             /// </summary>
-            /// <value>
-            /// The type.
-            /// </value>
             public Type Type
             {
                 get
@@ -42,7 +39,7 @@ namespace FlaxEditor.Utilities
                     else
                         result = ((PropertyInfo)Member).PropertyType;
 
-                    // Special case for arrays
+                    // Special case for collections
                     if (Index != -1)
                         result = result.GetElementType();
 
@@ -70,12 +67,12 @@ namespace FlaxEditor.Utilities
             {
                 object value;
 
-                // Special case for arrays
+                // Special case for collections
                 if (Index != -1)
                 {
-                    // Get array value at index
-                    var array = (Array)instance;
-                    value = array.GetValue(Index);
+                    // Get value at index
+                    var list = (System.Collections.IList)instance;
+                    value = list[Index];
                 }
                 else
                 {
@@ -96,12 +93,12 @@ namespace FlaxEditor.Utilities
             /// <param name="value">The value.</param>
             public void SetValue(object instance, object value)
             {
-                // Special case for arrays
+                // Special case for collections
                 if (Index != -1)
                 {
-                    // Set array value at index
-                    var array = (Array)instance;
-                    array.SetValue(value, Index);
+                    // Set value at index
+                    var list = (System.Collections.IList)instance;
+                    list[Index] = value;
                 }
                 else
                 {

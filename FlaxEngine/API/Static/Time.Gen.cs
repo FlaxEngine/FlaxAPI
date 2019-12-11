@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -69,6 +70,20 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the value indicating whenever game logic is paused (physics, script updates, etc.).
+        /// </summary>
+        [UnmanagedCall]
+        public static bool GamePaused
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetGamePaused(); }
+            set { Internal_SetGamePaused(value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets the current Frames Per Second amount. User scripts updates or fixed updates for physics may run at a different frequency than scene rendering. Use this property to get an accurate amount of frames rendered during the last second.
         /// </summary>
         [UnmanagedCall]
@@ -107,6 +122,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetTimeScale(float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetGamePaused();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetGamePaused(bool val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetFPS();

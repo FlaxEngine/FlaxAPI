@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
+using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
@@ -11,8 +12,14 @@ namespace FlaxEditor.Viewport.Previews
     /// <seealso cref="AssetPreview" />
     public class PrefabPreview : AssetPreview
     {
+        /// <summary>
+        /// The preview that is during prefab instance spawning. Used to link some actors such as UIControl to preview scene and view.
+        /// </summary>
+        internal static PrefabPreview LoadingPreview;
+
         private Prefab _prefab;
         private Actor _instance;
+        internal Control customControlLinked;
 
         /// <summary>
         /// Gets or sets the prefab asset to preview.
@@ -26,6 +33,11 @@ namespace FlaxEditor.Viewport.Previews
                 {
                     if (_instance)
                     {
+                        if (customControlLinked != null)
+                        {
+                            customControlLinked.Parent = null;
+                            customControlLinked = null;
+                        }
                         Task.CustomActors.Remove(_instance);
                         Object.Destroy(_instance);
                     }
@@ -35,7 +47,14 @@ namespace FlaxEditor.Viewport.Previews
                     if (_prefab)
                     {
                         _prefab.WaitForLoaded(); // TODO: use lazy prefab spawning to reduce stalls
+
+                        var prevPreview = LoadingPreview;
+                        LoadingPreview = this;
+
                         _instance = PrefabManager.SpawnPrefab(_prefab, null);
+
+                        LoadingPreview = prevPreview;
+
                         if (_instance == null)
                         {
                             _prefab = null;

@@ -160,7 +160,7 @@ namespace FlaxEditor.Modules
             var id = Guid.NewGuid();
             resultPath = StringUtils.CombinePaths(Globals.TemporaryFolder, id.ToString("N")) + extension;
 
-            if (CloneAssetFile(resultPath, item.Path, id))
+            if (CloneAssetFile(item.Path, resultPath, id))
                 return true;
 
             return false;
@@ -169,11 +169,11 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Duplicates the asset file and changes it's ID.
         /// </summary>
-        /// <param name="dstPath">The destination file path.</param>
         /// <param name="srcPath">The source file path.</param>
+        /// <param name="dstPath">The destination file path.</param>
         /// <param name="dstId">The destination asset identifier.</param>
         /// <returns>True if cannot perform that operation, otherwise false.</returns>
-        public bool CloneAssetFile(string dstPath, string srcPath, Guid dstId)
+        public bool CloneAssetFile(string srcPath, string dstPath, Guid dstId)
         {
             // Use internal call
             return Editor.Internal_CloneAssetFile(dstPath, srcPath, ref dstId);

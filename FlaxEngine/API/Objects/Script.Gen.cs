@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -34,14 +35,14 @@ namespace FlaxEngine
         /// Changing script parent breaks any existing prefab links.
         /// </remarks>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public Actor Actor
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetActor(unmanagedPtr); }
-            set { Internal_SetActor(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetActor(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -49,7 +50,7 @@ namespace FlaxEngine
         /// Gets or sets zero-based index in parent actor scripts list.
         /// </summary>
         [UnmanagedCall]
-        [HideInEditor]
+        [HideInEditor, NoAnimate]
         public int OrderInParent
         {
 #if UNIT_TEST_COMPILANT
@@ -106,6 +107,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
+        [NoAnimate]
         public void BreakPrefabLink()
         {
 #if UNIT_TEST_COMPILANT

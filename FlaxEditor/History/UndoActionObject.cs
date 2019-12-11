@@ -17,6 +17,7 @@ namespace FlaxEditor.History
         /// <summary>
         /// The data value storage to solve issue for flax objects and editor scene tree nodes which are serialized by ref id.
         /// </summary>
+        [Serializable]
         public struct DataValue
         {
             /// <summary>
@@ -35,10 +36,15 @@ namespace FlaxEditor.History
             public SceneGraph.SceneGraphNode EditorNode;
 
             /// <summary>
+            /// The id.
+            /// </summary>
+            public Guid? Id;
+
+            /// <summary>
             /// Gets the proper value.
             /// </summary>
             [NoSerialize]
-            public object Value => EditorNode ?? FlaxObject ?? Generic;
+            public object Value => EditorNode ?? FlaxObject ?? Generic ?? Id;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="DataValue"/> struct.
@@ -46,23 +52,26 @@ namespace FlaxEditor.History
             /// <param name="value">The value.</param>
             public DataValue(object value)
             {
+                Generic = null;
+                FlaxObject = null;
+                EditorNode = null;
+                Id = null;
+
                 if (value is SceneGraph.SceneGraphNode editorNode)
                 {
-                    Generic = null;
-                    FlaxObject = null;
                     EditorNode = editorNode;
                 }
                 else if (value is FlaxEngine.Object flaxObject)
                 {
-                    Generic = null;
                     FlaxObject = flaxObject;
-                    EditorNode = null;
+                }
+                else if (value is Guid guid)
+                {
+                    Id = guid;
                 }
                 else
                 {
                     Generic = value;
-                    FlaxObject = null;
-                    EditorNode = null;
                 }
             }
         }
@@ -110,6 +119,11 @@ namespace FlaxEditor.History
         private readonly object TargetInstance;
 
         private readonly MemberInfoPath[] Members;
+
+        /// <summary>
+        /// Gets the target.
+        /// </summary>
+        public object Target => TargetInstance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UndoActionObject"/> class.

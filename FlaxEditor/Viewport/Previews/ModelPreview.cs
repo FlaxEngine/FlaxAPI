@@ -1,9 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using FlaxEditor.Viewport.Cameras;
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
-using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
@@ -29,6 +27,11 @@ namespace FlaxEditor.Viewport.Previews
         /// Gets the model actor used to preview selected asset.
         /// </summary>
         public StaticModel PreviewStaticModel => _previewModel;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether scale the model to the normalized bounds.
+        /// </summary>
+        public bool ScaleToFit { get; set; } = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelPreview"/> class.
@@ -60,6 +63,12 @@ namespace FlaxEditor.Viewport.Previews
 
         private void OnBegin(SceneRenderTask task, GPUContext context)
         {
+            if (!ScaleToFit)
+            {
+                _previewModel.Scale = Vector3.One;
+                return;
+            }
+
             // Update preview model scale to fit the preview
             var model = Model;
             if (model && model.IsLoaded)

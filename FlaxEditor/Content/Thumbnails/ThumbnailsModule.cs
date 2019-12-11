@@ -6,7 +6,6 @@ using System.IO;
 using FlaxEditor.Modules;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Content.Thumbnails
@@ -32,7 +31,7 @@ namespace FlaxEditor.Content.Thumbnails
         private readonly List<ThumbnailRequest> _requests = new List<ThumbnailRequest>(128);
         private readonly PreviewRoot _guiRoot = new PreviewRoot();
         private CustomRenderTask _task;
-        private RenderTarget _output;
+        private GPUTexture _output;
 
         internal ThumbnailsModule(Editor editor)
         : base(editor)
@@ -206,12 +205,13 @@ namespace FlaxEditor.Content.Thumbnails
             }
 
             // Create render task but disabled for now
-            _output = RenderTarget.New();
-            _output.Init(PreviewsCache.AssetIconsAtlasFormat, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-            _task = RenderTask.Create<CustomRenderTask>();
+            _output = GPUDevice.CreateTexture("ThumbnailsOutput");
+            var desc = GPUTextureDescription.New2D(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconsAtlasFormat);
+            _output.Init(ref desc);
+            _task = Object.New<CustomRenderTask>();
             _task.Order = 50; // Render this task later
             _task.Enabled = false;
-            _task.OnRender += OnRender;
+            _task.Render += OnRender;
         }
 
         private void OnRender(GPUContext context)
@@ -506,7 +506,7 @@ namespace FlaxEditor.Content.Thumbnails
             public PreviewRoot()
             : base(0, 0, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize)
             {
-                CanFocus = false;
+                AutoFocus = false;
                 AccentColor = Color.Pink;
                 IsLayoutLocked = false;
             }

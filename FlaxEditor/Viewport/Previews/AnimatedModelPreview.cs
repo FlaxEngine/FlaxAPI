@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
@@ -83,6 +82,12 @@ namespace FlaxEditor.Viewport.Previews
 
         private void OnBegin(SceneRenderTask task, GPUContext context)
         {
+            if (!ScaleToFit)
+            {
+                _previewModel.Scale = Vector3.One;
+                return;
+            }
+
             // Update preview model scale to fit the preview
             var skinnedModel = SkinnedModel;
             if (skinnedModel && skinnedModel.IsLoaded)

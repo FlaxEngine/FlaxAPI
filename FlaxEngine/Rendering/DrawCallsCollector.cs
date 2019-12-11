@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Helper class to collect GPU drawing requests and send them back to the Engine.
@@ -209,7 +209,7 @@ namespace FlaxEngine.Rendering
         /// <param name="task">The render task.</param>
         /// <param name="output">The output texture.</param>
         /// <param name="pass">The rendering pass mode.</param>
-        public void ExecuteDrawCalls(GPUContext context, RenderTask task, RenderTarget output, RenderPass pass)
+        public void ExecuteDrawCalls(GPUContext context, RenderTask task, GPUTexture output, DrawPass pass)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
@@ -229,7 +229,7 @@ namespace FlaxEngine.Rendering
         /// <param name="output">The output texture.</param>
         /// <param name="outputDepth">The output depth texture.</param>
         /// <param name="pass">The rendering pass mode.</param>
-        public void ExecuteDrawCalls(GPUContext context, RenderTask task, RenderTarget output, RenderTarget outputDepth, RenderPass pass)
+        public void ExecuteDrawCalls(GPUContext context, RenderTask task, GPUTexture output, GPUTexture outputDepth, DrawPass pass)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));

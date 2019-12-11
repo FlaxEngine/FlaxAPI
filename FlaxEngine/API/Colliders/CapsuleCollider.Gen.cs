@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -47,7 +48,7 @@ namespace FlaxEngine
         /// The sphere radius will be scaled by the actor's world scale.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(100), EditorDisplay("Collider"), Tooltip("Radius of the sphere, measured in the object's local space")]
+        [EditorOrder(100), DefaultValue(20.0f), EditorDisplay("Collider"), Tooltip("Radius of the sphere, measured in the object's local space")]
         public float Radius
         {
 #if UNIT_TEST_COMPILANT
@@ -65,7 +66,7 @@ namespace FlaxEngine
         /// The capsule height will be scaled by the actor's world scale.
         /// </remarks>
         [UnmanagedCall]
-        [EditorOrder(110), EditorDisplay("Collider"), Tooltip("Height of the capsule, measured in the object's local space")]
+        [EditorOrder(110), DefaultValue(100.0f), EditorDisplay("Collider"), Tooltip("Height of the capsule, measured in the object's local space")]
         public float Height
         {
 #if UNIT_TEST_COMPILANT

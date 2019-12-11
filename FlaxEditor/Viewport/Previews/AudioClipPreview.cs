@@ -13,6 +13,27 @@ namespace FlaxEditor.Viewport.Previews
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public class AudioClipPreview : ContainerControl
     {
+        /// <summary>
+        /// The audio clip drawing modes.
+        /// </summary>
+        public enum DrawModes
+        {
+            /// <summary>
+            /// Fills the whole control area with the full clip duration.
+            /// </summary>
+            Fill,
+
+            /// <summary>
+            /// Draws single audio clip. Uses the view scale parameter.
+            /// </summary>
+            Single,
+
+            /// <summary>
+            /// Draws the looped audio clip. Uses the view scale parameter.
+            /// </summary>
+            Looped,
+        };
+
         private readonly object _locker = new object();
         private AudioClip _asset;
         private float[] _pcmData;
@@ -57,11 +78,20 @@ namespace FlaxEditor.Viewport.Previews
             }
         }
 
-        /// <inheritdoc />
-        public AudioClipPreview()
-        {
-            DockStyle = DockStyle.Fill;
-        }
+        /// <summary>
+        /// The draw mode.
+        /// </summary>
+        public DrawModes DrawMode = DrawModes.Fill;
+
+        /// <summary>
+        /// The view scale parameter. Increase it to zoom in the audio. Usage depends on the current <see cref="DrawMode"/>.
+        /// </summary>
+        public float ViewScale = 1.0f;
+
+        /// <summary>
+        /// The audio units per second (on time axis).
+        /// </summary>
+        public static readonly float UnitsPerSecond = 100.0f;
 
         /// <inheritdoc />
         public override void Draw()
@@ -73,57 +103,88 @@ namespace FlaxEditor.Viewport.Previews
                 var info = _pcmInfo;
                 if (_asset == null || _pcmData == null || info.NumSamples == 0)
                     return;
+                var height = Height;
+                var width = Width;
+                uint numSamplesPerChannel = info.NumSamples / info.NumChannels;
+                var length = (float)numSamplesPerChannel / info.SampleRate;
 
                 // Compute the scaled y-value used to render the channel data
-                float sampleYScale = Height / info.NumChannels;
+                float sampleYScale = height / info.NumChannels;
 
-                // Sample count
-                uint numSamplesPerChannel = info.NumSamples / info.NumChannels;
-                uint samplesPerIndex = (uint)(numSamplesPerChannel / Width);
-                const uint maxSamplesPerIndex = 64;
-                uint actualSamplesPerIndex = Math.Min(samplesPerIndex, maxSamplesPerIndex);
-                uint samplesPerIndexDiff = Math.Max(1, samplesPerIndex / actualSamplesPerIndex);
-
-                // Render each channel separately so outer loop is the sound wave channel index
-                for (uint channelIndex = 0; channelIndex < info.NumChannels; channelIndex++)
+                // Compute amount of samples that are contained in the view
+                float unitsPerSecond = UnitsPerSecond * ViewScale;
+                float clipDefaultWidth = length * unitsPerSecond;
+                float clipsInView = width / clipDefaultWidth;
+                float clipWidth;
+                uint samplesPerIndex;
+                switch (DrawMode)
                 {
-                    uint currentSample = 0;
-                    float yCenter = Y + ((2 * channelIndex) + 1) * Height / (2.0f * info.NumChannels);
+                case DrawModes.Fill:
+                    clipsInView = 1.0f;
+                    clipWidth = width;
+                    samplesPerIndex = (uint)(numSamplesPerChannel / width);
+                    break;
+                case DrawModes.Single:
+                    clipsInView = Mathf.Min(clipsInView, 1.0f);
+                    clipWidth = clipDefaultWidth;
+                    samplesPerIndex = (uint)(info.SampleRate / unitsPerSecond);
+                    break;
+                case DrawModes.Looped:
+                    clipWidth = width / clipsInView;
+                    samplesPerIndex = (uint)(info.SampleRate / unitsPerSecond);
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+                }
+                const uint maxSamplesPerIndex = 64;
+                uint samplesPerIndexDiff = Math.Max(1, samplesPerIndex / Math.Min(samplesPerIndex, maxSamplesPerIndex));
 
-                    // Loop through each pixel (in x direction)
-                    for (uint pixelIndex = 0; pixelIndex < Width; pixelIndex++)
+                // Render each clip separately
+                for (uint clipIndex = 0; clipIndex < Mathf.CeilToInt(clipsInView); clipIndex++)
+                {
+                    var clipX = clipWidth * clipIndex;
+                    var clipRight = Mathf.Min(width, clipX + clipWidth);
+
+                    // Render each channel separately so outer loop is the sound wave channel index
+                    for (uint channelIndex = 0; channelIndex < info.NumChannels; channelIndex++)
                     {
-                        // Reset the sample sum and num samples in pixel for each pixel
-                        float samplesSum = 0;
-                        int numSamplesInPixel = 0;
+                        uint currentSample = 0;
+                        float yCenter = Y + ((2 * channelIndex) + 1) * height / (2.0f * info.NumChannels);
 
-                        // Loop through all pixels in this x-frame, sum all audio data. Track total frames rendered to avoid writing past buffer boundary
-                        uint samplesEnd = Math.Min(currentSample + samplesPerIndex, numSamplesPerChannel);
-                        for (uint sampleIndex = currentSample; sampleIndex < samplesEnd; sampleIndex += samplesPerIndexDiff)
+                        // Loop through each pixel (in x direction)
+                        for (float pixelX = clipX; pixelX < clipRight; pixelX++)
                         {
-                            // Get the sample value
-                            uint index = sampleIndex + channelIndex;
-                            float value = _pcmData[index];
+                            // Reset the sample sum and num samples in pixel for each pixel
+                            float samplesSum = 0;
+                            int numSamplesInPixel = 0;
 
-                            // Sum the sample value with the running sum
-                            samplesSum += Mathf.Abs(value);
-
-                            // Track the number of samples we're actually summing to get an accurate average
-                            numSamplesInPixel++;
-                        }
-                        currentSample = samplesEnd;
-
-                        // If we actually added any audio data in this pixel
-                        if (numSamplesInPixel > Mathf.Epsilon)
-                        {
-                            float averageSampleValue = samplesSum / numSamplesInPixel;
-                            float averageSampleValueScaled = averageSampleValue * sampleYScale;
-
-                            // Don't try to draw anything if the audio data was too quiet
-                            if (averageSampleValueScaled > 0.001f)
+                            // Loop through all pixels in this x-frame, sum all audio data. Track total frames rendered to avoid writing past buffer boundary
+                            uint samplesEnd = Math.Min(currentSample + samplesPerIndex, numSamplesPerChannel);
+                            for (uint sampleIndex = currentSample; sampleIndex < samplesEnd; sampleIndex += samplesPerIndexDiff)
                             {
-                                // Draw vertical line mirrored around x-axis for channel equal to average sample value height
-                                Render2D.DrawLine(new Vector2(X + pixelIndex, yCenter - averageSampleValueScaled), new Vector2(X + pixelIndex, yCenter + averageSampleValueScaled), Color.White);
+                                // Get the sample value
+                                uint index = sampleIndex + channelIndex;
+                                float value = _pcmData[index];
+
+                                // Sum the sample value with the running sum
+                                samplesSum += Mathf.Abs(value);
+
+                                // Track the number of samples we're actually summing to get an accurate average
+                                numSamplesInPixel++;
+                            }
+                            currentSample = samplesEnd;
+
+                            // If we actually added any audio data in this pixel
+                            if (numSamplesInPixel > 0)
+                            {
+                                float averageSampleValue = samplesSum / numSamplesInPixel;
+                                float averageSampleValueScaled = averageSampleValue * sampleYScale;
+
+                                // Don't try to draw anything if the audio data was too quiet
+                                if (averageSampleValueScaled > 0.001f)
+                                {
+                                    // Draw vertical line mirrored around x-axis for channel equal to average sample value height
+                                    Render2D.DrawLine(new Vector2(pixelX, yCenter - averageSampleValueScaled), new Vector2(pixelX, yCenter + averageSampleValueScaled), Color.White);
+                                }
                             }
                         }
                     }

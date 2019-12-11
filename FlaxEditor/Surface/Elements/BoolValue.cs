@@ -19,7 +19,7 @@ namespace FlaxEditor.Surface.Elements
         public bool Value
         {
             get => (bool)ParentNode.Values[Archetype.ValueIndex];
-            set { ParentNode.SetValue(Archetype.ValueIndex, value); }
+            set => ParentNode.SetValue(Archetype.ValueIndex, value);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public BoolValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-        : base(parentNode, archetype, 16, 16, true)
+        : base(parentNode, archetype, archetype.ActualPosition, new Vector2(16), true)
         {
         }
 
@@ -113,7 +113,11 @@ namespace FlaxEditor.Surface.Elements
 
             // Note: this value box may edit on component of the vector like Vector3.Y, BoxID from Archetype tells which component pick
 
-            if (value is int valueInt)
+            if (value is bool valueBool)
+            {
+                result = valueBool;
+            }
+            else if (value is int valueInt)
             {
                 result = valueInt != 0;
             }

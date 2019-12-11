@@ -80,7 +80,7 @@ namespace FlaxEngine
         {
             try
             {
-                Debug.Write(LogType.Log, "Loading plugin " + plugin);
+                Debug.Write(LogType.Info, "Loading plugin " + plugin);
 
                 PluginLoading?.Invoke(plugin);
 
@@ -99,7 +99,7 @@ namespace FlaxEngine
         {
             try
             {
-                Debug.Write(LogType.Log, "Unloading plugin " + plugin);
+                Debug.Write(LogType.Info, "Unloading plugin " + plugin);
 
                 PluginUnloading?.Invoke(plugin);
 
@@ -124,7 +124,7 @@ namespace FlaxEngine
             var desc = plugin.Description;
             if (!CanLoadPlugin(ref desc))
             {
-                Debug.Write(LogType.Log, "Skip loading plugin " + plugin);
+                Debug.Write(LogType.Info, "Skip loading plugin " + plugin);
                 return;
             }
 
@@ -164,7 +164,7 @@ namespace FlaxEngine
             int pluginsCount = _editorPlugins.Count + _gamePlugins.Count;
             if (pluginsCount == 0)
                 return;
-            Debug.Write(LogType.Log, string.Format("Unloading {0} plugins", pluginsCount));
+            Debug.Write(LogType.Info, string.Format("Unloading {0} plugins", pluginsCount));
 
             for (int i = _editorPlugins.Count - 1; i >= 0 && _editorPlugins.Count > 0; i--)
             {

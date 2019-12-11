@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -9,7 +10,7 @@ namespace FlaxEditor.GUI
     /// <summary>
     /// Popup menu useful for renaming objects via UI. Displays text box for renaming.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
+    /// <seealso cref="ContextMenuBase" />
     public class RenamePopup : ContextMenuBase
     {
         private string _startValue;
@@ -24,6 +25,19 @@ namespace FlaxEditor.GUI
         /// Occurs when popup is closing (after renaming done or not).
         /// </summary>
         public event Action<RenamePopup> Closed;
+
+        /// <summary>
+        /// Input value validation delegate.
+        /// </summary>
+        /// <param name="popup">The popup reference.</param>
+        /// <param name="value">The input text value.</param>
+        /// <returns>True if text is valid, otherwise false.</returns>
+        public delegate bool ValidateDelegate(RenamePopup popup, string value);
+
+        /// <summary>
+        /// Occurs when input text validation should be performed.
+        /// </summary>
+        public ValidateDelegate Validate;
 
         /// <summary>
         /// Gets or sets the initial value.
@@ -64,9 +78,32 @@ namespace FlaxEditor.GUI
             _startValue = value;
 
             _inputField = new TextBox(isMultiline, 0, 0, size.Y);
+            _inputField.TextChanged += OnTextChanged;
             _inputField.DockStyle = DockStyle.Fill;
             _inputField.Text = _startValue;
             _inputField.Parent = this;
+        }
+
+        private bool IsInputValid => _inputField.Text == _startValue || Validate == null || Validate(this, _inputField.Text);
+
+        private void OnTextChanged()
+        {
+            if (Validate == null)
+                return;
+
+            var valid = IsInputValid;
+            var style = Style.Current;
+            if (valid)
+            {
+                _inputField.BorderColor = Color.Transparent;
+                _inputField.BorderSelectedColor = style.BackgroundSelected;
+            }
+            else
+            {
+                var color = new Color(1.0f, 0.0f, 0.02745f, 1.0f);
+                _inputField.BorderColor = Color.Lerp(color, style.TextBoxBackground, 0.6f);
+                _inputField.BorderSelectedColor = color;
+            }
         }
 
         /// <summary>
@@ -89,13 +126,12 @@ namespace FlaxEditor.GUI
             return rename;
         }
 
-        private void OnTextChanged()
+        private void OnEnd()
         {
             var text = Text;
-            if (text.Length > 0 && text != _startValue)
+            if (text.Length > 0 && text != _startValue && IsInputValid)
             {
                 Renamed?.Invoke(this);
-                Renamed = null;
             }
 
             Hide();
@@ -107,7 +143,7 @@ namespace FlaxEditor.GUI
             // Enter
             if (key == Keys.Return)
             {
-                OnTextChanged();
+                OnEnd();
                 return true;
             }
             // Esc
@@ -143,13 +179,14 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             Renamed = null;
             Closed = null;
+            Validate = null;
             _inputField = null;
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

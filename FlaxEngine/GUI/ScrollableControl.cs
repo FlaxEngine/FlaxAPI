@@ -17,7 +17,29 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets current view offset for all the controls (used by the scroll bars).
         /// </summary>
-        public Vector2 ViewOffset => _viewOffset;
+        [HideInEditor, NoSerialize]
+        public Vector2 ViewOffset
+        {
+            get => _viewOffset;
+            set => SetViewOffset(ref value);
+        }
+
+        /// <summary>
+        /// Sets the view offset.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        protected virtual void SetViewOffset(ref Vector2 value)
+        {
+            _viewOffset = value;
+            OnViewOffsetChanged();
+        }
+
+        /// <summary>
+        /// Called when view offset gets changed.
+        /// </summary>
+        protected virtual void OnViewOffsetChanged()
+        {
+        }
 
         /// <inheritdoc />
         protected override void DrawChildren()

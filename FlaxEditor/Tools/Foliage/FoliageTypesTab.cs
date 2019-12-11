@@ -1,10 +1,12 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -13,7 +15,7 @@ namespace FlaxEditor.Tools.Foliage
     /// <summary>
     /// Foliage types editor tab. Allows to add, remove or modify foliage instance types defined for the current foliage object.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="GUI.Tabs.Tab" />
     public class FoliageTypesTab : Tab
     {
         /// <summary>
@@ -148,7 +150,18 @@ namespace FlaxEditor.Tools.Foliage
                 }
             }
 
-            [EditorOrder(130), EditorDisplay("Instance Options"), Tooltip("The shadows casting mode.")]
+            [EditorOrder(120), DefaultValue(FlaxEngine.DrawPass.Default), EditorDisplay("Instance Options"), Tooltip("The draw passes to use for rendering this foliage type.")]
+            public FlaxEngine.DrawPass DrawModes
+            {
+                get => _options.DrawModes;
+                set
+                {
+                    _options.DrawModes = value;
+                    SetOptions();
+                }
+            }
+
+            [EditorOrder(130), DefaultValue(ShadowsCastingMode.All), EditorDisplay("Instance Options"), Tooltip("The shadows casting mode.")]
             public ShadowsCastingMode ShadowsMode
             {
                 get => _options.ShadowsMode;

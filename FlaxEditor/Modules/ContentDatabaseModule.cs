@@ -200,6 +200,9 @@ namespace FlaxEditor.Modules
         {
             Assert.IsFalse(_isDuringFastSetup);
 
+            if (string.IsNullOrEmpty(path))
+                return null;
+
             // Ensure path is normalized to the Flax format
             path = StringUtils.NormalizePath(path);
 
@@ -578,7 +581,7 @@ namespace FlaxEditor.Modules
                     {
                         // Rename asset
                         // Note: we use content backend because file may be in use or sth, it's safe
-                        if (Editor.ContentEditing.CloneAssetFile(targetPath, sourcePath, Guid.NewGuid()))
+                        if (Editor.ContentEditing.CloneAssetFile(sourcePath, targetPath, Guid.NewGuid()))
                         {
                             // Error
                             Editor.LogError(string.Format("Cannot copy asset \'{0}\' to \'{1}\'", sourcePath, targetPath));
@@ -858,6 +861,9 @@ namespace FlaxEditor.Modules
             Proxy.Add(new CubeTextureProxy());
             Proxy.Add(new PreviewsCacheProxy());
             Proxy.Add(new FontProxy());
+            Proxy.Add(new ParticleEmitterProxy());
+            Proxy.Add(new ParticleSystemProxy());
+            Proxy.Add(new SceneAnimationProxy());
             Proxy.Add(new ScriptProxy());
             Proxy.Add(new SceneProxy());
             Proxy.Add(new PrefabProxy());
@@ -875,12 +881,13 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<TimeSettings>());
             Proxy.Add(new SettingsProxy<LayersAndTagsSettings>());
             Proxy.Add(new SettingsProxy<PhysicsSettings>());
-            Proxy.Add(new SettingsProxy<GraphicsSettings>());
+            Proxy.Add(new SettingsProxy<FlaxEditor.Content.Settings.GraphicsSettings>());
             Proxy.Add(new SettingsProxy<NavigationSettings>());
             Proxy.Add(new SettingsProxy<BuildSettings>());
             Proxy.Add(new SettingsProxy<InputSettings>());
             Proxy.Add(new SettingsProxy<WindowsPlatformSettings>());
             Proxy.Add(new SettingsProxy<UWPPlatformSettings>());
+            Proxy.Add(new SettingsProxy<LinuxPlatformSettings>());
             Proxy.Add(new SettingsProxy<AudioSettings>());
 
             // Last add generic json (won't override other json proxies)
@@ -971,10 +978,12 @@ namespace FlaxEditor.Modules
             case WatcherChangeTypes.Created:
             case WatcherChangeTypes.Deleted:
             {
-                // We want to enqueue dir modification events for better stability
-                if (!_dirtyNodes.Contains(node))
-                    _dirtyNodes.Enqueue(node);
-
+                lock (_dirtyNodes)
+                {
+                    // We want to enqueue dir modification events for better stability
+                    if (!_dirtyNodes.Contains(node))
+                        _dirtyNodes.Enqueue(node);
+                }
                 break;
             }
 
@@ -985,17 +994,20 @@ namespace FlaxEditor.Modules
         /// <inheritdoc />
         public override void OnUpdate()
         {
-            while (_dirtyNodes.Count > 0)
+            lock (_dirtyNodes)
             {
-                // Get node
-                var node = _dirtyNodes.Dequeue();
+                while (_dirtyNodes.Count > 0)
+                {
+                    // Get node
+                    var node = _dirtyNodes.Dequeue();
 
-                // Refresh
-                loadFolder(node, true);
+                    // Refresh
+                    loadFolder(node, true);
 
-                // Fire event
-                if (_enableEvents)
-                    OnWorkspaceModified?.Invoke();
+                    // Fire event
+                    if (_enableEvents)
+                        OnWorkspaceModified?.Invoke();
+                }
             }
         }
 

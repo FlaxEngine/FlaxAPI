@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// The Post Process effect rendering location within the rendering pipeline.
@@ -36,7 +36,7 @@ namespace FlaxEngine.Rendering
     /// <summary>
     /// Custom postFx which can modify final image by processing it with material based filters.
     /// The base class for all post process effects used by the graphics pipeline.
-    /// Allows to extend frame rendering logic and apply custom effects such as outline, nighvision, contrast etc.
+    /// Allows to extend frame rendering logic and apply custom effects such as outline, night vision, contrast etc.
     /// </summary>
     /// <remarks>
     /// Override this class and implement custom post fx logic.
@@ -72,7 +72,7 @@ namespace FlaxEngine.Rendering
         /// <param name="task">The current rendering task.</param>
         /// <param name="input">The input texture.</param>
         /// <param name="output">The output texture.</param>
-        public abstract void Render(GPUContext context, SceneRenderTask task, RenderTarget input, RenderTarget output);
+        public abstract void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output);
 
         internal static void FetchInfo(PostProcessEffect obj, out PostProcessEffectLocation location, out bool useSingleTarget)
         {

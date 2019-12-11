@@ -3,8 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI
 {
     /// <summary>
     /// Combo box control allows to choose one item or set of items from the provided collection of options.
@@ -26,7 +28,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The popup menu. May be null if has not been used yet.
         /// </summary>
-        protected ContextMenu _popupMenu;
+        protected ContextMenu.ContextMenu _popupMenu;
 
         /// <summary>
         /// The mouse down flag.
@@ -149,6 +151,11 @@ namespace FlaxEngine.GUI
         /// Occurs when popup is showing (before event). Can be used to update items collection before showing it to the user.
         /// </summary>
         public event Action<ComboBox> PopupShowing;
+
+        /// <summary>
+        /// Gets the popup menu (it may be null if not used - lazy init).
+        /// </summary>
+        public ContextMenu.ContextMenu Popup => _popupMenu;
 
         /// <summary>
         /// Gets a value indicating whether this popup menu is opened.
@@ -324,9 +331,9 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Creates the popup menu.
         /// </summary>
-        protected virtual ContextMenu CreatePopup()
+        protected virtual ContextMenu.ContextMenu CreatePopup()
         {
-            return new ContextMenu();
+            return new ContextMenu.ContextMenu();
         }
 
         /// <inheritdoc />
@@ -374,7 +381,7 @@ namespace FlaxEngine.GUI
 
             // Background
             Render2D.FillRectangle(clientRect, backgroundColor);
-            Render2D.DrawRectangle(clientRect, borderColor);
+            Render2D.DrawRectangle(clientRect.MakeExpanded(-2.0f), borderColor);
 
             // Check if has selected item
             if (_selectedIndices.Count > 0)

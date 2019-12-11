@@ -33,6 +33,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             label.CheckChanged += CheckBoxOnCheckChanged;
             _labels.Add(label);
             itemLayout.Property(label, itemValues, item.OverrideEditor, item.TooltipText);
+            label.UpdateStyle();
         }
 
         private void CheckBoxOnCheckChanged(CheckablePropertyNameLabel label)

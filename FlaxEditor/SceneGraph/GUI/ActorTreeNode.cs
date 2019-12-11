@@ -6,6 +6,7 @@ using System.Linq;
 using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.GUI.Tree;
 using FlaxEditor.Utilities;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -16,7 +17,7 @@ namespace FlaxEditor.SceneGraph.GUI
     /// <summary>
     /// Tree node GUI control used as a proxy object for actors hierarchy.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.TreeNode" />
+    /// <seealso cref="TreeNode" />
     public class ActorTreeNode : TreeNode
     {
         private int _orderInParent;
@@ -53,11 +54,13 @@ namespace FlaxEditor.SceneGraph.GUI
         internal virtual void LinkNode(ActorNode node)
         {
             _actorNode = node;
-            if (node.Actor != null)
+            var actor = node.Actor;
+            if (actor != null)
             {
-                _orderInParent = node.Actor.OrderInParent;
+                _orderInParent = actor.OrderInParent;
+                Visible = (actor.HideFlags & HideFlags.HideInHierarchy) == 0;
 
-                var id = node.Actor.ID;
+                var id = actor.ID;
                 if (Editor.Instance.ProjectCache.IsExpandedActor(ref id))
                 {
                     Expand(true);
@@ -374,11 +377,19 @@ namespace FlaxEditor.SceneGraph.GUI
             _dragHandlers.OnDragLeave();
         }
 
+        [Serializable]
         private class ReparentAction : IUndoAction
         {
+            [Serialize]
             private Guid[] _ids;
+
+            [Serialize]
             private int _actorsCount;
+
+            [Serialize]
             private Guid[] _prefabIds;
+
+            [Serialize]
             private Guid[] _prefabObjectIds;
 
             public ReparentAction(Actor actor)
@@ -615,6 +626,30 @@ namespace FlaxEditor.SceneGraph.GUI
                             // Spawn
                             ActorNode.Root.Spawn(actor, Actor);
                         }
+                        else if (item.TypeName == typeof(ParticleSystem).FullName)
+                        {
+                            // Create actor
+                            var actor = ParticleEffect.New();
+                            actor.StaticFlags = Actor.StaticFlags;
+                            actor.Name = item.ShortName;
+                            actor.ParticleSystem = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
+                            actor.Transform = Actor.Transform;
+
+                            // Spawn
+                            ActorNode.Root.Spawn(actor, Actor);
+                        }
+                        else if (item.TypeName == typeof(SceneAnimation).FullName)
+                        {
+                            // Create actor
+                            var actor = SceneAnimationPlayer.New();
+                            actor.StaticFlags = Actor.StaticFlags;
+                            actor.Name = item.ShortName;
+                            actor.Animation = FlaxEngine.Content.LoadAsync<SceneAnimation>(item.ID);
+                            actor.Transform = Actor.Transform;
+
+                            // Spawn
+                            ActorNode.Root.Spawn(actor, Actor);
+                        }
 
                         break;
                     }
@@ -716,6 +751,10 @@ namespace FlaxEditor.SceneGraph.GUI
             case ContentDomain.Other:
             {
                 if (item.TypeName == typeof(CollisionData).FullName)
+                    return true;
+                if (item.TypeName == typeof(ParticleSystem).FullName)
+                    return true;
+                if (item.TypeName == typeof(SceneAnimation).FullName)
                     return true;
                 return false;
             }

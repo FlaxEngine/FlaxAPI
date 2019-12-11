@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.Surface.Elements;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -14,6 +15,11 @@ namespace FlaxEditor.Surface
     /// <seealso cref="SurfaceControl" />
     public class SurfaceNode : SurfaceControl
     {
+        /// <summary>
+        /// Flag used to discard node values setting during event sending for node UI flushing.
+        /// </summary>
+        protected bool _isDuringValuesEditing;
+
         /// <summary>
         /// The header rectangle (local space).
         /// </summary>
@@ -62,15 +68,17 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets the type (packed GroupID (higher 16 bits) and TypeID (lower 16 bits)).
         /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
         public uint Type => ((uint)GroupArchetype.GroupID << 16) | Archetype.TypeID;
 
         /// <summary>
         /// The metadata.
         /// </summary>
         public readonly SurfaceMeta Meta = new SurfaceMeta();
+
+        /// <summary>
+        /// Occurs when node values collection gets changed.
+        /// </summary>
+        public event Action ValuesChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SurfaceNode"/> class.
@@ -86,12 +94,25 @@ namespace FlaxEditor.Surface
             ID = id;
             Archetype = nodeArch;
             GroupArchetype = groupArch;
+            AutoFocus = false;
+            TooltipText = nodeArch.Description;
 
             if (Archetype.DefaultValues != null)
             {
                 Values = new object[Archetype.DefaultValues.Length];
                 Array.Copy(Archetype.DefaultValues, Values, Values.Length);
             }
+        }
+
+        /// <summary>
+        /// Calculates the size of the node including header, footer, and margins.
+        /// </summary>
+        /// <param name="width">The node area width.</param>
+        /// <param name="height">The node area height.</param>
+        /// <returns>The node control total size.</returns>
+        protected virtual Vector2 CalculateNodeSize(float width, float height)
+        {
+            return new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
         }
 
         /// <summary>
@@ -102,7 +123,7 @@ namespace FlaxEditor.Surface
         protected void Resize(float width, float height)
         {
             var prevSize = Size;
-            Size = new Vector2(width + Constants.NodeMarginX * 2, height + Constants.NodeMarginY * 2 + Constants.NodeHeaderSize + Constants.NodeFooterSize);
+            Size = CalculateNodeSize(width, height);
 
             // Update boxes on width change
             if (!Mathf.NearEqual(prevSize.X, Size.X))
@@ -117,14 +138,81 @@ namespace FlaxEditor.Surface
             }
         }
 
-        internal void AddElement(ISurfaceNodeElement element)
+        /// <summary>
+        /// Creates an element from the archetype and adds the element to the node.
+        /// </summary>
+        /// <param name="arch">The element archetype.</param>
+        /// <returns>The created element. Null if the archetype is invalid.</returns>
+        public ISurfaceNodeElement AddElement(NodeElementArchetype arch)
+        {
+            ISurfaceNodeElement element = null;
+            switch (arch.Type)
+            {
+            case NodeElementType.Input:
+                element = new InputBox(this, arch);
+                break;
+            case NodeElementType.Output:
+                element = new OutputBox(this, arch);
+                break;
+            case NodeElementType.BoolValue:
+                element = new BoolValue(this, arch);
+                break;
+            case NodeElementType.FloatValue:
+                element = new FloatValue(this, arch);
+                break;
+            case NodeElementType.IntegerValue:
+                element = new IntegerValue(this, arch);
+                break;
+            case NodeElementType.ColorValue:
+                element = new ColorValue(this, arch);
+                break;
+            case NodeElementType.ComboBox:
+                element = new ComboBoxElement(this, arch);
+                break;
+            case NodeElementType.Asset:
+                element = new AssetSelect(this, arch);
+                break;
+            case NodeElementType.Text:
+                element = new TextView(this, arch);
+                break;
+            case NodeElementType.TextBox:
+                element = new TextBoxView(this, arch);
+                break;
+            case NodeElementType.SkeletonNodeSelect:
+                element = new SkeletonNodeSelectElement(this, arch);
+                break;
+            case NodeElementType.BoxValue:
+                element = new BoxValue(this, arch);
+                break;
+            case NodeElementType.EnumValue:
+                element = new EnumValue(this, arch);
+                break;
+            }
+            if (element != null)
+            {
+                AddElement(element);
+            }
+
+            return element;
+        }
+
+        /// <summary>
+        /// Adds the element to the node.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        public void AddElement(ISurfaceNodeElement element)
         {
             Elements.Add(element);
             if (element is Control control)
                 AddChild(control);
         }
 
-        internal void RemoveElement(ISurfaceNodeElement element, bool dispose = true)
+        /// <summary>
+        /// Removes the element from the node.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="dispose">if set to <c>true</c> dispose control after removing, otherwise false.</param>
+        public void RemoveElement(ISurfaceNodeElement element, bool dispose = true)
         {
             if (element is Box box)
                 box.RemoveConnections();
@@ -306,6 +394,183 @@ namespace FlaxEditor.Surface
             }
         }
 
+        internal Box GetNextBox(Box box)
+        {
+            int i = 0;
+            for (; i < Elements.Count; i++)
+            {
+                if (Elements[i] == box)
+                {
+                    // We found the box
+                    break;
+                }
+            }
+
+            // Get the one after it
+            i++;
+            for (; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box b)
+                {
+                    return b;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Selects all the boxes.
+        /// </summary>
+        public void SelectAllBoxes()
+        {
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box box)
+                    box.IsSelected = true;
+            }
+        }
+
+        /// <summary>
+        /// Clears the box selection.
+        /// </summary>
+        public void ClearBoxSelection()
+        {
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                if (Elements[i] is Box box)
+                    box.IsSelected = false;
+            }
+        }
+
+        /// <summary>
+        /// Adds the specified box to the selection.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        public void AddBoxToSelection(Box box)
+        {
+            box.IsSelected = true;
+        }
+
+        /// <summary>
+        /// Selects the specified control.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        public void SelectBox(Box box)
+        {
+            ClearBoxSelection();
+
+            box.IsSelected = true;
+        }
+
+        /// <summary>
+        /// Selects the specified controls collection.
+        /// </summary>
+        /// <param name="boxes">The boxes.</param>
+        public void SelectBoxes(IEnumerable<Box> boxes)
+        {
+            ClearBoxSelection();
+
+            foreach (var box in boxes)
+            {
+                box.IsSelected = true;
+            }
+        }
+
+        /// <summary>
+        /// Deselects the specified control.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        public void DeselectBox(Box box)
+        {
+            box.IsSelected = false;
+        }
+
+        protected override void OnSelectionChanged()
+        {
+            if (!IsSelected)
+            {
+                ClearBoxSelection();
+            }
+        }
+
+        /// <summary>
+        /// Implementation of Depth-First traversal over the graph of surface nodes.
+        /// </summary>
+        /// <returns>The list of nodes as a result of depth-first traversal algorithm execution.</returns>
+        public IEnumerable<SurfaceNode> DepthFirstTraversal()
+        {
+            // Reference: https://github.com/stefnotch/flax-custom-visject-plugin/blob/a26a98b40f909a0b10c2259b858e058290003dce/Source/Editor/ExpressionGraphSurface.cs#L231
+
+            // The states of a node are 
+            // null  Nothing   (unvisited and not on the stack)
+            // false Processing(  visited and     on the stack)
+            // true  Completed (  visited and not on the stack)
+            Dictionary<SurfaceNode, bool> nodeState = new Dictionary<SurfaceNode, bool>();
+            Stack<SurfaceNode> toProcess = new Stack<SurfaceNode>();
+            List<SurfaceNode> output = new List<SurfaceNode>();
+
+            // Start processing the nodes (backwards)
+            toProcess.Push(this);
+            while (toProcess.Count > 0)
+            {
+                var node = toProcess.Peek();
+
+                // We have never seen this node before
+                if (!nodeState.ContainsKey(node))
+                {
+                    // We are now processing it
+                    nodeState.Add(node, false);
+                }
+                else
+                {
+                    // Otherwise, we are done processing it
+                    nodeState[node] = true;
+
+                    // Remove it from the stack
+                    toProcess.Pop();
+
+                    // And add it to the output
+                    output.Add(node);
+                }
+
+                // For all parents, push them onto the stack if they haven't been visited yet
+                var elements = node.Elements;
+                for (int i = 0; i < elements.Count; i++)
+                {
+                    if (node.Elements[i] is InputBox box && box.HasAnyConnection)
+                    {
+                        if (box.HasSingleConnection)
+                        {
+                            // Get the parent node
+                            var parentNode = box.Connections[0].ParentNode;
+
+                            // It has been visited previously
+                            if (nodeState.TryGetValue(parentNode, out bool state))
+                            {
+                                if (state == false)
+                                {
+                                    // It's still processing, so there must be a cycle!
+                                    throw new Exception("Cycle detected!");
+                                }
+                            }
+                            else
+                            {
+                                // It hasn't been visited, add it to the stack
+                                toProcess.Push(parentNode);
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Input box has more than one connection");
+                        }
+                    }
+                }
+            }
+
+            return output;
+        }
+
         /// <summary>
         /// Draws all the connections between surface objects related to this node.
         /// </summary>
@@ -322,9 +587,29 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
+        protected override bool ShowTooltip => base.ShowTooltip && _headerRect.Contains(ref _mousePosition) && !Surface.IsLeftMouseButtonDown && !Surface.IsRightMouseButtonDown && !Surface.IsPrimaryMenuOpened;
+
+        /// <inheritdoc />
+        public override bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
+        {
+            var result = base.OnShowTooltip(out text, out location, out area);
+
+            // Change the position
+            location = new Vector2(_headerRect.Width * 0.5f, _headerRect.Bottom);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override bool OnTestTooltipOverControl(ref Vector2 location)
+        {
+            return _headerRect.Contains(ref location) && ShowTooltip;
+        }
+
+        /// <inheritdoc />
         public override bool CanSelect(ref Vector2 location)
         {
-            return _headerRect.MakeOffseted(Location).Contains(ref location);
+            return _headerRect.MakeOffsetted(Location).Contains(ref location);
         }
 
         /// <inheritdoc />
@@ -341,15 +626,75 @@ namespace FlaxEditor.Surface
             }
         }
 
+        /// <inheritdoc />
+        public override void OnDeleted()
+        {
+            RemoveConnections();
+
+            base.OnDeleted();
+        }
+
         /// <summary>
         /// Sets the value of the node parameter.
         /// </summary>
         /// <param name="index">The value index.</param>
         /// <param name="value">The value.</param>
-        public virtual void SetValue(int index, object value)
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value).</param>
+        public virtual void SetValue(int index, object value, bool graphEdited = true)
         {
+            if (_isDuringValuesEditing)
+                return;
+
+            _isDuringValuesEditing = true;
+
+            var before = Surface.Undo != null ? (object[])Values.Clone() : null;
+
             Values[index] = value;
-            Surface.MarkAsEdited();
+            OnValuesChanged();
+            Surface.MarkAsEdited(graphEdited);
+
+            Surface.Undo?.AddAction(new EditNodeValuesAction(this, before, graphEdited));
+
+            _isDuringValuesEditing = false;
+        }
+
+        /// <summary>
+        /// Sets the values of the node parameters.
+        /// </summary>
+        /// <param name="values">The values.</param>
+        /// <param name="graphEdited">True if graph has been edited (nodes structure or parameter value).</param>
+        public virtual void SetValues(object[] values, bool graphEdited = true)
+        {
+            if (_isDuringValuesEditing)
+                return;
+
+            if (values == null || Values == null || values.Length != Values.Length)
+                throw new ArgumentException();
+
+            _isDuringValuesEditing = true;
+
+            var before = Surface.Undo != null ? (object[])Values.Clone() : null;
+
+            Array.Copy(values, Values, values.Length);
+            OnValuesChanged();
+            Surface.MarkAsEdited(graphEdited);
+
+            Surface.Undo?.AddAction(new EditNodeValuesAction(this, before, graphEdited));
+
+            _isDuringValuesEditing = false;
+        }
+
+        internal void SetIsDuringValuesEditing(bool value)
+        {
+            _isDuringValuesEditing = value;
+        }
+
+        /// <summary>
+        /// Called when node values set gets changed.
+        /// </summary>
+        public virtual void OnValuesChanged()
+        {
+            ValuesChanged?.Invoke();
         }
 
         /// <summary>
@@ -377,21 +722,16 @@ namespace FlaxEditor.Surface
         public override void Draw()
         {
             var style = Style.Current;
-            BackgroundColor = _isSelected ? Color.OrangeRed : style.BackgroundNormal;
 
-            base.Draw();
-
-            /*
-            // Node layout lines rendering
-            float marginX = SURFACE_NODE_MARGIN_X * _scale;
-            float marginY = SURFACE_NODE_MARGIN_Y * _scale;
-            float top = (SURFACE_NODE_HEADER_SIZE + SURFACE_NODE_MARGIN_Y) * _scale;
-            float footer = SURFACE_NODE_FOOTER_SIZE * _scale;
-            render.DrawRectangle(Rect(marginX, top, _width - 2 * marginX, _height - top - marginY - footer), Color::Red);
-            */
+            // Background
+            var backgroundRect = new Rectangle(Vector2.Zero, Size);
+            Render2D.FillRectangle(backgroundRect, style.BackgroundNormal);
 
             // Header
-            Render2D.FillRectangle(_headerRect, style.BackgroundHighlighted);
+            var headerColor = style.BackgroundHighlighted;
+            if (_headerRect.Contains(ref _mousePosition))
+                headerColor *= 1.07f;
+            Render2D.FillRectangle(_headerRect, headerColor);
             Render2D.DrawText(style.FontLarge, Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
 
             // Close button
@@ -403,6 +743,16 @@ namespace FlaxEditor.Surface
 
             // Footer
             Render2D.FillRectangle(_footerRect, GroupArchetype.Color);
+
+            DrawChildren();
+
+            // Selection outline
+            if (_isSelected)
+            {
+                var colorTop = Color.Orange;
+                var colorBottom = Color.OrangeRed;
+                Render2D.DrawRectangle(backgroundRect, colorTop, colorTop, colorBottom, colorBottom);
+            }
         }
 
         /// <inheritdoc />
@@ -412,7 +762,7 @@ namespace FlaxEditor.Surface
                 return true;
 
             // Close
-            if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
+            if (buttons == MouseButton.Left && (Archetype.Flags & NodeFlags.NoCloseButton) == 0)
             {
                 if (_closeButtonRect.Contains(ref location))
                 {

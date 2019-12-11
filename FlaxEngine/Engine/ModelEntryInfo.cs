@@ -43,17 +43,6 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets or sets the scale in lightmap (per mesh).
-        /// Final mesh scale in lightmap is also multiplied by <see cref="StaticModel.ScaleInLightmap"/> and global scene scale parameter.
-        /// </summary>
-        [EditorOrder(20), EditorDisplay(null, "Scale In Lightmap"), Limit(0, 10000, 0.1f), Tooltip("Per mesh scale factor in lightmap charts. Higher value increases the quality but reduces baking performance.")]
-        public float ScaleInLightmap
-        {
-            get => Internal_GetMeshScaleInLightmap(_actor.unmanagedPtr, _index);
-            set => Internal_SetMeshScaleInLightmap(_actor.unmanagedPtr, _index, value);
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether this <see cref="ModelEntryInfo"/> is visible.
         /// </summary>
         [EditorOrder(30), Tooltip("Determines whenever this mesh is visible.")]
@@ -101,6 +90,27 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Utility to crate a new virtual Material Instance asset, set its parent to the currently applied material, and assign it to the entry. Can be used to modify the material parameters from code.
+        /// </summary>
+        /// <returns>The created virtual material instance.</returns>
+        public MaterialInstance CreateAndSetVirtualMaterialInstance()
+        {
+            var material = Material;
+            if (material == null)
+                throw new FlaxException("Cannot create virtual material. Model Entry has missing material.");
+
+            if (material.WaitForLoaded())
+                throw new FlaxException("Cannot create virtual material. Model Entry material failed to load.");
+
+            var result = material.CreateVirtualInstance();
+            if (result == null)
+                throw new FlaxException("Cannot create virtual material.");
+            Material = result;
+
+            return result;
+        }
+
+        /// <summary>
         /// Determines if there is an intersection between the model actor mesh entry and a ray.
         /// If mesh data is available on the CPU performs exact intersection check with the geometry.
         /// Otherwise performs simple <see cref="BoundingBox"/> vs <see cref="Ray"/> test.
@@ -141,12 +151,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetMeshMaterial(IntPtr obj, int index, IntPtr value);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Internal_GetMeshScaleInLightmap(IntPtr obj, int index);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetMeshScaleInLightmap(IntPtr obj, int index, float value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetMeshVisible(IntPtr obj, int index);

@@ -5,7 +5,6 @@ using FlaxEditor.Gizmo;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Tools.Terrain
@@ -43,7 +42,7 @@ namespace FlaxEditor.Tools.Terrain
 
             _planeModel = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/Plane");
             _highlightTerrainMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightTerrainMaterial);
-            _highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
+            _highlightMaterial = EditorAssets.Cache.HighlightMaterialInstance;
         }
 
         private FlaxEngine.Terrain SelectedTerrain
@@ -76,8 +75,11 @@ namespace FlaxEditor.Tools.Terrain
             {
                 // Highlight selected chunk
                 var patchCoord = Mode.SelectedPatchCoord;
-                var chunkCoord = Mode.SelectedChunkCoord;
-                collector.AddDrawCall(terrain, ref patchCoord, ref chunkCoord, _highlightTerrainMaterial);
+                if (terrain.HasPatch(ref patchCoord))
+                {
+                    var chunkCoord = Mode.SelectedChunkCoord;
+                    collector.AddDrawCall(terrain, ref patchCoord, ref chunkCoord, _highlightTerrainMaterial);
+                }
 
                 break;
             }
@@ -104,8 +106,10 @@ namespace FlaxEditor.Tools.Terrain
             {
                 // Highlight selected patch
                 var patchCoord = Mode.SelectedPatchCoord;
-                collector.AddDrawCall(terrain, ref patchCoord, _highlightTerrainMaterial);
-
+                if (terrain.HasPatch(ref patchCoord))
+                {
+                    collector.AddDrawCall(terrain, ref patchCoord, _highlightTerrainMaterial);
+                }
                 break;
             }
             }
@@ -139,21 +143,23 @@ namespace FlaxEditor.Tools.Terrain
             }
         }
 
+        [Serializable]
         private class AddPatchAction : IUndoAction
         {
-            private readonly Editor _editor;
+            [Serialize]
             private Guid _terrainId;
+
+            [Serialize]
             private Int2 _patchCoord;
 
             /// <inheritdoc />
             public string ActionString => "Add terrain patch";
 
-            public AddPatchAction(Editor editor, FlaxEngine.Terrain terrain, ref Int2 patchCoord)
+            public AddPatchAction(FlaxEngine.Terrain terrain, ref Int2 patchCoord)
             {
                 if (terrain == null)
                     throw new ArgumentException(nameof(terrain));
 
-                _editor = editor ?? throw new ArgumentException(nameof(editor));
                 _terrainId = terrain.ID;
                 _patchCoord = patchCoord;
             }
@@ -173,8 +179,8 @@ namespace FlaxEditor.Tools.Terrain
                 {
                     Editor.LogError("Failed to initialize terrain patch.");
                 }
-
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+                terrain.GetPatchBounds(terrain.GetPatchIndex(ref _patchCoord), out var patchBounds);
+                OnPatchEdit(terrain, ref patchBounds);
             }
 
             /// <inheritdoc />
@@ -187,9 +193,26 @@ namespace FlaxEditor.Tools.Terrain
                     return;
                 }
 
+                terrain.GetPatchBounds(terrain.GetPatchIndex(ref _patchCoord), out var patchBounds);
                 terrain.RemovePatch(ref _patchCoord);
+                OnPatchEdit(terrain, ref patchBounds);
+            }
 
-                _editor.Scene.MarkSceneEdited(terrain.Scene);
+            private void OnPatchEdit(FlaxEngine.Terrain terrain, ref BoundingBox patchBounds)
+            {
+                Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
+
+                var editorOptions = Editor.Instance.Options.Options;
+                bool isPlayMode = Editor.Instance.StateMachine.IsPlayMode;
+
+                // Auto NavMesh rebuild
+                if (!isPlayMode && editorOptions.General.AutoRebuildNavMesh)
+                {
+                    if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
+                    {
+                        terrain.Scene.BuildNavMesh(patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                    }
+                }
             }
 
             /// <inheritdoc />
@@ -207,7 +230,7 @@ namespace FlaxEditor.Tools.Terrain
                 if (!terrain.HasPatch(ref patchCoord))
                 {
                     // Add a new patch (with undo)
-                    var action = new AddPatchAction(Editor.Instance, terrain, ref patchCoord);
+                    var action = new AddPatchAction(terrain, ref patchCoord);
                     action.Do();
                     Editor.Instance.Undo.AddAction(action);
                     return true;

@@ -4,7 +4,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     public partial class RenderTask
     {
@@ -30,13 +30,23 @@ namespace FlaxEngine.Rendering
             return Internal_ComputeModelLOD(model.unmanagedPtr, ref bounds, unmanagedPtr);
         }
 
-        internal virtual bool Internal_Begin(out IntPtr outputPtr)
+        internal static bool Internal_OnBegin(object obj, out IntPtr outputPtr)
+        {
+            return ((RenderTask)obj).OnBegin(out outputPtr);
+        }
+
+        internal virtual bool OnBegin(out IntPtr outputPtr)
         {
             outputPtr = IntPtr.Zero;
             return true;
         }
 
-        internal virtual void Internal_Render(GPUContext context)
+        internal static void Internal_OnRender(object obj, object context)
+        {
+            ((RenderTask)obj).OnRender((GPUContext)context);
+        }
+
+        internal virtual void OnRender(GPUContext context)
         {
         }
 
@@ -61,7 +71,12 @@ namespace FlaxEngine.Rendering
             public Matrix World;
         }
 
-        internal virtual DrawCall[] Internal_Draw()
+        internal static DrawCall[] Internal_OnDraw(object obj)
+        {
+            return ((RenderTask)obj).OnDraw();
+        }
+
+        internal virtual DrawCall[] OnDraw()
         {
             return null;
         }

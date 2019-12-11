@@ -1,8 +1,9 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEngine;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Integer (long type) value editor.

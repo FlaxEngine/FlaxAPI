@@ -4,7 +4,6 @@ using System;
 using FlaxEditor.Content.Thumbnails;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Content
 {

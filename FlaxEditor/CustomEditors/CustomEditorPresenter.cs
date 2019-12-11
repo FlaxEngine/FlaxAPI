@@ -180,6 +180,11 @@ namespace FlaxEditor.CustomEditors
         }
 
         /// <summary>
+        /// Gets the root editor.
+        /// </summary>
+        public CustomEditor Root => Editor;
+
+        /// <summary>
         /// Gets a value indicating whether build on update flag is set and layout will be updated during presenter update.
         /// </summary>
         public bool BuildOnUpdate => _buildOnUpdate;

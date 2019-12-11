@@ -2,7 +2,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace FlaxEngine.Rendering
+namespace FlaxEngine
 {
     /// <summary>
     /// Rendering view description object. Contains information about viewport location and orientation in space.
@@ -91,6 +91,18 @@ namespace FlaxEngine.Rendering
         /// The view mode.
         /// </summary>
         public ViewMode Mode;
+
+        /// <summary>
+        /// Initializes this view with default options.
+        /// </summary>
+        public void Init()
+        {
+            MaxShadowsQuality = Quality.Ultra;
+            ModelLODDistanceFactor = 1.0f;
+            ShadowModelLODDistanceFactor = 1.0f;
+            Flags = ViewFlags.DefaultGame;
+            Mode = ViewMode.Default;
+        }
 
         /// <summary>
         /// Initializes render view data.

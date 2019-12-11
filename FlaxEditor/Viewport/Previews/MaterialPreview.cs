@@ -3,7 +3,6 @@
 using System;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Viewport.Previews
@@ -141,6 +140,10 @@ namespace FlaxEditor.Viewport.Previews
                         guiMaterial = _material;
                         break;
                     case MaterialDomain.Terrain:
+                        // TODO: create a temporary, virtual terrain chunk to preview the material
+                        break;
+                    case MaterialDomain.Particle:
+                        // TODO: draw a simple particle effect with a fixed single sprite particle
                         break;
                     default: throw new ArgumentOutOfRangeException();
                     }
@@ -156,7 +159,10 @@ namespace FlaxEditor.Viewport.Previews
             if (entries.Length == 1)
                 entries[0].Material = surfaceMaterial;
             _postFxMaterialsCache[0] = postFxMaterial;
-            PostFxVolume.Settings.PostFxMaterials = _postFxMaterialsCache;
+            PostFxVolume.PostFxMaterials = new PostFxMaterialsSettings
+            {
+                Materials = _postFxMaterialsCache,
+            };
 
             // Decal
             if (decalMaterial && _decal == null)

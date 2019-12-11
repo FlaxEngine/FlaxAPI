@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tree;
 
 namespace FlaxEditor.Windows
 {
@@ -213,17 +214,11 @@ namespace FlaxEditor.Windows
         /// <summary>
         /// Gets the selected tree node.
         /// </summary>
-        /// <value>
-        /// The selected node.
-        /// </value>
         public ContentTreeNode SelectedNode => _tree.SelectedNode as ContentTreeNode;
 
         /// <summary>
         /// Gets the current view folder.
         /// </summary>
-        /// <value>
-        /// The current view folder.
-        /// </value>
         public ContentFolder CurrentViewFolder
         {
             get

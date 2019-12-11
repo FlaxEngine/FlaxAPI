@@ -4,10 +4,12 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Drag;
+using FlaxEditor.Options;
 using FlaxEditor.Surface.Archetypes;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
 using FlaxEditor.Surface.GUI;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -29,7 +31,6 @@ namespace FlaxEditor.Surface
 
         private float _targetScale = 1.0f;
         private float _moveViewWithMouseDragSpeed = 1.0f;
-        private bool _wasMouseDownSinceCommentCreatingStart;
         private bool _isReleasing;
         private VisjectCM _activeVisjectCM;
         private GroupArchetype _customNodesGroup;
@@ -44,11 +45,6 @@ namespace FlaxEditor.Surface
         /// The right mouse down flag.
         /// </summary>
         protected bool _rightMouseDown;
-
-        /// <summary>
-        /// The flag for keyboard key down for comment creating.
-        /// </summary>
-        protected bool _isCommentCreateKeyDown;
 
         /// <summary>
         /// The left mouse down position.
@@ -98,12 +94,17 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The secondary context menu.
         /// </summary>
-        protected FlaxEngine.GUI.ContextMenu _cmSecondaryMenu;
+        protected FlaxEditor.GUI.ContextMenu.ContextMenu _cmSecondaryMenu;
 
         /// <summary>
         /// The context menu start position.
         /// </summary>
         protected Vector2 _cmStartPos = Vector2.Minimum;
+
+        /// <summary>
+        /// Occurs when selection gets changed.
+        /// </summary>
+        protected event Action SelectionChanged;
 
         /// <summary>
         /// The surface owner.
@@ -114,6 +115,11 @@ namespace FlaxEditor.Surface
         /// The style used by the surface.
         /// </summary>
         public readonly SurfaceStyle Style;
+
+        /// <summary>
+        /// The undo system to use for the history actions recording (optional, can be null).
+        /// </summary>
+        public readonly FlaxEditor.Undo Undo;
 
         /// <summary>
         /// Gets a value indicating whether surface is edited.
@@ -169,12 +175,12 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Gets a value indicating whether user is selecting nodes.
         /// </summary>
-        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _connectionInstigator == null && !_isCommentCreateKeyDown;
+        public bool IsSelecting => _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Gets a value indicating whether user is moving selected nodes.
         /// </summary>
-        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _connectionInstigator == null && !_isCommentCreateKeyDown;
+        public bool IsMovingSelection => _leftMouseDown && _isMovingSelection && _connectionInstigator == null;
 
         /// <summary>
         /// Gets a value indicating whether user is connecting nodes.
@@ -182,9 +188,14 @@ namespace FlaxEditor.Surface
         public bool IsConnecting => _connectionInstigator != null;
 
         /// <summary>
-        /// Gets a value indicating whether user is creating comment.
+        /// Gets a value indicating whether the left mouse button is down.
         /// </summary>
-        public bool IsCreatingComment => _isCommentCreateKeyDown && _leftMouseDown && !_isMovingSelection && _connectionInstigator == null;
+        public bool IsLeftMouseButtonDown => _leftMouseDown;
+
+        /// <summary>
+        /// Gets a value indicating whether the right mouse button is down.
+        /// </summary>
+        public bool IsRightMouseButtonDown => _rightMouseDown;
 
         /// <summary>
         /// Returns true if any node is selected by the user (one or more).
@@ -260,24 +271,27 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="onSave">The save action called when user wants to save the surface.</param>
+        /// <param name="undo">The undo/redo to use for the history actions recording. Optional, can be null to disable undo support.</param>
         /// <param name="style">The custom surface style. Use null to create the default style.</param>
         /// <param name="groups">The custom surface node types. Pass null to use the default nodes set.</param>
-        public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, SurfaceStyle style = null, List<GroupArchetype> groups = null)
+        public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo = null, SurfaceStyle style = null, List<GroupArchetype> groups = null)
         {
             DockStyle = DockStyle.Fill;
+            AutoFocus = false; // Disable to prevent autofocus and event handling on OnMouseDown event
 
             Owner = owner;
             Style = style ?? SurfaceStyle.CreateStyleHandler(Editor.Instance);
             if (Style == null)
                 throw new InvalidOperationException("Missing visject surface style.");
             NodeArchetypes = groups ?? NodeFactory.DefaultGroups;
+            Undo = undo;
 
             // Initialize with the root context
             OpenContext(owner);
             RootContext.Modified += OnRootContextModified;
 
             // Create secondary menu (for other actions)
-            _cmSecondaryMenu = new FlaxEngine.GUI.ContextMenu();
+            _cmSecondaryMenu = new FlaxEditor.GUI.ContextMenu.ContextMenu();
             _cmSecondaryMenu.AddButton("Save", onSave);
             _cmSecondaryMenu.AddSeparator();
             _cmCopyButton = _cmSecondaryMenu.AddButton("Copy", Copy);
@@ -289,22 +303,65 @@ namespace FlaxEditor.Surface
             _cmRemoveNodeConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that node(s)", () =>
             {
                 var nodes = ((List<SurfaceNode>)_cmSecondaryMenu.Tag);
-                foreach (var node in nodes)
+
+                if (Undo != null)
                 {
-                    node.RemoveConnections();
+                    var actions = new List<IUndoAction>(nodes.Count);
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node);
+                        node.RemoveConnections();
+                        action.End();
+                        actions.Add(action);
+                    }
+                    Undo.AddAction(new MultiUndoAction(actions, actions[0].ActionString));
                 }
+                else
+                {
+                    foreach (var node in nodes)
+                    {
+                        node.RemoveConnections();
+                    }
+                }
+
                 MarkAsEdited();
             });
             _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
             {
                 var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
-                boxUnderMouse.RemoveConnections();
+
+                if (Undo != null)
+                {
+                    var action = new EditNodeConnections(Context, boxUnderMouse.ParentNode);
+                    boxUnderMouse.RemoveConnections();
+                    action.End();
+                    Undo.AddAction(action);
+                }
+                else
+                {
+                    boxUnderMouse.RemoveConnections();
+                }
+
                 MarkAsEdited();
             });
 
+            // Setup input actions
+            InputActions = new InputActionsContainer(new[]
+            {
+                new InputActionsContainer.Binding(options => options.Delete, Delete),
+                new InputActionsContainer.Binding(options => options.SelectAll, SelectAll),
+                new InputActionsContainer.Binding(options => options.Copy, Copy),
+                new InputActionsContainer.Binding(options => options.Paste, Paste),
+                new InputActionsContainer.Binding(options => options.Cut, Cut),
+                new InputActionsContainer.Binding(options => options.Duplicate, Duplicate),
+            });
+
+            Context.ControlSpawned += OnSurfaceControlSpawned;
+            Context.ControlDeleted += OnSurfaceControlDeleted;
+
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
-            DragHandlers.Add(_dragParameters = new DragSurfaceParameters<DragDropEventArgs>(ValidateDragParameter));
+            DragHandlers.Add(_dragParameters = new DragNames<DragDropEventArgs>(SurfaceParameter.DragPrefix, ValidateDragParameter));
         }
 
         private void OnRootContextModified(VisjectSurfaceContext context, bool graphEdited)
@@ -448,13 +505,12 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void SelectAll()
         {
-            _hasInputSelectionChanged = true;
-
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceControl control)
                     control.IsSelected = true;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -462,13 +518,12 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void ClearSelection()
         {
-            _hasInputSelectionChanged = true;
-
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceControl control)
                     control.IsSelected = false;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -477,9 +532,8 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void AddToSelection(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             control.IsSelected = true;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -488,11 +542,9 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Select(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             ClearSelection();
-
             control.IsSelected = true;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -501,14 +553,12 @@ namespace FlaxEditor.Surface
         /// <param name="controls">The controls.</param>
         public void Select(IEnumerable<SurfaceControl> controls)
         {
-            _hasInputSelectionChanged = true;
-
             ClearSelection();
-
             foreach (var control in controls)
             {
                 control.IsSelected = true;
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -517,27 +567,34 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Deselect(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             control.IsSelected = false;
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
         /// Creates the comment around the selected nodes.
         /// </summary>
-        public void CommentSelection()
+        public SurfaceComment CommentSelection(string text = "")
         {
             var selection = SelectedNodes;
             if (selection.Count == 0)
-                return;
+                return null;
+            Rectangle surfaceArea = GetNodesBounds(selection).MakeExpanded(80.0f);
 
-            Rectangle surfaceArea = selection[0].Bounds.MakeExpanded(80.0f);
-            for (int i = 1; i < selection.Count; i++)
+            return _context.CreateComment(ref surfaceArea, string.IsNullOrEmpty(text) ? "Comment" : text, new Color(1.0f, 1.0f, 1.0f, 0.2f));
+        }
+
+        private static Rectangle GetNodesBounds(List<SurfaceNode> nodes)
+        {
+            if (nodes.Count == 0) return Rectangle.Empty;
+
+            Rectangle surfaceArea = nodes[0].Bounds;
+            for (int i = 1; i < nodes.Count; i++)
             {
-                surfaceArea = Rectangle.Union(surfaceArea, selection[i].Bounds.MakeExpanded(80.0f));
+                surfaceArea = Rectangle.Union(surfaceArea, nodes[i].Bounds);
             }
 
-            _context.CreateComment(ref surfaceArea);
+            return surfaceArea;
         }
 
         /// <summary>
@@ -546,12 +603,11 @@ namespace FlaxEditor.Surface
         /// <param name="controls">The controls.</param>
         public void Delete(IEnumerable<SurfaceControl> controls)
         {
-            _hasInputSelectionChanged = true;
-
             foreach (var control in controls)
             {
                 Delete(control);
             }
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -560,19 +616,17 @@ namespace FlaxEditor.Surface
         /// <param name="control">The control.</param>
         public void Delete(SurfaceControl control)
         {
-            _hasInputSelectionChanged = true;
-
             if (control is SurfaceNode node)
             {
                 if ((node.Archetype.Flags & NodeFlags.NoRemove) != 0)
                     return;
 
-                node.RemoveConnections();
                 Nodes.Remove(node);
             }
 
-            control.Dispose();
+            Context.OnControlDeleted(control);
             MarkAsEdited();
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -580,35 +634,72 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void Delete()
         {
-            _hasInputSelectionChanged = true;
-
             bool edited = false;
 
+            List<SurfaceNode> nodes = null;
             for (int i = 0; i < _rootControl.Children.Count; i++)
             {
                 if (_rootControl.Children[i] is SurfaceNode node)
                 {
                     if (node.IsSelected && (node.Archetype.Flags & NodeFlags.NoRemove) == 0)
                     {
-                        node.RemoveConnections();
-                        node.Dispose();
-
-                        Nodes.Remove(node);
-                        i--;
-
+                        if (nodes == null)
+                            nodes = new List<SurfaceNode>();
+                        nodes.Add(node);
                         edited = true;
                     }
                 }
                 else if (_rootControl.Children[i] is SurfaceControl control && control.IsSelected)
                 {
                     i--;
-                    control.Dispose();
+                    Context.OnControlDeleted(control);
                     edited = true;
                 }
             }
 
+            if (nodes != null)
+            {
+                if (Undo == null)
+                {
+                    // Remove all nodes
+                    foreach (var node in nodes)
+                    {
+                        node.RemoveConnections();
+                        Nodes.Remove(node);
+                        Context.OnControlDeleted(node);
+                    }
+                }
+                else
+                {
+                    var actions = new List<IUndoAction>();
+
+                    // Break connections for all nodes
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node);
+                        node.RemoveConnections();
+                        action.End();
+                        actions.Add(action);
+                    }
+
+                    // Remove all nodes
+                    foreach (var node in nodes)
+                    {
+                        var action = new AddRemoveNodeAction(node, false);
+                        action.Do();
+                        actions.Add(action);
+                    }
+
+                    Undo.AddAction(new MultiUndoAction(actions, nodes.Count == 1 ? "Remove node" : "Remove nodes"));
+                }
+            }
+
             if (edited)
+            {
                 MarkAsEdited();
+            }
+
+            SelectionChanged?.Invoke();
         }
 
         /// <summary>
@@ -676,6 +767,42 @@ namespace FlaxEditor.Surface
             _cmSecondaryMenu.Dispose();
 
             base.OnDestroy();
+        }
+
+        /// <summary>
+        /// Gets the type of the parameter (enum to runtime value type).
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The runtime value time.</returns>
+        public static Type GetParameterValueType(ParameterType type)
+        {
+            switch (type)
+            {
+            case ParameterType.Bool: return typeof(bool);
+            case ParameterType.Integer: return typeof(int);
+            case ParameterType.Float: return typeof(float);
+            case ParameterType.Vector2: return typeof(Vector2);
+            case ParameterType.Vector3: return typeof(Vector3);
+            case ParameterType.Vector4: return typeof(Vector4);
+            case ParameterType.Color: return typeof(Color);
+            case ParameterType.Texture:
+            case ParameterType.NormalMap: return typeof(Texture);
+            case ParameterType.String: return typeof(string);
+            case ParameterType.Box: return typeof(Box);
+            case ParameterType.Rotation: return typeof(Quaternion);
+            case ParameterType.Transform: return typeof(Transform);
+            case ParameterType.Asset: return typeof(Asset);
+            case ParameterType.Actor: return typeof(Actor);
+            case ParameterType.Rectangle: return typeof(Rectangle);
+            case ParameterType.CubeTexture: return typeof(CubeTexture);
+            case ParameterType.SceneTexture: return typeof(int);
+            case ParameterType.GPUTexture: return typeof(bool);
+            case ParameterType.Matrix: return typeof(Matrix);
+            case ParameterType.GPUTextureArray: return typeof(bool);
+            case ParameterType.GPUTextureVolume: return typeof(bool);
+            case ParameterType.GPUTextureCube: return typeof(bool);
+            default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
     }
 }

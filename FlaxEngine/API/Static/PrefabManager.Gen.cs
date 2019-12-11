@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -27,7 +28,7 @@ namespace FlaxEngine
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_SpawnPrefab(Object.GetUnmanagedPtr(prefab), Object.GetUnmanagedPtr(parent));
+            return Internal_SpawnPrefab(FlaxEngine.Object.GetUnmanagedPtr(prefab), FlaxEngine.Object.GetUnmanagedPtr(parent));
 #endif
         }
 

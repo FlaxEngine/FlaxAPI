@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using FlaxEditor.Content;
 using FlaxEditor.Scripting;
 using FlaxEditor.Surface.ContextMenu;
@@ -33,12 +32,12 @@ namespace FlaxEditor.Surface
                         Create = (id, context, arch, groupArch) => new Animation.StateMachineState(id, context, arch, groupArch),
                         Title = "State",
                         Description = "The animation states machine state node",
-                        Flags = NodeFlags.AnimGraphOnly,
+                        Flags = NodeFlags.AnimGraph,
                         DefaultValues = new object[]
                         {
                             "State",
-                            Enumerable.Empty<byte>() as byte[],
-                            Enumerable.Empty<byte>() as byte[],
+                            Utils.GetEmptyArray<byte>(),
+                            Utils.GetEmptyArray<byte>(),
                         },
                         Size = new Vector2(100, 0),
                     },
@@ -58,7 +57,7 @@ namespace FlaxEditor.Surface
                     TypeID = 23,
                     Title = "Transition Source State Anim",
                     Description = "The animation state machine transition source state animation data information",
-                    Flags = NodeFlags.AnimGraphOnly,
+                    Flags = NodeFlags.AnimGraph,
                     Size = new Vector2(270, 110),
                     Elements = new[]
                     {
@@ -85,8 +84,8 @@ namespace FlaxEditor.Surface
         private bool _isRegisteredForScriptsReload;
 
         /// <inheritdoc />
-        public AnimGraphSurface(IVisjectSurfaceOwner owner, Action onSave)
-        : base(owner, onSave)
+        public AnimGraphSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo)
+        : base(owner, onSave, undo)
         {
             // Find custom nodes for Anim Graph
             var customNodes = Editor.Instance.CodeEditing.AnimGraphNodes.GetArchetypes();
@@ -122,7 +121,11 @@ namespace FlaxEditor.Surface
             {
                 if (_cmStateMachineMenu == null)
                 {
-                    _cmStateMachineMenu = new VisjectCM(StateMachineGroupArchetypes, (arch) => true);
+                    _cmStateMachineMenu = new VisjectCM(new VisjectCM.InitInfo
+                    {
+                        Groups = StateMachineGroupArchetypes,
+                        CanSpawnNode = (arch) => true,
+                    });
                     _cmStateMachineMenu.ShowExpanded = true;
                 }
                 menu = _cmStateMachineMenu;
@@ -133,7 +136,13 @@ namespace FlaxEditor.Surface
             {
                 if (_cmStateMachineTransitionMenu == null)
                 {
-                    _cmStateMachineTransitionMenu = new VisjectCM(NodeFactory.DefaultGroups, CanSpawnNodeType, null, GetCustomNodes());
+                    _cmStateMachineTransitionMenu = new VisjectCM(new VisjectCM.InitInfo
+                    {
+                        Groups = NodeFactory.DefaultGroups,
+                        CanSpawnNode = CanSpawnNodeType,
+                        ParametersGetter = null,
+                        CustomNodesGroup = GetCustomNodes(),
+                    });
                     _cmStateMachineTransitionMenu.AddGroup(StateMachineTransitionGroupArchetype);
                 }
                 menu = _cmStateMachineTransitionMenu;
@@ -145,9 +154,7 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
-            if ((nodeArchetype.Flags & NodeFlags.MaterialOnly) != 0 || (nodeArchetype.Flags & NodeFlags.VisjectOnly) != 0)
-                return false;
-            return base.CanSpawnNodeType(nodeArchetype);
+            return (nodeArchetype.Flags & NodeFlags.AnimGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />
@@ -200,7 +207,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             if (_cmStateMachineMenu != null)
             {
@@ -218,7 +225,7 @@ namespace FlaxEditor.Surface
                 ScriptsBuilder.ScriptsReloadBegin -= OnScriptsReloadBegin;
             }
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

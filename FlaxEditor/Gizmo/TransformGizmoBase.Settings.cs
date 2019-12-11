@@ -16,10 +16,6 @@ namespace FlaxEditor.Gizmo
         private const float CenterBoxSize = 0.8f;
         private const float CenterSphereRadius = 0.1f;
         private const float HalfLineOffset = LineOffset / 2;
-        private static readonly Color AxisColorFocus = new Color(255, 229, 10);
-        private static readonly Color AxisColorX = new Color(255, 0, 7);
-        private static readonly Color AxisColorY = new Color(61, 255, 12);
-        private static readonly Color AxisColorZ = new Color(0, 6, 255);
 
         private readonly Vector3[] _translationLineVertices =
         {
@@ -61,19 +57,11 @@ namespace FlaxEditor.Gizmo
         private BoundingSphere ScaleYSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[7], _gizmoWorld), ScaleSpheresRadius * _screenScale);
         private BoundingSphere ScaleZSphere => new BoundingSphere(Vector3.Transform(_translationLineVertices[13], _gizmoWorld), ScaleSpheresRadius * _screenScale);
         private OrientedBoundingBox CenterBox => new OrientedBoundingBox(CenterBoxRaw) * _gizmoWorld;
-        private BoundingSphere CenterSphere => new BoundingSphere(_gizmoWorld.TranslationVector, CenterSphereRadius * _screenScale);
-        private float RotateRadius => RotateRadiusRaw * _screenScale;
 
-        private bool _precisionModeEnabled = false;
         private Mode _activeMode = Mode.Translate;
         private Axis _activeAxis = Axis.None;
         private TransformSpace _activeTransformSpace = TransformSpace.World;
         private PivotType _activePivotType = PivotType.SelectionCenter;
-
-        /// <summary>
-        /// The value to adjust all transformation when precisionMode is active.
-        /// </summary>
-        public float PrecisionModeScale = 0.1f;
 
         /// <summary>
         /// True if enable grid snapping when moving objects

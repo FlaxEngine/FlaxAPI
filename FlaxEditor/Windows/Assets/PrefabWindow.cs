@@ -161,6 +161,23 @@ namespace FlaxEditor.Windows.Assets
             Editor.Prefabs.PrefabApplied += OnPrefabApplied;
             ScriptsBuilder.ScriptsReloadBegin += OnScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd += OnScriptsReloadEnd;
+
+            // Setup input actions
+            InputActions.Add(options => options.Undo, () =>
+            {
+                _undo.PerformUndo();
+                Focus();
+            });
+            InputActions.Add(options => options.Redo, () =>
+            {
+                _undo.PerformRedo();
+                Focus();
+            });
+            InputActions.Add(options => options.Cut, Cut);
+            InputActions.Add(options => options.Copy, Copy);
+            InputActions.Add(options => options.Paste, Paste);
+            InputActions.Add(options => options.Duplicate, Duplicate);
+            InputActions.Add(options => options.Delete, Delete);
         }
 
         private void OnSearchBoxTextChanged()
@@ -388,53 +405,6 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            // Base
-            bool result = base.OnKeyDown(key);
-            if (!result)
-            {
-                if (Root.GetKey(Keys.Control))
-                {
-                    switch (key)
-                    {
-                    case Keys.Z:
-                        _undo.PerformUndo();
-                        Focus();
-                        return true;
-                    case Keys.Y:
-                        _undo.PerformRedo();
-                        Focus();
-                        return true;
-                    case Keys.X:
-                        Cut();
-                        break;
-                    case Keys.C:
-                        Copy();
-                        break;
-                    case Keys.V:
-                        Paste();
-                        break;
-                    case Keys.D:
-                        Duplicate();
-                        break;
-                    }
-                }
-                else
-                {
-                    switch (key)
-                    {
-                    case Keys.Delete:
-                        Delete();
-                        break;
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        /// <inheritdoc />
         public override bool UseLayoutData => true;
 
         /// <inheritdoc />
@@ -475,11 +445,8 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            if (IsDisposing)
-                return;
-
             Editor.Prefabs.PrefabApplied -= OnPrefabApplied;
             ScriptsBuilder.ScriptsReloadBegin -= OnScriptsReloadBegin;
             ScriptsBuilder.ScriptsReloadEnd -= OnScriptsReloadEnd;
@@ -487,7 +454,7 @@ namespace FlaxEditor.Windows.Assets
             _undo.Dispose();
             Graph.Dispose();
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

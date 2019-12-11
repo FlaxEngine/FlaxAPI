@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -14,7 +13,8 @@ namespace FlaxEditor.Windows.Profiler
     {
         private readonly SingleChart _fpsChart;
         private readonly SingleChart _updateTimeChart;
-        private readonly SingleChart _drawTimeChart;
+        private readonly SingleChart _drawTimeCPUChart;
+        private readonly SingleChart _drawTimeGPUChart;
         private readonly SingleChart _cpuMemChart;
         private readonly SingleChart _gpuMemChart;
 
@@ -48,13 +48,20 @@ namespace FlaxEditor.Windows.Profiler
                 Parent = layout,
             };
             _updateTimeChart.SelectedSampleChanged += OnSelectedSampleChanged;
-            _drawTimeChart = new SingleChart
+            _drawTimeCPUChart = new SingleChart
             {
-                Title = "Draw Time",
+                Title = "Draw Time (CPU)",
                 FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
                 Parent = layout,
             };
-            _drawTimeChart.SelectedSampleChanged += OnSelectedSampleChanged;
+            _drawTimeCPUChart.SelectedSampleChanged += OnSelectedSampleChanged;
+            _drawTimeGPUChart = new SingleChart
+            {
+                Title = "Draw Time (GPU)",
+                FormatSample = v => (Mathf.RoundToInt(v * 10.0f) / 10.0f) + " ms",
+                Parent = layout,
+            };
+            _drawTimeGPUChart.SelectedSampleChanged += OnSelectedSampleChanged;
             _cpuMemChart = new SingleChart
             {
                 Title = "CPU Memory",
@@ -76,7 +83,8 @@ namespace FlaxEditor.Windows.Profiler
         {
             _fpsChart.Clear();
             _updateTimeChart.Clear();
-            _drawTimeChart.Clear();
+            _drawTimeCPUChart.Clear();
+            _drawTimeGPUChart.Clear();
             _cpuMemChart.Clear();
             _gpuMemChart.Clear();
         }
@@ -86,7 +94,8 @@ namespace FlaxEditor.Windows.Profiler
         {
             _fpsChart.AddSample(sharedData.Stats.FPS);
             _updateTimeChart.AddSample(sharedData.Stats.UpdateTimeMs);
-            _drawTimeChart.AddSample(sharedData.Stats.DrawTimeMs);
+            _drawTimeCPUChart.AddSample(sharedData.Stats.DrawCPUTimeMs);
+            _drawTimeGPUChart.AddSample(sharedData.Stats.DrawGPUTimeMs);
             _cpuMemChart.AddSample(sharedData.Stats.ProcessMemory_UsedPhysicalMemory / 1024 / 1024);
             _gpuMemChart.AddSample(sharedData.Stats.MemoryGPU_Used / 1024 / 1024);
         }
@@ -96,7 +105,8 @@ namespace FlaxEditor.Windows.Profiler
         {
             _fpsChart.SelectedSampleIndex = selectedFrame;
             _updateTimeChart.SelectedSampleIndex = selectedFrame;
-            _drawTimeChart.SelectedSampleIndex = selectedFrame;
+            _drawTimeCPUChart.SelectedSampleIndex = selectedFrame;
+            _drawTimeGPUChart.SelectedSampleIndex = selectedFrame;
             _cpuMemChart.SelectedSampleIndex = selectedFrame;
             _gpuMemChart.SelectedSampleIndex = selectedFrame;
         }

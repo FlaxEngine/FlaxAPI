@@ -16,6 +16,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = id,
                 Title = title,
                 Description = desc,
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 20),
                 DefaultType = type,
                 IndependentBoxes = new[] { 0 },
@@ -40,6 +41,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = id,
                 Title = title,
                 Description = desc,
+                Flags = NodeFlags.AllGraphs,
                 AlternativeTitles = altTitles,
                 Size = new Vector2(110, 40),
                 DefaultType = inputType,
@@ -90,6 +92,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 11,
                 Title = "Length",
                 Description = "Returns the length of A vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 20),
                 DefaultType = ConnectionType.Vector,
                 IndependentBoxes = new[] { 0 },
@@ -121,6 +124,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 24,
                 Title = "Clamp",
                 Description = "Clamps value to the specified range",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 60),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[] { 0 },
@@ -148,6 +152,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 25,
                 Title = "Lerp",
                 Description = "Performs a linear interpolation",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 60),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[]
@@ -175,6 +180,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 26,
                 Title = "Reflect",
                 Description = "Returns reflected vector over the normal",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 40),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[]
@@ -199,12 +205,12 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 29,
                 Title = "Derive Normal Z",
                 Description = "Derives the Z component of a tangent space normal given the X and Y components and outputs the resulting three-channel tangent space normal",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(170, 30),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, "In XY", true, ConnectionType.Vector2, 0),
-                    NodeElementArchetype.Factory.Output(0, "", ConnectionType.Vector3, 1)
+                    NodeElementArchetype.Factory.Input(0, "XY", true, ConnectionType.Vector2, 0),
+                    NodeElementArchetype.Factory.Output(0, "XYZ", ConnectionType.Vector3, 1)
                 }
             },
             new NodeArchetype
@@ -212,7 +218,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 30,
                 Title = "Vector Transform",
                 Description = "Transform vector from source space to destination space",
-                Flags = NodeFlags.MaterialOnly,
+                Flags = NodeFlags.MaterialGraph,
                 Size = new Vector2(170, 40),
                 DefaultValues = new object[]
                 {
@@ -232,6 +238,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 31,
                 Title = "Mad",
                 Description = "Performs value multiplication and addition at once",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(110, 60),
                 DefaultType = ConnectionType.Variable,
                 IndependentBoxes = new[]
@@ -259,6 +266,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 32,
                 Title = "Largest Component Mask",
                 Description = "Gets the largest component mask from the input vector",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(220, 30),
                 Elements = new[]
                 {
@@ -274,6 +282,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 36,
                 Title = "Bias and Scale",
                 Description = "Adds a constant to input and scales it",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(200, 60),
                 IndependentBoxes = new[] { 0 },
                 DependentBoxes = new[] { 1 },
@@ -298,6 +307,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 37,
                 Title = "Rotate About Axis",
                 Description = "Rotates given vector using the rotation axis, a point on the axis, and the angle to rotate",
+                Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(200, 80),
                 Elements = new[]
                 {
@@ -315,9 +325,9 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 42,
-                Flags = NodeFlags.AnimGraphOnly,
                 Title = "Near Equal",
                 Description = "Determines if two values are nearly equal within a given epsilon",
+                Flags = NodeFlags.AnimGraph | NodeFlags.ParticleEmitterGraph,
                 Size = new Vector2(200, 80),
                 IndependentBoxes = new[]
                 {
@@ -339,6 +349,8 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Bool, 3),
                 }
             },
+            Op1(43, "Degrees", "Converts the specified value from radians to degrees."),
+            Op1(44, "Radians", "Converts the specified value from degrees to radians."),
         };
     }
 }

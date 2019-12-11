@@ -75,5 +75,17 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [EditorOrder(1010), EditorDisplay("Other"), Tooltip("The location of the package certificate (relative to the project).")]
         public string CertificateLocation;
+
+        /// <summary>
+        /// Enables support for DirectX 11. Disabling it reduces compiled shaders count.
+        /// </summary>
+        [EditorOrder(2000), EditorDisplay("Graphics", "Support DirectX 11"), Tooltip("Enables support for DirectX 11. Disabling it reduces compiled shaders count.")]
+        public bool SupportDX11 = true;
+
+        /// <summary>
+        /// Enables support for DirectX 10 and DirectX 10.1. Disabling it reduces compiled shaders count.
+        /// </summary>
+        [EditorOrder(2010), EditorDisplay("Graphics", "Support DirectX 10"), Tooltip("Enables support for DirectX 10 and DirectX 10.1. Disabling it reduces compiled shaders count.")]
+        public bool SupportDX10 = false;
     }
 }

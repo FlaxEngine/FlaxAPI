@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
 using FlaxEditor.Gizmo;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
@@ -11,7 +12,6 @@ using FlaxEditor.Viewport.Widgets;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Viewport
 {
@@ -55,10 +55,41 @@ namespace FlaxEditor.Viewport
             public Vector3 HitLocation;
         }
 
-        private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
+        public sealed class EditorSpritesRenderer : PostProcessEffect
+        {
+            /// <summary>
+            /// The rendering task.
+            /// </summary>
+            public SceneRenderTask Task;
 
+            /// <inheritdoc />
+            public override int Order => -10000000;
+
+            /// <inheritdoc />
+            public override bool UseSingleTarget => true;
+
+            /// <inheritdoc />
+            public override bool CanRender => (Task.View.Flags & ViewFlags.EditorSprites) == ViewFlags.EditorSprites && SceneManager.ScenesCount != 0 && base.CanRender;
+
+            /// <inheritdoc />
+            public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
+            {
+                Profiler.BeginEventGPU("Editor Primitives");
+
+                for (int i = 0; i < SceneManager.ScenesCount; i++)
+                {
+                    var scene = SceneManager.GetScene(i);
+                    ViewportIconsRenderer.DrawIcons(context, task, input, task.Buffers.DepthBuffer, scene);
+                }
+
+                Profiler.EndEventGPU();
+            }
+        }
+
+        private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
         private StaticModel _previewStaticModel;
         private int _previewModelEntryIndex;
+        private EditorSpritesRenderer _editorSpritesRenderer;
 
         /// <summary>
         /// Drag and drop handlers
@@ -85,8 +116,10 @@ namespace FlaxEditor.Viewport
         /// </summary>
         public EditorPrimitives EditorPrimitives;
 
-        /// <inheritdoc />
-        public ViewportDebugDrawData DebugDrawData => _debugDrawData;
+        /// <summary>
+        /// Gets or sets a value indicating whether draw <see cref="DebugDraw"/> shapes.
+        /// </summary>
+        public bool DrawDebugDraw = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether show navigation mesh.
@@ -102,13 +135,13 @@ namespace FlaxEditor.Viewport
         /// </summary>
         /// <param name="editor">Editor instance.</param>
         public MainEditorGizmoViewport(Editor editor)
-        : base(FlaxEngine.Rendering.RenderTask.Create<SceneRenderTask>(), editor.Undo)
+        : base(FlaxEngine.Object.New<SceneRenderTask>(), editor.Undo)
         {
             _editor = editor;
 
             // Prepare rendering task
             Task.ActorsSource = ActorsSources.ScenesAndCustomActors;
-            Task.Flags = ViewFlags.DefaultEditor;
+            Task.View.Flags = ViewFlags.DefaultEditor;
             Task.Begin += RenderTaskOnBegin;
             Task.Draw += RenderTaskOnDraw;
             Task.End += RenderTaskOnEnd;
@@ -121,9 +154,11 @@ namespace FlaxEditor.Viewport
             SelectionOutline.SelectionGetter = () => _editor.SceneEditing.Selection;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
-            EditorPrimitives.DrawDebugDraw = true;
             EditorPrimitives.Viewport = this;
             Task.CustomPostFx.Add(EditorPrimitives);
+            _editorSpritesRenderer = FlaxEngine.Object.New<EditorSpritesRenderer>();
+            _editorSpritesRenderer.Task = Task;
+            Task.CustomPostFx.Add(_editorSpritesRenderer);
 
             // Add transformation gizmo
             TransformGizmo = new TransformGizmo(this);
@@ -146,7 +181,7 @@ namespace FlaxEditor.Viewport
                 TooltipText = "Gizmo transform space (world or local)",
                 Parent = transformSpaceWidget
             };
-            transformSpaceToggle.OnToggle += OnTransformSpaceToggle;
+            transformSpaceToggle.Toggled += OnTransformSpaceToggle;
             transformSpaceWidget.Parent = this;
 
             // Scale snapping widget
@@ -157,7 +192,7 @@ namespace FlaxEditor.Viewport
                 TooltipText = "Enable scale snapping",
                 Parent = scaleSnappingWidget
             };
-            enableScaleSnapping.OnToggle += OnScaleSnappingToggle;
+            enableScaleSnapping.Toggled += OnScaleSnappingToggle;
             var scaleSnappingCM = new ContextMenu();
             _scaleSnapping = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid, scaleSnappingCM);
             _scaleSnapping.TooltipText = "Scale snapping values";
@@ -180,7 +215,7 @@ namespace FlaxEditor.Viewport
                 TooltipText = "Enable rotation snapping",
                 Parent = rotateSnappingWidget
             };
-            enableRotateSnapping.OnToggle += OnRotateSnappingToggle;
+            enableRotateSnapping.Toggled += OnRotateSnappingToggle;
             var rotateSnappingCM = new ContextMenu();
             _rotateSnapping = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), Sprite.Invalid, rotateSnappingCM);
             _rotateSnapping.TooltipText = "Rotation snapping values";
@@ -203,7 +238,7 @@ namespace FlaxEditor.Viewport
                 TooltipText = "Enable position snapping",
                 Parent = translateSnappingWidget
             };
-            enableTranslateSnapping.OnToggle += OnTranslateSnappingToggle;
+            enableTranslateSnapping.Toggled += OnTranslateSnappingToggle;
             var translateSnappingCM = new ContextMenu();
             _translateSnapping = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
             _translateSnapping.TooltipText = "Position snapping values";
@@ -227,21 +262,21 @@ namespace FlaxEditor.Viewport
                 Checked = true,
                 Parent = gizmoMode
             };
-            _gizmoModeTranslate.OnToggle += OnGizmoModeToggle;
+            _gizmoModeTranslate.Toggled += OnGizmoModeToggle;
             _gizmoModeRotate = new ViewportWidgetButton(string.Empty, editor.Icons.Rotate16, null, true)
             {
                 Tag = TransformGizmo.Mode.Rotate,
                 TooltipText = "Rotate gizmo mode",
                 Parent = gizmoMode
             };
-            _gizmoModeRotate.OnToggle += OnGizmoModeToggle;
+            _gizmoModeRotate.Toggled += OnGizmoModeToggle;
             _gizmoModeScale = new ViewportWidgetButton(string.Empty, editor.Icons.Scale16, null, true)
             {
                 Tag = TransformGizmo.Mode.Scale,
                 TooltipText = "Scale gizmo mode",
                 Parent = gizmoMode
             };
-            _gizmoModeScale.OnToggle += OnGizmoModeToggle;
+            _gizmoModeScale.Toggled += OnGizmoModeToggle;
             gizmoMode.Parent = this;
 
             // Show grid widget
@@ -259,6 +294,13 @@ namespace FlaxEditor.Viewport
             DragHandlers.Add(_dragAssets);
 
             InitModes();
+
+            // Setup input actions
+            InputActions.Add(options => options.TranslateMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate);
+            InputActions.Add(options => options.RotateMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate);
+            InputActions.Add(options => options.ScaleMode, () => TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale);
+            InputActions.Add(options => options.FocusSelection, () => _editor.Windows.EditWin.ShowSelectedActors());
+            InputActions.Add(options => options.Delete, _editor.SceneEditing.Delete);
         }
 
         /// <summary>
@@ -336,10 +378,20 @@ namespace FlaxEditor.Viewport
             _debugDrawData.OnDraw(collector);
         }
 
+        /// <inheritdoc />
+        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, GPUTexture target, GPUTexture targetDepth, DrawCallsCollector collector)
+        {
+            // Draw selected objects debug shapes and visuals
+            if (DrawDebugDraw && (task.View.Flags & ViewFlags.DebugDraw) == ViewFlags.DebugDraw)
+            {
+                DebugDraw.Draw(task, _debugDrawData.ActorsPtrs, target, context, targetDepth, true);
+            }
+        }
+
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
         {
             // Render editor primitives, gizmo and debug shapes in debug view modes
-            if (task.Mode != ViewMode.Default)
+            if (task.View.Mode != ViewMode.Default)
             {
                 // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
                 EditorPrimitives.Render(context, task, task.Output, task.Output);
@@ -567,38 +619,6 @@ namespace FlaxEditor.Viewport
             base.OnLeftMouseButtonUp();
         }
 
-        /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
-        {
-            if (key == Keys.Delete)
-            {
-                _editor.SceneEditing.Delete();
-                return true;
-            }
-            if (key == Keys.Alpha1)
-            {
-                TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Translate;
-                return true;
-            }
-            if (key == Keys.Alpha2)
-            {
-                TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Rotate;
-                return true;
-            }
-            if (key == Keys.Alpha3)
-            {
-                TransformGizmo.ActiveMode = TransformGizmoBase.Mode.Scale;
-                return true;
-            }
-            if (key == Keys.F)
-            {
-                _editor.Windows.EditWin.ShowSelectedActors();
-                return true;
-            }
-
-            return base.OnKeyDown(key);
-        }
-
         private void GetHitLocation(ref Vector2 location, out SceneGraphNode hit, out Vector3 hitLocation)
         {
             // Get mouse ray and try to hit any object
@@ -662,12 +682,23 @@ namespace FlaxEditor.Viewport
 
         private static bool ValidateDragItem(ContentItem contentItem)
         {
+            if (!SceneManager.IsAnySceneLoaded)
+                return false;
+
+            if (contentItem is BinaryAssetItem binaryAssetItem)
+            {
+                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                    return true;
+                if (binaryAssetItem.Type == typeof(SceneAnimation))
+                    return true;
+            }
+
             switch (contentItem.ItemDomain)
             {
             case ContentDomain.Material:
             case ContentDomain.Model:
             case ContentDomain.Audio:
-            case ContentDomain.Prefab: return SceneManager.IsAnySceneLoaded;
+            case ContentDomain.Prefab: return true;
             case ContentDomain.Scene: return true;
             default: return false;
             }
@@ -725,6 +756,34 @@ namespace FlaxEditor.Viewport
 
         private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector3 hitLocation)
         {
+            // TODO: refactor this and dont use ContentDomain but only asset Type for matching
+
+            if (item is BinaryAssetItem binaryAssetItem)
+            {
+                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                {
+                    var asset = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
+                    var actor = ParticleEffect.New();
+                    actor.Name = item.ShortName;
+                    actor.ParticleSystem = asset;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Editor.Instance.SceneEditing.Spawn(actor);
+
+                    return;
+                }
+                if (binaryAssetItem.Type == typeof(SceneAnimation))
+                {
+                    var asset = FlaxEngine.Content.LoadAsync<SceneAnimation>(item.ID);
+                    var actor = SceneAnimationPlayer.New();
+                    actor.Name = item.ShortName;
+                    actor.Animation = asset;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Editor.Instance.SceneEditing.Spawn(actor);
+
+                    return;
+                }
+            }
+
             switch (item.ItemDomain)
             {
             case ContentDomain.Material:
@@ -867,12 +926,13 @@ namespace FlaxEditor.Viewport
             _debugDrawData.Dispose();
             FlaxEngine.Object.Destroy(ref SelectionOutline);
             FlaxEngine.Object.Destroy(ref EditorPrimitives);
+            FlaxEngine.Object.Destroy(ref _editorSpritesRenderer);
 
             base.OnDestroy();
         }
 
         private RenderTask _savedTask;
-        private RenderTarget _savedBackBuffer;
+        private GPUTexture _savedBackBuffer;
 
         internal void SaveProjectIcon()
         {

@@ -57,10 +57,6 @@ namespace FlaxEditor.Content
                     sb.Append(c);
             }
 
-            // Check for empty name
-            if (sb.Length == 0)
-                sb.Append("MyScript");
-
             return sb.ToString();
         }
 

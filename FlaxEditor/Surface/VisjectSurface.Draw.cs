@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
-using FlaxEditor.Surface.Elements;
+using System;
 using FlaxEngine;
 
 namespace FlaxEditor.Surface
@@ -95,17 +95,6 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Draws the comment creating background.
-        /// </summary>
-        /// <remarks>Called only when user is creating comment using rectangle tool.</remarks>
-        protected virtual void DrawCommenting()
-        {
-            var selectionRect = Rectangle.FromPoints(_leftMouseDownPos, _mousePos);
-            Render2D.FillRectangle(selectionRect, Color.White * 0.4f);
-            Render2D.DrawRectangle(selectionRect, Color.White);
-        }
-
-        /// <summary>
         /// Draws all the connections between surface nodes.
         /// </summary>
         /// <param name="mousePosition">The current mouse position (in surface-space).</param>
@@ -144,6 +133,51 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Draws the brackets and connections
+        /// </summary>
+        protected virtual void DrawInputBrackets()
+        {
+            var style = FlaxEngine.GUI.Style.Current;
+            Color fadedColor = style.Foreground * 0.6f;
+            foreach (var inputBracket in _inputBrackets)
+            {
+                // Draw brackets
+                Vector2 upperLeft = _rootControl.PointToParent(inputBracket.Area.UpperLeft);
+                Vector2 bottomRight = _rootControl.PointToParent(inputBracket.Area.BottomRight);
+
+                Vector2 upperRight = new Vector2(bottomRight.X, upperLeft.Y);
+                Vector2 bottomLeft = new Vector2(upperLeft.X, bottomRight.Y);
+
+                // Calculate control points
+                float height = bottomLeft.Y - upperLeft.Y;
+                float offsetX = height / 10f;
+                Vector2 leftControl1 = new Vector2(bottomLeft.X - offsetX, bottomLeft.Y);
+                Vector2 leftControl2 = new Vector2(upperLeft.X - offsetX, upperLeft.Y);
+
+                // Draw left bracket
+                Render2D.DrawBezier(bottomLeft, leftControl1, leftControl2, upperLeft, style.Foreground, 2.2f);
+
+                // Calculate control points
+                Vector2 rightControl1 = new Vector2(bottomRight.X + offsetX, bottomRight.Y);
+                Vector2 rightControl2 = new Vector2(upperRight.X + offsetX, upperRight.Y);
+
+                // Draw right bracket
+                Render2D.DrawBezier(bottomRight, rightControl1, rightControl2, upperRight, fadedColor, 2.2f);
+
+                // Draw connection bezier
+                // X-offset at 75%
+                Vector2 bezierStartPoint = new Vector2(upperRight.X + offsetX * 0.75f, (upperRight.Y + bottomRight.Y) * 0.5f);
+                Vector2 bezierEndPoint = inputBracket.Box.ParentNode.PointToParent(_rootControl.Parent, inputBracket.Box.Center);
+
+                Elements.OutputBox.DrawConnection(ref bezierStartPoint, ref bezierEndPoint, ref fadedColor);
+                // Debug Area
+                //Rectangle drawRect = Rectangle.FromPoints(upperLeft, bottomRight);
+                //Render2D.FillRectangle(drawRect, Color.Green * 0.5f);
+            }
+
+        }
+
+        /// <summary>
         /// Draws the contents of the surface (nodes, connections, comments, etc.).
         /// </summary>
         protected virtual void DrawContents()
@@ -161,11 +195,7 @@ namespace FlaxEditor.Surface
 
             _rootControl.DrawComments();
 
-            if (IsCreatingComment)
-            {
-                DrawCommenting();
-            }
-            else if (IsSelecting)
+            if (IsSelecting)
             {
                 DrawSelection();
             }
@@ -182,6 +212,8 @@ namespace FlaxEditor.Surface
             }
 
             Render2D.PopTransform();
+
+            DrawInputBrackets();
 
             DrawContents();
 

@@ -11,14 +11,16 @@ namespace FlaxEngine.GUI
     public class Panel : ScrollableControl
     {
         private bool _layoutChanged;
+        private bool _alwaysShowScrollbars;
         private int _layoutUpdateLock;
         private ScrollBars _scrollBars;
+        private Margin _scrollMargin;
 
         /// <summary>
-        /// The scroll right corner. Used to scroll contents of the panel control.
+        /// The cached scroll area bounds. Used to scroll contents of the panel control. Cached during performing layout.
         /// </summary>
-        [NoSerialize]
-        protected Vector2 _scrollRightCorner;
+        [HideInEditor, NoSerialize]
+        protected Rectangle _controlsBounds;
 
         /// <summary>
         /// The vertical scroll bar.
@@ -33,19 +35,14 @@ namespace FlaxEngine.GUI
         public HScrollBar HScrollBar;
 
         /// <summary>
-        /// Gets the scrolling right corner.
-        /// </summary>
-        [HideInEditor, NoSerialize]
-        public Vector2 ScrollRightCorner
-        {
-            get => _scrollRightCorner;
-            internal set => _scrollRightCorner = value;
-        }
-
-        /// <summary>
         /// Gets the view bottom.
         /// </summary>
         public Vector2 ViewBottom => Size + _viewOffset;
+
+        /// <summary>
+        /// Gets the cached scroll area bounds. Used to scroll contents of the panel control. Cached during performing layout.
+        /// </summary>
+        public Rectangle ControlsBounds => _controlsBounds;
 
         /// <summary>
         /// Gets or sets the scroll bars usage by this panel.
@@ -63,12 +60,17 @@ namespace FlaxEngine.GUI
 
                 if ((value & ScrollBars.Vertical) == ScrollBars.Vertical)
                 {
-                    // Create vertical scroll bar
-                    VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+                    if (VScrollBar == null)
+                        VScrollBar = GetChild<VScrollBar>();
+                    if (VScrollBar == null)
                     {
-                        DockStyle = DockStyle.Right,
-                        Parent = this
-                    };
+                        VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+                        {
+                            DockStyle = DockStyle.Right,
+                            Parent = this
+                        };
+                        VScrollBar.ValueChanged += () => SetViewOffset(Orientation.Vertical, VScrollBar.Value);
+                    }
                 }
                 else if (VScrollBar != null)
                 {
@@ -78,12 +80,17 @@ namespace FlaxEngine.GUI
 
                 if ((value & ScrollBars.Horizontal) == ScrollBars.Horizontal)
                 {
-                    // Create vertical scroll bar
-                    HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+                    if (HScrollBar == null)
+                        HScrollBar = GetChild<HScrollBar>();
+                    if (HScrollBar == null)
                     {
-                        DockStyle = DockStyle.Bottom,
-                        Parent = this
-                    };
+                        HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+                        {
+                            DockStyle = DockStyle.Bottom,
+                            Parent = this
+                        };
+                        HScrollBar.ValueChanged += () => SetViewOffset(Orientation.Horizontal, HScrollBar.Value);
+                    }
                 }
                 else if (HScrollBar != null)
                 {
@@ -92,6 +99,40 @@ namespace FlaxEngine.GUI
                 }
 
                 PerformLayout();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether always show scrollbars. Otherwise show them only if scrolling is available.
+        /// </summary>
+        [EditorOrder(10), Tooltip("Whether always show scrollbars. Otherwise show them only if scrolling is available.")]
+        public bool AlwaysShowScrollbars
+        {
+            get => _alwaysShowScrollbars;
+            set
+            {
+                if (_alwaysShowScrollbars != value)
+                {
+                    _alwaysShowScrollbars = value;
+                    PerformLayout();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the scroll margin applies to the child controls area. Can be used to expand the scroll area bounds by adding a margin.
+        /// </summary>
+        [EditorOrder(20), Tooltip("Scroll margin applies to the child controls area. Can be used to expand the scroll area bounds by adding a margin.")]
+        public Margin ScrollMargin
+        {
+            get => _scrollMargin;
+            set
+            {
+                if (_scrollMargin != value)
+                {
+                    _scrollMargin = value;
+                    PerformLayout();
+                }
             }
         }
 
@@ -108,12 +149,27 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="Panel"/> class.
         /// </summary>
         /// <param name="scrollBars">The scroll bars.</param>
-        /// <param name="canFocus">True if control can accept user focus</param>
-        public Panel(ScrollBars scrollBars, bool canFocus = false)
+        /// <param name="autoFocus">True if control can accept user focus</param>
+        public Panel(ScrollBars scrollBars, bool autoFocus = false)
         {
-            CanFocus = canFocus;
+            AutoFocus = autoFocus;
 
             ScrollBars = scrollBars;
+        }
+
+        /// <inheritdoc />
+        protected override void SetViewOffset(ref Vector2 value)
+        {
+            bool wasLocked = IsLayoutLocked;
+            IsLayoutLocked = true;
+
+            if (HScrollBar != null)
+                HScrollBar.Value = -value.X;
+            if (VScrollBar != null)
+                VScrollBar.Value = -value.Y;
+
+            IsLayoutLocked = wasLocked;
+            base.SetViewOffset(ref value);
         }
 
         /// <summary>
@@ -157,9 +213,9 @@ namespace FlaxEngine.GUI
             bool wasLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
-            if (HScrollBar != null && HScrollBar.Visible)
+            if (HScrollBar != null && HScrollBar.Enabled)
                 HScrollBar.ScrollViewTo(bounds.Left, bounds.Right);
-            if (VScrollBar != null && VScrollBar.Visible)
+            if (VScrollBar != null && VScrollBar.Enabled)
                 VScrollBar.ScrollViewTo(bounds.Top, bounds.Bottom);
 
             IsLayoutLocked = wasLocked;
@@ -172,6 +228,7 @@ namespace FlaxEngine.GUI
                 _viewOffset.Y = -value;
             else
                 _viewOffset.X = -value;
+            OnViewOffsetChanged();
             PerformLayout();
         }
 
@@ -183,9 +240,9 @@ namespace FlaxEngine.GUI
                 return true;
 
             // Roll back to scroll bars
-            if (VScrollBar != null && VScrollBar.Visible && VScrollBar.OnMouseWheel(VScrollBar.PointFromParent(ref location), delta))
+            if (VScrollBar != null && VScrollBar.Enabled && VScrollBar.OnMouseWheel(VScrollBar.PointFromParent(ref location), delta))
                 return true;
-            if (HScrollBar != null && HScrollBar.Visible && HScrollBar.OnMouseWheel(HScrollBar.PointFromParent(ref location), delta))
+            if (HScrollBar != null && HScrollBar.Enabled && HScrollBar.OnMouseWheel(HScrollBar.PointFromParent(ref location), delta))
                 return true;
 
             // No event handled
@@ -244,7 +301,7 @@ namespace FlaxEngine.GUI
             if (child != VScrollBar && child != HScrollBar)
             {
                 // Check if has v scroll bar to reject points on it
-                if (VScrollBar != null && VScrollBar.Visible)
+                if (VScrollBar != null && VScrollBar.Enabled)
                 {
                     Vector2 pos = VScrollBar.PointFromParent(ref location);
                     if (VScrollBar.ContainsPoint(ref pos))
@@ -255,7 +312,7 @@ namespace FlaxEngine.GUI
                 }
 
                 // Check if has h scroll bar to reject points on it
-                if (HScrollBar != null && HScrollBar.Visible)
+                if (HScrollBar != null && HScrollBar.Enabled)
                 {
                     Vector2 pos = HScrollBar.PointFromParent(ref location);
                     if (HScrollBar.ContainsPoint(ref pos))
@@ -302,59 +359,63 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            const float scrollSpaceLeft = 0.1f;
-
             // Arrange controls and get scroll bounds
             ArrangeAndGetBounds();
 
-            // Scroll bars
+            // Update scroll bars
+            var controlsBounds = _controlsBounds;
+            var scrollBounds = controlsBounds;
+            _scrollMargin.ExpandRectangle(ref scrollBounds);
             if (VScrollBar != null)
             {
                 float height = Height;
-                bool vScrollEnabled = _scrollRightCorner.Y > height + 0.01f && height > ScrollBar.DefaultMinimumSize;
+                bool vScrollEnabled = (controlsBounds.Bottom > height + 0.01f || controlsBounds.Y < 0.0f) && height > ScrollBar.DefaultMinimumSize;
 
-                if (VScrollBar.Visible != vScrollEnabled)
+                if (VScrollBar.Enabled != vScrollEnabled)
                 {
                     // Set scroll bar visibility 
-                    VScrollBar.Visible = vScrollEnabled;
+                    VScrollBar.Enabled = vScrollEnabled;
+                    VScrollBar.Visible = vScrollEnabled || _alwaysShowScrollbars;
                     _layoutChanged = true;
 
                     // Clear scroll state
                     VScrollBar.Reset();
                     _viewOffset.Y = 0;
+                    OnViewOffsetChanged();
 
-                    // Update
+                    // Get the new bounds after changing scroll
                     ArrangeAndGetBounds();
                 }
 
                 if (vScrollEnabled)
                 {
-                    VScrollBar.Maximum = _scrollRightCorner.Y - height * (1 - scrollSpaceLeft);
+                    VScrollBar.SetScrollRange(scrollBounds.Top, Mathf.Max(Mathf.Max(0, scrollBounds.Top), scrollBounds.Height - height));
                 }
             }
             if (HScrollBar != null)
             {
                 float width = Width;
-                bool hScrollEnabled = _scrollRightCorner.X > width + 0.01f && width > ScrollBar.DefaultMinimumSize;
+                bool hScrollEnabled = (controlsBounds.Right > width + 0.01f || controlsBounds.X < 0.0f) && width > ScrollBar.DefaultMinimumSize;
 
-                if (HScrollBar.Visible != hScrollEnabled)
+                if (HScrollBar.Enabled != hScrollEnabled)
                 {
-                    // Set scroll bar visibility 
-                    HScrollBar.Visible = hScrollEnabled;
+                    // Set scroll bar visibility
+                    HScrollBar.Enabled = hScrollEnabled;
+                    HScrollBar.Visible = hScrollEnabled || _alwaysShowScrollbars;
                     _layoutChanged = true;
 
                     // Clear scroll state
                     HScrollBar.Reset();
-
                     _viewOffset.X = 0;
+                    OnViewOffsetChanged();
 
-                    // Update
+                    // Get the new bounds after changing scroll
                     ArrangeAndGetBounds();
                 }
 
                 if (hScrollEnabled)
                 {
-                    HScrollBar.Maximum = _scrollRightCorner.X - width * (1 - scrollSpaceLeft);
+                    HScrollBar.SetScrollRange(scrollBounds.Left, Mathf.Max(Mathf.Max(0, scrollBounds.Left), scrollBounds.Width - width));
                 }
             }
         }
@@ -367,18 +428,24 @@ namespace FlaxEngine.GUI
             Arrange();
 
             // Calculate scroll area bounds
-            Vector2 rigthBottom = Vector2.Zero;
+            Vector2 totalMin = Vector2.Zero;
+            Vector2 totalMax = Vector2.Zero;
             for (int i = 0; i < _children.Count; i++)
             {
                 var c = _children[i];
                 if (c.Visible && c.IsScrollable)
                 {
-                    rigthBottom = Vector2.Max(rigthBottom, c.BottomRight);
+                    Vector2 min = Vector2.Zero;
+                    Vector2 max = c.Size;
+                    Matrix3x3.Transform2D(ref min, ref c._cachedTransform, out min);
+                    Matrix3x3.Transform2D(ref max, ref c._cachedTransform, out max);
+                    Vector2.Min(ref min, ref totalMin, out totalMin);
+                    Vector2.Max(ref max, ref totalMax, out totalMax);
                 }
             }
 
             // Cache result
-            _scrollRightCorner = rigthBottom;
+            _controlsBounds = new Rectangle(totalMin, totalMax - totalMin);
         }
 
         /// <summary>
@@ -401,7 +468,7 @@ namespace FlaxEngine.GUI
             float MoveScale = 4.0f;
             Vector2 viewOffset = -_viewOffset;
 
-            if (VScrollBar != null && VScrollBar.Visible && height > MinSize)
+            if (VScrollBar != null && VScrollBar.Enabled && height > MinSize)
             {
                 if (new Rectangle(0, 0, width, AreaSize).Contains(ref location))
                 {
@@ -416,7 +483,7 @@ namespace FlaxEngine.GUI
                 VScrollBar.Value = viewOffset.Y;
             }
 
-            if (HScrollBar != null && HScrollBar.Visible && width > MinSize)
+            if (HScrollBar != null && HScrollBar.Enabled && width > MinSize)
             {
                 if (new Rectangle(0, 0, AreaSize, height).Contains(ref location))
                 {
@@ -436,6 +503,7 @@ namespace FlaxEngine.GUI
             if (viewOffset != _viewOffset)
             {
                 _viewOffset = viewOffset;
+                OnViewOffsetChanged();
                 PerformLayout();
             }
 

@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEngine;
+
 namespace FlaxEditor
 {
     /// <summary>
@@ -7,6 +9,38 @@ namespace FlaxEditor
     /// </summary>
     public static class EditorAssets
     {
+        internal class Cache
+        {
+            private static MaterialInstance _highlightMaterial;
+
+            /// <summary>
+            /// Gets the highlight material instance.
+            /// </summary>
+            public static MaterialInstance HighlightMaterialInstance
+            {
+                get
+                {
+                    if (!_highlightMaterial)
+                    {
+                        var material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(HighlightMaterial);
+                        if (material && !material.WaitForLoaded())
+                        {
+                            _highlightMaterial = material.CreateVirtualInstance();
+                            OnEditorOptionsChanged(Editor.Instance.Options.Options);
+                        }
+                    }
+                    return _highlightMaterial;
+                }
+            }
+
+            public static void OnEditorOptionsChanged(Options.EditorOptions options)
+            {
+                var param = _highlightMaterial?.GetParam("Color");
+                if (param != null)
+                    param.Value = options.Visual.HighlightColor;
+            }
+        }
+
         /// <summary>
         /// The icons atlas.
         /// </summary>
@@ -15,7 +49,22 @@ namespace FlaxEditor
         /// <summary>
         /// The primary font.
         /// </summary>
-        public static string PrimaryFont = "Editor/Roboto-Regular";
+        public static string PrimaryFont = "Editor/Fonts/Roboto-Regular";
+
+        /// <summary>
+        /// The Inconsolata Regular font.
+        /// </summary>
+        public static string InconsolataRegularFont = "Editor/Fonts/Inconsolata-Regular";
+
+        /// <summary>
+        /// The window icon.
+        /// </summary>
+        public static string WindowIcon = "Editor/EditorIcon";
+
+        /// <summary>
+        /// The window icons font.
+        /// </summary>
+        public static string WindowIconsFont = "Editor/Fonts/SegMDL2";
 
         /// <summary>
         /// The default font material.

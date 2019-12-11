@@ -2,8 +2,10 @@
 
 using System;
 using FlaxEditor.GUI.Dialogs;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Color value editor with picking support.
@@ -141,7 +143,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
             if (_currentDialog != null)
             {
@@ -149,7 +151,7 @@ namespace FlaxEngine.GUI
                 _currentDialog = null;
             }
 
-            base.Dispose();
+            base.OnDestroy();
         }
     }
 }

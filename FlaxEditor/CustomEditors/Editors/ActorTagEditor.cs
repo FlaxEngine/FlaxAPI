@@ -2,7 +2,7 @@
 
 using FlaxEditor.Content.Settings;
 using FlaxEditor.CustomEditors.Elements;
-using FlaxEngine.GUI;
+using FlaxEditor.GUI;
 
 namespace FlaxEditor.CustomEditors.Editors
 {

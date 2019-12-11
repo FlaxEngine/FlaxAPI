@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -80,7 +81,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public bool WaitForLoaded(double timeoutInMilliseconds = 10000.0)
+        public bool WaitForLoaded(double timeoutInMilliseconds = 30000.0)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -105,6 +106,26 @@ namespace FlaxEngine
 #endif
         }
 
+        /// <summary>
+        /// Gets the asset references. Supported only in Editor.
+        /// </summary>
+        /// <remarks>
+        /// For some asset types (e.g. scene or prefab) it may contain invalid asset ids due to not perfect gather method, which is optimized to perform scan very quickly. Before using those ids perform simple validation via Content cache API. The result collection contains only 1-level-deep references (only direct ones) and is invalid if asset is not loaded. Also the output data may have duplicated asset ids or even invalid ids (Guid.Empty).
+        /// </remarks>
+        /// <returns>The output collection of the asset ids referenced by this asset.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Guid[] GetReferences()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_GetReferences(unmanagedPtr);
+#endif
+        }
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
@@ -125,6 +146,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Reload(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Guid[] Internal_GetReferences(IntPtr obj);
 #endif
 
         #endregion

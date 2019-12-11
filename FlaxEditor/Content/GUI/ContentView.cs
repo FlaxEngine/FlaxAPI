@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEditor.Options;
 using FlaxEditor.Windows;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -103,12 +104,40 @@ namespace FlaxEditor.Content.GUI
         public bool IsSearching;
 
         /// <summary>
+        /// The input actions collection to processed during user input.
+        /// </summary>
+        public readonly InputActionsContainer InputActions;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ContentView"/> class.
         /// </summary>
         public ContentView()
         {
             DockStyle = DockStyle.Top;
             IsScrollable = true;
+
+            // Setup input actions
+            InputActions = new InputActionsContainer(new[]
+            {
+                new InputActionsContainer.Binding(options => options.Delete, () =>
+                {
+                    if (HasSelection)
+                        OnDelete?.Invoke(_selection);
+                }),
+                new InputActionsContainer.Binding(options => options.SelectAll, SelectAll),
+                new InputActionsContainer.Binding(options => options.Rename, () =>
+                {
+                    if (HasSelection && _selection[0].CanRename)
+                    {
+                        if (_selection.Count > 1)
+                            Select(_selection[0]);
+                        OnRename?.Invoke(_selection[0]);
+                    }
+                }),
+                new InputActionsContainer.Binding(options => options.Copy, Copy),
+                new InputActionsContainer.Binding(options => options.Paste, Paste),
+                new InputActionsContainer.Binding(options => options.Duplicate, Duplicate),
+            });
         }
 
         /// <summary>
@@ -333,7 +362,7 @@ namespace FlaxEditor.Content.GUI
                 return;
 
             var files = _selection.ConvertAll(x => x.Path).ToArray();
-            Application.ClipboardFiles = files;
+            Platform.ClipboardFiles = files;
         }
 
         /// <summary>
@@ -342,7 +371,7 @@ namespace FlaxEditor.Content.GUI
         /// <returns>True if can paste files.</returns>
         public bool CanPaste()
         {
-            var files = Application.ClipboardFiles;
+            var files = Platform.ClipboardFiles;
             return files != null && files.Length > 0;
         }
 
@@ -351,7 +380,7 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public void Paste()
         {
-            var files = Application.ClipboardFiles;
+            var files = Platform.ClipboardFiles;
             if (files == null || files.Length == 0)
                 return;
 
@@ -519,64 +548,17 @@ namespace FlaxEditor.Content.GUI
                 return true;
             }
 
-            // Select all
-            if (key == Keys.A && Root.GetKey(Keys.Control))
-            {
-                SelectAll();
+            if (InputActions.Process(Editor.Instance, this, key))
                 return true;
-            }
 
             // Check if sth is selected
             if (HasSelection)
             {
-                // Delete selection
-                if (key == Keys.Delete)
-                {
-                    OnDelete?.Invoke(_selection);
-                    return true;
-                }
-
-                // Rename
-                if (key == Keys.F2 && _selection[0].CanRename)
-                {
-                    if (_selection.Count > 1)
-                        Select(_selection[0]);
-                    OnRename?.Invoke(_selection[0]);
-                    return true;
-                }
-
                 // Open
                 if (key == Keys.Return && _selection.Count == 1)
                 {
                     OnOpen?.Invoke(_selection[0]);
                     return true;
-                }
-
-                if (Root.GetKey(Keys.Control))
-                {
-                    switch (key)
-                    {
-                    // Duplicate
-                    case Keys.D:
-                    {
-                        Duplicate();
-                        return true;
-                    }
-
-                    // Copy
-                    case Keys.C:
-                    {
-                        Copy();
-                        return true;
-                    }
-
-                    // Paste
-                    case Keys.V:
-                    {
-                        Paste();
-                        return true;
-                    }
-                    }
                 }
 
                 // Movement with arrows

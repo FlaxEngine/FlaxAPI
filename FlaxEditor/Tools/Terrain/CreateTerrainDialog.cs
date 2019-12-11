@@ -31,8 +31,8 @@ namespace FlaxEditor.Tools.Terrain
 
         private class Options
         {
-            [EditorOrder(100), EditorDisplay("Layout", "Number Of Patches"), DefaultValue(typeof(Int2), "4,4"), Limit(0, 512), Tooltip("Amount of terrain patches in each direction (X and Z). Each terrain patch contains a grid of 16 chunks. Patches can be later added or removed from terrain using a terrain editor tool.")]
-            public Int2 NumberOfPatches = new Int2(4, 4);
+            [EditorOrder(100), EditorDisplay("Layout", "Number Of Patches"), DefaultValue(typeof(Int2), "1,1"), Limit(0, 512), Tooltip("Amount of terrain patches in each direction (X and Z). Each terrain patch contains a grid of 16 chunks. Patches can be later added or removed from terrain using a terrain editor tool.")]
+            public Int2 NumberOfPatches = new Int2(1, 1);
 
             [EditorOrder(110), EditorDisplay("Layout"), DefaultValue(ChunkSizes._127), Tooltip("The size of the chunk (amount of quads per edge for the highest LOD). Must be power of two minus one (eg. 63).")]
             public ChunkSizes ChunkSize = ChunkSizes._127;
@@ -52,8 +52,8 @@ namespace FlaxEditor.Tools.Terrain
             [EditorOrder(300), EditorDisplay("Import Data"), DefaultValue(null), Tooltip("Custom heightmap texture to import. Used as a source for height field values (from channel Red).")]
             public Texture Heightmap;
 
-            [EditorOrder(310), EditorDisplay("Import Data"), DefaultValue(20000.0f), Tooltip("Custom heightmap texture values scale. Applied to adjust the normalized heightmap values into the world units.")]
-            public float HeightmapScale = 20000.0f;
+            [EditorOrder(310), EditorDisplay("Import Data"), DefaultValue(5000.0f), Tooltip("Custom heightmap texture values scale. Applied to adjust the normalized heightmap values into the world units.")]
+            public float HeightmapScale = 5000.0f;
 
             [EditorOrder(320), EditorDisplay("Import Data"), DefaultValue(null), Tooltip("Custom terrain splat map used as a source of the terrain layers weights. Each channel from RGBA is used as an independent layer weight for terrain layers compositing.")]
             public Texture Splatmap1;
@@ -61,8 +61,8 @@ namespace FlaxEditor.Tools.Terrain
             [EditorOrder(330), EditorDisplay("Import Data"), DefaultValue(null), Tooltip("Custom terrain splat map used as a source of the terrain layers weights. Each channel from RGBA is used as an independent layer weight for terrain layers compositing.")]
             public Texture Splatmap2;
 
-            [EditorOrder(400), EditorDisplay("Transform", "Position"), DefaultValue(typeof(Vector3), "0,0,0"), Tooltip("Position of the terrain")]
-            public Vector3 Position = Vector3.Zero;
+            [EditorOrder(400), EditorDisplay("Transform", "Position"), DefaultValue(typeof(Vector3), "0,0,0"), Tooltip("Position of the terrain (importer offset it on the Y axis.)")]
+            public Vector3 Position = new Vector3(0.0f, 0.0f, 0.0f);
 
             [EditorOrder(410), EditorDisplay("Transform", "Rotation"), DefaultValue(typeof(Quaternion), "0,0,0,1"), Tooltip("Orientation of the terrain")]
             public Quaternion Orientation = Quaternion.Identity;
@@ -151,6 +151,8 @@ namespace FlaxEditor.Tools.Terrain
             terrain.Material = _options.Material;
             terrain.PhysicalMaterial = _options.PhysicalMaterial;
             terrain.CollisionLOD = _options.CollisionLOD;
+            if (_options.Heightmap)
+                terrain.Position -= new Vector3(0, _options.HeightmapScale * 0.5f, 0);
 
             // Add to scene (even if generation fails user gets a terrain in the scene)
             terrain.Parent = scene;
@@ -205,6 +207,8 @@ namespace FlaxEditor.Tools.Terrain
         {
             if (_isDone)
             {
+                Editor.Instance.SceneEditing.Select(_terrain);
+
                 _terrain = null;
                 _isDone = false;
                 Close(DialogResult.OK);

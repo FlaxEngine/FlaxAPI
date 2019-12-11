@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 using System;
-using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEditor.Modules;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
@@ -12,10 +12,11 @@ namespace FlaxEditor.Tools.Terrain
     /// <summary>
     /// Terrain carving tab. Supports different modes for terrain editing including: carving, painting and managing tools.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="Tab" />
     public class CarveTab : Tab
     {
         private readonly Tabs _modes;
+        private readonly ContainerControl _noTerrainPanel;
 
         /// <summary>
         /// The editor instance.
@@ -58,6 +59,8 @@ namespace FlaxEditor.Tools.Terrain
             Editor = editor;
             Editor.SceneEditing.SelectionChanged += OnSelectionChanged;
 
+            Selected += OnSelected;
+
             _modes = new Tabs
             {
                 Orientation = Orientation.Vertical,
@@ -73,6 +76,41 @@ namespace FlaxEditor.Tools.Terrain
             InitEditMode();
 
             _modes.SelectedTabIndex = 0;
+
+            _noTerrainPanel = new ContainerControl
+            {
+                DockStyle = DockStyle.Fill,
+                BackgroundColor = Style.Current.Background,
+                Parent = this
+            };
+            var noTerrainLabel = new Label
+            {
+                Text = "Select terrain to edit\nor\n\n\n\n",
+                DockStyle = DockStyle.Fill,
+                Parent = _noTerrainPanel
+            };
+            var noTerrainButton = new Button
+            {
+                Text = "Create new terrain",
+                AnchorStyle = AnchorStyle.Center,
+                Parent = _noTerrainPanel
+            };
+            noTerrainButton.Clicked += OnCreateNewTerrainClicked;
+        }
+
+        private void OnSelected(Tab tab)
+        {
+            // Auto select first terrain actor to make usage easier
+            var actor = Actor.Find<FlaxEngine.Terrain>();
+            if (actor)
+            {
+                Editor.SceneEditing.Select(actor);
+            }
+        }
+
+        private void OnCreateNewTerrainClicked()
+        {
+            Editor.UI.CreateTerrain();
         }
 
         private void OnSelectionChanged()
@@ -84,6 +122,8 @@ namespace FlaxEditor.Tools.Terrain
                 SelectedTerrain = terrain;
                 SelectedTerrainChanged?.Invoke();
             }
+
+            _noTerrainPanel.Visible = terrain == null;
         }
 
         private void InitSculptMode()

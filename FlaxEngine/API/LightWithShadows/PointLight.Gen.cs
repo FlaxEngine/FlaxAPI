@@ -3,6 +3,7 @@
 // incorrect behavior and will be lost if the code is regenerated.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
@@ -41,7 +42,7 @@ namespace FlaxEngine
         /// Gets or sets light radius parameter.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(1), EditorDisplay("Light"), Tooltip("Light radius"), Limit(0, 100000, 0.1f)]
+        [EditorOrder(1), DefaultValue(1000.0f), EditorDisplay("Light"), Tooltip("Light radius"), Limit(0, 100000, 0.1f)]
         public float Radius
         {
 #if UNIT_TEST_COMPILANT
@@ -56,7 +57,7 @@ namespace FlaxEngine
         /// Gets or sets light source bulb radius parameter.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(2), EditorDisplay("Light"), Tooltip("Light bulb source radius"), Limit(0, 1000, 0.01f)]
+        [EditorOrder(2), DefaultValue(0.0f), EditorDisplay("Light"), Tooltip("Light bulb source radius"), Limit(0, 1000, 0.01f)]
         public float SourceRadius
         {
 #if UNIT_TEST_COMPILANT
@@ -71,7 +72,7 @@ namespace FlaxEngine
         /// Gets or sets light source bulb length parameter.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(3), EditorDisplay("Light"), Tooltip("Light build source length"), Limit(0, 1000, 0.01f)]
+        [EditorOrder(3), DefaultValue(0.0f), EditorDisplay("Light"), Tooltip("Light build source length"), Limit(0, 1000, 0.01f)]
         public float SourceLength
         {
 #if UNIT_TEST_COMPILANT
@@ -86,7 +87,7 @@ namespace FlaxEngine
         /// Gets or sets light source radial falloff parameter. Controls the radial falloff of light when UseInverseSquaredFalloff is disabled.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(13), EditorDisplay("Light"), Tooltip("Controls the radial falloff of light when UseInverseSquaredFalloff is disabled."), Limit(2, 16, 0.01f)]
+        [EditorOrder(13), DefaultValue(8.0f), EditorDisplay("Light"), Tooltip("Controls the radial falloff of light when UseInverseSquaredFalloff is disabled."), Limit(2, 16, 0.01f)]
         public float FallOffExponent
         {
 #if UNIT_TEST_COMPILANT
@@ -101,7 +102,7 @@ namespace FlaxEngine
         /// Gets or sets the value indicating whether to use physically based inverse squared distance falloff.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(14), EditorDisplay("Light"), Tooltip("Whether to use physically based inverse squared distance falloff, where Radius is only clamping the light's contribution.")]
+        [EditorOrder(14), DefaultValue(false), EditorDisplay("Light"), Tooltip("Whether to use physically based inverse squared distance falloff, where Radius is only clamping the light's contribution.")]
         public bool UseInverseSquaredFalloff
         {
 #if UNIT_TEST_COMPILANT
@@ -116,14 +117,14 @@ namespace FlaxEngine
         /// Gets or sets the IES texture (light profiles from real world measured data).
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(211), EditorDisplay("IES Profile", "IES Texture"), Tooltip("IES texture (light profiles from real world measured data)")]
+        [EditorOrder(211), DefaultValue(null), EditorDisplay("IES Profile", "IES Texture"), Tooltip("IES texture (light profiles from real world measured data)")]
         public IESProfile IESTexture
         {
 #if UNIT_TEST_COMPILANT
             get; set;
 #else
             get { return Internal_GetIESTexture(unmanagedPtr); }
-            set { Internal_SetIESTexture(unmanagedPtr, Object.GetUnmanagedPtr(value)); }
+            set { Internal_SetIESTexture(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
 #endif
         }
 
@@ -131,7 +132,7 @@ namespace FlaxEngine
         /// Enables or disables using light brightness from IES profile.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(212), EditorDisplay("IES Profile", "Use IES Brightness"), Tooltip("Enable/disable using light brightness from IES profile")]
+        [EditorOrder(212), DefaultValue(false), EditorDisplay("IES Profile", "Use IES Brightness"), Tooltip("Enable/disable using light brightness from IES profile")]
         public bool UseIESBrightness
         {
 #if UNIT_TEST_COMPILANT
@@ -146,7 +147,7 @@ namespace FlaxEngine
         /// Gets or sets the global scale for IES brightness contribution.
         /// </summary>
         [UnmanagedCall]
-        [EditorOrder(213), Limit(0, 10000, 0.01f), EditorDisplay("IES Profile", "Brightness Scale"), Tooltip("Global scale for IES brightness contribution")]
+        [EditorOrder(213), DefaultValue(1.0f), Limit(0, 10000, 0.01f), EditorDisplay("IES Profile", "Brightness Scale"), Tooltip("Global scale for IES brightness contribution")]
         public float IESBrightnessScale
         {
 #if UNIT_TEST_COMPILANT

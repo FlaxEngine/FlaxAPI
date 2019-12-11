@@ -31,28 +31,14 @@ namespace FlaxEditor.Surface
         /// </summary>
         /// <param name="parentNode">The parent node.</param>
         /// <param name="archetype">The element archetype.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="canFocus">if set to <c>true</c> can focus this control.</param>
-        protected SurfaceNodeElementControl(SurfaceNode parentNode, NodeElementArchetype archetype, float width, float height, bool canFocus)
-        : base(archetype.ActualPositionX, archetype.ActualPositionY, width, height)
-        {
-            ParentNode = parentNode;
-            Archetype = archetype;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SurfaceNodeElementControl"/> class.
-        /// </summary>
-        /// <param name="parentNode">The parent node.</param>
-        /// <param name="archetype">The element archetype.</param>
         /// <param name="location">The location.</param>
         /// <param name="size">The size.</param>
-        /// <param name="canFocus">if set to <c>true</c> can focus this control.</param>
-        protected SurfaceNodeElementControl(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location, Vector2 size, bool canFocus)
+        /// <param name="autoFocus">if set to <c>true</c> can focus this control.</param>
+        protected SurfaceNodeElementControl(SurfaceNode parentNode, NodeElementArchetype archetype, Vector2 location, Vector2 size, bool autoFocus)
         : base(location, size)
         {
-            CanFocus = canFocus;
+            AutoFocus = autoFocus;
+            TooltipText = archetype.Tooltip;
             ParentNode = parentNode;
             Archetype = archetype;
         }

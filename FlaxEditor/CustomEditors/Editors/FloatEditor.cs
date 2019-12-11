@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEngine;
@@ -77,7 +78,13 @@ namespace FlaxEditor.CustomEditors.Editors
             }
             else
             {
-                _element.Value = (float)Values[0];
+                var value = Values[0];
+                if (value is float asFloat)
+                    _element.Value = asFloat;
+                else if (value is double asDouble)
+                    _element.Value = (float)asDouble;
+                else
+                    throw new Exception("Invalid value.");
             }
         }
     }

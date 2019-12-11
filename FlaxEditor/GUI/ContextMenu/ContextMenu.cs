@@ -3,13 +3,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.ContextMenu
 {
     /// <summary>
     /// Popup menu control.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GUI.ContextMenuBase" />
+    /// <seealso cref="ContextMenuBase" />
     [HideInEditor]
     public class ContextMenu : ContextMenuBase
     {
@@ -128,8 +130,11 @@ namespace FlaxEngine.GUI
             MinimumWidth = 10;
             MaximumItemsInViewCount = 20;
 
-            _panel = new ItemsPanel(this);
-            _panel.Parent = this;
+            _panel = new ItemsPanel(this)
+            {
+                ClipChildren = false,
+                Parent = this,
+            };
         }
 
         /// <summary>

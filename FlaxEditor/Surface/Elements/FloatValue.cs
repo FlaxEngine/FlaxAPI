@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -25,10 +26,17 @@ namespace FlaxEditor.Surface.Elements
 
         /// <inheritdoc />
         public FloatValue(SurfaceNode parentNode, NodeElementArchetype archetype)
-        : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, -1000000, 1000000, 0.01f)
+        : base(Get(parentNode, archetype), archetype.Position.X, archetype.Position.Y, 50, archetype.ValueMin, archetype.ValueMax, 0.01f)
         {
             ParentNode = parentNode;
             Archetype = archetype;
+
+            ParentNode.ValuesChanged += OnNodeValuesChanged;
+        }
+        
+        private void OnNodeValuesChanged()
+        {
+            Value = Get(ParentNode, Archetype);
         }
 
         /// <inheritdoc />

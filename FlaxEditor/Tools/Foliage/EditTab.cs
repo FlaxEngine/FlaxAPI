@@ -3,7 +3,7 @@
 using System;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
-using FlaxEditor.GUI;
+using FlaxEditor.GUI.Tabs;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -12,7 +12,7 @@ namespace FlaxEditor.Tools.Foliage
     /// <summary>
     /// Foliage instances editor tab. Allows to pick and edit a single foliage instance properties.
     /// </summary>
-    /// <seealso cref="FlaxEditor.GUI.Tab" />
+    /// <seealso cref="GUI.Tabs.Tab" />
     public class EditTab : Tab
     {
         /// <summary>

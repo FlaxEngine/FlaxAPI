@@ -2,8 +2,10 @@
 
 using System;
 using System.Globalization;
+using FlaxEngine;
+using FlaxEngine.GUI;
 
-namespace FlaxEngine.GUI
+namespace FlaxEditor.GUI.Input
 {
     /// <summary>
     /// Float value editor with fixed size text box and slider.
@@ -115,8 +117,6 @@ namespace FlaxEngine.GUI
             public Slider(float width, float height)
             : base(0, 0, width, height)
             {
-                CanFocus = false;
-
                 var style = Style.Current;
                 TrackLineColor = style.BackgroundHighlighted;
                 ThumbColor = style.BackgroundNormal;

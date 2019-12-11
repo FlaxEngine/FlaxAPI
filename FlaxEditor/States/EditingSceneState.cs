@@ -1,6 +1,4 @@
-﻿// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
-
-using System;
+// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
 namespace FlaxEditor.States
 {
@@ -10,6 +8,8 @@ namespace FlaxEditor.States
     /// <seealso cref="FlaxEditor.States.EditorState" />
     public sealed class EditingSceneState : EditorState
     {
+        internal string AutoSaveStatus;
+
         /// <inheritdoc />
         public override bool CanUseToolbox => true;
 
@@ -27,6 +27,9 @@ namespace FlaxEditor.States
 
         /// <inheritdoc />
         public override bool CanReloadScripts => true;
+
+        /// <inheritdoc />
+        public override string Status => AutoSaveStatus;
 
         internal EditingSceneState(Editor editor)
         : base(editor)

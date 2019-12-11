@@ -3,7 +3,6 @@
 using System;
 using FlaxEditor.Gizmo;
 using FlaxEngine;
-using FlaxEngine.Rendering;
 
 namespace FlaxEditor.Tools.Foliage
 {
@@ -202,7 +201,7 @@ namespace FlaxEditor.Tools.Foliage
         {
             base.OnActivated();
 
-            _highlightMaterial = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.HighlightMaterial);
+            _highlightMaterial = EditorAssets.Cache.HighlightMaterialInstance;
 
             if (_needSync)
             {

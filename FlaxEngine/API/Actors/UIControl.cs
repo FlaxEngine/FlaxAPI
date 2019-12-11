@@ -158,6 +158,7 @@ namespace FlaxEngine
         /// <summary>
         /// Unlinks the control from the actor without disposing it or modifying.
         /// </summary>
+        [NoAnimate]
         public void UnlinkControl()
         {
             if (_control != null)
@@ -172,6 +173,11 @@ namespace FlaxEngine
             LocalPosition = new Vector3(control.Location, LocalPosition.Z);
         }
 
+        /// <summary>
+        /// The fallback callback used to handle <see cref="UIControl"/> parent container control to link when it fails to find the default parent. Can be used to link the controls into a custom control.
+        /// </summary>
+        public static Func<UIControl, ContainerControl> FallbackParentGetDelegate;
+
         private ContainerControl GetParent()
         {
             // Don't link disabled actors
@@ -183,7 +189,7 @@ namespace FlaxEngine
                 return uiContainerControl;
             if (parent is UICanvas uiCanvas)
                 return uiCanvas.GUI;
-            return null;
+            return FallbackParentGetDelegate?.Invoke(this);
         }
 
         internal string Serialize(out string controlType)
@@ -267,9 +273,8 @@ namespace FlaxEngine
         {
             if (_control == null || _control.GetType() != controlType)
             {
-                if (controlType == null)
-                    throw new FlaxException("Missing UIControl type.");
-                Control = (Control)Activator.CreateInstance(controlType);
+                if (controlType != null)
+                    Control = (Control)Activator.CreateInstance(controlType);
             }
 
             if (_control != null)
