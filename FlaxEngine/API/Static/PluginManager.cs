@@ -114,6 +114,40 @@ namespace FlaxEngine
             }
         }
 
+        public static T GetPlugin<T>() where T : class 
+        {
+            foreach (Plugin p in _editorPlugins)
+            {
+                if(p.GetType() == typeof(T))
+                    return (T) Convert.ChangeType(p, typeof(T));
+            }
+            
+            foreach (GamePlugin gp in _gamePlugins)
+            {
+                if(gp.GetType() == typeof(T))
+                    return (T) Convert.ChangeType(gp, typeof(T));
+            }
+
+            return null;
+        }
+        
+        public static Plugin GetPlugin(string name)
+        {
+            foreach (Plugin p in _editorPlugins)
+            {
+                if(p.Description.Name.Equals(name))
+                    return p;
+            }
+            
+            foreach (GamePlugin gp in _gamePlugins)
+            {
+                if(gp.Description.Name.Equals(name))
+                    return gp;
+            }
+
+            return null;
+        }
+        
         internal static void Internal_LoadPlugin(Type type, bool isEditor)
         {
             if (type == null)
