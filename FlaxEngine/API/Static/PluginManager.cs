@@ -114,6 +114,10 @@ namespace FlaxEngine
             }
         }
 
+        /// <summary>
+        /// Return the first plugin of the provided type.
+        /// </summary>
+        /// <returns>Return the plugin, otherwise null.</returns>
         public static T GetPlugin<T>() where T : class 
         {
             foreach (Plugin p in _editorPlugins)
@@ -131,6 +135,11 @@ namespace FlaxEngine
             return null;
         }
         
+        /// <summary>
+        /// Return the first plugin using the provided name.
+        /// </summary>
+        /// /// <param name="name">The plugin name.</param>
+        /// <returns>Return the plugin, otherwise null.</returns>
         public static Plugin GetPlugin(string name)
         {
             foreach (Plugin p in _editorPlugins)
