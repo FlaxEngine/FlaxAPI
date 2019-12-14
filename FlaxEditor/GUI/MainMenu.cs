@@ -98,7 +98,7 @@ namespace FlaxEditor.GUI
 
                 _maximizeButton = new Button
                 {
-                    Text = ((char)0xE923).ToString(),
+                    Text = _window.IsMaximized ? ((char)0xE923).ToString() : ((char)0xE71A).ToString(),
                     Font = new FontReference(iconFont),
                     BackgroundColor = Color.Transparent,
                     BorderColor = Color.Transparent,
@@ -112,9 +112,15 @@ namespace FlaxEditor.GUI
                 _maximizeButton.Clicked += () =>
                 {
                     if (_window.IsMaximized)
+                    {
                         _window.Restore();
+                        _maximizeButton.Text = ((char)0xE923).ToString();
+                    }
                     else
+                    {
                         _window.Maximize();
+                        _maximizeButton.Text = ((char)0xE71A).ToString();
+                    }
                 };
             }
             else
