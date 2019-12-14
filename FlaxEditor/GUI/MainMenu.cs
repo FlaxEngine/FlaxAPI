@@ -129,6 +129,20 @@ namespace FlaxEditor.GUI
             }
         }
 
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+            if (_window.IsMaximized)
+            {
+                _maximizeButton.Text = ((char)0xE923).ToString();
+            }
+            else
+            {
+                _maximizeButton.Text = ((char)0xE71A).ToString();
+            }
+        }
+
         private void OnWindowClosed()
         {
             if (_window != null)
