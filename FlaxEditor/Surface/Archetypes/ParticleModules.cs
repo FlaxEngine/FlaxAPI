@@ -1449,7 +1449,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Render,
                     Guid.Empty, // Material
-                    (int)DrawPass.Default, // Draw Modes
+                    (int)(DrawPass.GBuffer | DrawPass.Forward | DrawPass.Distortion), // Draw Modes
                 },
                 Elements = new[]
                 {
@@ -1521,7 +1521,7 @@ namespace FlaxEditor.Surface.Archetypes
                     (int)ModuleType.Render,
                     Guid.Empty, // Model
                     Guid.Empty, // Material
-                    (int)DrawPass.Default, // Draw Modes
+                    (int)(DrawPass.GBuffer | DrawPass.Forward | DrawPass.Distortion), // Draw Modes
                 },
                 Elements = new[]
                 {
@@ -1554,7 +1554,7 @@ namespace FlaxEditor.Surface.Archetypes
                     0.0f, // UV Tiling Distance
                     Vector2.One, // UV Scale
                     Vector2.Zero, // UV Offset
-                    (int)DrawPass.Default, // Draw Modes
+                    (int)(DrawPass.GBuffer | DrawPass.Forward | DrawPass.Distortion), // Draw Modes
                 },
                 Elements = new[]
                 {
