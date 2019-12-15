@@ -96,6 +96,9 @@ namespace FlaxEditor.Windows.Assets
             b = contextMenu.AddButton("Cut", Cut);
             b.Enabled = hasSthSelected && !isRootSelected;
 
+            b = contextMenu.AddButton("Set Root", SetRoot);
+            b.Enabled = isSingleActorSelected && !isRootSelected;
+
             // Prefab options
 
             contextMenu.AddSeparator();

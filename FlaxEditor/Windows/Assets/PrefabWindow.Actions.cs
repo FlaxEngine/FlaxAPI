@@ -6,11 +6,89 @@ using System.Linq;
 using FlaxEditor.Actions;
 using FlaxEditor.SceneGraph;
 using FlaxEngine;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Windows.Assets
 {
     public sealed partial class PrefabWindow
     {
+        /// <summary>
+        /// Implementation of <see cref="IUndoAction"/> used to change the root actor of the prefab.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.IUndoAction" />
+        public class SetRootAction : IUndoAction
+        {
+            private PrefabWindow _window;
+            private readonly Guid _before;
+            private readonly Guid _after;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SetRootAction"/> class.
+            /// </summary>
+            /// <param name="window">The window reference.</param>
+            /// <param name="before">The root before.</param>
+            /// <param name="after">The root after.</param>
+            internal SetRootAction(PrefabWindow window, Actor before, Actor after)
+            {
+                _window = window;
+                _before = before.ID;
+                _after = after.ID;
+            }
+
+            private void Set(Guid oldRootId, Guid newRootId)
+            {
+                var oldRoot = Object.Find<Actor>(ref oldRootId);
+                var newRoot = Object.Find<Actor>(ref newRootId);
+
+                _window.Graph.MainActor = null;
+                if (SceneGraphFactory.Nodes.TryGetValue(oldRootId, out var oldRootNode))
+                    oldRootNode.Dispose();
+                if (SceneGraphFactory.Nodes.TryGetValue(newRootId, out var newRootNode))
+                    newRootNode.Dispose();
+
+                newRoot.Parent = null;
+                oldRoot.Parent = newRoot;
+
+                _window.Graph.MainActor = newRoot;
+            }
+
+            /// <inheritdoc />
+            public string ActionString => "Set root";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Set(_before, _after);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Set(_after, _before);
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                _window = null;
+            }
+        }
+
+        /// <summary>
+        /// Changes the root object of the prefab.
+        /// </summary>
+        private void SetRoot()
+        {
+            var oldRoot = Graph.MainActor;
+            var newRoot = ((ActorNode)Selection[0]).Actor;
+
+            Deselect();
+
+            var action = new SetRootAction(this, oldRoot, newRoot);
+            action.Do();
+            Undo.AddAction(action);
+        }
+
         /// <summary>
         /// Cuts selected objects.
         /// </summary>
