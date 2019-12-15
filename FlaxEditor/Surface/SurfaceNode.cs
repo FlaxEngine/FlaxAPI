@@ -53,7 +53,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The values (node parameters in layout based on <see cref="NodeArchetype.DefaultValues"/>).
         /// </summary>
-        public readonly object[] Values;
+        public object[] Values;
 
         /// <summary>
         /// Gets or sets the node title text.

@@ -167,7 +167,6 @@ namespace FlaxEditor.Surface
         /// <returns>Created node or null if failed.</returns>
         public static SurfaceNode CreateNode(List<GroupArchetype> groups, uint id, VisjectSurfaceContext context, ushort groupID, ushort typeID)
         {
-            // Find archetype for that node
             for (var i = 0; i < groups.Count; i++)
             {
                 var groupArchetype = groups[i];
@@ -178,7 +177,6 @@ namespace FlaxEditor.Surface
                         var nodeArchetype = groupArchetype.Archetypes[j];
                         if (nodeArchetype.TypeID == typeID)
                         {
-                            // Create
                             SurfaceNode node;
                             if (nodeArchetype.Create != null)
                                 node = nodeArchetype.Create(id, context, nodeArchetype, groupArchetype);
@@ -189,9 +187,6 @@ namespace FlaxEditor.Surface
                     }
                 }
             }
-
-            // Error
-            Editor.LogError($"Failed to create Visject Surface node with id: {groupID}:{typeID}");
             return null;
         }
 
@@ -207,7 +202,6 @@ namespace FlaxEditor.Surface
         {
             Assert.IsTrue(groupArchetype.Archetypes.Contains(nodeArchetype));
 
-            // Create
             SurfaceNode node;
             if (nodeArchetype.Create != null)
                 node = nodeArchetype.Create(id, context, nodeArchetype, groupArchetype);
