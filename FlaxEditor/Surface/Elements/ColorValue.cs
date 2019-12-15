@@ -21,9 +21,6 @@ namespace FlaxEditor.Surface.Elements
         /// <summary>
         /// Gets the surface.
         /// </summary>
-        /// <value>
-        /// The surface.
-        /// </value>
         public VisjectSurface Surface => ParentNode.Surface;
 
         /// <inheritdoc />
@@ -35,7 +32,7 @@ namespace FlaxEditor.Surface.Elements
 
             ParentNode.ValuesChanged += OnNodeValuesChanged;
         }
-        
+
         private void OnNodeValuesChanged()
         {
             Value = Get(ParentNode, Archetype);

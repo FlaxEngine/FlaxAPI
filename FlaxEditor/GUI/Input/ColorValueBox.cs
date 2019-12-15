@@ -22,13 +22,19 @@ namespace FlaxEditor.GUI.Input
         public delegate void ColorPickerEvent(Color color, bool sliding);
 
         /// <summary>
+        /// Delegate function used for the color picker close event handling.
+        /// </summary>
+        public delegate void ColorPickerClosedEvent();
+
+        /// <summary>
         /// Delegate function used to handle showing color picking dialog.
         /// </summary>
         /// <param name="initialValue">The initial value.</param>
         /// <param name="colorChanged">The color changed event.</param>
+        /// <param name="pickerClosed">The color editing end event.</param>
         /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
         /// <returns>The created color picker dialog or null if failed.</returns>
-        public delegate IColorPickerDialog ShowPickColorDialogDelegate(Color initialValue, ColorPickerEvent colorChanged, bool useDynamicEditing = true);
+        public delegate IColorPickerDialog ShowPickColorDialogDelegate(Color initialValue, ColorPickerEvent colorChanged, ColorPickerClosedEvent pickerClosed = null, bool useDynamicEditing = true);
 
         /// <summary>
         /// Shows picking color dialog (see <see cref="ShowPickColorDialogDelegate"/>).
@@ -58,9 +64,6 @@ namespace FlaxEditor.GUI.Input
         /// <summary>
         /// Gets or sets the color value.
         /// </summary>
-        /// <value>
-        /// The color value.
-        /// </value>
         public Color Value
         {
             get => _value;
@@ -125,7 +128,7 @@ namespace FlaxEditor.GUI.Input
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Show color picker dialog
-            _currentDialog = ShowPickColorDialog?.Invoke(_value, OnColorChanged);
+            _currentDialog = ShowPickColorDialog?.Invoke(_value, OnColorChanged, OnPickerClosed);
 
             return true;
         }
@@ -140,6 +143,11 @@ namespace FlaxEditor.GUI.Input
 
             _isSliding = sliding;
             Value = color;
+        }
+
+        private void OnPickerClosed()
+        {
+            _currentDialog = null;
         }
 
         /// <inheritdoc />

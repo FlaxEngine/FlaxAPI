@@ -367,9 +367,9 @@ namespace FlaxEditor.Modules
             Style.Current = style;
         }
 
-        private IColorPickerDialog ShowPickColorDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, bool useDynamicEditing)
+        private IColorPickerDialog ShowPickColorDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, ColorValueBox.ColorPickerClosedEvent pickerClosed, bool useDynamicEditing)
         {
-            var dialog = new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing);
+            var dialog = new ColorPickerDialog(initialValue, colorChanged, pickerClosed, useDynamicEditing);
             dialog.Show();
             return dialog;
         }
