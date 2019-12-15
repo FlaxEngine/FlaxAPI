@@ -50,6 +50,7 @@ namespace FlaxEditor.Windows.Assets
                 oldRoot.Parent = newRoot;
 
                 _window.Graph.MainActor = newRoot;
+                _window.Viewport.Instance = newRoot;
             }
 
             /// <inheritdoc />
