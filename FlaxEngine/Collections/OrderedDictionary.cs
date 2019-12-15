@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -228,7 +228,7 @@ namespace FlaxEngine.Collections
         public KeyValuePair<TKey, TValue> GetItem(int index)
         {
             if (index < 0 || index >= _keyedCollection.Count)
-                throw new ArgumentException(String.Format("The index was outside the bounds of the dictionary: {0}",
+                throw new ArgumentException(string.Format("The index was outside the bounds of the dictionary: {0}",
                                                           index));
             return _keyedCollection[index];
         }

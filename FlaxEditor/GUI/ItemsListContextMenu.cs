@@ -177,7 +177,7 @@ namespace FlaxEditor.GUI
             public override int Compare(Control other)
             {
                 if (other is Item otherItem)
-                    return String.Compare(Name, otherItem.Name, StringComparison.Ordinal);
+                    return string.Compare(Name, otherItem.Name, StringComparison.Ordinal);
                 return base.Compare(other);
             }
         }
