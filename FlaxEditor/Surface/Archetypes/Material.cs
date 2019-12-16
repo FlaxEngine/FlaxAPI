@@ -169,7 +169,7 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(MaterialNodeBoxes.Roughness).Enabled = isNotUnlit;
                     GetBox(MaterialNodeBoxes.AmbientOcclusion).Enabled = isNotUnlit;
                     GetBox(MaterialNodeBoxes.Normal).Enabled = isNotUnlit;
-                    GetBox(MaterialNodeBoxes.Opacity).Enabled = isTransparent || withSubsurface;
+                    GetBox(MaterialNodeBoxes.Opacity).Enabled = withSubsurface || info.BlendMode != MaterialBlendMode.Opaque;
                     GetBox(MaterialNodeBoxes.Refraction).Enabled = isTransparent;
                     GetBox(MaterialNodeBoxes.PositionOffset).Enabled = true;
                     GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = withTess;
