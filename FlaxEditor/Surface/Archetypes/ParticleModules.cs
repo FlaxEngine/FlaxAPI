@@ -63,6 +63,11 @@ namespace FlaxEditor.Surface.Archetypes
             /// Particles will use the custom vector for facing.
             /// </summary>
             CustomFacingVector,
+
+            /// <summary>
+            /// Particles will use the custom fixed axis for facing up.
+            /// </summary>
+            FixedAxis,
         }
 
         /// <summary>
@@ -460,7 +465,9 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void UpdateInputBox()
             {
-                GetBox(0).Enabled = (ParticleSpriteFacingMode)Values[2] == ParticleSpriteFacingMode.CustomFacingVector;
+                var facingMode = (ParticleSpriteFacingMode)Values[2];
+                GetBox(0).Enabled = facingMode == ParticleSpriteFacingMode.CustomFacingVector
+                                    || facingMode == ParticleSpriteFacingMode.FixedAxis;
             }
         }
 
