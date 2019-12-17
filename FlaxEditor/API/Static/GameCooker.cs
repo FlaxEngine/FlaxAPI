@@ -56,7 +56,7 @@ namespace FlaxEditor
         WindowsStoreX64 = 4,
 
         /// <summary>
-        /// Xbox One (x64 architecture)
+        /// Xbox One
         /// </summary>
         XboxOne = 5,
 
@@ -64,6 +64,11 @@ namespace FlaxEditor
         /// Linux (x64 architecture)
         /// </summary>
         LinuxX64 = 6,
+
+        /// <summary>
+        /// PlayStation 4
+        /// </summary>
+        PS4 = 7,
     }
 
     /// <summary>
@@ -195,6 +200,7 @@ namespace FlaxEditor
             case BuildPlatform.WindowsStoreX64: return PlatformType.WindowsStore;
             case BuildPlatform.XboxOne: return PlatformType.XboxOne;
             case BuildPlatform.LinuxX64: return PlatformType.Linux;
+            case BuildPlatform.PS4: return PlatformType.PS4;
             default: throw new ArgumentOutOfRangeException(nameof(buildPlatform), buildPlatform, null);
             }
         }

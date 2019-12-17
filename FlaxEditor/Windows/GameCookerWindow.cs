@@ -40,6 +40,7 @@ namespace FlaxEditor.Windows
                 { PlatformType.XboxOne, new XboxOne() },
                 { PlatformType.WindowsStore, new WindowsStore() },
                 { PlatformType.Linux, new Linux() },
+                { PlatformType.PS4, new PS4() },
             };
 
             public BuildTabProxy(GameCookerWindow win, PlatformSelector platformSelector)
@@ -51,6 +52,7 @@ namespace FlaxEditor.Windows
                 PerPlatformOptions[PlatformType.XboxOne].Init("Output/XboxOne", "XboxOne");
                 PerPlatformOptions[PlatformType.WindowsStore].Init("Output/WindowsStore", "UWP");
                 PerPlatformOptions[PlatformType.Linux].Init("Output/Linux", "Linux");
+                PerPlatformOptions[PlatformType.PS4].Init("Output/PS4", "PS4");
             }
 
             public abstract class Platform
@@ -167,6 +169,11 @@ namespace FlaxEditor.Windows
                 protected override BuildPlatform BuildPlatform => BuildPlatform.LinuxX64;
             }
 
+            public class PS4 : Platform
+            {
+                protected override BuildPlatform BuildPlatform => BuildPlatform.PS4;
+            }
+
             public class Editor : CustomEditor
             {
                 private PlatformType _platform;
@@ -194,6 +201,9 @@ namespace FlaxEditor.Windows
                             break;
                         case PlatformType.Linux:
                             name = "Linux";
+                            break;
+                        case PlatformType.PS4:
+                            name = "PlayStation 4";
                             break;
                         default:
                             name = CustomEditorsUtil.GetPropertyNameUI(_platform.ToString());
