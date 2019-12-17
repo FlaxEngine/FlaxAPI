@@ -34,7 +34,8 @@ namespace FlaxEditor.GUI.Dialogs
         private Color _newColor;
         private bool _disableEvents;
         private bool _useDynamicEditing;
-        private ColorValueBox.ColorPickerEvent _onChangedOk;
+        private ColorValueBox.ColorPickerEvent _onChanged;
+        private ColorValueBox.ColorPickerClosedEvent _onClosed;
 
         private ColorSelectorWithSliders _cSelector;
         private IntValueBox _cRed;
@@ -86,7 +87,7 @@ namespace FlaxEditor.GUI.Dialogs
                 // Dynamic value
                 if (_useDynamicEditing)
                 {
-                    _onChangedOk?.Invoke(_newColor, true);
+                    _onChanged?.Invoke(_newColor, true);
                 }
 
                 _disableEvents = false;
@@ -98,14 +99,16 @@ namespace FlaxEditor.GUI.Dialogs
         /// </summary>
         /// <param name="initialValue">The initial value.</param>
         /// <param name="colorChanged">The color changed event.</param>
+        /// <param name="pickerClosed">The close event.</param>
         /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
-        public ColorPickerDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, bool useDynamicEditing)
+        public ColorPickerDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, ColorValueBox.ColorPickerClosedEvent pickerClosed, bool useDynamicEditing)
         : base("Pick a color!")
         {
             _oldColor = initialValue;
             _useDynamicEditing = useDynamicEditing;
             _newColor = Color.Transparent;
-            _onChangedOk = colorChanged;
+            _onChanged = colorChanged;
+            _onClosed = pickerClosed;
 
             // Selector
             _cSelector = new ColorSelectorWithSliders(180, 18);
@@ -180,7 +183,7 @@ namespace FlaxEditor.GUI.Dialogs
         private void OnOkClicked()
         {
             _result = DialogResult.OK;
-            _onChangedOk?.Invoke(_newColor, false);
+            _onChanged?.Invoke(_newColor, false);
             Close();
         }
 
@@ -188,7 +191,7 @@ namespace FlaxEditor.GUI.Dialogs
         {
             // Restore color
             if (_useDynamicEditing)
-                _onChangedOk?.Invoke(_oldColor, false);
+                _onChanged?.Invoke(_oldColor, false);
 
             Close(DialogResult.Cancel);
         }
@@ -270,6 +273,14 @@ namespace FlaxEditor.GUI.Dialogs
             ((WindowRootControl)Root).Window.LostFocus += OnCancelClicked;
 
             base.OnShow();
+        }
+
+        /// <inheritdoc />
+        public override void OnDestroy()
+        {
+            _onClosed?.Invoke();
+
+            base.OnDestroy();
         }
 
         /// <inheritdoc />

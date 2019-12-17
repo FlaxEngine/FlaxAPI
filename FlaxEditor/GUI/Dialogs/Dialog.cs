@@ -243,9 +243,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// Determines whether this dialog can be closed.
         /// </summary>
         /// <param name="reason">The reason.</param>
-        /// <returns>
-        ///   <c>true</c> if this dialog can be closed; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if this dialog can be closed; otherwise, <c>false</c>.</returns>
         protected virtual bool CanCloseWindow(ClosingReason reason)
         {
             return true;

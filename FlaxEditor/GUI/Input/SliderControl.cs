@@ -334,7 +334,7 @@ namespace FlaxEditor.GUI.Input
         /// <param name="width">The width.</param>
         /// <param name="min">The minimum value.</param>
         /// <param name="max">The maximum value.</param>
-        public SliderControl(float value, float x = 0, float y = 0, float width = 120, float min = Single.MinValue, float max = Single.MaxValue)
+        public SliderControl(float value, float x = 0, float y = 0, float width = 120, float min = float.MinValue, float max = float.MaxValue)
         : base(x, y, width, TextBox.DefaultHeight)
         {
             _min = min;

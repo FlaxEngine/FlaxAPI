@@ -67,7 +67,7 @@ namespace FlaxEditor.GUI
 
                 _closeButton = new Button
                 {
-                    Text = ((char)0xE711).ToString(),
+                    Text = ((char)EditorAssets.SegMDL2Icons.ChromeClose).ToString(),
                     Font = new FontReference(iconFont),
                     BackgroundColor = Color.Transparent,
                     BorderColor = Color.Transparent,
@@ -83,7 +83,7 @@ namespace FlaxEditor.GUI
 
                 _minimizeButton = new Button
                 {
-                    Text = ((char)0xE738).ToString(),
+                    Text = ((char)EditorAssets.SegMDL2Icons.ChromeMinimize).ToString(),
                     Font = new FontReference(iconFont),
                     BackgroundColor = Color.Transparent,
                     BorderColor = Color.Transparent,
@@ -98,7 +98,7 @@ namespace FlaxEditor.GUI
 
                 _maximizeButton = new Button
                 {
-                    Text = ((char)0xE923).ToString(),
+                    Text = ((char)(_window.IsMaximized ? EditorAssets.SegMDL2Icons.ChromeRestore : EditorAssets.SegMDL2Icons.ChromeMaximize)).ToString(),
                     Font = new FontReference(iconFont),
                     BackgroundColor = Color.Transparent,
                     BorderColor = Color.Transparent,
@@ -112,15 +112,27 @@ namespace FlaxEditor.GUI
                 _maximizeButton.Clicked += () =>
                 {
                     if (_window.IsMaximized)
+                    {
                         _window.Restore();
+                    }
                     else
+                    {
                         _window.Maximize();
+                    }
                 };
             }
             else
             {
                 BackgroundColor = Style.Current.LightBackground;
             }
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            _maximizeButton.Text = ((char)(_window.IsMaximized ? EditorAssets.SegMDL2Icons.ChromeRestore : EditorAssets.SegMDL2Icons.ChromeMaximize)).ToString();
         }
 
         private void OnWindowClosed()
