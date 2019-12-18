@@ -99,6 +99,11 @@ namespace FlaxEngine
         /// Vulkan (Shader Model 5 compatible)
         /// </summary>
         Vulkan_SM5 = 5,
+
+        /// <summary>
+        /// PlayStation 4
+        /// </summary>
+        PS4 = 6,
     }
 
     /// <summary>
