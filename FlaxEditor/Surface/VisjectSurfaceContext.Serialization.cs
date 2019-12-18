@@ -464,7 +464,7 @@ namespace FlaxEditor.Surface
                         // Find custom node archetype that matches this node type (it must be unique)
                         var customNodes = _surface.GetCustomNodes();
                         if (customNodes?.Archetypes == null)
-                            throw new Exception("Cannot find any custom nodes archetype.");
+                            Editor.LogWarning("Cannot find any custom nodes archetype.");
                         NodeArchetype arch = null;
                         for (int j = 0; j < customNodes.Archetypes.Length; j++)
                         {
