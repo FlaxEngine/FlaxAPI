@@ -37,8 +37,8 @@ namespace FlaxEditor.GUI
                 BackgroundColor = Style.Current.LightBackground;
                 Height = 28;
 
-                var windowIcon = FlaxEngine.Content.LoadInternal<Texture>(EditorAssets.WindowIcon);
-                FontAsset windowIconsFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.WindowIconsFont);
+                var windowIcon = FlaxEngine.Content.LoadAsyncInternal<Texture>(EditorAssets.WindowIcon);
+                FontAsset windowIconsFont = FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.WindowIconsFont);
                 Font iconFont = windowIconsFont?.CreateFont(9);
 
                 _window = mainWindow.RootWindow.Window;

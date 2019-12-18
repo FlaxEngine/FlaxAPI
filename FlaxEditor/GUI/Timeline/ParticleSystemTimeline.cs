@@ -71,7 +71,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 if (typeof(ParticleEmitter).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var emitter = FlaxEngine.Content.Load<ParticleEmitter>(binaryAssetItem.ID);
+                    var emitter = FlaxEngine.Content.LoadAsync<ParticleEmitter>(binaryAssetItem.ID);
                     if (emitter)
                         return true;
                 }
@@ -88,7 +88,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     if (typeof(ParticleEmitter).IsAssignableFrom(binaryAssetItem.Type))
                     {
-                        var emitter = FlaxEngine.Content.Load<ParticleEmitter>(binaryAssetItem.ID);
+                        var emitter = FlaxEngine.Content.LoadAsync<ParticleEmitter>(binaryAssetItem.ID);
                         if (emitter)
                         {
                             var track = (ParticleEmitterTrack)timeline.AddTrack(ParticleEmitterTrack.GetArchetype());

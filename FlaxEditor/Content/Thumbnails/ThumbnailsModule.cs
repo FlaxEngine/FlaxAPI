@@ -361,7 +361,7 @@ namespace FlaxEditor.Content.Thumbnails
             }
 
             // Load atlas
-            var atlas = FlaxEngine.Content.Load<PreviewsCache>(path);
+            var atlas = FlaxEngine.Content.LoadAsync<PreviewsCache>(path);
             if (atlas == null)
             {
                 // Error

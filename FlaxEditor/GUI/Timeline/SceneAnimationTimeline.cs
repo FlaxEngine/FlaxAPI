@@ -135,13 +135,13 @@ namespace FlaxEditor.GUI.Timeline
                 }
                 else if (typeof(SceneAnimation).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var sceneAnimation = FlaxEngine.Content.Load<SceneAnimation>(binaryAssetItem.ID);
+                    var sceneAnimation = FlaxEngine.Content.LoadAsync<SceneAnimation>(binaryAssetItem.ID);
                     if (sceneAnimation)
                         return true;
                 }
                 else if (typeof(AudioClip).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var audioClip = FlaxEngine.Content.Load<AudioClip>(binaryAssetItem.ID);
+                    var audioClip = FlaxEngine.Content.LoadAsync<AudioClip>(binaryAssetItem.ID);
                     if (audioClip)
                         return true;
                 }
@@ -158,7 +158,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     if (typeof(MaterialBase).IsAssignableFrom(binaryAssetItem.Type))
                     {
-                        var material = FlaxEngine.Content.Load<MaterialBase>(binaryAssetItem.ID);
+                        var material = FlaxEngine.Content.LoadAsync<MaterialBase>(binaryAssetItem.ID);
                         if (material && !material.WaitForLoaded() && material.IsPostFx)
                         {
                             var track = (PostProcessMaterialTrack)timeline.AddTrack(PostProcessMaterialTrack.GetArchetype());
@@ -168,7 +168,7 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     else if (typeof(SceneAnimation).IsAssignableFrom(binaryAssetItem.Type))
                     {
-                        var sceneAnimation = FlaxEngine.Content.Load<SceneAnimation>(binaryAssetItem.ID);
+                        var sceneAnimation = FlaxEngine.Content.LoadAsync<SceneAnimation>(binaryAssetItem.ID);
                         if (!sceneAnimation || sceneAnimation.WaitForLoaded())
                             continue;
                         var track = (NestedSceneAnimationTrack)timeline.AddTrack(NestedSceneAnimationTrack.GetArchetype());
@@ -178,7 +178,7 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     else if (typeof(AudioClip).IsAssignableFrom(binaryAssetItem.Type))
                     {
-                        var audioClip = FlaxEngine.Content.Load<AudioClip>(binaryAssetItem.ID);
+                        var audioClip = FlaxEngine.Content.LoadAsync<AudioClip>(binaryAssetItem.ID);
                         if (!audioClip || audioClip.WaitForLoaded())
                             continue;
                         var track = (AudioTrack)timeline.AddTrack(AudioTrack.GetArchetype());

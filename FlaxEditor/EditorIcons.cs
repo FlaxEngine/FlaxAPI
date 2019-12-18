@@ -97,7 +97,7 @@ namespace FlaxEditor
         internal void GetIcons()
         {
             // Load asset
-            var iconsAtlas = FlaxEngine.Content.LoadInternal<SpriteAtlas>(EditorAssets.IconsAtlas);
+            var iconsAtlas = FlaxEngine.Content.LoadAsyncInternal<SpriteAtlas>(EditorAssets.IconsAtlas);
             if (iconsAtlas == null)
             {
                 Editor.LogError("Cannot load editor icons atlas.");

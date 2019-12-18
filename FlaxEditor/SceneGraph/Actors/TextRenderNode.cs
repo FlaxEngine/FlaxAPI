@@ -24,8 +24,8 @@ namespace FlaxEditor.SceneGraph.Actors
             // Setup for default values
             var text = (TextRender)Actor;
             text.Text = "My Text";
-            text.Font = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
-            text.Material = FlaxEngine.Content.LoadInternal<MaterialBase>(EditorAssets.DefaultFontMaterial);
+            text.Font = FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.PrimaryFont);
+            text.Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.DefaultFontMaterial);
         }
     }
 }

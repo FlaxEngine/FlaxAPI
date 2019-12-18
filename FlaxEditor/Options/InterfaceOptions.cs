@@ -113,7 +113,7 @@ namespace FlaxEditor.Options
         [EditorDisplay("Play In-Editor", "Focus Game Window On Play"), EditorOrder(200), Tooltip("Determines whether auto-focus game window on play mode start.")]
         public bool FocusGameWinOnPlay { get; set; } = true;
 
-        private static FontAsset DefaultFont => FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.PrimaryFont);
+        private static FontAsset DefaultFont => FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.PrimaryFont);
 
         /// <summary>
         /// Gets or sets the title font for editor UI.
