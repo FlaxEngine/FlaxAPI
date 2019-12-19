@@ -33,7 +33,7 @@ namespace FlaxEditor.Content.Settings
         /// The configuration mode.
         /// </summary>
         [EditorOrder(30), Tooltip("Configuration build mode")]
-        public BuildMode Mode;
+        public BuildConfiguration Mode;
 
         /// <summary>
         /// The pre-build action command line.
@@ -57,15 +57,6 @@ namespace FlaxEditor.Content.Settings
         /// Gets the build options computed from the target configuration.
         /// </summary>
         [HideInEditor, NoSerialize]
-        public virtual BuildOptions Options
-        {
-            get
-            {
-                BuildOptions options = BuildOptions.None;
-                if (Mode == BuildMode.Debug)
-                    options |= BuildOptions.Debug;
-                return options;
-            }
-        }
+        public virtual BuildOptions Options => BuildOptions.None;
     }
 }

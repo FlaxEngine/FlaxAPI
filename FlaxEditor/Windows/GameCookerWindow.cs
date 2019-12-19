@@ -67,7 +67,7 @@ namespace FlaxEditor.Windows
                 public bool ShowOutput = true;
 
                 [EditorOrder(20), Tooltip("Configuration build mode")]
-                public BuildMode ConfigurationMode;
+                public BuildConfiguration ConfigurationMode = BuildConfiguration.Development;
 
                 [EditorOrder(100), Tooltip("Custom macros")]
                 public string[] Defines;
@@ -79,8 +79,6 @@ namespace FlaxEditor.Windows
                     get
                     {
                         BuildOptions options = BuildOptions.None;
-                        if (ConfigurationMode == BuildMode.Debug)
-                            options |= BuildOptions.Debug;
                         if (ShowOutput)
                             options |= BuildOptions.ShowOutput;
                         return options;
@@ -105,7 +103,7 @@ namespace FlaxEditor.Windows
 
                 public virtual void Build()
                 {
-                    GameCooker.Build(BuildPlatform, Options, Output, Defines);
+                    GameCooker.Build(BuildPlatform, ConfigurationMode, Output, Options, Defines);
                 }
             }
 
@@ -562,14 +560,14 @@ namespace FlaxEditor.Windows
                         Name = "Windows 64bit",
                         Output = "Output\\Win64",
                         Platform = BuildPlatform.Windows64,
-                        Mode = BuildMode.Debug,
+                        Mode = BuildConfiguration.Development,
                     },
                     new BuildTarget
                     {
                         Name = "Windows 32bit",
                         Output = "Output\\Win32",
                         Platform = BuildPlatform.Windows32,
-                        Mode = BuildMode.Debug,
+                        Mode = BuildConfiguration.Development,
                     },
                 }
             };
@@ -593,7 +591,7 @@ namespace FlaxEditor.Windows
                 Name = "Xbox One",
                 Output = "Output\\XboxOne",
                 Platform = BuildPlatform.XboxOne,
-                Mode = BuildMode.Release,
+                Mode = BuildConfiguration.Development,
             };
             _data[_selectedPresetIndex].Targets = targets;
 
@@ -798,7 +796,7 @@ namespace FlaxEditor.Windows
                     _preBuildAction = target.PreBuildAction;
                     _postBuildAction = target.PostBuildAction;
 
-                    GameCooker.Build(target.Platform, target.Options, target.Output, target.Defines);
+                    GameCooker.Build(target.Platform, target.Mode, target.Output, target.Options, target.Defines);
                 }
                 else if (_exitOnBuildEnd)
                 {

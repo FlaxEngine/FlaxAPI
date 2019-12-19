@@ -11,6 +11,12 @@ namespace FlaxEditor.Scripting
     /// </summary>
     public static partial class ScriptsBuilder
     {
+        public enum BuildMode
+        {
+            Debug = 0,
+            Release = 1,
+        };
+
         // TODO: expose api to inject custom defines to compilation and more customizations
 
         internal enum InBuildEditorTypes
