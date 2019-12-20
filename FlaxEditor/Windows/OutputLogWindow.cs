@@ -163,6 +163,8 @@ namespace FlaxEditor.Windows
             // Setup editor options
             Editor.Options.OptionsChanged += OnEditorOptionsChanged;
             OnEditorOptionsChanged(Editor.Options.Options);
+
+            GameCooker.Event += OnGameCookerEvent;
         }
 
         private void OnViewButtonClicked()
@@ -257,6 +259,12 @@ namespace FlaxEditor.Windows
             _showLogType = options.Interface.OutputLogShowLogType;
 
             Refresh();
+        }
+
+        private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
+        {
+            if (eventType == GameCooker.EventType.BuildFailed && !Editor.IsHeadlessMode)
+                FocusOrShow();
         }
 
         /// <summary>
@@ -548,6 +556,7 @@ namespace FlaxEditor.Windows
 
             // Unbind events
             Editor.Options.OptionsChanged -= OnEditorOptionsChanged;
+            GameCooker.Event -= OnGameCookerEvent;
 
             // Cleanup
             _textBuffer.Clear();

@@ -327,18 +327,11 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationBegin += OnCompilationBegin;
             ScriptsBuilder.CompilationError += OnCompilationError;
             ScriptsBuilder.CompilationWarning += OnCompilationWarning;
-            GameCooker.Event += OnGameCookerEvent;
         }
 
         private void OnEditorOptionsChanged(EditorOptions options)
         {
             _timestampsFormats = options.Interface.DebugLogTimestampsFormat;
-        }
-
-        private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
-        {
-            if (eventType == GameCooker.EventType.BuildFailed)
-                FocusOrShow();
         }
 
         /// <summary>
@@ -641,7 +634,6 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationBegin -= OnCompilationBegin;
             ScriptsBuilder.CompilationError -= OnCompilationError;
             ScriptsBuilder.CompilationWarning -= OnCompilationWarning;
-            GameCooker.Event -= OnGameCookerEvent;
 
             base.OnDestroy();
         }
