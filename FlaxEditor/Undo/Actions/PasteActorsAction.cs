@@ -146,8 +146,8 @@ namespace FlaxEditor.Actions
                 if (parent != null)
                 {
                     string name = node.Name;
-                    Actor[] children = parent.GetChildren();
-                    if (children.Count(x => x.Name == name) > 1)
+                    Actor[] children = parent.Children;
+                    if (children.Any(x => x.Name == name))
                     {
                         // Generate new name
                         node.Actor.Name = StringUtils.IncrementNameNumber(name, x => children.All(y => y.Name != x));

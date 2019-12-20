@@ -656,7 +656,7 @@ namespace FlaxEngine
         [NoAnimate]
         public void DestroyChildren(float timeLeft = 0.0f)
         {
-            Actor[] children = GetChildren();
+            Actor[] children = Children;
             for (var i = 0; i < children.Length; i++)
             {
                 children[i].Parent = null;
