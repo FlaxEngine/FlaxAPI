@@ -114,8 +114,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets a list of all scripts attached to this object. It's read-only array. Use AddScript/RemoveScript to modify
-        /// collection.
+        /// Gets a list of all scripts attached to this object. It's read-only array. Use AddScript/RemoveScript to modify collection.
         /// </summary>
         [UnmanagedCall]
         [HideInEditor, NoAnimate]
@@ -134,6 +133,27 @@ namespace FlaxEngine
                 return Internal_GetScripts(unmanagedPtr);
             }
             internal set { }
+#endif
+        }
+
+        /// <summary>
+        /// Gets a list of all actors attached to this object. It's read-only array.
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public Actor[] Children
+        {
+#if UNIT_TEST_COMPILANT
+			get;
+#else
+            get
+            {
+                if (Internal_GetChildCount(unmanagedPtr) == 0)
+                    return Utils.GetEmptyArray<Actor>();
+                return Internal_GetChildren(unmanagedPtr);
+            }
 #endif
         }
 
