@@ -290,7 +290,7 @@ namespace FlaxEditor.GUI.ContextMenu
             if (_parentCM != null)
             {
                 // Skip if user clicked over the parent popup
-                var mouse = _parentCM.ScreenToClient(Platform.MousePosition / Platform.Dpi);
+                var mouse = _parentCM.ScreenToClient(Platform.MousePosition / Platform.DpiScale);
                 if (!_parentCM.ContainsPoint(ref mouse))
                 {
                     root.Hide();
