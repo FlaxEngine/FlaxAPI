@@ -38,7 +38,7 @@ namespace FlaxEditor.Windows.Assets
 
         private Undo _undo;
         private bool _focusCamera;
-        private bool _liveReload = true;
+        private bool _liveReload = false;
         private bool _isUpdatingSelection, _isScriptsReloading;
         private DateTime _modifiedTime = DateTime.MinValue;
 
