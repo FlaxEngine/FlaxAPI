@@ -111,10 +111,10 @@ namespace FlaxEditor.Actions
                     LinkBrokenParentReference(actor);
                 }
 
-                var foundNode = SceneGraphFactory.FindNode(actor.ID);
-                if (foundNode is ActorNode node)
+                var node = GetNode(actor.ID);
+                if (node is ActorNode actorNode)
                 {
-                    nodes.Add(node);
+                    nodes.Add(actorNode);
                 }
             }
 
@@ -158,6 +158,16 @@ namespace FlaxEditor.Actions
             }
         }
 
+        /// <summary>
+        /// Gets the node.
+        /// </summary>
+        /// <param name="id">The actor id.</param>
+        /// <returns>The scene graph node.</returns>
+        protected virtual SceneGraphNode GetNode(Guid id)
+        {
+            return SceneGraphFactory.FindNode(id);
+        }
+
         /// <inheritdoc />
         public void Do()
         {
@@ -170,7 +180,7 @@ namespace FlaxEditor.Actions
             // Remove objects
             for (int i = 0; i < _nodeParents.Count; i++)
             {
-                var node = SceneGraphFactory.FindNode(_nodeParents[i]);
+                var node = GetNode(_nodeParents[i]);
                 Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
                 node.Delete();
             }

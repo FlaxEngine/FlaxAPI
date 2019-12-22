@@ -218,6 +218,12 @@ namespace FlaxEditor.Windows.Assets
                     nodes[i].Dispose();
                 }
             }
+
+            /// <inheritdoc />
+            protected override SceneGraphNode GetNode(Guid id)
+            {
+                return SceneGraphFactory.GetNode(id);
+            }
         }
 
         private class CustomPasteActorsAction : PasteActorsAction
@@ -278,6 +284,12 @@ namespace FlaxEditor.Windows.Assets
                 }
 
                 _nodeParents.Clear();
+            }
+
+            /// <inheritdoc />
+            protected override SceneGraphNode GetNode(Guid id)
+            {
+                return SceneGraphFactory.GetNode(id);
             }
 
             /// <inheritdoc />

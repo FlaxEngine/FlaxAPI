@@ -109,6 +109,16 @@ namespace FlaxEditor.Actions
         }
 
         /// <summary>
+        /// Gets the node.
+        /// </summary>
+        /// <param name="id">The actor id.</param>
+        /// <returns>The scene graph node.</returns>
+        protected virtual SceneGraphNode GetNode(Guid id)
+        {
+            return SceneGraphFactory.FindNode(id);
+        }
+
+        /// <summary>
         /// Creates the removed objects (from data).
         /// </summary>
         protected virtual void Create()
@@ -128,7 +138,7 @@ namespace FlaxEditor.Actions
             var actorNodes = new List<ActorNode>(actors.Length);
             for (int i = 0; i < actors.Length; i++)
             {
-                var foundNode = SceneGraphFactory.FindNode(actors[i].ID);
+                var foundNode = GetNode(actors[i].ID);
                 if (foundNode is ActorNode node)
                 {
                     actorNodes.Add(node);

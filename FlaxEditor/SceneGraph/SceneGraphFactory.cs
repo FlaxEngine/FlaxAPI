@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.SceneGraph
 {
@@ -25,26 +26,12 @@ namespace FlaxEditor.SceneGraph
         public static readonly Dictionary<Guid, SceneGraphNode> Nodes = new Dictionary<Guid, SceneGraphNode>();
 
         /// <summary>
-        /// Tries to find the node by the given ID.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>Found node or null if cannot.</returns>
-        public static SceneGraphNode FindNode(Guid id)
-        {
-            if (id == Guid.Empty)
-                return null;
-
-            SceneGraphNode result;
-            Nodes.TryGetValue(id, out result);
-            return result;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SceneGraphFactory"/> class.
         /// </summary>
         static SceneGraphFactory()
         {
             // Init default nodes types
+            CustomNodesTypes.Add(typeof(Scene), typeof(SceneNode));
             CustomNodesTypes.Add(typeof(Camera), typeof(CameraNode));
             CustomNodesTypes.Add(typeof(EnvironmentProbe), typeof(EnvironmentProbeNode));
             CustomNodesTypes.Add(typeof(PointLight), typeof(PointLightNode));
@@ -78,19 +65,53 @@ namespace FlaxEditor.SceneGraph
         }
 
         /// <summary>
+        /// Tries to find the node by the given ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Found node or null if cannot.</returns>
+        public static SceneGraphNode FindNode(Guid id)
+        {
+            if (id == Guid.Empty)
+                return null;
+
+            SceneGraphNode result;
+            Nodes.TryGetValue(id, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the node for the given object ID or creates a new node for actors (with automatic linkage to the parent).
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>The result node.</returns>
+        public static SceneGraphNode GetNode(Guid id)
+        {
+            SceneGraphNode result;
+            Nodes.TryGetValue(id, out result);
+            if (result == null)
+            {
+                var actor = Object.TryFind<Actor>(ref id);
+                if (actor != null)
+                {
+                    result = BuildActorNode(actor);
+                    if (result != null && actor.HasParent)
+                    {
+                        result.ParentNode = FindNode(actor.Parent.ID);
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Builds the scene tree.
         /// </summary>
         /// <param name="scene">The scene.</param>
         /// <returns>The root scene node.</returns>
         public static SceneNode BuildSceneTree(Scene scene)
         {
-            // TODO: make it faster by calling engine internally only once to gather optimized scene tree -> but do it in late stage of editor development - no early optimization!
-
-            var sceneNode = new SceneNode(scene);
-
-            BuildSceneTree(sceneNode);
-
-            return sceneNode;
+            // TODO: make it faster by calling engine internally only once to gather optimized scene tree
+            return (SceneNode)BuildActorNode(scene);
         }
 
         /// <summary>
@@ -119,7 +140,17 @@ namespace FlaxEditor.SceneGraph
                 }
 
                 // Build children
-                BuildSceneTree(result);
+                var childrenCount = actor.ChildrenCount;
+                for (int i = 0; i < childrenCount; i++)
+                {
+                    var child = actor.GetChild(i);
+                    if (child == null)
+                        continue;
+
+                    var childNode = BuildActorNode(child);
+                    if (childNode != null)
+                        childNode.ParentNode = result;
+                }
             }
             catch (Exception ex)
             {
@@ -133,21 +164,6 @@ namespace FlaxEditor.SceneGraph
             }
 
             return result;
-        }
-
-        private static void BuildSceneTree(ActorNode node)
-        {
-            var childrenCount = node.Actor.ChildrenCount;
-            for (int i = 0; i < childrenCount; i++)
-            {
-                var child = node.Actor.GetChild(i);
-                if (child == null)
-                    continue;
-
-                var childNode = BuildActorNode(child);
-                if (childNode != null)
-                    childNode.ParentNode = node;
-            }
         }
     }
 }
