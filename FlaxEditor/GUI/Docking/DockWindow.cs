@@ -398,6 +398,7 @@ namespace FlaxEditor.GUI.Docking
                 switch (key)
                 {
                 case Keys.Tab:
+                {
                     var win = RootWindow;
                     if (win.GetKey(Keys.Control))
                     {
@@ -416,6 +417,17 @@ namespace FlaxEditor.GUI.Docking
                         return true;
                     }
                     break;
+                }
+                case Keys.W:
+                {
+                    var win = RootWindow;
+                    if (win.GetKey(Keys.Control))
+                    {
+                        Close(ClosingReason.User);
+                        return true;
+                    }
+                    break;
+                }
                 }
             }
 
