@@ -149,9 +149,13 @@ namespace FlaxEditor.GUI.Docking
         public int TabsCount => _tabs.Count;
 
         /// <summary>
-        /// Gets index of the selected tab.
+        /// Gets or sets the index of the selected tab.
         /// </summary>
-        public int SelectedTabIndex => _tabs.IndexOf(_selectedTab);
+        public int SelectedTabIndex
+        {
+            get => _tabs.IndexOf(_selectedTab);
+            set => SelectTab(value);
+        }
 
         /// <summary>
         /// Gets the selected tab.

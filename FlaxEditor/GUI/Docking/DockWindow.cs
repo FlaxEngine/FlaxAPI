@@ -387,6 +387,42 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (_dockedTo != null)
+            {
+                // Navigation shortcuts
+                switch (key)
+                {
+                case Keys.Tab:
+                    var win = RootWindow;
+                    if (win.GetKey(Keys.Control))
+                    {
+                        var index = _dockedTo.SelectedTabIndex;
+                        if (win.GetKey(Keys.Shift))
+                        {
+                            // Previous tab
+                            index = index == 0 ? _dockedTo.TabsCount - 1 : index - 1;
+                        }
+                        else
+                        {
+                            // Next tab
+                            index = (index + 1) % _dockedTo.TabsCount;
+                        }
+                        _dockedTo.SelectedTabIndex = index;
+                        return true;
+                    }
+                    break;
+                }
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
             // Cache window title dimensions
