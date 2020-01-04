@@ -11,7 +11,8 @@ namespace FlaxEditor.Windows
     /// Window used to present collection of selected object(s) properties in a grid. Supports Undo/Redo operations.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
-    public class PropertiesWindow : EditorWindow
+    /// <seealso cref="FlaxEditor.Windows.SceneEditorWindow" />
+    public class PropertiesWindow : SceneEditorWindow
     {
         private IEnumerable<object> undoRecordObjects;
 
