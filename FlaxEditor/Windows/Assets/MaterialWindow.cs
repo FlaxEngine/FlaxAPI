@@ -39,6 +39,7 @@ namespace FlaxEditor.Windows.Assets
             GPUTextureCube = ParameterType.GPUTextureCube,
             GPUTextureVolume = ParameterType.GPUTextureVolume,
             Matrix = ParameterType.Matrix,
+            ChannelMask = ParameterType.ChannelMask,
         }
 
         /// <summary>

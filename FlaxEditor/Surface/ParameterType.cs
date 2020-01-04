@@ -121,5 +121,10 @@ namespace FlaxEditor.Surface
         /// The GPU cube texture (created from code).
         /// </summary>
         GPUTextureCube = 22,
+
+        /// <summary>
+        /// The RGBA channel selection mask.
+        /// </summary>
+        ChannelMask = 23,
     }
 }

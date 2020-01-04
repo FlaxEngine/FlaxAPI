@@ -264,6 +264,10 @@ namespace FlaxEditor.Windows.Assets
 
                     switch (p.Type)
                     {
+                    case MaterialParameterType.ChannelMask:
+                        pType = typeof(ChannelMask);
+                        pValue = (ChannelMask)(int)pValue;
+                        break;
                     case MaterialParameterType.CubeTexture:
                         pType = typeof(CubeTexture);
                         break;

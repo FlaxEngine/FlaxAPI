@@ -198,6 +198,14 @@ namespace FlaxEditor.Surface.Archetypes
                         NodeElementArchetype.Factory.Output(4, "Row 3", ConnectionType.Vector4, 3),
                     }
                 },
+                {
+                    ParameterType.ChannelMask,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Input(1, "Vector", true, ConnectionType.Vector, 0),
+                        NodeElementArchetype.Factory.Output(1, "Component", ConnectionType.Float, 1),
+                    }
+                },
             };
 
             /// <inheritdoc />
@@ -505,6 +513,14 @@ namespace FlaxEditor.Surface.Archetypes
                         NodeElementArchetype.Factory.Output(2, "Row 1", ConnectionType.Vector4, 1),
                         NodeElementArchetype.Factory.Output(3, "Row 2", ConnectionType.Vector4, 2),
                         NodeElementArchetype.Factory.Output(4, "Row 3", ConnectionType.Vector4, 3),
+                    }
+                },
+                {
+                    ParameterType.ChannelMask,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Input(1, "Vector", true, ConnectionType.Vector, 0),
+                        NodeElementArchetype.Factory.Output(1, "Component", ConnectionType.Float, 1),
                     }
                 },
             };

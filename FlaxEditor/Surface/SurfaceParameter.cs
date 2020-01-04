@@ -87,6 +87,8 @@ namespace FlaxEditor.Surface
                 param.Value = false;
                 break;
             case ParameterType.Integer:
+            case ParameterType.ChannelMask:
+            case ParameterType.SceneTexture:
                 param.Value = 0;
                 break;
             case ParameterType.Float:
@@ -121,9 +123,6 @@ namespace FlaxEditor.Surface
                 break;
             case ParameterType.Transform:
                 param.Value = Transform.Identity;
-                break;
-            case ParameterType.SceneTexture:
-                param.Value = 0;
                 break;
             case ParameterType.Asset:
             case ParameterType.Actor:

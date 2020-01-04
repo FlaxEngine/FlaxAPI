@@ -167,6 +167,10 @@ namespace FlaxEditor.Windows.Assets
                     object[] attributes = null;
                     switch (p.Type)
                     {
+                    case ParameterType.ChannelMask:
+                        pType = typeof(ChannelMask);
+                        pValue = (ChannelMask)(int)pValue;
+                        break;
                     case ParameterType.CubeTexture:
                         pType = typeof(CubeTexture);
                         break;
@@ -473,6 +477,9 @@ namespace FlaxEditor.Windows.Assets
             // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
             switch (param.Type)
             {
+            case ParameterType.ChannelMask:
+                valueToSet = (int)(ChannelMask)value;
+                break;
             case ParameterType.Asset:
             case ParameterType.Actor:
             case ParameterType.CubeTexture:

@@ -90,10 +90,10 @@ namespace FlaxEngine
                         var p = parameters[i];
 
                         // Packed:
-                        // Bits 0-7: Type
-                        // Bit 8: IsPublic
-                        var type = (MaterialParameterType)(p & 0b1111);
-                        var isPublic = (p & 0b10000) != 0;
+                        // Bits 0-9: Type
+                        // Bit 10: IsPublic
+                        var type = (MaterialParameterType)(p & 0b111111);
+                        var isPublic = (p & 0b1000000) != 0;
 
                         _parameters[i] = new MaterialParameter(_parametersHash, this, i, type, isPublic);
                     }
