@@ -240,6 +240,7 @@ namespace FlaxEditor.GUI.Timeline
         public override void OnDestroy()
         {
             _preview = null;
+            Emitters.Clear();
 
             base.OnDestroy();
         }

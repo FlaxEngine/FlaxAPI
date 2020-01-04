@@ -490,7 +490,7 @@ namespace FlaxEditor.GUI.Docking
             if (!_panel.IsFloating)
             {
                 menu.AddSeparator();
-                menu.AddButton("Float", OnTabMenuFloatClicked);
+                menu.AddButton("Undock", OnTabMenuUndockClicked);
             }
             menu.Show(this, location);
         }
@@ -529,7 +529,7 @@ namespace FlaxEditor.GUI.Docking
             }
         }
 
-        private void OnTabMenuFloatClicked(ContextMenuButton button)
+        private void OnTabMenuUndockClicked(ContextMenuButton button)
         {
             var tab = (DockWindow)button.ParentContextMenu.Tag;
             tab.ShowFloating();
