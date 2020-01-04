@@ -47,9 +47,9 @@ This extension is available to download [here](https://marketplace.visualstudio.
 
 # Screenshots
 
+![rendering](https://flaxengine.com/wp-content/images/flax-pic-1.png "Rendering")
+![pbr-rendering](https://flaxengine.com/wp-content/images/flax-pic-2.png "PBR Rendering")
 ![terrain](https://flaxengine.com/wp-content/images/visuals/terrain.jpg "Terrain")
-![rendering](https://flaxengine.com/wp-content/images/Screenshot_2017_03_11_18_12_35.png "Rendering")
-![pbr-rendering](https://flaxengine.com/wp-content/images/visuals/pbr.jpg "PBR Rendering")
 ![gi](https://flaxengine.com/wp-content/images/visuals/gi.jpg "Global Illumination")
 ![materials-editor](https://flaxengine.com/wp-content/images/editor/materials-editor.jpg "Materials Editor")
 ![editor](https://flaxengine.com/wp-content/uploads/2017/05/HistoryOfTheCelelej_0029.png "Editor")
