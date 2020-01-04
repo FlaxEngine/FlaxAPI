@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
 
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.GUI.Input;
 using FlaxEditor.Options;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -253,6 +255,37 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
+        public override void OnShowContextMenu(ContextMenu menu)
+        {
+            base.OnShowContextMenu(menu);
+
+            // Viewport Brightness
+            {
+                var brightness = menu.AddButton("Viewport Brightness");
+                var brightnessValue = new FloatValueBox(_viewport.Brightness, 140, 2, 50.0f, 0.001f, 10.0f, 0.001f);
+                brightnessValue.Parent = brightness;
+                brightnessValue.ValueChanged += () => _viewport.Brightness = brightnessValue.Value;
+            }
+
+            // Viewport Resolution
+            {
+                var resolution = menu.AddButton("Viewport Resolution");
+                var resolutionValue = new FloatValueBox(_viewport.ResolutionScale, 140, 2, 50.0f, 0.1f, 4.0f, 0.001f);
+                resolutionValue.Parent = resolution;
+                resolutionValue.ValueChanged += () => _viewport.ResolutionScale = resolutionValue.Value;
+            }
+
+            // Take Screenshot
+            {
+                var takeScreenshot = menu.AddButton("Take Screenshot");
+                takeScreenshot.Clicked += TakeScreenshot;
+            }
+
+            menu.MinimumWidth = 200;
+            menu.AddSeparator();
+        }
+
+        /// <inheritdoc />
         public override void Draw()
         {
             base.Draw();
@@ -274,10 +307,11 @@ namespace FlaxEditor.Windows
                 float animTime = time - timeout;
                 if (animTime < 0)
                 {
-                    float alpha = Mathf.Saturate(-animTime / fadeOutTime);
-                    Rectangle rect = new Rectangle(new Vector2(6), Size - 12);
-                    Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect + new Vector2(1.0f), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
-                    Render2D.DrawText(style.FontSmall, "Press Shift+F11 to unlock the mouse", rect, Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
+                    var alpha = Mathf.Saturate(-animTime / fadeOutTime);
+                    var rect = new Rectangle(new Vector2(6), Size - 12);
+                    var text = "Press Shift+F11 to unlock the mouse";
+                    Render2D.DrawText(style.FontSmall, text, rect + new Vector2(1.0f), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
+                    Render2D.DrawText(style.FontSmall, text, rect, Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
                 }
 
                 timeout = 1.0f;
@@ -307,6 +341,23 @@ namespace FlaxEditor.Windows
             }
         }
 
+        /// <summary>
+        /// Takes the screenshot of the current viewport.
+        /// </summary>
+        public void TakeScreenshot()
+        {
+            Screenshot.Capture(_viewport.Task);
+        }
+
+        /// <summary>
+        /// Takes the screenshot of the current viewport.
+        /// </summary>
+        /// <param name="path">The output file path.</param>
+        public void TakeScreenshot(string path)
+        {
+            Screenshot.Capture(_viewport.Task, path);
+        }
+
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
@@ -315,16 +366,17 @@ namespace FlaxEditor.Windows
             case Keys.Pause:
                 Editor.Simulation.RequestResumeOrPause();
                 UnlockMouseInPlay();
-                break;
+                return true;
             case Keys.F12:
                 Screenshot.Capture();
-                break;
+                return true;
             case Keys.F11:
             {
                 if (Root.GetKey(Keys.Shift))
                 {
                     // Unlock mouse in game mode
                     UnlockMouseInPlay();
+                    return true;
                 }
                 break;
             }
