@@ -140,8 +140,8 @@ namespace FlaxEditor.Content.Settings
         /// <returns>The loaded game settings.</returns>
         public static GameSettings Load()
         {
-            var asset = FlaxEngine.Content.Load<JsonAsset>(GameSettingsAssetPath);
-            if (asset)
+            var asset = FlaxEngine.Content.LoadAsync<JsonAsset>(GameSettingsAssetPath);
+            if (asset && !asset.WaitForLoaded())
             {
                 if (asset.CreateInstance() is GameSettings result)
                     return result;

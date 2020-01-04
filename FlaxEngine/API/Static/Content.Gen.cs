@@ -14,7 +14,7 @@ namespace FlaxEngine
     public static partial class Content
     {
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
@@ -33,7 +33,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// </summary>
         /// <param name="path">Path to the asset.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
@@ -52,7 +52,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// </summary>
         /// <param name="internalPath">Internal path to the asset. Relative to the Engine startup folder and without an asset file extension.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>

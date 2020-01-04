@@ -129,7 +129,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 if (typeof(MaterialBase).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var material = FlaxEngine.Content.Load<MaterialBase>(binaryAssetItem.ID);
+                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(binaryAssetItem.ID);
                     if (material && !material.WaitForLoaded() && material.IsPostFx)
                         return true;
                 }
