@@ -225,8 +225,9 @@ namespace FlaxEditor.Windows.Assets
         {
             base.OnShowContextMenu(menu);
 
-            var saveButton = menu.AddButton("Save", Save);
-            saveButton.Enabled = IsEdited;
+            menu.AddButton("Save", Save).Enabled = IsEdited;
+            menu.AddButton("Copy name", () => Platform.ClipboardText = Item.NamePath);
+
             menu.AddSeparator();
         }
 
