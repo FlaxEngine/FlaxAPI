@@ -452,7 +452,7 @@ namespace FlaxEditor.Modules
             cm.AddButton("Profiler", Editor.Windows.ProfilerWin.FocusOrShow);
             cm.AddSeparator();
             _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefault);
-            cm.AddButton("Take screenshot!", "F12", Editor.Windows.TakeScreenshot);
+            cm.AddButton("Take screenshot", "F12", Editor.Windows.TakeScreenshot);
             cm.AddSeparator();
             cm.AddButton("Plugin Exporter", PluginExporterDialog.ShowIt);
             cm.AddButton("Plugins", () => Editor.Windows.PluginsWin.Show());
