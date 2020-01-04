@@ -485,7 +485,7 @@ namespace FlaxEditor.GUI.Docking
             menu.AddButton("Close All But This", OnTabMenuCloseAllButThisClicked);
             if (_panel.Tabs.IndexOf(tab) + 1 < _panel.TabsCount)
             {
-                menu.AddButton("Close All To the Right", OnTabMenuCloseAllToTheRightClicked);
+                menu.AddButton("Close All To The Right", OnTabMenuCloseAllToTheRightClicked);
             }
             if (!_panel.IsFloating)
             {
