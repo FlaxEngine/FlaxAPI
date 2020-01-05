@@ -283,8 +283,9 @@ namespace FlaxEditor.Modules
 
                         if (isMaximized)
                         {
+                            if (MainWindow.IsMaximized)
+                                MainWindow.Restore();
                             MainWindow.ClientPosition = bounds.Location;
-
                             MainWindow.Maximize();
                         }
                         else
