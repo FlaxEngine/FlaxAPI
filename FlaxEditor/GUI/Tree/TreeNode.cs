@@ -584,8 +584,8 @@ namespace FlaxEditor.GUI.Tree
                 }
                 else
                 {
-                    const float openCloseAniamtionTime = 0.1f;
-                    _animationProgress += deltaTime / openCloseAniamtionTime;
+                    const float openCloseAnimationTime = 0.1f;
+                    _animationProgress += deltaTime / openCloseAnimationTime;
                     if (_animationProgress > 1.0f)
                         _animationProgress = 1.0f;
                 }
@@ -808,8 +808,7 @@ namespace FlaxEditor.GUI.Tree
                 // Allow non-scrollable controls to stay on top of the header and override the mouse behaviour
                 for (int i = 0; i < Children.Count; i++)
                 {
-                    Vector2 childLocation;
-                    if (!Children[i].IsScrollable && IntersectsChildContent(Children[i], location, out childLocation))
+                    if (!Children[i].IsScrollable && IntersectsChildContent(Children[i], location, out _))
                     {
                         _mouseOverHeader = false;
                         break;
