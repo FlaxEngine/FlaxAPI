@@ -91,5 +91,10 @@ namespace FlaxEngine
         /// Draw materials subsurface color debug view
         /// </summary>
         SubsurfaceColor = 16,
+
+        /// <summary>
+        /// Draw materials colors with ambient occlusion
+        /// </summary>
+        Unlit = 17,
     }
 }
