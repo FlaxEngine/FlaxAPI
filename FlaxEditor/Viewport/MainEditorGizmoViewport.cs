@@ -311,6 +311,8 @@ namespace FlaxEditor.Viewport
         {
             if (_customSelectionOutline != null)
             {
+                FlaxEngine.Object.Destroy(ref _customSelectionOutline);
+
                 Task.CustomPostFx.Remove(_customSelectionOutline);
 
                 Task.CustomPostFx.Add(customSelectionOutline ? customSelectionOutline : SelectionOutline);
@@ -927,6 +929,7 @@ namespace FlaxEditor.Viewport
             FlaxEngine.Object.Destroy(ref SelectionOutline);
             FlaxEngine.Object.Destroy(ref EditorPrimitives);
             FlaxEngine.Object.Destroy(ref _editorSpritesRenderer);
+            FlaxEngine.Object.Destroy(ref _customSelectionOutline);
 
             base.OnDestroy();
         }
