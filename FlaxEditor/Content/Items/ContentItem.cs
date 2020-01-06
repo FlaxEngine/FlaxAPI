@@ -603,7 +603,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButton.Left)
+            if (buttons == MouseButton.Left && _isMouseDown)
             {
                 // Clear flag
                 _isMouseDown = false;

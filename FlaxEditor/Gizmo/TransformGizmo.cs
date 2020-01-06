@@ -85,6 +85,12 @@ namespace FlaxEditor.Gizmo
                         }
                     }
 
+                    if (canChildBeSelected && sceneEditing.Selection.Count > 1)
+                    {
+                        // Don't select child node if multiple nodes are selected
+                        canChildBeSelected = false;
+                    }
+
                     if (!canChildBeSelected)
                     {
                         // Select parent
