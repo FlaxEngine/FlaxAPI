@@ -132,7 +132,10 @@ namespace FlaxEditor.GUI
         {
             base.Update(deltaTime);
 
-            _maximizeButton.Text = ((char)(_window.IsMaximized ? EditorAssets.SegMDL2Icons.ChromeRestore : EditorAssets.SegMDL2Icons.ChromeMaximize)).ToString();
+            if (_maximizeButton != null)
+            {
+                _maximizeButton.Text = ((char)(_window.IsMaximized ? EditorAssets.SegMDL2Icons.ChromeRestore : EditorAssets.SegMDL2Icons.ChromeMaximize)).ToString();
+            }
         }
 
         private void OnWindowClosed()
