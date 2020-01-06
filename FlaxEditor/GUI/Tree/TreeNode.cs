@@ -251,7 +251,7 @@ namespace FlaxEditor.GUI.Tree
         /// <summary>
         /// Gets a value indicating whether this node has any visible child. Returns false if it has no children.
         /// </summary>
-        protected bool HasAnyVisibleChild
+        public bool HasAnyVisibleChild
         {
             get
             {
@@ -863,24 +863,6 @@ namespace FlaxEditor.GUI.Tree
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
-            // Check if is focused and has any children
-            if (IsFocused && HasAnyVisibleChild)
-            {
-                // Collapse
-                if (key == Keys.ArrowLeft)
-                {
-                    Collapse();
-                    return true;
-                }
-
-                // Expand
-                if (key == Keys.ArrowRight)
-                {
-                    Expand();
-                    return true;
-                }
-            }
-
             // Base
             if (_opened)
                 return base.OnKeyDown(key);
