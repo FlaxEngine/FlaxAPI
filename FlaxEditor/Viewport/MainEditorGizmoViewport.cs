@@ -392,11 +392,26 @@ namespace FlaxEditor.Viewport
 
         private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
         {
-            // Render editor primitives, gizmo and debug shapes in debug view modes
             if (task.View.Mode != ViewMode.Default)
             {
+                // Render editor primitives, gizmo and debug shapes in debug view modes
                 // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
                 EditorPrimitives.Render(context, task, task.Output, task.Output);
+
+                // Render selection outline
+                var selectionOutline = _customSelectionOutline ?? SelectionOutline;
+                if (selectionOutline.CanRender)
+                {
+                    // Use temporary intermediate buffer
+                    var desc = task.Output.Description;
+                    var temp = RenderTargetPool.Get(ref desc);
+                    selectionOutline.Render(context, task, task.Output, temp);
+
+                    // Copy the results back to the output
+                    context.CopyTexture(task.Output, 0, 0, 0, 0, temp, 0);
+
+                    RenderTargetPool.Release(temp);
+                }
             }
         }
 
