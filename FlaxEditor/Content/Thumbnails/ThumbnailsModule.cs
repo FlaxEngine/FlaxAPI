@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -361,7 +361,7 @@ namespace FlaxEditor.Content.Thumbnails
             }
 
             // Load atlas
-            var atlas = FlaxEngine.Content.Load<PreviewsCache>(path);
+            var atlas = FlaxEngine.Content.LoadAsync<PreviewsCache>(path);
             if (atlas == null)
             {
                 // Error

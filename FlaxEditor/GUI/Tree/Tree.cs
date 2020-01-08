@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -398,7 +398,7 @@ namespace FlaxEditor.GUI.Tree
                                 toSelect = nodeParent.GetChild(myIndex - 1) as TreeNode;
 
                                 // Check if is valid and expanded and has any children
-                                if (toSelect != null && toSelect.IsExpanded && toSelect.HasChildren)
+                                if (toSelect != null && toSelect.IsExpanded && toSelect.HasAnyVisibleChild)
                                 {
                                     // Select last child
                                     toSelect = toSelect.GetChild(toSelect.ChildrenCount - 1) as TreeNode;
@@ -415,7 +415,7 @@ namespace FlaxEditor.GUI.Tree
                         else
                         {
                             TreeNode toSelect = null;
-                            if (node.IsExpanded && node.HasChildren)
+                            if (node.IsExpanded && node.HasAnyVisibleChild)
                             {
                                 // Select the first child
                                 toSelect = node.GetChild(0) as TreeNode;
@@ -457,11 +457,10 @@ namespace FlaxEditor.GUI.Tree
 
                 if (window.GetKeyDown(Keys.ArrowRight))
                 {
-                    // Check if is expanded
                     if (node.IsExpanded)
                     {
                         // Select first child if has
-                        if (node.HasChildren)
+                        if (node.HasAnyVisibleChild)
                         {
                             Select(node.GetChild(0) as TreeNode);
                             node.Focus();

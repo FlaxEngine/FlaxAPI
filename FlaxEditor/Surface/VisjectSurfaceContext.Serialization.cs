@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -450,36 +450,41 @@ namespace FlaxEditor.Surface
                     // Special case for missing nodes
                     if (node is DummyCustomNode customNode)
                     {
+                        node = null;
+
                         // Values check
                         if (valuesCnt < 2)
                             throw new Exception("Missing custom nodes data.");
 
                         // Node typename check
-                        object typeName = null;
-                        Utils.ReadCommonValue(stream, ref typeName);
+                        object typeNameValue = null;
+                        Utils.ReadCommonValue(stream, ref typeNameValue);
                         firstValueReadIdx = 1;
-                        if (string.IsNullOrEmpty(typeName as string))
-                            throw new Exception("Missing custom node typename.");
+                        string typeName = typeNameValue as string ?? string.Empty;
 
                         // Find custom node archetype that matches this node type (it must be unique)
                         var customNodes = _surface.GetCustomNodes();
-                        if (customNodes?.Archetypes == null)
-                            throw new Exception("Cannot find any custom nodes archetype.");
-                        NodeArchetype arch = null;
-                        for (int j = 0; j < customNodes.Archetypes.Length; j++)
+                        if (customNodes?.Archetypes != null && typeName.Length != 0)
                         {
-                            if (string.Equals(Archetypes.Custom.GetNodeTypeName(customNodes.Archetypes[j]), (string)typeName, StringComparison.OrdinalIgnoreCase))
+                            NodeArchetype arch = null;
+                            for (int j = 0; j < customNodes.Archetypes.Length; j++)
                             {
-                                arch = customNodes.Archetypes[j];
-                                break;
+                                if (string.Equals(Archetypes.Custom.GetNodeTypeName(customNodes.Archetypes[j]), typeName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    arch = customNodes.Archetypes[j];
+                                    break;
+                                }
                             }
+                            if (arch != null)
+                                node = NodeFactory.CreateNode(customNode.ID, this, customNodes, arch);
                         }
-                        if (arch != null)
-                            node = NodeFactory.CreateNode(customNode.ID, this, customNodes, arch);
-                        else
-                            node = new MissingNode(customNode.ID, this, Archetypes.Custom.GroupID, customNode.Archetype.TypeID);
+
+                        // Fallback to the
                         if (node == null)
-                            throw new Exception("Failed to create custom node " + typeName);
+                        {
+                            Editor.LogWarning(string.Format("Cannot find custom node archetype for {0}", typeName));
+                            node = new MissingNode(customNode.ID, this, Archetypes.Custom.GroupID, customNode.Archetype.TypeID);
+                        }
                         Nodes[i] = node;
 
                         // Store node typename in values container

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -586,7 +586,8 @@ namespace FlaxEditor.Surface
 
         private static Rectangle GetNodesBounds(List<SurfaceNode> nodes)
         {
-            if (nodes.Count == 0) return Rectangle.Empty;
+            if (nodes.Count == 0)
+                return Rectangle.Empty;
 
             Rectangle surfaceArea = nodes[0].Bounds;
             for (int i = 1; i < nodes.Count; i++)
@@ -779,7 +780,9 @@ namespace FlaxEditor.Surface
             switch (type)
             {
             case ParameterType.Bool: return typeof(bool);
+            case ParameterType.SceneTexture:
             case ParameterType.Integer: return typeof(int);
+            case ParameterType.ChannelMask: return typeof(ChannelMask);
             case ParameterType.Float: return typeof(float);
             case ParameterType.Vector2: return typeof(Vector2);
             case ParameterType.Vector3: return typeof(Vector3);
@@ -795,7 +798,6 @@ namespace FlaxEditor.Surface
             case ParameterType.Actor: return typeof(Actor);
             case ParameterType.Rectangle: return typeof(Rectangle);
             case ParameterType.CubeTexture: return typeof(CubeTexture);
-            case ParameterType.SceneTexture: return typeof(int);
             case ParameterType.GPUTexture: return typeof(bool);
             case ParameterType.Matrix: return typeof(Matrix);
             case ParameterType.GPUTextureArray: return typeof(bool);

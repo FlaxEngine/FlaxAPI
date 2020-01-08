@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -140,8 +140,8 @@ namespace FlaxEditor.Content.Settings
         /// <returns>The loaded game settings.</returns>
         public static GameSettings Load()
         {
-            var asset = FlaxEngine.Content.Load<JsonAsset>(GameSettingsAssetPath);
-            if (asset)
+            var asset = FlaxEngine.Content.LoadAsync<JsonAsset>(GameSettingsAssetPath);
+            if (asset && !asset.WaitForLoaded())
             {
                 if (asset.CreateInstance() is GameSettings result)
                     return result;

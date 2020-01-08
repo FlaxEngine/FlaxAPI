@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 namespace FlaxEditor.Surface
 {
@@ -121,5 +121,10 @@ namespace FlaxEditor.Surface
         /// The GPU cube texture (created from code).
         /// </summary>
         GPUTextureCube = 22,
+
+        /// <summary>
+        /// The RGBA channel selection mask.
+        /// </summary>
+        ChannelMask = 23,
     }
 }

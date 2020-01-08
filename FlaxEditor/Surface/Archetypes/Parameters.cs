@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -196,6 +196,14 @@ namespace FlaxEditor.Surface.Archetypes
                         NodeElementArchetype.Factory.Output(2, "Row 1", ConnectionType.Vector4, 1),
                         NodeElementArchetype.Factory.Output(3, "Row 2", ConnectionType.Vector4, 2),
                         NodeElementArchetype.Factory.Output(4, "Row 3", ConnectionType.Vector4, 3),
+                    }
+                },
+                {
+                    ParameterType.ChannelMask,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Input(1, "Vector", true, ConnectionType.Vector, 0),
+                        NodeElementArchetype.Factory.Output(1, "Component", ConnectionType.Float, 1),
                     }
                 },
             };
@@ -505,6 +513,14 @@ namespace FlaxEditor.Surface.Archetypes
                         NodeElementArchetype.Factory.Output(2, "Row 1", ConnectionType.Vector4, 1),
                         NodeElementArchetype.Factory.Output(3, "Row 2", ConnectionType.Vector4, 2),
                         NodeElementArchetype.Factory.Output(4, "Row 3", ConnectionType.Vector4, 3),
+                    }
+                },
+                {
+                    ParameterType.ChannelMask,
+                    new[]
+                    {
+                        NodeElementArchetype.Factory.Input(1, "Vector", true, ConnectionType.Vector, 0),
+                        NodeElementArchetype.Factory.Output(1, "Component", ConnectionType.Float, 1),
                     }
                 },
             };

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEditor.Content.Thumbnails;
@@ -42,7 +42,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
-            var asset = FlaxEngine.Content.Load<FontAsset>(request.Item.Path);
+            var asset = FlaxEngine.Content.LoadAsync<FontAsset>(request.Item.ID);
             guiRoot.AddChild(new Label
             {
                 Text = asset.FamilyName,

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEngine;
@@ -24,7 +24,6 @@ namespace FlaxEditor.GUI.Tree
         public const float DefaultNodeOffsetY = 1;
 
         private Tree _tree;
-        private int _visibleChildNodesCount;
 
         private bool _opened, _canChangeOrder;
         private float _animationProgress, _cachedHeight;
@@ -176,7 +175,7 @@ namespace FlaxEditor.GUI.Tree
                 {
                     for (int i = 0; i < _children.Count; i++)
                     {
-                        if (_children[i] is TreeNode node)
+                        if (_children[i] is TreeNode node && node.Visible)
                         {
                             minWidth = Mathf.Max(minWidth, node.MinimumWidth);
                         }
@@ -248,6 +247,26 @@ namespace FlaxEditor.GUI.Tree
         /// Gets the drag over action type.
         /// </summary>
         protected DragItemPositioning DragOverMode => _dragOverMode;
+
+        /// <summary>
+        /// Gets a value indicating whether this node has any visible child. Returns false if it has no children.
+        /// </summary>
+        public bool HasAnyVisibleChild
+        {
+            get
+            {
+                bool result = false;
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    if (_children[i] is TreeNode node && node.Visible)
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+                return result;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode"/> class.
@@ -565,8 +584,8 @@ namespace FlaxEditor.GUI.Tree
                 }
                 else
                 {
-                    const float openCloseAniamtionTime = 0.1f;
-                    _animationProgress += deltaTime / openCloseAniamtionTime;
+                    const float openCloseAnimationTime = 0.1f;
+                    _animationProgress += deltaTime / openCloseAnimationTime;
                     if (_animationProgress > 1.0f)
                         _animationProgress = 1.0f;
                 }
@@ -614,7 +633,7 @@ namespace FlaxEditor.GUI.Tree
             }
 
             // Draw arrow
-            if (_visibleChildNodesCount > 0)
+            if (HasAnyVisibleChild)
             {
                 Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
             }
@@ -741,7 +760,7 @@ namespace FlaxEditor.GUI.Tree
                 }
 
                 // Check if mouse hits arrow
-                if (_children.Count > 0 && _mouseOverArrow)
+                if (HasAnyVisibleChild && _mouseOverArrow)
                 {
                     // Toggle open state
                     if (_opened)
@@ -782,15 +801,14 @@ namespace FlaxEditor.GUI.Tree
         public override void OnMouseMove(Vector2 location)
         {
             // Cache flags
-            _mouseOverArrow = _children.Count > 0 && ArrowRect.Contains(location);
+            _mouseOverArrow = HasAnyVisibleChild && ArrowRect.Contains(location);
             _mouseOverHeader = new Rectangle(0, 0, Width, _headerHeight - 1).Contains(location);
             if (_mouseOverHeader)
             {
                 // Allow non-scrollable controls to stay on top of the header and override the mouse behaviour
                 for (int i = 0; i < Children.Count; i++)
                 {
-                    Vector2 childLocation;
-                    if (!Children[i].IsScrollable && IntersectsChildContent(Children[i], location, out childLocation))
+                    if (!Children[i].IsScrollable && IntersectsChildContent(Children[i], location, out _))
                     {
                         _mouseOverHeader = false;
                         break;
@@ -844,24 +862,6 @@ namespace FlaxEditor.GUI.Tree
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
-            // Check if is focused and has any children
-            if (IsFocused && _children.Count > 0)
-            {
-                // Collapse
-                if (key == Keys.ArrowLeft)
-                {
-                    Collapse();
-                    return true;
-                }
-
-                // Expand
-                if (key == Keys.ArrowRight)
-                {
-                    Expand();
-                    return true;
-                }
-            }
-
             // Base
             if (_opened)
                 return base.OnKeyDown(key);
@@ -907,7 +907,7 @@ namespace FlaxEditor.GUI.Tree
                 if (_isDragOverHeader)
                 {
                     // Check if mouse is over arrow
-                    if (_children.Count > 0 && ArrowRect.Contains(location))
+                    if (ArrowRect.Contains(location) && HasAnyVisibleChild)
                     {
                         // Expand node (no animation)
                         Expand(true);
@@ -938,8 +938,7 @@ namespace FlaxEditor.GUI.Tree
                 bool isDragOverHeader = TestHeaderHit(ref location);
                 if (isDragOverHeader)
                 {
-                    // Check if mouse is over arrow
-                    if (_children.Count > 0 && ArrowRect.Contains(location))
+                    if (ArrowRect.Contains(location) && HasAnyVisibleChild)
                     {
                         // Expand node (no animation)
                         Expand(true);
@@ -1006,18 +1005,6 @@ namespace FlaxEditor.GUI.Tree
             _headerRect = new Rectangle(0, 0, Width, _headerHeight);
         }
 
-        private void CacheVisibleChildren()
-        {
-            _visibleChildNodesCount = 0;
-            for (int i = 0; i < _children.Count; i++)
-            {
-                if (_children[i] is TreeNode node && node.Visible)
-                {
-                    _visibleChildNodesCount++;
-                }
-            }
-        }
-
         /// <inheritdoc />
         public override void PerformLayout(bool force = false)
         {
@@ -1059,7 +1046,6 @@ namespace FlaxEditor.GUI.Tree
                     height += nodeHeight;
                 }
             }
-            CacheVisibleChildren();
 
             // Cache calculated height
             _cachedHeight = height;
@@ -1083,14 +1069,6 @@ namespace FlaxEditor.GUI.Tree
                 Width = Parent.Width;
 
             base.OnParentChangedInternal();
-        }
-
-        /// <inheritdoc />
-        public override void OnChildrenChanged()
-        {
-            base.OnChildrenChanged();
-
-            CacheVisibleChildren();
         }
 
         /// <inheritdoc />

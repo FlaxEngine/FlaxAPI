@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -209,7 +209,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the ambient occlusion intensity.
         /// </summary>
-        [DefaultValue(0.6f), Limit(0, 2.0f, 0.01f)]
+        [DefaultValue(0.6f), Limit(0, 5.0f, 0.01f)]
         [EditorOrder(1), PostProcessSetting((int)Override.Intensity)]
         public float Intensity;
 
@@ -1698,7 +1698,7 @@ namespace FlaxEngine
         /// <summary>
         /// The effect intensity (normalized to range [0;1]). Use 0 to disable it.
         /// </summary>
-        [DefaultValue(1.0f), Limit(0, 1.0f, 0.01f)]
+        [DefaultValue(1.0f), Limit(0, 5.0f, 0.01f)]
         [EditorOrder(0), PostProcessSetting((int)Override.Intensity)]
         [Tooltip("The effect intensity (normalized to range [0;1]). Use 0 to disable it.")]
         public float Intensity;

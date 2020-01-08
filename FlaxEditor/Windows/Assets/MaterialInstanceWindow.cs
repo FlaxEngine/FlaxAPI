@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -264,6 +264,10 @@ namespace FlaxEditor.Windows.Assets
 
                     switch (p.Type)
                     {
+                    case MaterialParameterType.ChannelMask:
+                        pType = typeof(ChannelMask);
+                        pValue = (ChannelMask)(int)pValue;
+                        break;
                     case MaterialParameterType.CubeTexture:
                         pType = typeof(CubeTexture);
                         break;

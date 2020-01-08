@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -283,8 +283,9 @@ namespace FlaxEditor.Modules
 
                         if (isMaximized)
                         {
+                            if (MainWindow.IsMaximized)
+                                MainWindow.Restore();
                             MainWindow.ClientPosition = bounds.Location;
-
                             MainWindow.Maximize();
                         }
                         else

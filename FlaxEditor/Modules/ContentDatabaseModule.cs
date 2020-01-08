@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace FlaxEditor.Modules
         private bool _isDuringFastSetup;
         private int _itemsCreated;
         private int _itemsDeleted;
-        private readonly Queue<MainContentTreeNode> _dirtyNodes = new Queue<MainContentTreeNode>();
+        private readonly HashSet<MainContentTreeNode> _dirtyNodes = new HashSet<MainContentTreeNode>();
 
         /// <summary>
         /// The project content directory.
@@ -969,8 +969,7 @@ namespace FlaxEditor.Modules
             if (_isDuringFastSetup)
                 return;
 
-            // TODO: maybe we could make it faster! since we have a path so it would be easy to just create or delete given file
-            // TODO: but remember about subdirectories!
+            // TODO: maybe we could make it faster! since we have a path so it would be easy to just create or delete given file. but remember about subdirectories
 
             // Switch type
             switch (e.ChangeType)
@@ -980,31 +979,23 @@ namespace FlaxEditor.Modules
             {
                 lock (_dirtyNodes)
                 {
-                    // We want to enqueue dir modification events for better stability
-                    if (!_dirtyNodes.Contains(node))
-                        _dirtyNodes.Enqueue(node);
+                    _dirtyNodes.Add(node);
                 }
                 break;
             }
-
-            default: break;
             }
         }
 
         /// <inheritdoc />
         public override void OnUpdate()
         {
+            // Update all dirty content tree nodes
             lock (_dirtyNodes)
             {
-                while (_dirtyNodes.Count > 0)
+                foreach (var node in _dirtyNodes)
                 {
-                    // Get node
-                    var node = _dirtyNodes.Dequeue();
-
-                    // Refresh
                     loadFolder(node, true);
 
-                    // Fire event
                     if (_enableEvents)
                         OnWorkspaceModified?.Invoke();
                 }

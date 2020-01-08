@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -116,7 +116,7 @@ namespace FlaxEditor
             var options = editor.Options.Options;
 
             // Auto NavMesh rebuild
-            if (!isPlayMode && options.General.AutoRebuildNavMesh)
+            if (!isPlayMode && options.General.AutoRebuildNavMesh && data.Scene != null)
             {
                 // Handle simple case where objects were moved just a little and use one navmesh build request to improve performance
                 if (data.BeforeBounds.Intersects(ref data.AfterBounds))

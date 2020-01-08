@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.IO;
 
@@ -25,13 +25,13 @@ namespace FlaxEditor.Content
                 IncludeSubdirectories = true,
                 EnableRaisingEvents = true
             };
-            _watcher.Changed += onEvent;
-            _watcher.Created += onEvent;
-            _watcher.Deleted += onEvent;
-            _watcher.Renamed += onEvent;
+            //_watcher.Changed += OnEvent;
+            _watcher.Created += OnEvent;
+            _watcher.Deleted += OnEvent;
+            //_watcher.Renamed += OnEvent;
         }
 
-        private void onEvent(object sender, FileSystemEventArgs e)
+        private void OnEvent(object sender, FileSystemEventArgs e)
         {
             Editor.Instance.ContentDatabase.OnDirectoryEvent(this, e);
         }
@@ -47,6 +47,7 @@ namespace FlaxEditor.Content
         {
             _watcher.EnableRaisingEvents = false;
             _watcher.Dispose();
+            _watcher = null;
 
             base.OnDestroy();
         }

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEditor.GUI;
@@ -198,6 +198,8 @@ namespace FlaxEditor.Windows.Profiler
         {
             if (LiveRecording)
             {
+                FlaxEngine.Profiler.BeginEvent("ProfilerWindow.OnUpdate");
+
                 ProfilerMode.SharedUpdateData sharedData = new ProfilerMode.SharedUpdateData();
                 sharedData.Begin();
                 for (int i = 0; i < _tabs.ChildrenCount; i++)
@@ -209,6 +211,8 @@ namespace FlaxEditor.Windows.Profiler
 
                 _framesCount = Mathf.Min(_framesCount + 1, ProfilerMode.MaxSamples);
                 UpdateButtons();
+
+                FlaxEngine.Profiler.EndEvent();
             }
         }
 

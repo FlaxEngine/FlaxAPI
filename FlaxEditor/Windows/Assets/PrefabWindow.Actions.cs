@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -218,6 +218,12 @@ namespace FlaxEditor.Windows.Assets
                     nodes[i].Dispose();
                 }
             }
+
+            /// <inheritdoc />
+            protected override SceneGraphNode GetNode(Guid id)
+            {
+                return SceneGraphFactory.GetNode(id);
+            }
         }
 
         private class CustomPasteActorsAction : PasteActorsAction
@@ -278,6 +284,12 @@ namespace FlaxEditor.Windows.Assets
                 }
 
                 _nodeParents.Clear();
+            }
+
+            /// <inheritdoc />
+            protected override SceneGraphNode GetNode(Guid id)
+            {
+                return SceneGraphFactory.GetNode(id);
             }
 
             /// <inheritdoc />

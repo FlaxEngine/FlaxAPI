@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEngine;
@@ -37,8 +37,8 @@ namespace FlaxEditor.GUI
                 BackgroundColor = Style.Current.LightBackground;
                 Height = 28;
 
-                var windowIcon = FlaxEngine.Content.LoadInternal<Texture>(EditorAssets.WindowIcon);
-                FontAsset windowIconsFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.WindowIconsFont);
+                var windowIcon = FlaxEngine.Content.LoadAsyncInternal<Texture>(EditorAssets.WindowIcon);
+                FontAsset windowIconsFont = FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.WindowIconsFont);
                 Font iconFont = windowIconsFont?.CreateFont(9);
 
                 _window = mainWindow.RootWindow.Window;
@@ -132,7 +132,10 @@ namespace FlaxEditor.GUI
         {
             base.Update(deltaTime);
 
-            _maximizeButton.Text = ((char)(_window.IsMaximized ? EditorAssets.SegMDL2Icons.ChromeRestore : EditorAssets.SegMDL2Icons.ChromeMaximize)).ToString();
+            if (_maximizeButton != null)
+            {
+                _maximizeButton.Text = ((char)(_window.IsMaximized ? EditorAssets.SegMDL2Icons.ChromeRestore : EditorAssets.SegMDL2Icons.ChromeMaximize)).ToString();
+            }
         }
 
         private void OnWindowClosed()
@@ -146,30 +149,28 @@ namespace FlaxEditor.GUI
 
         private WindowHitCodes OnHitTest(ref Vector2 mouse)
         {
-            var pos = _window.ScreenToClient(mouse);
+            var pos = _window.ScreenToClient(mouse * Platform.DpiScale);
 
             if (_window.IsMinimized)
-            {
                 return WindowHitCodes.NoWhere;
-            }
 
             if (!_window.IsMaximized)
             {
-                var rootWindow = RootWindow;
+                var winSize = RootWindow.Size * Platform.DpiScale;
 
-                if (pos.Y > rootWindow.Height - 5 && pos.X < 5)
+                if (pos.Y > winSize.Y - 5 && pos.X < 5)
                     return WindowHitCodes.BottomLeft;
 
-                if (pos.X > rootWindow.Width - 5 && pos.Y > rootWindow.Height - 5)
+                if (pos.X > winSize.X - 5 && pos.Y > winSize.Y - 5)
                     return WindowHitCodes.BottomRight;
 
                 if (pos.Y < 5 && pos.X < 5)
                     return WindowHitCodes.TopLeft;
 
-                if (pos.Y < 5 && pos.X > rootWindow.Width - 5)
+                if (pos.Y < 5 && pos.X > winSize.X - 5)
                     return WindowHitCodes.TopRight;
 
-                if (pos.X > rootWindow.Width - 5)
+                if (pos.X > winSize.X - 5)
                     return WindowHitCodes.Right;
 
                 if (pos.X < 5)
@@ -178,7 +179,7 @@ namespace FlaxEditor.GUI
                 if (pos.Y < 5)
                     return WindowHitCodes.Top;
 
-                if (pos.Y > rootWindow.Height - 5)
+                if (pos.Y > winSize.Y - 5)
                     return WindowHitCodes.Bottom;
             }
 
