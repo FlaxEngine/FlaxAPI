@@ -439,7 +439,7 @@ namespace FlaxEditor.Windows.Assets
         private void OnMaterialPropertyEdited()
         {
             _paramValueChange = false;
-            MarkAsEdited();
+            //MarkAsEdited();
         }
 
         /// <inheritdoc />

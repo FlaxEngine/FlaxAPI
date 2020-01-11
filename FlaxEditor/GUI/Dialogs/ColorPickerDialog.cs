@@ -38,13 +38,13 @@ namespace FlaxEditor.GUI.Dialogs
         private ColorValueBox.ColorPickerClosedEvent _onClosed;
 
         private ColorSelectorWithSliders _cSelector;
-        private IntValueBox _cRed;
-        private IntValueBox _cGreen;
-        private IntValueBox _cBlue;
-        private IntValueBox _cAlpha;
-        private IntValueBox _cHue;
-        private IntValueBox _cSaturation;
-        private IntValueBox _cValue;
+        private FloatValueBox _cRed;
+        private FloatValueBox _cGreen;
+        private FloatValueBox _cBlue;
+        private FloatValueBox _cAlpha;
+        private FloatValueBox _cHue;
+        private FloatValueBox _cSaturation;
+        private FloatValueBox _cValue;
         private TextBox _cHex;
         private Button _cCancel;
         private Button _cOK;
@@ -65,24 +65,25 @@ namespace FlaxEditor.GUI.Dialogs
 
                 _disableEvents = true;
                 _value = value;
+                var clamped = Color.Min(Color.White, value);
 
                 // Selector
                 _cSelector.Color = _value;
 
                 // RGBA
-                _cRed.Value = (int)(_value.R * byte.MaxValue);
-                _cGreen.Value = (int)(_value.G * byte.MaxValue);
-                _cBlue.Value = (int)(_value.B * byte.MaxValue);
-                _cAlpha.Value = (int)(_value.A * byte.MaxValue);
+                _cRed.Value = _value.R;
+                _cGreen.Value = _value.G;
+                _cBlue.Value = _value.B;
+                _cAlpha.Value = _value.A;
 
                 // HSV
                 var hsv = _value.ToHSV();
-                _cHue.Value = (int)hsv.X;
-                _cSaturation.Value = (int)(hsv.Y * 100);
-                _cValue.Value = (int)(hsv.Z * 100);
+                _cHue.Value = hsv.X;
+                _cSaturation.Value = hsv.Y * 100.0f;
+                _cValue.Value = hsv.Z * 100.0f;
 
                 // Hex
-                _cHex.Text = _value.ToHexString();
+                _cHex.Text = clamped.ToHexString();
 
                 // Dynamic value
                 if (_useDynamicEditing)
@@ -117,37 +118,37 @@ namespace FlaxEditor.GUI.Dialogs
             _cSelector.Parent = this;
 
             // Red
-            _cRed = new IntValueBox(0, _cSelector.Right + PickerMargin + RGBAMargin + ChannelTextWidth, PickerMargin, 100, 0, 255);
+            _cRed = new FloatValueBox(0, _cSelector.Right + PickerMargin + RGBAMargin + ChannelTextWidth, PickerMargin, 100, 0, float.MaxValue, 0.001f);
             _cRed.ValueChanged += OnRGBAChanged;
             _cRed.Parent = this;
 
             // Green
-            _cGreen = new IntValueBox(0, _cRed.X, _cRed.Bottom + ChannelsMargin, _cRed.Width, 0, 255);
+            _cGreen = new FloatValueBox(0, _cRed.X, _cRed.Bottom + ChannelsMargin, _cRed.Width, 0, float.MaxValue, 0.001f);
             _cGreen.ValueChanged += OnRGBAChanged;
             _cGreen.Parent = this;
 
             // Blue
-            _cBlue = new IntValueBox(0, _cRed.X, _cGreen.Bottom + ChannelsMargin, _cRed.Width, 0, 255);
+            _cBlue = new FloatValueBox(0, _cRed.X, _cGreen.Bottom + ChannelsMargin, _cRed.Width, 0, float.MaxValue, 0.001f);
             _cBlue.ValueChanged += OnRGBAChanged;
             _cBlue.Parent = this;
 
             // Alpha
-            _cAlpha = new IntValueBox(0, _cRed.X, _cBlue.Bottom + ChannelsMargin, _cRed.Width, 0, 255);
+            _cAlpha = new FloatValueBox(0, _cRed.X, _cBlue.Bottom + ChannelsMargin, _cRed.Width, 0, float.MaxValue, 0.001f);
             _cAlpha.ValueChanged += OnRGBAChanged;
             _cAlpha.Parent = this;
 
             // Hue
-            _cHue = new IntValueBox(0, PickerMargin + HSVMargin + ChannelTextWidth, _cSelector.Bottom + PickerMargin, 100, 0, 360);
+            _cHue = new FloatValueBox(0, PickerMargin + HSVMargin + ChannelTextWidth, _cSelector.Bottom + PickerMargin, 100, 0, 360);
             _cHue.ValueChanged += OnHSVChanged;
             _cHue.Parent = this;
 
             // Saturation
-            _cSaturation = new IntValueBox(0, _cHue.X, _cHue.Bottom + ChannelsMargin, _cHue.Width, 0, 100);
+            _cSaturation = new FloatValueBox(0, _cHue.X, _cHue.Bottom + ChannelsMargin, _cHue.Width, 0, 100.0f, 0.1f);
             _cSaturation.ValueChanged += OnHSVChanged;
             _cSaturation.Parent = this;
 
             // Value
-            _cValue = new IntValueBox(0, _cHue.X, _cSaturation.Bottom + ChannelsMargin, _cHue.Width, 0, 100);
+            _cValue = new FloatValueBox(0, _cHue.X, _cSaturation.Bottom + ChannelsMargin, _cHue.Width, 0, float.MaxValue, 0.1f);
             _cValue.ValueChanged += OnHSVChanged;
             _cValue.Parent = this;
 
@@ -207,7 +208,7 @@ namespace FlaxEditor.GUI.Dialogs
             if (_disableEvents)
                 return;
 
-            SelectedColor = new Color((byte)_cRed.Value, (byte)_cGreen.Value, (byte)_cBlue.Value, (byte)_cAlpha.Value);
+            SelectedColor = new Color(_cRed.Value, _cGreen.Value, _cBlue.Value, _cAlpha.Value);
         }
 
         private void OnHSVChanged()
@@ -215,7 +216,7 @@ namespace FlaxEditor.GUI.Dialogs
             if (_disableEvents)
                 return;
 
-            SelectedColor = Color.FromHSV(_cHue.Value, _cSaturation.Value / 100.0f, _cValue.Value / 100.0f, _cAlpha.Value / 255.0f);
+            SelectedColor = Color.FromHSV(_cHue.Value, _cSaturation.Value / 100.0f, _cValue.Value / 100.0f, _cAlpha.Value);
         }
 
         private void OnHexChanged()
