@@ -383,9 +383,9 @@ namespace FlaxEditor.Windows.Assets
         {
             // Undo
             _undo = new Undo();
-            _undo.UndoDone += OnUndo;
-            _undo.RedoDone += OnUndo;
-            _undo.ActionDone += OnUndo;
+            _undo.UndoDone += OnUndoRedo;
+            _undo.RedoDone += OnUndoRedo;
+            _undo.ActionDone += OnAction;
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
@@ -421,7 +421,14 @@ namespace FlaxEditor.Windows.Assets
             InputActions.Add(options => options.Redo, _undo.PerformRedo);
         }
 
-        private void OnUndo(IUndoAction action)
+        private void OnAction(IUndoAction action)
+        {
+            _paramValueChange = false;
+            MarkAsEdited();
+            UpdateToolstrip();
+        }
+
+        private void OnUndoRedo(IUndoAction action)
         {
             _paramValueChange = false;
             MarkAsEdited();
