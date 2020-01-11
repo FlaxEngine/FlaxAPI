@@ -126,7 +126,7 @@ namespace FlaxEditor.GUI.Timeline.GUI
                 if (buttons == MouseButton.Left)
                 {
                     // Show color picker dialog
-                    _currentDialog = ColorValueBox.ShowPickColorDialog?.Invoke(Gradient._data[Index].Value, OnColorChanged);
+                    _currentDialog = ColorValueBox.ShowPickColorDialog?.Invoke(this, Gradient._data[Index].Value, OnColorChanged);
                     return true;
                 }
 

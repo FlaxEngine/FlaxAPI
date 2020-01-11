@@ -23,15 +23,15 @@ namespace FlaxEditor.GUI.Dialogs
     /// <seealso cref="FlaxEditor.GUI.Dialogs.Dialog" />
     public class ColorPickerDialog : Dialog, IColorPickerDialog
     {
-        private const float BUTTONS_WIDTH = 60.0f;
-        private const float PICKER_MARGIN = 6.0f;
-        private const float RGBA_MARGIN = 12.0f;
-        private const float HSV_MARGIN = 0.0f;
-        private const float CHANNELS_MARGIN = 4.0f;
-        private const float CHANNEL_TEXT_WIDTH = 12.0f;
+        private const float ButtonsWidth = 60.0f;
+        private const float PickerMargin = 6.0f;
+        private const float RGBAMargin = 12.0f;
+        private const float HSVMargin = 0.0f;
+        private const float ChannelsMargin = 4.0f;
+        private const float ChannelTextWidth = 12.0f;
 
-        private Color _oldColor;
-        private Color _newColor;
+        private Color _initialValue;
+        private Color _value;
         private bool _disableEvents;
         private bool _useDynamicEditing;
         private ColorValueBox.ColorPickerEvent _onChanged;
@@ -57,37 +57,37 @@ namespace FlaxEditor.GUI.Dialogs
         /// </value>
         public Color SelectedColor
         {
-            get => _newColor;
+            get => _value;
             private set
             {
-                if (_disableEvents || value == _newColor)
+                if (_disableEvents || value == _value)
                     return;
 
                 _disableEvents = true;
-                _newColor = value;
+                _value = value;
 
                 // Selector
-                _cSelector.Color = _newColor;
+                _cSelector.Color = _value;
 
                 // RGBA
-                _cRed.Value = (int)(_newColor.R * byte.MaxValue);
-                _cGreen.Value = (int)(_newColor.G * byte.MaxValue);
-                _cBlue.Value = (int)(_newColor.B * byte.MaxValue);
-                _cAlpha.Value = (int)(_newColor.A * byte.MaxValue);
+                _cRed.Value = (int)(_value.R * byte.MaxValue);
+                _cGreen.Value = (int)(_value.G * byte.MaxValue);
+                _cBlue.Value = (int)(_value.B * byte.MaxValue);
+                _cAlpha.Value = (int)(_value.A * byte.MaxValue);
 
                 // HSV
-                var hsv = _newColor.ToHSV();
+                var hsv = _value.ToHSV();
                 _cHue.Value = (int)hsv.X;
                 _cSaturation.Value = (int)(hsv.Y * 100);
                 _cValue.Value = (int)(hsv.Z * 100);
 
                 // Hex
-                _cHex.Text = _newColor.ToHexString();
+                _cHex.Text = _value.ToHexString();
 
                 // Dynamic value
                 if (_useDynamicEditing)
                 {
-                    _onChanged?.Invoke(_newColor, true);
+                    _onChanged?.Invoke(_value, true);
                 }
 
                 _disableEvents = false;
@@ -104,64 +104,64 @@ namespace FlaxEditor.GUI.Dialogs
         public ColorPickerDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, ColorValueBox.ColorPickerClosedEvent pickerClosed, bool useDynamicEditing)
         : base("Pick a color!")
         {
-            _oldColor = initialValue;
+            _initialValue = initialValue;
             _useDynamicEditing = useDynamicEditing;
-            _newColor = Color.Transparent;
+            _value = Color.Transparent;
             _onChanged = colorChanged;
             _onClosed = pickerClosed;
 
             // Selector
             _cSelector = new ColorSelectorWithSliders(180, 18);
-            _cSelector.Location = new Vector2(PICKER_MARGIN, PICKER_MARGIN);
+            _cSelector.Location = new Vector2(PickerMargin, PickerMargin);
             _cSelector.ColorChanged += x => SelectedColor = x;
             _cSelector.Parent = this;
 
             // Red
-            _cRed = new IntValueBox(0, _cSelector.Right + PICKER_MARGIN + RGBA_MARGIN + CHANNEL_TEXT_WIDTH, PICKER_MARGIN, 100, 0, 255);
+            _cRed = new IntValueBox(0, _cSelector.Right + PickerMargin + RGBAMargin + ChannelTextWidth, PickerMargin, 100, 0, 255);
             _cRed.ValueChanged += OnRGBAChanged;
             _cRed.Parent = this;
 
             // Green
-            _cGreen = new IntValueBox(0, _cRed.X, _cRed.Bottom + CHANNELS_MARGIN, _cRed.Width, 0, 255);
+            _cGreen = new IntValueBox(0, _cRed.X, _cRed.Bottom + ChannelsMargin, _cRed.Width, 0, 255);
             _cGreen.ValueChanged += OnRGBAChanged;
             _cGreen.Parent = this;
 
             // Blue
-            _cBlue = new IntValueBox(0, _cRed.X, _cGreen.Bottom + CHANNELS_MARGIN, _cRed.Width, 0, 255);
+            _cBlue = new IntValueBox(0, _cRed.X, _cGreen.Bottom + ChannelsMargin, _cRed.Width, 0, 255);
             _cBlue.ValueChanged += OnRGBAChanged;
             _cBlue.Parent = this;
 
             // Alpha
-            _cAlpha = new IntValueBox(0, _cRed.X, _cBlue.Bottom + CHANNELS_MARGIN, _cRed.Width, 0, 255);
+            _cAlpha = new IntValueBox(0, _cRed.X, _cBlue.Bottom + ChannelsMargin, _cRed.Width, 0, 255);
             _cAlpha.ValueChanged += OnRGBAChanged;
             _cAlpha.Parent = this;
 
             // Hue
-            _cHue = new IntValueBox(0, PICKER_MARGIN + HSV_MARGIN + CHANNEL_TEXT_WIDTH, _cSelector.Bottom + PICKER_MARGIN, 100, 0, 360);
+            _cHue = new IntValueBox(0, PickerMargin + HSVMargin + ChannelTextWidth, _cSelector.Bottom + PickerMargin, 100, 0, 360);
             _cHue.ValueChanged += OnHSVChanged;
             _cHue.Parent = this;
 
             // Saturation
-            _cSaturation = new IntValueBox(0, _cHue.X, _cHue.Bottom + CHANNELS_MARGIN, _cHue.Width, 0, 100);
+            _cSaturation = new IntValueBox(0, _cHue.X, _cHue.Bottom + ChannelsMargin, _cHue.Width, 0, 100);
             _cSaturation.ValueChanged += OnHSVChanged;
             _cSaturation.Parent = this;
 
             // Value
-            _cValue = new IntValueBox(0, _cHue.X, _cSaturation.Bottom + CHANNELS_MARGIN, _cHue.Width, 0, 100);
+            _cValue = new IntValueBox(0, _cHue.X, _cSaturation.Bottom + ChannelsMargin, _cHue.Width, 0, 100);
             _cValue.ValueChanged += OnHSVChanged;
             _cValue.Parent = this;
 
             // Set valid dialog size based on UI content
-            Size = new Vector2(_cRed.Right + PICKER_MARGIN, 300);
+            Size = new Vector2(_cRed.Right + PickerMargin, 300);
 
             // Hex
             const float hexTextBoxWidth = 80;
-            _cHex = new TextBox(false, Width - hexTextBoxWidth - PICKER_MARGIN, _cSelector.Bottom + PICKER_MARGIN, hexTextBoxWidth);
+            _cHex = new TextBox(false, Width - hexTextBoxWidth - PickerMargin, _cSelector.Bottom + PickerMargin, hexTextBoxWidth);
             _cHex.Parent = this;
             _cHex.EditEnd += OnHexChanged;
 
             // Cancel
-            _cCancel = new Button(Width - BUTTONS_WIDTH - PICKER_MARGIN, Height - Button.DefaultHeight - PICKER_MARGIN, BUTTONS_WIDTH)
+            _cCancel = new Button(Width - ButtonsWidth - PickerMargin, Height - Button.DefaultHeight - PickerMargin, ButtonsWidth)
             {
                 Text = "Cancel",
                 Parent = this
@@ -169,7 +169,7 @@ namespace FlaxEditor.GUI.Dialogs
             _cCancel.Clicked += OnCancelClicked;
 
             // OK
-            _cOK = new Button(_cCancel.Left - BUTTONS_WIDTH - PICKER_MARGIN, _cCancel.Y, BUTTONS_WIDTH)
+            _cOK = new Button(_cCancel.Left - ButtonsWidth - PickerMargin, _cCancel.Y, ButtonsWidth)
             {
                 Text = "Ok",
                 Parent = this
@@ -182,16 +182,22 @@ namespace FlaxEditor.GUI.Dialogs
 
         private void OnOkClicked()
         {
-            _result = DialogResult.OK;
-            _onChanged?.Invoke(_newColor, false);
-            Close();
+            // Send color event if modified
+            if (_value != _initialValue)
+            {
+                _onChanged?.Invoke(_value, false);
+            }
+
+            Close(DialogResult.OK);
         }
 
         private void OnCancelClicked()
         {
-            // Restore color
-            if (_useDynamicEditing)
-                _onChanged?.Invoke(_oldColor, false);
+            // Restore color if modified
+            if (_useDynamicEditing && _initialValue != _value)
+            {
+                _onChanged?.Invoke(_initialValue, false);
+            }
 
             Close(DialogResult.Cancel);
         }
@@ -231,7 +237,7 @@ namespace FlaxEditor.GUI.Dialogs
             base.Draw();
 
             // RGBA
-            var rgbaR = new Rectangle(_cRed.Left - CHANNEL_TEXT_WIDTH, _cRed.Y, 10000, _cRed.Height);
+            var rgbaR = new Rectangle(_cRed.Left - ChannelTextWidth, _cRed.Y, 10000, _cRed.Height);
             Render2D.DrawText(style.FontMedium, "R", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
             rgbaR.Location.Y = _cGreen.Y;
             Render2D.DrawText(style.FontMedium, "G", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
@@ -241,7 +247,7 @@ namespace FlaxEditor.GUI.Dialogs
             Render2D.DrawText(style.FontMedium, "A", rgbaR, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // HSV left
-            var hsvHl = new Rectangle(_cHue.Left - CHANNEL_TEXT_WIDTH, _cHue.Y, 10000, _cHue.Height);
+            var hsvHl = new Rectangle(_cHue.Left - ChannelTextWidth, _cHue.Y, 10000, _cHue.Height);
             Render2D.DrawText(style.FontMedium, "H", hsvHl, textColor, TextAlignment.Near, TextAlignment.Center);
             hsvHl.Location.Y = _cSaturation.Y;
             Render2D.DrawText(style.FontMedium, "S", hsvHl, textColor, TextAlignment.Near, TextAlignment.Center);
@@ -261,9 +267,9 @@ namespace FlaxEditor.GUI.Dialogs
             Render2D.DrawText(style.FontMedium, "Hex", hex, textColor, TextAlignment.Near, TextAlignment.Center);
 
             // Color difference
-            var newRect = new Rectangle(_cOK.X, _cHex.Bottom + PICKER_MARGIN, _cCancel.Right - _cOK.Left, 0);
+            var newRect = new Rectangle(_cOK.X, _cHex.Bottom + PickerMargin, _cCancel.Right - _cOK.Left, 0);
             newRect.Size.Y = _cValue.Bottom - newRect.Y;
-            Render2D.FillRectangle(newRect, _newColor * _newColor.A);
+            Render2D.FillRectangle(newRect, _value * _value.A);
         }
 
         /// <inheritdoc />

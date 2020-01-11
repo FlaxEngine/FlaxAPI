@@ -29,12 +29,13 @@ namespace FlaxEditor.GUI.Input
         /// <summary>
         /// Delegate function used to handle showing color picking dialog.
         /// </summary>
+        /// <param name="targetControl">The GUI control that invokes the picker.</param>
         /// <param name="initialValue">The initial value.</param>
         /// <param name="colorChanged">The color changed event.</param>
         /// <param name="pickerClosed">The color editing end event.</param>
         /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will fire color change event only on editing end.</param>
         /// <returns>The created color picker dialog or null if failed.</returns>
-        public delegate IColorPickerDialog ShowPickColorDialogDelegate(Color initialValue, ColorPickerEvent colorChanged, ColorPickerClosedEvent pickerClosed = null, bool useDynamicEditing = true);
+        public delegate IColorPickerDialog ShowPickColorDialogDelegate(Control targetControl, Color initialValue, ColorPickerEvent colorChanged, ColorPickerClosedEvent pickerClosed = null, bool useDynamicEditing = true);
 
         /// <summary>
         /// Shows picking color dialog (see <see cref="ShowPickColorDialogDelegate"/>).
@@ -128,7 +129,7 @@ namespace FlaxEditor.GUI.Input
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
             // Show color picker dialog
-            _currentDialog = ShowPickColorDialog?.Invoke(_value, OnColorChanged, OnPickerClosed);
+            _currentDialog = ShowPickColorDialog?.Invoke(this, _value, OnColorChanged, OnPickerClosed);
 
             return true;
         }
