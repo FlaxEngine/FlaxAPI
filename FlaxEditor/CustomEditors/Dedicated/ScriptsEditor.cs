@@ -523,24 +523,33 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// <inheritdoc />
         public override void Initialize(LayoutElementsContainer layout)
         {
-            _scripts.Clear();
-
             // Area for drag&drop scripts
             var dragArea = layout.CustomContainer<DragAreaControl>();
             dragArea.CustomControl.ScriptsEditor = this;
 
-            // No support to show scripts for more than one actor selected
-            // TODO: support showing scripts from objects that has the same scripts layout
-            if (Values.Count != 1)
-                return;
+            // No support for showing scripts from multiple actors that have different set of scripts
+            var scripts = (Script[])Values[0];
+            _scripts.Clear();
+            _scripts.AddRange(scripts);
+            for (int i = 1; i < Values.Count; i++)
+            {
+                var e = (Script[])Values[i];
+                if (scripts.Length != e.Length)
+                    return;
+                for (int j = 0; j < e.Length; j++)
+                {
+                    var t1 = scripts[j]?.GetType();
+                    var t2 = e[j]?.GetType();
+                    if (t1 != t2)
+                        return;
+                }
+            }
 
             // Scripts arrange bar
             var dragBar = layout.Custom<ScriptArrangeBar>();
             dragBar.CustomControl.Init(0, this);
 
             // Scripts
-            var scripts = (Script[])Values[0];
-            _scripts.AddRange(scripts);
             var elementType = typeof(Script);
             _scriptToggles = new CheckBox[scripts.Length];
             for (int i = 0; i < scripts.Length; i++)
