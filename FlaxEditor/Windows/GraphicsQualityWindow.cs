@@ -1,8 +1,11 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
+using System.ComponentModel;
 using FlaxEditor.CustomEditors;
+using FlaxEditor.States;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Json;
 
 namespace FlaxEditor.Windows
 {
@@ -12,16 +15,17 @@ namespace FlaxEditor.Windows
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public class GraphicsQualityWindow : EditorWindow
     {
-        private readonly CustomEditorPresenter _presenter;
+        private static string _optionsName = "GraphicsQualityWindow";
+        private ViewModel _viewModel;
+        private string _cachedOptions;
 
-        /// <summary>
-        /// MVC or something. https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
-        /// </summary>
         private class ViewModel
         {
-            /// <summary>
-            /// Enables rendering synchronization with the refresh rate of the display device to avoid "tearing" artifacts.
-            /// </summary>
+            [DefaultValue(true)]
+            [EditorOrder(0), EditorDisplay("Rendering"), Tooltip("If checked, the initial values will be from project Graphics Settings, otherwise will be adjusted locally (and stored in project cache).")]
+            public bool UseProjectDefaults { get; set; } = true;
+
+            [DefaultValue(false)]
             [EditorOrder(0), EditorDisplay("Rendering", "Use V-Sync"), Tooltip("Enables rendering synchronization with the refresh rate of the display device to avoid \"tearing\" artifacts.")]
             public bool UseVSync
             {
@@ -29,9 +33,7 @@ namespace FlaxEditor.Windows
                 set => GraphicsSettings.UseVSync = value;
             }
 
-            /// <summary>
-            /// Anti Aliasing quality setting.
-            /// </summary>
+            [DefaultValue(Quality.Medium)]
             [EditorOrder(1000), EditorDisplay("Quality", "AA Quality"), Tooltip("Anti Aliasing quality.")]
             public Quality AAQuality
             {
@@ -39,9 +41,7 @@ namespace FlaxEditor.Windows
                 set => GraphicsSettings.AAQuality = value;
             }
 
-            /// <summary>
-            /// Screen Space Reflections quality.
-            /// </summary>
+            [DefaultValue(Quality.Medium)]
             [EditorOrder(1100), EditorDisplay("Quality", "SSR Quality"), Tooltip("Screen Space Reflections quality.")]
             public Quality SSRQuality
             {
@@ -49,9 +49,6 @@ namespace FlaxEditor.Windows
                 set => GraphicsSettings.SSRQuality = value;
             }
 
-            /// <summary>
-            /// Screen Space Ambient Occlusion quality setting.
-            /// </summary>
             [EditorOrder(1200), EditorDisplay("Quality", "SSAO Quality"), Tooltip("Screen Space Ambient Occlusion quality setting.")]
             public Quality SSAOQuality
             {
@@ -59,9 +56,7 @@ namespace FlaxEditor.Windows
                 set => GraphicsSettings.SSAOQuality = value;
             }
 
-            /// <summary>
-            /// Volumetric Fog quality setting.
-            /// </summary>
+            [DefaultValue(Quality.High)]
             [EditorOrder(1250), EditorDisplay("Quality", "Volumetric Fog Quality"), Tooltip("Volumetric Fog quality setting.")]
             public Quality VolumetricFogQuality
             {
@@ -69,9 +64,7 @@ namespace FlaxEditor.Windows
                 set => GraphicsSettings.VolumetricFogQuality = value;
             }
 
-            /// <summary>
-            /// The shadows quality.
-            /// </summary>
+            [DefaultValue(Quality.Medium)]
             [EditorOrder(1300), EditorDisplay("Quality", "Shadows Quality"), Tooltip("The shadows quality.")]
             public Quality ShadowsQuality
             {
@@ -79,9 +72,7 @@ namespace FlaxEditor.Windows
                 set => GraphicsSettings.ShadowsQuality = value;
             }
 
-            /// <summary>
-            /// The shadow maps quality (textures resolution).
-            /// </summary>
+            [DefaultValue(Quality.Medium)]
             [EditorOrder(1310), EditorDisplay("Quality", "Shadow Maps Quality"), Tooltip("The shadow maps quality (textures resolution).")]
             public Quality ShadowMapsQuality
             {
@@ -89,9 +80,7 @@ namespace FlaxEditor.Windows
                 set => GraphicsSettings.ShadowMapsQuality = value;
             }
 
-            /// <summary>
-            /// Enables cascades splits blending for directional light shadows.
-            /// </summary>
+            [DefaultValue(false)]
             [EditorOrder(1320), EditorDisplay("Quality", "Allow CSM Blending"), Tooltip("Enables cascades splits blending for directional light shadows.")]
             public bool AllowCSMBlending
             {
@@ -109,9 +98,58 @@ namespace FlaxEditor.Windows
         {
             Title = "Graphics Quality";
 
-            _presenter = new CustomEditorPresenter(null);
-            _presenter.Panel.Parent = this;
-            _presenter.Select(new ViewModel());
+            var presenter = new CustomEditorPresenter(null);
+            presenter.Panel.Parent = this;
+            presenter.Select(_viewModel = new ViewModel());
+        }
+
+        private void OnPlayingStateGameSettingsApplying()
+        {
+            _cachedOptions = _viewModel.UseProjectDefaults ? null : JsonSerializer.Serialize(_viewModel);
+        }
+
+        private void OnPlayingStateGameSettingsApplied()
+        {
+            if (_cachedOptions != null)
+            {
+                JsonSerializer.Deserialize(_viewModel, _cachedOptions);
+                _cachedOptions = null;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void OnInit()
+        {
+            if (Editor.ProjectCache.TryGetCustomData(_optionsName, out var options) && !string.IsNullOrEmpty(options))
+            {
+                // Load cached settings
+                JsonSerializer.Deserialize(_viewModel, options);
+            }
+
+            var playingState = Editor.StateMachine.PlayingState;
+            playingState.GameSettingsApplying += OnPlayingStateGameSettingsApplying;
+            playingState.GameSettingsApplied += OnPlayingStateGameSettingsApplied;
+        }
+
+        /// <inheritdoc />
+        public override void OnExit()
+        {
+            var playingState = Editor.StateMachine.PlayingState;
+            playingState.GameSettingsApplying -= OnPlayingStateGameSettingsApplying;
+            playingState.GameSettingsApplied -= OnPlayingStateGameSettingsApplied;
+
+            string data;
+            if (_viewModel.UseProjectDefaults)
+            {
+                // Clear cached settings
+                data = string.Empty;
+            }
+            else
+            {
+                // Store cached settings
+                data = JsonSerializer.Serialize(_viewModel);
+            }
+            Editor.ProjectCache.SetCustomData(_optionsName, data);
         }
     }
 }
