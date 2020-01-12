@@ -345,34 +345,20 @@ namespace FlaxEditor.Windows
         {
             string sourcePath = item.Path;
             string sourceFolder = Path.GetDirectoryName(sourcePath);
-            string destinationPath;
-            int i = 0;
 
             // Find new name for clone
+            string destinationName;
             if (item.IsFolder)
             {
-                do
-                {
-                    destinationPath = StringUtils.CombinePaths(sourceFolder, string.Format("{0} Copy ({1})", item.ShortName, i++));
-                } while (Directory.Exists(destinationPath));
+                destinationName = StringUtils.IncrementNameNumber(item.ShortName, x => !Directory.Exists(StringUtils.CombinePaths(sourceFolder, x)));
             }
             else
             {
                 string extension = Path.GetExtension(sourcePath);
-                do
-                {
-                    // TODO: better renaming cloned assets
-                    /*// Generate new name
-                    Function<bool, const String&> f;
-                    f.Bind<ContentWindow, &ContentWindow::isElementNameValid>(this);
-                    String name = StringUtils::IncrementNameNumber(el->GetName(), &f);
-                    _tmpList = nullptr;*/
-
-                    destinationPath = StringUtils.CombinePaths(sourceFolder, string.Format("{0} Copy ({1}){2}", item.ShortName, i++, extension));
-                } while (File.Exists(destinationPath));
+                destinationName = StringUtils.IncrementNameNumber(item.ShortName, x => !File.Exists(StringUtils.CombinePaths(sourceFolder, x + extension))) + extension;
             }
 
-            return destinationPath;
+            return StringUtils.CombinePaths(sourceFolder, destinationName);
         }
 
         /// <summary>
