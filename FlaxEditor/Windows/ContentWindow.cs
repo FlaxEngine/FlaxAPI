@@ -66,7 +66,7 @@ namespace FlaxEditor.Windows
             Title = "Content";
 
             // Content database events
-            editor.ContentDatabase.OnWorkspaceModified += () => _isWorkspaceDirty = true;
+            editor.ContentDatabase.WorkspaceModified += () => _isWorkspaceDirty = true;
             editor.ContentDatabase.ItemRemoved += ContentDatabaseOnItemRemoved;
 
             // Tool strip

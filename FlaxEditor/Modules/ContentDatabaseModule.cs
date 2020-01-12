@@ -61,7 +61,7 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Occurs when workspace has been modified.
         /// </summary>
-        public event Action OnWorkspaceModified;
+        public event Action WorkspaceModified;
 
         /// <summary>
         /// Gets the amount of created items.
@@ -522,7 +522,7 @@ namespace FlaxEditor.Modules
             item.ParentFolder = newParent;
 
             if (_enableEvents)
-                OnWorkspaceModified?.Invoke();
+                WorkspaceModified?.Invoke();
         }
 
         /// <summary>
@@ -684,7 +684,7 @@ namespace FlaxEditor.Modules
             }
 
             if (_enableEvents)
-                OnWorkspaceModified?.Invoke();
+                WorkspaceModified?.Invoke();
         }
 
         private void loadFolder(ContentTreeNode node, bool checkSubDirs)
@@ -750,7 +750,7 @@ namespace FlaxEditor.Modules
                     if (_enableEvents)
                     {
                         ItemAdded?.Invoke(n.Folder);
-                        OnWorkspaceModified?.Invoke();
+                        WorkspaceModified?.Invoke();
                     }
                     _itemsCreated++;
                 }
@@ -788,7 +788,7 @@ namespace FlaxEditor.Modules
                     if (_enableEvents)
                     {
                         ItemAdded?.Invoke(item);
-                        OnWorkspaceModified?.Invoke();
+                        WorkspaceModified?.Invoke();
                     }
                     _itemsCreated++;
                     anyAdded = true;
@@ -839,7 +839,7 @@ namespace FlaxEditor.Modules
                     if (_enableEvents)
                     {
                         ItemAdded?.Invoke(item);
-                        OnWorkspaceModified?.Invoke();
+                        WorkspaceModified?.Invoke();
                     }
                     _itemsCreated++;
                 }
@@ -997,8 +997,9 @@ namespace FlaxEditor.Modules
                     loadFolder(node, true);
 
                     if (_enableEvents)
-                        OnWorkspaceModified?.Invoke();
+                        WorkspaceModified?.Invoke();
                 }
+                _dirtyNodes.Clear();
             }
         }
 
