@@ -6,7 +6,7 @@ using FlaxEngine;
 namespace FlaxEditor.Tools.Foliage.Undo
 {
     /// <summary>
-    /// The foliage heightmap or visibility map editing action that records before and after states to swap between unmodified and modified terrain data.
+    /// The foliage editing action that records before and after states to swap between unmodified and modified foliage data.
     /// </summary>
     /// <seealso cref="FlaxEditor.IUndoAction" />
     [Serializable]

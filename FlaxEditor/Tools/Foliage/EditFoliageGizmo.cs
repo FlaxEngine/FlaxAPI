@@ -14,6 +14,7 @@ namespace FlaxEditor.Tools.Foliage
     {
         private MaterialBase _highlightMaterial;
         private bool _needSync = true;
+        private Undo.EditFoliageAction _action;
 
         /// <summary>
         /// The parent mode.
@@ -64,6 +65,18 @@ namespace FlaxEditor.Tools.Foliage
         {
             bounds = BoundingBox.Empty;
             navigationDirty = false;
+        }
+
+        /// <inheritdoc />
+        protected override void OnStartTransforming()
+        {
+            base.OnStartTransforming();
+
+            // Start undo
+            var foliage = GizmoMode.SelectedFoliage;
+            if (!foliage)
+                throw new InvalidOperationException("No foliage selected.");
+            _action = new Undo.EditFoliageAction(foliage);
         }
 
         /// <inheritdoc />
@@ -120,12 +133,10 @@ namespace FlaxEditor.Tools.Foliage
         {
             base.OnEndTransforming();
 
-            // TODO: support undo for foliage instance transform
-
-            var foliage = GizmoMode.SelectedFoliage;
-            if (!foliage)
-                throw new InvalidOperationException("No foliage selected.");
-            Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
+            // End undo
+            _action.RecordEnd();
+            Owner.Undo?.AddAction(_action);
+            _action = null;
         }
 
         /// <inheritdoc />
