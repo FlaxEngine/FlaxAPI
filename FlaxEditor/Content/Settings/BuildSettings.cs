@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings
@@ -11,27 +12,37 @@ namespace FlaxEditor.Content.Settings
     public sealed class BuildSettings : SettingsBase
     {
         /// <summary>
-        /// The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.
+        /// The maximum amount of assets to include into a single assets package. Assets packages will split into several packages if need to.
         /// </summary>
-        [EditorOrder(10), Limit(32, short.MaxValue), EditorDisplay("General", "Max assets per package"), Tooltip("The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.")]
+        [DefaultValue(256)]
+        [EditorOrder(10), Limit(32, short.MaxValue), EditorDisplay("General", "Max assets per package"), Tooltip("The maximum amount of assets to include into a single assets package. Assets packages will split into several packages if need to.")]
         public int MaxAssetsPerPackage = 256;
 
         /// <summary>
-        /// The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.
+        /// The maximum size of the single assets package (in megabytes). Assets packages will split into several packages if need to.
         /// </summary>
-        [EditorOrder(20), Limit(16, short.MaxValue), EditorDisplay("General", "Max package size (in MB)"), Tooltip("The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.")]
+        [DefaultValue(256)]
+        [EditorOrder(20), Limit(16, short.MaxValue), EditorDisplay("General", "Max package size (in MB)"), Tooltip("The maximum size of the single assets package (in megabytes). Assets packages will split into several packages if need to.")]
         public int MaxPackageSizeMB = 256;
 
         /// <summary>
         /// The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the build game. Use 0 to randomize it during building.
         /// </summary>
+        [DefaultValue(0)]
         [EditorOrder(30), EditorDisplay("General"), Tooltip("The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the build game. Use 0 to randomize it during building.")]
         public int ContentKey = 0;
 
         /// <summary>
+        /// Disable shaders optimization in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.
+        /// </summary>
+        [DefaultValue(false)]
+        [EditorOrder(100), EditorDisplay("Content"), Tooltip("Disable shaders optimization in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
+        public bool NoOptimizeShaders = false;
+
+        /// <summary>
         /// The build presets.
         /// </summary>
-        [EditorOrder(100), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
+        [EditorOrder(1000), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
         public BuildPreset[] Presets =
         {
             new BuildPreset
