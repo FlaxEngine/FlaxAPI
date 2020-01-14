@@ -145,8 +145,6 @@ namespace FlaxEditor.Tools.Foliage
         {
             base.OnDuplicate();
 
-            // TODO: support undo for foliage instance duplicate
-
             // Get selected instance
             var foliage = GizmoMode.SelectedFoliage;
             if (!foliage)
@@ -155,12 +153,14 @@ namespace FlaxEditor.Tools.Foliage
             if (instanceIndex < 0 || instanceIndex >= foliage.InstancesCount)
                 throw new InvalidOperationException("No foliage instance selected.");
             foliage.GetInstance(instanceIndex, out var instance);
+            var action = new EditFoliageAction(foliage);
 
             // Duplicate instance and select it
             var newIndex = foliage.InstancesCount;
             foliage.AddInstance(ref instance);
+            action.RecordEnd();
+            Owner.Undo?.AddAction(new MultiUndoAction(action, new EditSelectedInstanceIndexAction(GizmoMode.SelectedInstanceIndex, newIndex)));
             GizmoMode.SelectedInstanceIndex = newIndex;
-            Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
         }
 
         /// <inheritdoc />
