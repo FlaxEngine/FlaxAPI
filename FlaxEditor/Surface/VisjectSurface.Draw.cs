@@ -174,7 +174,6 @@ namespace FlaxEditor.Surface
                 //Rectangle drawRect = Rectangle.FromPoints(upperLeft, bottomRight);
                 //Render2D.FillRectangle(drawRect, Color.Green * 0.5f);
             }
-
         }
 
         /// <summary>
@@ -202,6 +201,8 @@ namespace FlaxEditor.Surface
 
             // Push surface view transform (scale and offset)
             Render2D.PushTransform(ref _rootControl._cachedTransform);
+            var features = Render2D.Features;
+            Render2D.Features = Render2D.RenderingFeatures.None;
 
             var mousePos = _rootControl.PointFromParent(ref _mousePos);
             DrawConnections(ref mousePos);
@@ -211,6 +212,7 @@ namespace FlaxEditor.Surface
                 DrawConnectingLine();
             }
 
+            Render2D.Features = features;
             Render2D.PopTransform();
 
             DrawInputBrackets();

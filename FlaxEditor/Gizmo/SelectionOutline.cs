@@ -150,6 +150,14 @@ namespace FlaxEditor.Gizmo
             Profiler.EndEventGPU();
         }
 
+        private void CollectActors(Actor actor)
+        {
+            _actors.Add(actor);
+
+            for (int i = 0; i < actor.ChildrenCount; i++)
+                CollectActors(actor.GetChild(i));
+        }
+
         /// <summary>
         /// Draws the selected object to depth buffer.
         /// </summary>
@@ -163,8 +171,8 @@ namespace FlaxEditor.Gizmo
             _actors.Capacity = Mathf.NextPowerOfTwo(Mathf.Max(_actors.Capacity, selection.Count));
             for (int i = 0; i < selection.Count; i++)
             {
-                if (selection[i] is ActorNode actorNode)
-                    _actors.Add(actorNode.Actor);
+                if (selection[i] is ActorNode actorNode && actorNode.Actor != null)
+                    CollectActors(actorNode.Actor);
             }
 
             // Render selected objects depth

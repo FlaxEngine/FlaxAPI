@@ -290,7 +290,7 @@ namespace FlaxEditor.Surface
             // Color
             if (_colorButtonRect.Contains(ref location))
             {
-                ColorValueBox.ShowPickColorDialog?.Invoke(Color, OnColorChanged);
+                ColorValueBox.ShowPickColorDialog?.Invoke(this, Color, OnColorChanged);
                 return true;
             }
 

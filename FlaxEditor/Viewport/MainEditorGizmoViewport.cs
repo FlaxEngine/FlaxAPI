@@ -151,7 +151,7 @@ namespace FlaxEditor.Viewport
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
-            SelectionOutline.SelectionGetter = () => _editor.SceneEditing.Selection;
+            SelectionOutline.SelectionGetter = () => TransformGizmo.SelectedParents;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
             EditorPrimitives.Viewport = this;
@@ -396,7 +396,16 @@ namespace FlaxEditor.Viewport
             {
                 // Render editor primitives, gizmo and debug shapes in debug view modes
                 // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
-                EditorPrimitives.Render(context, task, task.Output, task.Output);
+                if (EditorPrimitives.CanRender)
+                {
+                    EditorPrimitives.Render(context, task, task.Output, task.Output);
+                }
+
+                // Render editor sprites
+                if (_editorSpritesRenderer.CanRender)
+                {
+                    _editorSpritesRenderer.Render(context, task, task.Output, task.Output);
+                }
 
                 // Render selection outline
                 var selectionOutline = _customSelectionOutline ?? SelectionOutline;

@@ -73,7 +73,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             if (button == MouseButton.Left)
             {
-                ColorValueBox.ShowPickColorDialog?.Invoke(Color, OnColorChanged);
+                ColorValueBox.ShowPickColorDialog?.Invoke(this, Color, OnColorChanged);
             }
         }
 

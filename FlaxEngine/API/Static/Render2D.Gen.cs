@@ -14,6 +14,20 @@ namespace FlaxEngine
     public static partial class Render2D
     {
         /// <summary>
+        /// Gets or sets the active rendering features flags.
+        /// </summary>
+        [UnmanagedCall]
+        public static RenderingFeatures Features
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetFeatures(); }
+            set { Internal_SetFeatures(value); }
+#endif
+        }
+
+        /// <summary>
         /// Pushes 2D transformation matrix on the stack.
         /// </summary>
         /// <param name="transform">The transformation to apply.</param>
@@ -459,6 +473,12 @@ namespace FlaxEngine
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern RenderingFeatures Internal_GetFeatures();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetFeatures(RenderingFeatures val);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_PushTransform(ref Matrix3x3 transform);
 

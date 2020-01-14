@@ -8,6 +8,23 @@ namespace FlaxEngine
     public static partial class Render2D
     {
         /// <summary>
+        /// The rendering features and options flags.
+        /// </summary>
+        [Flags]
+        public enum RenderingFeatures
+        {
+            /// <summary>
+            /// The none.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// Enables automatic geometry vertices snapping to integer coordinates in screen space. Reduces aliasing and sampling artifacts. Might be disabled for 3D projection viewport or for complex UI transformations.
+            /// </summary>
+            VertexSnapping = 1,
+        };
+
+        /// <summary>
         /// Draws a text.
         /// </summary>
         /// <param name="font">The font to use.</param>

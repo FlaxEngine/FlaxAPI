@@ -367,10 +367,24 @@ namespace FlaxEditor.Modules
             Style.Current = style;
         }
 
-        private IColorPickerDialog ShowPickColorDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, ColorValueBox.ColorPickerClosedEvent pickerClosed, bool useDynamicEditing)
+        private IColorPickerDialog ShowPickColorDialog(Control targetControl, Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, ColorValueBox.ColorPickerClosedEvent pickerClosed, bool useDynamicEditing)
         {
             var dialog = new ColorPickerDialog(initialValue, colorChanged, pickerClosed, useDynamicEditing);
-            dialog.Show();
+            dialog.Show(targetControl);
+
+            // Place dialog nearby the target control
+            if (targetControl != null)
+            {
+                var targetControlDesktopCenter = targetControl.ClientToScreen(targetControl.Size * 0.5f);
+                var desktopSize = Platform.GetMonitorBounds(targetControlDesktopCenter);
+                var pos = targetControlDesktopCenter + new Vector2(10.0f, -dialog.Height * 0.5f);
+                var dialogEnd = pos + dialog.Size;
+                var desktopEnd = desktopSize.BottomRight - new Vector2(10.0f);
+                if (dialogEnd.X >= desktopEnd.X || dialogEnd.Y >= desktopEnd.Y)
+                    pos = targetControl.ClientToScreen(Vector2.Zero) - new Vector2(10.0f + dialog.Width, dialog.Height);
+                dialog.RootWindow.Window.Position = pos;
+            }
+
             return dialog;
         }
 

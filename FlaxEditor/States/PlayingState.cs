@@ -41,6 +41,16 @@ namespace FlaxEditor.States
         public event Action SceneDuplicated;
 
         /// <summary>
+        /// Occurs when play mode is applying game settings. Can be used to cache the editor local state of some settings.
+        /// </summary>
+        public event Action GameSettingsApplying;
+
+        /// <summary>
+        /// Occurs when play mode applied game settings. Can be used to preserve the editor local state of some settings.
+        /// </summary>
+        public event Action GameSettingsApplied;
+
+        /// <summary>
         /// Occurs when play mode is ending (before scene restoring).
         /// </summary>
         public event Action SceneRestoring;
@@ -106,7 +116,9 @@ namespace FlaxEditor.States
             Editor.Scene.ClearRefsToSceneObjects(true);
 
             // Apply game settings (user may modify them before the gameplay)
+            GameSettingsApplying?.Invoke();
             GameSettings.Apply();
+            GameSettingsApplied?.Invoke();
 
             // Duplicate editor scene for simulation
             SceneDuplicating?.Invoke();
