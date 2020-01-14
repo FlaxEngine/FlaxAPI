@@ -509,6 +509,7 @@
     <Compile Include="Tools\Foliage\PaintFoliageGizmo.cs" />
     <Compile Include="Tools\Foliage\PaintFoliageGizmoMode.cs" />
     <Compile Include="Tools\Foliage\PaintTab.cs" />
+    <Compile Include="Tools\Foliage\Undo\EditSelectedInstanceIndexAction.cs" />
     <Compile Include="Tools\Terrain\Brushes\Brush.cs" />
     <Compile Include="Tools\Terrain\Brushes\CircleBrush.cs" />
     <Compile Include="Tools\Terrain\CarveTab.cs" />

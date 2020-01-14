@@ -66,9 +66,6 @@ namespace FlaxEditor.Tools.Foliage
                     return;
 
                 _selectedFoliageTypeIndex = value;
-
-                // TODO: support undo for changing selected foliage index
-
                 SelectedFoliageTypeIndexChanged?.Invoke(prev, value);
             }
         }

@@ -2,6 +2,7 @@
 
 using System;
 using FlaxEditor.Gizmo;
+using FlaxEditor.Tools.Foliage.Undo;
 using FlaxEngine;
 
 namespace FlaxEditor.Tools.Foliage
@@ -14,7 +15,7 @@ namespace FlaxEditor.Tools.Foliage
     {
         private MaterialBase _highlightMaterial;
         private bool _needSync = true;
-        private Undo.EditFoliageAction _action;
+        private EditFoliageAction _action;
 
         /// <summary>
         /// The parent mode.
@@ -76,7 +77,7 @@ namespace FlaxEditor.Tools.Foliage
             var foliage = GizmoMode.SelectedFoliage;
             if (!foliage)
                 throw new InvalidOperationException("No foliage selected.");
-            _action = new Undo.EditFoliageAction(foliage);
+            _action = new EditFoliageAction(foliage);
         }
 
         /// <inheritdoc />
@@ -204,7 +205,13 @@ namespace FlaxEditor.Tools.Foliage
                 return;
             var ray = Owner.MouseRay;
             FoliageTools.Intersects(foliage, ray, out _, out _, out var instanceIndex);
-            GizmoMode.SelectedInstanceIndex = instanceIndex;
+
+            // Change the selection (with undo)
+            if (GizmoMode.SelectedInstanceIndex == instanceIndex)
+                return;
+            var action = new EditSelectedInstanceIndexAction(GizmoMode.SelectedInstanceIndex, instanceIndex);
+            action.Do();
+            Owner.Undo?.AddAction(action);
         }
 
         /// <inheritdoc />
