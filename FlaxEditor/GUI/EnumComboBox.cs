@@ -49,6 +49,11 @@ namespace FlaxEditor.GUI
             public string Name;
 
             /// <summary>
+            /// The tooltip text.
+            /// </summary>
+            public string Tooltip;
+
+            /// <summary>
             /// The value.
             /// </summary>
             public int Value;
@@ -57,10 +62,12 @@ namespace FlaxEditor.GUI
             /// Initializes a new instance of the <see cref="Entry"/> struct.
             /// </summary>
             /// <param name="name">The name.</param>
+            /// <param name="tooltip">The tooltip.</param>
             /// <param name="value">The value.</param>
-            public Entry(string name, int value)
+            public Entry(string name, int value, string tooltip = null)
             {
                 Name = name;
+                Tooltip = tooltip;
                 Value = value;
             }
         }
@@ -157,9 +164,24 @@ namespace FlaxEditor.GUI
             else
                 BuildEntriesDefault(type, _entries, formatMode);
 
+            var hasTooltips = false;
+            var entries = FlaxEngine.Utils.ExtractArrayFromList(_entries);
             for (int i = 0; i < _entries.Count; i++)
             {
-                AddItem(_entries[i].Name);
+                ref var e = ref entries[i];
+                _items.Add(e.Name);
+                hasTooltips |= e.Tooltip != null;
+            }
+
+            if (hasTooltips)
+            {
+                var tooltips = new string[_entries.Count];
+                for (int i = 0; i < _entries.Count; i++)
+                {
+                    ref var e = ref entries[i];
+                    tooltips[i] = e.Tooltip;
+                }
+                _tooltips = tooltips;
             }
         }
 
@@ -242,7 +264,14 @@ namespace FlaxEditor.GUI
                     }
                 }
 
-                entries.Add(new Entry(name, Convert.ToInt32(field.GetRawConstantValue())));
+                string tooltip = null;
+                var tooltipAttr = (TooltipAttribute)attributes.FirstOrDefault(x => x is TooltipAttribute);
+                if (tooltipAttr != null)
+                {
+                    tooltip = tooltipAttr.Text;
+                }
+
+                entries.Add(new Entry(name, Convert.ToInt32(field.GetRawConstantValue()), tooltip));
             }
         }
 
