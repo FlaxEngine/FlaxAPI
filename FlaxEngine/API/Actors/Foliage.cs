@@ -36,26 +36,31 @@ namespace FlaxEngine
             /// <summary>
             /// The uniform scaling. All axes are scaled the same.
             /// </summary>
+            [Tooltip("The uniform scaling. All axes are scaled the same.")]
             Uniform,
 
             /// <summary>
             /// The free scaling. Each axis can have custom scale.
             /// </summary>
+            [Tooltip("The free scaling. Each axis can have custom scale.")]
             Free,
 
             /// <summary>
             /// The lock XZ plane axis. Axes X and Z are constrained to-gather and axis Y is free.
             /// </summary>
+            [Tooltip("The lock XZ plane axis. Axes X and Z are constrained to-gather and axis Y is free.")]
             LockXZ,
 
             /// <summary>
             /// The lock XY plane axis. Axes X and Y are constrained to-gather and axis Z is free.
             /// </summary>
+            [Tooltip("The lock XY plane axis. Axes X and Y are constrained to-gather and axis Z is free.")]
             LockXY,
 
             /// <summary>
             /// The lock YZ plane axis. Axes Y and Z are constrained to-gather and axis X is free.
             /// </summary>
+            [Tooltip("The lock YZ plane axis. Axes Y and Z are constrained to-gather and axis X is free.")]
             LockYZ,
         }
 

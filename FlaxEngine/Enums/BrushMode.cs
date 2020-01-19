@@ -10,11 +10,13 @@ namespace FlaxEngine
         /// <summary>
         /// Brush adds
         /// </summary>
+        [Tooltip("Brush adds")]
         Additive = 0,
 
         /// <summary>
         /// Brush subtracts
         /// </summary>
+        [Tooltip("Brush subtracts")]
         Subtractive = 1,
     }
 }

@@ -15,11 +15,13 @@ namespace FlaxEngine
             /// <summary>
             /// Use realtime simulation updates. Updates particles during every game logic update.
             /// </summary>
+            [Tooltip("Use realtime simulation updates. Updates particles during every game logic update.")]
             Realtime = 0,
 
             /// <summary>
             /// Use fixed timestep delta time to update particles simulation with a custom frequency.
             /// </summary>
+            [Tooltip("Use fixed timestep delta time to update particles simulation with a custom frequency.")]
             FixedTimestep = 1,
         }
 

@@ -12,17 +12,20 @@ namespace FlaxEngine
         /// <summary>
         /// Align text near the edge.
         /// </summary>
+        [Tooltip("Align text near the edge.")]
         Near = 0,
 
         /// <summary>
         /// Align text to the center.
         /// </summary>
+        [Tooltip("Align text to the center.")]
         Center,
 
         /// <summary>
         /// Align text to the far edge.
         /// </summary>
-        Far
+        [Tooltip("Align text to the far edge.")]
+        Far,
     };
 
     /// <summary>
@@ -33,17 +36,20 @@ namespace FlaxEngine
         /// <summary>
         /// No text wrapping.
         /// </summary>
+        [Tooltip("No text wrapping.")]
         NoWrap = 0,
 
         /// <summary>
         /// Wrap only whole words that overflow.
         /// </summary>
+        [Tooltip("Wrap only whole words that overflow.")]
         WrapWords,
 
         /// <summary>
         /// Wrap single characters that overflow.
         /// </summary>
-        WrapChars
+        [Tooltip("Wrap single characters that overflow.")]
+        WrapChars,
     };
 
     /// <summary>
