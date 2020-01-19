@@ -166,9 +166,9 @@ namespace FlaxEngine
         /// Moves the character with the given speed.
         /// </summary>
         /// <remarks>
-        /// Velocity along the y-axis is ignored and the gravity is automatically applied. It will slide along colliders. Result collision flags is the summary of collisions that occurred during the Move.
+        /// Gravity is automatically applied. It will slide along colliders. Result collision flags is the summary of collisions that occurred during the Move.
         /// </remarks>
-        /// <param name="speed">The speed (in cm/s).</param>
+        /// <param name="speed">The speed (in units/s).</param>
         /// <returns>The collision flags. It can be used to trigger various character animations.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
@@ -184,23 +184,23 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Moves the character with the given speed.
+        /// Moves the character using a 'collide-and-slide' algorithm.
         /// </summary>
         /// <remarks>
-        /// Velocity along the y-axis is ignored and the gravity is automatically applied. It will slide along colliders. Result collision flags is the summary of collisions that occurred during the Move.
+        /// Attempts to move the controller by the given displacement vector, the motion will only be constrained by collisions. It will slide along colliders. Result collision flags is the summary of collisions that occurred during the Move. This function does not apply any gravity.
         /// </remarks>
-        /// <param name="speed">The displacement vector (in cm).</param>
+        /// <param name="displacement">The displacement vector (in world units).</param>
         /// <returns>The collision flags. It can be used to trigger various character animations.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public CollisionFlags Move(Vector3 speed)
+        public CollisionFlags Move(Vector3 displacement)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            return Internal_Move(unmanagedPtr, ref speed);
+            return Internal_Move(unmanagedPtr, ref displacement);
 #endif
         }
 
@@ -247,7 +247,7 @@ namespace FlaxEngine
         internal static extern CollisionFlags Internal_SimpleMove(IntPtr obj, ref Vector3 speed);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern CollisionFlags Internal_Move(IntPtr obj, ref Vector3 speed);
+        internal static extern CollisionFlags Internal_Move(IntPtr obj, ref Vector3 displacement);
 #endif
 
         #endregion
