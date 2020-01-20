@@ -119,7 +119,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Sets the gamepad vibration.
+        /// Sets the gamepad vibration. Ignored if controller does not support this.
         /// </summary>
         /// <param name="state">The state.</param>
         public void SetVibration(GamepadVibrationState state)
@@ -127,6 +127,27 @@ namespace FlaxEngine
             if (_version != Input.gamepadsVersion)
                 throw new AccessViolationException();
             Internal_SetVibration(_index, state.LeftLarge, state.LeftSmall, state.RightLarge, state.LeftSmall);
+        }
+
+        /// <summary>
+        /// Sets the gamepad color. Ignored if controller does not support this.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        public void SetColor(Color color)
+        {
+            if (_version != Input.gamepadsVersion)
+                throw new AccessViolationException();
+            Internal_SetColor(_index, ref color);
+        }
+
+        /// <summary>
+        /// Resets the color of the gamepad light to the default. Ignored if controller does not support this.
+        /// </summary>
+        public void ResetColor()
+        {
+            if (_version != Input.gamepadsVersion)
+                throw new AccessViolationException();
+            Internal_ResetColor(_index);
         }
 
         /// <summary>
@@ -220,6 +241,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetVibration(int index, float l1, float l2, float r1, float r2);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetColor(int index, ref Color color);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ResetColor(int index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetState(int index, bool[] buttons, float[] axis);
