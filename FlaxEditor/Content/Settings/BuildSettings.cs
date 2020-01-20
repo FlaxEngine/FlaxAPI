@@ -12,17 +12,17 @@ namespace FlaxEditor.Content.Settings
     public sealed class BuildSettings : SettingsBase
     {
         /// <summary>
-        /// The maximum amount of assets to include into a single assets package. Assets packages will split into several packages if need to.
+        /// The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.
         /// </summary>
         [DefaultValue(256)]
-        [EditorOrder(10), Limit(32, short.MaxValue), EditorDisplay("General", "Max assets per package"), Tooltip("The maximum amount of assets to include into a single assets package. Assets packages will split into several packages if need to.")]
+        [EditorOrder(10), Limit(32, short.MaxValue), EditorDisplay("General", "Max assets per package"), Tooltip("The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.")]
         public int MaxAssetsPerPackage = 256;
 
         /// <summary>
-        /// The maximum size of the single assets package (in megabytes). Assets packages will split into several packages if need to.
+        /// The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.
         /// </summary>
         [DefaultValue(256)]
-        [EditorOrder(20), Limit(16, short.MaxValue), EditorDisplay("General", "Max package size (in MB)"), Tooltip("The maximum size of the single assets package (in megabytes). Assets packages will split into several packages if need to.")]
+        [EditorOrder(20), Limit(16, short.MaxValue), EditorDisplay("General", "Max package size (in MB)"), Tooltip("The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.")]
         public int MaxPackageSizeMB = 256;
 
         /// <summary>
@@ -76,14 +76,14 @@ namespace FlaxEditor.Content.Settings
                         Name = "Windows 64bit",
                         Output = "Output\\Win64",
                         Platform = BuildPlatform.Windows64,
-                        Mode = BuildConfiguration.Release,
+                        Mode = BuildConfiguration.Development,
                     },
                     new BuildTarget
                     {
                         Name = "Windows 32bit",
                         Output = "Output\\Win32",
                         Platform = BuildPlatform.Windows32,
-                        Mode = BuildConfiguration.Release,
+                        Mode = BuildConfiguration.Development,
                     },
                 }
             },

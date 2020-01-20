@@ -12,11 +12,13 @@ namespace FlaxEngine
         /// <summary>
         /// The raw PCM data.
         /// </summary>
+        [Tooltip("The raw PCM data.")]
         Raw = 0,
 
         /// <summary>
         /// The compressed audio data stored in the Vorbis format.
         /// </summary>
+        [Tooltip("The compressed audio data stored in the Vorbis format.")]
         Vorbis = 1,
     }
 
