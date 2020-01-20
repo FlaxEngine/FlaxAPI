@@ -152,6 +152,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the current network connection type.
+        /// </summary>
+        [UnmanagedCall]
+        public static NetworkConnectionType NetworkConnectionType
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetNetworkConnectionType(); }
+#endif
+        }
+
+        /// <summary>
         /// True if app has focus.
         /// </summary>
         [UnmanagedCall]
@@ -348,6 +361,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_GetDpi();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern NetworkConnectionType Internal_GetNetworkConnectionType();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetHasFocus();
