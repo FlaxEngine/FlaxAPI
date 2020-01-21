@@ -63,6 +63,11 @@ namespace FlaxEngine
         /// Vulkan
         /// </summary>
         Vulkan = 10,
+
+        /// <summary>
+        /// PlayStation 4
+        /// </summary>
+        PS4 = 11,
     }
 
     /// <summary>
