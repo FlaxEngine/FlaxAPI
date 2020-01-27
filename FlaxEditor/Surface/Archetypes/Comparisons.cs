@@ -53,6 +53,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 7,
                 Title = "Branch",
+                AlternativeTitles = new string[] { "if" },
                 Description = "Returns one of the input values based on the condition value",
                 Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(100, 60),
