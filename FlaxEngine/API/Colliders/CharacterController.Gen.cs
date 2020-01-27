@@ -93,6 +93,21 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the non-walkable mode for the character controller.
+        /// </summary>
+        [UnmanagedCall]
+        [EditorOrder(215), DefaultValue(NonWalkableModes.PreventClimbing), EditorDisplay("Character Controller"), Tooltip("Specifies the non-walkable mode for the character controller")]
+        public NonWalkableModes NonWalkableMode
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetNonWalkableMode(unmanagedPtr); }
+            set { Internal_SetNonWalkableMode(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
         /// Gets or sets the step height.
         /// </summary>
         /// <remarks>
@@ -224,6 +239,12 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetSlopeLimit(IntPtr obj, float val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern NonWalkableModes Internal_GetNonWalkableMode(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetNonWalkableMode(IntPtr obj, NonWalkableModes val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetStepOffset(IntPtr obj);

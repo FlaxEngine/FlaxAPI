@@ -22,6 +22,39 @@ namespace FlaxEditor.GUI
         private Window _window;
 
         /// <summary>
+        /// Gets or sets the selected button (with opened context menu).
+        /// </summary>
+        public MainMenuButton Selected
+        {
+            get => _selected;
+            set
+            {
+                if (_selected == value)
+                    return;
+
+                if (_selected != null)
+                {
+                    _selected.ContextMenu.VisibleChanged -= OnSelectedContextMenuVisibleChanged;
+                    _selected.ContextMenu.Hide();
+                }
+
+                _selected = value;
+
+                if (_selected != null && _selected.ContextMenu.HasChildren)
+                {
+                    _selected.ContextMenu.Show(_selected, new Vector2(0, _selected.Height));
+                    _selected.ContextMenu.VisibleChanged += OnSelectedContextMenuVisibleChanged;
+                }
+            }
+        }
+
+        private void OnSelectedContextMenuVisibleChanged(Control control)
+        {
+            if (_selected != null)
+                Selected = null;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MainMenu"/> class.
         /// </summary>
         /// <param name="mainWindow">The main window.</param>
@@ -219,32 +252,6 @@ namespace FlaxEditor.GUI
                 }
             }
             return result;
-        }
-
-        /// <summary>
-        /// Selects the specified button. Used by <see cref="MainMenuButton"/>.
-        /// </summary>
-        /// <param name="button">The button.</param>
-        internal void Select(MainMenuButton button)
-        {
-            // Check if popup menu has been already hidden
-            if (_selected != null && !_selected.ContextMenu.Visible)
-                _selected = null;
-
-            if (_selected != button)
-            {
-                _selected = button;
-
-                if (_selected != null && _selected.ContextMenu.HasChildren)
-                {
-                    _selected.ContextMenu.Show(_selected, new Vector2(0, _selected.Height));
-                }
-            }
-            else if (_selected != null)
-            {
-                _selected.ContextMenu.Hide();
-                _selected = null;
-            }
         }
 
         /// <inheritdoc />
