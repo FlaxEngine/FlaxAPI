@@ -140,7 +140,7 @@ namespace FlaxEditor.Windows
             _view.OnNavigateBack += NavigateBackward;
             _view.OnRename += Rename;
             _view.OnDelete += Delete;
-            _view.OnDuplicate += Clone;
+            _view.OnDuplicate += Duplicate;
             _view.OnPaste += Paste;
             _view.Parent = _split.Panel2;
         }
@@ -365,7 +365,7 @@ namespace FlaxEditor.Windows
         /// Clones the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        public void Clone(ContentItem item)
+        public void Duplicate(ContentItem item)
         {
             // Skip null
             if (item == null)
@@ -390,10 +390,10 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Clones the specified items.
+        /// Duplicates the specified items.
         /// </summary>
         /// <param name="items">The items.</param>
-        public void Clone(List<ContentItem> items)
+        public void Duplicate(List<ContentItem> items)
         {
             // Skip empty or null case
             if (items == null || items.Count == 0)
@@ -404,7 +404,7 @@ namespace FlaxEditor.Windows
             // Check if it's just a single item
             if (items.Count == 1)
             {
-                Clone(items[0]);
+                Duplicate(items[0]);
             }
             else
             {

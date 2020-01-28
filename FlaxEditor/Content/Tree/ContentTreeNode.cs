@@ -319,7 +319,7 @@ namespace FlaxEditor.Content
                     switch (key)
                     {
                     case Keys.D:
-                        Editor.Instance.Windows.ContentWin.Clone(Folder);
+                        Editor.Instance.Windows.ContentWin.Duplicate(Folder);
                         return true;
                     }
                 }
