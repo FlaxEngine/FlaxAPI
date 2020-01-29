@@ -206,8 +206,9 @@ namespace FlaxEditor.GUI.Timeline
 
             PlaybackState = state;
 
-            if (_player && _player.Animation && _player.Animation.IsLoaded)
+            if (_player && _player.Animation)
             {
+                _player.Animation.WaitForLoaded();
                 CurrentFrame = (int)(_player.Time * _player.Animation.FramesPerSecond);
             }
             else
@@ -243,7 +244,11 @@ namespace FlaxEditor.GUI.Timeline
         /// <inheritdoc />
         public override void OnSeek(int frame)
         {
-            _player.Time = frame / _player.Animation.FramesPerSecond;
+            if (_player?.Animation)
+            {
+                _player.Animation.WaitForLoaded();
+                _player.Time = frame / _player.Animation.FramesPerSecond;
+            }
 
             base.OnSeek(frame);
         }
