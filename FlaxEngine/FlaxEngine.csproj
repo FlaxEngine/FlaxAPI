@@ -191,8 +191,6 @@
     <Compile Include="API\Objects\Asset.Gen.cs">
       <DependentUpon>Asset.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Objects\BasePersistentData.cs" />
-    <Compile Include="API\Objects\BasePersistentData.Gen.cs" />
     <Compile Include="API\Objects\Font.cs" />
     <Compile Include="API\Objects\Font.Gen.cs">
       <DependentUpon>Font.cs</DependentUpon>
@@ -287,11 +285,9 @@
     <Compile Include="Attributes\MonoPInvokeCallbackAttribute.cs" />
     <Compile Include="Attributes\NoAnimateAttribute.cs" />
     <Compile Include="Attributes\NoSerializeAttribute.cs" />
-    <Compile Include="Attributes\PersisitentDataAttribute.cs" />
     <Compile Include="Attributes\SerializeAttribute.cs" />
     <Compile Include="Attributes\Editor\TooltipAttribute.cs" />
     <Compile Include="Attributes\UnmanagedCallAttribute.cs" />
-    <Compile Include="Configurations\PersistentDataConfig.cs" />
     <Compile Include="Engine\AnimationGraphParameter.cs" />
     <Compile Include="Engine\AudioDevice.cs" />
     <Compile Include="Engine\BrushSurface.cs" />
@@ -503,5 +499,6 @@
   <ItemGroup>
     <None Include=".editorconfig" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
