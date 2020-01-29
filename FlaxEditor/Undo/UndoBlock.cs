@@ -22,7 +22,7 @@ namespace FlaxEditor
         private readonly IUndoAction _customActionAfter;
 
         /// <summary>
-        ///     Creates new undo object for recording actions with using pattern.
+        /// Creates new undo object for recording actions with using pattern.
         /// </summary>
         /// <param name="undo">The undo/redo object.</param>
         /// <param name="snapshotInstance">Instance of an object to record.</param>

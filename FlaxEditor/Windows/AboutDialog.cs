@@ -62,7 +62,7 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        ///     Create footer label
+        /// Create footer label
         /// </summary>
         /// <param name="topParentControl">Top element that this footer should be put under</param>
         private void CreateFooter(Control topParentControl)

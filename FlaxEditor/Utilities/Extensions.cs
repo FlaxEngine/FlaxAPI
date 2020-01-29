@@ -12,8 +12,7 @@ namespace FlaxEditor.Utilities
     public static partial class Extensions
     {
         /// <summary>
-        ///     Gets a list of MemberComparison values that represent the fields and/or properties that differ between the two
-        ///     objects.
+        /// Gets a list of MemberComparison values that represent the fields and/or properties that differ between the two objects.
         /// </summary>
         /// <typeparam name="T">Type of object to compare.</typeparam>
         /// <param name="first">First object to compare.</param>

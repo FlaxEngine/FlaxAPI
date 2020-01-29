@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 namespace FlaxEngine.Collections
 {
     /// <summary>
-    ///     Creates new structure array like, with fast front and back insertion.
-    ///     <para>Every overflow of this buffer removes last item form other side of insertion</para>
+    /// Creates new structure array like, with fast front and back insertion.
+    /// <para>Every overflow of this buffer removes last item form other side of insertion</para>
     /// </summary>
     /// <remarks>This collection is NOT thread-safe.</remarks>
     /// <typeparam name="T">Type of items inserted into buffer</typeparam>
@@ -19,17 +19,17 @@ namespace FlaxEngine.Collections
     public class CircularBuffer<T> : IEnumerable<T>
     {
         /// <summary>
-        ///     Arguments for new item added event
+        /// Arguments for new item added event
         /// </summary>
         public class ItemAddedEventArgs : EventArgs
         {
             /// <summary>
-            ///     Gets Index of new element in buffer
+            /// Gets Index of new element in buffer
             /// </summary>
             public int Index { get; }
 
             /// <summary>
-            ///     Gets added item
+            /// Gets added item
             /// </summary>
             public T Item { get; }
 
@@ -46,17 +46,17 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Arguments for item removed event
+        /// Arguments for item removed event
         /// </summary>
         public class ItemRemovedEventArgs : EventArgs
         {
             /// <summary>
-            ///     Gets if item removed was item from front of the buffer
+            /// Gets if item removed was item from front of the buffer
             /// </summary>
             public bool WasFrontItem { get; }
 
             /// <summary>
-            ///     Gets removed item
+            /// Gets removed item
             /// </summary>
             public T Item { get; }
 
@@ -73,17 +73,17 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Arguments for item being replaced because of buffer was overflown with data
+        /// Arguments for item being replaced because of buffer was overflown with data
         /// </summary>
         public class ItemOverflownEventArgs : EventArgs
         {
             /// <summary>
-            ///     Gets if item removed was item from front of the buffer
+            /// Gets if item removed was item from front of the buffer
             /// </summary>
             public bool WasFrontItem { get; }
 
             /// <summary>
-            ///     Gets overflown item
+            /// Gets overflown item
             /// </summary>
             public T Item { get; }
 
@@ -109,7 +109,7 @@ namespace FlaxEngine.Collections
         private int _backItem;
 
         /// <summary>
-        ///     Executes an action when item is removed
+        /// Executes an action when item is removed
         /// </summary>
         public event ItemRemovedEventHandler OnItemRemoved;
 
@@ -117,7 +117,7 @@ namespace FlaxEngine.Collections
         public delegate void ItemRemovedEventHandler(object sender, ItemRemovedEventArgs e);
 
         /// <summary>
-        ///     Executes an action when item is added
+        /// Executes an action when item is added
         /// </summary>
         public event ItemAddedEventHandler OnItemAdded;
 
@@ -125,7 +125,7 @@ namespace FlaxEngine.Collections
         public delegate void ItemAddedEventHandler(object sender, ItemAddedEventArgs e);
 
         /// <summary>
-        ///     Executes an action when item is removed because of overflow in buffer
+        /// Executes an action when item is removed because of overflow in buffer
         /// </summary>
         public event ItemOverflownEventHandler OnItemOverflown;
 
@@ -133,12 +133,12 @@ namespace FlaxEngine.Collections
         public delegate void ItemOverflownEventHandler(object sender, ItemOverflownEventArgs e);
 
         /// <summary>
-        ///     Amount of items currently in buffer
+        /// Amount of items currently in buffer
         /// </summary>
         public int Count { get; private set; }
 
         /// <summary>
-        ///     Current capacity of internal buffer
+        /// Current capacity of internal buffer
         /// </summary>
         public int Capacity
         {
@@ -157,17 +157,17 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Returns true if there are no items in structure, or false if there are
+        /// Returns true if there are no items in structure, or false if there are
         /// </summary>
         public bool IsEmpty => Count == 0;
 
         /// <summary>
-        ///     Returns true if buffer is filled with whole of its capacity with items
+        /// Returns true if buffer is filled with whole of its capacity with items
         /// </summary>
         public bool IsFull => Count == Capacity;
 
         /// <summary>
-        ///     Creates new instance of object with given capacity, copies given array as a framework
+        /// Creates new instance of object with given capacity, copies given array as a framework
         /// </summary>
         /// <param name="buffer">Buffer to insert into</param>
         /// <param name="frontItem">First index of an item in provided buffer</param>
@@ -195,7 +195,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Creates new instance of object with given capacity
+        /// Creates new instance of object with given capacity
         /// </summary>
         /// <param name="capacity">Capacity of internal structure</param>
         public CircularBuffer(int capacity)
@@ -209,7 +209,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Creates new instance of object with given capacity and adds array of items to internal buffer
+        /// Creates new instance of object with given capacity and adds array of items to internal buffer
         /// </summary>
         /// <param name="capacity">Capacity of internal structure</param>
         /// <param name="items">Items to input</param>
@@ -230,8 +230,8 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets or sets item from list at given index.
-        ///     <remarks>All items are in order of input regardless of overflow that may occur</remarks>
+        /// Gets or sets item from list at given index.
+        /// <remarks>All items are in order of input regardless of overflow that may occur</remarks>
         /// </summary>
         /// <param name="index">Index to item required</param>
         public T this[int index]
@@ -257,7 +257,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Adds item to the front of the buffer
+        /// Adds item to the front of the buffer
         /// </summary>
         /// <param name="item">Item to add</param>
         public void PushFront(T item)
@@ -274,7 +274,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Adds item to the back of the buffer
+        /// Adds item to the back of the buffer
         /// </summary>
         /// <param name="item">Item to add</param>
         public void PushBack(T item)
@@ -291,7 +291,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets top first element form collection
+        /// Gets top first element form collection
         /// </summary>
         public T Front()
         {
@@ -301,7 +301,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets bottom first element form collection
+        /// Gets bottom first element form collection
         /// </summary>
         public T Back()
         {
@@ -311,7 +311,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Removes first item from the front of the buffer
+        /// Removes first item from the front of the buffer
         /// </summary>
         /// <returns></returns>
         public T PopFront()
@@ -334,7 +334,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Removes first item from the back of the buffer
+        /// Removes first item from the back of the buffer
         /// </summary>
         /// <returns></returns>
         public T PopBack()
@@ -357,9 +357,9 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Copies the buffer contents to an array, according to the logical
-        ///     contents of the buffer (i.e. independent of the internal
-        ///     order/contents)
+        /// Copies the buffer contents to an array, according to the logical
+        /// contents of the buffer (i.e. independent of the internal
+        /// order/contents)
         /// </summary>
         /// <returns>A new array with a copy of the buffer contents.</returns>
         public T[] ToArray()
@@ -382,7 +382,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     CopyTo copies a collection into an Array, starting at a particular index into the array.
+        /// CopyTo copies a collection into an Array, starting at a particular index into the array.
         /// </summary>
         /// <returns>A new array with a copy of the buffer contents.</returns>
         public void CopyTo(T[] array, int arrayIndex)
@@ -391,7 +391,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Clears buffer and remains capacity
+        /// Clears buffer and remains capacity
         /// </summary>
         public void Clear()
         {
@@ -440,8 +440,8 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Decrease index of _backItem and warp it round if fall below 0
-        ///     <para>Move _frontItem back index if they've met</para>
+        /// Decrease index of _backItem and warp it round if fall below 0
+        /// <para>Move _frontItem back index if they've met</para>
         /// </summary>
         private void DecreaseBackIndex()
         {
@@ -454,8 +454,8 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Decrease index of _frontItem and warp it round if fall below 0
-        ///     <para>Move _backItem back index if they've met</para>
+        /// Decrease index of _frontItem and warp it round if fall below 0
+        /// <para>Move _backItem back index if they've met</para>
         /// </summary>
         private void DecreaseFrontIndex()
         {
@@ -468,8 +468,8 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Increases index of _backItem and warp it round if exceded capacity
-        ///     <para>Move _frontItem forward index if they've met</para>
+        /// Increases index of _backItem and warp it round if exceded capacity
+        /// <para>Move _frontItem forward index if they've met</para>
         /// </summary>
         private void IncreaseBackIndex()
         {
@@ -479,8 +479,8 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Increases index of _frontItem and warp it round if exceded capacity
-        ///     <para>Move _backItem forward index if they've met</para>
+        /// Increases index of _frontItem and warp it round if exceded capacity
+        /// <para>Move _backItem forward index if they've met</para>
         /// </summary>
         private void IncreaseFrontIndex()
         {
