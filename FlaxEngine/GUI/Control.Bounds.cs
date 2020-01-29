@@ -6,7 +6,7 @@ namespace FlaxEngine.GUI
     public partial class Control
     {
         /// <summary>
-        /// Gets or sets X coordinate of the upper-left corner of the control relative to the upper-left corner of its container
+        /// Gets or sets X coordinate of the upper-left corner of the control relative to the upper-left corner of its container.
         /// </summary>
         [HideInEditor, NoSerialize]
         public float X
@@ -23,7 +23,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets Y coordinate of the upper-left corner of the control relative to the upper-left corner of its container
+        /// Gets or sets Y coordinate of the upper-left corner of the control relative to the upper-left corner of its container.
         /// </summary>
         [HideInEditor, NoSerialize]
         public float Y
@@ -40,7 +40,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets coordinates of the upper-left corner of the control relative to the upper-left corner of its container
+        /// Gets or sets coordinates of the upper-left corner of the control relative to the upper-left corner of its container.
         /// </summary>
         [NoSerialize]
         [ExpandGroups, EditorDisplay("Transform"), EditorOrder(1000), Tooltip("The location of the upper-left corner of the control relative to he upper-left corner of its container.")]
@@ -55,7 +55,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets width of the control
+        /// Gets or sets width of the control.
         /// </summary>
         [HideInEditor, NoSerialize]
         public float Width
@@ -72,7 +72,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets height of the control
+        /// Gets or sets height of the control.
         /// </summary>
         [HideInEditor, NoSerialize]
         public float Height
@@ -89,7 +89,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets control's size
+        /// Gets or sets control's size.
         /// </summary>
         [EditorDisplay("Transform"), EditorOrder(1010), Tooltip("The size of the control bounds.")]
         public Vector2 Size
@@ -103,52 +103,52 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets Y coordinate of the top edge of the control relative to the upper-left corner of its container
+        /// Gets Y coordinate of the top edge of the control relative to the upper-left corner of its container.
         /// </summary>
         public float Top => _bounds.Top;
 
         /// <summary>
-        /// Gets Y coordinate of the bottom edge of the control relative to the upper-left corner of its container
+        /// Gets Y coordinate of the bottom edge of the control relative to the upper-left corner of its container.
         /// </summary>
         public float Bottom => _bounds.Bottom;
 
         /// <summary>
-        /// Gets X coordinate of the left edge of the control relative to the upper-left corner of its container
+        /// Gets X coordinate of the left edge of the control relative to the upper-left corner of its container.
         /// </summary>
         public float Left => _bounds.Left;
 
         /// <summary>
-        /// Gets X coordinate of the right edge of the control relative to the upper-left corner of its container
+        /// Gets X coordinate of the right edge of the control relative to the upper-left corner of its container.
         /// </summary>
         public float Right => _bounds.Right;
 
         /// <summary>
-        /// Gets position of the upper left corner of the control relative to the upper-left corner of its container
+        /// Gets position of the upper left corner of the control relative to the upper-left corner of its container.
         /// </summary>
         public Vector2 UpperLeft => _bounds.UpperLeft;
 
         /// <summary>
-        /// Gets position of the upper right corner of the control relative to the upper-left corner of its container
+        /// Gets position of the upper right corner of the control relative to the upper-left corner of its container.
         /// </summary>
         public Vector2 UpperRight => _bounds.UpperRight;
 
         /// <summary>
-        /// Gets position of the bottom right corner of the control relative to the upper-left corner of its container
+        /// Gets position of the bottom right corner of the control relative to the upper-left corner of its container.
         /// </summary>
         public Vector2 BottomRight => _bounds.BottomRight;
 
         /// <summary>
-        /// Gets position of the bottom left of the control relative to the upper-left corner of its container
+        /// Gets position of the bottom left of the control relative to the upper-left corner of its container.
         /// </summary>
         public Vector2 BottomLeft => _bounds.BottomLeft;
 
         /// <summary>
-        /// Gets center position of the control relative to the upper-left corner of its container
+        /// Gets center position of the control relative to the upper-left corner of its container.
         /// </summary>
         public Vector2 Center => _bounds.Center;
 
         /// <summary>
-        /// Gets or sets control's bounds rectangle
+        /// Gets or sets control's bounds rectangle.
         /// </summary>
         [HideInEditor, NoSerialize]
         public Rectangle Bounds
@@ -176,9 +176,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the normalized pivot location (used to transform control around it). Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom left corner.
+        /// Gets or sets the normalized pivot location (used to transform control around it). Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom right corner.
         /// </summary>
-        [EditorDisplay("Transform"), Limit(0.0f, 1.0f, 0.1f), EditorOrder(1030), Tooltip("The control rotation pivot location in normalized control size. Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom left corner.")]
+        [EditorDisplay("Transform"), Limit(0.0f, 1.0f, 0.1f), EditorOrder(1030), Tooltip("The control rotation pivot location in normalized control size. Point (0,0) is upper left corner, (0.5,0.5) is center, (1,1) is bottom right corner.")]
         public Vector2 Pivot
         {
             get => _pivot;
@@ -190,7 +190,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the shear. Defined in degrees.
+        /// Gets or sets the shear transform angles (x, y). Defined in degrees.
         /// </summary>
         [EditorDisplay("Transform"), EditorOrder(1040), Tooltip("The shear transform angles (x, y). Defined in degrees.")]
         public Vector2 Shear
