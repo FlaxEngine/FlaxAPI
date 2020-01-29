@@ -445,19 +445,15 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Save()
         {
-            // Check if don't need to push any new changes to the original asset
             if (!IsEdited)
                 return;
 
-            // Save
             if (Asset.Save())
             {
-                // Error
-                Editor.LogError("Cannot save material instance.");
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 
-            // Update
             _properties.PeekState();
             ClearEditedFlag();
             _item.RefreshThumbnail();

@@ -216,22 +216,12 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            // Wait until model asset file be fully loaded
-            if (_asset.WaitForLoaded())
-            {
-                // Error
-                return;
-            }
-
-            // Call asset saving
             if (_asset.Save(_properties.Skeleton, _properties.Mask))
             {
-                // Error
-                Editor.LogError("Failed to save asset " + _item);
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 
-            // Update
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }

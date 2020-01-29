@@ -637,42 +637,42 @@ namespace FlaxEditor
         public enum NewAssetType
         {
             /// <summary>
-            /// The material. See <see cref="FlaxEngine.Material"/>.
+            /// The <see cref="FlaxEngine.Material"/>.
             /// </summary>
             Material = 0,
 
             /// <summary>
-            /// The material instance. See <see cref="FlaxEngine.MaterialInstance"/>.
+            /// The <see cref="FlaxEngine.MaterialInstance"/>.
             /// </summary>
             MaterialInstance = 1,
 
             /// <summary>
-            /// The collision data. See <see cref="FlaxEngine.CollisionData"/>.
+            /// The <see cref="FlaxEngine.CollisionData"/>.
             /// </summary>
             CollisionData = 2,
 
             /// <summary>
-            /// The animation graph. See <see cref="FlaxEngine.AnimationGraph"/>.
+            /// The <see cref="FlaxEngine.AnimationGraph"/>.
             /// </summary>
             AnimationGraph = 3,
 
             /// <summary>
-            /// The skeleton mask. See <see cref="FlaxEngine.SkeletonMask"/>.
+            /// The <see cref="FlaxEngine.SkeletonMask"/>.
             /// </summary>
             SkeletonMask = 4,
 
             /// <summary>
-            /// The particle emitter. See <see cref="FlaxEngine.ParticleEmitter"/>.
+            /// The <see cref="FlaxEngine.ParticleEmitter"/>.
             /// </summary>
             ParticleEmitter = 5,
 
             /// <summary>
-            /// The particle emitter. See <see cref="FlaxEngine.ParticleSystem"/>.
+            /// The <see cref="FlaxEngine.ParticleSystem"/>.
             /// </summary>
             ParticleSystem = 6,
 
             /// <summary>
-            /// The particle emitter. See <see cref="FlaxEngine.SceneAnimation"/>.
+            /// The <see cref="FlaxEngine.SceneAnimation"/>.
             /// </summary>
             SceneAnimation = 7,
         }

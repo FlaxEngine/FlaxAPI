@@ -536,23 +536,19 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Save()
         {
-            // Check if don't need to push any new changes to the original asset
             if (!IsEdited)
                 return;
 
-            // Just in case refresh data
             if (RefreshTempAsset())
             {
                 return;
             }
 
-            // Update original Particle Emitter so user can see changes in the scene
             if (SaveToOriginal())
             {
                 return;
             }
 
-            // Setup
             ClearEditedFlag();
             OnSurfaceEditedChanged();
             _item.RefreshThumbnail();
