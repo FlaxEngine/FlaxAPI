@@ -195,19 +195,25 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnRightKeyClicked(Image image, MouseButton button)
         {
-            if (button == MouseButton.Left)
+            if (button == MouseButton.Left && GetNextKeyframeFrame(Timeline.CurrentTime, out var frame))
             {
-                var time = Timeline.CurrentTime;
-                for (int i = 0; i < Events.Keyframes.Count; i++)
+                Timeline.OnSeek(frame);
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool GetNextKeyframeFrame(float time, out int result)
+        {
+            for (int i = 0; i < Events.Keyframes.Count; i++)
+            {
+                var k = Events.Keyframes[i];
+                if (k.Time > time)
                 {
-                    var k = Events.Keyframes[i];
-                    if (k.Time > time)
-                    {
-                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond));
-                        break;
-                    }
+                    result = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
+                    return true;
                 }
             }
+            return base.GetNextKeyframeFrame(time, out result);
         }
 
         private void OnAddKeyClicked(Image image, MouseButton button)
@@ -243,19 +249,25 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnLeftKeyClicked(Image image, MouseButton button)
         {
-            if (button == MouseButton.Left)
+            if (button == MouseButton.Left && GetPreviousKeyframeFrame(Timeline.CurrentTime, out var frame))
             {
-                var time = Timeline.CurrentTime;
-                for (int i = Events.Keyframes.Count - 1; i >= 0; i--)
+                Timeline.OnSeek(frame);
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool GetPreviousKeyframeFrame(float time, out int result)
+        {
+            for (int i = Events.Keyframes.Count - 1; i >= 0; i--)
+            {
+                var k = Events.Keyframes[i];
+                if (k.Time < time)
                 {
-                    var k = Events.Keyframes[i];
-                    if (k.Time < time)
-                    {
-                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond));
-                        break;
-                    }
+                    result = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
+                    return true;
                 }
             }
+            return base.GetPreviousKeyframeFrame(time, out result);
         }
 
         private void UpdateEvents()
