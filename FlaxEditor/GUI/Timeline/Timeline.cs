@@ -1783,6 +1783,46 @@ namespace FlaxEditor.GUI.Timeline
             case Keys.End:
                 OnSeek(DurationFrames);
                 return true;
+            case Keys.PageUp:
+            {
+                bool hasValid = false;
+                int closestFrame = 0;
+                float time = CurrentTime;
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    if (_tracks[i].GetNextKeyframeFrame(time, out var frame) && (!hasValid || closestFrame > frame))
+                    {
+                        hasValid = true;
+                        closestFrame = frame;
+                    }
+                }
+                if (hasValid)
+                {
+                    OnSeek(closestFrame);
+                    return true;
+                }
+                break;
+            }
+            case Keys.PageDown:
+            {
+                bool hasValid = false;
+                int closestFrame = 0;
+                float time = CurrentTime;
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    if (_tracks[i].GetPreviousKeyframeFrame(time, out var frame) && (!hasValid || closestFrame < frame))
+                    {
+                        hasValid = true;
+                        closestFrame = frame;
+                    }
+                }
+                if (hasValid)
+                {
+                    OnSeek(closestFrame);
+                    return true;
+                }
+                break;
+            }
             }
 
             return false;
