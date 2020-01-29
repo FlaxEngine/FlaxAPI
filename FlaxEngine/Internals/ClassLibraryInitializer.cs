@@ -93,6 +93,11 @@ namespace FlaxEngine
             RootControl.GameRoot = window.GUI;
         }
 
+        internal static Type MakeGenericType(Type genericType, Type[] genericArgs)
+        {
+            return genericType.MakeGenericType(genericArgs);
+        }
+
         private static void CreateGuiStyle()
         {
             var style = new Style

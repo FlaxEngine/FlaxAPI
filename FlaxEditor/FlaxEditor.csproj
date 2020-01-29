@@ -73,6 +73,7 @@
     <Compile Include="Content\GUI\ContentView.cs" />
     <Compile Include="Content\GUI\ContentView.DragDrop.cs" />
     <Compile Include="Content\Import\Request.cs" />
+    <Compile Include="Content\Proxy\GameplayGlobalsProxy.cs" />
     <Compile Include="Content\Proxy\ParticleEmitterProxy.cs" />
     <Compile Include="Content\Proxy\ParticleSystemProxy.cs" />
     <Compile Include="Content\Proxy\SceneAnimationProxy.cs" />
@@ -592,6 +593,7 @@
     <Compile Include="Windows\Assets\CollisionDataWindow.cs" />
     <Compile Include="Windows\Assets\CubeTextureWindow.cs" />
     <Compile Include="Windows\Assets\FontWindow.cs" />
+    <Compile Include="Windows\Assets\GameplayGlobalsWindow.cs" />
     <Compile Include="Windows\Assets\IESProfileWindow.cs" />
     <Compile Include="Windows\Assets\JsonAssetWindow.cs" />
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
@@ -656,6 +658,5 @@
   <ItemGroup>
     <None Include=".editorconfig" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

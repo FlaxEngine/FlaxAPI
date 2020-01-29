@@ -128,6 +128,8 @@
     <Compile Include="API\BinaryAssets\CollisionData.Gen.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\FontAsset.Gen.cs" />
+    <Compile Include="API\BinaryAssets\GameplayGlobals.cs" />
+    <Compile Include="API\BinaryAssets\GameplayGlobals.Gen.cs" />
     <Compile Include="API\BinaryAssets\Model.cs" />
     <Compile Include="API\BinaryAssets\Model.Gen.cs" />
     <Compile Include="API\BinaryAssets\ParticleEmitter.cs" />
