@@ -368,6 +368,30 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <summary>
+        /// Gets the frame of the next keyframe (if found).
+        /// </summary>
+        /// <param name="time">The start time.</param>
+        /// <param name="result">The result value.</param>
+        /// <returns>True if found next keyframe, otherwise false.</returns>
+        public virtual bool GetNextKeyframeFrame(float time, out int result)
+        {
+            result = 0;
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the frame of the previous keyframe (if found).
+        /// </summary>
+        /// <param name="time">The start time.</param>
+        /// <param name="result">The result value.</param>
+        /// <returns>True if found previous keyframe, otherwise false.</returns>
+        public virtual bool GetPreviousKeyframeFrame(float time, out int result)
+        {
+            result = 0;
+            return false;
+        }
+
+        /// <summary>
         /// Adds the media.
         /// </summary>
         /// <param name="media">The media.</param>

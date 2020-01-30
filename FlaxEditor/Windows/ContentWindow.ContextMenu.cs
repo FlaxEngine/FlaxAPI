@@ -97,12 +97,11 @@ namespace FlaxEditor.Windows
 
                 cm.AddSeparator();
 
-                b = cm.AddButton("Clone", _view.Duplicate);
-                b.Enabled = !isFolder;
+                cm.AddButton("Duplicate", _view.Duplicate);
 
                 cm.AddButton("Copy", _view.Copy);
 
-                cm.AddButton("Paste", _view.Paste);
+                b = cm.AddButton("Paste", _view.Paste);
                 b.Enabled = _view.CanPaste();
 
                 cm.AddButton("Rename", () => Rename(item));
