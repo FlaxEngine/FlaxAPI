@@ -195,8 +195,6 @@ namespace FlaxEngine
                 throw new InvalidOperationException("Only virtual models can be modified at runtime.");
             if (nodes == null)
                 throw new ArgumentNullException(nameof(nodes));
-            if (nodes.Length > MaxBones)
-                throw new ArgumentOutOfRangeException(nameof(nodes));
 
             // Cleanup data
             _nodes = null;
