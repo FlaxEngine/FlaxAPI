@@ -20,6 +20,7 @@ namespace FlaxEngine
             typeof(ParticleSystem),
             typeof(RawDataAsset),
             typeof(Model),
+            typeof(SkeletonMask),
         };
 
         // TODO: assets list get
