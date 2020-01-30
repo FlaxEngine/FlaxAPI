@@ -67,7 +67,7 @@ namespace FlaxEngine
         /// <summary>
         /// Saves asset to the file. Supported only in Editor.
         /// </summary>
-        /// <param name="path">The custom asset path to use for the saving. Use empty value to save this asset to its own storage location. Can be used to duplicate asset.</param>
+        /// <param name="path">The custom asset path to use for the saving. Use empty value to save this asset to its own storage location. Can be used to duplicate asset. Must be specified when saving virtual asset.</param>
         /// <returns>True if cannot save data, otherwise false.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
