@@ -7,9 +7,9 @@ using FlaxEngine;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
-    /// Custom editor for picking skeleton bone. Instead of choosing bone index or entering bone text it shows a combo box with simple tag picking by name.
+    /// Custom editor for picking skeleton node. Instead of choosing node index or entering node text it shows a combo box with simple tag picking by name.
     /// </summary>
-    public sealed class SkeletonBoneEditor : CustomEditor
+    public sealed class SkeletonNodeEditor : CustomEditor
     {
         private ComboBoxElement element;
 
@@ -22,16 +22,15 @@ namespace FlaxEditor.CustomEditors.Editors
             element = layout.ComboBox();
             element.ComboBox.SelectedIndexChanged += OnSelectedIndexChanged;
 
-            // Set bone names
+            // Set node names
             if (ParentEditor != null
                 && ParentEditor.Values.Count == 1 && ParentEditor.Values[0] is BoneSocket boneSocket
                 && boneSocket.Parent is AnimatedModel animatedModel && animatedModel.SkinnedModel
                 && !animatedModel.SkinnedModel.WaitForLoaded())
             {
                 var nodes = animatedModel.SkinnedModel.Nodes;
-                var bones = animatedModel.SkinnedModel.Bones;
-                for (int i = 0; i < bones.Length; i++)
-                    element.ComboBox.AddItem(nodes[bones[i].NodeIndex].Name);
+                for (int nodeIndex = 0; nodeIndex < nodes.Length; nodeIndex++)
+                    element.ComboBox.AddItem(nodes[nodeIndex].Name);
             }
         }
 
