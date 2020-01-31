@@ -207,7 +207,7 @@ namespace FlaxEditor.Windows.Assets
                         Drag = DragParameter
                     };
                     propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(pIndex, label);
-                    propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
+                    propertyLabel.SetupContextMenu += OnPropertyLabelSetupContextMenu;
                     var property = layout.AddPropertyItem(propertyLabel);
                     property.Object(propertyValue);
                 }
@@ -233,12 +233,12 @@ namespace FlaxEditor.Windows.Assets
                 return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
             }
 
-            private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
+            private void OnPropertyLabelSetupContextMenu(PropertyNameLabel label, ContextMenu menu, CustomEditor linkedEditor)
             {
-                var contextMenu = new ContextMenu();
-                contextMenu.AddButton("Rename", () => StartParameterRenaming(index, label));
-                contextMenu.AddButton("Delete", () => DeleteParameter(index));
-                contextMenu.Show(label, targetLocation);
+                var index = (int)label.Tag;
+                menu.AddSeparator();
+                menu.AddButton("Rename", () => StartParameterRenaming(index, label));
+                menu.AddButton("Delete", () => DeleteParameter(index));
             }
 
             private void AddParameter(ParameterType type)
