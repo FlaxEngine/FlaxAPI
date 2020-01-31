@@ -52,14 +52,17 @@ namespace FlaxEditor.Windows.Assets
             {
                 Proxy.DefaultValues[Name] = DefaultValue;
                 Proxy.Values[Name] = DefaultValue;
+
                 Proxy.Window._propertiesEditor.BuildLayoutOnUpdate();
             }
 
             private void Remove()
             {
                 DefaultValue = Proxy.DefaultValues[Name];
+
                 Proxy.Values.Remove(Name);
                 Proxy.DefaultValues.Remove(Name);
+
                 Proxy.Window._propertiesEditor.BuildLayoutOnUpdate();
             }
 
@@ -68,6 +71,48 @@ namespace FlaxEditor.Windows.Assets
             {
                 DefaultValue = null;
                 Proxy = null;
+            }
+        }
+
+        private class RenameParamAction : IUndoAction
+        {
+            public PropertiesProxy Proxy;
+            public string Before;
+            public string After;
+
+            /// <inheritdoc />
+            public string ActionString => "Rename parameter";
+
+            /// <inheritdoc />
+            public void Do()
+            {
+                Rename(Before, After);
+            }
+
+            /// <inheritdoc />
+            public void Undo()
+            {
+                Rename(After, Before);
+            }
+
+            private void Rename(string from, string to)
+            {
+                var defaultValue = Proxy.DefaultValues[from];
+
+                Proxy.DefaultValues.Remove(from);
+                Proxy.Values.Remove(from);
+
+                Proxy.DefaultValues[to] = defaultValue;
+                Proxy.Values[to] = defaultValue;
+
+                Proxy.Window._propertiesEditor.BuildLayoutOnUpdate();
+            }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                Before = null;
+                After = null;
             }
         }
 
@@ -211,10 +256,8 @@ namespace FlaxEditor.Windows.Assets
 
                 foreach (var e in _proxy.DefaultValues)
                 {
-                    // TODO: editing default value
+                    // TODO: editing default value with undo
                     // TODO: editing value
-                    // TODO: renaming variables
-                    // TODO: removing variable
                     // TODO: copy/paste values
 
                     var name = e.Key;
@@ -223,6 +266,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         Tag = name,
                     };
+                    propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(name, label);
                     propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(name, label, ref location);
                     var property = layout.AddPropertyItem(propertyLabel);
                     property.Object(valueContainer);
@@ -231,7 +275,7 @@ namespace FlaxEditor.Windows.Assets
                 // TODO: improve the UI
                 layout.Space(40);
                 var addParamType = layout.ComboBox().ComboBox;
-                addParamType.Items = AllowedTypes.Select(x => CustomEditorsUtil.GetTypeNameUI(x)).ToList();
+                addParamType.Items = AllowedTypes.Select(CustomEditorsUtil.GetTypeNameUI).ToList();
                 addParamType.SelectedIndex = 0;
                 _addParamType = addParamType;
                 var addParamButton = layout.Button("Add").Button;
@@ -264,6 +308,7 @@ namespace FlaxEditor.Windows.Assets
             private void ShowParameterMenu(string name, Control label, ref Vector2 targetLocation)
             {
                 var contextMenu = new ContextMenu();
+                contextMenu.AddButton("Rename", () => StartParameterRenaming(name, label));
                 contextMenu.AddButton("Delete", () => DeleteParameter(name));
                 contextMenu.Show(label, targetLocation);
             }
@@ -274,20 +319,51 @@ namespace FlaxEditor.Windows.Assets
             /// <param name="type">The type.</param>
             private void AddParameter(Type type)
             {
-                var material = _proxy?.Asset;
-                if (material == null || !material.IsLoaded)
+                var asset = _proxy?.Asset;
+                if (asset == null || asset.WaitForLoaded())
                     return;
                 var action = new AddRemoveParamAction
                 {
                     Proxy = _proxy,
                     IsAdd = true,
-                    Name = "New parameter",
+                    Name = StringUtils.IncrementNameNumber("New parameter", x => OnParameterRenameValidate(null, x)),
                     DefaultValue = Utilities.Utils.GetDefaultValue(type),
                 };
                 _proxy.Window.Undo.AddAction(action);
                 action.Do();
             }
-            
+
+            /// <summary>
+            /// Starts renaming parameter.
+            /// </summary>
+            /// <param name="name">The name</param>
+            /// <param name="label">The label control.</param>
+            private void StartParameterRenaming(string name, Control label)
+            {
+                var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), name, false);
+                dialog.Tag = name;
+                dialog.Validate += OnParameterRenameValidate;
+                dialog.Renamed += OnParameterRenamed;
+            }
+
+            private bool OnParameterRenameValidate(RenamePopup popup, string value)
+            {
+                return !string.IsNullOrWhiteSpace(value) && !_proxy.DefaultValues.ContainsKey(value);
+            }
+
+            private void OnParameterRenamed(RenamePopup renamePopup)
+            {
+                var name = (string)renamePopup.Tag;
+                var action = new RenameParamAction
+                {
+                    Proxy = _proxy,
+                    Before = name,
+                    After = renamePopup.Text,
+                };
+                _proxy.Window.Undo.AddAction(action);
+                action.Do();
+            }
+
             /// <summary>
             /// Removes the parameter.
             /// </summary>
