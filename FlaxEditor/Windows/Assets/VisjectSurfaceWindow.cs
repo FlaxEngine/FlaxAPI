@@ -233,12 +233,6 @@ namespace FlaxEditor.Windows.Assets
                 return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
             }
 
-            /// <summary>
-            /// Shows the parameter context menu.
-            /// </summary>
-            /// <param name="index">The index.</param>
-            /// <param name="label">The label control.</param>
-            /// <param name="targetLocation">The target location.</param>
             private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
             {
                 var contextMenu = new ContextMenu();
@@ -247,10 +241,6 @@ namespace FlaxEditor.Windows.Assets
                 contextMenu.Show(label, targetLocation);
             }
 
-            /// <summary>
-            /// Adds the parameter.
-            /// </summary>
-            /// <param name="type">The type.</param>
             private void AddParameter(ParameterType type)
             {
                 var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
@@ -269,11 +259,6 @@ namespace FlaxEditor.Windows.Assets
                 action.Do();
             }
 
-            /// <summary>
-            /// Starts renaming parameter.
-            /// </summary>
-            /// <param name="index">The index.</param>
-            /// <param name="label">The label control.</param>
             private void StartParameterRenaming(int index, Control label)
             {
                 var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
@@ -305,10 +290,6 @@ namespace FlaxEditor.Windows.Assets
                 action.Do();
             }
 
-            /// <summary>
-            /// Removes the parameter.
-            /// </summary>
-            /// <param name="index">The index.</param>
             private void DeleteParameter(int index)
             {
                 var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];

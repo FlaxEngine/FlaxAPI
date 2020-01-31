@@ -244,7 +244,6 @@ namespace FlaxEditor.Windows.Assets
                 typeof(string),
             };
 
-            /// <inheritdoc />
             public override void Initialize(LayoutElementsContainer layout)
             {
                 _proxy = (PropertiesProxy)Values[0];
@@ -282,12 +281,6 @@ namespace FlaxEditor.Windows.Assets
                 addParamButton.Clicked += OnAddParamButtonClicked;
             }
 
-            private void OnAddParamButtonClicked()
-            {
-                AddParameter(AllowedTypes[_addParamType.SelectedIndex]);
-            }
-
-            /// <inheritdoc />
             public override void Refresh()
             {
                 if (_proxy?.Asset != null)
@@ -299,12 +292,11 @@ namespace FlaxEditor.Windows.Assets
                 base.Refresh();
             }
 
-            /// <summary>
-            /// Shows the parameter context menu.
-            /// </summary>
-            /// <param name="name">The name.</param>
-            /// <param name="label">The label control.</param>
-            /// <param name="targetLocation">The target location.</param>
+            private void OnAddParamButtonClicked()
+            {
+                AddParameter(AllowedTypes[_addParamType.SelectedIndex]);
+            }
+
             private void ShowParameterMenu(string name, Control label, ref Vector2 targetLocation)
             {
                 var contextMenu = new ContextMenu();
@@ -313,10 +305,6 @@ namespace FlaxEditor.Windows.Assets
                 contextMenu.Show(label, targetLocation);
             }
 
-            /// <summary>
-            /// Adds the parameter.
-            /// </summary>
-            /// <param name="type">The type.</param>
             private void AddParameter(Type type)
             {
                 var asset = _proxy?.Asset;
@@ -333,11 +321,6 @@ namespace FlaxEditor.Windows.Assets
                 action.Do();
             }
 
-            /// <summary>
-            /// Starts renaming parameter.
-            /// </summary>
-            /// <param name="name">The name</param>
-            /// <param name="label">The label control.</param>
             private void StartParameterRenaming(string name, Control label)
             {
                 var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), name, false);
@@ -364,10 +347,6 @@ namespace FlaxEditor.Windows.Assets
                 action.Do();
             }
 
-            /// <summary>
-            /// Removes the parameter.
-            /// </summary>
-            /// <param name="name">The name.</param>
             private void DeleteParameter(string name)
             {
                 var action = new AddRemoveParamAction
