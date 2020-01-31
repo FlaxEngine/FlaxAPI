@@ -63,7 +63,7 @@ namespace FlaxEditor.Utilities
             var finalMember = MemberPath.GetLastMember(ref instance);
 
             var type = finalMember.Type;
-            if (value != null)
+            if (value != null && type != null)
             {
                 if (type.IsEnum)
                 {

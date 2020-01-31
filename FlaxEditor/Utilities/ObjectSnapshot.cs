@@ -54,42 +54,55 @@ namespace FlaxEditor.Utilities
             var path = new MemberInfoPath(membersPath);
             var beforeCount = result.Count;
 
-            // Check if record object sub members (skip flax objects)
-            // It's used for ref types bu not null types and with checking cyclic references
-            if ((memberType.IsClass || memberType.IsArray || typeof(IList).IsAssignableFrom(memberType))
+            // Check if record object sub members (skip Flax objects)
+            // It's used for ref types but not null types and with checking cyclic references
+            if ((memberType.IsClass || memberType.IsArray || typeof(IList).IsAssignableFrom(memberType) || typeof(IDictionary).IsAssignableFrom(memberType))
                 && memberValue != null
                 && !refStack.Contains(memberValue))
             {
                 if (memberType.IsArray && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType.GetElementType()))
                 {
+                    // Array
                     var array = (Array)memberValue;
                     var elementType = memberType.GetElementType();
                     var length = array.Length;
-
                     refStack.Push(memberValue);
                     for (int i = 0; i < length; i++)
                     {
-                        var elementValue = array.GetValue(i);
-                        GetEntries(new MemberInfoPath.Entry(member.Member, i), membersPath, type, result, values, refStack, elementType, elementValue);
+                        var value = array.GetValue(i);
+                        GetEntries(new MemberInfoPath.Entry(member.Member, i), membersPath, type, result, values, refStack, elementType, value);
                     }
                     refStack.Pop();
                 }
                 else if (typeof(IList).IsAssignableFrom(memberType) && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType.GetElementType()))
                 {
+                    // List
                     var list = (IList)memberValue;
                     var elementType = memberType.GetGenericArguments()[0];
                     var count = list.Count;
-
                     refStack.Push(memberValue);
                     for (int i = 0; i < count; i++)
                     {
-                        var elementValue = list[i];
-                        GetEntries(new MemberInfoPath.Entry(member.Member, i), membersPath, type, result, values, refStack, elementType, elementValue);
+                        var value = list[i];
+                        GetEntries(new MemberInfoPath.Entry(member.Member, i), membersPath, type, result, values, refStack, elementType, value);
                     }
                     refStack.Pop();
                 }
+                else if (typeof(IDictionary).IsAssignableFrom(memberType))
+                {
+                    // Dictionary
+                    var dictionary = (IDictionary)memberValue;
+                    var genericArguments = memberType.GetGenericArguments();
+                    var valueType = genericArguments[1];
+                    foreach (var key in dictionary.Keys)
+                    {
+                        var value = dictionary[key];
+                        GetEntries(new MemberInfoPath.Entry(member.Member, key), membersPath, type, result, values, refStack, valueType, value);
+                    }
+                }
                 else if (memberType.IsClass && !typeof(FlaxEngine.Object).IsAssignableFrom(memberType))
                 {
+                    // Object
                     refStack.Push(memberValue);
                     GetEntries(memberValue, membersPath, memberType, result, values, refStack);
                     refStack.Pop();
