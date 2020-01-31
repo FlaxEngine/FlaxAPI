@@ -165,20 +165,14 @@ namespace FlaxEditor.Windows.Assets
                     layout.Property(e.Key, valueContainer);
                 }
 
-                // TODO: finish this
+                // TODO: improve the UI
                 layout.Space(40);
-                var addParamPanel = layout.Space(30).ContainerControl;
-                var addParamButton = addParamPanel.AddChild<Button>();
-                addParamButton.AnchorStyle = AnchorStyle.CenterRight;
-                addParamButton.Width = 50.0f;
-                addParamButton.Text = "Add";
-                addParamButton.Clicked += OnAddParamButtonClicked;
-                var addParamType = addParamPanel.AddChild<ComboBox>();
-                addParamType.AnchorStyle = AnchorStyle.CenterLeft;
-                addParamType.Width = addParamPanel.Width - addParamButton.Width - 4.0f;
-                addParamType.Items = AllowedTypes.Select(x => x.ToString()).ToList();
+                var addParamType = layout.ComboBox().ComboBox;
+                addParamType.Items = AllowedTypes.Select(x => CustomEditorsUtil.GetTypeNameUI(x)).ToList();
                 addParamType.SelectedIndex = 0;
                 _addParamType = addParamType;
+                var addParamButton = layout.Button("Add").Button;
+                addParamButton.Clicked += OnAddParamButtonClicked;
             }
 
             private void OnAddParamButtonClicked()
