@@ -119,9 +119,15 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(PropertiesProxyEditor))]
         private sealed class PropertiesProxy
         {
+            [NoSerialize]
             public GameplayGlobalsWindow Window;
+
+            [NoSerialize]
             public GameplayGlobals Asset;
+
             public Dictionary<string, object> DefaultValues;
+
+            [NoSerialize]
             public Dictionary<string, object> Values;
 
             public void Init(GameplayGlobalsWindow window)
@@ -255,7 +261,6 @@ namespace FlaxEditor.Windows.Assets
 
                 foreach (var e in _proxy.DefaultValues)
                 {
-                    // TODO: editing default value with undo
                     // TODO: editing value
                     // TODO: copy/paste values
 
