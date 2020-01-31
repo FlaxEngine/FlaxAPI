@@ -114,7 +114,7 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(ParticleEmitter particleEmitter)
         {
             var source = Editor.GetParticleEmitterShaderSourceCode(particleEmitter);
-            Utilities.Utils.ShowSourceCode(source, "Particle Emitter GPU Simulation Source");
+            Utilities.Utils.ShowSourceCodeWindow(source, "Particle Emitter GPU Simulation Source");
         }
 
         /// <inheritdoc />

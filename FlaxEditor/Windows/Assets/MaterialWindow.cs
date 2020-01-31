@@ -240,7 +240,7 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(Material material)
         {
             var source = Editor.GetMaterialShaderSourceCode(material);
-            Utilities.Utils.ShowSourceCode(source, "Material Source");
+            Utilities.Utils.ShowSourceCodeWindow(source, "Material Source");
         }
 
         /// <summary>
