@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -260,7 +261,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     Window = window,
                     IsAdd = true,
-                    Name = "New parameter",
+                    Name = StringUtils.IncrementNameNumber("New parameter", x => OnParameterRenameValidate(null, x)),
                     Type = type,
                     Index = window.Surface.Parameters.Count,
                 };
@@ -279,7 +280,14 @@ namespace FlaxEditor.Windows.Assets
                 var parameter = window.Surface.Parameters[(int)label.Tag];
                 var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
                 dialog.Tag = index;
+                dialog.Validate += OnParameterRenameValidate;
                 dialog.Renamed += OnParameterRenamed;
+            }
+
+            private bool OnParameterRenameValidate(RenamePopup popup, string value)
+            {
+                var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
+                return !string.IsNullOrWhiteSpace(value) && window.Surface.Parameters.All(x => x.Name != value);
             }
 
             private void OnParameterRenamed(RenamePopup renamePopup)
