@@ -262,7 +262,6 @@ namespace FlaxEditor.Windows.Assets
                 foreach (var e in _proxy.DefaultValues)
                 {
                     // TODO: editing value
-                    // TODO: copy/paste values
 
                     var name = e.Key;
                     var valueContainer = new VariableValueContainer(_proxy, name, e.Value);
@@ -271,7 +270,7 @@ namespace FlaxEditor.Windows.Assets
                         Tag = name,
                     };
                     propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(name, label);
-                    propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(name, label, ref location);
+                    propertyLabel.SetupContextMenu += OnPropertyLabelSetupContextMenu;
                     var property = layout.AddPropertyItem(propertyLabel);
                     property.Object(valueContainer);
                 }
@@ -302,12 +301,12 @@ namespace FlaxEditor.Windows.Assets
                 AddParameter(AllowedTypes[_addParamType.SelectedIndex]);
             }
 
-            private void ShowParameterMenu(string name, Control label, ref Vector2 targetLocation)
+            private void OnPropertyLabelSetupContextMenu(PropertyNameLabel label, ContextMenu menu, CustomEditor linkedEditor)
             {
-                var contextMenu = new ContextMenu();
-                contextMenu.AddButton("Rename", () => StartParameterRenaming(name, label));
-                contextMenu.AddButton("Delete", () => DeleteParameter(name));
-                contextMenu.Show(label, targetLocation);
+                var name = (string)label.Tag;
+                menu.AddSeparator();
+                menu.AddButton("Rename", () => StartParameterRenaming(name, label));
+                menu.AddButton("Delete", () => DeleteParameter(name));
             }
 
             private void AddParameter(Type type)
