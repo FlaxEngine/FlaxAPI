@@ -1141,6 +1141,8 @@ namespace FlaxEditor.GUI
                 _showCollapsed = value;
                 UpdateKeyframes();
                 UpdateTangents();
+                if (value)
+                    ShowWholeCurve();
             }
         }
 
