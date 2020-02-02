@@ -43,11 +43,13 @@ namespace FlaxEditor
         {
             var projectFilePath = Path.Combine(Globals.ProjectFolder, "Project.xml");
 
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.IndentChars = "\t";
-            settings.OmitXmlDeclaration = true;
-            settings.Encoding = Encoding.Unicode;
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true,
+                IndentChars = "\t",
+                OmitXmlDeclaration = true,
+                Encoding = Encoding.UTF8,
+            };
 
             using (var writer = XmlWriter.Create(projectFilePath, settings))
             {
