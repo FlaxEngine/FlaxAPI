@@ -185,6 +185,11 @@ namespace FlaxEditor.GUI.Timeline
             Disabled,
 
             /// <summary>
+            /// The timeline animation feature is disabled except for current frame seeking.
+            /// </summary>
+            Seeking,
+
+            /// <summary>
             /// The timeline animation is stopped.
             /// </summary>
             Stopped,
@@ -531,6 +536,7 @@ namespace FlaxEditor.GUI.Timeline
 
                 // Update buttons UI
                 var icons = Editor.Instance.Icons;
+                // TODO: cleanup this UI code
                 switch (value)
                 {
                 case PlaybackStates.Disabled:
@@ -553,6 +559,28 @@ namespace FlaxEditor.GUI.Timeline
                     if (_positionHandle != null)
                     {
                         _positionHandle.Visible = false;
+                    }
+                    break;
+                case PlaybackStates.Seeking:
+                    if (_playbackNavigation != null)
+                    {
+                        foreach (var e in _playbackNavigation)
+                        {
+                            e.Enabled = false;
+                            e.Visible = false;
+                        }
+                    }
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = false;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = false;
+                    }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = true;
                     }
                     break;
                 case PlaybackStates.Stopped:

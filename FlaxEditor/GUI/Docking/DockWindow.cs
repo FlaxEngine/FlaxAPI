@@ -99,7 +99,7 @@ namespace FlaxEditor.GUI.Docking
         /// <param name="hideOnClose">True if hide window on closing, otherwise it will be destroyed.</param>
         /// <param name="scrollBars">The scroll bars.</param>
         public DockWindow(MasterDockPanel masterPanel, bool hideOnClose, ScrollBars scrollBars)
-        : base(scrollBars, true)
+        : base(scrollBars)
         {
             _masterPanel = masterPanel;
             HideOnClose = hideOnClose;

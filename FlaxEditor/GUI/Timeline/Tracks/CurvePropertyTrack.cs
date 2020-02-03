@@ -264,6 +264,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Curve.ViewScale = new Vector2(Timeline.Zoom, Curve.ViewScale.Y);
             Curve.ShowCollapsed = !expanded;
             Curve.ShowBackground = expanded;
+            Curve.EnableZoom = expanded ? CurveEditorBase.UseMode.Vertical : CurveEditorBase.UseMode.Off;
+            Curve.EnablePanning = expanded ? CurveEditorBase.UseMode.Vertical : CurveEditorBase.UseMode.Off;
             Curve.ShowAxes = expanded;
             Curve.Visible = Visible;
             Curve.UpdateKeyframes();

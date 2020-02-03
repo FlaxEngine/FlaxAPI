@@ -43,7 +43,7 @@ namespace FlaxEngine
         /// </summary>
         [UnmanagedCall]
         [EditorOrder(10), EditorDisplay("Bone Socket"), CustomEditorAlias("FlaxEditor.CustomEditors.Editors.SkeletonNodeEditor"), Tooltip("The name of the node to track its transform.")]
-        public string Node
+        public String Node
         {
 #if UNIT_TEST_COMPILANT
             get; set;
@@ -72,10 +72,10 @@ namespace FlaxEngine
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetNode(IntPtr obj);
+        internal static extern String Internal_GetNode(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetNode(IntPtr obj, string val);
+        internal static extern void Internal_SetNode(IntPtr obj, String val);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetUseScale(IntPtr obj);

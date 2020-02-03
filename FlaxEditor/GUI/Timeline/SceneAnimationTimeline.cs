@@ -55,7 +55,7 @@ namespace FlaxEditor.GUI.Timeline
         public SceneAnimationTimeline()
         : base(PlaybackButtons.Play | PlaybackButtons.Stop | PlaybackButtons.Navigation)
         {
-            PlaybackState = PlaybackStates.Disabled;
+            PlaybackState = PlaybackStates.Seeking;
             PropertiesEditObject = new Proxy(this);
 
             // Setup track types
@@ -194,7 +194,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             PlaybackStates state;
             if (!_player)
-                state = PlaybackStates.Disabled;
+                state = PlaybackStates.Seeking;
             else if (_player.IsPlaying)
                 state = PlaybackStates.Playing;
             else if (_player.IsPaused)
@@ -210,10 +210,6 @@ namespace FlaxEditor.GUI.Timeline
             {
                 _player.Animation.WaitForLoaded();
                 CurrentFrame = (int)(_player.Time * _player.Animation.FramesPerSecond);
-            }
-            else
-            {
-                CurrentFrame = 0;
             }
         }
 
@@ -248,6 +244,10 @@ namespace FlaxEditor.GUI.Timeline
             {
                 _player.Animation.WaitForLoaded();
                 _player.Time = frame / _player.Animation.FramesPerSecond;
+            }
+            else
+            {
+                CurrentFrame = frame;
             }
 
             base.OnSeek(frame);
