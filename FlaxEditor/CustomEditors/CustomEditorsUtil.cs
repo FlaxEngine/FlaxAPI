@@ -14,10 +14,17 @@ namespace FlaxEditor.CustomEditors
     {
         private static readonly StringBuilder CachedSb = new StringBuilder(256);
 
-        private static readonly Dictionary<Type, string> InBuildTypeNames = new Dictionary<Type, string>()
+        internal static readonly Dictionary<Type, string> InBuildTypeNames = new Dictionary<Type, string>()
         {
             { typeof(bool), "bool" },
+            { typeof(byte), "byte" },
+            { typeof(sbyte), "sbyte" },
+            { typeof(char), "char" },
+            { typeof(short), "short" },
+            { typeof(ushort), "ushort" },
             { typeof(int), "int" },
+            { typeof(uint), "uint" },
+            { typeof(long), "ulong" },
             { typeof(float), "float" },
             { typeof(double), "double" },
             { typeof(decimal), "decimal" },
