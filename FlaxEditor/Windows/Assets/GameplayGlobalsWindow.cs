@@ -394,8 +394,13 @@ namespace FlaxEditor.Windows.Assets
             _undo.ActionDone += OnUndo;
             _undo.UndoDone += OnUndo;
             _undo.RedoDone += OnUndo;
+            var panel = new Panel(ScrollBars.Vertical)
+            {
+                DockStyle = DockStyle.Fill,
+                Parent = this,
+            };
             _propertiesEditor = new CustomEditorPresenter(_undo);
-            _propertiesEditor.Panel.Parent = this;
+            _propertiesEditor.Panel.Parent = panel;
             _propertiesEditor.Modified += OnPropertiesEditorModified;
             _proxy = new PropertiesProxy();
             _propertiesEditor.Select(_proxy);

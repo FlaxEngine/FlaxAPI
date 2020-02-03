@@ -162,11 +162,15 @@ namespace FlaxEditor.Utilities
         {
             if (type == typeof(string))
                 return string.Empty;
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
+            if (type == typeof(Color))
+                return Color.White;
+            if (type == typeof(Quaternion))
+                return Quaternion.Identity;
+            if (type == typeof(Transform))
+                return Transform.Identity;
 
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
             if (typeof(object).IsAssignableFrom(type))
                 return null;
             return Activator.CreateInstance(type);
@@ -346,6 +350,7 @@ namespace FlaxEditor.Utilities
             case ContentDomain.Audio: return typeof(AudioClip);
             case ContentDomain.Animation: return typeof(Animation);
             case ContentDomain.SkeletonMask: return typeof(SkeletonMask);
+            case ContentDomain.GameplayGlobals: return typeof(GameplayGlobals);
             }
 
             // Anything
