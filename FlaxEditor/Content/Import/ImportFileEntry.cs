@@ -70,12 +70,23 @@ namespace FlaxEditor.Content.Import
         /// <returns>True if failed, otherwise false.</returns>
         public virtual bool Import()
         {
-            // Copy file by default
-            if (!File.Exists(SourceUrl))
+            // Skip if missing
+            if (!Directory.Exists(SourceUrl) && !File.Exists(SourceUrl))
                 return true;
+
+            // Setup output
             string folder = Path.GetDirectoryName(ResultUrl);
             if (folder != null && !Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
+
+            if (Directory.Exists(SourceUrl))
+            {
+                // Copy directory
+                Utilities.Utils.DirectoryCopy(SourceUrl, ResultUrl, true);
+                return false;
+            }
+
+            // Copy file
             File.Copy(SourceUrl, ResultUrl, true);
             return false;
         }
