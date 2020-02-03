@@ -51,7 +51,6 @@ namespace FlaxEditor.Windows.Assets
             private void Add()
             {
                 Proxy.DefaultValues[Name] = DefaultValue;
-                Proxy.Values[Name] = DefaultValue;
 
                 Proxy.Window._propertiesEditor.BuildLayoutOnUpdate();
             }
@@ -60,7 +59,6 @@ namespace FlaxEditor.Windows.Assets
             {
                 DefaultValue = Proxy.DefaultValues[Name];
 
-                Proxy.Values.Remove(Name);
                 Proxy.DefaultValues.Remove(Name);
 
                 Proxy.Window._propertiesEditor.BuildLayoutOnUpdate();
@@ -100,10 +98,7 @@ namespace FlaxEditor.Windows.Assets
                 var defaultValue = Proxy.DefaultValues[from];
 
                 Proxy.DefaultValues.Remove(from);
-                Proxy.Values.Remove(from);
-
                 Proxy.DefaultValues[to] = defaultValue;
-                Proxy.Values[to] = defaultValue;
 
                 Proxy.Window._propertiesEditor.BuildLayoutOnUpdate();
             }
@@ -127,15 +122,11 @@ namespace FlaxEditor.Windows.Assets
 
             public Dictionary<string, object> DefaultValues;
 
-            [NoSerialize]
-            public Dictionary<string, object> Values;
-
             public void Init(GameplayGlobalsWindow window)
             {
                 Window = window;
                 Asset = window.Asset;
                 DefaultValues = Asset.DefaultValues;
-                Values = Asset.Values;
             }
         }
 
@@ -143,24 +134,31 @@ namespace FlaxEditor.Windows.Assets
         {
             private readonly PropertiesProxy _proxy;
             private readonly string _name;
+            private readonly bool _isDefault;
 
-            public VariableValueContainer(PropertiesProxy proxy, string name, object value)
+            public VariableValueContainer(PropertiesProxy proxy, string name, object value, bool isDefault)
             : base(null, value.GetType())
             {
                 _proxy = proxy;
                 _name = name;
+                _isDefault = isDefault;
 
                 Add(value);
             }
 
             private object Getter(object instance, int index)
             {
-                return _proxy.DefaultValues[_name];
+                if (_isDefault)
+                    return _proxy.DefaultValues[_name];
+                return _proxy.Asset.GetValue(_name);
             }
 
             private void Setter(object instance, int index, object value)
             {
-                _proxy.DefaultValues[_name] = value;
+                if (_isDefault)
+                    _proxy.DefaultValues[_name] = value;
+                else
+                    _proxy.Asset.SetValue(_name, value);
             }
 
             /// <inheritdoc />
@@ -259,41 +257,52 @@ namespace FlaxEditor.Windows.Assets
                     return;
                 }
 
-                foreach (var e in _proxy.DefaultValues)
+                var isPlayModeActive = _proxy.Window.Editor.StateMachine.IsPlayMode;
+                if (isPlayModeActive)
                 {
-                    // TODO: editing value
+                    layout.Label("Play mode is active. Editing runtime values.", TextAlignment.Center);
+                    layout.Space(10);
 
-                    var name = e.Key;
-                    var valueContainer = new VariableValueContainer(_proxy, name, e.Value);
-                    var propertyLabel = new ClickablePropertyNameLabel(name)
+                    foreach (var e in _proxy.DefaultValues)
                     {
-                        Tag = name,
-                    };
-                    propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(name, label);
-                    propertyLabel.SetupContextMenu += OnPropertyLabelSetupContextMenu;
-                    var property = layout.AddPropertyItem(propertyLabel);
-                    property.Object(valueContainer);
+                        var name = e.Key;
+                        var value = _proxy.Asset.GetValue(name);
+                        var valueContainer = new VariableValueContainer(_proxy, name, value, false);
+                        var propertyLabel = new PropertyNameLabel(name)
+                        {
+                            Tag = name,
+                        };
+                        string tooltip = null;
+                        if (_proxy.DefaultValues.TryGetValue(name, out var defaultValue))
+                            tooltip = "Default value: " + defaultValue;
+                        layout.Object(propertyLabel, valueContainer, null, tooltip);
+                    }
                 }
-
-                // TODO: improve the UI
-                layout.Space(40);
-                var addParamType = layout.ComboBox().ComboBox;
-                addParamType.Items = AllowedTypes.Select(CustomEditorsUtil.GetTypeNameUI).ToList();
-                addParamType.SelectedIndex = 0;
-                _addParamType = addParamType;
-                var addParamButton = layout.Button("Add").Button;
-                addParamButton.Clicked += OnAddParamButtonClicked;
-            }
-
-            public override void Refresh()
-            {
-                if (_proxy?.Asset != null)
+                else
                 {
-                    // Get the current values
-                    _proxy.Values = _proxy.Asset.Values;
-                }
+                    foreach (var e in _proxy.DefaultValues)
+                    {
+                        var name = e.Key;
+                        var value = e.Value;
+                        var valueContainer = new VariableValueContainer(_proxy, name, value, true);
+                        var propertyLabel = new ClickablePropertyNameLabel(name)
+                        {
+                            Tag = name,
+                        };
+                        propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(name, label);
+                        propertyLabel.SetupContextMenu += OnPropertyLabelSetupContextMenu;
+                        layout.Object(propertyLabel, valueContainer, null, "Type: " + CustomEditorsUtil.GetTypeNameUI(value.GetType()));
+                    }
 
-                base.Refresh();
+                    // TODO: improve the UI
+                    layout.Space(40);
+                    var addParamType = layout.ComboBox().ComboBox;
+                    addParamType.Items = AllowedTypes.Select(CustomEditorsUtil.GetTypeNameUI).ToList();
+                    addParamType.SelectedIndex = 0;
+                    _addParamType = addParamType;
+                    var addParamButton = layout.Button("Add").Button;
+                    addParamButton.Clicked += OnAddParamButtonClicked;
+                }
             }
 
             private void OnAddParamButtonClicked()
@@ -387,7 +396,7 @@ namespace FlaxEditor.Windows.Assets
             _undo.RedoDone += OnUndo;
             _propertiesEditor = new CustomEditorPresenter(_undo);
             _propertiesEditor.Panel.Parent = this;
-            _propertiesEditor.Modified += MarkAsEdited;
+            _propertiesEditor.Modified += OnPropertiesEditorModified;
             _proxy = new PropertiesProxy();
             _propertiesEditor.Select(_proxy);
 
@@ -403,8 +412,19 @@ namespace FlaxEditor.Windows.Assets
             InputActions.Add(options => options.Redo, _undo.PerformRedo);
         }
 
+        private void OnPropertiesEditorModified()
+        {
+            if (_proxy.Window.Editor.StateMachine.IsPlayMode)
+                return;
+
+            MarkAsEdited();
+        }
+
         private void OnUndo(IUndoAction action)
         {
+            if (_proxy.Window.Editor.StateMachine.IsPlayMode)
+                return;
+
             UpdateToolstrip();
             MarkAsEdited();
         }
@@ -442,6 +462,35 @@ namespace FlaxEditor.Windows.Assets
             _resetButton.Enabled = _asset != null;
 
             base.UpdateToolstrip();
+        }
+
+        /// <inheritdoc />
+        public override void OnPlayBegin()
+        {
+            base.OnPlayBegin();
+
+            if (IsEdited)
+            {
+                if (MessageBox.Show("Gameplay Globals asset has been modified. Save it before entering the play mode?", "Save gameplay globals?", MessageBox.Buttons.YesNo, MessageBox.Icon.Question) == DialogResult.Yes)
+                {
+                    Save();
+                }
+            }
+
+            ClearEditedFlag();
+            _undo.Enabled = false;
+            _undo.Clear();
+            _propertiesEditor.BuildLayoutOnUpdate();
+        }
+
+        /// <inheritdoc />
+        public override void OnPlayEnd()
+        {
+            base.OnPlayEnd();
+
+            _undo.Enabled = true;
+            _undo.Clear();
+            _propertiesEditor.BuildLayoutOnUpdate();
         }
 
         /// <inheritdoc />
