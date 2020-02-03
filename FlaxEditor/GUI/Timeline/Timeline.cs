@@ -679,7 +679,7 @@ namespace FlaxEditor.GUI.Timeline
             get => _zoom;
             set
             {
-                value = Mathf.Clamp(value, 0.02f, 10.0f);
+                value = Mathf.Clamp(value, 0.0001f, 1000.0f);
                 if (Mathf.NearEqual(_zoom, value))
                     return;
 
