@@ -450,6 +450,7 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
+            Asset.DefaultValues = _proxy.DefaultValues;
             if (Asset.Save())
             {
                 Editor.LogError("Cannot save asset.");
