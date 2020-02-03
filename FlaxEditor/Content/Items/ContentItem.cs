@@ -257,7 +257,7 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the item short name (filename without extension).
         /// </summary>
-        public string ShortName { get; private set; }
+        public string ShortName { get; internal set; }
 
         /// <summary>
         /// Gets the asset name relative to the project root folder (without asset file extension)

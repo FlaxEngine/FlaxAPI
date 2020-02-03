@@ -93,6 +93,7 @@ namespace FlaxEditor.Content
         {
             FolderType = type;
             Node = node;
+            ShortName = System.IO.Path.GetFileName(path);
         }
 
         /// <summary>
@@ -143,6 +144,8 @@ namespace FlaxEditor.Content
         internal override void UpdatePath(string value)
         {
             base.UpdatePath(value);
+
+            ShortName = System.IO.Path.GetFileName(value);
 
             // Update node text
             Node.Text = ShortName;
