@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace FlaxEngine.Utilities
 {
@@ -13,14 +14,44 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Creates deep clone for a class if all members of this class are marked as serializable (uses Json serialization).
         /// </summary>
-        /// <param name="instance">Current instance of an object</param>
-        /// <typeparam name="T">Instance type of an object</typeparam>
-        /// <returns>Returns new object of provided class</returns>
+        /// <param name="instance">The input instance of an object.</param>
+        /// <typeparam name="T">The instance type of an object.</typeparam>
+        /// <returns>Returns new object of provided class.</returns>
         public static T DeepClone<T>(this T instance)
         where T : new()
         {
             var json = Json.JsonSerializer.Serialize(instance);
             return Json.JsonSerializer.Deserialize<T>(json);
+        }
+
+        /// <summary>
+        /// Creates raw clone for a structure using memory copy. Valid only for value types.
+        /// </summary>
+        /// <param name="instance">The input instance of an object.</param>
+        /// <typeparam name="T">The instance type of an object.</typeparam>
+        /// <returns>Returns new object of provided structure.</returns>
+        public static T RawClone<T>(this T instance)
+        {
+            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(instance));
+            try
+            {
+                Marshal.StructureToPtr(instance, ptr, false);
+                return (T)Marshal.PtrToStructure(ptr, instance.GetType());
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the input type represents a structure (value type but not enum nor primitive type).
+        /// </summary>
+        /// <param name="instance">The input type of the object to check.</param>
+        /// <returns>Returns true if the input type represents a structure (value type but not enum nor primitive type).</returns>
+        public static bool IsStructure(this Type type)
+        {
+            return type.IsValueType && !type.IsEnum && !type.IsPrimitive;
         }
 
         /// <summary>

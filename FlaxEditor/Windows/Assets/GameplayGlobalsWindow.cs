@@ -191,7 +191,7 @@ namespace FlaxEditor.Windows.Assets
             /// <inheritdoc />
             public override void Set(ValueContainer instanceValues, ValueContainer values)
             {
-                if (instanceValues == null || instanceValues.Count != Count)
+                /*if (instanceValues == null || instanceValues.Count != Count)
                     throw new ArgumentException();
                 if (values == null || values.Count != Count)
                     throw new ArgumentException();
@@ -202,7 +202,7 @@ namespace FlaxEditor.Windows.Assets
                     var value = ((CustomValueContainer)values)[i];
                     Setter(v, i, value);
                     this[i] = value;
-                }
+                }*/
             }
 
             /// <inheritdoc />

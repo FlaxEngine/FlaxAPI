@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using FlaxEngine;
 using FlaxEngine.Json;
+using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Utilities
 {
@@ -42,7 +43,7 @@ namespace FlaxEditor.Utilities
             }
         }
 
-        private static Type[] _attributesIgnoreList =
+        private static readonly Type[] AttributesIgnoreList =
         {
             typeof(NonSerializedAttribute),
             typeof(NoSerializeAttribute)
@@ -78,7 +79,8 @@ namespace FlaxEditor.Utilities
                 {
                     // List
                     var list = (IList)memberValue;
-                    var elementType = memberType.GetGenericArguments()[0];
+                    var genericArguments = memberType.GetGenericArguments();
+                    var elementType = genericArguments[0];
                     var count = list.Count;
                     refStack.Push(memberValue);
                     for (int i = 0; i < count; i++)
@@ -111,7 +113,10 @@ namespace FlaxEditor.Utilities
 
             var afterCount = result.Count;
             result.Add(new TypeEntry(path, afterCount - beforeCount));
-            values.Add(memberValue);
+            if (memberValue != null && memberValue.GetType().IsStructure())
+                values.Add(memberValue.RawClone());
+            else
+                values.Add(memberValue);
             membersPath.Pop();
         }
 
@@ -146,7 +151,7 @@ namespace FlaxEditor.Utilities
                 bool noSerialize = false;
                 foreach (var attribute in attributes)
                 {
-                    if (_attributesIgnoreList.Contains(attribute.GetType()))
+                    if (AttributesIgnoreList.Contains(attribute.GetType()))
                     {
                         noSerialize = true;
                         break;
@@ -178,7 +183,7 @@ namespace FlaxEditor.Utilities
                 bool noSerialize = false;
                 foreach (var attribute in attributes)
                 {
-                    if (_attributesIgnoreList.Contains(attribute.GetType()))
+                    if (AttributesIgnoreList.Contains(attribute.GetType()))
                     {
                         noSerialize = true;
                         break;
@@ -216,13 +221,11 @@ namespace FlaxEditor.Utilities
                 throw new ArgumentNullException();
 
             var type = obj.GetType();
+            var members = GetMembers(obj, type, out var values);
 
-            List<object> values;
-            var members = GetMembers(obj, type, out values);
-
-            //Debug.Log("-------------- CaptureSnapshot:  " + obj.GetType() + "  --------------");
+            //Debug.Logger.LogHandler.LogWrite(LogType.Warning, "-------------- CaptureSnapshot:  " + obj.GetType() + "  --------------");
             //for (int i = 0; i < values.Count; i++)
-            //    Debug.Log(members[i].Path.Path + " = " + (values[i] ?? "<null>"));
+            //    Debug.Logger.LogHandler.LogWrite(LogType.Warning, members[i].Path.Path + " = " + (values[i] ?? "<null>"));
 
             return new ObjectSnapshot(type, values, members);
         }
@@ -242,15 +245,19 @@ namespace FlaxEditor.Utilities
 
             var list = new List<MemberComparison>();
 
+            //Debug.Logger.LogHandler.LogWrite(LogType.Warning, "-------------- Comparision --------------");
+
             for (int i = _members.Count - 1; i >= 0; i--)
             {
                 var m = _members[i];
-                object xValue = _values[i];
-                object yValue = m.Path.GetLastValue(obj);
+                var xValue = _values[i];
+                var yValue = m.Path.GetLastValue(obj);
+
+                //Debug.Logger.LogHandler.LogWrite(LogType.Warning, "Compare: " + (new MemberComparison(m.Path, xValue, yValue)));
 
                 if (!JsonSerializer.ValueEquals(xValue, yValue))
                 {
-                    //Debug.Log("Diff on: " + (new MemberComparison(m.Path, xValue, yValue)));
+                    //Debug.Logger.LogHandler.LogWrite(LogType.Warning, "Diff on: " + (new MemberComparison(m.Path, xValue, yValue)));
 
                     list.Add(new MemberComparison(m.Path, xValue, yValue));
 
@@ -258,6 +265,8 @@ namespace FlaxEditor.Utilities
                     i -= m.SubEntriesCount;
                 }
             }
+
+            //Debug.Logger.LogHandler.LogWrite(LogType.Warning, "-------------- End --------------");
 
             return list;
         }
