@@ -98,6 +98,11 @@ namespace FlaxEngine
         /// The RGBA channel selection mask.
         /// </summary>
         ChannelMask = 17,
+
+        /// <summary>
+        /// The gameplay global.
+        /// </summary>
+        GameplayGlobal = 18,
     }
 
     /// <summary>

@@ -152,6 +152,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             var data = Save();
             asset.SaveTimeline(data);
+            asset.Reload();
         }
 
         /// <inheritdoc />

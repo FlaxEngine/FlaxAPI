@@ -47,6 +47,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Returns true if last asset loading failed, otherwise false.
+        /// </summary>
+        [UnmanagedCall]
+        public bool LastLoadFailed
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetLastLoadFailed(unmanagedPtr); }
+#endif
+        }
+
+        /// <summary>
         /// Determines whether this asset is virtual (generated or temporary, has no storage so it won't be saved).
         /// </summary>
         [UnmanagedCall]
@@ -134,6 +147,9 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetIsLoaded(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetLastLoadFailed(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetIsVirtual(IntPtr obj);

@@ -33,9 +33,16 @@ namespace FlaxEditor.Content.Settings
         public int ContentKey = 0;
 
         /// <summary>
+        /// Disable shaders optimization in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.
+        /// </summary>
+        [DefaultValue(false)]
+        [EditorOrder(100), EditorDisplay("Content"), Tooltip("Disable shaders optimization in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
+        public bool NoOptimizeShaders = false;
+
+        /// <summary>
         /// The build presets.
         /// </summary>
-        [EditorOrder(100), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
+        [EditorOrder(1000), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
         public BuildPreset[] Presets =
         {
             new BuildPreset
@@ -48,14 +55,14 @@ namespace FlaxEditor.Content.Settings
                         Name = "Windows 64bit",
                         Output = "Output\\Win64",
                         Platform = BuildPlatform.Windows64,
-                        Mode = BuildMode.Debug,
+                        Mode = BuildConfiguration.Development,
                     },
                     new BuildTarget
                     {
                         Name = "Windows 32bit",
                         Output = "Output\\Win32",
                         Platform = BuildPlatform.Windows32,
-                        Mode = BuildMode.Debug,
+                        Mode = BuildConfiguration.Development,
                     },
                 }
             },
@@ -69,14 +76,14 @@ namespace FlaxEditor.Content.Settings
                         Name = "Windows 64bit",
                         Output = "Output\\Win64",
                         Platform = BuildPlatform.Windows64,
-                        Mode = BuildMode.Release,
+                        Mode = BuildConfiguration.Development,
                     },
                     new BuildTarget
                     {
                         Name = "Windows 32bit",
                         Output = "Output\\Win32",
                         Platform = BuildPlatform.Windows32,
-                        Mode = BuildMode.Release,
+                        Mode = BuildConfiguration.Development,
                     },
                 }
             },

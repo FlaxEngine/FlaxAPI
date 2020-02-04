@@ -21,6 +21,7 @@ namespace FlaxEngine
             typeof(RawDataAsset),
             typeof(Model),
             typeof(SkeletonMask),
+            typeof(GameplayGlobals),
         };
 
         // TODO: assets list get

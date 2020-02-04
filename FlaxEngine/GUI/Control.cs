@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    ///     Base class for all GUI controls
+    /// Base class for all GUI controls
     /// </summary>
     public partial class Control : IComparable, IDrawable
     {
@@ -49,29 +49,29 @@ namespace FlaxEngine.GUI
         private Tooltip _tooltip;
 
         /// <summary>
-        ///     Action is invoked, when location is changed
+        /// Action is invoked, when location is changed
         /// </summary>
         public event Action<Control> LocationChanged;
 
         /// <summary>
-        ///     Action is invoked, when size is changed
+        /// Action is invoked, when size is changed
         /// </summary>
         public event Action<Control> SizeChanged;
 
         /// <summary>
-        ///     Action is invoked, when parent is changed
+        /// Action is invoked, when parent is changed
         /// </summary>
         public event Action<Control> ParentChanged;
 
         /// <summary>
-        ///     Action is invoked, when visibility is changed
+        /// Action is invoked, when visibility is changed
         /// </summary>
         public event Action<Control> VisibleChanged;
 
         #region Public Properties
 
         /// <summary>
-        ///     Parent control (the one above in the tree hierarchy)
+        /// Parent control (the one above in the tree hierarchy)
         /// </summary>
         [HideInEditor, NoSerialize]
         public ContainerControl Parent
@@ -110,7 +110,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Checks if control has parent container control
+        /// Checks if control has parent container control
         /// </summary>
         public bool HasParent => _parent != null;
 
@@ -125,7 +125,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets or sets control background color (transparent color (alpha=0) means no background rendering)
+        /// Gets or sets control background color (transparent color (alpha=0) means no background rendering)
         /// </summary>
         [ExpandGroups, EditorDisplay("Style"), EditorOrder(2000), Tooltip("The control background color. Use transparent color (alpha=0) to hide background.")]
         public Color BackgroundColor
@@ -135,7 +135,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets or sets the docking style of the control.
+        /// Gets or sets the docking style of the control.
         /// If value set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
         /// </summary>
         [EditorDisplay("Transform"), EditorOrder(1060), Tooltip("The docking style of the control. Defines how control will be docked into the parent container. Use None to disable it. Docked controls have disabled scrolling.")]
@@ -187,7 +187,7 @@ namespace FlaxEngine.GUI
         public bool IsScrollable { get; set; } = true;
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the control can respond to user interaction
+        /// Gets or sets a value indicating whether the control can respond to user interaction
         /// </summary>
         [EditorOrder(520), Tooltip("If checked, control will receive input events of the user interaction.")]
         public bool Enabled
@@ -230,7 +230,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the control is visible
+        /// Gets or sets a value indicating whether the control is visible
         /// </summary>
         [EditorOrder(510), Tooltip("If checked, control will be visible.")]
         public bool Visible
@@ -276,7 +276,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Returns true if control is during disposing state (on destroy)
+        /// Returns true if control is during disposing state (on destroy)
         /// </summary>
         public bool IsDisposing => _isDisposing;
 
@@ -365,7 +365,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Init
+        /// Init
         /// </summary>
         /// <param name="bounds">Window bounds</param>
         public Control(Rectangle bounds)
@@ -382,7 +382,7 @@ namespace FlaxEngine.GUI
         public delegate void UpdateDelegate(float deltaTime);
 
         /// <summary>
-        ///     Delete control (will unlink from the parent and start to dispose)
+        /// Delete control (will unlink from the parent and start to dispose)
         /// </summary>
         public void Dispose()
         {
@@ -397,7 +397,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Perform control update and all its children
+        /// Perform control update and all its children
         /// </summary>
         /// <param name="deltaTime">Delta time in seconds</param>
         [NoAnimate]
@@ -412,7 +412,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Draw control
+        /// Draw control
         /// </summary>
         [NoAnimate]
         public virtual void Draw()
@@ -425,7 +425,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Update control layout
+        /// Update control layout
         /// </summary>
         /// <param name="force">True if perform layout by force even if cached state wants to skip it due to optimization.</param>
         [NoAnimate]
@@ -436,7 +436,7 @@ namespace FlaxEngine.GUI
         #region Focus
 
         /// <summary>
-        ///     Gets a value indicating whether the control can receive automatic focus on user events (eg. mouse down.
+        /// Gets a value indicating whether the control can receive automatic focus on user events (eg. mouse down.
         /// </summary>
         [HideInEditor]
         public bool AutoFocus
@@ -446,17 +446,17 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the control, currently has the input focus
+        /// Gets a value indicating whether the control, currently has the input focus
         /// </summary>
         public virtual bool ContainsFocus => _isFocused;
 
         /// <summary>
-        ///     Gets a value indicating whether the control has input focus
+        /// Gets a value indicating whether the control has input focus
         /// </summary>
         public virtual bool IsFocused => _isFocused;
 
         /// <summary>
-        ///     Sets input focus to the control
+        /// Sets input focus to the control
         /// </summary>
         public virtual void Focus()
         {
@@ -467,7 +467,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Removes input focus from the control
+        /// Removes input focus from the control
         /// </summary>
         public virtual void Defocus()
         {
@@ -478,7 +478,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When control gets input focus
+        /// When control gets input focus
         /// </summary>
         [NoAnimate]
         public virtual void OnGotFocus()
@@ -488,7 +488,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When control losts input focus
+        /// When control losts input focus
         /// </summary>
         [NoAnimate]
         public virtual void OnLostFocus()
@@ -498,7 +498,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Action fired when control gets 'Contains Focus' state
+        /// Action fired when control gets 'Contains Focus' state
         /// </summary>
         [NoAnimate]
         public virtual void OnStartContainsFocus()
@@ -506,7 +506,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Action fired when control losts 'Contains Focus' state
+        /// Action fired when control losts 'Contains Focus' state
         /// </summary>
         [NoAnimate]
         public virtual void OnEndContainsFocus()
@@ -514,7 +514,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Focus that control
+        /// Focus that control
         /// </summary>
         /// <param name="c">Control to focus</param>
         /// <returns>True if control got a focus</returns>
@@ -545,8 +545,8 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse goes up/down not over the control but it has user focus so remove that focus from it (used by scroll
-        ///     bars, sliders etc.)
+        /// When mouse goes up/down not over the control but it has user focus so remove that focus from it (used by scroll
+        /// bars, sliders etc.)
         /// </summary>
         [NoAnimate]
         public virtual void OnEndMouseCapture()
@@ -558,13 +558,13 @@ namespace FlaxEngine.GUI
         #region Mouse
 
         /// <summary>
-        ///     Check if mouse is over that item or its child items
+        /// Check if mouse is over that item or its child items
         /// </summary>
         /// <returns>True if mouse is over</returns>
         public virtual bool IsMouseOver => _isMouseOver;
 
         /// <summary>
-        ///     When mouse enters control's area
+        /// When mouse enters control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         [NoAnimate]
@@ -582,7 +582,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse moves over control's area
+        /// When mouse moves over control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         [NoAnimate]
@@ -597,7 +597,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse leaves control's area
+        /// When mouse leaves control's area
         /// </summary>
         [NoAnimate]
         public virtual void OnMouseLeave()
@@ -614,7 +614,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse wheel moves
+        /// When mouse wheel moves
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="delta">
@@ -629,7 +629,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse goes down over control's area
+        /// When mouse goes down over control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
@@ -641,7 +641,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse goes up over control's area
+        /// When mouse goes up over control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
@@ -653,7 +653,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse double clicks over control's area
+        /// When mouse double clicks over control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="buttons">Mouse buttons state (flags)</param>
@@ -669,7 +669,7 @@ namespace FlaxEngine.GUI
         #region Keyboard
 
         /// <summary>
-        ///     On input character
+        /// On input character
         /// </summary>
         /// <param name="c">Input character</param>
         /// <returns>True if event has been handled, otherwise false</returns>
@@ -680,7 +680,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When key goes down
+        /// When key goes down
         /// </summary>
         /// <param name="key">Key value</param>
         /// <returns>True if event has been handled, otherwise false</returns>
@@ -691,7 +691,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When key goes up
+        /// When key goes up
         /// </summary>
         /// <param name="key">Key value</param>
         [NoAnimate]
@@ -704,12 +704,12 @@ namespace FlaxEngine.GUI
         #region Drag&Drop
 
         /// <summary>
-        ///     Check if mouse dragging is over that item or its child items.
+        /// Check if mouse dragging is over that item or its child items.
         /// </summary>
         public virtual bool IsDragOver => _isDragOver;
 
         /// <summary>
-        ///     When mouse dragging enters control's area
+        /// When mouse dragging enters control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
@@ -724,7 +724,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse dragging moves over control's area
+        /// When mouse dragging moves over control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
@@ -736,7 +736,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse dragging drops on control's area
+        /// When mouse dragging drops on control's area
         /// </summary>
         /// <param name="location">Mouse location in Control Space</param>
         /// <param name="data">The data. See <see cref="DragDataText"/> and <see cref="DragDataFiles"/>.</param>
@@ -751,7 +751,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     When mouse dragging leaves control's area
+        /// When mouse dragging leaves control's area
         /// </summary>
         [NoAnimate]
         public virtual void OnDragLeave()
@@ -873,7 +873,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Checks if control contains given point in local Control Space.
+        /// Checks if control contains given point in local Control Space.
         /// </summary>
         /// <param name="location">Point location in Control Space to check</param>
         /// <returns>True if point is inside control's area</returns>
@@ -886,7 +886,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Converts point in local control's space into one of the parent control coordinates
+        /// Converts point in local control's space into one of the parent control coordinates
         /// </summary>
         /// <param name="parent">This control parent of any other parent.</param>
         /// <param name="location">Input location of the point to convert</param>
@@ -981,7 +981,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Converts point in local control's space into window coordinates
+        /// Converts point in local control's space into window coordinates
         /// </summary>
         /// <param name="location">Input location of the point to convert</param>
         /// <returns>Converted point location in window coordinates</returns>
@@ -996,7 +996,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Converts point in the window coordinates into control's space
+        /// Converts point in the window coordinates into control's space
         /// </summary>
         /// <param name="location">Input location of the point to convert</param>
         /// <returns>Converted point location in control's space</returns>
@@ -1010,7 +1010,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Converts point in the local control's space into screen coordinates
+        /// Converts point in the local control's space into screen coordinates
         /// </summary>
         /// <param name="location">Input location of the point to convert</param>
         /// <returns>Converted point location in screen coordinates</returns>
@@ -1025,7 +1025,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Converts point in screen coordinates into the local control's space
+        /// Converts point in screen coordinates into the local control's space
         /// </summary>
         /// <param name="location">Input location of the point to convert</param>
         /// <returns>Converted point location in local control's space</returns>
@@ -1043,8 +1043,8 @@ namespace FlaxEngine.GUI
         #region Control Action
 
         /// <summary>
-        ///     Sets location of control and calls event
-        ///     <remarks>This method is called from engine when necessary</remarks>
+        /// Sets location of control and calls event
+        /// <remarks>This method is called from engine when necessary</remarks>
         /// </summary>
         /// <param name="location">Location to set</param>
         protected virtual void SetLocationInternal(ref Vector2 location)
@@ -1056,8 +1056,8 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Sets size of control and calls event
-        ///     <remarks>This method is called form engine when necessary</remarks>
+        /// Sets size of control and calls event
+        /// <remarks>This method is called form engine when necessary</remarks>
         /// </summary>
         /// <param name="size"></param>
         protected virtual void SetSizeInternal(ref Vector2 size)
@@ -1161,7 +1161,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Action fred when parent control gets changed.
+        /// Action fred when parent control gets changed.
         /// </summary>
         protected virtual void OnParentChangedInternal()
         {
@@ -1222,7 +1222,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Action fred when parent control gets resized (also when control gets non-null parent)
+        /// Action fred when parent control gets resized (also when control gets non-null parent)
         /// </summary>
         /// <param name="oldSize">Previous size of the parent control</param>
         public virtual void OnParentResized(ref Vector2 oldSize)
@@ -1310,7 +1310,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Method called when managed instance should be destroyed
+        /// Method called when managed instance should be destroyed
         /// </summary>
         [NoAnimate]
         public virtual void OnDestroy()

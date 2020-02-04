@@ -46,68 +46,81 @@ namespace FlaxEngine.GUI
     public enum AnchorStyle
     {
         /// <summary>
-        /// The upper left corner.
+        /// The upper left corner of the parent control.
         /// </summary>
+        [Tooltip("The upper left corner of the parent control.")]
         UpperLeft = 0,
 
         /// <summary>
-        /// The center of the upper edge.
+        /// The center of the upper edge of the parent control.
         /// </summary>
+        [Tooltip("The center of the upper edge of the parent control.")]
         UpperCenter,
 
         /// <summary>
-        /// The upper right corner.
+        /// The upper right corner of the parent control.
         /// </summary>
+        [Tooltip("The upper right corner of the parent control.")]
         UpperRight,
 
         /// <summary>
-        /// The upper edge.
+        /// The upper edge of the parent control.
         /// </summary>
+        [Tooltip("The upper edge of the parent control.")]
         Upper,
 
         /// <summary>
-        /// The center of the left edge.
+        /// The center of the left edge of the parent control.
         /// </summary>
+        [Tooltip("The center of the left edge of the parent control.")]
         CenterLeft,
 
         /// <summary>
-        /// The center.
+        /// The center of the parent control.
         /// </summary>
+        [Tooltip("The center of the parent control.")]
         Center,
 
         /// <summary>
-        /// The center of the right edge.
+        /// The center of the right edge of the parent control.
         /// </summary>
+        [Tooltip("The center of the right edge of the parent control.")]
         CenterRight,
 
         /// <summary>
-        /// The bottom left corner.
+        /// The bottom left corner of the parent control.
         /// </summary>
+        [Tooltip("The bottom left corner of the parent control.")]
         BottomLeft,
 
         /// <summary>
-        /// The center of the bottom edge.
+        /// The center of the bottom edge of the parent control.
         /// </summary>
+        [Tooltip("The center of the bottom edge of the parent control.")]
         BottomCenter,
 
         /// <summary>
-        /// The bottom right corner.
+        /// The bottom right corner of the parent control.
         /// </summary>
+        [Tooltip("The bottom right corner of the parent control.")]
         BottomRight,
 
         /// <summary>
-        /// The bottom edge.
+        /// The bottom edge of the parent control.
         /// </summary>
+        [Tooltip("The bottom edge of the parent control.")]
         Bottom,
 
         /// <summary>
-        /// The left edge.
+        /// The left edge of the parent control.
         /// </summary>
+        [Tooltip("The left edge of the parent control.")]
         Left,
 
         /// <summary>
-        /// The right edge.
+        /// The right edge of the parent control.
         /// </summary>
+        [Tooltip("The right edge of the parent control.")]
         Right,
     }
 
@@ -120,21 +133,25 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Don't use scroll bars.
         /// </summary>
+        [Tooltip("Don't use scroll bars.")]
         None = 0,
 
         /// <summary>
         /// Use horizontal scrollbar.
         /// </summary>
+        [Tooltip("Use horizontal scrollbar.")]
         Horizontal = 1,
 
         /// <summary>
         /// Use vertical scrollbar.
         /// </summary>
+        [Tooltip("Use vertical scrollbar.")]
         Vertical = 2,
 
         /// <summary>
         /// Use horizontal and vertical scrollbar.
         /// </summary>
+        [Tooltip("Use horizontal and vertical scrollbar.")]
         Both = Horizontal | Vertical
     }
 

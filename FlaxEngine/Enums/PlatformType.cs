@@ -3,12 +3,12 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// The platform the game is running. Can be accessed via <see cref="Platform.Platform"/>.
+    /// The platform the game is running. Can be accessed via <see cref="Platform.PlatformType"/>.
     /// </summary>
     public enum PlatformType
     {
         /// <summary>
-        /// Running on Windows (standalone or editor).
+        /// Running on Windows.
         /// </summary>
         Windows = 1,
 
@@ -26,5 +26,10 @@ namespace FlaxEngine
         /// Running on Linux system.
         /// </summary>
         Linux = 4,
+
+        /// <summary>
+        /// Running on PlayStation 4.
+        /// </summary>
+        PS4 = 5,
     }
 }

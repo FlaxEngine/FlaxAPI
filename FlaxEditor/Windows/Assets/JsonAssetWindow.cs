@@ -45,22 +45,17 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            // Wait until asset file be fully loaded
             if (_asset.WaitForLoaded())
             {
-                // Error
                 return;
             }
 
-            // Save
             if (Editor.SaveJsonAsset(_item.Path, _object))
             {
-                // Error
-                Editor.LogError("Failed to save " + _item);
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 
-            // Update
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }

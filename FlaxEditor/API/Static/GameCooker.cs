@@ -20,14 +20,9 @@ namespace FlaxEditor
         None = 0,
 
         /// <summary>
-        /// The debug build mode (opposite to release mode).
-        /// </summary>
-        Debug = 1,
-
-        /// <summary>
         /// Shows the output directory folder on building end.
         /// </summary>
-        ShowOutput = 1 << 1,
+        ShowOutput = 1 << 0,
     }
 
     /// <summary>
@@ -56,7 +51,7 @@ namespace FlaxEditor
         WindowsStoreX64 = 4,
 
         /// <summary>
-        /// Xbox One (x64 architecture)
+        /// Xbox One
         /// </summary>
         XboxOne = 5,
 
@@ -64,22 +59,32 @@ namespace FlaxEditor
         /// Linux (x64 architecture)
         /// </summary>
         LinuxX64 = 6,
+
+        /// <summary>
+        /// PlayStation 4
+        /// </summary>
+        PS4 = 7,
     }
 
     /// <summary>
-    /// The build mode.
+    /// Game build configuration modes.
     /// </summary>
-    public enum BuildMode
+    public enum BuildConfiguration
     {
         /// <summary>
-        /// The release configuration.
+        /// Debug configuration. Without optimizations but with full debugging information.
         /// </summary>
-        Release = 0,
+        Debug = 0,
 
         /// <summary>
-        /// The debug configuration.
+        /// Development configuration. With basic optimizations and partial debugging data.
         /// </summary>
-        Debug = 1,
+        Development = 1,
+
+        /// <summary>
+        /// Shipping configuration. With full optimization and no debugging data.
+        /// </summary>
+        Release = 2,
     }
 
     public static partial class GameCooker
@@ -93,6 +98,11 @@ namespace FlaxEditor
             /// The platform.
             /// </summary>
             public BuildPlatform Platform;
+
+            /// <summary>
+            /// The build configuration.
+            /// </summary>
+            public BuildConfiguration Configuration;
 
             /// <summary>
             /// The options.
@@ -116,10 +126,11 @@ namespace FlaxEditor
         /// Starts building game for the specified platform.
         /// </summary>
         /// <param name="platform">The target platform.</param>
+        /// <param name="configuration">The build configuration.</param>
         /// <param name="options">The build options.</param>
         /// <param name="outputPath">The output path (output directory).</param>
         /// <param name="defines">Scripts compilation define symbols (macros).</param>
-        public static void Build(BuildPlatform platform, BuildOptions options, string outputPath, string[] defines = null)
+        public static void Build(BuildPlatform platform, BuildConfiguration configuration, string outputPath, BuildOptions options = BuildOptions.None, string[] defines = null)
         {
             if (IsRunning)
                 throw new InvalidOperationException("Cannot start build while already running.");
@@ -128,11 +139,12 @@ namespace FlaxEditor
 
             // Cache options (reuse them for build step events)
             _lastOptions.Platform = platform;
+            _lastOptions.Configuration = configuration;
             _lastOptions.Flags = options;
             _lastOptions.OutputPath = StringUtils.ConvertRelativePathToAbsolute(Globals.ProjectFolder, StringUtils.NormalizePath(outputPath));
             _lastOptions.Defines = defines;
 
-            Internal_Build(platform, options, outputPath, defines);
+            Internal_Build(platform, configuration, outputPath, options, defines);
         }
 
         /// <summary>
@@ -195,6 +207,7 @@ namespace FlaxEditor
             case BuildPlatform.WindowsStoreX64: return PlatformType.WindowsStore;
             case BuildPlatform.XboxOne: return PlatformType.XboxOne;
             case BuildPlatform.LinuxX64: return PlatformType.Linux;
+            case BuildPlatform.PS4: return PlatformType.PS4;
             default: throw new ArgumentOutOfRangeException(nameof(buildPlatform), buildPlatform, null);
             }
         }
@@ -238,7 +251,7 @@ namespace FlaxEditor
 
 #if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Build(BuildPlatform platform, BuildOptions options, string outputPath, string[] defines);
+        internal static extern void Internal_Build(BuildPlatform platform, BuildConfiguration configuration, string outputPath, BuildOptions options, string[] defines);
 #endif
 
         #endregion

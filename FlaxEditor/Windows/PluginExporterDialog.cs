@@ -75,7 +75,7 @@ namespace FlaxEditor.Windows
             /// The configuration mode.
             /// </summary>
             [EditorOrder(40), Tooltip("Plugin code configuration mode.")]
-            public BuildMode Configuration = BuildMode.Release;
+            public ScriptsBuilder.BuildMode Configuration = ScriptsBuilder.BuildMode.Release;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ExportOptions"/> class.
@@ -221,7 +221,7 @@ namespace FlaxEditor.Windows
                 Remove(files, "Game.Editor");
                 Remove(files, assemblyName);
                 Remove(files, assemblyName + ".Editor");
-                
+
                 for (int i = 0; i < files.Count; i++)
                 {
                     Editor.Log("Removing " + files[i]);
@@ -270,7 +270,7 @@ namespace FlaxEditor.Windows
                 RemoveStartsWith(files, "Newtonsoft.Json");
 
                 // Don't copy pdb files if release mode is checked
-                if (options.Configuration == BuildMode.Release)
+                if (options.Configuration == ScriptsBuilder.BuildMode.Release)
                 {
                     RemoveEndsWith(files, ".pdb");
                 }

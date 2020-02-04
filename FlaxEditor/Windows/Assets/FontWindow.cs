@@ -165,7 +165,7 @@ namespace FlaxEditor.Windows.Assets
             // Save asset
             if (Asset.Save())
             {
-                Editor.Log("Cannot save font asset.");
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 

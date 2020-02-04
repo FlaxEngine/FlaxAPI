@@ -152,6 +152,19 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the current network connection type.
+        /// </summary>
+        [UnmanagedCall]
+        public static NetworkConnectionType NetworkConnectionType
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetNetworkConnectionType(); }
+#endif
+        }
+
+        /// <summary>
         /// True if app has focus.
         /// </summary>
         [UnmanagedCall]
@@ -161,6 +174,41 @@ namespace FlaxEngine
             get; set;
 #else
             get { return Internal_GetHasFocus(); }
+#endif
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether can open a given URL in a web browser.
+        /// </summary>
+        /// <param name="url">The URI to assign to web browser.</param>
+        /// <returns>True if can open URL, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool CanOpenUrl(String url)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_CanOpenUrl(url);
+#endif
+        }
+
+        /// <summary>
+        /// Launches a web browser and opens a given URL.
+        /// </summary>
+        /// <param name="url">The URI to assign to web browser.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void OpenUrl(String url)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_OpenUrl(url);
 #endif
         }
 
@@ -240,7 +288,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Starts a new native process.
+        /// Starts a new native process. Supported only in Editor.
         /// </summary>
         /// <param name="path">Target file path.</param>
         /// <param name="args">Custom command line arguments to pass to the new Platform.</param>
@@ -315,7 +363,16 @@ namespace FlaxEngine
         internal static extern int Internal_GetDpi();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern NetworkConnectionType Internal_GetNetworkConnectionType();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetHasFocus();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CanOpenUrl(String url);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_OpenUrl(String url);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Exit();

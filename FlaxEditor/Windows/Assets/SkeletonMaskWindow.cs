@@ -230,12 +230,10 @@ namespace FlaxEditor.Windows.Assets
             _asset.MaskedNodes = nodes;
             if (_asset.Save())
             {
-                // Error
-                Editor.LogError("Failed to save asset " + _item);
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 
-            // Update
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }

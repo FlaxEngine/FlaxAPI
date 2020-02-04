@@ -63,6 +63,11 @@ namespace FlaxEngine
         /// Vulkan
         /// </summary>
         Vulkan = 10,
+
+        /// <summary>
+        /// PlayStation 4
+        /// </summary>
+        PS4 = 11,
     }
 
     /// <summary>
@@ -76,14 +81,14 @@ namespace FlaxEngine
         Unknown = 0,
 
         /// <summary>
-        /// Shader Model 4.0
+        /// DirectX (Shader Model 4 compatible)
         /// </summary>
-        ShaderModel4 = 1,
+        DirectX_SM4 = 1,
 
         /// <summary>
-        /// Shader Model 5.0
+        /// DirectX (Shader Model 5 compatible)
         /// </summary>
-        ShaderModel5 = 2,
+        DirectX_SM5 = 2,
 
         /// <summary>
         /// GLSL 410
@@ -99,6 +104,11 @@ namespace FlaxEngine
         /// Vulkan (Shader Model 5 compatible)
         /// </summary>
         Vulkan_SM5 = 5,
+
+        /// <summary>
+        /// PlayStation 4
+        /// </summary>
+        PS4 = 6,
     }
 
     /// <summary>

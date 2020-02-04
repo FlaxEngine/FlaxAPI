@@ -423,7 +423,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Sort child controls list
+        /// Sort child controls list
         /// </summary>
         [NoAnimate]
         public void SortChildren()
@@ -433,7 +433,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Sort children using recursion
+        /// Sort children using recursion
         /// </summary>
         [NoAnimate]
         public void SortChildrenRecursive()
@@ -533,7 +533,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Update contain focus state and all it's children
+        /// Update contain focus state and all it's children
         /// </summary>
         protected void UpdateContainsFocus()
         {
@@ -568,7 +568,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Arrange docked controls and return final client area for other controls
+        /// Arrange docked controls and return final client area for other controls
         /// </summary>
         /// <param name="clientArea">Result client area</param>
         protected void ArrangeDockedControls(ref Rectangle clientArea)
@@ -630,7 +630,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Use docked controls to calculate return final client area for other controls
+        /// Use docked controls to calculate return final client area for other controls
         /// </summary>
         /// <param name="clientArea">Result client area</param>
         protected void CalculateDockedControlsClientRect(out Rectangle clientArea)
@@ -682,7 +682,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Perform layout for that container control
+        /// Perform layout for that container control
         /// </summary>
         protected virtual void PerformLayoutSelf()
         {

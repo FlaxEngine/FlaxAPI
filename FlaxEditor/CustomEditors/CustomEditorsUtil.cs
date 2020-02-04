@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -12,6 +13,37 @@ namespace FlaxEditor.CustomEditors
     internal static class CustomEditorsUtil
     {
         private static readonly StringBuilder CachedSb = new StringBuilder(256);
+
+        internal static readonly Dictionary<Type, string> InBuildTypeNames = new Dictionary<Type, string>()
+        {
+            { typeof(bool), "bool" },
+            { typeof(byte), "byte" },
+            { typeof(sbyte), "sbyte" },
+            { typeof(char), "char" },
+            { typeof(short), "short" },
+            { typeof(ushort), "ushort" },
+            { typeof(int), "int" },
+            { typeof(uint), "uint" },
+            { typeof(long), "ulong" },
+            { typeof(float), "float" },
+            { typeof(double), "double" },
+            { typeof(decimal), "decimal" },
+            { typeof(string), "string" },
+        };
+
+        /// <summary>
+        /// Gets the type name for UI. Handles in-build types like System.Single and returns float.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The result.</returns>
+        public static string GetTypeNameUI(Type type)
+        {
+            if (!InBuildTypeNames.TryGetValue(type, out var result))
+            {
+                result = type.Name;
+            }
+            return result;
+        }
 
         /// <summary>
         /// Gets the property name for UI. Removes unnecessary characters and filters text. Makes it more user-friendly.

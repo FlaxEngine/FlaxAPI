@@ -81,5 +81,10 @@ namespace FlaxEditor
         /// The skeleton bones masking.
         /// </summary>
         SkeletonMask,
+
+        /// <summary>
+        /// The gameplay globals.
+        /// </summary>
+        GameplayGlobals,
     }
 }

@@ -240,7 +240,7 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(Material material)
         {
             var source = Editor.GetMaterialShaderSourceCode(material);
-            Utilities.Utils.ShowSourceCode(source, "Material Source");
+            Utilities.Utils.ShowSourceCodeWindow(source, "Material Source");
         }
 
         /// <summary>
@@ -332,6 +332,7 @@ namespace FlaxEditor.Windows.Assets
                     _surface.MarkAsEdited();
                     Editor.LogError("Failed to save material surface data");
                 }
+                _asset.Reload();
             }
         }
 

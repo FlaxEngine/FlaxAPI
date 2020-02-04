@@ -1124,12 +1124,12 @@ namespace FlaxEditor.Viewport
         private static readonly ViewModeOptions[] EditorViewportViewModeValues =
         {
             new ViewModeOptions(ViewMode.Default, "Default"),
+            new ViewModeOptions(ViewMode.Unlit, "Unlit"),
             new ViewModeOptions(ViewMode.NoPostFx, "No PostFx"),
             new ViewModeOptions(ViewMode.Wireframe, "Wireframe"),
             new ViewModeOptions(ViewMode.LightBuffer, "Light Buffer"),
             new ViewModeOptions(ViewMode.Reflections, "Reflections Buffer"),
             new ViewModeOptions(ViewMode.Depth, "Depth Buffer"),
-            new ViewModeOptions(ViewMode.Unlit, "Unlit"),
             new ViewModeOptions(ViewMode.Diffuse, "Diffuse"),
             new ViewModeOptions(ViewMode.Metalness, "Metalness"),
             new ViewModeOptions(ViewMode.Roughness, "Roughness"),

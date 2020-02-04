@@ -49,14 +49,22 @@ namespace FlaxEditor.CustomEditors.GUI
             // Fire events
             if (buttons == MouseButton.Left)
             {
-                MouseLeftClick?.Invoke(this, location);
+                if (MouseLeftClick != null)
+                {
+                    MouseLeftClick.Invoke(this, location);
+                    return true;
+                }
             }
             else if (buttons == MouseButton.Right)
             {
-                MouseRightClick?.Invoke(this, location);
+                if (MouseRightClick != null)
+                {
+                    MouseRightClick.Invoke(this, location);
+                    return true;
+                }
             }
 
-            return true;
+            return base.OnMouseUp(location, buttons);
         }
 
         /// <inheritdoc />
@@ -65,14 +73,22 @@ namespace FlaxEditor.CustomEditors.GUI
             // Fire events
             if (buttons == MouseButton.Left)
             {
-                MouseLeftDoubleClick?.Invoke(this, location);
+                if (MouseLeftDoubleClick != null)
+                {
+                    MouseLeftDoubleClick.Invoke(this, location);
+                    return true;
+                }
             }
             else if (buttons == MouseButton.Right)
             {
-                MouseRightDoubleClick?.Invoke(this, location);
+                if (MouseRightDoubleClick != null)
+                {
+                    MouseRightDoubleClick.Invoke(this, location);
+                    return true;
+                }
             }
 
-            return true;
+            return base.OnMouseDoubleClick(location, buttons);
         }
 
         /// <inheritdoc />

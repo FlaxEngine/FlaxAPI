@@ -15,11 +15,13 @@ namespace FlaxEditor.GUI
         {
             public PlatformType PlatformType;
             public Sprite Icon;
+            public string PlatformName;
 
-            public PlatformData(PlatformType type, Sprite icon)
+            public PlatformData(PlatformType type, Sprite icon, string name)
             {
                 PlatformType = type;
                 Icon = icon;
+                PlatformName = name;
             }
         }
 
@@ -79,10 +81,11 @@ namespace FlaxEditor.GUI
             var icons = Editor.Instance.Icons;
             var platforms = new[]
             {
-                new PlatformData(PlatformType.Windows, icons.Windows),
-                new PlatformData(PlatformType.XboxOne, icons.XboxOne),
-                new PlatformData(PlatformType.WindowsStore, icons.WindowsStore),
-                new PlatformData(PlatformType.Linux, icons.Linux),
+                new PlatformData(PlatformType.Windows, icons.Windows, "Windows"),
+                new PlatformData(PlatformType.XboxOne, icons.XboxOne, "Xbox One"),
+                new PlatformData(PlatformType.WindowsStore, icons.WindowsStore, "Windows Store"),
+                new PlatformData(PlatformType.Linux, icons.Linux, "Linux"),
+                new PlatformData(PlatformType.PS4, icons.Linux, "PlayStation 4"),
             };
 
             const float IconSize = 48.0f;
@@ -101,7 +104,7 @@ namespace FlaxEditor.GUI
                     MouseOverColor = _mouseOverColor,
                     Color = _defaultColor,
                     Tag = platforms[i].PlatformType,
-                    TooltipText = CustomEditors.CustomEditorsUtil.GetPropertyNameUI(platforms[i].PlatformType.ToString()),
+                    TooltipText = platforms[i].PlatformName,
                     Parent = this,
                 };
                 tile.Clicked += OnTileClicked;
