@@ -149,6 +149,11 @@ namespace FlaxEditor.Windows.Assets
                     layout.Label("No parameters");
                     return;
                 }
+                if (asset.LastLoadFailed)
+                {
+                    layout.Label("Failed to load asset");
+                    return;
+                }
                 if (!asset.IsLoaded)
                 {
                     layout.Label("Loading...");

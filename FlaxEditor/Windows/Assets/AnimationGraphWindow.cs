@@ -284,6 +284,7 @@ namespace FlaxEditor.Windows.Assets
                     Editor.LogError("Failed to save animation graph surface data");
                     return;
                 }
+                _asset.Reload();
 
                 // Reset any root motion
                 _preview.PreviewActor.ResetLocalTransform();

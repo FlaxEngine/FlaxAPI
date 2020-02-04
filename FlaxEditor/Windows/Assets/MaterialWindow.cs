@@ -332,6 +332,7 @@ namespace FlaxEditor.Windows.Assets
                     _surface.MarkAsEdited();
                     Editor.LogError("Failed to save material surface data");
                 }
+                _asset.Reload();
             }
         }
 

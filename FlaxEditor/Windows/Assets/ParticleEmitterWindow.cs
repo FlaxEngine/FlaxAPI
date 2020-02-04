@@ -189,6 +189,7 @@ namespace FlaxEditor.Windows.Assets
                     _surface.MarkAsEdited();
                     Editor.LogError("Failed to save Particle Emitter surface data");
                 }
+                _asset.Reload();
                 _preview.PreviewActor.ResetSimulation();
             }
         }

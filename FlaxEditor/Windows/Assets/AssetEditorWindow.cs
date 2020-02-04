@@ -58,11 +58,8 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         protected virtual void UnlinkItem()
         {
-            if (_item != null)
-            {
-                _item.RemoveReference(this);
-                _item = null;
-            }
+            _item.RemoveReference(this);
+            _item = null;
         }
 
         /// <summary>
@@ -135,8 +132,11 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override void OnClose()
         {
-            // Ensure to remove linkage to the item
-            UnlinkItem();
+            if (_item != null)
+            {
+                // Ensure to remove linkage to the item
+                UnlinkItem();
+            }
 
             base.OnClose();
         }
@@ -144,8 +144,11 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void OnDestroy()
         {
-            // Ensure to remove linkage to the item
-            UnlinkItem();
+            if (_item != null)
+            {
+                // Ensure to remove linkage to the item
+                UnlinkItem();
+            }
 
             base.OnDestroy();
         }
@@ -277,10 +280,13 @@ namespace FlaxEditor.Windows.Assets
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     public abstract class AssetEditorWindowBase<T> : AssetEditorWindow where T : Asset
     {
-        private bool _isWaitingForLoaded;
+        /// <summary>
+        /// Flag set to true if window is is waiting for asset to be loaded (to send <see cref="OnAssetLoaded"/> or <see cref="OnAssetLoadFailed"/> events).
+        /// </summary>
+        protected bool _isWaitingForLoaded;
 
         /// <summary>
-        /// The asset.
+        /// The asset reference.
         /// </summary>
         protected T _asset;
 
@@ -296,26 +302,41 @@ namespace FlaxEditor.Windows.Assets
         }
 
         /// <summary>
+        /// Reloads the asset (window will receive <see cref="OnAssetLoaded"/> or <see cref="OnAssetLoadFailed"/> events).
+        /// </summary>
+        public void ReloadAsset()
+        {
+            _asset.Reload();
+            _isWaitingForLoaded = true;
+        }
+
+        /// <summary>
         /// Loads the asset.
         /// </summary>
         /// <returns>Loaded asset or null if cannot do it.</returns>
         protected virtual T LoadAsset()
         {
-            // Load asset (but in async - we don't want to block user)
             return FlaxEngine.Content.LoadAsync<T>(_item.Path);
         }
 
         /// <summary>
-        /// Called when asset gets linked and may setup window UI for it.
+        /// Called when asset gets linked and window can setup UI for it.
         /// </summary>
         protected virtual void OnAssetLinked()
         {
         }
 
         /// <summary>
-        /// Called when asset gets loaded and may setup window UI for it.
+        /// Called when asset gets loaded and window can setup UI for it.
         /// </summary>
         protected virtual void OnAssetLoaded()
+        {
+        }
+
+        /// <summary>
+        /// Called when asset fails to load and window can setup UI for it.
+        /// </summary>
+        protected virtual void OnAssetLoadFailed()
         {
         }
 
@@ -333,6 +354,11 @@ namespace FlaxEditor.Windows.Assets
                     _isWaitingForLoaded = false;
                     OnAssetLoaded();
                 }
+                else if (_asset.LastLoadFailed)
+                {
+                    _isWaitingForLoaded = false;
+                    OnAssetLoadFailed();
+                }
             }
 
             base.Update(deltaTime);
@@ -348,10 +374,7 @@ namespace FlaxEditor.Windows.Assets
                 _asset = LoadAsset();
                 if (_asset == null)
                 {
-                    // Error
                     Editor.LogError(string.Format("Cannot load asset \'{0}\' ({1})", _item.Path, typeof(T)));
-
-                    // Close window
                     Close();
                     return;
                 }
