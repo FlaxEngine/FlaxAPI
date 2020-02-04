@@ -593,7 +593,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyframesEditor{T}"/> class.
+        /// Initializes a new instance of the <see cref="KeyframesEditor"/> class.
         /// </summary>
         public KeyframesEditor()
         {

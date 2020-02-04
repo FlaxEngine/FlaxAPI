@@ -3,7 +3,7 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// The platform the game is running. Can be accessed via <see cref="Platform.PlatformType"/>.
+    /// The platform the game is running. Can be accessed via <see cref="FlaxEngine.Platform.PlatformType"/>.
     /// </summary>
     public enum PlatformType
     {
