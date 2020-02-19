@@ -33,36 +33,47 @@ namespace FlaxEditor
         /// <summary>
         /// Windows (x86 architecture)
         /// </summary>
+        [EditorDisplay(null, "Windows 32bit")]
+        [Tooltip("Windows (x86 architecture)")]
         Windows32 = 1,
 
         /// <summary>
         /// Windows (x64 architecture)
         /// </summary>
+        [EditorDisplay(null, "Windows 64bit")]
+        [Tooltip("Windows (x64 architecture)")]
         Windows64 = 2,
 
         /// <summary>
         /// Universal Windows Platform (UWP) (x86 architecture)
         /// </summary>
+        [EditorDisplay(null, "Windows Store x86")]
+        [Tooltip("Windows Store (UWP) (x86 architecture)")]
         WindowsStoreX86 = 3,
 
         /// <summary>
         /// Universal Windows Platform (UWP) (x64 architecture)
         /// </summary>
+        [EditorDisplay(null, "Windows Store x64")]
+        [Tooltip("Windows Store (UWP) (x64 architecture)")]
         WindowsStoreX64 = 4,
 
         /// <summary>
         /// Xbox One
         /// </summary>
+        [EditorDisplay(null, " Xbox One")]
         XboxOne = 5,
 
         /// <summary>
         /// Linux (x64 architecture)
         /// </summary>
+        [EditorDisplay(null, " Linux x64")]
         LinuxX64 = 6,
 
         /// <summary>
         /// PlayStation 4
         /// </summary>
+        [EditorDisplay(null, " PlayStation 4")]
         PS4 = 7,
     }
 
