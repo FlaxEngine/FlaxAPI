@@ -226,7 +226,7 @@ namespace FlaxEngine.GUI
 
             // Calculate size of the tooltip
             var size = Vector2.Zero;
-            if (style.FontMedium && !string.IsNullOrEmpty(_currentText))
+            if (style != null && style.FontMedium && !string.IsNullOrEmpty(_currentText))
             {
                 var layout = TextLayoutOptions.Default;
                 layout.Bounds = new Rectangle(0, 0, MaxWidth, 10000000);
