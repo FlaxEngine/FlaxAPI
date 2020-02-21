@@ -174,7 +174,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the anchor preset used by the control anchors (based on <see cref="AnchorMin"/> and <see cref="AnchorMax"/>).
         /// </summary>
-        [NoSerialize, EditorDisplay("Transform"), EditorOrder(1060), Tooltip("The anchor preset used by the control anchors.")]
+        [NoSerialize, EditorDisplay("Transform"), EditorOrder(980), Tooltip("The anchor preset used by the control anchors.")]
         public AnchorPresets AnchorPreset
         {
             get

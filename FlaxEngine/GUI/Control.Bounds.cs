@@ -27,7 +27,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the normalized position in the parent control that the upper left corner is anchored to (range 0-1).
         /// </summary>
-        [NoSerialize]
+        [Serialize]
         [ExpandGroups, Limit(0.0f, 1.0f, 0.01f), EditorDisplay("Transform"), EditorOrder(990), Tooltip("The normalized position in the parent control that the upper left corner is anchored to (range 0-1).")]
         public Vector2 AnchorMin
         {
@@ -47,7 +47,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the normalized position in the parent control that the bottom right corner is anchored to (range 0-1).
         /// </summary>
-        [NoSerialize]
+        [Serialize]
         [ExpandGroups, Limit(0.0f, 1.0f, 0.01f), EditorDisplay("Transform"), EditorOrder(991), Tooltip("The normalized position in the parent control that the bottom right corner is anchored to (range 0-1).")]
         public Vector2 AnchorMax
         {
@@ -67,7 +67,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets the offsets of the corners of the control relative to its anchors.
         /// </summary>
-        [NoSerialize]
+        [Serialize]
         [ExpandGroups, EditorDisplay("Transform"), EditorOrder(992), Tooltip("The offsets of the corners of the control relative to its anchors.")]
         public Margin Offsets
         {
@@ -116,6 +116,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Gets or sets control's size.
         /// </summary>
+        [NoSerialize]
         [EditorDisplay("Transform"), EditorOrder(1010), Tooltip("The size of the control bounds.")]
         public Vector2 Size
         {
