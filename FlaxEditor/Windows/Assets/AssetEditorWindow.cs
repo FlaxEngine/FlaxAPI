@@ -44,9 +44,12 @@ namespace FlaxEditor.Windows.Assets
             _item = item ?? throw new ArgumentNullException(nameof(item));
             _item.AddReference(this);
 
-            _toolstrip = new ToolStrip();
+            _toolstrip = new ToolStrip
+            {
+                Offsets = new Margin(0, 0, 0, 32),
+                Parent = this
+            };
             _toolstrip.AddButton(editor.Icons.Find32, () => Editor.Windows.ContentWin.Select(_item)).LinkTooltip("Show and select in Content Window");
-            _toolstrip.Parent = this;
 
             InputActions.Add(options => options.Save, Save);
 

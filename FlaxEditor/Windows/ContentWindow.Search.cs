@@ -13,11 +13,6 @@ namespace FlaxEditor.Windows
     {
         private class SearchFilterComboBox : ComboBox
         {
-            public SearchFilterComboBox(float x, float y, float width)
-            : base(x, y, width)
-            {
-            }
-
             /// <inheritdoc />
             public override void Draw()
             {

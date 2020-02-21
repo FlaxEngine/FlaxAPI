@@ -10,6 +10,45 @@ namespace FlaxEngine.GUI
     /// </summary>
     public partial class Control : IComparable, IDrawable
     {
+        private struct AnchorPresetData
+        {
+            public AnchorPresets Preset;
+            public Vector2 Min;
+            public Vector2 Max;
+
+            public AnchorPresetData(AnchorPresets preset, Vector2 min, Vector2 max)
+            {
+                Preset = preset;
+                Min = min;
+                Max = max;
+            }
+        }
+
+        private static readonly AnchorPresetData[] AnchorPresetsData =
+        {
+            new AnchorPresetData(AnchorPresets.TopLeft, new Vector2(0, 0), new Vector2(0, 0)),
+            new AnchorPresetData(AnchorPresets.TopCenter, new Vector2(0.5f, 0), new Vector2(0.5f, 0)),
+            new AnchorPresetData(AnchorPresets.TopRight, new Vector2(1, 0), new Vector2(1, 0)),
+
+            new AnchorPresetData(AnchorPresets.MiddleLeft, new Vector2(0, 0.5f), new Vector2(0, 0.5f)),
+            new AnchorPresetData(AnchorPresets.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)),
+            new AnchorPresetData(AnchorPresets.MiddleRight, new Vector2(1, 0.5f), new Vector2(1, 0.5f)),
+
+            new AnchorPresetData(AnchorPresets.BottomLeft, new Vector2(0, 1), new Vector2(0, 1)),
+            new AnchorPresetData(AnchorPresets.BottomCenter, new Vector2(0.5f, 1), new Vector2(0.5f, 1)),
+            new AnchorPresetData(AnchorPresets.BottomRight, new Vector2(1, 1), new Vector2(1, 1)),
+
+            new AnchorPresetData(AnchorPresets.HorizontalStretchTop, new Vector2(0, 0), new Vector2(1, 0)),
+            new AnchorPresetData(AnchorPresets.HorizontalStretchMiddle, new Vector2(0, 0.5f), new Vector2(1, 0.5f)),
+            new AnchorPresetData(AnchorPresets.HorizontalStretchBottom, new Vector2(0, 1), new Vector2(1, 1)),
+
+            new AnchorPresetData(AnchorPresets.VerticalStretchLeft, new Vector2(0, 0), new Vector2(0, 1)),
+            new AnchorPresetData(AnchorPresets.VerticalStretchCenter, new Vector2(0.5f, 0), new Vector2(0.5f, 1)),
+            new AnchorPresetData(AnchorPresets.VerticalStretchRight, new Vector2(1, 0), new Vector2(1, 1)),
+
+            new AnchorPresetData(AnchorPresets.StretchAll, new Vector2(0, 0), new Vector2(1, 1)),
+        };
+
         private ContainerControl _parent;
         private RootControl _root;
         private bool _isDisposing, _isFocused;
@@ -24,12 +63,12 @@ namespace FlaxEngine.GUI
         private bool _autoFocus = true;
         private RootControl.UpdateDelegate _tooltipUpdate;
 
-        // Dimensions
-
-        private Rectangle _bounds;
-
         // Transform
 
+        private Rectangle _bounds;
+        private Margin _offsets = new Margin(0.0f, 100.0f, 0.0f, 30.0f);
+        private Vector2 _anchorMin;
+        private Vector2 _anchorMax;
         private Vector2 _scale = new Vector2(1.0f);
         private Vector2 _pivot = new Vector2(0.5f);
         private Vector2 _shear;
@@ -39,8 +78,6 @@ namespace FlaxEngine.GUI
 
         // Style
 
-        private DockStyle _dockStyle;
-        private AnchorStyle _anchorStyle;
         private Color _backgroundColor = Color.Transparent;
 
         // Tooltip
@@ -102,9 +139,9 @@ namespace FlaxEngine.GUI
                 OnParentChangedInternal();
 
                 // Check if parent size has been changed
-                if (_parent != null && !_parent.IsLayoutLocked && !_parent.Size.Equals(ref oldParentSize))
+                if (_parent != null && !_parent.Size.Equals(ref oldParentSize))
                 {
-                    OnParentResized(ref oldParentSize);
+                    OnParentResized();
                 }
             }
         }
@@ -135,46 +172,47 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets or sets the docking style of the control.
-        /// If value set is other than <see cref="FlaxEngine.GUI.DockStyle.None"/> then <see cref="IsScrollable"/> will be disabled by auto.
+        /// Gets or sets the anchor preset used by the control anchors (based on <see cref="AnchorMin"/> and <see cref="AnchorMax"/>).
         /// </summary>
-        [EditorDisplay("Transform"), EditorOrder(1060), Tooltip("The docking style of the control. Defines how control will be docked into the parent container. Use None to disable it. Docked controls have disabled scrolling.")]
-        public DockStyle DockStyle
+        [NoSerialize, EditorDisplay("Transform"), EditorOrder(1060), Tooltip("The anchor preset used by the control anchors.")]
+        public AnchorPresets AnchorPreset
         {
-            get => _dockStyle;
-            set
+            get
             {
-                if (_dockStyle != value)
+                var result = AnchorPresets.Custom;
+                for (int i = 0; i < AnchorPresetsData.Length; i++)
                 {
-                    _dockStyle = value;
-
-                    // Disable scrolling for docked controls (by default but can be manually restored)
-                    if (_dockStyle != DockStyle.None)
-                        IsScrollable = false;
-
-                    // Update parent's container
-                    _parent?.PerformLayout();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the anchor style of the control.
-        /// </summary>
-        [EditorDisplay("Transform"), EditorOrder(1070), Tooltip("The anchor style of the control. Defines how control location and size will be constrained when parent container is being resized.")]
-        public AnchorStyle AnchorStyle
-        {
-            get => _anchorStyle;
-            set
-            {
-                if (_anchorStyle != value)
-                {
-                    _anchorStyle = value;
-
-                    // Update layout
-                    if (_parent != null && _anchorStyle == AnchorStyle.Center)
+                    if (Vector2.NearEqual(ref _anchorMin, ref AnchorPresetsData[i].Min) &&
+                        Vector2.NearEqual(ref _anchorMax, ref AnchorPresetsData[i].Max))
                     {
-                        Location = (_parent.Size - Size) * 0.5f;
+                        result = AnchorPresetsData[i].Preset;
+                        break;
+                    }
+                }
+                return result;
+            }
+            set
+            {
+                for (int i = 0; i < AnchorPresetsData.Length; i++)
+                {
+                    if (AnchorPresetsData[i].Preset == value)
+                    {
+                        var anchorMin = AnchorPresetsData[i].Min;
+                        var anchorMax = AnchorPresetsData[i].Max;
+                        if (!Vector2.NearEqual(ref _anchorMin, ref anchorMin) ||
+                            !Vector2.NearEqual(ref _anchorMax, ref anchorMax))
+                        {
+                            // Disable scrolling for anchored controls (by default but can be manually restored)
+                            if (!anchorMin.IsZero || !anchorMax.IsZero)
+                                IsScrollable = false;
+
+                            var bounds = Bounds;
+                            _anchorMin = anchorMin;
+                            _anchorMax = anchorMax;
+                            UpdateBounds();
+                            Bounds = bounds;
+                        }
+                        return;
                     }
                 }
             }
@@ -193,6 +231,7 @@ namespace FlaxEngine.GUI
         public bool Enabled
         {
             get => _isEnabled;
+
             set
             {
                 if (_isEnabled != value)
@@ -236,6 +275,7 @@ namespace FlaxEngine.GUI
         public bool Visible
         {
             get => _isVisible;
+
             set
             {
                 if (_isVisible != value)
@@ -315,6 +355,7 @@ namespace FlaxEngine.GUI
         public virtual CursorType Cursor
         {
             get => _parent?.Cursor ?? CursorType.Default;
+
             set
             {
                 if (_parent != null)
@@ -333,8 +374,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Control()
         {
-            _bounds = new Rectangle(0, 0, 64, 64);
-
+            _bounds = new Rectangle(_offsets.Left, _offsets.Top, _offsets.Right, _offsets.Bottom);
             UpdateTransform();
         }
 
@@ -346,10 +386,8 @@ namespace FlaxEngine.GUI
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
         public Control(float x, float y, float width, float height)
+        : this(new Rectangle(x, y, width, height))
         {
-            _bounds = new Rectangle(x, y, width, height);
-
-            UpdateTransform();
         }
 
         /// <summary>
@@ -358,10 +396,8 @@ namespace FlaxEngine.GUI
         /// <param name="location">Upper left corner location.</param>
         /// <param name="size">Bounds size.</param>
         public Control(Vector2 location, Vector2 size)
+        : this(new Rectangle(location, size))
         {
-            _bounds = new Rectangle(location, size);
-
-            UpdateTransform();
         }
 
         /// <summary>
@@ -371,7 +407,7 @@ namespace FlaxEngine.GUI
         public Control(Rectangle bounds)
         {
             _bounds = bounds;
-
+            _offsets = new Margin(bounds.X, bounds.Width, bounds.Y, bounds.Height);
             UpdateTransform();
         }
 
@@ -719,7 +755,6 @@ namespace FlaxEngine.GUI
         {
             // Set flag
             _isDragOver = true;
-
             return DragDropEffect.None;
         }
 
@@ -746,7 +781,6 @@ namespace FlaxEngine.GUI
         {
             // Clear flag
             _isDragOver = false;
-
             return DragDropEffect.None;
         }
 
@@ -963,20 +997,18 @@ namespace FlaxEngine.GUI
         {
             if (parent == null)
                 throw new ArgumentNullException();
-
             var path = new List<Control>();
+
             Control c = this;
             while (c != null && c != parent)
             {
                 path.Add(c);
                 c = c.Parent;
             }
-
             for (int i = path.Count - 1; i >= 0; i--)
             {
                 location = path[i].PointFromParent(ref location);
             }
-
             return location;
         }
 
@@ -992,6 +1024,7 @@ namespace FlaxEngine.GUI
             {
                 location = _parent.PointToWindow(location);
             }
+
             return location;
         }
 
@@ -1006,6 +1039,7 @@ namespace FlaxEngine.GUI
             {
                 location = _parent.PointFromWindow(location);
             }
+
             return PointFromParent(ref location);
         }
 
@@ -1021,6 +1055,7 @@ namespace FlaxEngine.GUI
             {
                 location = _parent.ClientToScreen(location);
             }
+
             return location;
         }
 
@@ -1035,6 +1070,7 @@ namespace FlaxEngine.GUI
             {
                 location = _parent.ScreenToClient(location);
             }
+
             return PointFromParent(ref location);
         }
 
@@ -1043,65 +1079,20 @@ namespace FlaxEngine.GUI
         #region Control Action
 
         /// <summary>
-        /// Sets location of control and calls event
-        /// <remarks>This method is called from engine when necessary</remarks>
+        /// Called when control location gets changed.
         /// </summary>
-        /// <param name="location">Location to set</param>
-        protected virtual void SetLocationInternal(ref Vector2 location)
+        protected virtual void OnLocationChanged()
         {
-            _bounds.Location = location;
-
-            UpdateTransform();
             LocationChanged?.Invoke(this);
         }
 
         /// <summary>
-        /// Sets size of control and calls event
-        /// <remarks>This method is called form engine when necessary</remarks>
+        /// Called when control size gets changed.
         /// </summary>
-        /// <param name="size"></param>
-        protected virtual void SetSizeInternal(ref Vector2 size)
+        protected virtual void OnSizeChanged()
         {
-            var oldSize = _bounds.Size;
-            _bounds.Size = size;
-
-            UpdateTransform();
             SizeChanged?.Invoke(this);
             _parent?.OnChildResized(this);
-
-            // Update layout
-            if (_parent != null)
-            {
-                switch (_anchorStyle)
-                {
-                case AnchorStyle.UpperCenter:
-                    X = (_parent.Width - size.X) * 0.5f;
-                    break;
-                case AnchorStyle.CenterLeft:
-                    Y = (_parent.Height - Height) * 0.5f;
-                    break;
-                case AnchorStyle.Center:
-                    Location = (_parent.Size - Size) * 0.5f;
-                    break;
-                case AnchorStyle.CenterRight:
-                    Location = new Vector2(X - (size.X - oldSize.X), (_parent.Height - Height) * 0.5f);
-                    break;
-                case AnchorStyle.BottomCenter:
-                    Location = new Vector2((_parent.Width - size.X) * 0.5f, Y - (size.Y - oldSize.Y));
-                    break;
-                case AnchorStyle.BottomRight:
-                    Location -= size - oldSize;
-                    break;
-                case AnchorStyle.Bottom:
-                case AnchorStyle.BottomLeft:
-                    Y -= size.Y - oldSize.Y;
-                    break;
-                case AnchorStyle.Right:
-                case AnchorStyle.UpperRight:
-                    X -= size.X - oldSize.X;
-                    break;
-                }
-            }
         }
 
         /// <summary>
@@ -1111,7 +1102,6 @@ namespace FlaxEngine.GUI
         protected virtual void SetScaleInternal(ref Vector2 scale)
         {
             _scale = scale;
-
             UpdateTransform();
             _parent?.OnChildResized(this);
         }
@@ -1123,7 +1113,6 @@ namespace FlaxEngine.GUI
         protected virtual void SetPivotInternal(ref Vector2 pivot)
         {
             _pivot = pivot;
-
             UpdateTransform();
             _parent?.OnChildResized(this);
         }
@@ -1135,7 +1124,6 @@ namespace FlaxEngine.GUI
         protected virtual void SetShearInternal(ref Vector2 shear)
         {
             _shear = shear;
-
             UpdateTransform();
             _parent?.OnChildResized(this);
         }
@@ -1147,7 +1135,6 @@ namespace FlaxEngine.GUI
         protected virtual void SetRotationInternal(float rotation)
         {
             _rotation = rotation;
-
             UpdateTransform();
             _parent?.OnChildResized(this);
         }
@@ -1177,7 +1164,6 @@ namespace FlaxEngine.GUI
                 RemoveUpdateCallbacks(_root);
 
             _root = _parent?.Root;
-
             if (_root != null)
                 AddUpdateCallbacks(_root);
         }
@@ -1211,102 +1197,22 @@ namespace FlaxEngine.GUI
         {
             if (onUpdate == value)
                 return;
-
             if (_root != null && onUpdate != null)
                 _root.UpdateCallbacksToRemove.Add(onUpdate);
-
             onUpdate = value;
-
             if (_root != null && onUpdate != null)
                 _root.UpdateCallbacksToAdd.Add(onUpdate);
         }
 
         /// <summary>
-        /// Action fred when parent control gets resized (also when control gets non-null parent)
+        /// Action fred when parent control gets resized (also when control gets non-null parent).
         /// </summary>
-        /// <param name="oldSize">Previous size of the parent control</param>
-        public virtual void OnParentResized(ref Vector2 oldSize)
+        public virtual void OnParentResized()
         {
-            if (_anchorStyle == AnchorStyle.UpperLeft || oldSize.LengthSquared < Mathf.Epsilon)
-                return;
-
-            var bounds = Bounds;
-
-            switch (_anchorStyle)
+            if (!_anchorMin.IsZero || !_anchorMax.IsZero)
             {
-            case AnchorStyle.UpperCenter:
-            {
-                bounds.X = (_parent.Width - bounds.Width) * 0.5f;
-                break;
+                UpdateBounds();
             }
-            case AnchorStyle.UpperRight:
-            {
-                bounds.X = _parent.Width - (oldSize.X - bounds.Left);
-                break;
-            }
-            case AnchorStyle.Upper:
-            {
-                bounds.Width = _parent.Width - bounds.X - (oldSize.X - bounds.Right);
-                break;
-            }
-
-            case AnchorStyle.CenterLeft:
-            {
-                bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
-                break;
-            }
-            case AnchorStyle.Center:
-            {
-                bounds.Location = (_parent.Size - bounds.Size) * 0.5f;
-                break;
-            }
-            case AnchorStyle.CenterRight:
-            {
-                bounds.X = _parent.Width - (oldSize.X - bounds.Left);
-                bounds.Y = (_parent.Height - bounds.Height) * 0.5f;
-                break;
-            }
-
-            case AnchorStyle.BottomLeft:
-            {
-                bounds.Y = _parent.Height - (oldSize.Y - bounds.Y);
-                break;
-            }
-            case AnchorStyle.BottomCenter:
-            {
-                bounds.X = (_parent.Width - bounds.Width) * 0.5f;
-                bounds.Y = _parent.Height - (oldSize.Y - bounds.Y);
-                break;
-            }
-            case AnchorStyle.BottomRight:
-            {
-                bounds.X = _parent.Width - (oldSize.X - bounds.Left);
-                bounds.Y = _parent.Height - (oldSize.Y - bounds.Y);
-                break;
-            }
-            case AnchorStyle.Bottom:
-            {
-                bounds.Width = _parent.Width - bounds.X - (oldSize.X - bounds.Right);
-                bounds.Y = _parent.Height - (oldSize.Y - bounds.Y);
-                break;
-            }
-
-            case AnchorStyle.Left:
-            {
-                bounds.Height = _parent.Height - bounds.Y - (oldSize.Y - bounds.Bottom);
-                break;
-            }
-            case AnchorStyle.Right:
-            {
-                bounds.Height = _parent.Height - bounds.Y - (oldSize.Y - bounds.Bottom);
-                bounds.X = _parent.Width - (oldSize.X - bounds.Left);
-                break;
-            }
-
-            default: throw new ArgumentOutOfRangeException();
-            }
-
-            Bounds = bounds;
         }
 
         /// <summary>
@@ -1317,9 +1223,7 @@ namespace FlaxEngine.GUI
         {
             // Set disposing flag
             _isDisposing = true;
-
             Defocus();
-
             UnlinkTooltip();
             Tag = null;
         }

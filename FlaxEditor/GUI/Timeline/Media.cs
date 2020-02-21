@@ -233,7 +233,7 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        protected override void GetDesireClientArea(out Rectangle rect)
+        public override void GetDesireClientArea(out Rectangle rect)
         {
             base.GetDesireClientArea(out rect);
 

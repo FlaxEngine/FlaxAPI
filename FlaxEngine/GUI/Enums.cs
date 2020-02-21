@@ -5,123 +5,72 @@ using System;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Specifies the position and manner in which a control is docked
+    /// UI control anchors presets.
     /// </summary>
-    public enum DockStyle
+    public enum AnchorPresets
     {
         /// <summary>
-        /// The none.
+        /// The empty preset.
         /// </summary>
-        None = 0,
+        Custom,
 
         /// <summary>
-        /// The top edge.
+        /// The top left corner of the parent control.
         /// </summary>
-        Top = 1,
+        TopLeft,
 
         /// <summary>
-        /// The bottom edge.
+        /// The center of the top edge of the parent control.
         /// </summary>
-        Bottom = 2,
+        TopCenter,
 
         /// <summary>
-        /// The left edge.
+        /// The top right corner of the parent control.
         /// </summary>
-        Left = 3,
+        TopRight,
 
         /// <summary>
-        /// The right edge
+        /// The middle of the left edge of the parent control.
         /// </summary>
-        Right = 4,
+        MiddleLeft,
 
         /// <summary>
-        /// The whole area.
+        /// The middle center! Right in the middle of the parent control.
         /// </summary>
-        Fill = 5,
-    }
-
-    /// <summary>
-    /// Specifies the location of the anchor point used to position control in the parent container.
-    /// </summary>
-    public enum AnchorStyle
-    {
-        /// <summary>
-        /// The upper left corner of the parent control.
-        /// </summary>
-        [Tooltip("The upper left corner of the parent control.")]
-        UpperLeft = 0,
+        MiddleCenter,
 
         /// <summary>
-        /// The center of the upper edge of the parent control.
+        /// The middle of the right edge of the parent control.
         /// </summary>
-        [Tooltip("The center of the upper edge of the parent control.")]
-        UpperCenter,
-
-        /// <summary>
-        /// The upper right corner of the parent control.
-        /// </summary>
-        [Tooltip("The upper right corner of the parent control.")]
-        UpperRight,
-
-        /// <summary>
-        /// The upper edge of the parent control.
-        /// </summary>
-        [Tooltip("The upper edge of the parent control.")]
-        Upper,
-
-        /// <summary>
-        /// The center of the left edge of the parent control.
-        /// </summary>
-        [Tooltip("The center of the left edge of the parent control.")]
-        CenterLeft,
-
-        /// <summary>
-        /// The center of the parent control.
-        /// </summary>
-        [Tooltip("The center of the parent control.")]
-        Center,
-
-        /// <summary>
-        /// The center of the right edge of the parent control.
-        /// </summary>
-        [Tooltip("The center of the right edge of the parent control.")]
-        CenterRight,
+        MiddleRight,
 
         /// <summary>
         /// The bottom left corner of the parent control.
         /// </summary>
-        [Tooltip("The bottom left corner of the parent control.")]
         BottomLeft,
 
         /// <summary>
         /// The center of the bottom edge of the parent control.
         /// </summary>
-        [Tooltip("The center of the bottom edge of the parent control.")]
         BottomCenter,
 
         /// <summary>
         /// The bottom right corner of the parent control.
         /// </summary>
-        [Tooltip("The bottom right corner of the parent control.")]
         BottomRight,
 
-        /// <summary>
-        /// The bottom edge of the parent control.
-        /// </summary>
-        [Tooltip("The bottom edge of the parent control.")]
-        Bottom,
+        VerticalStretchLeft,
+        VerticalStretchRight,
+        VerticalStretchCenter,
+
+        HorizontalStretchTop,
+        HorizontalStretchMiddle,
+        HorizontalStretchBottom,
 
         /// <summary>
-        /// The left edge of the parent control.
+        /// All parent control edges.
         /// </summary>
-        [Tooltip("The left edge of the parent control.")]
-        Left,
-
-        /// <summary>
-        /// The right edge of the parent control.
-        /// </summary>
-        [Tooltip("The right edge of the parent control.")]
-        Right,
+        StretchAll,
     }
 
     /// <summary>

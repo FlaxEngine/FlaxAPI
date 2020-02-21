@@ -24,12 +24,13 @@ namespace FlaxEditor.CustomEditors.Dedicated
             // Set control type button
             var space = layout.Space(20);
             float setTypeButtonWidth = 60.0f;
-            var setTypeButton = new Button((layout.ContainerControl.Width - setTypeButtonWidth) / 2, 1, setTypeButtonWidth, 18)
+            var setTypeButton = new Button
             {
                 TooltipText = "Sets the control to the given type",
-                AnchorStyle = AnchorStyle.UpperCenter,
+                AnchorPreset = AnchorPresets.MiddleCenter,
                 Text = "Set Type",
-                Parent = space.Spacer
+                Parent = space.Spacer,
+                Bounds = new Rectangle((space.Spacer.Width - setTypeButtonWidth) / 2, 1, setTypeButtonWidth, 18),
             };
             setTypeButton.ButtonClicked += OnSetTypeButtonClicked;
 

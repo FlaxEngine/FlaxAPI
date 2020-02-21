@@ -69,80 +69,100 @@ namespace FlaxEditor.Windows
             editor.ContentDatabase.WorkspaceModified += () => _isWorkspaceDirty = true;
             editor.ContentDatabase.ItemRemoved += ContentDatabaseOnItemRemoved;
 
-            // Tool strip
-            _toolStrip = new ToolStrip();
+            // Toolstrip
+            _toolStrip = new ToolStrip
+            {
+                Parent = this,
+                Bounds = new Rectangle(0, 0, Width, 34),
+            };
             _importButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.Import32, () => Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder)).LinkTooltip("Import content");
             _toolStrip.AddSeparator();
             _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowLeft32, NavigateBackward).LinkTooltip("Navigate backward");
             _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowRight32, NavigateForward).LinkTooltip("Navigate forward");
             _navigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowUp32, NavigateUp).LinkTooltip("Navigate up");
-            _toolStrip.Parent = this;
 
             // Navigation bar
             _navigationBar = new NavigationBar
             {
-                Parent = this
+                Parent = this,
             };
 
             // Split panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolStrip.Bottom, 0),
                 SplitterValue = 0.2f,
-                Parent = this
+                Parent = this,
             };
 
             // Content structure tree searching query input box
-            var headerPanel = new ContainerControl();
-            headerPanel.DockStyle = DockStyle.Top;
-            headerPanel.IsScrollable = true;
-            headerPanel.Parent = _split.Panel1;
-            //
-            _foldersSearchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
-            _foldersSearchBox.AnchorStyle = AnchorStyle.Upper;
-            _foldersSearchBox.WatermarkText = "Search...";
-            _foldersSearchBox.Parent = headerPanel;
+            var headerPanel = new ContainerControl
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                IsScrollable = true,
+                Offsets = new Margin(0, 0, 0, 18 + 6),
+                Parent = _split.Panel1,
+            };
+            _foldersSearchBox = new TextBox
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
+                WatermarkText = "Search...",
+                Parent = headerPanel,
+                Bounds = new Rectangle(4, 4, headerPanel.Width - 8, 18),
+            };
             _foldersSearchBox.TextChanged += OnFoldersSearchBoxTextChanged;
-            //
-            headerPanel.Height = _foldersSearchBox.Bottom + 6;
 
             // Content structure tree
-            _tree = new Tree(false);
-            _tree.Y = headerPanel.Bottom;
+            _tree = new Tree(false)
+            {
+                Y = headerPanel.Bottom,
+                Parent = _split.Panel1,
+            };
             _tree.SelectedChanged += OnTreeSelectionChanged;
-            _tree.Parent = _split.Panel1;
 
             // Content items searching query input box and filters selector
-            var contentItemsSearchPanel = new ContainerControl();
-            contentItemsSearchPanel.DockStyle = DockStyle.Top;
-            contentItemsSearchPanel.IsScrollable = true;
-            contentItemsSearchPanel.Parent = _split.Panel2;
-            //
+            var contentItemsSearchPanel = new ContainerControl
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                IsScrollable = true,
+                Offsets = new Margin(0, 0, 0, 18 + 8),
+                Parent = _split.Panel2,
+            };
             const float filterBoxWidth = 56.0f;
-            _itemsSearchBox = new TextBox(false, filterBoxWidth + 8, 4, contentItemsSearchPanel.Width - 8 - filterBoxWidth);
-            _itemsSearchBox.AnchorStyle = AnchorStyle.Upper;
-            _itemsSearchBox.WatermarkText = "Search...";
-            _itemsSearchBox.Parent = contentItemsSearchPanel;
+            _itemsSearchBox = new TextBox
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
+                WatermarkText = "Search...",
+                Parent = contentItemsSearchPanel,
+                Bounds = new Rectangle(filterBoxWidth + 8, 4, contentItemsSearchPanel.Width - 12 - filterBoxWidth, 18),
+            };
             _itemsSearchBox.TextChanged += UpdateItemsSearch;
-            //
-            contentItemsSearchPanel.Height = _itemsSearchBox.Bottom + 4;
-            //
-            _itemsFilterBox = new SearchFilterComboBox(4, (contentItemsSearchPanel.Height - ComboBox.DefaultHeight) * 0.5f, filterBoxWidth);
-            _itemsFilterBox.Parent = contentItemsSearchPanel;
+            _itemsFilterBox = new SearchFilterComboBox
+            {
+                AnchorPreset = AnchorPresets.MiddleLeft,
+                SupportMultiSelect = true,
+                Parent = contentItemsSearchPanel,
+                Offsets = new Margin(4, filterBoxWidth, -9, 18),
+            };
             _itemsFilterBox.SelectedIndexChanged += e => UpdateItemsSearch();
-            _itemsFilterBox.SupportMultiSelect = true;
             for (int i = 0; i <= (int)ContentItemSearchFilter.Other; i++)
                 _itemsFilterBox.Items.Add(((ContentItemSearchFilter)i).ToString());
 
             // Content View
-            _view = new ContentView();
+            _view = new ContentView
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(0, 0, contentItemsSearchPanel.Bottom + 4, 0),
+                IsScrollable = true,
+                Parent = _split.Panel2,
+            };
             _view.OnOpen += Open;
             _view.OnNavigateBack += NavigateBackward;
             _view.OnRename += Rename;
             _view.OnDelete += Delete;
             _view.OnDuplicate += Duplicate;
             _view.OnPaste += Paste;
-            _view.Parent = _split.Panel2;
         }
 
         /// <summary>
@@ -180,8 +200,7 @@ namespace FlaxEditor.Windows
 
         private bool OnRenameValidate(RenamePopup popup, string value)
         {
-            string hint;
-            return Editor.ContentEditing.IsValidAssetName((ContentItem)popup.Tag, value, out hint);
+            return Editor.ContentEditing.IsValidAssetName((ContentItem)popup.Tag, value, out _);
         }
 
         /// <summary>
@@ -485,9 +504,11 @@ namespace FlaxEditor.Windows
             } while (parentFolder.FindChild(path) != null);
 
             // Create new asset proxy, add to view and rename it
-            _newElement = new NewItem(path, proxy, argument);
-            _newElement.ParentFolder = parentFolder;
-            _newElement.Tag = created;
+            _newElement = new NewItem(path, proxy, argument)
+            {
+                ParentFolder = parentFolder,
+                Tag = created,
+            };
             RefreshView();
             Rename(_newElement);
         }

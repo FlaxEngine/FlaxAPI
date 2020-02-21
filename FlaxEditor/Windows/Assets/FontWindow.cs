@@ -70,13 +70,15 @@ namespace FlaxEditor.Windows.Assets
         {
             var panel1 = new SplitPanel(Orientation.Horizontal, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.7f,
                 Parent = this
             };
             var panel2 = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 SplitterValue = 0.2f,
                 Parent = panel1.Panel1
             };
@@ -84,13 +86,14 @@ namespace FlaxEditor.Windows.Assets
             // Text preview
             _inputText = new TextBox(true, 0, 0)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
                 Parent = panel2.Panel1
             };
             _inputText.TextChanged += OnTextChanged;
             _textPreview = new Label
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Margin = new Margin(4),
                 Wrapping = TextWrapping.WrapWords,
                 HorizontalAlignment = TextAlignment.Near,

@@ -18,7 +18,7 @@ namespace FlaxEditor.Windows
         public AboutDialog()
         : base("About Flax")
         {
-            Size = new Vector2(400, 260);
+            _dialogSize = Size = new Vector2(400, 260);
 
             Control header = CreateHeader();
             Control authorsLabel = CreateAuthorsLabels(header);

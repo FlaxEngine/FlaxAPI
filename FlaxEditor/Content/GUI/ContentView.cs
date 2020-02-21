@@ -113,9 +113,6 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public ContentView()
         {
-            DockStyle = DockStyle.Top;
-            IsScrollable = true;
-
             // Setup input actions
             InputActions = new InputActionsContainer(new[]
             {

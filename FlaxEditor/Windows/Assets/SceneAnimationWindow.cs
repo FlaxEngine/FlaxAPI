@@ -41,7 +41,8 @@ namespace FlaxEditor.Windows.Assets
             // Timeline
             _timeline = new SceneAnimationTimeline
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 Parent = this,
                 Enabled = false
             };
@@ -56,12 +57,12 @@ namespace FlaxEditor.Windows.Assets
             var previewPlayerPickerContainer = new ContainerControl();
             var previewPlayerPickerLabel = new Label
             {
-                DockStyle = DockStyle.Left,
+                AnchorPreset = AnchorPresets.VerticalStretchLeft,
                 VerticalAlignment = TextAlignment.Center,
                 HorizontalAlignment = TextAlignment.Far,
+                Parent = previewPlayerPickerContainer,
                 Width = 60.0f,
                 Text = "Player:",
-                Parent = previewPlayerPickerContainer,
             };
             _previewPlayerPicker = new FlaxObjectRefPickerControl
             {

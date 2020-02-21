@@ -80,8 +80,6 @@ namespace FlaxEditor.Viewport.Previews
         protected AssetPreview(bool useWidgets, ViewportCamera camera)
         : base(Object.New<SceneRenderTask>(), camera, useWidgets)
         {
-            DockStyle = DockStyle.Fill;
-
             Task.View.Flags = ViewFlags.DefaultAssetPreview;
             Task.AllowGlobalCustomPostFx = false;
 

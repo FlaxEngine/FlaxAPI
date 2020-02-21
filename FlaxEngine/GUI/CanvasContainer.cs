@@ -11,7 +11,8 @@ namespace FlaxEngine.GUI
     {
         internal CanvasContainer()
         {
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
             AutoFocus = false;
         }
 
@@ -80,7 +81,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
+        public override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
         {
             childSpaceLocation = Vector2.Zero;
             return ((CanvasRootControl)child).Is2D && base.IntersectsChildContent(child, location, out childSpaceLocation);

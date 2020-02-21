@@ -98,7 +98,10 @@ namespace FlaxEditor.Windows
                 public virtual void OnNotAvailableLayout(LayoutElementsContainer layout)
                 {
                     layout.Label("Missing platform data tools for the target platform.", TextAlignment.Center);
-                    layout.Label("Use Flax Launcher and download the required package.", TextAlignment.Center);
+                    if (FlaxEditor.Editor.IsDevInstance())
+                        layout.Label("Build engine for this platform.", TextAlignment.Center);
+                    else
+                        layout.Label("Use Flax Launcher and download the required package.", TextAlignment.Center);
                 }
 
                 public virtual void Build()
@@ -246,11 +249,15 @@ namespace FlaxEditor.Windows
 
         private class PresetsTargetsColumnBase : ContainerControl
         {
-            public PresetsTargetsColumnBase(bool isPresets, Action addClicked)
-            {
-                DockStyle = DockStyle.Left;
-                Width = 140;
+            protected GameCookerWindow _cooker;
 
+            protected PresetsTargetsColumnBase(ContainerControl parent, GameCookerWindow cooker, bool isPresets, Action addClicked)
+            {
+                AnchorPreset = AnchorPresets.VerticalStretchLeft;
+                Parent = parent;
+                Offsets = new Margin(isPresets ? 0 : 140, 140, 0, 0);
+
+                _cooker = cooker;
                 var title = new Label
                 {
                     Bounds = new Rectangle(0, 0, Width, 19),
@@ -284,9 +291,9 @@ namespace FlaxEditor.Windows
                 var selectButton = new Button
                 {
                     Text = name,
-                    Bounds = new Rectangle(6, y + 2, Width - 12 - 20, 22),
                     Tag = index,
                     Parent = this,
+                    Bounds = new Rectangle(6, y + 2, Width - 12 - 20, 22),
                 };
                 if (selectedIndex == index)
                     selectButton.SetColors(Color.FromBgra(0xFFAB8400));
@@ -294,9 +301,9 @@ namespace FlaxEditor.Windows
                 var removeButton = new Button
                 {
                     Text = "x",
-                    Bounds = new Rectangle(selectButton.Right + 4, y + 4, 18, 18),
                     Tag = index,
                     Parent = this,
+                    Bounds = new Rectangle(selectButton.Right + 4, y + 4, 18, 18),
                 };
                 removeButton.ButtonClicked += remove;
             }
@@ -314,10 +321,8 @@ namespace FlaxEditor.Windows
 
         private sealed class PresetsColumn : PresetsTargetsColumnBase
         {
-            private GameCookerWindow _cooker;
-
-            public PresetsColumn(GameCookerWindow cooker)
-            : base(true, cooker.AddPreset)
+            public PresetsColumn(ContainerControl parent, GameCookerWindow cooker)
+            : base(parent, cooker, true, cooker.AddPreset)
             {
                 _cooker = cooker;
             }
@@ -342,10 +347,8 @@ namespace FlaxEditor.Windows
 
         private sealed class TargetsColumn : PresetsTargetsColumnBase
         {
-            private GameCookerWindow _cooker;
-
-            public TargetsColumn(GameCookerWindow cooker)
-            : base(false, cooker.AddTarget)
+            public TargetsColumn(ContainerControl parent, GameCookerWindow cooker)
+            : base(parent, cooker, false, cooker.AddTarget)
             {
                 _cooker = cooker;
 
@@ -353,41 +356,41 @@ namespace FlaxEditor.Windows
                 var helpButton = new Button
                 {
                     Text = "Help",
-                    Bounds = new Rectangle(6, Height - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, Height - height, Width - 12, 22),
                 };
                 helpButton.Clicked += () => Platform.StartProcess(Constants.DocsUrl + "manual/editor/game-cooker/");
                 var buildAllButton = new Button
                 {
                     Text = "Build All",
-                    Bounds = new Rectangle(6, helpButton.Top - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, helpButton.Top - height, Width - 12, 22),
                 };
                 buildAllButton.Clicked += _cooker.BuildAllTargets;
                 var buildButton = new Button
                 {
                     Text = "Build",
-                    Bounds = new Rectangle(6, buildAllButton.Top - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, buildAllButton.Top - height, Width - 12, 22),
                 };
                 buildButton.Clicked += _cooker.BuildTarget;
                 var discardButton = new Button
                 {
                     Text = "Discard",
-                    Bounds = new Rectangle(6, buildButton.Top - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, buildButton.Top - height, Width - 12, 22),
                 };
                 discardButton.Clicked += _cooker.GatherData;
                 var saveButton = new Button
                 {
                     Text = "Save",
-                    Bounds = new Rectangle(6, discardButton.Top - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, discardButton.Top - height, Width - 12, 22),
                 };
                 saveButton.Clicked += _cooker.SaveData;
             }
@@ -433,7 +436,8 @@ namespace FlaxEditor.Windows
             var sections = new Tabs
             {
                 Orientation = Orientation.Vertical,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 TabsSize = new Vector2(120, 32),
                 Parent = this
             };
@@ -685,17 +689,12 @@ namespace FlaxEditor.Windows
         {
             var tab = sections.AddTab(new Tab("Presets"));
 
-            _presets = new PresetsColumn(this)
-            {
-                Parent = tab,
-            };
-            _targets = new TargetsColumn(this)
-            {
-                Parent = tab,
-            };
+            _presets = new PresetsColumn(tab, this);
+            _targets = new TargetsColumn(tab, this);
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(140 * 2, 0, 0, 0),
                 Parent = tab
             };
 
@@ -726,13 +725,14 @@ namespace FlaxEditor.Windows
 
             var platformSelector = new PlatformSelector
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 BackgroundColor = Style.Current.LightBackground,
                 Parent = tab,
             };
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, platformSelector.Offsets.Height, 0),
                 Parent = tab
             };
 

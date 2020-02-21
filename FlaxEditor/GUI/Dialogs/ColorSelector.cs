@@ -204,11 +204,11 @@ namespace FlaxEditor.GUI.Dialogs
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            _wheelRect = new Rectangle(0, 0, size.Y, size.Y);
+            base.OnSizeChanged();
 
-            base.SetSizeInternal(ref size);
+            _wheelRect = new Rectangle(0, 0, Size.Y, Size.Y);
         }
     }
 

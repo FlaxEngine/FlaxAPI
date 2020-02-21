@@ -47,8 +47,11 @@ namespace FlaxEditor.Content
         {
             if (_preview == null)
             {
-                _preview = new IESProfilePreview();
-                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+                _preview = new IESProfilePreview
+                {
+                    Offsets = Margin.Zero,
+                    AnchorPreset = AnchorPresets.StretchAll,
+                };
             }
 
             // TODO: disable streaming for asset during thumbnail rendering (and restore it after)

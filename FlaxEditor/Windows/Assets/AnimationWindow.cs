@@ -102,7 +102,8 @@ namespace FlaxEditor.Windows.Assets
         {
             _panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 Parent = this
             };
 

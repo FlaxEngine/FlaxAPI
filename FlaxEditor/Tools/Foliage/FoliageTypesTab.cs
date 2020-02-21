@@ -407,16 +407,16 @@ namespace FlaxEditor.Tools.Foliage
             var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
             {
                 SplitterValue = 0.2f,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
 
             // Foliage types list
             _items = new VerticalPanel
             {
-                Y = 4,
-                Height = 4,
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(4, 4, 4, 0),
                 IsScrollable = true,
                 Parent = splitPanel.Panel1
             };

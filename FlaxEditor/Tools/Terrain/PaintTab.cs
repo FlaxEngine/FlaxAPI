@@ -91,7 +91,8 @@ namespace FlaxEditor.Tools.Terrain
             // Main panel
             var panel = new Panel(ScrollBars.Both)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
 

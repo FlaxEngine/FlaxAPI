@@ -59,11 +59,12 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="mainWindow">The main window.</param>
         public MainMenu(RootControl mainWindow)
-        : base(0, 0, 1, 20)
+        : base(0, 0, 0, 20)
         {
             _useCustomWindowSystem = !Editor.Instance.Options.Options.Interface.UseNativeWindowSystem;
             AutoFocus = false;
-            DockStyle = DockStyle.Top;
+            AnchorPreset = AnchorPresets.HorizontalStretchTop;
+            _performChildrenLayoutFirst = true;
 
             if (_useCustomWindowSystem)
             {
@@ -291,8 +292,7 @@ namespace FlaxEditor.GUI
                 var c = _children[i];
                 if (c is MainMenuButton b && c.Visible)
                 {
-                    b.Height = Height;
-                    b.Location = new Vector2(x, 0);
+                    b.Bounds = new Rectangle(x, 0, b.Width, Height);
 
                     if (rightMostButton == null)
                         rightMostButton = b;

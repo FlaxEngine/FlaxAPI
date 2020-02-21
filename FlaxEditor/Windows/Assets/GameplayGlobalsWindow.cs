@@ -396,7 +396,8 @@ namespace FlaxEditor.Windows.Assets
             _undo.RedoDone += OnUndo;
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 Parent = this,
             };
             _propertiesEditor = new CustomEditorPresenter(_undo);

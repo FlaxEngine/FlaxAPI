@@ -448,7 +448,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void GetDesireClientArea(out Rectangle rect)
+        public override void GetDesireClientArea(out Rectangle rect)
         {
             var topMargin = HeaderHeight;
             rect = new Rectangle(0, topMargin, Width, Height - topMargin);
@@ -457,14 +457,13 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            // Arrange docked controls
-            Rectangle clientArea;
-            GetDesireClientArea(out clientArea);
+            // Arrange anchored controls
+            GetDesireClientArea(out var clientArea);
             float dropOffset = _cachedHeight * (_isClosed ? _animationProgress : 1.0f - _animationProgress);
             clientArea.Location.Y -= dropOffset;
-            ArrangeDockedControls(ref clientArea);
+            UpdateChildrenBounds();
 
-            // Arrange undocked controls
+            // Arrange scrollable controls
             var slotsMargin = _itemsMargin;
             var slotsLeft = clientArea.Left + slotsMargin.Left;
             var slotsWidth = clientArea.Width - slotsMargin.Width;

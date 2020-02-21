@@ -97,12 +97,13 @@ namespace FlaxEditor.Surface.Archetypes
 
                     float addButtonWidth = 80.0f;
                     float addButtonHeight = 16.0f;
-                    AddModuleButton = new Button(Width * 0.5f, Height - addButtonHeight - 2.0f, addButtonWidth, addButtonHeight)
+                    AddModuleButton = new Button
                     {
                         Text = "Add Module",
                         TooltipText = "Add new particle modules to the emitter",
-                        AnchorStyle = AnchorStyle.BottomCenter,
-                        Parent = this
+                        AnchorPreset = AnchorPresets.BottomCenter,
+                        Parent = this,
+                        Bounds = new Rectangle((Width - addButtonWidth) * 0.5f, Height - addButtonHeight - 2, addButtonWidth, addButtonHeight),
                     };
                     AddModuleButton.ButtonClicked += OnAddModuleButtonClicked;
                 }
@@ -222,9 +223,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            protected override void SetLocationInternal(ref Vector2 location)
+            protected override void OnLocationChanged()
             {
-                base.SetLocationInternal(ref location);
+                base.OnLocationChanged();
 
                 if (Surface != null && ParticleSurface._rootNode == this)
                 {
@@ -262,7 +263,7 @@ namespace FlaxEditor.Surface.Archetypes
 
                 UpdateOutputBoxType();
             }
-            
+
             /// <inheritdoc />
             public override void OnValuesChanged()
             {

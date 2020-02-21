@@ -34,10 +34,9 @@ namespace FlaxEditor.GUI
         /// Initializes a new instance of the <see cref="StatusBar"/> class.
         /// </summary>
         public StatusBar()
-        : base(0, 0, 100, DefaultHeight)
         {
             AutoFocus = false;
-            DockStyle = DockStyle.Bottom;
+            AnchorPreset = AnchorPresets.HorizontalStretchBottom;
         }
 
         /// <inheritdoc />

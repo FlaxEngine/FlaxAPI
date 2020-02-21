@@ -153,7 +153,7 @@ namespace FlaxEditor.GUI.Dialogs
             _cValue.Parent = this;
 
             // Set valid dialog size based on UI content
-            Size = new Vector2(_cRed.Right + PickerMargin, 300);
+            _dialogSize = Size = new Vector2(_cRed.Right + PickerMargin, 300);
 
             // Hex
             const float hexTextBoxWidth = 80;

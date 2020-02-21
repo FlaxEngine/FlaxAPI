@@ -56,13 +56,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         protected SingleMediaAssetTrack(ref TrackCreateOptions options)
         : base(ref options)
         {
+            var width = 50.0f;
+            var height = 36.0f;
             _picker = new AssetPicker(typeof(TAsset), Vector2.Zero)
             {
-                Size = new Vector2(50.0f, 36.0f),
-                AnchorStyle = AnchorStyle.UpperRight,
-                Parent = this
+                AnchorPreset = AnchorPresets.MiddleRight,
+                Offsets = new Margin(-width - 2 + _muteCheckbox.Offsets.Left, width, height * -0.5f, height),
+                Parent = this,
             };
-            _picker.Location = new Vector2(_muteCheckbox.Left - _picker.Width - 2, 2);
             _picker.SelectedItemChanged += OnPickerSelectedItemChanged;
             Height = 4 + _picker.Height;
         }

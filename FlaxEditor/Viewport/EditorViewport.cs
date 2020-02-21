@@ -423,7 +423,8 @@ namespace FlaxEditor.Viewport
             if (_camera != null)
                 _camera.Viewport = this;
 
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
 
             // Setup options
             {

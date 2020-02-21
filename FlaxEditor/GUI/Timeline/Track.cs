@@ -214,9 +214,9 @@ namespace FlaxEditor.GUI.Timeline
         /// </summary>
         /// <param name="options">The track initial options.</param>
         public Track(ref TrackCreateOptions options)
-        : base(0, 0, 100, HeaderHeight)
         {
             AutoFocus = false;
+            Offsets = new Margin(0, 100, 0, HeaderHeight);
 
             Archetype = options.Archetype;
             Name = options.Archetype.Name;
@@ -226,13 +226,15 @@ namespace FlaxEditor.GUI.Timeline
 
             // Mute checkbox
             const float buttonSize = 14;
-            _muteCheckbox = new CheckBox(Width - buttonSize - 2.0f, 0, !Mute, buttonSize)
+            _muteCheckbox = new CheckBox
             {
                 TooltipText = "Mute track",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                Checked = !Mute,
+                AnchorPreset = AnchorPresets.MiddleRight,
+                Offsets = new Margin(-buttonSize - 2, buttonSize, buttonSize * -0.5f, buttonSize),
                 IsScrollable = false,
-                Parent = this
+                Parent = this,
             };
             _muteCheckbox.StateChanged += OnMuteButtonStateChanged;
         }

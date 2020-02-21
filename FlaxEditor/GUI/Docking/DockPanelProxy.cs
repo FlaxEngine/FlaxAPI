@@ -61,7 +61,8 @@ namespace FlaxEditor.GUI.Docking
             AutoFocus = false;
 
             _panel = panel;
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
         }
 
         private DockWindow GetTabAtPos(Vector2 position, out bool closeButton)
@@ -457,7 +458,7 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <inheritdoc />
-        protected override void GetDesireClientArea(out Rectangle rect)
+        public override void GetDesireClientArea(out Rectangle rect)
         {
             rect = new Rectangle(0, DockPanel.DefaultHeaderHeight, Width, Height - DockPanel.DefaultHeaderHeight);
         }

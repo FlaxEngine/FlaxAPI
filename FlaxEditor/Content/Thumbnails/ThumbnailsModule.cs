@@ -520,12 +520,6 @@ namespace FlaxEditor.Content.Thumbnails
                 const float accentHeight = 2;
                 Render2D.FillRectangle(new Rectangle(0, Height - accentHeight, Width, accentHeight), AccentColor);
             }
-
-            /// <inheritdoc />
-            protected override void SetSizeInternal(ref Vector2 size)
-            {
-                // Cannot change default preview size
-            }
         }
     }
 }

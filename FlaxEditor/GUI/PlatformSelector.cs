@@ -91,6 +91,7 @@ namespace FlaxEditor.GUI
             const float IconSize = 48.0f;
             TileSize = new Vector2(IconSize);
             AutoResize = true;
+            Offsets = new Margin(0, 0, 0, IconSize);
 
             _mouseOverColor = Color.White;
             _selectedColor = Color.White;
@@ -116,9 +117,9 @@ namespace FlaxEditor.GUI
             ((Image)Children[0]).MouseOverColor = _selectedColor;
         }
 
-        private void OnTileClicked(Image image, MouseButton MouseButton)
+        private void OnTileClicked(Image image, MouseButton mouseButton)
         {
-            if (MouseButton == MouseButton.Left)
+            if (mouseButton == MouseButton.Left)
             {
                 Selected = (PlatformType)image.Tag;
             }

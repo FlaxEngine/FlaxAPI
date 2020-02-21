@@ -77,7 +77,8 @@ namespace FlaxEditor.Content
             guiRoot.AddChild(new Label
             {
                 Text = Name,
-                Size = guiRoot.Size,
+                Offsets = Margin.Zero,
+                AnchorPreset = AnchorPresets.StretchAll,
                 Wrapping = TextWrapping.WrapWords
             });
         }

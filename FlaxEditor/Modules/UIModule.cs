@@ -509,8 +509,11 @@ namespace FlaxEditor.Modules
 
         private void InitToolstrip(RootControl mainWindow)
         {
-            ToolStrip = new ToolStrip();
-            ToolStrip.Parent = mainWindow;
+            ToolStrip = new ToolStrip
+            {
+                Parent = mainWindow,
+                Bounds = new Rectangle(0, MainMenu.Bottom, mainWindow.Width, 34),
+            };
 
             ToolStrip.AddButton(Editor.Icons.Save32, Editor.SaveAll).LinkTooltip("Save all (Ctrl+S)");
             ToolStrip.AddSeparator();
@@ -534,7 +537,8 @@ namespace FlaxEditor.Modules
             StatusBar = new StatusBar
             {
                 Text = "Loading...",
-                Parent = mainWindow
+                Parent = mainWindow,
+                Offsets = new Margin(0, 0, -StatusBar.DefaultHeight, StatusBar.DefaultHeight),
             };
 
             // Progress bar with label
@@ -545,23 +549,22 @@ namespace FlaxEditor.Modules
             var progressPanel = new Panel(ScrollBars.None)
             {
                 Visible = false,
-                DockStyle = DockStyle.Fill,
-                Parent = StatusBar
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
+                Parent = StatusBar,
             };
-            _progressBar = new ProgressBar(
-                progressPanel.Width - progressBarWidth - progressBarRightMargin,
-                (StatusBar.Height - progressBarHeight) * 0.5f,
-                progressBarWidth,
-                progressBarHeight)
+            _progressBar = new ProgressBar
             {
-                AnchorStyle = AnchorStyle.CenterRight,
-                Parent = progressPanel
+                AnchorPreset = AnchorPresets.MiddleRight,
+                Parent = progressPanel,
+                Offsets = new Margin(-progressBarWidth - progressBarRightMargin, progressBarWidth, progressBarHeight * -0.5f, progressBarHeight),
             };
-            _progressLabel = new Label(0, 0, _progressBar.Left - progressBarLeftMargin, progressPanel.Height)
+            _progressLabel = new Label
             {
                 HorizontalAlignment = TextAlignment.Far,
-                AnchorStyle = AnchorStyle.CenterRight,
-                Parent = progressPanel
+                AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
+                Parent = progressPanel,
+                Offsets = new Margin(progressBarRightMargin, progressBarWidth + progressBarLeftMargin + progressBarRightMargin, 0, 0),
             };
 
             UpdateStatusBar();
@@ -570,7 +573,9 @@ namespace FlaxEditor.Modules
         private void InitDockPanel(RootControl mainWindow)
         {
             // Dock Panel
+            MasterPanel.AnchorPreset = AnchorPresets.StretchAll;
             MasterPanel.Parent = mainWindow;
+            MasterPanel.Offsets = new Margin(0, 0, ToolStrip.Bottom, StatusBar.Height);
         }
 
         private void OpenProject()

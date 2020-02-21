@@ -79,7 +79,8 @@ namespace FlaxEditor.GUI
 
             _inputField = new TextBox(isMultiline, 0, 0, size.Y);
             _inputField.TextChanged += OnTextChanged;
-            _inputField.DockStyle = DockStyle.Fill;
+            _inputField.AnchorPreset = AnchorPresets.StretchAll;
+            _inputField.Offsets = Margin.Zero;
             _inputField.Text = _startValue;
             _inputField.Parent = this;
         }

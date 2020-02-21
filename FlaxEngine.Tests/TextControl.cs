@@ -79,8 +79,10 @@ namespace FlaxEngine.Tests
             Assert.AreEqual(testRect, rect.Bounds);
 
             testRect = new Rectangle(2, 7, 22, 27);
-            rect.Location = new Vector2(2, 7);
-            rect.Size = new Vector2(22, 27);
+            rect.Location = testRect.Location;
+            Assert.AreEqual(testRect.Location, rect.Location);
+            rect.Size = testRect.Size;
+            Assert.AreEqual(testRect.Size, rect.Size);
             Assert.AreEqual(testRect, rect.Bounds);
 
             rect.BackgroundColor = Color.Azure;

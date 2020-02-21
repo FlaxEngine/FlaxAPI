@@ -12,12 +12,15 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="HScrollBar"/> class.
         /// </summary>
+        /// <param name="parent">The parent control.</param>
         /// <param name="y">The y position.</param>
         /// <param name="width">The width.</param>
-        public HScrollBar(float y, float width)
-        : base(Orientation.Horizontal, 0, y, width, DefaultSize)
+        public HScrollBar(ContainerControl parent, float y, float width)
+        : base(Orientation.Horizontal)
         {
-            DockStyle = DockStyle.Bottom;
+            AnchorPreset = AnchorPresets.HorizontalStretchBottom;
+            Parent = parent;
+            Bounds = new Rectangle(0, y, width, DefaultSize);
         }
 
         /// <inheritdoc />

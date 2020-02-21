@@ -69,7 +69,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             Preview = new AudioClipPreview
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 DrawMode = AudioClipPreview.DrawModes.Single,
                 Parent = this,
             };
@@ -170,14 +171,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             // Add button
             const float buttonSize = 14;
-            _addButton = new Button(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            _addButton = new Button
             {
                 Text = "+",
                 TooltipText = "Add sub-tracks",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + _muteCheckbox.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             _addButton.Clicked += OnAddButtonClicked;
             _picker.Location = new Vector2(_addButton.Left - _picker.Width - 2, 2);
@@ -308,54 +310,58 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             // Navigation buttons
             const float buttonSize = 14;
             var icons = Editor.Instance.Icons;
-            var rightKey = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            var rightKey = new Image
             {
                 TooltipText = "Sets the time to the next key",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
                 Color = new Color(0.8f),
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(icons.ArrowRight32),
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + _muteCheckbox.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             rightKey.Clicked += OnRightKeyClicked;
-            var addKey = new Image(rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            var addKey = new Image
             {
                 TooltipText = "Adds a new key at the current time",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
                 Color = new Color(0.8f),
                 Margin = new Margin(3),
                 Brush = new SpriteBrush(icons.Add48),
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + rightKey.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             addKey.Clicked += OnAddKeyClicked;
-            var leftKey = new Image(addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            var leftKey = new Image
             {
                 TooltipText = "Sets the time to the previous key",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
                 Color = new Color(0.8f),
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(icons.ArrowLeft32),
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + addKey.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             leftKey.Clicked += OnLeftKeyClicked;
 
             // Value preview
             var previewWidth = 50.0f;
-            _previewValue = new Label(leftKey.Left - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
+            _previewValue = new Label
             {
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
                 HorizontalAlignment = TextAlignment.Near,
                 TextColor = new Color(0.8f),
                 Margin = new Margin(1),
-                Parent = this
+                Offsets = new Margin(-previewWidth - 2 + leftKey.Offsets.Left, previewWidth, TextBox.DefaultHeight * -0.5f, TextBox.DefaultHeight),
+                Parent = this,
             };
         }
 
@@ -372,7 +378,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             if (_audioMedia != null)
             {
-                var mediaTime = (time - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
+                var mediaTime = time - _audioMedia.StartFrame / Timeline.FramesPerSecond;
                 for (int i = 0; i < Curve.Keyframes.Count; i++)
                 {
                     var k = Curve.Keyframes[i];
@@ -413,19 +419,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             {
                 Timeline.OnSeek(frame);
             }
-            if (button == MouseButton.Left && _audioMedia != null)
-            {
-                var time = (Timeline.CurrentFrame - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
-                for (int i = Curve.Keyframes.Count - 1; i >= 0; i--)
-                {
-                    var k = Curve.Keyframes[i];
-                    if (k.Time < time)
-                    {
-                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond) + _audioMedia.StartFrame);
-                        break;
-                    }
-                }
-            }
         }
 
         /// <inheritdoc />
@@ -433,7 +426,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             if (_audioMedia != null)
             {
-                var mediaTime = (time - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
+                var mediaTime = time - _audioMedia.StartFrame / Timeline.FramesPerSecond;
                 for (int i = Curve.Keyframes.Count - 1; i >= 0; i--)
                 {
                     var k = Curve.Keyframes[i];

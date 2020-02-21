@@ -521,7 +521,7 @@ namespace FlaxEditor.Modules
                 };
                 cancelButton.Clicked += OnCancel;
 
-                Size = okButton.BottomRight + new Vector2(8);
+                _dialogSize = okButton.BottomRight + new Vector2(8);
             }
 
             private void OnOk()
