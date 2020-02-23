@@ -101,9 +101,10 @@ namespace FlaxEngine
                 throw new ArgumentException("Invalid texture init data.");
             for (int i = 0; i < initData.Mips.Length; i++)
             {
-                if (initData.Mips[i].Data == null ||
-                    initData.Mips[i].Data.Length < initData.Mips[i].SlicePitch * initData.ArraySize)
-                    throw new ArgumentException("Invalid texture mip init data.");
+                if (initData.Mips[i].Data == null)
+                    throw new ArgumentException($"Missing texture mip{i} init data.");
+                if (initData.Mips[i].Data.Length < initData.Mips[i].SlicePitch * initData.ArraySize)
+                    throw new ArgumentException($"Invalid texture mip{i} init data. It has size {initData.Mips[i].Data.Length} bytes but should be {initData.Mips[i].SlicePitch * initData.ArraySize} bytes.");
             }
 
             // Convert data to internal storage (don't allocate memory but pin the managed arrays)
@@ -115,20 +116,21 @@ namespace FlaxEngine
                 ArraySize = initData.ArraySize,
                 MipLevels = initData.Mips.Length,
             };
-            fixed (byte* data13 = initData.Mips[13].Data)
-            fixed (byte* data12 = initData.Mips[11].Data)
-            fixed (byte* data11 = initData.Mips[11].Data)
-            fixed (byte* data10 = initData.Mips[10].Data)
-            fixed (byte* data09 = initData.Mips[9].Data)
-            fixed (byte* data08 = initData.Mips[8].Data)
-            fixed (byte* data07 = initData.Mips[7].Data)
-            fixed (byte* data06 = initData.Mips[6].Data)
-            fixed (byte* data05 = initData.Mips[5].Data)
-            fixed (byte* data04 = initData.Mips[4].Data)
-            fixed (byte* data03 = initData.Mips[3].Data)
-            fixed (byte* data02 = initData.Mips[2].Data)
-            fixed (byte* data01 = initData.Mips[1].Data)
-            fixed (byte* data00 = initData.Mips[0].Data)
+            var emptyArray = Utils.GetEmptyArray<byte>();
+            fixed (byte* data13 = (initData.Mips.Length > 13 ? initData.Mips[13].Data : emptyArray))
+            fixed (byte* data12 = (initData.Mips.Length > 12 ? initData.Mips[12].Data : emptyArray))
+            fixed (byte* data11 = (initData.Mips.Length > 11 ? initData.Mips[11].Data : emptyArray))
+            fixed (byte* data10 = (initData.Mips.Length > 10 ? initData.Mips[10].Data : emptyArray))
+            fixed (byte* data09 = (initData.Mips.Length > 09 ? initData.Mips[9].Data : emptyArray))
+            fixed (byte* data08 = (initData.Mips.Length > 08 ? initData.Mips[8].Data : emptyArray))
+            fixed (byte* data07 = (initData.Mips.Length > 07 ? initData.Mips[7].Data : emptyArray))
+            fixed (byte* data06 = (initData.Mips.Length > 06 ? initData.Mips[6].Data : emptyArray))
+            fixed (byte* data05 = (initData.Mips.Length > 05 ? initData.Mips[5].Data : emptyArray))
+            fixed (byte* data04 = (initData.Mips.Length > 04 ? initData.Mips[4].Data : emptyArray))
+            fixed (byte* data03 = (initData.Mips.Length > 03 ? initData.Mips[3].Data : emptyArray))
+            fixed (byte* data02 = (initData.Mips.Length > 02 ? initData.Mips[2].Data : emptyArray))
+            fixed (byte* data01 = (initData.Mips.Length > 01 ? initData.Mips[1].Data : emptyArray))
+            fixed (byte* data00 = (initData.Mips.Length > 00 ? initData.Mips[0].Data : emptyArray))
             {
                 t.Data13 = new IntPtr(data13);
                 t.Data12 = new IntPtr(data12);
