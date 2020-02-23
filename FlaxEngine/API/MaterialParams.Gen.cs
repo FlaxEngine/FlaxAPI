@@ -19,6 +19,18 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets the parameter ID (not the parameter instance Id but the original parameter ID).
+        /// </summary>
+        [Tooltip("The parameter ID (not the parameter instance Id but the original parameter ID).")]
+        public Guid ParameterID
+        {
+            get { Internal_GetParameterID(unmanagedPtr, out var resultAsRef); return resultAsRef; }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetParameterID(IntPtr obj, out Guid resultAsRef);
+
+        /// <summary>
         /// Gets the parameter type.
         /// </summary>
         [Tooltip("The parameter type.")]
