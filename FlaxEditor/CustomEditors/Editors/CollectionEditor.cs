@@ -8,6 +8,7 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.CustomEditors.Editors
 {
@@ -113,6 +114,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
             // Try get MemberCollectionAttribute for collection editor meta
             var attributes = Values.GetAttributes();
+            Type overrideEditorType = null;
             if (attributes != null)
             {
                 var memberCollection = (MemberCollectionAttribute)attributes.FirstOrDefault(x => x is MemberCollectionAttribute);
@@ -123,6 +125,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     _readOnly = memberCollection.ReadOnly;
                     _canReorderItems = memberCollection.CanReorderItems;
                     _notNullItems = memberCollection.NotNullItems;
+                    overrideEditorType = Utils.GetType(memberCollection.OverrideEditorTypeName);
                 }
             }
 
@@ -148,14 +151,16 @@ namespace FlaxEditor.CustomEditors.Editors
                 {
                     for (int i = 0; i < size; i++)
                     {
-                        layout.Object(new CollectionItemLabel(this, i), new ListValueContainer(elementType, i, Values));
+                        var overrideEditor = overrideEditorType != null ? (CustomEditor)Activator.CreateInstance(overrideEditorType) : null;
+                        layout.Object(new CollectionItemLabel(this, i), new ListValueContainer(elementType, i, Values), overrideEditor);
                     }
                 }
                 else
                 {
                     for (int i = 0; i < size; i++)
                     {
-                        layout.Object("Element " + i, new ListValueContainer(elementType, i, Values));
+                        var overrideEditor = overrideEditorType != null ? (CustomEditor)Activator.CreateInstance(overrideEditorType) : null;
+                        layout.Object("Element " + i, new ListValueContainer(elementType, i, Values), overrideEditor);
                     }
                 }
             }
