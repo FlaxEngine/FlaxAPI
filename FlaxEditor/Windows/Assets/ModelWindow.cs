@@ -91,7 +91,8 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(ProxyEditor))]
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true)]
+            [MemberCollection(CanReorderItems = true, NotNullItems = true, OverrideEditorTypeName = "FlaxEditor.CustomEditors.Editors.GenericEditor")]
+            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle)]
             public MaterialSlot[] MaterialSlots
             {
                 get => Asset?.MaterialSlots;
@@ -440,11 +441,6 @@ namespace FlaxEditor.Windows.Assets
             _highlightActor = StaticModel.New();
             _highlightActor.IsActive = false;
             _preview.Task.CustomActors.Add(_highlightActor);
-        }
-
-        private void CacheMeshData()
-        {
-            // TODO: finish mesh data gather from c# API (use async task)
         }
 
         /// <summary>
