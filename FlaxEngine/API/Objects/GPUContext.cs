@@ -144,8 +144,6 @@ namespace FlaxEngine
         /// <param name="output">Output texture.</param>
         /// <param name="buffers">Frame rendering buffers.</param>
         /// <param name="view">Rendering view description structure.</param>
-        /// <param name="flags">Custom view flags collection.</param>
-        /// <param name="mode">Custom view mode option.</param>
         /// <param name="customActors">Custom set of actors to render.</param>
         /// <param name="actorsSource">Actors source to use during rendering.</param>
         /// <param name="customPostFx">The set of custom post effects to use during rendering. Use null to skip it.</param>
@@ -175,8 +173,6 @@ namespace FlaxEngine
         /// <param name="output">Output texture.</param>
         /// <param name="buffers">Frame rendering buffers.</param>
         /// <param name="view">Rendering view description structure.</param>
-        /// <param name="flags">Custom view flags collection.</param>
-        /// <param name="mode">Custom view mode option.</param>
         /// <param name="customActors">Custom set of actors to render.</param>
         /// <param name="actorsSource">Actors source to use during rendering.</param>
         /// <param name="customPostFx">The set of custom post effects to use during rendering. Use null to skip it.</param>

@@ -326,14 +326,14 @@ namespace FlaxEditor.Windows.Assets
                         for (int meshIndex = 0; meshIndex < meshes.Length; meshIndex++)
                         {
                             var mesh = meshes[meshIndex];
-                            triangleCount += mesh.Triangles;
-                            vertexCount += mesh.Vertices;
+                            triangleCount += mesh.TriangleCount;
+                            vertexCount += mesh.VertexCount;
                         }
 
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
                         group.Label("Nodes: " + nodes.Length);
                         group.Label("Bones: " + bones.Length);
-                        group.Label("Size: " + proxy.Asset.Box.Size);
+                        group.Label("Size: " + proxy.Asset.GetBox().Size);
                     }
 
                     // Group per mesh
@@ -344,7 +344,7 @@ namespace FlaxEditor.Windows.Assets
                         var mesh = meshes[meshIndex];
 
                         var group = meshesGroup.Group("Mesh " + meshIndex);
-                        group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", mesh.Triangles, mesh.Vertices));
+                        group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", mesh.TriangleCount, mesh.VertexCount));
 
                         // Material Slot
                         var materialSlot = group.ComboBox("Material Slot", "Material slot used by this mesh during rendering");
@@ -593,7 +593,7 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnLoad(this);
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
-            _preview.ViewportCamera.SerArcBallView(Asset.Box);
+            _preview.ViewportCamera.SerArcBallView(Asset.GetBox());
 
             // Reset any root motion
             _preview.PreviewActor.ResetLocalTransform();

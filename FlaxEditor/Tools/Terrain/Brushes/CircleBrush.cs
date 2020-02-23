@@ -106,10 +106,9 @@ namespace FlaxEditor.Tools.Terrain.Brushes
                 float halfSize = Size * 0.5f;
                 float falloff = halfSize * Falloff;
                 float radius = halfSize - falloff;
-                // TODO: cache parameters
-                material.GetParam("Color").Value = color;
-                material.GetParam("BrushData0").Value = new Vector4(position, radius);
-                material.GetParam("BrushData1").Value = new Vector4(falloff, (float)FalloffType, 0, 0);
+                material.SetParameterValue("Color", color);
+                material.SetParameterValue("BrushData0", new Vector4(position, radius));
+                material.SetParameterValue("BrushData1", new Vector4(falloff, (float)FalloffType, 0, 0));
             }
             return material;
         }

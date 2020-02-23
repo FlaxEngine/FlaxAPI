@@ -38,9 +38,8 @@ namespace FlaxEditor.Tools.Foliage
 
             if (_material)
             {
-                // TODO: cache parameters
-                _material.GetParam("Color").Value = color;
-                _material.GetParam("DepthBuffer").Value = sceneDepth;
+                _material.SetParameterValue("Color", color);
+                _material.SetParameterValue("DepthBuffer", sceneDepth);
             }
 
             return _material;

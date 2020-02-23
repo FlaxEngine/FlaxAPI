@@ -132,9 +132,9 @@ namespace FlaxEngine
             {
                 Type = RenderTask.DrawCall.Types.Mesh,
                 Flags = flags,
-                LodIndex = mesh._lodIndex,
-                Index0 = new Int2(mesh._meshIndex, receiveDecals ? 1 : 0),
-                Object = Object.GetUnmanagedPtr(mesh.ParentModel),
+                LodIndex = 0,
+                Index0 = new Int2(0, receiveDecals ? 1 : 0),
+                Object = Object.GetUnmanagedPtr(mesh),
                 Material = Object.GetUnmanagedPtr(material),
                 World = world
             };

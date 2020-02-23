@@ -138,10 +138,10 @@ namespace FlaxEditor.Gizmo
             var projection = task.View.Projection;
 
             // Render outline
-            _material.GetParam("OutlineColor0").Value = _color0;
-            _material.GetParam("OutlineColor1").Value = _color1;
-            _material.GetParam("CustomDepth").Value = customDepth;
-            _material.GetParam("ViewInfo").Value = new Vector4(1.0f / projection.M11, 1.0f / projection.M22, far / (far - near), (-far * near) / (far - near) / far);
+            _material.SetParameterValue("OutlineColor0", _color0);
+            _material.SetParameterValue("OutlineColor1", _color1);
+            _material.SetParameterValue("CustomDepth", customDepth);
+            _material.SetParameterValue("ViewInfo", new Vector4(1.0f / projection.M11, 1.0f / projection.M22, far / (far - near), (-far * near) / (far - near) / far));
             context.DrawPostFxMaterial(_material, output, input, task);
 
             // Cleanup

@@ -30,8 +30,4 @@ namespace FlaxEngine
         /// </summary>
         Spring = 0x4
     }
-
-    public sealed partial class DistanceJoint
-    {
-    }
 }

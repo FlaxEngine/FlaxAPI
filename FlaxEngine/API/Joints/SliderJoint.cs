@@ -20,8 +20,4 @@ namespace FlaxEngine
         /// </summary>
         Limit = 0x1
     }
-
-    public sealed partial class SliderJoint
-    {
-    }
 }

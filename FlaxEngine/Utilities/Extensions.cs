@@ -47,7 +47,7 @@ namespace FlaxEngine.Utilities
         /// <summary>
         /// Checks if the input type represents a structure (value type but not enum nor primitive type).
         /// </summary>
-        /// <param name="instance">The input type of the object to check.</param>
+        /// <param name="type">The input type of the object to check.</param>
         /// <returns>Returns true if the input type represents a structure (value type but not enum nor primitive type).</returns>
         public static bool IsStructure(this Type type)
         {

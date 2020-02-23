@@ -77,8 +77,4 @@ namespace FlaxEngine
             FreeSpin = freeSpin;
         }
     }
-
-    public sealed partial class HingeJoint
-    {
-    }
 }

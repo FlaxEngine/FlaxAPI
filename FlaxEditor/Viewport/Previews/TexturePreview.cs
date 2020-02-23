@@ -280,7 +280,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (_usePointSampler != value)
                 {
                     _usePointSampler = value;
-                    _previewMaterial.GetParam("PointSampler").Value = value;
+                    _previewMaterial.SetParameterValue("PointSampler", value);
                 }
             }
         }
@@ -296,7 +296,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (!Mathf.NearEqual(_mipLevel, value))
                 {
                     _mipLevel = value;
-                    _previewMaterial.GetParam("Mip").Value = value;
+                    _previewMaterial.SetParameterValue("Mip", value);
                 }
             }
         }
@@ -396,7 +396,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="value">The value.</param>
         protected void SetTexture(object value)
         {
-            _previewMaterial.GetParam("Texture").Value = value;
+            _previewMaterial.SetParameterValue("Texture", value);
             UpdateTextureRect();
         }
 
@@ -405,7 +405,7 @@ namespace FlaxEditor.Viewport.Previews
             if (!control.Visible)
                 return;
 
-            var textureObj = _previewMaterial.GetParam("Texture").Value;
+            var textureObj = _previewMaterial.GetParameterValue("Texture");
 
             if (textureObj is TextureBase texture && !texture.WaitForLoaded())
             {
@@ -436,7 +436,7 @@ namespace FlaxEditor.Viewport.Previews
                 mask.Z = 0;
             if ((_channelFlags & ChannelFlags.Alpha) == 0)
                 mask.W = 0;
-            _previewMaterial.GetParam("Mask").Value = mask;
+            _previewMaterial.SetParameterValue("Mask", mask);
         }
 
         /// <inheritdoc />
@@ -585,7 +585,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="useWidgets">True if show viewport widgets.</param>
         /// <inheritdoc />
         public TexturePreview(bool useWidgets)
-        : base(useWidgets)
+            : base(useWidgets)
         {
         }
 
@@ -640,7 +640,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="useWidgets">True if show viewport widgets.</param>
         /// <inheritdoc />
         public SpriteAtlasPreview(bool useWidgets)
-        : base(useWidgets)
+            : base(useWidgets)
         {
         }
 

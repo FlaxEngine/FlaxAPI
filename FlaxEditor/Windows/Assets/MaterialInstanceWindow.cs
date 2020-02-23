@@ -35,7 +35,7 @@ namespace FlaxEditor.Windows.Assets
 
             private void Set(bool value)
             {
-                Window.Asset.Parameters[Index].Override = value;
+                Window.Asset.Parameters[Index].IsOverride = value;
             }
 
             /// <inheritdoc />
@@ -214,7 +214,6 @@ namespace FlaxEditor.Windows.Assets
         public class ParametersEditor : GenericEditor
         {
             private static readonly object[] DefaultAttributes = { new LimitAttribute(float.MinValue, float.MaxValue, 0.1f) };
-            private int _parametersHash;
 
             /// <inheritdoc />
             public override void Initialize(LayoutElementsContainer layout)
@@ -224,17 +223,16 @@ namespace FlaxEditor.Windows.Assets
                 var material = proxy.Window?.Asset;
                 if (material == null)
                 {
-                    _parametersHash = -1;
                     layout.Label("No parameters");
                     return;
                 }
+
                 if (!material.IsLoaded || (material.BaseMaterial && !material.BaseMaterial.IsLoaded))
                 {
-                    _parametersHash = -2;
                     layout.Label("Loading...");
                     return;
                 }
-                _parametersHash = material._parametersHash;
+
                 var parameters = material.Parameters;
 
                 // Base
@@ -262,7 +260,7 @@ namespace FlaxEditor.Windows.Assets
                     Type pType;
                     object[] attributes = null;
 
-                    switch (p.Type)
+                    switch (p.ParameterType)
                     {
                     case MaterialParameterType.ChannelMask:
                         pType = typeof(ChannelMask);
@@ -311,7 +309,7 @@ namespace FlaxEditor.Windows.Assets
                     );
 
                     // Try to get default value (from the base material)
-                    if (baseMaterialParameters != null && baseMaterialParameters.Length > i && baseMaterialParameters[i].Type == p.Type)
+                    if (baseMaterialParameters != null && baseMaterialParameters.Length > i && baseMaterialParameters[i].ParameterType == p.ParameterType)
                     {
                         var defaultValue = baseMaterialParameters[i].Value;
                         propertyValue.SetDefaultValue(defaultValue);
@@ -319,12 +317,12 @@ namespace FlaxEditor.Windows.Assets
 
                     // Add label with checkbox for parameter value override
                     var label = new CheckablePropertyNameLabel(p.Name);
-                    label.CheckBox.Checked = p.Override;
+                    label.CheckBox.Checked = p.IsOverride;
                     label.CheckBox.Tag = window._properties;
                     label.CheckChanged += nameLabel =>
                     {
                         var proxy = (PropertiesProxy)nameLabel.CheckBox.Tag;
-                        proxy.Window.Asset.Parameters[pIndex].Override = nameLabel.CheckBox.Checked;
+                        proxy.Window.Asset.Parameters[pIndex].IsOverride = nameLabel.CheckBox.Checked;
                         proxy.Window._undo.AddAction(new EditParamOverrideAction
                         {
                             Window = proxy.Window,
@@ -333,34 +331,6 @@ namespace FlaxEditor.Windows.Assets
                         });
                     };
                     layout.Property(label, propertyValue);
-                }
-            }
-
-            /// <inheritdoc />
-            public override void Refresh()
-            {
-                base.Refresh();
-
-                var proxy = Values[0] as PropertiesProxy;
-                var material = proxy?.Window?.Asset;
-                int parametersHash = -1;
-                if (material != null)
-                {
-                    if (material.IsLoaded)
-                    {
-                        var parameters = material.Parameters; // need to ask for params here to sync valid hash   
-                        parametersHash = material._parametersHash;
-                    }
-                    else
-                    {
-                        parametersHash = -2;
-                    }
-                }
-
-                if (parametersHash != _parametersHash)
-                {
-                    // Parameters has been modified (loaded/unloaded/edited)
-                    RebuildLayout();
                 }
             }
         }
@@ -503,8 +473,6 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
-            base.Update(deltaTime);
-
             // Check if need to load
             if (_isWaitingForLoad && _asset.IsLoaded && (_asset.BaseMaterial == null || _asset.BaseMaterial.IsLoaded))
             {
@@ -517,7 +485,10 @@ namespace FlaxEditor.Windows.Assets
                 // Setup
                 ClearEditedFlag();
                 _undo.Clear();
+                _editor.BuildLayout();
             }
+
+            base.Update(deltaTime);
         }
 
         /// <inheritdoc />

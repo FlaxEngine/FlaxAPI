@@ -5,10 +5,6 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-    class SceneAsset
-    {
-    }
-
     public sealed partial class Scene
     {
         /// <summary>

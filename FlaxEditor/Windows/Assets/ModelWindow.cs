@@ -332,13 +332,13 @@ namespace FlaxEditor.Windows.Assets
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
                         {
                             var mesh = lod.Meshes[meshIndex];
-                            triangleCount += mesh.Triangles;
-                            vertexCount += mesh.Vertices;
+                            triangleCount += mesh.TriangleCount;
+                            vertexCount += mesh.VertexCount;
                         }
 
                         var group = layout.Group("LOD " + lodIndex);
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
-                        group.Label("Size: " + lod.Bounds.Size);
+                        group.Label("Size: " + lod.Box.Size);
                         var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
                         screenSize.FloatValue.MinValue = 0.0f;
                         screenSize.FloatValue.MaxValue = 10.0f;
@@ -556,7 +556,7 @@ namespace FlaxEditor.Windows.Assets
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
             _refreshOnLODsLoaded = true;
-            _preview.ViewportCamera.SerArcBallView(Asset.Box);
+            _preview.ViewportCamera.SerArcBallView(Asset.GetBox());
 
             // TODO: disable streaming for this model
 

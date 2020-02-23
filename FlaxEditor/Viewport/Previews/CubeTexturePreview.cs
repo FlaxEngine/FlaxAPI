@@ -42,6 +42,7 @@ namespace FlaxEditor.Viewport.Previews
                     Editor.LogError("Cannot load preview material.");
                     return;
                 }
+
                 var baseMaterial = _previewMaterial.BaseMaterial;
                 if (baseMaterial == null || baseMaterial.WaitForLoaded())
                 {
@@ -49,14 +50,8 @@ namespace FlaxEditor.Viewport.Previews
                     Editor.LogError("Cannot load base material for preview material.");
                     return;
                 }
-                var param = _previewMaterial.GetParam("CubeTexture");
-                if (param == null)
-                {
-                    // Error
-                    Editor.LogError("Invalid preview material parameters.");
-                    return;
-                }
-                param.Value = value;
+
+                _previewMaterial.SetParameterValue("CubeTexture", value);
             }
         }
 
@@ -87,7 +82,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (_usePointSampler != value)
                 {
                     _usePointSampler = value;
-                    _previewMaterial.GetParam("PointSampler").Value = value;
+                    _previewMaterial.SetParameterValue("PointSampler", value);
                 }
             }
         }
@@ -103,7 +98,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (!Mathf.NearEqual(_mipLevel, value))
                 {
                     _mipLevel = value;
-                    _previewMaterial.GetParam("Mip").Value = value;
+                    _previewMaterial.SetParameterValue("Mip", value);
                 }
             }
         }
@@ -199,7 +194,7 @@ namespace FlaxEditor.Viewport.Previews
             if (!control.Visible)
                 return;
 
-            var textureObj = _previewMaterial.GetParam("CubeTexture").Value;
+            var textureObj = _previewMaterial.GetParameterValue("CubeTexture");
 
             if (textureObj is TextureBase texture && !texture.WaitForLoaded())
             {
@@ -230,7 +225,7 @@ namespace FlaxEditor.Viewport.Previews
                 mask.Z = 0;
             if ((_channelFlags & ChannelFlags.Alpha) == 0)
                 mask.W = 0;
-            _previewMaterial.GetParam("Mask").Value = mask;
+            _previewMaterial.SetParameterValue("Mask", mask);
         }
 
         /// <inheritdoc />

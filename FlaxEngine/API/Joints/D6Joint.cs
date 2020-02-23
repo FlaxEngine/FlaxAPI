@@ -160,8 +160,4 @@ namespace FlaxEngine
             Acceleration = acceleration;
         }
     }
-
-    public sealed partial class D6Joint
-    {
-    }
 }

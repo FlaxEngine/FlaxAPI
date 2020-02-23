@@ -62,7 +62,7 @@ namespace FlaxEditor.Windows.Assets
 
                 // Get data from the asset
                 Skeleton = Asset.Skeleton;
-                NodesMask = Asset.GetNodesMask();
+                NodesMask = Asset.NodesMask;
             }
 
             public void OnClean()

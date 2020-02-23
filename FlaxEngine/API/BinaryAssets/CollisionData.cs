@@ -123,7 +123,7 @@ namespace FlaxEngine
         /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
         /// </remarks>
         /// <param name="type">The collision data type.</param>
-        /// <param name="model">The source geometry vertex buffer with vertices positions. Cannot be null.</param>
+        /// <param name="vertices">The source geometry vertex buffer with vertices positions. Cannot be null.</param>
         /// <param name="triangles">The source data index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
         /// <param name="convexFlags">The convex mesh generation flags.</param>
         /// <param name="convexVertexLimit">The convex mesh vertex limit. Use values in range [8;255]</param>
@@ -161,7 +161,7 @@ namespace FlaxEngine
         /// Can be used only for virtual assets (see <see cref="Asset.IsVirtual"/> and <see cref="Content.CreateVirtualAsset{T}"/>).
         /// </remarks>
         /// <param name="type">The collision data type.</param>
-        /// <param name="model">The source geometry vertex buffer with vertices positions. Cannot be null.</param>
+        /// <param name="vertices">The source geometry vertex buffer with vertices positions. Cannot be null.</param>
         /// <param name="triangles">The source data index buffer (triangles). Uses 32-bit stride buffer. Cannot be null.</param>
         /// <param name="convexFlags">The convex mesh generation flags.</param>
         /// <param name="convexVertexLimit">The convex mesh vertex limit. Use values in range [8;255]</param>

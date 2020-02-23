@@ -82,7 +82,6 @@ namespace FlaxEditor.Content.Create
             {
             case Templates.Empty:
                 return Editor.CreateAsset(Editor.NewAssetType.ParticleEmitter, ResultUrl);
-                break;
             case Templates.ConstantBurst:
                 templateName = "Constant Burst";
                 break;

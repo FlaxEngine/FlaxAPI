@@ -70,7 +70,7 @@ namespace FlaxEditor.Viewport.Previews
             _previewModel.BoundsScale = 1000.0f;
             _previewModel.UpdateMode = AnimatedModel.AnimationUpdateMode.Manual;
             _previewNodesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
-            _previewNodesModel.SetupLODs(1);
+            _previewNodesModel.SetupLODs(new[] {1});
             _previewNodesActor = StaticModel.New();
             _previewNodesActor.Model = _previewNodesModel;
             _previewNodesActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
@@ -93,7 +93,7 @@ namespace FlaxEditor.Viewport.Previews
             if (skinnedModel && skinnedModel.IsLoaded)
             {
                 float targetSize = 30.0f;
-                float maxSize = Mathf.Max(0.001f, skinnedModel.Box.Size.MaxValue);
+                float maxSize = Mathf.Max(0.001f, skinnedModel.GetBox().Size.MaxValue);
                 _previewModel.Scale = new Vector3(targetSize / maxSize);
             }
         }
