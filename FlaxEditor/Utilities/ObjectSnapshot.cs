@@ -114,9 +114,15 @@ namespace FlaxEditor.Utilities
             var afterCount = result.Count;
             result.Add(new TypeEntry(path, afterCount - beforeCount));
             if (memberValue != null && memberValue.GetType().IsStructure())
-                values.Add(memberValue.RawClone());
+            {
+                var json = JsonSerializer.Serialize(memberValue);
+                var clone = JsonSerializer.Deserialize(json, memberValue.GetType());
+                values.Add(clone);
+            }
             else
+            {
                 values.Add(memberValue);
+            }
             membersPath.Pop();
         }
 
