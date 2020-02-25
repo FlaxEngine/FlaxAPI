@@ -99,7 +99,7 @@ namespace FlaxEditor.Windows
             }
             if (parentActor == null)
             {
-                var scenes = SceneManager.Scenes;
+                var scenes = Level.Scenes;
                 if (scenes.Length > 0)
                     parentActor = scenes[scenes.Length - 1];
             }

@@ -83,7 +83,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void MarkAllScenesEdited()
         {
-            MarkSceneEdited(SceneManager.Scenes);
+            MarkSceneEdited(Level.Scenes);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace FlaxEditor.Modules
             cam.Position = new Vector3(0, 150, -300);
 
             // Serialize
-            var bytes = SceneManager.SaveSceneToBytes(scene);
+            var bytes = Level.SaveSceneToBytes(scene);
 
             // Cleanup
             Object.Destroy(ref scene);
@@ -214,7 +214,7 @@ namespace FlaxEditor.Modules
                 return;
 
             scene.IsEdited = false;
-            SceneManager.SaveSceneAsync(scene.Scene);
+            Level.SaveSceneAsync(scene.Scene);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace FlaxEditor.Modules
                 if (scene is SceneNode node)
                     node.IsEdited = false;
             }
-            SceneManager.SaveAllScenesAsync();
+            Level.SaveAllScenesAsync();
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace FlaxEditor.Modules
                 return;
 
             // Unload scenes
-            Editor.StateMachine.ChangingScenesState.UnloadScene(SceneManager.Scenes);
+            Editor.StateMachine.ChangingScenesState.UnloadScene(Level.Scenes);
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace FlaxEditor.Modules
             if (IsEdited())
             {
                 // Ask user for further action
-                var scenes = SceneManager.Scenes;
+                var scenes = Level.Scenes;
                 var result = MessageBox.Show(
                     scenes.Length == 1 ? string.Format("Scene \'{0}\' has been edited. Save before closing?", scenes[0].Name) : string.Format("{0} scenes have been edited. Save before closing?", scenes.Length),
                     "Close without saving?",
@@ -568,28 +568,28 @@ namespace FlaxEditor.Modules
             Root = new ScenesRootNode();
 
             // Bind events
-            SceneManager.SceneLoaded += OnSceneLoaded;
-            SceneManager.SceneUnloading += OnSceneUnloading;
-            SceneManager.ActorSpawned += OnActorSpawned;
-            SceneManager.ActorDeleted += OnActorDeleted;
-            SceneManager.ActorParentChanged += OnActorParentChanged;
-            SceneManager.ActorOrderInParentChanged += OnActorOrderInParentChanged;
-            SceneManager.ActorNameChanged += OnActorNameChanged;
-            SceneManager.ActorActiveChanged += OnActorActiveChanged;
+            Level.SceneLoaded += OnSceneLoaded;
+            Level.SceneUnloading += OnSceneUnloading;
+            Level.ActorSpawned += OnActorSpawned;
+            Level.ActorDeleted += OnActorDeleted;
+            Level.ActorParentChanged += OnActorParentChanged;
+            Level.ActorOrderInParentChanged += OnActorOrderInParentChanged;
+            Level.ActorNameChanged += OnActorNameChanged;
+            Level.ActorActiveChanged += OnActorActiveChanged;
         }
 
         /// <inheritdoc />
         public override void OnExit()
         {
             // Unbind events
-            SceneManager.SceneLoaded -= OnSceneLoaded;
-            SceneManager.SceneUnloading -= OnSceneUnloading;
-            SceneManager.ActorSpawned -= OnActorSpawned;
-            SceneManager.ActorDeleted -= OnActorDeleted;
-            SceneManager.ActorParentChanged -= OnActorParentChanged;
-            SceneManager.ActorOrderInParentChanged -= OnActorOrderInParentChanged;
-            SceneManager.ActorNameChanged -= OnActorNameChanged;
-            SceneManager.ActorActiveChanged -= OnActorActiveChanged;
+            Level.SceneLoaded -= OnSceneLoaded;
+            Level.SceneUnloading -= OnSceneUnloading;
+            Level.ActorSpawned -= OnActorSpawned;
+            Level.ActorDeleted -= OnActorDeleted;
+            Level.ActorParentChanged -= OnActorParentChanged;
+            Level.ActorOrderInParentChanged -= OnActorOrderInParentChanged;
+            Level.ActorNameChanged -= OnActorNameChanged;
+            Level.ActorActiveChanged -= OnActorActiveChanged;
 
             // Cleanup graph
             Root.Dispose();

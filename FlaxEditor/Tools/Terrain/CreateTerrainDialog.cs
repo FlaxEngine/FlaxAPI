@@ -140,7 +140,7 @@ namespace FlaxEditor.Tools.Terrain
             if (_isWorking)
                 return;
 
-            var scene = SceneManager.GetScene(0);
+            var scene = Level.GetScene(0);
             if (scene == null)
                 throw new InvalidOperationException("No scene found to add terrain to it!");
 

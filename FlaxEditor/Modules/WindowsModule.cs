@@ -735,14 +735,14 @@ namespace FlaxEditor.Modules
             PluginsWin = new PluginsWindow(Editor);
 
             // Bind events
-            SceneManager.SceneSaveError += OnSceneSaveError;
-            SceneManager.SceneLoaded += OnSceneLoaded;
-            SceneManager.SceneLoadError += OnSceneLoadError;
-            SceneManager.SceneLoading += OnSceneLoading;
-            SceneManager.SceneSaved += OnSceneSaved;
-            SceneManager.SceneSaving += OnSceneSaving;
-            SceneManager.SceneUnloaded += OnSceneUnloaded;
-            SceneManager.SceneUnloading += OnSceneUnloading;
+            Level.SceneSaveError += OnSceneSaveError;
+            Level.SceneLoaded += OnSceneLoaded;
+            Level.SceneLoadError += OnSceneLoadError;
+            Level.SceneLoading += OnSceneLoading;
+            Level.SceneSaved += OnSceneSaved;
+            Level.SceneSaving += OnSceneSaving;
+            Level.SceneUnloaded += OnSceneUnloaded;
+            Level.SceneUnloading += OnSceneUnloading;
             ScriptsBuilder.ScriptsReloadEnd += OnScriptsReloadEnd;
         }
 
@@ -919,14 +919,14 @@ namespace FlaxEditor.Modules
         public override void OnExit()
         {
             // Unbind events
-            SceneManager.SceneSaveError -= OnSceneSaveError;
-            SceneManager.SceneLoaded -= OnSceneLoaded;
-            SceneManager.SceneLoadError -= OnSceneLoadError;
-            SceneManager.SceneLoading -= OnSceneLoading;
-            SceneManager.SceneSaved -= OnSceneSaved;
-            SceneManager.SceneSaving -= OnSceneSaving;
-            SceneManager.SceneUnloaded -= OnSceneUnloaded;
-            SceneManager.SceneUnloading -= OnSceneUnloading;
+            Level.SceneSaveError -= OnSceneSaveError;
+            Level.SceneLoaded -= OnSceneLoaded;
+            Level.SceneLoadError -= OnSceneLoadError;
+            Level.SceneLoading -= OnSceneLoading;
+            Level.SceneSaved -= OnSceneSaved;
+            Level.SceneSaving -= OnSceneSaving;
+            Level.SceneUnloaded -= OnSceneUnloaded;
+            Level.SceneUnloading -= OnSceneUnloading;
             ScriptsBuilder.ScriptsReloadEnd -= OnScriptsReloadEnd;
 
             // Close main window

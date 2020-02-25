@@ -158,7 +158,7 @@ namespace FlaxEditor.Modules
 
             // Update buttons
             bool canEditScene = state.CanEditScene;
-            bool canEnterPlayMode = state.CanEnterPlayMode && SceneManager.IsAnySceneLoaded;
+            bool canEnterPlayMode = state.CanEnterPlayMode && Level.IsAnySceneLoaded;
             //
             _toolStripUndo.Enabled = canEditScene && undoRedo.CanUndo;
             _toolStripRedo.Enabled = canEditScene && undoRedo.CanRedo;
@@ -589,7 +589,7 @@ namespace FlaxEditor.Modules
                 return;
             var c = (ContextMenu)control;
 
-            bool hasOpenedScene = SceneManager.IsAnySceneLoaded;
+            bool hasOpenedScene = Level.IsAnySceneLoaded;
 
             _menuFileSaveScenes.Enabled = hasOpenedScene;
             _menuFileCloseScenes.Enabled = hasOpenedScene;
@@ -617,7 +617,7 @@ namespace FlaxEditor.Modules
             _menuEditCopy.Enabled = hasSthSelected;
             _menuEditDelete.Enabled = hasSthSelected;
             _menuEditDuplicate.Enabled = hasSthSelected;
-            _menuEditSelectAll.Enabled = SceneManager.IsAnySceneLoaded;
+            _menuEditSelectAll.Enabled = Level.IsAnySceneLoaded;
 
             control.PerformLayout();
         }
@@ -636,7 +636,7 @@ namespace FlaxEditor.Modules
             _menuSceneAlignViewportWithActor.Enabled = hasActorSelected;
             _menuScenePilotActor.Enabled = hasActorSelected || isPilotActorActive;
             _menuScenePilotActor.Text = isPilotActorActive ? "Stop piloting actor" : "Pilot actor";
-            _menuSceneCreateTerrain.Enabled = SceneManager.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
+            _menuSceneCreateTerrain.Enabled = Level.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
 
             control.PerformLayout();
         }
@@ -661,7 +661,7 @@ namespace FlaxEditor.Modules
 
             var c = (ContextMenu)control;
             bool canBakeLightmaps = GPUDevice.Limits.IsComputeSupported;
-            bool canEdit = SceneManager.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
+            bool canEdit = Level.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
             bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive;
             _menuToolsBakeLightmaps.Enabled = (canEdit && canBakeLightmaps) || isBakingLightmaps;
             _menuToolsBakeLightmaps.Text = isBakingLightmaps ? "Cancel baking lightmaps" : "Bake lightmaps";
@@ -670,7 +670,7 @@ namespace FlaxEditor.Modules
             _menuToolsBuildCSGMesh.Enabled = canEdit;
             _menuToolsBuildNavMesh.Enabled = canEdit;
             _menuToolsCancelBuilding.Enabled = GameCooker.IsRunning;
-            _menuToolsSetTheCurrentSceneViewAsDefault.Enabled = SceneManager.ScenesCount > 0;
+            _menuToolsSetTheCurrentSceneViewAsDefault.Enabled = Level.ScenesCount > 0;
 
             c.PerformLayout();
         }
@@ -777,14 +777,14 @@ namespace FlaxEditor.Modules
 
         private void BuildCSG()
         {
-            var scenes = SceneManager.Scenes;
+            var scenes = Level.Scenes;
             scenes.ToList().ForEach(x => x.BuildCSG(0));
             Editor.Scene.MarkSceneEdited(scenes);
         }
 
         private void BuildNavMesh()
         {
-            var scenes = SceneManager.Scenes;
+            var scenes = Level.Scenes;
             scenes.ToList().ForEach(x => x.BuildNavMesh(0));
             Editor.Scene.MarkSceneEdited(scenes);
         }
@@ -792,7 +792,7 @@ namespace FlaxEditor.Modules
         private void SetTheCurrentSceneViewAsDefault()
         {
             var projectInfo = Editor.ProjectInfo;
-            projectInfo.DefaultSceneId = SceneManager.Scenes[0].ID;
+            projectInfo.DefaultSceneId = Level.Scenes[0].ID;
             projectInfo.DefaultSceneSpawn = Editor.Windows.EditWin.Viewport.ViewRay;
             projectInfo.Save();
         }

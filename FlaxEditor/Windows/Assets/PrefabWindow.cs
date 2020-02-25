@@ -361,7 +361,7 @@ namespace FlaxEditor.Windows.Assets
                 if (Graph.Main != null)
                 {
                     // Due to fact that actors in prefab editor are only created but not added to gameplay 
-                    // we have to manually update some data (SceneManager events work only for actors in a gameplay)
+                    // we have to manually update some data (Level events work only for actors in a gameplay)
                     Update(Graph.Main);
                 }
 

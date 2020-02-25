@@ -24,7 +24,7 @@ namespace FlaxEngine
     /// <param name="prevParent">The previous parent.</param>
     public delegate void ActorParentChangedDelegate(Actor actor, Actor prevParent);
 
-    public static partial class SceneManager
+    public static partial class Level
     {
         /// <summary>
         /// Checks if any scene has been loaded. Loaded scene means deserialized and added to the scenes collection.

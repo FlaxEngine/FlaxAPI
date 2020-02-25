@@ -69,16 +69,16 @@ namespace FlaxEditor.Viewport
             public override bool UseSingleTarget => true;
 
             /// <inheritdoc />
-            public override bool CanRender => (Task.View.Flags & ViewFlags.EditorSprites) == ViewFlags.EditorSprites && SceneManager.ScenesCount != 0 && base.CanRender;
+            public override bool CanRender => (Task.View.Flags & ViewFlags.EditorSprites) == ViewFlags.EditorSprites && Level.ScenesCount != 0 && base.CanRender;
 
             /// <inheritdoc />
             public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
             {
                 Profiler.BeginEventGPU("Editor Primitives");
 
-                for (int i = 0; i < SceneManager.ScenesCount; i++)
+                for (int i = 0; i < Level.ScenesCount; i++)
                 {
-                    var scene = SceneManager.GetScene(i);
+                    var scene = Level.GetScene(i);
                     ViewportIconsRenderer.DrawIcons(context, task, input, task.Buffers.DepthBuffer, scene);
                 }
 
@@ -329,7 +329,7 @@ namespace FlaxEditor.Viewport
 
         private void CreateCameraAtView()
         {
-            if (!SceneManager.IsAnySceneLoaded)
+            if (!Level.IsAnySceneLoaded)
                 return;
 
             // Create actor
@@ -708,7 +708,7 @@ namespace FlaxEditor.Viewport
 
         private static bool ValidateDragItem(ContentItem contentItem)
         {
-            if (!SceneManager.IsAnySceneLoaded)
+            if (!Level.IsAnySceneLoaded)
                 return false;
 
             if (contentItem is BinaryAssetItem binaryAssetItem)
@@ -732,7 +732,7 @@ namespace FlaxEditor.Viewport
 
         private static bool ValidateDragActorType(Type actorType)
         {
-            return SceneManager.IsAnySceneLoaded;
+            return Level.IsAnySceneLoaded;
         }
 
         /// <inheritdoc />

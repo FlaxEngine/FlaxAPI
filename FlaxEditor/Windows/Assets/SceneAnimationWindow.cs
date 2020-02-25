@@ -36,7 +36,7 @@ namespace FlaxEditor.Windows.Assets
         public SceneAnimationWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
-            SceneManager.ActorDeleted += OnActorDeleted;
+            Level.ActorDeleted += OnActorDeleted;
 
             // Timeline
             _timeline = new SceneAnimationTimeline
@@ -272,7 +272,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void OnDestroy()
         {
-            SceneManager.ActorDeleted -= OnActorDeleted;
+            Level.ActorDeleted -= OnActorDeleted;
 
             _timeline = null;
             _saveButton = null;

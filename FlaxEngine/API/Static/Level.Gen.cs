@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// <summary>
     /// The scene manager handles the scenes collection and spawns/deleted actors.
     /// </summary>
-    public static partial class SceneManager
+    public static partial class Level
     {
         /// <summary>
         /// Gets the amount of the loaded scenes.

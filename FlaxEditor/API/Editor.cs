@@ -481,7 +481,7 @@ namespace FlaxEditor
 
             // Cache last opened scene
             {
-                var lastSceneId = SceneManager.ScenesCount > 0 ? SceneManager.Scenes[0].ID : Guid.Empty;
+                var lastSceneId = Level.ScenesCount > 0 ? Level.Scenes[0].ID : Guid.Empty;
                 var lastSceneSpawn = Windows.EditWin.Viewport.ViewRay;
                 ProjectCache.SetCustomData(ProjectDataLastScene, lastSceneId.ToString());
                 ProjectCache.SetCustomData(ProjectDataLastSceneSpawn, JsonSerializer.Serialize(lastSceneSpawn));
@@ -1015,7 +1015,7 @@ namespace FlaxEditor
         /// </summary>
         public void ClearLightmaps()
         {
-            var scenes = SceneManager.Scenes;
+            var scenes = Level.Scenes;
             for (int i = 0; i < scenes.Length; i++)
             {
                 scenes[i].ClearLightmaps();

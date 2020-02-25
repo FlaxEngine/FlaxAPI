@@ -41,7 +41,7 @@ namespace FlaxEditor.Utilities
             Editor.Log("Collecting scene data");
 
             // Get loaded scenes
-            var scenes = SceneManager.Scenes;
+            var scenes = Level.Scenes;
             int scenesCount = scenes.Length;
             if (scenesCount == 0)
                 throw new InvalidOperationException("Cannot gather scene data. No scene loaded.");
@@ -59,19 +59,19 @@ namespace FlaxEditor.Utilities
                 var data = new SceneData
                 {
                     IsDirty = Editor.Instance.Scene.IsEdited(scene),
-                    Bytes = SceneManager.SaveSceneToBytes(scene, false),
+                    Bytes = Level.SaveSceneToBytes(scene, false),
                 };
                 _scenesData.Add(data);
             }
 
             // Delete old scenes
-            if (SceneManager.UnloadAllScenes())
+            if (Level.UnloadAllScenes())
                 throw new FlaxException("Failed to unload scenes.");
             FlaxEngine.Scripting.FlushRemovedObjects();
 
             // Ensure that old scenes has been unregistered
             {
-                var noScenes = SceneManager.Scenes;
+                var noScenes = Level.Scenes;
                 if (noScenes != null && noScenes.Length != 0)
                     throw new FlaxException("Failed to unload scenes.");
             }
@@ -94,7 +94,7 @@ namespace FlaxEditor.Utilities
             for (int i = 0; i < scenesCount; i++)
             {
                 var data = _scenesData[i];
-                var scene = SceneManager.LoadSceneFromBytes(data.Bytes);
+                var scene = Level.LoadSceneFromBytes(data.Bytes);
                 if (scene == null)
                     throw new FlaxException("Failed to deserialize scene");
             }
@@ -110,7 +110,7 @@ namespace FlaxEditor.Utilities
             // TODO: here we can keep changes for actors marked to keep their state after simulation
 
             // Delete new scenes
-            if (SceneManager.UnloadAllScenes())
+            if (Level.UnloadAllScenes())
                 throw new FlaxException("Failed to unload scenes.");
             FlaxEngine.Scripting.FlushRemovedObjects();
         }
@@ -127,7 +127,7 @@ namespace FlaxEditor.Utilities
             for (int i = 0; i < _scenesData.Count; i++)
             {
                 var data = _scenesData[i];
-                var scene = SceneManager.LoadSceneFromBytes(data.Bytes);
+                var scene = Level.LoadSceneFromBytes(data.Bytes);
                 if (scene == null)
                     throw new FlaxException("Failed to deserialize scene");
 

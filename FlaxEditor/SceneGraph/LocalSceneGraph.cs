@@ -79,12 +79,12 @@ namespace FlaxEditor.SceneGraph
 
         private void RegisterEvents()
         {
-            SceneManager.ActorSpawned += OnActorSpawned;
+            Level.ActorSpawned += OnActorSpawned;
         }
 
         private void UnregisterEvents()
         {
-            SceneManager.ActorSpawned -= OnActorSpawned;
+            Level.ActorSpawned -= OnActorSpawned;
         }
 
         private void OnActorSpawned(Actor actor)

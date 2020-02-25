@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -25,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\bin\FlaxEngine.xml</DocumentationFile>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+<UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\bin\FlaxEngine.xml</DocumentationFile>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+<UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,12 +57,6 @@
     <Compile Include="API\Asset.Gen.cs" />
     <Compile Include="API\BinaryAsset.Gen.cs" />
     <Compile Include="API\BoneSocket.Gen.cs" />
-    <Compile Include="API\MaterialParams.Gen.cs" />
-    <Compile Include="API\Mesh.Gen.cs" />
-    <Compile Include="API\ModelLOD.Gen.cs" />
-    <Compile Include="API\SkeletonData.Gen.cs" />
-    <Compile Include="API\SkinnedMesh.Gen.cs" />
-    <Compile Include="Engine\CreateWindowSettings.cs" />
     <Compile Include="API\CubeTexture.Gen.cs" />
     <Compile Include="API\FontTextureAtlas.Gen.cs" />
     <Compile Include="API\IESProfile.Gen.cs" />
@@ -74,19 +68,26 @@
     <Compile Include="API\MaterialBase.Gen.cs" />
     <Compile Include="API\MaterialInstance.cs" />
     <Compile Include="API\MaterialInstance.Gen.cs" />
+    <Compile Include="API\MaterialParams.cs" />
+    <Compile Include="API\MaterialParams.Gen.cs" />
     <Compile Include="API\MaterialSlot.Gen.cs" />
+    <Compile Include="API\Mesh.cs" />
+    <Compile Include="API\Mesh.Gen.cs" />
     <Compile Include="API\Model.cs" />
     <Compile Include="API\Model.Gen.cs" />
     <Compile Include="API\ModelBase.Gen.cs" />
+    <Compile Include="API\ModelLOD.Gen.cs" />
     <Compile Include="API\Prefab.Gen.cs" />
     <Compile Include="API\RawDataAsset.Gen.cs" />
     <Compile Include="API\Scene.Gen.cs" />
     <Compile Include="API\Shader.Gen.cs" />
+    <Compile Include="API\SkeletonData.Gen.cs" />
     <Compile Include="API\SkeletonMask.Gen.cs" />
+    <Compile Include="API\SkinnedMesh.cs" />
+    <Compile Include="API\SkinnedMesh.Gen.cs" />
     <Compile Include="API\SkinnedModel.cs" />
     <Compile Include="API\SkinnedModel.Gen.cs" />
     <Compile Include="API\SpriteAtlas.cs" />
-    <Compile Include="Engine\TextLayoutOptions.cs" />
     <Compile Include="API\Texture.Gen.cs" />
     <Compile Include="API\TextureBase.cs" />
     <Compile Include="API\TextureBase.Gen.cs" />
@@ -201,6 +202,8 @@
     <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
     <Compile Include="API\Static\Input.cs" />
     <Compile Include="API\Static\Input.Gen.cs" />
+    <Compile Include="API\Static\Level.cs" />
+    <Compile Include="API\Static\Level.Gen.cs" />
     <Compile Include="API\Static\MessageBox.cs" />
     <Compile Include="API\Static\MessageBox.Gen.cs" />
     <Compile Include="API\Static\Navigation.cs" />
@@ -219,8 +222,6 @@
     <Compile Include="API\Static\Render2D.Gen.cs" />
     <Compile Include="API\Static\RenderTargetPool.cs" />
     <Compile Include="API\Static\RenderTargetPool.Gen.cs" />
-    <Compile Include="API\Static\SceneManager.cs" />
-    <Compile Include="API\Static\SceneManager.Gen.cs" />
     <Compile Include="API\Static\Screen.cs" />
     <Compile Include="API\Static\Screen.Gen.cs" />
     <Compile Include="API\Static\Scripting.cs" />
@@ -264,6 +265,7 @@
     <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />
+    <Compile Include="Engine\CreateWindowSettings.cs" />
     <Compile Include="Engine\Curve.cs" />
     <Compile Include="Engine\Debug.cs" />
     <Compile Include="Engine\FontReference.cs" />
@@ -279,14 +281,13 @@
     <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Engine\Limits.cs" />
     <Compile Include="Engine\Logger.cs" />
-    <Compile Include="API\Mesh.cs" />
     <Compile Include="Engine\ModelEntryInfo.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\RayCastHit.cs" />
     <Compile Include="Engine\SceneReference.cs" />
-    <Compile Include="API\SkinnedMesh.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
+    <Compile Include="Engine\TextLayoutOptions.cs" />
     <Compile Include="Engine\Exceptions\FlaxException.cs" />
     <Compile Include="Enums\AlphaBlendMode.cs" />
     <Compile Include="Enums\BrushMode.cs" />
@@ -417,7 +418,6 @@
     <Compile Include="Rendering\LightmapSettings.cs" />
     <Compile Include="Rendering\MainRenderTask.cs" />
     <Compile Include="Rendering\MaterialInfo.cs" />
-    <Compile Include="API\MaterialParams.cs" />
     <Compile Include="Rendering\MSAALevel.cs" />
     <Compile Include="Rendering\PixelFormat.cs" />
     <Compile Include="Rendering\PixelFormatExtensions.cs" />
@@ -436,9 +436,6 @@
     <Compile Include="Utilities\StateMachine.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="API\MaterialBases\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

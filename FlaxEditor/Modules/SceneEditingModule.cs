@@ -207,13 +207,13 @@ namespace FlaxEditor.Modules
         {
             bool isPlayMode = Editor.StateMachine.IsPlayMode;
 
-            if (SceneManager.IsAnySceneLoaded == false)
+            if (Level.IsAnySceneLoaded == false)
                 throw new InvalidOperationException("Cannot spawn actor when no scene is loaded.");
 
             SpawnBegin?.Invoke();
 
             // Add it
-            SceneManager.SpawnActor(actor, parent);
+            Level.SpawnActor(actor, parent);
 
             // Peek spawned node
             var actorNode = Editor.Instance.Scene.GetActorNode(actor);

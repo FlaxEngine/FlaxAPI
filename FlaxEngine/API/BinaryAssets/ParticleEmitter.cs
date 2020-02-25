@@ -134,7 +134,7 @@ namespace FlaxEngine
             effect.Transform = transform;
             effect.ParticleSystem = system;
 
-            SceneManager.SpawnActor(effect, parent);
+            Level.SpawnActor(effect, parent);
 
             if (autoDestroy && duration < float.MaxValue)
                 Destroy(effect, duration);

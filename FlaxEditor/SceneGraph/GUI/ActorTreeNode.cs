@@ -323,7 +323,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Check if cannot edit scene or there is no scene loaded (handle case for actors in prefab editor)
             if (_actorNode?.ParentScene != null)
             {
-                if (!Editor.Instance.StateMachine.CurrentState.CanEditScene || !SceneManager.IsAnySceneLoaded)
+                if (!Editor.Instance.StateMachine.CurrentState.CanEditScene || !Level.IsAnySceneLoaded)
                     return DragDropEffect.None;
             }
             else
@@ -510,7 +510,7 @@ namespace FlaxEditor.SceneGraph.GUI
             if (myActor == null)
             {
                 // Append to the last scene
-                var scenes = SceneManager.Scenes;
+                var scenes = Level.Scenes;
                 if (scenes == null || scenes.Length == 0)
                     throw new InvalidOperationException("No scene loaded.");
                 newParent = scenes[scenes.Length - 1];

@@ -14,7 +14,7 @@ namespace FlaxEngine
         /// <returns>The created actor (root) or null if failed.</returns>
         public static Actor SpawnPrefab(Prefab prefab)
         {
-            var scene = SceneManager.GetScene(0);
+            var scene = Level.GetScene(0);
             if (scene == null)
                 return null;
             return SpawnPrefab(prefab, scene);

@@ -209,7 +209,7 @@ namespace FlaxEditor.Modules
                 if (_isPlayModeRequested)
                 {
                     // Check if editor has been compiled and scripting reloaded (there is no pending reload action)
-                    if (ScriptsBuilder.IsReady && !SceneManager.IsAnyAsyncActionPending)
+                    if (ScriptsBuilder.IsReady && !Level.IsAnyAsyncActionPending)
                     {
                         // Clear flag
                         _isPlayModeRequested = false;

@@ -23,7 +23,7 @@ namespace FlaxEngine
         /// <returns>True if action fails, otherwise false.</returns>
         public bool Save()
         {
-            return SceneManager.SaveScene(this);
+            return Level.SaveScene(this);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace FlaxEngine
         /// </summary>
         public void SaveAsync()
         {
-            SceneManager.SaveSceneAsync(this);
+            Level.SaveSceneAsync(this);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace FlaxEngine
         /// <returns>True if action fails, otherwise false.</returns>
         public bool Unload()
         {
-            return SceneManager.UnloadScene(this);
+            return Level.UnloadScene(this);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace FlaxEngine
         /// </summary>
         public void UnloadAsync()
         {
-            SceneManager.UnloadSceneAsync(this);
+            Level.UnloadSceneAsync(this);
         }
 
         /// <summary>
