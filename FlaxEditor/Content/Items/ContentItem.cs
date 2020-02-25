@@ -276,8 +276,7 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Gets the default name of the content item thumbnail.
-        /// Returns null if not used.
+        /// Gets the default name of the content item thumbnail. Returns null if not used.
         /// </summary>
         public virtual Sprite DefaultThumbnail => Sprite.Invalid;
 
@@ -348,6 +347,14 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
+        /// Updates the tooltip text text.
+        /// </summary>
+        protected virtual void UpdateTooltipText()
+        {
+            TooltipText = "Path: " + Path;
+        }
+
+        /// <summary>
         /// Tries to find the item at the specified path.
         /// </summary>
         /// <param name="path">The path.</param>
@@ -390,17 +397,11 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets a value indicating whether draw item shadow.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if draw shadow; otherwise, <c>false</c>.
-        /// </value>
         protected virtual bool DrawShadow => false;
 
         /// <summary>
         /// Gets the local space rectangle for element name text area.
         /// </summary>
-        /// <value>
-        /// The text rectangle.
-        /// </value>
         public Rectangle TextRectangle
         {
             get
@@ -437,9 +438,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the amount of references to that item.
         /// </summary>
-        /// <value>
-        /// The references count.
-        /// </value>
         public int ReferencesCount => _references.Count;
 
         /// <summary>
@@ -554,6 +552,16 @@ namespace FlaxEditor.Content
 
             // Start drag operation
             DoDragDrop(data);
+        }
+
+        /// <inheritdoc />
+        protected override bool ShowTooltip => true;
+
+        /// <inheritdoc />
+        public override bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
+        {
+            UpdateTooltipText();
+            return base.OnShowTooltip(out text, out location, out area);
         }
 
         /// <inheritdoc />

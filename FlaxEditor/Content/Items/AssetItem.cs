@@ -1,6 +1,8 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.IO;
+using System.Text;
 
 namespace FlaxEditor.Content
 {
@@ -31,6 +33,16 @@ namespace FlaxEditor.Content
         {
             TypeName = typeName;
             ID = id;
+        }
+
+        /// <inheritdoc />
+        protected override void UpdateTooltipText()
+        {
+            var sb = new StringBuilder();
+            sb.Append("Type: ").Append(TypeName).AppendLine();
+            sb.Append("Size: ").Append(Utilities.Utils.FormatBytesCount((int)new FileInfo(Path).Length)).AppendLine();
+            sb.Append("Path: ").Append(Path).AppendLine();
+            TooltipText = sb.ToString();
         }
 
         /// <inheritdoc />
