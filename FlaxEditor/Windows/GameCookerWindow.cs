@@ -360,7 +360,7 @@ namespace FlaxEditor.Windows
                     AnchorPreset = AnchorPresets.BottomLeft,
                     Bounds = new Rectangle(6, Height - height, Width - 12, 22),
                 };
-                helpButton.Clicked += () => Platform.StartProcess(Constants.DocsUrl + "manual/editor/game-cooker/");
+                helpButton.Clicked += () => Platform.OpenUrl(Constants.DocsUrl + "manual/editor/game-cooker/");
                 var buildAllButton = new Button
                 {
                     Text = "Build All",

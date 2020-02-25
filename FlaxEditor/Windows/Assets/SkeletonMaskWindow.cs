@@ -183,7 +183,7 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(editor.Icons.Save32, Save).LinkTooltip("Save asset to the file");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/skeleton-mask.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/animation/skeleton-mask.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)

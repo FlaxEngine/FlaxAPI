@@ -495,14 +495,14 @@ namespace FlaxEditor.Modules
             // Help
             MenuHelp = MainMenu.AddButton("Help");
             cm = MenuHelp.ContextMenu;
-            cm.AddButton("Discord", () => Platform.StartProcess(Constants.DiscordUrl));
-            cm.AddButton("Documentation", () => Platform.StartProcess(Constants.DocsUrl));
-            cm.AddButton("Report an issue", () => Platform.StartProcess(Constants.BugTrackerUrl));
+            cm.AddButton("Discord", () => Platform.OpenUrl(Constants.DiscordUrl));
+            cm.AddButton("Documentation", () => Platform.OpenUrl(Constants.DocsUrl));
+            cm.AddButton("Report an issue", () => Platform.OpenUrl(Constants.BugTrackerUrl));
             cm.AddSeparator();
-            cm.AddButton("Official Website", () => Platform.StartProcess(Constants.WebsiteUrl));
-            cm.AddButton("Facebook Fanpage", () => Platform.StartProcess(Constants.FacebookUrl));
-            cm.AddButton("Youtube Channel", () => Platform.StartProcess(Constants.YoutubeUrl));
-            cm.AddButton("Twitter", () => Platform.StartProcess(Constants.TwitterUrl));
+            cm.AddButton("Official Website", () => Platform.OpenUrl(Constants.WebsiteUrl));
+            cm.AddButton("Facebook Fanpage", () => Platform.OpenUrl(Constants.FacebookUrl));
+            cm.AddButton("Youtube Channel", () => Platform.OpenUrl(Constants.YoutubeUrl));
+            cm.AddButton("Twitter", () => Platform.OpenUrl(Constants.TwitterUrl));
             cm.AddSeparator();
             cm.AddButton("Information about Flax", () => new AboutDialog().Show());
         }

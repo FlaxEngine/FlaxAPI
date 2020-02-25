@@ -459,7 +459,7 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.Bone32, () => _preview.ShowNodes = !_preview.ShowNodes).SetAutoCheck(true).LinkTooltip("Show animated model nodes debug view");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/skinned-model/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/animation/skinned-model/index.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)

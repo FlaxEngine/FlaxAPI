@@ -125,7 +125,7 @@ namespace FlaxEditor.Windows
                 if (url != null)
                 {
                     authorLabel.TextColorHighlighted = Style.Current.BackgroundSelected;
-                    authorLabel.DoubleClick = () => Platform.StartProcess(url);
+                    authorLabel.DoubleClick = () => Platform.OpenUrl(url);
                 }
             }
 
