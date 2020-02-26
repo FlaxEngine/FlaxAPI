@@ -255,6 +255,11 @@ namespace FlaxEditor.Content
         public string Path { get; private set; }
 
         /// <summary>
+        /// Gets the item file name (filename with extension).
+        /// </summary>
+        public string FileName { get; internal set; }
+
+        /// <summary>
         /// Gets the item short name (filename without extension).
         /// </summary>
         public string ShortName { get; internal set; }
@@ -303,6 +308,7 @@ namespace FlaxEditor.Content
         {
             // Set path
             Path = path;
+            FileName = System.IO.Path.GetFileName(path);
             ShortName = System.IO.Path.GetFileNameWithoutExtension(path);
         }
 
@@ -316,6 +322,7 @@ namespace FlaxEditor.Content
 
             // Set path
             Path = StringUtils.NormalizePath(value);
+            FileName = System.IO.Path.GetFileName(value);
             ShortName = System.IO.Path.GetFileNameWithoutExtension(value);
 
             // Fire event
@@ -406,9 +413,23 @@ namespace FlaxEditor.Content
         {
             get
             {
-                float width = Width;
-                float textRectHeight = DefaultTextHeight * width / DefaultWidth;
-                return new Rectangle(0, Height - textRectHeight, width, textRectHeight);
+                var view = Parent as ContentView;
+                var size = Size;
+                switch (view?.ViewType ?? ContentViewType.Tiles)
+                {
+                case ContentViewType.Tiles:
+                {
+                    var textHeight = DefaultTextHeight * size.X / DefaultWidth;
+                    return new Rectangle(0, size.Y - textHeight, size.X, textHeight);
+                }
+                case ContentViewType.List:
+                {
+                    var thumbnailSize = size.Y - 2 * DefaultMarginSize;
+                    var textHeight = Mathf.Min(size.Y, 24.0f);
+                    return new Rectangle(thumbnailSize + DefaultMarginSize * 2, (size.Y - textHeight) * 0.5f, size.X - textHeight - DefaultMarginSize * 3.0f, textHeight);
+                }
+                default: throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -568,15 +589,32 @@ namespace FlaxEditor.Content
         public override void Draw()
         {
             // Cache data
-            var width = Width;
-            var height = Height;
+            var size = Size;
             var style = Style.Current;
             var view = Parent as ContentView;
-            bool isSelected = view.IsSelected(this);
-            var clientRect = new Rectangle(0, 0, width, height);
-            float thumbnailSize = width - 2 * DefaultMarginSize;
-            var thumbnailRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, thumbnailSize, thumbnailSize);
+            var isSelected = view.IsSelected(this);
+            var clientRect = new Rectangle(Vector2.Zero, size);
             var textRect = TextRectangle;
+            Rectangle thumbnailRect;
+            TextAlignment nameAlignment;
+            switch (view.ViewType)
+            {
+            case ContentViewType.Tiles:
+            {
+                var thumbnailSize = size.X - 2 * DefaultMarginSize;
+                thumbnailRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, thumbnailSize, thumbnailSize);
+                nameAlignment = TextAlignment.Center;
+                break;
+            }
+            case ContentViewType.List:
+            {
+                var thumbnailSize = size.Y - 2 * DefaultMarginSize;
+                thumbnailRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, thumbnailSize, thumbnailSize);
+                nameAlignment = TextAlignment.Near;
+                break;
+            }
+            default: throw new ArgumentOutOfRangeException();
+            }
 
             // Draw background
             if (isSelected)
@@ -589,7 +627,7 @@ namespace FlaxEditor.Content
 
             // Draw short name
             Render2D.PushClip(ref textRect);
-            Render2D.DrawText(style.FontMedium, ShortName, textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);
+            Render2D.DrawText(style.FontMedium, view.ShowFileExtensions ? FileName : ShortName, textRect, style.Foreground, nameAlignment, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);
             Render2D.PopClip();
         }
 

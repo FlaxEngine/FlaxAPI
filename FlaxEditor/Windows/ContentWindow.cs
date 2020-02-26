@@ -7,6 +7,8 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.GUI.Input;
 using FlaxEditor.GUI.Tree;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -36,7 +38,7 @@ namespace FlaxEditor.Windows
         private Tree _tree;
         private TextBox _foldersSearchBox;
         private TextBox _itemsSearchBox;
-        private SearchFilterComboBox _itemsFilterBox;
+        private ViewDropdown _viewDowndown;
 
         private RootContentTreeNode _root;
 
@@ -129,25 +131,27 @@ namespace FlaxEditor.Windows
                 Offsets = new Margin(0, 0, 0, 18 + 8),
                 Parent = _split.Panel2,
             };
-            const float filterBoxWidth = 56.0f;
+            const float viewDropdownWidth = 50.0f;
             _itemsSearchBox = new TextBox
             {
                 AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
                 WatermarkText = "Search...",
                 Parent = contentItemsSearchPanel,
-                Bounds = new Rectangle(filterBoxWidth + 8, 4, contentItemsSearchPanel.Width - 12 - filterBoxWidth, 18),
+                Bounds = new Rectangle(viewDropdownWidth + 8, 4, contentItemsSearchPanel.Width - 12 - viewDropdownWidth, 18),
             };
             _itemsSearchBox.TextChanged += UpdateItemsSearch;
-            _itemsFilterBox = new SearchFilterComboBox
+            _viewDowndown = new ViewDropdown
             {
                 AnchorPreset = AnchorPresets.MiddleLeft,
                 SupportMultiSelect = true,
+                TooltipText = "Change content view and filter options",
                 Parent = contentItemsSearchPanel,
-                Offsets = new Margin(4, filterBoxWidth, -9, 18),
+                Offsets = new Margin(4, viewDropdownWidth, -9, 18),
             };
-            _itemsFilterBox.SelectedIndexChanged += e => UpdateItemsSearch();
+            _viewDowndown.SelectedIndexChanged += e => UpdateItemsSearch();
             for (int i = 0; i <= (int)ContentItemSearchFilter.Other; i++)
-                _itemsFilterBox.Items.Add(((ContentItemSearchFilter)i).ToString());
+                _viewDowndown.Items.Add(((ContentItemSearchFilter)i).ToString());
+            _viewDowndown.PopupCreate += OnViewDropdownPopupCreate;
 
             // Content View
             _view = new ContentView
@@ -163,6 +167,65 @@ namespace FlaxEditor.Windows
             _view.OnDelete += Delete;
             _view.OnDuplicate += Duplicate;
             _view.OnPaste += Paste;
+        }
+
+        private ContextMenu OnViewDropdownPopupCreate(ComboBox comboBox)
+        {
+            var menu = new ContextMenu();
+
+            var showFileExtensionsButton = menu.AddButton("Show file extensions", () => View.ShowFileExtensions = !View.ShowFileExtensions);
+            showFileExtensionsButton.Checked = View.ShowFileExtensions;
+            showFileExtensionsButton.AutoCheck = true;
+
+            var viewScale = menu.AddButton("View Scale");
+            var scaleValue = new FloatValueBox(1, 75, 2, 50.0f, 0.3f, 3.0f, 0.01f);
+            scaleValue.Parent = viewScale;
+            scaleValue.ValueChanged += () => View.ViewScale = scaleValue.Value;
+            menu.VisibleChanged += control => { scaleValue.Value = View.ViewScale; };
+
+            var viewType = menu.AddChildMenu("View Type");
+            viewType.ContextMenu.AddButton("Tiles", OnViewTypeButtonClicked).Tag = ContentViewType.Tiles;
+            viewType.ContextMenu.AddButton("List", OnViewTypeButtonClicked).Tag = ContentViewType.List;
+            viewType.ContextMenu.VisibleChanged += control =>
+            {
+                if (!control.Visible)
+                    return;
+                foreach (var item in ((ContextMenu)control).Items)
+                {
+                    if (item is ContextMenuButton button)
+                        button.Checked = View.ViewType == (ContentViewType)button.Tag;
+                }
+            };
+
+            var filters = menu.AddChildMenu("Filters");
+            for (int i = 0; i < _viewDowndown.Items.Count; i++)
+            {
+                var filterButton = filters.ContextMenu.AddButton(_viewDowndown.Items[i], OnFilterClicked);
+                filterButton.Tag = i;
+            }
+            filters.ContextMenu.VisibleChanged += control =>
+            {
+                if (!control.Visible)
+                    return;
+                foreach (var item in ((ContextMenu)control).Items)
+                {
+                    if (item is ContextMenuButton filterButton)
+                        filterButton.Checked = _viewDowndown.IsSelected(filterButton.Text);
+                }
+            };
+
+            return menu;
+        }
+
+        private void OnViewTypeButtonClicked(ContextMenuButton button)
+        {
+            View.ViewType = (ContentViewType)button.Tag;
+        }
+
+        private void OnFilterClicked(ContextMenuButton filterButton)
+        {
+            var i = (int)filterButton.Tag;
+            _viewDowndown.OnClicked(i);
         }
 
         /// <summary>
@@ -784,17 +847,24 @@ namespace FlaxEditor.Windows
         {
             writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
             writer.WriteAttributeString("Scale", _view.ViewScale.ToString());
+            writer.WriteAttributeString("ShowFileExtensions", _view.ShowFileExtensions.ToString());
+            writer.WriteAttributeString("ViewType", _view.ViewType.ToString());
         }
 
         /// <inheritdoc />
         public override void OnLayoutDeserialize(XmlElement node)
         {
             float value1;
+            bool value2;
 
             if (float.TryParse(node.GetAttribute("Split"), out value1))
                 _split.SplitterValue = value1;
             if (float.TryParse(node.GetAttribute("Scale"), out value1))
                 _view.ViewScale = value1;
+            if (bool.TryParse(node.GetAttribute("ShowFileExtensions"), out value2))
+                _view.ShowFileExtensions = value2;
+            if (Enum.TryParse(node.GetAttribute("ViewType"), out ContentViewType viewType))
+                _view.ViewType = viewType;
         }
 
         /// <inheritdoc />
@@ -809,7 +879,7 @@ namespace FlaxEditor.Windows
         {
             _foldersSearchBox = null;
             _itemsSearchBox = null;
-            _itemsFilterBox = null;
+            _viewDowndown = null;
 
             base.OnDestroy();
         }

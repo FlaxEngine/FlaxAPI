@@ -322,6 +322,26 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
+        /// Determines whether the specified item is selected.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns><c>true</c> if the item is selected; otherwise, <c>false</c>.</returns>
+        public bool IsSelected(string item)
+        {
+            return IsSelected(_items.IndexOf(item));
+        }
+
+        /// <summary>
+        /// Determines whether the item at the specified index is selected.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns><c>true</c> if the item is selected; otherwise, <c>false</c>.</returns>
+        public bool IsSelected(int index)
+        {
+            return index != -1 && _selectedIndices.Contains(index);
+        }
+
+        /// <summary>
         /// Called when selected item index gets changed.
         /// </summary>
         protected virtual void OnSelectedIndexChanged()
