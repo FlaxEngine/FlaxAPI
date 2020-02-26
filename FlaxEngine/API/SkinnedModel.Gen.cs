@@ -79,6 +79,45 @@ namespace FlaxEngine
         internal static extern SkeletonBone[] Internal_GetBones(IntPtr obj, System.Type resultArrayItemType0);
 
         /// <summary>
+        /// Finds the node with the given name.
+        /// </summary>
+        /// <param name="name">Thr name of the node.</param>
+        /// <returns>The index of the node or -1 if not found.</returns>
+        public int FindNode(string name)
+        {
+            return Internal_FindNode(unmanagedPtr, name);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_FindNode(IntPtr obj, string name);
+
+        /// <summary>
+        /// Finds the bone with the given name.
+        /// </summary>
+        /// <param name="name">Thr name of the node used by the bone.</param>
+        /// <returns>The index of the bone or -1 if not found.</returns>
+        public int FindBone(string name)
+        {
+            return Internal_FindBone(unmanagedPtr, name);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_FindBone(IntPtr obj, string name);
+
+        /// <summary>
+        /// Finds the bone that is using a given node index.
+        /// </summary>
+        /// <param name="nodeIndex">The index of the node.</param>
+        /// <returns>The index of the bone or -1 if not found.</returns>
+        public int FindBone(int nodeIndex)
+        {
+            return Internal_FindBone1(unmanagedPtr, nodeIndex);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_FindBone1(IntPtr obj, int nodeIndex);
+
+        /// <summary>
         /// Gets the model bounding box in custom matrix world space (rig pose transformed by matrix, not animated).
         /// </summary>
         /// <param name="world">The transformation matrix.</param>
@@ -117,6 +156,34 @@ namespace FlaxEngine
         internal static extern bool Internal_SetupMeshes(IntPtr obj, int meshesCount);
 
         /// <summary>
+        /// Setups the skinned model skeleton. Uses the same nodes layout for skeleton bones and calculates the offset matrix by auto.
+        /// </summary>
+        /// <param name="nodes">The nodes hierarchy. The first node must be a root one (with parent index equal -1).</param>
+        /// <returns>True if failed, otherwise false.</returns>
+        public bool SetupSkeleton(SkeletonNode[] nodes)
+        {
+            return Internal_SetupSkeleton(unmanagedPtr, nodes);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SetupSkeleton(IntPtr obj, SkeletonNode[] nodes);
+
+        /// <summary>
+        /// Setups the skinned model skeleton.
+        /// </summary>
+        /// <param name="nodes">The nodes hierarchy. The first node must be a root one (with parent index equal -1).</param>
+        /// <param name="bones">The bones hierarchy.</param>
+        /// <param name="autoCalculateOffsetMatrix">If true then the OffsetMatrix for each bone will be auto-calculated by the engine, otherwise the provided values will be used.</param>
+        /// <returns>True if failed, otherwise false.</returns>
+        public bool SetupSkeleton(SkeletonNode[] nodes, SkeletonBone[] bones, bool autoCalculateOffsetMatrix)
+        {
+            return Internal_SetupSkeleton1(unmanagedPtr, nodes, bones, autoCalculateOffsetMatrix);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SetupSkeleton1(IntPtr obj, SkeletonNode[] nodes, SkeletonBone[] bones, bool autoCalculateOffsetMatrix);
+
+        /// <summary>
         /// Saves this asset to the file. Supported only in Editor.
         /// </summary>
         /// <remarks>If you use saving with the GPU mesh data then the call has to be provided from the thread other than the main game thread.</remarks>
@@ -130,20 +197,5 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_Save(IntPtr obj, bool withMeshDataFromGpu, string path);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Array Internal_GetNodes1(IntPtr obj, System.Type type);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_SetupSkeleton1(IntPtr obj, Array nodesObj, Array bonesObj, bool autoCalculateOffsetMatrix);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_SetupSkeleton2(IntPtr obj, Array nodesObj);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int Internal_FindNode(IntPtr obj, string name);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int Internal_FindBone(IntPtr obj, int nodeIndex);
     }
 }
