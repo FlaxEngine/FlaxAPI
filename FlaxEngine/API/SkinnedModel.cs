@@ -12,11 +12,6 @@ namespace FlaxEngine
         public const int MaxBones = 256;
 
         /// <summary>
-        /// Gets the skeleton nodes hierarchy.
-        /// </summary>
-        public SkeletonNode[] Nodes => (SkeletonNode[])Internal_GetNodes(unmanagedPtr, typeof(SkeletonNode));
-
-        /// <summary>
         /// Setups the skinned model skeleton.
         /// </summary>
         /// <param name="nodes">The nodes hierarchy. The first node must be a root one (with parent index equal -1).</param>

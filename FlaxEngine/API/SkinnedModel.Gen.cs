@@ -55,6 +55,18 @@ namespace FlaxEngine
         internal static extern int Internal_MeshesCount(IntPtr obj);
 
         /// <summary>
+        /// Gets the skeleton nodes hierarchy.
+        /// </summary>
+        [Tooltip("The skeleton nodes hierarchy.")]
+        public SkeletonNode[] Nodes
+        {
+            get { return Internal_GetNodes(unmanagedPtr, typeof(SkeletonNode)); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern SkeletonNode[] Internal_GetNodes(IntPtr obj, System.Type resultArrayItemType0);
+
+        /// <summary>
         /// Gets the skeleton bones hierarchy.
         /// </summary>
         [Tooltip("The skeleton bones hierarchy.")]
@@ -120,7 +132,7 @@ namespace FlaxEngine
         internal static extern bool Internal_Save(IntPtr obj, bool withMeshDataFromGpu, string path);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Array Internal_GetNodes(IntPtr obj, System.Type type);
+        internal static extern Array Internal_GetNodes1(IntPtr obj, System.Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_SetupSkeleton1(IntPtr obj, Array nodesObj, Array bonesObj, bool autoCalculateOffsetMatrix);
