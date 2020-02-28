@@ -169,8 +169,6 @@ namespace FlaxEditor.Content
                 _preview.Instance.Scale = new Vector3(targetSize / maxSize);
                 _preview.Instance.Position = Vector3.Zero;
             }
-
-            _preview.Task.OnRender(context);
         }
 
         /// <inheritdoc />

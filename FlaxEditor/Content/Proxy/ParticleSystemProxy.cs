@@ -114,8 +114,6 @@ namespace FlaxEditor.Content
         public override void OnThumbnailDrawBegin(ThumbnailRequest request, ContainerControl guiRoot, GPUContext context)
         {
             _preview.Parent = guiRoot;
-
-            _preview.Task.OnRender(context);
         }
 
         /// <inheritdoc />
