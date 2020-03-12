@@ -44,7 +44,8 @@ namespace FlaxEditor.Windows
             _tabs = new Tabs
             {
                 Orientation = Orientation.Vertical,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, toolstrip.Bottom, 0),
                 TabsSize = new Vector2(120, 32),
                 Parent = this
             };
@@ -65,7 +66,8 @@ namespace FlaxEditor.Windows
 
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = tab
             };
 

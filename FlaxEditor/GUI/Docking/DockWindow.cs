@@ -103,7 +103,8 @@ namespace FlaxEditor.GUI.Docking
         {
             _masterPanel = masterPanel;
             HideOnClose = hideOnClose;
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
 
             // Link to the master panel
             _masterPanel?.linkWindow(this);

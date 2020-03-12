@@ -2,6 +2,7 @@
 
 using FlaxEditor.Content;
 using FlaxEditor.Viewport.Previews;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -21,6 +22,8 @@ namespace FlaxEditor.Windows.Assets
             // Texture preview
             _preview = new TexturePreview(true)
             {
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 Parent = this
             };
 

@@ -397,7 +397,8 @@ namespace FlaxEditor.Windows.Assets
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.7f,
                 Parent = this
             };
@@ -405,7 +406,8 @@ namespace FlaxEditor.Windows.Assets
             // Split Panel 2
             _split2 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 SplitterValue = 0.4f,
                 Parent = _split1.Panel2
             };

@@ -55,16 +55,17 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         : base(ref options)
         {
             const float buttonSize = 14;
-            var colorPickerButton = new Image(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            var colorPickerButton = new Image
             {
                 TooltipText = "Change folder color",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
                 Color = new Color(0.7f),
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(Style.Current.Settings),
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + _muteCheckbox.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             colorPickerButton.Clicked += OnColorPickerButtonClicked;
         }

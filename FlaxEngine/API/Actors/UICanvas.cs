@@ -326,7 +326,7 @@ namespace FlaxEngine
             case CanvasRenderMode.ScreenSpace:
             {
                 // Fill the screen area
-                _guiRoot.DockStyle = DockStyle.Fill;
+                _guiRoot.AnchorPreset = AnchorPresets.StretchAll;
                 if (_renderer)
                 {
                     SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
@@ -340,7 +340,7 @@ namespace FlaxEngine
             case CanvasRenderMode.WorldSpace:
             {
                 // Render canvas manually
-                _guiRoot.DockStyle = DockStyle.None;
+                _guiRoot.AnchorPreset = AnchorPresets.TopLeft;
                 if (_renderer == null)
                 {
                     _renderer = New<CanvasRenderer>();

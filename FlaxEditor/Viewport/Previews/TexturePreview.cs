@@ -10,7 +10,7 @@ using Object = FlaxEngine.Object;
 namespace FlaxEditor.Viewport.Previews
 {
     /// <summary>
-    /// Base class for texture previews. Draws a surface in the UI and supports view moving/zomming.
+    /// Base class for texture previews. Draws a surface in the UI and supports view moving/zooming.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public abstract class TexturePreviewBase : ContainerControl
@@ -24,7 +24,8 @@ namespace FlaxEditor.Viewport.Previews
         /// <inheritdoc />
         protected TexturePreviewBase()
         {
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
         }
 
         /// <summary>
@@ -188,9 +189,9 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             // Update texture rectangle and move view to the center
             UpdateTextureRect();

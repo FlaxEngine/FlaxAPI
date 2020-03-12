@@ -107,7 +107,8 @@ namespace FlaxEditor.Tools.Foliage
             {
                 Orientation = Orientation.Vertical,
                 UseScroll = true,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 TabsSize = new Vector2(50, 32),
                 Parent = this
             };
@@ -121,21 +122,24 @@ namespace FlaxEditor.Tools.Foliage
 
             _noFoliagePanel = new ContainerControl
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 BackgroundColor = Style.Current.Background,
                 Parent = this
             };
             var noFoliageLabel = new Label
             {
                 Text = "Select foliage to edit\nor\n\n\n\n",
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = _noFoliagePanel
             };
             var noFoliageButton = new Button
             {
                 Text = "Create new foliage",
-                AnchorStyle = AnchorStyle.Center,
-                Parent = _noFoliagePanel
+                AnchorPreset = AnchorPresets.MiddleCenter,
+                Offsets = new Margin(-60, 120, -12, 24),
+                Parent = _noFoliagePanel,
             };
             noFoliageButton.Clicked += OnCreateNewFoliageClicked;
         }

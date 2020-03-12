@@ -64,11 +64,9 @@ namespace FlaxEngine.GUI
                         VScrollBar = GetChild<VScrollBar>();
                     if (VScrollBar == null)
                     {
-                        VScrollBar = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
-                        {
-                            DockStyle = DockStyle.Right,
-                            Parent = this
-                        };
+                        VScrollBar = new VScrollBar(this, Width - ScrollBar.DefaultSize, Height);
+                        VScrollBar.AnchorPreset = AnchorPresets.TopLeft;
+                        //VScrollBar.X += VScrollBar.Width;
                         VScrollBar.ValueChanged += () => SetViewOffset(Orientation.Vertical, VScrollBar.Value);
                     }
                 }
@@ -84,11 +82,10 @@ namespace FlaxEngine.GUI
                         HScrollBar = GetChild<HScrollBar>();
                     if (HScrollBar == null)
                     {
-                        HScrollBar = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
-                        {
-                            DockStyle = DockStyle.Bottom,
-                            Parent = this
-                        };
+                        HScrollBar = new HScrollBar(this, Height - ScrollBar.DefaultSize, Width);
+                        HScrollBar.AnchorPreset = AnchorPresets.TopLeft;
+                        //HScrollBar.Y += HScrollBar.Height;
+                        //HScrollBar.Offsets += new Margin(0, 0, HScrollBar.Height * 0.5f, 0);
                         HScrollBar.ValueChanged += () => SetViewOffset(Orientation.Horizontal, HScrollBar.Value);
                     }
                 }
@@ -153,7 +150,6 @@ namespace FlaxEngine.GUI
         public Panel(ScrollBars scrollBars, bool autoFocus = false)
         {
             AutoFocus = autoFocus;
-
             ScrollBars = scrollBars;
         }
 
@@ -291,11 +287,36 @@ namespace FlaxEngine.GUI
         public override void OnChildResized(Control control)
         {
             base.OnChildResized(control);
-            PerformLayout();
+
+            if (control.IsScrollable)
+            {
+                PerformLayout();
+            }
         }
 
         /// <inheritdoc />
-        protected override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
+        public override void Draw()
+        {
+            base.Draw();
+
+            // Draw scrollbars manually (they are outside the clipping bounds)
+            if (VScrollBar != null && VScrollBar.Visible)
+            {
+                Render2D.PushTransform(ref VScrollBar._cachedTransform);
+                VScrollBar.Draw();
+                Render2D.PopTransform();
+            }
+
+            if (HScrollBar != null && HScrollBar.Visible)
+            {
+                Render2D.PushTransform(ref HScrollBar._cachedTransform);
+                HScrollBar.Draw();
+                Render2D.PopTransform();
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
         {
             // For not scroll bars we want to reject any collisions
             if (child != VScrollBar && child != HScrollBar)
@@ -330,7 +351,11 @@ namespace FlaxEngine.GUI
         internal override void AddChildInternal(Control child)
         {
             base.AddChildInternal(child);
-            PerformLayout();
+
+            if (child.IsScrollable)
+            {
+                PerformLayout();
+            }
         }
 
         /// <inheritdoc />
@@ -391,6 +416,7 @@ namespace FlaxEngine.GUI
                 {
                     VScrollBar.SetScrollRange(scrollBounds.Top, Mathf.Max(Mathf.Max(0, scrollBounds.Top), scrollBounds.Height - height));
                 }
+                VScrollBar.Bounds = new Rectangle(Width - ScrollBar.DefaultSize, 0, ScrollBar.DefaultSize, Height);
             }
             if (HScrollBar != null)
             {
@@ -417,6 +443,7 @@ namespace FlaxEngine.GUI
                 {
                     HScrollBar.SetScrollRange(scrollBounds.Left, Mathf.Max(Mathf.Max(0, scrollBounds.Left), scrollBounds.Width - width));
                 }
+                HScrollBar.Bounds = new Rectangle(0, Height - ScrollBar.DefaultSize, Width - (VScrollBar != null && VScrollBar.Visible ? VScrollBar.Width : 0), ScrollBar.DefaultSize);
             }
         }
 
@@ -454,6 +481,22 @@ namespace FlaxEngine.GUI
         protected virtual void Arrange()
         {
             base.PerformLayoutSelf();
+        }
+
+        /// <inheritdoc />
+        public override void GetDesireClientArea(out Rectangle rect)
+        {
+            rect = new Rectangle(Vector2.Zero, Size);
+
+            if (VScrollBar != null && VScrollBar.Visible)
+            {
+                rect.Width -= VScrollBar.Width;
+            }
+
+            if (HScrollBar != null && HScrollBar.Visible)
+            {
+                rect.Height -= HScrollBar.Height;
+            }
         }
 
         /// <inheritdoc />

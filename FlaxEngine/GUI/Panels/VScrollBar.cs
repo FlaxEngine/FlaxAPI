@@ -12,12 +12,15 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="VScrollBar"/> class.
         /// </summary>
+        /// <param name="parent">The parent control.</param>
         /// <param name="x">The x position.</param>
         /// <param name="height">The height.</param>
-        public VScrollBar(float x, float height)
-        : base(Orientation.Vertical, x, 0, DefaultSize, height)
+        public VScrollBar(ContainerControl parent, float x, float height)
+        : base(Orientation.Vertical)
         {
-            DockStyle = DockStyle.Right;
+            AnchorPreset = AnchorPresets.VerticalStretchRight;
+            Parent = parent;
+            Bounds = new Rectangle(x, 0, DefaultSize, height);
         }
 
         /// <inheritdoc />

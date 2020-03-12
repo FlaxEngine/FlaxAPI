@@ -69,7 +69,7 @@ namespace FlaxEditor.Windows
                 _pinButton = new Button(Width - PinSize - PinMargin, PinMargin)
                 {
                     Size = new Vector2(PinSize),
-                    AnchorStyle = AnchorStyle.UpperRight,
+                    AnchorPreset = AnchorPresets.TopRight,
                     Parent = this
                 };
                 _pinButton.Clicked += () => IsPinned = !IsPinned;

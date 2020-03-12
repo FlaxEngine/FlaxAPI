@@ -180,7 +180,7 @@ namespace FlaxEditor.Viewport.Previews
             {
                 _guiMaterialControl = new Image
                 {
-                    DockStyle = DockStyle.Fill,
+                    AnchorPreset = AnchorPresets.StretchAll,
                     KeepAspectRatio = false,
                     Brush = new MaterialBrush(),
                     Parent = this,

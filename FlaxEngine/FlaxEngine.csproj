@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -25,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\bin\FlaxEngine.xml</DocumentationFile>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+<UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\bin\FlaxEngine.xml</DocumentationFile>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+<UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -110,6 +110,7 @@
     <Compile Include="API\SkinnedModel.cs" />
     <Compile Include="API\SkinnedModel.Gen.cs" />
     <Compile Include="API\SpriteAtlas.cs" />
+    <Compile Include="API\Terrain.cs" />
     <Compile Include="API\Terrain.Gen.cs" />
     <Compile Include="API\Texture.Gen.cs" />
     <Compile Include="API\TextureBase.cs" />
@@ -149,7 +150,6 @@
     <Compile Include="API\Actors\Skybox.Gen.cs" />
     <Compile Include="API\Actors\StaticModel.cs" />
     <Compile Include="API\Actors\StaticModel.Gen.cs" />
-    <Compile Include="API\Terrain.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />
     <Compile Include="API\Actors\UICanvas.Gen.cs" />

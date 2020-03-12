@@ -53,5 +53,10 @@ namespace FlaxEngine
         /// Create read-only view for depth-stencil buffer. Valid only if texture uses depth-stencil and the graphics device supports it.
         /// </summary>
         ReadOnlyDepthView = 0x0040,
+
+        /// <summary>
+        /// Create a texture that can be used as a native window swap chain backbuffer surface.
+        /// </summary>
+        BackBuffer = 0x0080,
     }
 }

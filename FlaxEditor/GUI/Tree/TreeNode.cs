@@ -885,9 +885,10 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override void OnParentResized(ref Vector2 oldSize)
+        public override void OnParentResized()
         {
-            base.OnParentResized(ref oldSize);
+            base.OnParentResized();
+
             Width = Parent.Width;
         }
 
@@ -997,11 +998,10 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
-            // Cache data
             _headerRect = new Rectangle(0, 0, Width, _headerHeight);
         }
 

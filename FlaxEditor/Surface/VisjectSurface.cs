@@ -276,7 +276,8 @@ namespace FlaxEditor.Surface
         /// <param name="groups">The custom surface node types. Pass null to use the default nodes set.</param>
         public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo = null, SurfaceStyle style = null, List<GroupArchetype> groups = null)
         {
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
             AutoFocus = false; // Disable to prevent autofocus and event handling on OnMouseDown event
 
             Owner = owner;
@@ -732,17 +733,6 @@ namespace FlaxEditor.Surface
         public SurfaceNode FindNode(uint id)
         {
             return _context.FindNode(id);
-        }
-
-        /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
-        {
-            // Keep view stable
-            var viewCenter = ViewCenterPosition;
-
-            base.SetSizeInternal(ref size);
-
-            ViewCenterPosition = viewCenter;
         }
 
         /// <inheritdoc />

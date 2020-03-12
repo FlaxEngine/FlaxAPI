@@ -128,7 +128,7 @@ namespace FlaxEditor.Surface.ContextMenu
             // Create second panel (for groups arrangement)
             var panel2 = new VerticalPanel
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 IsScrollable = true,
                 Parent = panel1
             };

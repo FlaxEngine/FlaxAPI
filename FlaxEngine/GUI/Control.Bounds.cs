@@ -2,7 +2,6 @@
 
 namespace FlaxEngine.GUI
 {
-    // Duplicate of Rectangle API for easier lookup
     public partial class Control
     {
         /// <summary>
@@ -12,14 +11,7 @@ namespace FlaxEngine.GUI
         public float X
         {
             get => _bounds.X;
-            set
-            {
-                if (!Mathf.NearEqual(_bounds.X, value))
-                {
-                    var location = new Vector2(value, _bounds.Y);
-                    SetLocationInternal(ref location);
-                }
-            }
+            set => Bounds = new Rectangle(value, Y, _bounds.Size);
         }
 
         /// <summary>
@@ -29,12 +21,63 @@ namespace FlaxEngine.GUI
         public float Y
         {
             get => _bounds.Y;
+            set => Bounds = new Rectangle(X, value, _bounds.Size);
+        }
+
+        /// <summary>
+        /// Gets or sets the normalized position in the parent control that the upper left corner is anchored to (range 0-1).
+        /// </summary>
+        [Serialize]
+        [ExpandGroups, Limit(0.0f, 1.0f, 0.01f), EditorDisplay("Transform"), EditorOrder(990), Tooltip("The normalized position in the parent control that the upper left corner is anchored to (range 0-1).")]
+        public Vector2 AnchorMin
+        {
+            get => _anchorMin;
             set
             {
-                if (!Mathf.NearEqual(_bounds.Y, value))
+                if (!_anchorMin.Equals(ref value))
                 {
-                    var location = new Vector2(_bounds.X, value);
-                    SetLocationInternal(ref location);
+                    var bounds = Bounds;
+                    _anchorMin = value;
+                    UpdateBounds();
+                    Bounds = bounds;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the normalized position in the parent control that the bottom right corner is anchored to (range 0-1).
+        /// </summary>
+        [Serialize]
+        [ExpandGroups, Limit(0.0f, 1.0f, 0.01f), EditorDisplay("Transform"), EditorOrder(991), Tooltip("The normalized position in the parent control that the bottom right corner is anchored to (range 0-1).")]
+        public Vector2 AnchorMax
+        {
+            get => _anchorMax;
+            set
+            {
+                if (!_anchorMax.Equals(ref value))
+                {
+                    var bounds = Bounds;
+                    _anchorMax = value;
+                    UpdateBounds();
+                    Bounds = bounds;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the offsets of the corners of the control relative to its anchors.
+        /// </summary>
+        [Serialize]
+        [ExpandGroups, EditorDisplay("Transform"), EditorOrder(992), Tooltip("The offsets of the corners of the control relative to its anchors.")]
+        public Margin Offsets
+        {
+            get => _offsets;
+            set
+            {
+                if (!_offsets.Equals(ref value))
+                {
+                    _offsets = value;
+                    UpdateBounds();
                 }
             }
         }
@@ -47,59 +90,38 @@ namespace FlaxEngine.GUI
         public Vector2 Location
         {
             get => _bounds.Location;
-            set
-            {
-                if (!_bounds.Location.Equals(ref value))
-                    SetLocationInternal(ref value);
-            }
+            set => Bounds = new Rectangle(value, _bounds.Size);
         }
 
         /// <summary>
         /// Gets or sets width of the control.
         /// </summary>
-        [HideInEditor, NoSerialize]
+        [NoSerialize]
         public float Width
         {
             get => _bounds.Width;
-            set
-            {
-                if (!Mathf.NearEqual(_bounds.Width, value))
-                {
-                    var size = new Vector2(value, _bounds.Height);
-                    SetSizeInternal(ref size);
-                }
-            }
+            set => Bounds = new Rectangle(_bounds.Location, value, _bounds.Height);
         }
 
         /// <summary>
         /// Gets or sets height of the control.
         /// </summary>
-        [HideInEditor, NoSerialize]
+        [NoSerialize]
         public float Height
         {
             get => _bounds.Height;
-            set
-            {
-                if (!Mathf.NearEqual(_bounds.Height, value))
-                {
-                    var size = new Vector2(_bounds.Width, value);
-                    SetSizeInternal(ref size);
-                }
-            }
+            set => Bounds = new Rectangle(_bounds.Location, _bounds.Width, value);
         }
 
         /// <summary>
         /// Gets or sets control's size.
         /// </summary>
+        [NoSerialize]
         [EditorDisplay("Transform"), EditorOrder(1010), Tooltip("The size of the control bounds.")]
         public Vector2 Size
         {
             get => _bounds.Size;
-            set
-            {
-                if (!_bounds.Size.Equals(ref value))
-                    SetSizeInternal(ref value);
-            }
+            set => Bounds = new Rectangle(_bounds.Location, value);
         }
 
         /// <summary>
@@ -156,8 +178,51 @@ namespace FlaxEngine.GUI
             get => _bounds;
             set
             {
-                Location = value.Location;
-                Size = value.Size;
+                if (!_bounds.Equals(ref value))
+                {
+                    // Calculate anchors based on the parent container client area
+                    Margin anchors;
+                    if (_parent != null)
+                    {
+                        _parent.GetDesireClientArea(out var parentBounds);
+                        anchors = new Margin
+                        (
+                            _anchorMin.X * parentBounds.Size.X + parentBounds.Location.X,
+                            _anchorMax.X * parentBounds.Size.X,
+                            _anchorMin.Y * parentBounds.Size.Y + parentBounds.Location.Y,
+                            _anchorMax.Y * parentBounds.Size.Y
+                        );
+                    }
+                    else
+                    {
+                        anchors = Margin.Zero;
+                    }
+
+                    // Calculate offsets on X axis
+                    _offsets.Left = value.Location.X - anchors.Left;
+                    if (_anchorMin.X != _anchorMax.X)
+                    {
+                        _offsets.Right = anchors.Right - value.Location.X - value.Size.X;
+                    }
+                    else
+                    {
+                        _offsets.Right = value.Size.X;
+                    }
+
+                    // Calculate offsets on Y axis
+                    _offsets.Top = value.Location.Y - anchors.Top;
+                    if (_anchorMin.Y != _anchorMax.Y)
+                    {
+                        _offsets.Bottom = anchors.Bottom - value.Location.Y - value.Size.Y;
+                    }
+                    else
+                    {
+                        _offsets.Bottom = value.Size.Y;
+                    }
+
+                    // Flush the control bounds
+                    UpdateBounds();
+                }
             }
         }
 
@@ -171,7 +236,9 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!_scale.Equals(ref value))
+                {
                     SetScaleInternal(ref value);
+                }
             }
         }
 
@@ -185,7 +252,9 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!_pivot.Equals(ref value))
+                {
                     SetPivotInternal(ref value);
+                }
             }
         }
 
@@ -199,7 +268,9 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!_shear.Equals(ref value))
+                {
                     SetShearInternal(ref value);
+                }
             }
         }
 
@@ -213,14 +284,86 @@ namespace FlaxEngine.GUI
             set
             {
                 if (!Mathf.NearEqual(_rotation, value))
+                {
                     SetRotationInternal(value);
+                }
             }
         }
 
         /// <summary>
-        /// Updates the control transform.
+        /// Updates the control cached bounds (based on anchors and offsets).
         /// </summary>
-        protected void UpdateTransform()
+        [NoAnimate]
+        public void UpdateBounds()
+        {
+            var prevBounds = _bounds;
+
+            // Calculate anchors based on the parent container client area
+            Margin anchors;
+            Vector2 offset;
+            if (_parent != null)
+            {
+                _parent.GetDesireClientArea(out var parentBounds);
+                anchors = new Margin
+                (
+                    _anchorMin.X * parentBounds.Size.X,
+                    _anchorMax.X * parentBounds.Size.X,
+                    _anchorMin.Y * parentBounds.Size.Y,
+                    _anchorMax.Y * parentBounds.Size.Y
+                );
+                offset = parentBounds.Location;
+            }
+            else
+            {
+                anchors = Margin.Zero;
+                offset = Vector2.Zero;
+            }
+
+            // Calculate position and size on X axis
+            _bounds.Location.X = anchors.Left + _offsets.Left;
+            if (_anchorMin.X != _anchorMax.X)
+            {
+                _bounds.Size.X = anchors.Right - _bounds.Location.X - _offsets.Right;
+            }
+            else
+            {
+                _bounds.Size.X = _offsets.Right;
+            }
+
+            // Calculate position and size on Y axis
+            _bounds.Location.Y = anchors.Top + _offsets.Top;
+            if (_anchorMin.Y != _anchorMax.Y)
+            {
+                _bounds.Size.Y = anchors.Bottom - _bounds.Location.Y - _offsets.Bottom;
+            }
+            else
+            {
+                _bounds.Size.Y = _offsets.Bottom;
+            }
+
+            // Apply the offset
+            _bounds.Location += offset;
+
+            // Update cached transformation matrix
+            UpdateTransform();
+
+            // Handle location/size changes
+            if (_bounds.Location != prevBounds.Location)
+            {
+                OnLocationChanged();
+            }
+
+            if (_bounds.Size != prevBounds.Size)
+            {
+                OnSizeChanged();
+            }
+        }
+
+        /// <summary>
+        /// Updates the control cached transformation matrix (based on bounds).
+        /// </summary>
+        [NoAnimate]
+        public void UpdateTransform()
         {
             // Actual pivot and negative pivot
             Vector2 v1, v2;

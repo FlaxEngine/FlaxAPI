@@ -33,11 +33,18 @@ namespace FlaxEditor.Content.Settings
         public int ContentKey = 0;
 
         /// <summary>
-        /// Disable shaders optimization in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.
+        /// Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.
         /// </summary>
         [DefaultValue(false)]
-        [EditorOrder(100), EditorDisplay("Content"), Tooltip("Disable shaders optimization in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
-        public bool NoOptimizeShaders = false;
+        [EditorOrder(100), EditorDisplay("Content"), Tooltip("Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
+        public bool ShadersNoOptimize;
+
+        /// <summary>
+        /// Enables shader debug data generation for shaders in cooked game (depends on the target platform rendering backend).
+        /// </summary>
+        [DefaultValue(false)]
+        [EditorOrder(110), EditorDisplay("Content"), Tooltip("Enables shader debug data generation for shaders in cooked game (depends on the target platform rendering backend).")]
+        public bool ShadersGenerateDebugData;
 
         /// <summary>
         /// The build presets.

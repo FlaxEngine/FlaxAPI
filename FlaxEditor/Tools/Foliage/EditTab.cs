@@ -205,9 +205,17 @@ namespace FlaxEditor.Tools.Foliage
             mode.SelectedInstanceIndexChanged += OnSelectedInstanceIndexChanged;
             _proxy = new ProxyObject(mode);
 
+            // Main panel
+            var panel = new Panel(ScrollBars.Vertical)
+            {
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
+                Parent = this
+            };
+
             // Options editor
             var editor = new CustomEditorPresenter(tab.Editor.Undo, "No foliage instance selected");
-            editor.Panel.Parent = this;
+            editor.Panel.Parent = panel;
             editor.Modified += OnModified;
             _presenter = editor;
         }

@@ -531,11 +531,11 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override void OnParentResized(ref Vector2 oldSize)
+        public override void OnParentResized()
         {
             UpdateSize();
 
-            base.OnParentResized(ref oldSize);
+            base.OnParentResized();
         }
 
         /// <inheritdoc />

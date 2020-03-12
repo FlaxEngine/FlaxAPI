@@ -30,7 +30,8 @@ namespace FlaxEditor.CustomEditors
             internal PresenterPanel(CustomEditorPresenter presenter)
             {
                 _presenter = presenter;
-                DockStyle = DockStyle.Top;
+                AnchorPreset = AnchorPresets.StretchAll;
+                Offsets = Margin.Zero;
                 IsScrollable = true;
             }
 
@@ -41,6 +42,14 @@ namespace FlaxEditor.CustomEditors
                 _presenter.Update();
 
                 base.Update(deltaTime);
+            }
+
+            /// <inheritdoc />
+            public override void OnDestroy()
+            {
+                base.OnDestroy();
+
+                _presenter = null;
             }
         }
 

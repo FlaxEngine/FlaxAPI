@@ -14,7 +14,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The default size.
         /// </summary>
-        public const int DefaultSize = 16;
+        public const int DefaultSize = 12;
 
         /// <summary>
         /// The default thumb rectangle thickness.
@@ -174,12 +174,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="ScrollBar"/> class.
         /// </summary>
         /// <param name="orientation">The orientation.</param>
-        /// <param name="x">The x position.</param>
-        /// <param name="y">The y position.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        protected ScrollBar(Orientation orientation, float x, float y, float width, float height)
-        : base(x, y, width, height)
+        protected ScrollBar(Orientation orientation)
         {
             AutoFocus = false;
 
@@ -396,9 +391,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             UpdateThumb();
         }

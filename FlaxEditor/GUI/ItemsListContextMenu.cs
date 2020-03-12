@@ -224,7 +224,7 @@ namespace FlaxEditor.GUI
             // Create second panel (for items arrangement)
             ItemsPanel = new VerticalPanel
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 IsScrollable = true,
                 Parent = panel1
             };

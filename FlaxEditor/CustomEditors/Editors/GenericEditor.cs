@@ -460,7 +460,7 @@ namespace FlaxEditor.CustomEditors.Editors
                             Height = ButtonSize,
                             Width = ButtonSize,
                             X = layout.ContainerControl.Width - ButtonSize - 4,
-                            AnchorStyle = AnchorStyle.CenterRight,
+                            AnchorPreset = AnchorPresets.MiddleRight,
                             Parent = layout.ContainerControl
                         };
                         button.Clicked += () =>
