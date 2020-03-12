@@ -4,7 +4,7 @@ using System;
 
 namespace FlaxEngine
 {
-    public sealed partial class Terrain
+    partial class Terrain
     {
         /// <summary>
         /// The constant amount of units per terrain geometry vertex (can be adjusted per terrain instance using non-uniform scale factor).

@@ -507,6 +507,7 @@ namespace FlaxEngine
         {
             if (_renderer)
             {
+                SceneRenderTask.GlobalCustomPostFx.Remove(_renderer);
                 _renderer.Canvas = null;
                 Destroy(_renderer);
                 _renderer = null;
