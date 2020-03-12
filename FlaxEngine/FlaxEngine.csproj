@@ -59,6 +59,7 @@
     <Compile Include="API\BoneSocket.Gen.cs" />
     <Compile Include="API\Camera.Gen.cs" />
     <Compile Include="API\CubeTexture.Gen.cs" />
+    <Compile Include="API\DebugDraw.cs" />
     <Compile Include="API\DebugDraw.Gen.cs" />
     <Compile Include="API\Enums.Gen.cs" />
     <Compile Include="API\FontTextureAtlas.Gen.cs" />
