@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Define a Rectangle.
+    /// Describes rectangle in 2D space defines by location of its upper-left corner and the size.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Rectangle : IEquatable<Rectangle>
