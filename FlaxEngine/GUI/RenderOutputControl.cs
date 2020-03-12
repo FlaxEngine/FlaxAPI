@@ -144,7 +144,12 @@ namespace FlaxEngine.GUI
             }
 
             // Check if skip rendering
+            var wasEnabled = _task.Enabled;
             _task.Enabled = !CanSkipRendering();
+            if (wasEnabled != _task.Enabled)
+            {
+                SyncBackbufferSize();
+            }
         }
 
         /// <inheritdoc />
