@@ -85,7 +85,7 @@ namespace FlaxEditor.GUI
                 new PlatformData(PlatformType.XboxOne, icons.XboxOne, "Xbox One"),
                 new PlatformData(PlatformType.WindowsStore, icons.WindowsStore, "Windows Store"),
                 new PlatformData(PlatformType.Linux, icons.Linux, "Linux"),
-                new PlatformData(PlatformType.PS4, icons.Linux, "PlayStation 4"),
+                new PlatformData(PlatformType.PS4, icons.PS4, "PlayStation 4"),
             };
 
             const float IconSize = 48.0f;

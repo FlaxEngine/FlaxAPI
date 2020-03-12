@@ -93,6 +93,7 @@ namespace FlaxEditor
         public Sprite XboxOne;
         public Sprite WindowsStore;
         public Sprite Linux;
+        public Sprite PS4;
 
         internal void GetIcons()
         {
