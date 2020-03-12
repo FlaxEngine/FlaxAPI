@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Actor that links to the animated model skeleton node transformation.
     /// </summary>
     [Tooltip("Actor that links to the animated model skeleton node transformation.")]
-    public partial class BoneSocket : Actor
+    public unsafe partial class BoneSocket : Actor
     {
         /// <inheritdoc />
         protected BoneSocket() : base()

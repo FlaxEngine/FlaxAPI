@@ -368,7 +368,7 @@ namespace FlaxEditor.Windows
                 UnlockMouseInPlay();
                 return true;
             case Keys.F12:
-                Screenshot.Capture();
+                Screenshot.Capture(string.Empty);
                 return true;
             case Keys.F11:
             {

@@ -79,6 +79,8 @@ namespace FlaxEditor.Content
         {
             _preview.CubeTexture = (CubeTexture)request.Asset;
             _preview.Parent = guiRoot;
+
+            _preview.Task.OnDraw();
         }
 
         /// <inheritdoc />

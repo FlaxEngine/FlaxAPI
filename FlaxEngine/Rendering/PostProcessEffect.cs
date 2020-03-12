@@ -3,37 +3,6 @@
 namespace FlaxEngine
 {
     /// <summary>
-    /// The Post Process effect rendering location within the rendering pipeline.
-    /// </summary>
-    public enum PostProcessEffectLocation
-    {
-        /// <summary>
-        /// The default location after the in-build PostFx pass (bloom, color grading, etc.) but before anti-aliasing effect.
-        /// </summary>
-        Default = 0,
-
-        /// <summary>
-        /// The 'before' in-build PostFx pass (bloom, color grading, etc.). After Forward Pass (transparency) and fog effects.
-        /// </summary>
-        BeforePostProcessingPass = 1,
-
-        /// <summary>
-        /// The 'before' Forward pass (transparency) and fog effects. After the Light pass and Reflections pass.
-        /// </summary>
-        BeforeForwardPass = 2,
-
-        /// <summary>
-        /// The 'before' Reflections pass. After the Light pass. Can be used to affect Screen Space Reflections by the GUI.
-        /// </summary>
-        BeforeReflectionsPass = 3,
-
-        /// <summary>
-        /// The 'after' AA filter pass. Rendering is done to the output backbuffer.
-        /// </summary>
-        AfterAntiAliasingPass = 4,
-    }
-
-    /// <summary>
     /// Custom postFx which can modify final image by processing it with material based filters.
     /// The base class for all post process effects used by the graphics pipeline.
     /// Allows to extend frame rendering logic and apply custom effects such as outline, night vision, contrast etc.
@@ -69,10 +38,10 @@ namespace FlaxEngine
         /// Performs custom postFx rendering.
         /// </summary>
         /// <param name="context">The GPU commands context.</param>
-        /// <param name="task">The current rendering task.</param>
+        /// <param name="renderContext">The rendering context.</param>
         /// <param name="input">The input texture.</param>
         /// <param name="output">The output texture.</param>
-        public abstract void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output);
+        public abstract void Render(GPUContext context, ref RenderContext renderContext, GPUTexture input, GPUTexture output);
 
         internal static void FetchInfo(PostProcessEffect obj, out PostProcessEffectLocation location, out bool useSingleTarget)
         {

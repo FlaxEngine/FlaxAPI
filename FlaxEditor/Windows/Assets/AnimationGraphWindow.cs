@@ -61,13 +61,13 @@ namespace FlaxEditor.Windows.Assets
                 _floorModel.Position = new Vector3(0, -25, 0);
                 _floorModel.Scale = new Vector3(5, 0.5f, 5);
                 _floorModel.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
-                Task.CustomActors.Add(_floorModel);
+                Task.AddCustomActor(_floorModel);
 
                 // Enable shadows
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
                 PreviewLight.CascadeCount = 2;
                 PreviewLight.ShadowsDistance = 1000.0f;
-                Task.View.Flags |= ViewFlags.Shadows;
+                Task.ViewFlags |= ViewFlags.Shadows;
             }
 
             private void OnShowFloorModelClicked(ContextMenuButton obj)

@@ -38,7 +38,7 @@ namespace FlaxEditor.Viewport.Previews
                             customControlLinked.Parent = null;
                             customControlLinked = null;
                         }
-                        Task.CustomActors.Remove(_instance);
+                        Task.RemoveCustomActor(_instance);
                         Object.Destroy(_instance);
                     }
 
@@ -60,7 +60,7 @@ namespace FlaxEditor.Viewport.Previews
                             _prefab = null;
                             throw new FlaxException("Failed to spawn a prefab for the preview.");
                         }
-                        Task.CustomActors.Add(_instance);
+                        Task.AddCustomActor(_instance);
                     }
                 }
             }

@@ -69,8 +69,8 @@ namespace FlaxEditor.Viewport
 
             // Prepare rendering task
             Task.ActorsSource = ActorsSources.CustomActors;
-            Task.View.Flags = ViewFlags.DefaultEditor & ~ViewFlags.EditorSprites;
-            Task.End += RenderTaskOnEnd;
+            Task.ViewFlags = ViewFlags.DefaultEditor & ~ViewFlags.EditorSprites;
+            Task.PostRender += OnPostRender;
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
@@ -213,13 +213,15 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
+        private void OnPostRender(GPUContext context, RenderContext renderContext)
         {
-            // Render editor primitives, gizmo and debug shapes in debug view modes
-            if (task.View.Mode != ViewMode.Default)
+            if (renderContext.View.Mode != ViewMode.Default)
             {
+                var task = renderContext.Task;
+
+                // Render editor primitives, gizmo and debug shapes in debug view modes
                 // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
-                EditorPrimitives.Render(context, task, task.Output, task.Output);
+                EditorPrimitives.Render(context, ref renderContext, task.Output, task.Output);
             }
         }
 
@@ -622,9 +624,9 @@ namespace FlaxEditor.Viewport
             {
                 float snapValue = TransformGizmo.TranslationSnapValue;
                 location = new Vector3(
-                    (int)(location.X / snapValue) * snapValue,
-                    (int)(location.Y / snapValue) * snapValue,
-                    (int)(location.Z / snapValue) * snapValue);
+                                       (int)(location.X / snapValue) * snapValue,
+                                       (int)(location.Y / snapValue) * snapValue,
+                                       (int)(location.Z / snapValue) * snapValue);
             }
 
             return location;
@@ -799,7 +801,7 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, GPUTexture target, GPUTexture targetDepth, DrawCallsCollector collector)
+        public void DrawEditorPrimitives(GPUContext context, ref RenderContext renderContext, GPUTexture target, GPUTexture targetDepth)
         {
         }
     }

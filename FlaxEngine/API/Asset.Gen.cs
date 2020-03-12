@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Asset objects base class.
     /// </summary>
     [Tooltip("Asset objects base class.")]
-    public abstract partial class Asset : FlaxEngine.Object
+    public abstract unsafe partial class Asset : FlaxEngine.Object
     {
         /// <inheritdoc />
         protected Asset() : base()

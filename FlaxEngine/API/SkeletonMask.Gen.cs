@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// The skinned model skeleton bones boolean masking data.
     /// </summary>
     [Tooltip("The skinned model skeleton bones boolean masking data.")]
-    public partial class SkeletonMask : BinaryAsset
+    public unsafe partial class SkeletonMask : BinaryAsset
     {
         /// <inheritdoc />
         protected SkeletonMask() : base()

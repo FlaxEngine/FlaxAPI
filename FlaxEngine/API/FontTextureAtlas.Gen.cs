@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Texture resource that contains an atlas of cached font glyphs.
     /// </summary>
     [Tooltip("Texture resource that contains an atlas of cached font glyphs.")]
-    public partial class FontTextureAtlas : Texture
+    public unsafe partial class FontTextureAtlas : Texture
     {
         /// <inheritdoc />
         protected FontTextureAtlas() : base()

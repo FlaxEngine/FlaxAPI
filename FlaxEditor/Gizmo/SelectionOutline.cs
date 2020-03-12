@@ -116,33 +116,33 @@ namespace FlaxEditor.Gizmo
         public override bool CanRender => _enabled && _material && _outlineMaterial.IsLoaded && SelectionGetter().Count > 0;
 
         /// <inheritdoc />
-        public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
+        public override void Render(GPUContext context, ref RenderContext renderContext, GPUTexture input, GPUTexture output)
         {
             Profiler.BeginEventGPU("Selection Outline");
 
             // Pick a temporary depth buffer
             var desc = GPUTextureDescription.New2D(input.Width, input.Height, PixelFormat.R32_Typeless, GPUTextureFlags.DepthStencil | GPUTextureFlags.ShaderResource);
             var customDepth = RenderTargetPool.Get(ref desc);
-            context.ClearDepth(customDepth);
+            context.ClearDepth(customDepth.View());
 
             // Draw objects to depth buffer
             if (_actors == null)
                 _actors = new List<Actor>();
             else
                 _actors.Clear();
-            DrawSelectionDepth(context, task, customDepth);
+            DrawSelectionDepth(context, renderContext.Task, customDepth);
             _actors.Clear();
 
-            var near = task.View.Near;
-            var far = task.View.Far;
-            var projection = task.View.Projection;
+            var near = renderContext.View.Near;
+            var far = renderContext.View.Far;
+            var projection = renderContext.View.Projection;
 
             // Render outline
             _material.SetParameterValue("OutlineColor0", _color0);
             _material.SetParameterValue("OutlineColor1", _color1);
             _material.SetParameterValue("CustomDepth", customDepth);
             _material.SetParameterValue("ViewInfo", new Vector4(1.0f / projection.M11, 1.0f / projection.M22, far / (far - near), (-far * near) / (far - near) / far));
-            context.DrawPostFxMaterial(_material, output, input, task);
+            Renderer.DrawPostFxMaterial(context, ref renderContext, _material, output, input.View());
 
             // Cleanup
             RenderTargetPool.Release(customDepth);
@@ -176,7 +176,7 @@ namespace FlaxEditor.Gizmo
             }
 
             // Render selected objects depth
-            context.DrawSceneDepth(task, customDepth, _actors, ActorsSources.CustomActors);
+            Renderer.DrawSceneDepth(context, task, customDepth, _actors);
         }
     }
 }

@@ -8,7 +8,6 @@ using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Viewport
 {
@@ -485,7 +484,7 @@ namespace FlaxEditor.Viewport
                         var button = viewFlags.AddButton(v.Name);
                         button.Tag = v.Mode;
                     }
-                    viewFlags.ButtonClicked += (button) => Task.View.Flags ^= (ViewFlags)button.Tag;
+                    viewFlags.ButtonClicked += button => Task.ViewFlags ^= (ViewFlags)button.Tag;
                     viewFlags.VisibleChanged += WidgetViewFlagsShowHide;
                 }
 
@@ -498,7 +497,7 @@ namespace FlaxEditor.Viewport
                         var button = debugView.AddButton(v.Name);
                         button.Tag = v.Mode;
                     }
-                    debugView.ButtonClicked += (button) => Task.View.Mode = (ViewMode)button.Tag;
+                    debugView.ButtonClicked += button => Task.ViewMode = (ViewMode)button.Tag;
                     debugView.VisibleChanged += WidgetViewModeShowHide;
                 }
 
@@ -592,9 +591,13 @@ namespace FlaxEditor.Viewport
             _mouseSensitivity = options.Viewport.MouseSensitivity;
         }
 
-        private void OnRenderBegin(SceneRenderTask task, GPUContext context)
+        private void OnRenderBegin(RenderTask task, GPUContext context)
         {
-            CopyViewData(ref task.View);
+            var sceneTask = (SceneRenderTask)task;
+
+            var view = sceneTask.View;
+            CopyViewData(ref view);
+            sceneTask.View = view;
         }
 
         #region FPS Counter
@@ -672,6 +675,8 @@ namespace FlaxEditor.Viewport
             view.Direction = ViewDirection;
             view.Near = _nearPlane;
             view.Far = _farPlane;
+
+            view.UpdateCachedData();
         }
 
         /// <summary>

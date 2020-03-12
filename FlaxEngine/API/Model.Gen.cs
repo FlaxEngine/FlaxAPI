@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Model asset that contains model object made of meshes which can rendered on the GPU.
     /// </summary>
     [Tooltip("Model asset that contains model object made of meshes which can rendered on the GPU.")]
-    public partial class Model : ModelBase
+    public unsafe partial class Model : ModelBase
     {
         /// <inheritdoc />
         protected Model() : base()
@@ -68,6 +68,22 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetBox1(IntPtr obj, int lodIndex, out BoundingBox resultAsRef);
+
+        /// <summary>
+        /// Draws the model.
+        /// </summary>
+        /// <param name="renderContext">The rendering context.</param>
+        /// <param name="material">The material to use for rendering.</param>
+        /// <param name="world">The world transformation of the model.</param>
+        /// <param name="flags">The object static flags.</param>
+        /// <param name="receiveDecals">True if rendered geometry can receive decals, otherwise false.</param>
+        public void Draw(ref RenderContext renderContext, MaterialBase material, ref Matrix world, StaticFlags flags = StaticFlags.None, bool receiveDecals = true)
+        {
+            Internal_Draw(unmanagedPtr, ref renderContext, FlaxEngine.Object.GetUnmanagedPtr(material), ref world, flags, receiveDecals);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Draw(IntPtr obj, ref RenderContext renderContext, IntPtr material, ref Matrix world, StaticFlags flags, bool receiveDecals);
 
         /// <summary>
         /// Setups the model LODs collection including meshes creation.

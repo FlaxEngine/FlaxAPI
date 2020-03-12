@@ -164,9 +164,9 @@ namespace FlaxEditor.Tools.Foliage
         }
 
         /// <inheritdoc />
-        public override void Draw(DrawCallsCollector collector)
+        public override void Draw(ref RenderContext renderContext)
         {
-            base.Draw(collector);
+            base.Draw(ref renderContext);
 
             if (!IsActive || !_highlightMaterial)
                 return;
@@ -182,13 +182,10 @@ namespace FlaxEditor.Tools.Foliage
             var model = foliage.GetFoliageTypeModel(instance.Type);
             if (model)
             {
-                Matrix world;
-                foliage.GetLocalToWorldMatrix(out world);
-                Matrix matrix;
-                instance.Transform.GetWorld(out matrix);
-                Matrix instanceWorld;
-                Matrix.Multiply(ref matrix, ref world, out instanceWorld);
-                collector.AddDrawCall(model, _highlightMaterial, ref instance.Bounds, ref instanceWorld, StaticFlags.None, false);
+                foliage.GetLocalToWorldMatrix(out var world);
+                instance.Transform.GetWorld(out var matrix);
+                Matrix.Multiply(ref matrix, ref world, out var instanceWorld);
+                model.Draw(ref renderContext, _highlightMaterial, ref instanceWorld, StaticFlags.None, false);
             }
         }
 

@@ -173,6 +173,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                          ViewFlags.Shadows | ViewFlags.SpecularLight | ViewFlags.AntiAliasing | ViewFlags.CustomPostProcess |
                          ViewFlags.Bloom | ViewFlags.ToneMapping | ViewFlags.CameraArtifacts | ViewFlags.LensFlares | ViewFlags.Decals |
                          ViewFlags.DepthOfField | ViewFlags.Fog;
+            view.UpdateCachedData();
             task.View = view;
         }
 
@@ -458,7 +459,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 _atlases = new List<Atlas>(4);
             if (_output == null)
             {
-                _output = GPUDevice.CreateTexture();
+                _output = GPUDevice.Instance.CreateTexture();
                 var desc = GPUTextureDescription.New2D(Width, Height, PixelFormat.R8G8B8A8_UNorm);
                 _output.Init(ref desc);
             }
@@ -474,14 +475,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             _task.Enabled = true;
         }
 
-        private void OnBegin(SceneRenderTask task, GPUContext context)
+        private void OnBegin(RenderTask task, GPUContext context)
         {
             // Setup
             var req = _queue[0];
-            req.Media.OnThumbnailRenderingBegin(task, context, ref req);
+            req.Media.OnThumbnailRenderingBegin((SceneRenderTask)task, context, ref req);
         }
 
-        private void OnEnd(SceneRenderTask task, GPUContext context)
+        private void OnEnd(RenderTask task, GPUContext context)
         {
             // Pick the atlas or create a new one
             int atlasIndex = -1;
@@ -569,11 +570,11 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
             // Copy output frame to the sprite atlas slot
             var spriteLocation = sprite.Location;
-            context.CopyTexture(atlas.Texture, 0, (uint)spriteLocation.X, (uint)spriteLocation.Y, 0, _output, 0);
+            context.CopyTexture(atlas.Texture.Texture, 0, (uint)spriteLocation.X, (uint)spriteLocation.Y, 0, _output, 0);
 
             // Link sprite to the UI
             var req = _queue[0];
-            req.Media.OnThumbnailRenderingEnd(task, context, ref req, ref sprite);
+            req.Media.OnThumbnailRenderingEnd((SceneRenderTask)task, context, ref req, ref sprite);
 
             // End
             _queue.RemoveAt(0);

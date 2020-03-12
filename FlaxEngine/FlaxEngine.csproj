@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -25,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\bin\FlaxEngine.xml</DocumentationFile>
-<UseVSHostingProcess>true</UseVSHostingProcess>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\bin\FlaxEngine.xml</DocumentationFile>
-<UseVSHostingProcess>true</UseVSHostingProcess>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,8 +57,18 @@
     <Compile Include="API\Asset.Gen.cs" />
     <Compile Include="API\BinaryAsset.Gen.cs" />
     <Compile Include="API\BoneSocket.Gen.cs" />
+    <Compile Include="API\Camera.Gen.cs" />
     <Compile Include="API\CubeTexture.Gen.cs" />
+    <Compile Include="API\DebugDraw.Gen.cs" />
+    <Compile Include="API\Enums.Gen.cs" />
     <Compile Include="API\FontTextureAtlas.Gen.cs" />
+    <Compile Include="API\GPUBuffer.Gen.cs" />
+    <Compile Include="API\GPUContext.Gen.cs" />
+    <Compile Include="API\GPUDevice.Gen.cs" />
+    <Compile Include="API\GPULimits.Gen.cs" />
+    <Compile Include="API\GPUResource.Gen.cs" />
+    <Compile Include="API\GPUTexture.Gen.cs" />
+    <Compile Include="API\GPUTextureDescription.Gen.cs" />
     <Compile Include="API\IESProfile.Gen.cs" />
     <Compile Include="API\JsonAsset.cs" />
     <Compile Include="API\JsonAsset.Gen.cs" />
@@ -77,9 +87,20 @@
     <Compile Include="API\Model.Gen.cs" />
     <Compile Include="API\ModelBase.Gen.cs" />
     <Compile Include="API\ModelLOD.Gen.cs" />
+    <Compile Include="API\Physics.Gen.cs" />
+    <Compile Include="API\PhysicsColliderActor.Gen.cs" />
+    <Compile Include="API\PixelFormat.Gen.cs" />
     <Compile Include="API\Prefab.Gen.cs" />
     <Compile Include="API\RawDataAsset.Gen.cs" />
+    <Compile Include="API\RenderBuffers.Gen.cs" />
+    <Compile Include="API\Renderer.cs" />
+    <Compile Include="API\Renderer.Gen.cs" />
+    <Compile Include="API\RenderList.Gen.cs" />
+    <Compile Include="API\RenderTask.cs" />
+    <Compile Include="API\RenderTask.Gen.cs" />
+    <Compile Include="API\RenderTools.Gen.cs" />
     <Compile Include="API\Scene.Gen.cs" />
+    <Compile Include="API\Screenshot.Gen.cs" />
     <Compile Include="API\Shader.Gen.cs" />
     <Compile Include="API\SkeletonData.Gen.cs" />
     <Compile Include="API\SkeletonMask.Gen.cs" />
@@ -88,6 +109,7 @@
     <Compile Include="API\SkinnedModel.cs" />
     <Compile Include="API\SkinnedModel.Gen.cs" />
     <Compile Include="API\SpriteAtlas.cs" />
+    <Compile Include="API\Terrain.Gen.cs" />
     <Compile Include="API\Texture.Gen.cs" />
     <Compile Include="API\TextureBase.cs" />
     <Compile Include="API\TextureBase.Gen.cs" />
@@ -98,8 +120,6 @@
     <Compile Include="API\Actors\AudioSource.Gen.cs" />
     <Compile Include="API\Actors\BoxBrush.cs" />
     <Compile Include="API\Actors\BoxBrush.Gen.cs" />
-    <Compile Include="API\Actors\Camera.cs" />
-    <Compile Include="API\Actors\Camera.Gen.cs" />
     <Compile Include="API\Actors\Collider.cs" />
     <Compile Include="API\Actors\Collider.Gen.cs" />
     <Compile Include="API\Actors\Decal.cs" />
@@ -128,8 +148,7 @@
     <Compile Include="API\Actors\Skybox.Gen.cs" />
     <Compile Include="API\Actors\StaticModel.cs" />
     <Compile Include="API\Actors\StaticModel.Gen.cs" />
-    <Compile Include="API\Actors\Terrain.cs" />
-    <Compile Include="API\Actors\Terrain.Gen.cs" />
+    <Compile Include="API\Terrain.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />
     <Compile Include="API\Actors\UICanvas.Gen.cs" />
@@ -153,8 +172,6 @@
     <Compile Include="API\Colliders\CharacterController.Gen.cs" />
     <Compile Include="API\Colliders\MeshCollider.Gen.cs" />
     <Compile Include="API\Colliders\SphereCollider.Gen.cs" />
-    <Compile Include="API\GPUResources\GPUTexture.cs" />
-    <Compile Include="API\GPUResources\GPUTexture.Gen.cs" />
     <Compile Include="API\Joints\D6Joint.cs" />
     <Compile Include="API\Joints\D6Joint.Gen.cs" />
     <Compile Include="API\Joints\DistanceJoint.cs" />
@@ -178,12 +195,6 @@
     <Compile Include="API\Objects\Actor.Gen.cs" />
     <Compile Include="API\Objects\Font.cs" />
     <Compile Include="API\Objects\Font.Gen.cs" />
-    <Compile Include="API\Objects\GPUContext.cs" />
-    <Compile Include="API\Objects\GPUContext.Gen.cs" />
-    <Compile Include="API\Objects\GPUResource.Gen.cs" />
-    <Compile Include="API\Objects\RenderBuffers.Gen.cs" />
-    <Compile Include="API\Objects\RenderTask.cs" />
-    <Compile Include="API\Objects\RenderTask.Gen.cs" />
     <Compile Include="API\Objects\Script.cs" />
     <Compile Include="API\Objects\Script.Gen.cs" />
     <Compile Include="API\Objects\Window.cs" />
@@ -192,12 +203,8 @@
     <Compile Include="API\Static\Audio.Gen.cs" />
     <Compile Include="API\Static\Content.cs" />
     <Compile Include="API\Static\Content.Gen.cs" />
-    <Compile Include="API\Static\DebugDraw.cs" />
-    <Compile Include="API\Static\DebugDraw.Gen.cs" />
     <Compile Include="API\Static\Globals.cs" />
     <Compile Include="API\Static\Globals.Gen.cs" />
-    <Compile Include="API\Static\GPUDevice.cs" />
-    <Compile Include="API\Static\GPUDevice.Gen.cs" />
     <Compile Include="API\Static\GraphicsSettings.cs" />
     <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
     <Compile Include="API\Static\Input.cs" />
@@ -220,9 +227,7 @@
     <Compile Include="API\Static\Profiler.Gen.cs" />
     <Compile Include="API\Static\Render2D.cs" />
     <Compile Include="API\Static\Render2D.Gen.cs" />
-    <Compile Include="API\Static\RenderTargetPool.cs" />
     <Compile Include="API\Static\RenderTargetPool.Gen.cs" />
-    <Compile Include="API\Static\Screen.cs" />
     <Compile Include="API\Static\Screen.Gen.cs" />
     <Compile Include="API\Static\Scripting.cs" />
     <Compile Include="API\Static\Time.cs" />
@@ -284,7 +289,6 @@
     <Compile Include="Engine\ModelEntryInfo.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
-    <Compile Include="Engine\RayCastHit.cs" />
     <Compile Include="Engine\SceneReference.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
     <Compile Include="Engine\TextLayoutOptions.cs" />
@@ -297,9 +301,7 @@
     <Compile Include="Enums\LogType.cs" />
     <Compile Include="Enums\PhysicsCombineMode.cs" />
     <Compile Include="Enums\PlatformType.cs" />
-    <Compile Include="Enums\Quality.cs" />
     <Compile Include="Enums\RigidbodyConstraints.cs" />
-    <Compile Include="Enums\ShadowsCastingMode.cs" />
     <Compile Include="Enums\StaticFlags.cs" />
     <Compile Include="Enums\WindowEnums.cs" />
     <Compile Include="GUI\CanvasContainer.cs" />
@@ -403,35 +405,17 @@
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rendering\CullMode.cs" />
-    <Compile Include="Rendering\CustomRenderTask.cs" />
-    <Compile Include="Rendering\DrawCallsCollector.cs" />
-    <Compile Include="Rendering\DrawPass.cs" />
-    <Compile Include="Rendering\Enums.cs" />
-    <Compile Include="Rendering\FormatFeatures.cs" />
-    <Compile Include="Rendering\FormatSupport.cs" />
-    <Compile Include="Rendering\GPUResourceMapMode.cs" />
-    <Compile Include="Rendering\GPUResourceUsage.cs" />
     <Compile Include="Rendering\GPUTextureDescription.cs" />
-    <Compile Include="Rendering\GPUTextureFlags.cs" />
     <Compile Include="Rendering\IDrawable.cs" />
     <Compile Include="Rendering\LightmapSettings.cs" />
-    <Compile Include="Rendering\MainRenderTask.cs" />
     <Compile Include="Rendering\MaterialInfo.cs" />
-    <Compile Include="Rendering\MSAALevel.cs" />
-    <Compile Include="Rendering\PixelFormat.cs" />
     <Compile Include="Rendering\PixelFormatExtensions.cs" />
     <Compile Include="Rendering\PostProcessEffect.cs" />
     <Compile Include="Rendering\PostProcessSettings.cs" />
     <Compile Include="Rendering\RenderView.cs" />
-    <Compile Include="Rendering\SceneRenderTask.cs" />
-    <Compile Include="Rendering\TessellationMethod.cs" />
     <Compile Include="Rendering\TextureDimensions.cs" />
-    <Compile Include="Rendering\ViewFlags.cs" />
-    <Compile Include="Rendering\ViewMode.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\PerlinNoise.cs" />
-    <Compile Include="Utilities\Screenshot.cs" />
     <Compile Include="Utilities\State.cs" />
     <Compile Include="Utilities\StateMachine.cs" />
     <Compile Include="Utilities\StringUtils.cs" />

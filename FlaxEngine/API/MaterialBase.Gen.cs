@@ -12,7 +12,7 @@ namespace FlaxEngine
     /// </summary>
     /// <seealso cref="FlaxEngine.BinaryAsset" />
     [Tooltip("Base class for <see cref=\"Material\"/> and <see cref=\"MaterialInstance\"/>.")]
-    public abstract partial class MaterialBase : BinaryAsset
+    public abstract unsafe partial class MaterialBase : BinaryAsset
     {
         /// <inheritdoc />
         protected MaterialBase() : base()

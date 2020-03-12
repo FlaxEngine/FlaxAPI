@@ -12,7 +12,7 @@ namespace FlaxEngine
     /// </summary>
     [Tooltip("Describes a single skeleton node data. Used by the runtime.")]
     [StructLayout(LayoutKind.Sequential)]
-    public struct SkeletonNode
+    public unsafe struct SkeletonNode
     {
         /// <summary>
         /// The parent node index. The root node uses value -1.
@@ -41,7 +41,7 @@ namespace FlaxEngine
     /// </summary>
     [Tooltip("Describes a single skeleton bone data. Used by the runtime. Skeleton bones are subset of the skeleton nodes collection that are actually used by the skinned model meshes.")]
     [StructLayout(LayoutKind.Sequential)]
-    public struct SkeletonBone
+    public unsafe struct SkeletonBone
     {
         /// <summary>
         /// The parent bone index. The root bone uses value -1.

@@ -212,10 +212,10 @@ namespace FlaxEditor.Windows.Assets
             {
                 // Ask user for further action
                 var result = MessageBox.Show(
-                    string.Format("Asset \'{0}\' has been edited. Save before scripts reload?", _item.Path),
-                    "Save before reloading?",
-                    MessageBox.Buttons.YesNo
-                );
+                                             string.Format("Asset \'{0}\' has been edited. Save before scripts reload?", _item.Path),
+                                             "Save before reloading?",
+                                             MessageBox.Buttons.YesNo
+                                            );
                 if (result == DialogResult.OK || result == DialogResult.Yes)
                 {
                     Save();

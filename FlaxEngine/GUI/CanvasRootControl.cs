@@ -128,7 +128,7 @@ namespace FlaxEngine.GUI
             Vector3 locationWorldSpace;
             Vector3 locationCanvasSpace = new Vector3(location, 0.0f);
             Vector3.Transform(ref locationCanvasSpace, ref world, out locationWorldSpace);
-            camera.ProjectPoint(ref locationWorldSpace, out location);
+            camera.ProjectPoint(locationWorldSpace, out location);
             return location;
         }
 

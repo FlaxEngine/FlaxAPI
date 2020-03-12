@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Material variable object. Allows to modify material parameter value at runtime.
     /// </summary>
     [Tooltip("Material variable object. Allows to modify material parameter value at runtime.")]
-    public partial class MaterialParameter : FlaxEngine.Object
+    public unsafe partial class MaterialParameter : FlaxEngine.Object
     {
         /// <inheritdoc />
         protected MaterialParameter() : base()

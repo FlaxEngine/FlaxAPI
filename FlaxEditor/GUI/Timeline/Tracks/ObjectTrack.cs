@@ -229,7 +229,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Adds the property or field track to this object track.
         /// </summary>
-        /// <param name="script">The member (property or a field).</param>
+        /// <param name="m">The member (property or a field).</param>
         /// <returns>The created track or null if failed.</returns>
         public MemberTrack AddPropertyTrack(MemberInfo m)
         {

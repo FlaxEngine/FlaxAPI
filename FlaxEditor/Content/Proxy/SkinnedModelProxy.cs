@@ -79,6 +79,8 @@ namespace FlaxEditor.Content
         {
             _preview.SkinnedModel = (SkinnedModel)request.Asset;
             _preview.Parent = guiRoot;
+
+            _preview.Task.OnDraw();
         }
 
         /// <inheritdoc />

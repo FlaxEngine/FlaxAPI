@@ -146,7 +146,7 @@ namespace FlaxEditor.GUI.Timeline
             /// <summary>
             /// Initializes a new instance of the <see cref="ProxyBase{TTimeline}"/> class.
             /// </summary>
-            /// <param name="track">The timeline.</param>
+            /// <param name="timeline">The timeline.</param>
             protected ProxyBase(TTimeline timeline)
             {
                 Timeline = timeline ?? throw new ArgumentNullException(nameof(timeline));

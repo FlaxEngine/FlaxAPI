@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Base class for asset types that can contain a model resource.
     /// </summary>
     [Tooltip("Base class for asset types that can contain a model resource.")]
-    public abstract partial class ModelBase : BinaryAsset
+    public abstract unsafe partial class ModelBase : BinaryAsset
     {
         /// <inheritdoc />
         protected ModelBase() : base()

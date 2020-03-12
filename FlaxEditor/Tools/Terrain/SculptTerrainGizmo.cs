@@ -60,10 +60,8 @@ namespace FlaxEditor.Tools.Terrain
         }
 
         /// <inheritdoc />
-        public override void Draw(DrawCallsCollector collector)
+        public override void Draw(ref RenderContext renderContext)
         {
-            base.Draw(collector);
-
             if (!IsActive)
                 return;
 
@@ -82,7 +80,7 @@ namespace FlaxEditor.Tools.Terrain
                 for (int i = 0; i < Mode.ChunksUnderCursor.Count; i++)
                 {
                     var chunk = Mode.ChunksUnderCursor[i];
-                    collector.AddDrawCall(terrain, ref chunk.PatchCoord, ref chunk.ChunkCoord, brushMaterial);
+                    terrain.DrawChunk(ref renderContext, ref chunk.PatchCoord, ref chunk.ChunkCoord, brushMaterial);
                 }
             }
         }

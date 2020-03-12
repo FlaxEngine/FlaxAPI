@@ -74,7 +74,7 @@ namespace FlaxEditor.Viewport.Previews
             SelectedModelIndex = 0;
 
             // Link actors for rendering
-            Task.CustomActors.Add(_previewModel);
+            Task.AddCustomActor(_previewModel);
 
             // TODO: don't wait for model but assign material in async on task begin or sth?
             // do it like in c++ editor
@@ -170,7 +170,7 @@ namespace FlaxEditor.Viewport.Previews
                 _decal = Decal.New();
                 _decal.Size = new Vector3(100.0f);
                 _decal.LocalOrientation = Quaternion.RotationZ(Mathf.PiOverTwo);
-                Task.CustomActors.Add(_decal);
+                Task.AddCustomActor(_decal);
             }
             if (_decal)
                 _decal.Material = decalMaterial;

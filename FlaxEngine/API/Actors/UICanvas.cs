@@ -53,25 +53,25 @@ namespace FlaxEngine
         public override int Order => Canvas.Order;
 
         /// <inheritdoc />
-        public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
+        public override void Render(GPUContext context, ref RenderContext renderContext, GPUTexture input, GPUTexture output)
         {
             // TODO: apply frustum culling to skip rendering if canvas is not in a viewport
 
             Profiler.BeginEventGPU("UI Canvas");
 
             // Calculate rendering matrix (world*view*projection)
-            Matrix viewProjection;
-            Matrix world;
-            Canvas.GetWorldMatrix(out world);
-            Matrix view;
-            Matrix.Multiply(ref world, ref task.View.View, out view);
-            Matrix.Multiply(ref view, ref task.View.Projection, out viewProjection);
+            Matrix viewProjectionMatrix;
+            Matrix worldMatrix;
+            Canvas.GetWorldMatrix(out worldMatrix);
+            Matrix viewMatrix;
+            Matrix.Multiply(ref worldMatrix, ref renderContext.View.View, out viewMatrix);
+            Matrix.Multiply(ref viewMatrix, ref renderContext.View.Projection, out viewProjectionMatrix);
 
             // Pick a depth buffer
-            GPUTexture depthBuffer = Canvas.IgnoreDepth ? null : task.Buffers.DepthBuffer;
+            GPUTexture depthBuffer = Canvas.IgnoreDepth ? null : renderContext.Buffers.DepthBuffer;
 
             // Render GUI in 3D
-            Render2D.CallDrawing(Canvas.GUI, context, input, depthBuffer, ref viewProjection);
+            Render2D.CallDrawing(Canvas.GUI, context, input, depthBuffer, ref viewProjectionMatrix);
 
             Profiler.EndEventGPU();
         }
@@ -219,7 +219,7 @@ namespace FlaxEngine
             var camera = Camera.MainCamera;
             if (camera)
             {
-                camera.ConvertMouseToRay(ref location, out ray);
+                ray = camera.ConvertMouseToRay(location);
             }
             else
             {

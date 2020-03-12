@@ -102,48 +102,6 @@ namespace FlaxEngine
     }
 
     /// <summary>
-    /// Post Fx material rendering locations.
-    /// </summary>
-    public enum MaterialPostFxLocation : byte
-    {
-        /// <summary>
-        /// The after post processing pass using LDR input frame.
-        /// </summary>
-        [Tooltip("The after post processing pass using LDR input frame.")]
-        AfterPostProcessingPass = 0,
-
-        /// <summary>
-        /// The before post processing pass using HDR input frame.
-        /// </summary>
-        [Tooltip("The before post processing pass using HDR input frame.")]
-        BeforePostProcessingPass = 1,
-
-        /// <summary>
-        /// The before forward pass but after GBuffer with HDR input frame.
-        /// </summary>
-        [Tooltip("The before forward pass but after GBuffer with HDR input frame.")]
-        BeforeForwardPass = 2,
-
-        /// <summary>
-        /// The after custom post effects.
-        /// </summary>
-        [Tooltip("The after custom post effects.")]
-        AfterCustomPostEffects = 3,
-
-        /// <summary>
-        /// The 'before' Reflections pass. After the Light pass. Can be used to implement a custom light types that accumulate lighting to the light buffer.
-        /// </summary>
-        [Tooltip("The 'before' Reflections pass. After the Light pass. Can be used to implement a custom light types that accumulate lighting to the light buffer.")]
-        BeforeReflectionsPass = 4,
-
-        /// <summary>
-        /// The 'after' AA filter pass. Rendering is done to the output backbuffer.
-        /// </summary>
-        [Tooltip("The 'after' AA filter pass. Rendering is done to the output backbuffer.")]
-        AfterAntiAliasingPass = 5,
-    }
-
-    /// <summary>
     /// Decal material blending modes.
     /// </summary>
     public enum MaterialDecalBlendingMode : byte
@@ -373,7 +331,7 @@ namespace FlaxEngine
         /// The post fx material rendering location.
         /// </summary>
         public MaterialPostFxLocation PostFxLocation;
-        
+
         /// <summary>
         /// The primitives culling mode.
         /// </summary>

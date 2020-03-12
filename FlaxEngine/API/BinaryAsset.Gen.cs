@@ -12,7 +12,7 @@ namespace FlaxEngine
     /// </summary>
     /// <seealso cref="Asset" />
     [Tooltip("Base class for all binary assets.")]
-    public abstract partial class BinaryAsset : Asset
+    public abstract unsafe partial class BinaryAsset : Asset
     {
         /// <inheritdoc />
         protected BinaryAsset() : base()

@@ -70,12 +70,11 @@ namespace FlaxEngine.GUI
             if (task == null)
                 throw new ArgumentNullException();
 
-            _backBuffer = GPUDevice.CreateTexture();
+            _backBuffer = GPUDevice.Instance.CreateTexture();
             _resizeTime = ResizeCheckTime;
 
             _task = task;
             _task.Output = _backBuffer;
-            _task.CanSkipRendering += CanSkipRendering;
             _task.End += OnEnd;
         }
 
@@ -116,11 +115,6 @@ namespace FlaxEngine.GUI
         /// <returns>True if skip rendering, otherwise false.</returns>
         protected virtual bool CanSkipRendering()
         {
-            if (_task == null)
-                return true;
-
-            _task.Output = _backBuffer;
-
             // Disable task rendering if control is very small
             const float MinRenderSize = 4;
             if (Width < MinRenderSize || Height < MinRenderSize)
@@ -140,7 +134,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="task">The task.</param>
         /// <param name="context">The GPU execution context.</param>
-        protected virtual void OnEnd(SceneRenderTask task, GPUContext context)
+        protected virtual void OnEnd(RenderTask task, GPUContext context)
         {
             // Check if was using old backbuffer
             if (_backBufferOld)
@@ -163,6 +157,9 @@ namespace FlaxEngine.GUI
                 _resizeTime = 0;
                 SyncBackbufferSize();
             }
+
+            // Check if skip rendering
+            _task.Enabled = !CanSkipRendering();
 
             base.Update(deltaTime);
         }
@@ -199,7 +196,7 @@ namespace FlaxEngine.GUI
             if (_backBufferOld == null && _backBuffer.IsAllocated)
             {
                 _backBufferOld = _backBuffer;
-                _backBuffer = GPUDevice.CreateTexture();
+                _backBuffer = GPUDevice.Instance.CreateTexture();
             }
 
             // Set timeout to remove old buffer
@@ -218,7 +215,11 @@ namespace FlaxEngine.GUI
                 return;
 
             // Cleanup
-            _task?.Dispose();
+            if (_task != null)
+            {
+                _task.Enabled = false;
+                //_task.CustomPostFx.Clear();
+            }
             Object.Destroy(ref _backBuffer);
             Object.Destroy(ref _backBufferOld);
             Object.Destroy(ref _task);

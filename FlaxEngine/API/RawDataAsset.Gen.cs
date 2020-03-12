@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Raw bytes container asset.
     /// </summary>
     [Tooltip("Raw bytes container asset.")]
-    public partial class RawDataAsset : BinaryAsset
+    public unsafe partial class RawDataAsset : BinaryAsset
     {
         /// <inheritdoc />
         protected RawDataAsset() : base()

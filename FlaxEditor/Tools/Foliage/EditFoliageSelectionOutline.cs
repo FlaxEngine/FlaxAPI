@@ -63,7 +63,7 @@ namespace FlaxEditor.Tools.Foliage
                 _staticModel.Transform = instanceWorld;
                 _actors.Add(_staticModel);
 
-                context.DrawSceneDepth(task, customDepth, _actors, ActorsSources.CustomActors);
+                Renderer.DrawSceneDepth(context, task, customDepth, _actors);
             }
         }
     }

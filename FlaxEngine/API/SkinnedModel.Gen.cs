@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Skinned model asset that contains model object made of meshes that can be rendered on the GPU using skeleton bones skinning.
     /// </summary>
     [Tooltip("Skinned model asset that contains model object made of meshes that can be rendered on the GPU using skeleton bones skinning.")]
-    public partial class SkinnedModel : ModelBase
+    public unsafe partial class SkinnedModel : ModelBase
     {
         /// <inheritdoc />
         protected SkinnedModel() : base()

@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// The scene asset.
     /// </summary>
     [Tooltip("The scene asset.")]
-    public partial class SceneAsset : JsonAsset
+    public unsafe partial class SceneAsset : JsonAsset
     {
         /// <inheritdoc />
         protected SceneAsset() : base()

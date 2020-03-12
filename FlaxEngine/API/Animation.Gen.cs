@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Asset that contains an animation spline represented by a set of keyframes, each representing an endpoint of a linear curve.
     /// </summary>
     [Tooltip("Asset that contains an animation spline represented by a set of keyframes, each representing an endpoint of a linear curve.")]
-    public partial class Animation : BinaryAsset
+    public unsafe partial class Animation : BinaryAsset
     {
         /// <inheritdoc />
         protected Animation() : base()
@@ -71,7 +71,7 @@ namespace FlaxEngine
         /// </summary>
         [Tooltip("Contains basic information about the animation asset contents.")]
         [StructLayout(LayoutKind.Sequential)]
-        public struct InfoData
+        public unsafe struct InfoData
         {
             /// <summary>
             /// Length of the animation in seconds.

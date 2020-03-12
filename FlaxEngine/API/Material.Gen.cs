@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Material asset that contains shader for rendering models on the GPU.
     /// </summary>
     [Tooltip("Material asset that contains shader for rendering models on the GPU.")]
-    public partial class Material : MaterialBase
+    public unsafe partial class Material : MaterialBase
     {
         /// <inheritdoc />
         protected Material() : base()

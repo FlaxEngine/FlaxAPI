@@ -549,10 +549,10 @@ namespace FlaxEditor.Modules
                 Parent = StatusBar
             };
             _progressBar = new ProgressBar(
-                progressPanel.Width - progressBarWidth - progressBarRightMargin,
-                (StatusBar.Height - progressBarHeight) * 0.5f,
-                progressBarWidth,
-                progressBarHeight)
+                                           progressPanel.Width - progressBarWidth - progressBarRightMargin,
+                                           (StatusBar.Height - progressBarHeight) * 0.5f,
+                                           progressBarWidth,
+                                           progressBarHeight)
             {
                 AnchorStyle = AnchorStyle.CenterRight,
                 Parent = progressPanel
@@ -660,7 +660,7 @@ namespace FlaxEditor.Modules
                 return;
 
             var c = (ContextMenu)control;
-            bool canBakeLightmaps = GPUDevice.Limits.IsComputeSupported;
+            bool canBakeLightmaps = GPUDevice.Instance.Limits.IsComputeSupported;
             bool canEdit = Level.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
             bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive;
             _menuToolsBakeLightmaps.Enabled = (canEdit && canBakeLightmaps) || isBakingLightmaps;

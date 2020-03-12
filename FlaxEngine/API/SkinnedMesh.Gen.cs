@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Represents part of the skinned model that is made of vertices and can be rendered using custom material, transformation and skeleton bones hierarchy.
     /// </summary>
     [Tooltip("Represents part of the skinned model that is made of vertices and can be rendered using custom material, transformation and skeleton bones hierarchy.")]
-    public partial class SkinnedMesh : FlaxEngine.Object
+    public unsafe partial class SkinnedMesh : FlaxEngine.Object
     {
         /// <inheritdoc />
         protected SkinnedMesh() : base()

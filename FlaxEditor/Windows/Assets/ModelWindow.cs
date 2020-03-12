@@ -48,13 +48,13 @@ namespace FlaxEditor.Windows.Assets
                 _floorModel.Scale = new Vector3(5, 0.5f, 5);
                 _floorModel.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
                 _floorModel.IsActive = false;
-                Task.CustomActors.Add(_floorModel);
+                Task.AddCustomActor(_floorModel);
 
                 // Enable shadows
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
                 PreviewLight.CascadeCount = 3;
                 PreviewLight.ShadowsDistance = 2000.0f;
-                Task.View.Flags |= ViewFlags.Shadows;
+                Task.ViewFlags |= ViewFlags.Shadows;
             }
 
             private void OnShowFloorModelClicked(ContextMenuButton obj)
@@ -440,7 +440,7 @@ namespace FlaxEditor.Windows.Assets
             // Highlight actor (used to highlight selected material slot, see UpdateEffectsOnAsset)
             _highlightActor = StaticModel.New();
             _highlightActor.IsActive = false;
-            _preview.Task.CustomActors.Add(_highlightActor);
+            _preview.Task.AddCustomActor(_highlightActor);
         }
 
         /// <summary>

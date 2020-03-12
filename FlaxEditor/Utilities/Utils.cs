@@ -912,7 +912,8 @@ namespace FlaxEditor.Utilities
         /// <summary>
         /// Shows the source code window.
         /// </summary>
-        /// <param name="material">The material asset.</param>
+        /// <param name="source">The source code.</param>
+        /// <param name="title">The window title.</param>
         public static void ShowSourceCodeWindow(string source, string title)
         {
             if (string.IsNullOrEmpty(source))

@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Instance of the <seealso cref="Material" /> with custom set of material parameter values.
     /// </summary>
     [Tooltip("Instance of the <seealso cref=\"Material\" /> with custom set of material parameter values.")]
-    public partial class MaterialInstance : MaterialBase
+    public unsafe partial class MaterialInstance : MaterialBase
     {
         /// <inheritdoc />
         protected MaterialInstance() : base()

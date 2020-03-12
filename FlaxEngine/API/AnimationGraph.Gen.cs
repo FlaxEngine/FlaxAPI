@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// The Animation Graph is used to evaluate a final pose for the animated model for the current frame.
     /// </summary>
     [Tooltip("The Animation Graph is used to evaluate a final pose for the animated model for the current frame.")]
-    public partial class AnimationGraph : BinaryAsset
+    public unsafe partial class AnimationGraph : BinaryAsset
     {
         /// <inheritdoc />
         protected AnimationGraph() : base()

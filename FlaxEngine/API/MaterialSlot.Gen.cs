@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// The material slot descriptor that specifies how to render geometry using it.
     /// </summary>
     [Tooltip("The material slot descriptor that specifies how to render geometry using it.")]
-    public partial class MaterialSlot : FlaxEngine.Object
+    public unsafe partial class MaterialSlot : FlaxEngine.Object
     {
         /// <inheritdoc />
         protected MaterialSlot() : base()

@@ -76,11 +76,11 @@ namespace FlaxEditor.Viewport.Previews
             _previewNodesActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
 
             // Link actors for rendering
-            Task.CustomActors.Add(_previewModel);
-            Task.CustomActors.Add(_previewNodesActor);
+            Task.AddCustomActor(_previewModel);
+            Task.AddCustomActor(_previewNodesActor);
         }
 
-        private void OnBegin(SceneRenderTask task, GPUContext context)
+        private void OnBegin(RenderTask task, GPUContext context)
         {
             if (!ScaleToFit)
             {

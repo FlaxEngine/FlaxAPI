@@ -12,7 +12,7 @@ namespace FlaxEngine
     /// </summary>
     /// <seealso cref="FlaxEngine.BinaryAsset" />
     [Tooltip("Base class for <see cref=\"Texture\"/>, <see cref=\"SpriteAtlas\"/>, <see cref=\"IESProfile\"/> and other assets that can contain texture data.")]
-    public abstract partial class TextureBase : BinaryAsset
+    public abstract unsafe partial class TextureBase : BinaryAsset
     {
         /// <inheritdoc />
         protected TextureBase() : base()
@@ -20,16 +20,16 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the native pointer to the underlying resource. It's a low-level platform-specific handle.
+        /// Gets GPU texture object allocated by the asset.
         /// </summary>
-        [Tooltip("The native pointer to the underlying resource. It's a low-level platform-specific handle.")]
-        public IntPtr NativePtr
+        [Tooltip("Gets GPU texture object allocated by the asset.")]
+        public GPUTexture Texture
         {
-            get { return Internal_GetNativePtr(unmanagedPtr); }
+            get { return Internal_GetTexture(unmanagedPtr); }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern IntPtr Internal_GetNativePtr(IntPtr obj);
+        internal static extern GPUTexture Internal_GetTexture(IntPtr obj);
 
         /// <summary>
         /// Gets the texture data format.

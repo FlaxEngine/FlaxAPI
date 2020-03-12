@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Texture asset contains an image that is usually stored on a GPU and is used during rendering graphics.
     /// </summary>
     [Tooltip("Texture asset contains an image that is usually stored on a GPU and is used during rendering graphics.")]
-    public partial class Texture : TextureBase
+    public unsafe partial class Texture : TextureBase
     {
         /// <inheritdoc />
         protected Texture() : base()

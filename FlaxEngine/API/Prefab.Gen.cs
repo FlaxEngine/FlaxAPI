@@ -12,7 +12,7 @@ namespace FlaxEngine
     /// </summary>
     /// <seealso cref="JsonAssetBase" />
     [Tooltip("Json asset that stores the collection of scene objects including actors and scripts. In general it can serve as any grouping of scene objects (for example a level) or be used as a form of a template instantiated and reused throughout the scene.")]
-    public partial class Prefab : JsonAssetBase
+    public unsafe partial class Prefab : JsonAssetBase
     {
         /// <inheritdoc />
         protected Prefab() : base()

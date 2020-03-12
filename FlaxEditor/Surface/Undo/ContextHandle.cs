@@ -43,7 +43,7 @@ namespace FlaxEditor.Surface.Undo
         /// <summary>
         /// Gets the context.
         /// </summary>
-        /// <param name="context">The Surface.</param>
+        /// <param name="surface">The Surface.</param>
         /// <returns>The restored context.</returns>
         public VisjectSurfaceContext Get(VisjectSurface surface)
         {

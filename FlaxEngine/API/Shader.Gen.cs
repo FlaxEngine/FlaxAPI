@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// The shader asset. Contains a program that runs on the GPU and is able to perform rendering calculation using textures, vertices and other resources.
     /// </summary>
     [Tooltip("The shader asset. Contains a program that runs on the GPU and is able to perform rendering calculation using textures, vertices and other resources.")]
-    public partial class Shader : BinaryAsset
+    public unsafe partial class Shader : BinaryAsset
     {
         /// <inheritdoc />
         protected Shader() : base()

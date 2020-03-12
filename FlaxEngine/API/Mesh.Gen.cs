@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Represents part of the model that is made of vertices and can be rendered using custom material and transformation.
     /// </summary>
     [Tooltip("Represents part of the model that is made of vertices and can be rendered using custom material and transformation.")]
-    public partial class Mesh : FlaxEngine.Object
+    public unsafe partial class Mesh : FlaxEngine.Object
     {
         /// <inheritdoc />
         protected Mesh() : base()
@@ -117,6 +117,22 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetSphere(IntPtr obj, out BoundingSphere resultAsRef);
+
+        /// <summary>
+        /// Draws the mesh.
+        /// </summary>
+        /// <param name="renderContext">The rendering context.</param>
+        /// <param name="material">The material to use for rendering.</param>
+        /// <param name="world">The world transformation of the model.</param>
+        /// <param name="flags">The object static flags.</param>
+        /// <param name="receiveDecals">True if rendered geometry can receive decals, otherwise false.</param>
+        public void Draw(ref RenderContext renderContext, MaterialBase material, ref Matrix world, StaticFlags flags = StaticFlags.None, bool receiveDecals = true)
+        {
+            Internal_Draw(unmanagedPtr, ref renderContext, FlaxEngine.Object.GetUnmanagedPtr(material), ref world, flags, receiveDecals);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_Draw(IntPtr obj, ref RenderContext renderContext, IntPtr material, ref Matrix world, StaticFlags flags, bool receiveDecals);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern FlaxEngine.Object Internal_GetParentModel(IntPtr obj);

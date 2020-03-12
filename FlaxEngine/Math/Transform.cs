@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
+
 namespace FlaxEngine
 {
     /// <summary>
@@ -79,24 +81,24 @@ namespace FlaxEngine
             Orientation = rotation;
             Scale = scale;
         }
-        
-        /// <summary>
-		/// Creates a new Transfrom from a matrix
-		/// </summary>
-		/// <param name="matrix">World matrix</param>
-		public Transform(Matrix transform)
-		{
-			transform.Decompose(out Scale, out Orientation, out Translation);
-		}
 
-		/// <summary>
-		/// Creates a new Transfrom from a matrix
-		/// </summary>
-		/// <param name="matrix">World matrix</param>
-		public Transform(ref Matrix transform)
-		{
-			transform.Decompose(out Scale, out Orientation, out Translation);
-		}
+        /// <summary>
+        /// Creates a new Transform from a matrix
+        /// </summary>
+        /// <param name="transform">World matrix</param>
+        public Transform(Matrix transform)
+        {
+            transform.Decompose(out Scale, out Orientation, out Translation);
+        }
+
+        /// <summary>
+        /// Creates a new Transform from a matrix
+        /// </summary>
+        /// <param name="transform">World matrix</param>
+        public Transform(ref Matrix transform)
+        {
+            transform.Decompose(out Scale, out Orientation, out Translation);
+        }
 
         /// <summary>
         /// Gets a value indicting whether this transform is identity
@@ -139,8 +141,7 @@ namespace FlaxEngine
         /// <returns>Rotation matrix</returns>
         public Matrix GetRotation()
         {
-            Matrix result;
-            Matrix.RotationQuaternion(ref Orientation, out result);
+            Matrix.RotationQuaternion(ref Orientation, out var result);
             return result;
         }
 
@@ -241,9 +242,12 @@ namespace FlaxEngine
         {
             Transform result = new Transform(Vector3.Zero);
             Vector3 invScale = Scale;
-            if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
-            if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
-            if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
+            if (invScale.X != 0.0f)
+                invScale.X = 1.0f / invScale.X;
+            if (invScale.Y != 0.0f)
+                invScale.Y = 1.0f / invScale.Y;
+            if (invScale.Z != 0.0f)
+                invScale.Z = 1.0f / invScale.Z;
 
             result.Orientation = Orientation;
             result.Orientation.Invert();
@@ -262,9 +266,12 @@ namespace FlaxEngine
         public Vector3 WorldToLocal(Vector3 point)
         {
             Vector3 invScale = Scale;
-            if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
-            if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
-            if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
+            if (invScale.X != 0.0f)
+                invScale.X = 1.0f / invScale.X;
+            if (invScale.Y != 0.0f)
+                invScale.Y = 1.0f / invScale.Y;
+            if (invScale.Z != 0.0f)
+                invScale.Z = 1.0f / invScale.Z;
 
             Quaternion invRotation = Orientation;
             invRotation.Invert();
@@ -283,9 +290,12 @@ namespace FlaxEngine
         public void WorldToLocal(Vector3[] points, Vector3[] result)
         {
             Vector3 invScale = Scale;
-            if (invScale.X != 0.0f) invScale.X = 1.0f / invScale.X;
-            if (invScale.Y != 0.0f) invScale.Y = 1.0f / invScale.Y;
-            if (invScale.Z != 0.0f) invScale.Z = 1.0f / invScale.Z;
+            if (invScale.X != 0.0f)
+                invScale.X = 1.0f / invScale.X;
+            if (invScale.Y != 0.0f)
+                invScale.Y = 1.0f / invScale.Y;
+            if (invScale.Z != 0.0f)
+                invScale.Z = 1.0f / invScale.Z;
 
             Quaternion invRotation = Orientation;
             invRotation.Invert();

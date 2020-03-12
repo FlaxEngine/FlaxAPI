@@ -18,13 +18,6 @@ namespace FlaxEngine
     /// <summary>
     /// The hidden class used in the Engine.
     /// </summary>
-    class PhysicsColliderActor
-    {
-    }
-
-    /// <summary>
-    /// The hidden class used in the Engine.
-    /// </summary>
     class ModelInstanceActor
     {
     }
@@ -79,8 +72,6 @@ namespace FlaxEngine
             {
                 CreateGuiStyle();
             }
-
-            MainRenderTask.Instance = Object.New<MainRenderTask>();
         }
 
         /// <summary>

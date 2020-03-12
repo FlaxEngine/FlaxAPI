@@ -83,7 +83,7 @@ namespace FlaxEditor.GUI
                     Margin = new Margin(6, 6, 6, 6),
                     Brush = new TextureBrush(windowIcon),
                     KeepAspectRatio = false,
-                    TooltipText = string.Format("{0}\nVersion {1}\nGraphics {2}", _window.Title, Globals.Version, GPUDevice.RendererType),
+                    TooltipText = string.Format("{0}\nVersion {1}\nGraphics {2}", _window.Title, Globals.Version, GPUDevice.Instance.RendererType),
                     Parent = this,
                 };
 

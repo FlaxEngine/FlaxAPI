@@ -12,7 +12,7 @@ namespace FlaxEngine
     /// </summary>
     /// <seealso cref="Asset" />
     [Tooltip("Base class for all Json-format assets.")]
-    public abstract partial class JsonAssetBase : Asset
+    public abstract unsafe partial class JsonAssetBase : Asset
     {
         /// <inheritdoc />
         protected JsonAssetBase() : base()
@@ -64,7 +64,7 @@ namespace FlaxEngine
     /// </summary>
     /// <seealso cref="JsonAssetBase" />
     [Tooltip("Generic type of Json-format asset. It provides the managed representation of this resource data so it can be accessed via C# API.")]
-    public partial class JsonAsset : JsonAssetBase
+    public unsafe partial class JsonAsset : JsonAssetBase
     {
         /// <inheritdoc />
         protected JsonAsset() : base()

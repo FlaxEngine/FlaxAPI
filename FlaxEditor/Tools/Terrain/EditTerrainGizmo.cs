@@ -56,10 +56,8 @@ namespace FlaxEditor.Tools.Terrain
         }
 
         /// <inheritdoc />
-        public override void Draw(DrawCallsCollector collector)
+        public override void Draw(ref RenderContext renderContext)
         {
-            base.Draw(collector);
-
             if (!IsActive)
                 return;
 
@@ -78,7 +76,7 @@ namespace FlaxEditor.Tools.Terrain
                 if (terrain.HasPatch(ref patchCoord))
                 {
                     var chunkCoord = Mode.SelectedChunkCoord;
-                    collector.AddDrawCall(terrain, ref patchCoord, ref chunkCoord, _highlightTerrainMaterial);
+                    terrain.DrawChunk(ref renderContext, ref patchCoord, ref chunkCoord, _highlightTerrainMaterial);
                 }
 
                 break;
@@ -97,7 +95,7 @@ namespace FlaxEditor.Tools.Terrain
                                    Matrix.Scaling(terrain.Scale) *
                                    Matrix.RotationQuaternion(terrain.Orientation) *
                                    Matrix.Translation(terrain.Position);
-                    collector.AddDrawCall(_planeModel, 0, _highlightMaterial, 0, ref world);
+                    _planeModel.Draw(ref renderContext, _highlightMaterial, ref world);
                 }
 
                 break;
@@ -108,7 +106,7 @@ namespace FlaxEditor.Tools.Terrain
                 var patchCoord = Mode.SelectedPatchCoord;
                 if (terrain.HasPatch(ref patchCoord))
                 {
-                    collector.AddDrawCall(terrain, ref patchCoord, _highlightTerrainMaterial);
+                    terrain.DrawPatch(ref renderContext, ref patchCoord, _highlightTerrainMaterial);
                 }
                 break;
             }

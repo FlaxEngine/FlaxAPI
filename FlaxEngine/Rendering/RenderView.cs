@@ -16,14 +16,14 @@ namespace FlaxEngine
         public Vector3 Position;
 
         /// <summary>
-        /// The near plane.
-        /// </summary>
-        public float Near;
-
-        /// <summary>
         /// The direction of the view.
         /// </summary>
         public Vector3 Direction;
+
+        /// <summary>
+        /// The near plane.
+        /// </summary>
+        public float Near;
 
         /// <summary>
         /// The far plane.
@@ -48,14 +48,54 @@ namespace FlaxEngine
         public Matrix NonJitteredProjection;
 
         /// <summary>
-        /// The temporal AA jitter packed (xy - this frame jitter, zw - previous frame jitter). Cached before rendering. Zero if TAA is disabled. The value added to projection matrix (in clip space).
+        /// The inverted view matrix.
         /// </summary>
-        public Vector4 TemporalAAJitter;
+        public Matrix IV;
+
+        /// <summary>
+        /// The inverted projection matrix.
+        /// </summary>
+        public Matrix IP;
+
+        /// <summary>
+        /// The inverted projection view matrix.
+        /// </summary>
+        public Matrix IVP;
+
+        /// <summary>
+        /// The view frustum.
+        /// </summary>
+        public BoundingFrustum Frustum;
+
+        /// <summary>
+        /// The view frustum used for culling (can be different than Frustum in some cases e.g. cascaded shadow map rendering).
+        /// </summary>
+        public BoundingFrustum CullingFrustum;
+
+        /// <summary>
+        /// The draw passes mask for the current view rendering.
+        /// </summary>
+        public DrawPass Pass;
 
         /// <summary>
         /// Flag used by static, offline rendering passes (eg. reflections rendering, lightmap rendering etc.)
         /// </summary>
         public bool IsOfflinePass;
+
+        /// <summary>
+        /// The static flags mask used to hide objects that don't have a given static flags. Eg. use StaticFlags::Lightmap to render only objects that can use lightmap.
+        /// </summary>
+        public StaticFlags StaticFlagsMask;
+
+        /// <summary>
+        /// The view flags.
+        /// </summary>
+        public ViewFlags Flags;
+
+        /// <summary>
+        /// The view mode.
+        /// </summary>
+        public ViewMode Mode;
 
         /// <summary>
         /// Maximum allowed shadows quality for this view
@@ -83,14 +123,44 @@ namespace FlaxEngine
         public float ShadowModelLODDistanceFactor;
 
         /// <summary>
-        /// The view flags.
+        /// The Temporal Anti-Aliasing jitter frame index.
         /// </summary>
-        public ViewFlags Flags;
+        public int TaaFrameIndex;
 
         /// <summary>
-        /// The view mode.
+        /// The view information vector with packed components to reconstruct linear depth and view position from the hardware depth buffer. Cached before rendering.
         /// </summary>
-        public ViewMode Mode;
+        public Vector4 ViewInfo;
+
+        /// <summary>
+        /// The screen size packed (x - width, y - height, zw - inv width, w - inv height). Cached before rendering.
+        /// </summary>
+        public Vector4 ScreenSize;
+
+        /// <summary>
+        /// The temporal AA jitter packed (xy - this frame jitter, zw - previous frame jitter). Cached before rendering. Zero if TAA is disabled. The value added to projection matrix (in clip space).
+        /// </summary>
+        public Vector4 TemporalAAJitter;
+
+        /// <summary>
+        /// The previous frame view matrix.
+        /// </summary>
+        public Matrix PrevView;
+
+        /// <summary>
+        /// The previous frame projection matrix.
+        /// </summary>
+        public Matrix PrevProjection;
+
+        /// <summary>
+        /// The previous frame view * projection matrix.
+        /// </summary>
+        public Matrix PrevViewProjection;
+
+        /// <summary>
+        /// Square of <see cref="ModelLODDistanceFactor"/>. Cached by rendering backend.
+        /// </summary>
+        public float ModelLODDistanceFactorSqrt;
 
         /// <summary>
         /// Initializes this view with default options.
@@ -99,9 +169,23 @@ namespace FlaxEngine
         {
             MaxShadowsQuality = Quality.Ultra;
             ModelLODDistanceFactor = 1.0f;
+            ModelLODDistanceFactorSqrt = 1.0f;
             ShadowModelLODDistanceFactor = 1.0f;
             Flags = ViewFlags.DefaultGame;
             Mode = ViewMode.Default;
+        }
+
+        /// <summary>
+        /// Updates the cached data for the view (inverse matrices, etc.).
+        /// </summary>
+        public void UpdateCachedData()
+        {
+            Matrix.Invert(ref View, out IV);
+            Matrix.Invert(ref Projection, out IP);
+            Matrix.Multiply(ref View, ref Projection, out var viewProjection);
+            Frustum = new BoundingFrustum(viewProjection);
+            Matrix.Invert(ref viewProjection, out IVP);
+            CullingFrustum = Frustum;
         }
 
         /// <summary>
@@ -111,12 +195,13 @@ namespace FlaxEngine
         /// <param name="projection">The projection.</param>
         public void SetUp(ref Matrix view, ref Matrix projection)
         {
-            // Copy data
             Position = view.TranslationVector;
             Projection = projection;
             NonJitteredProjection = projection;
             TemporalAAJitter = Vector4.Zero;
             View = view;
+
+            UpdateCachedData();
         }
 
         /// <summary>
@@ -144,6 +229,8 @@ namespace FlaxEngine
             Direction = direction;
             Vector3 target = Position + Direction;
             Matrix.LookAt(ref Position, ref target, ref up, out View);
+
+            UpdateCachedData();
         }
 
         /// <summary>
@@ -152,7 +239,6 @@ namespace FlaxEngine
         /// <param name="camera">The camera.</param>
         public void CopyFrom(Camera camera)
         {
-            // Get data
             Position = camera.Position;
             Direction = camera.Direction;
             Near = camera.NearPlane;
@@ -161,6 +247,8 @@ namespace FlaxEngine
             Projection = camera.Projection;
             NonJitteredProjection = Projection;
             TemporalAAJitter = Vector4.Zero;
+
+            UpdateCachedData();
         }
 
         /// <summary>
@@ -170,7 +258,6 @@ namespace FlaxEngine
         /// <param name="customViewport">The custom viewport to use for view/projeection matrices override.</param>
         public void CopyFrom(Camera camera, ref Viewport customViewport)
         {
-            // Get data
             Position = camera.Position;
             Direction = camera.Direction;
             Near = camera.NearPlane;
@@ -178,6 +265,8 @@ namespace FlaxEngine
             camera.GetMatrices(out View, out Projection, ref customViewport);
             NonJitteredProjection = Projection;
             TemporalAAJitter = Vector4.Zero;
+
+            UpdateCachedData();
         }
     }
 }

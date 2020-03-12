@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Contains IES profile texture used by the lights to simulate real life bulb light emission.
     /// </summary>
     [Tooltip("Contains IES profile texture used by the lights to simulate real life bulb light emission.")]
-    public partial class IESProfile : TextureBase
+    public unsafe partial class IESProfile : TextureBase
     {
         /// <inheritdoc />
         protected IESProfile() : base()
