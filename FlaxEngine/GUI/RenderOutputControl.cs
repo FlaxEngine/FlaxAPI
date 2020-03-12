@@ -76,32 +76,16 @@ namespace FlaxEngine.GUI
             _task = task;
             _task.Output = _backBuffer;
             _task.End += OnEnd;
+
+            Scripting.Update += OnUpdate;
         }
 
-        /// <summary>
-        /// Enables this output rendering.
-        /// </summary>
-        public void Enable()
-        {
-            Task.Enabled = true;
-        }
-
-        /// <summary>
-        /// Disables this output rendering.
-        /// </summary>
-        public void Disable()
-        {
-            Task.Enabled = false;
-        }
-
-        private bool walkTree(Control c)
+        private bool WalkTree(Control c)
         {
             while (c != null)
             {
-                if (c is RootControl win)
-                {
+                if (c is RootControl)
                     return false;
-                }
                 if (c.Visible == false)
                     break;
                 c = c.Parent;
@@ -123,7 +107,7 @@ namespace FlaxEngine.GUI
             // Disable task rendering if control is not used in a window (has using ParentWindow)
             if (RenderOnlyWithWindow)
             {
-                return walkTree(Parent);
+                return WalkTree(Parent);
             }
 
             return false;
@@ -147,12 +131,13 @@ namespace FlaxEngine.GUI
             }
         }
 
-        /// <inheritdoc />
-        public override void Update(float deltaTime)
+        private void OnUpdate()
         {
+            var deltaTime = Time.UnscaledDeltaTime;
+
             // Check if need to resize the output
             _resizeTime += deltaTime;
-            if (_resizeTime >= ResizeCheckTime)
+            if (_resizeTime >= ResizeCheckTime && Visible && Enabled)
             {
                 _resizeTime = 0;
                 SyncBackbufferSize();
@@ -160,8 +145,6 @@ namespace FlaxEngine.GUI
 
             // Check if skip rendering
             _task.Enabled = !CanSkipRendering();
-
-            base.Update(deltaTime);
         }
 
         /// <inheritdoc />
@@ -215,6 +198,7 @@ namespace FlaxEngine.GUI
                 return;
 
             // Cleanup
+            Scripting.Update -= OnUpdate;
             if (_task != null)
             {
                 _task.Enabled = false;
