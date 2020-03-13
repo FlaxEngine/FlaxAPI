@@ -16,36 +16,43 @@ namespace FlaxEngine
         /// <summary>
         /// Hardware depth rendering.
         /// </summary>
+        [Tooltip("Hardware depth rendering.")]
         Depth,
 
         /// <summary>
         /// GBuffer rendering.
         /// </summary>
+        [Tooltip("GBuffer rendering.")]
         GBuffer,
 
         /// <summary>
         /// GBuffer rendering after decals.
         /// </summary>
+        [Tooltip("GBuffer rendering after decals.")]
         GBufferNoDecals,
 
         /// <summary>
         /// Transparency rendering.
         /// </summary>
+        [Tooltip("Transparency rendering.")]
         Forward,
 
         /// <summary>
         /// Distortion accumulation rendering.
         /// </summary>
+        [Tooltip("Distortion accumulation rendering.")]
         Distortion,
 
         /// <summary>
         /// Motion vectors rendering.
         /// </summary>
+        [Tooltip("Motion vectors rendering.")]
         MotionVectors,
 
         /// <summary>
         /// The count of items in the DrawCallsListType enum.
         /// </summary>
+        [Tooltip("The count of items in the DrawCallsListType enum.")]
         MAX,
     }
 }

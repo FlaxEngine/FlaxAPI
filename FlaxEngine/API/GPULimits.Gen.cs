@@ -17,161 +17,193 @@ namespace FlaxEngine
         /// <summary>
         /// No features supported.
         /// </summary>
+        [Tooltip("No features supported.")]
         None = 0,
 
         /// <summary>
         /// Buffer resources supported.
         /// </summary>
+        [Tooltip("Buffer resources supported.")]
         Buffer = 1,
 
         /// <summary>
         /// Vertex buffers supported.
         /// </summary>
+        [Tooltip("Vertex buffers supported.")]
         InputAssemblyVertexBuffer = 2,
 
         /// <summary>
         /// Index buffers supported.
         /// </summary>
+        [Tooltip("Index buffers supported.")]
         InputAssemblyIndexBuffer = 4,
 
         /// <summary>
         /// Streaming output buffers supported.
         /// </summary>
+        [Tooltip("Streaming output buffers supported.")]
         StreamOutputBuffer = 8,
 
         /// <summary>
         /// 1D texture resources supported.
         /// </summary>
+        [Tooltip("1D texture resources supported.")]
         Texture1D = 16,
 
         /// <summary>
         /// 2D texture resources supported.
         /// </summary>
+        [Tooltip("2D texture resources supported.")]
         Texture2D = 32,
 
         /// <summary>
         /// 3D texture resources supported.
         /// </summary>
+        [Tooltip("3D texture resources supported.")]
         Texture3D = 64,
 
         /// <summary>
         /// Cube texture resources supported.
         /// </summary>
+        [Tooltip("Cube texture resources supported.")]
         TextureCube = 128,
 
         /// <summary>
         /// The shader Load function for texture objects is supported.
         /// </summary>
+        [Tooltip("The shader Load function for texture objects is supported.")]
         ShaderLoad = 256,
 
         /// <summary>
         /// The shader Sample function for texture objects is supported.
         /// </summary>
+        [Tooltip("The shader Sample function for texture objects is supported.")]
         ShaderSample = 512,
 
         /// <summary>
         /// The shader SampleCmp and SampleCmpLevelZero functions for texture objects are supported.
         /// </summary>
+        [Tooltip("The shader SampleCmp and SampleCmpLevelZero functions for texture objects are supported.")]
         ShaderSampleComparison = 1024,
 
         /// <summary>
         /// Unused.
         /// </summary>
+        [Tooltip("Unused.")]
         ShaderSampleMonoText = 2048,
 
         /// <summary>
         /// Mipmaps are supported.
         /// </summary>
+        [Tooltip("Mipmaps are supported.")]
         Mip = 4096,
 
         /// <summary>
         /// Automatic generation of mipmaps is supported.
         /// </summary>
+        [Tooltip("Automatic generation of mipmaps is supported.")]
         MipAutogen = 8192,
 
         /// <summary>
         /// Render targets are supported.
         /// </summary>
+        [Tooltip("Render targets are supported.")]
         RenderTarget = 16384,
 
         /// <summary>
         /// Blend operations supported.
         /// </summary>
+        [Tooltip("Blend operations supported.")]
         Blendable = 32768,
 
         /// <summary>
         /// Depth stencils supported.
         /// </summary>
+        [Tooltip("Depth stencils supported.")]
         DepthStencil = 65536,
 
         /// <summary>
         /// CPU locking supported.
         /// </summary>
+        [Tooltip("CPU locking supported.")]
         CpuLockable = 131072,
 
         /// <summary>
         /// Multisample antialiasing (MSAA) resolve operations are supported.
         /// </summary>
+        [Tooltip("Multisample antialiasing (MSAA) resolve operations are supported.")]
         MultisampleResolve = 262144,
 
         /// <summary>
         /// Format can be displayed on screen.
         /// </summary>
+        [Tooltip("Format can be displayed on screen.")]
         Display = 524288,
 
         /// <summary>
         /// Format can't be cast to another format.
         /// </summary>
+        [Tooltip("Format can't be cast to another format.")]
         CastWithinBitLayout = 1048576,
 
         /// <summary>
         /// Format can be used as a multi-sampled render target.
         /// </summary>
+        [Tooltip("Format can be used as a multi-sampled render target.")]
         MultisampleRenderTarget = 2097152,
 
         /// <summary>
         /// Format can be used as a multi-sampled texture and read into a shader with the shader Load function.
         /// </summary>
+        [Tooltip("Format can be used as a multi-sampled texture and read into a shader with the shader Load function.")]
         MultisampleLoad = 4194304,
 
         /// <summary>
         /// Format can be used with the shader gather function.
         /// </summary>
+        [Tooltip("Format can be used with the shader gather function.")]
         ShaderGather = 8388608,
 
         /// <summary>
         /// Format supports casting when the resource is a back buffer.
         /// </summary>
+        [Tooltip("Format supports casting when the resource is a back buffer.")]
         BackBufferCast = 16777216,
 
         /// <summary>
         /// Format can be used for an unordered access view.
         /// </summary>
+        [Tooltip("Format can be used for an unordered access view.")]
         TypedUnorderedAccessView = 33554432,
 
         /// <summary>
         /// Format can be used with the shader gather with comparison function.
         /// </summary>
+        [Tooltip("Format can be used with the shader gather with comparison function.")]
         ShaderGatherComparison = 67108864,
 
         /// <summary>
         /// Format can be used with the decoder output.
         /// </summary>
+        [Tooltip("Format can be used with the decoder output.")]
         DecoderOutput = 134217728,
 
         /// <summary>
         /// Format can be used with the video processor output.
         /// </summary>
+        [Tooltip("Format can be used with the video processor output.")]
         VideoProcessorOutput = 268435456,
 
         /// <summary>
         /// Format can be used with the video processor input.
         /// </summary>
+        [Tooltip("Format can be used with the video processor input.")]
         VideoProcessorInput = 536870912,
 
         /// <summary>
         /// Format can be used with the video encoder.
         /// </summary>
+        [Tooltip("Format can be used with the video encoder.")]
         VideoEncoder = 1073741824,
     }
 }

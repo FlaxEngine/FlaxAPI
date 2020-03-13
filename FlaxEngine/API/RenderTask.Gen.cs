@@ -122,21 +122,25 @@ namespace FlaxEngine
         /// <summary>
         /// The actors won't be rendered.
         /// </summary>
+        [Tooltip("The actors won't be rendered.")]
         None = 0,
 
         /// <summary>
         /// The actors from the loaded scenes.
         /// </summary>
+        [Tooltip("The actors from the loaded scenes.")]
         Scenes = 1,
 
         /// <summary>
         /// The actors from the custom collection.
         /// </summary>
+        [Tooltip("The actors from the custom collection.")]
         CustomActors = 2,
 
         /// <summary>
         /// The actors from the loaded scenes and custom collection.
         /// </summary>
+        [Tooltip("The actors from the loaded scenes and custom collection.")]
         ScenesAndCustomActors = Scenes | CustomActors,
     }
 }
