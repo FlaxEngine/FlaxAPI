@@ -2,7 +2,7 @@
 
 using System;
 
-namespace FlaxEngine.API
+namespace FlaxEngine
 {
     partial class DebugDraw
     {
