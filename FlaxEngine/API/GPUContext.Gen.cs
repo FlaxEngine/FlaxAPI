@@ -214,17 +214,30 @@ namespace FlaxEngine
         internal static extern void Internal_SetRenderTarget1(IntPtr obj, IntPtr depthBuffer, IntPtr rt);
 
         /// <summary>
+        /// Sets the render targets and the depth buffer to the output.
+        /// </summary>
+        /// <param name="depthBuffer">The depth buffer (can be null).</param>
+        /// <param name="rts">The array with render targets to bind.</param>
+        public void SetRenderTarget(GPUTextureView depthBuffer, GPUTextureView[] rts)
+        {
+            Internal_SetRenderTarget2(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(depthBuffer), rts);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetRenderTarget2(IntPtr obj, IntPtr depthBuffer, GPUTextureView[] rts);
+
+        /// <summary>
         /// Sets the render target and unordered access output.
         /// </summary>
         /// <param name="rt">The render target to bind to output.</param>
         /// <param name="uaOutput">The unordered access buffer to bind to output.</param>
         public void SetRenderTarget(GPUTextureView rt, GPUBuffer uaOutput)
         {
-            Internal_SetRenderTarget2(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(rt), FlaxEngine.Object.GetUnmanagedPtr(uaOutput));
+            Internal_SetRenderTarget3(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(rt), FlaxEngine.Object.GetUnmanagedPtr(uaOutput));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetRenderTarget2(IntPtr obj, IntPtr rt, IntPtr uaOutput);
+        internal static extern void Internal_SetRenderTarget3(IntPtr obj, IntPtr rt, IntPtr uaOutput);
 
         /// <summary>
         /// Resolves the multisampled texture by performing a copy of the resource into a non-multisampled resource.

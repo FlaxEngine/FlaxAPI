@@ -63,6 +63,7 @@
     <Compile Include="API\DebugDraw.Gen.cs" />
     <Compile Include="API\Enums.Gen.cs" />
     <Compile Include="API\FontTextureAtlas.Gen.cs" />
+    <Compile Include="API\GPUAdapter.Gen.cs" />
     <Compile Include="API\GPUBuffer.Gen.cs" />
     <Compile Include="API\GPUContext.Gen.cs" />
     <Compile Include="API\GPUDevice.Gen.cs" />

@@ -102,6 +102,18 @@ namespace FlaxEngine
         internal static extern GPUContext Internal_GetMainContext(IntPtr obj);
 
         /// <summary>
+        /// Gets the adapter device.
+        /// </summary>
+        [Tooltip("The adapter device.")]
+        public GPUAdapter Adapter
+        {
+            get { return Internal_GetAdapter(unmanagedPtr); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern GPUAdapter Internal_GetAdapter(IntPtr obj);
+
+        /// <summary>
         /// Gets the native pointer to the underlying graphics device. It's a low-level platform-specific handle.
         /// </summary>
         [Tooltip("The native pointer to the underlying graphics device. It's a low-level platform-specific handle.")]
