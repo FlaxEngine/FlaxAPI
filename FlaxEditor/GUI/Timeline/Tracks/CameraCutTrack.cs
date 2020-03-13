@@ -510,7 +510,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
                 // Create sprite atlas texture
                 var spriteAtlas = FlaxEngine.Content.CreateVirtualAsset<SpriteAtlas>();
-                var data = new byte[atlasSize * atlasSize * atlasFormat.SizeInBytes()];
+                var data = new byte[atlasSize * atlasSize * PixelFormatExtensions.SizeInBytes(atlasFormat)];
                 var initData = new TextureBase.InitData
                 {
                     Width = atlasSize,

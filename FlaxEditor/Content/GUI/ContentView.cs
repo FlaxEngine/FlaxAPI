@@ -137,7 +137,7 @@ namespace FlaxEditor.Content.GUI
                 if (_viewType != value)
                 {
                     _viewType = value;
-                    ViewScaleChanged?.Invoke();
+                    ViewTypeChanged?.Invoke();
                     PerformLayout();
                 }
             }

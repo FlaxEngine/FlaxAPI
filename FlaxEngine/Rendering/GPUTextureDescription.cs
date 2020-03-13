@@ -1,71 +1,11 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Runtime.InteropServices;
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// A common description for all GPU textures.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct GPUTextureDescription : IEquatable<GPUTextureDescription>
+    partial struct GPUTextureDescription : IEquatable<GPUTextureDescription>
     {
-        /// <summary>
-        /// The dimensions of the texture.
-        /// </summary>
-        public TextureDimensions Dimensions;
-
-        /// <summary>
-        /// Texture width (in texels).
-        /// </summary>
-        public int Width;
-
-        /// <summary>
-        /// Texture height (in texels).
-        /// </summary>
-        public int Height;
-
-        /// <summary>
-        /// Texture depth (in texels) for Volume Textures.
-        /// </summary>
-        public int Depth;
-
-        /// <summary>
-        /// Number of textures in array for Texture Arrays.
-        /// </summary>
-        public int ArraySize;
-
-        /// <summary>	
-        /// The maximum number of mipmap levels in the texture. Use 1 for a multisampled texture; or 0 to generate a full set of subtextures.
-        /// </summary>	
-        public int MipLevels;
-
-        /// <summary>	
-        /// Texture format (see <strong><see cref="PixelFormat"/></strong>).
-        /// </summary>	
-        public PixelFormat Format;
-
-        /// <summary>	
-        /// Structure that specifies multisampling parameters for the texture.
-        /// </summary>	
-        public MSAALevel MultiSampleLevel;
-
-        /// <summary>	
-        /// Flags (see <strong><see cref="GPUTextureFlags"/></strong>) for binding to pipeline stages. The flags can be combined by a logical OR.
-        /// </summary>
-        public GPUTextureFlags Flags;
-
-        /// <summary>	
-        /// Value that identifies how the texture is to be read from and written to. The most common value is <see cref="GPUResourceUsage.Default"/>; see <strong><see cref="GPUResourceUsage"/></strong> for all possible values.
-        /// </summary>
-        public GPUResourceUsage Usage;
-
-        /// <summary>
-        /// Default clear color for render targets
-        /// </summary>
-        public Color DefaultClearColor;
-
         /// <summary>
         /// Gets a value indicating whether this instance is a render target.
         /// </summary>
@@ -119,7 +59,7 @@ namespace FlaxEngine
         private static int CalculateMipMapCount(int requestedLevel, int width)
         {
             if (requestedLevel == 0)
-                requestedLevel = 14; // GPU_MAX_TEXTURE_MIP_LEVELS
+                requestedLevel = Texture.MaxMipLevels;
 
             int maxMipMap = 1;
             while (width > 1)

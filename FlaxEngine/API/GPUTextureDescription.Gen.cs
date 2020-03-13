@@ -69,3 +69,108 @@ namespace FlaxEngine
         BackBuffer = 0x0080,
     }
 }
+
+namespace FlaxEngine
+{
+    /// <summary>
+    /// Defines the dimension of a texture object.
+    /// </summary>
+    [Tooltip("Defines the dimension of a texture object.")]
+    public enum TextureDimensions
+    {
+        /// <summary>
+        /// The texture (2d).
+        /// </summary>
+        [Tooltip("The texture (2d).")]
+        Texture,
+
+        /// <summary>
+        /// The volume texture (3d texture).
+        /// </summary>
+        [Tooltip("The volume texture (3d texture).")]
+        VolumeTexture,
+
+        /// <summary>
+        /// The cube texture (2d texture array of 6 items).
+        /// </summary>
+        [Tooltip("The cube texture (2d texture array of 6 items).")]
+        CubeTexture,
+    }
+}
+
+namespace FlaxEngine
+{
+    /// <summary>
+    /// A common description for all GPU textures.
+    /// </summary>
+    [Tooltip("A common description for all GPU textures.")]
+    [StructLayout(LayoutKind.Sequential)]
+    public unsafe partial struct GPUTextureDescription
+    {
+        /// <summary>
+        /// The dimensions of the texture.
+        /// </summary>
+        [Tooltip("The dimensions of the texture.")]
+        public TextureDimensions Dimensions;
+
+        /// <summary>
+        /// Texture width (in texels).
+        /// </summary>
+        [Tooltip("Texture width (in texels).")]
+        public int Width;
+
+        /// <summary>
+        /// Texture height (in texels).
+        /// </summary>
+        [Tooltip("Texture height (in texels).")]
+        public int Height;
+
+        /// <summary>
+        /// Texture depth (in texels) for Volume Textures.
+        /// </summary>
+        [Tooltip("Texture depth (in texels) for Volume Textures.")]
+        public int Depth;
+
+        /// <summary>
+        /// Number of textures in array for Texture Arrays.
+        /// </summary>
+        [Tooltip("Number of textures in array for Texture Arrays.")]
+        public int ArraySize;
+
+        /// <summary>
+        /// The maximum number of mipmap levels in the texture. Use 1 for a multisampled texture; or 0 to generate a full set of subtextures.
+        /// </summary>
+        [Tooltip("The maximum number of mipmap levels in the texture. Use 1 for a multisampled texture; or 0 to generate a full set of subtextures.")]
+        public int MipLevels;
+
+        /// <summary>
+        /// Texture format (see <strong><see cref="PixelFormat"/></strong>).
+        /// </summary>
+        [Tooltip("Texture format (see <strong><see cref=\"PixelFormat\"/></strong>).")]
+        public PixelFormat Format;
+
+        /// <summary>
+        /// Structure that specifies multisampling parameters for the texture.
+        /// </summary>
+        [Tooltip("Structure that specifies multisampling parameters for the texture.")]
+        public MSAALevel MultiSampleLevel;
+
+        /// <summary>
+        /// Flags (see <strong><see cref="GPUTextureFlags"/></strong>) for binding to pipeline stages. The flags can be combined by a logical OR.
+        /// </summary>
+        [Tooltip("Flags (see <strong><see cref=\"GPUTextureFlags\"/></strong>) for binding to pipeline stages. The flags can be combined by a logical OR.")]
+        public GPUTextureFlags Flags;
+
+        /// <summary>
+        /// Value that identifies how the texture is to be read from and written to. The most common value is <see cref="GPUResourceUsage.Default"/>; see <strong><see cref="GPUResourceUsage"/></strong> for all possible values.
+        /// </summary>
+        [Tooltip("Value that identifies how the texture is to be read from and written to. The most common value is <see cref=\"GPUResourceUsage.Default\"/>; see <strong><see cref=\"GPUResourceUsage\"/></strong> for all possible values.")]
+        public GPUResourceUsage Usage;
+
+        /// <summary>
+        /// Default clear color for render targets
+        /// </summary>
+        [Tooltip("Default clear color for render targets")]
+        public Color DefaultClearColor;
+    }
+}

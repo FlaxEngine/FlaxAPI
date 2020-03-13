@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -25,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\bin\FlaxEngine.xml</DocumentationFile>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+<UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\bin\FlaxEngine.xml</DocumentationFile>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+<UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\AlphaBlend.Gen.cs" />
     <Compile Include="API\Animation.Gen.cs" />
     <Compile Include="API\AnimationGraph.cs" />
     <Compile Include="API\AnimationGraph.Gen.cs" />
@@ -93,6 +94,8 @@
     <Compile Include="API\Physics.Gen.cs" />
     <Compile Include="API\PhysicsColliderActor.Gen.cs" />
     <Compile Include="API\PixelFormat.Gen.cs" />
+    <Compile Include="API\PixelFormatExtensions.Gen.cs" />
+    <Compile Include="API\PostProcessSettings.Gen.cs" />
     <Compile Include="API\Prefab.Gen.cs" />
     <Compile Include="API\RawDataAsset.Gen.cs" />
     <Compile Include="API\RenderBuffers.Gen.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="API\Texture.Gen.cs" />
     <Compile Include="API\TextureBase.cs" />
     <Compile Include="API\TextureBase.Gen.cs" />
+    <Compile Include="API\Types.Gen.cs" />
     <Compile Include="API\Actors\AnimatedModel.cs" />
     <Compile Include="API\Actors\AnimatedModel.Gen.cs" />
     <Compile Include="API\Actors\AudioListener.Gen.cs" />
@@ -296,8 +300,6 @@
     <Compile Include="Engine\SpringParameters.cs" />
     <Compile Include="Engine\TextLayoutOptions.cs" />
     <Compile Include="Engine\Exceptions\FlaxException.cs" />
-    <Compile Include="Enums\AlphaBlendMode.cs" />
-    <Compile Include="Enums\BrushMode.cs" />
     <Compile Include="Enums\ForceMode.cs" />
     <Compile Include="Enums\Input.Enums.cs" />
     <Compile Include="Enums\Keys.cs" />
@@ -412,11 +414,9 @@
     <Compile Include="Rendering\IDrawable.cs" />
     <Compile Include="Rendering\LightmapSettings.cs" />
     <Compile Include="Rendering\MaterialInfo.cs" />
-    <Compile Include="Rendering\PixelFormatExtensions.cs" />
     <Compile Include="Rendering\PostProcessEffect.cs" />
     <Compile Include="Rendering\PostProcessSettings.cs" />
     <Compile Include="Rendering\RenderView.cs" />
-    <Compile Include="Rendering\TextureDimensions.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\PerlinNoise.cs" />
     <Compile Include="Utilities\State.cs" />
