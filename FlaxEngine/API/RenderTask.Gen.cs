@@ -354,7 +354,7 @@ namespace FlaxEngine
     /// </summary>
     [Tooltip("The high-level renderer context. Used to collect the draw calls for the scene rendering. Can be used to perform a custom rendering.")]
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct RenderContext
+    public unsafe partial struct RenderContext
     {
         /// <summary>
         /// The render buffers.

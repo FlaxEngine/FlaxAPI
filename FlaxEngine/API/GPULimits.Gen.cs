@@ -215,7 +215,7 @@ namespace FlaxEngine
     /// </summary>
     [Tooltip("The features exposed for a particular format.")]
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct FormatFeatures
+    public unsafe partial struct FormatFeatures
     {
         /// <summary>
         /// Gets the maximum MSAA sample count for a particular <see cref="PixelFormat"/>.
@@ -238,7 +238,7 @@ namespace FlaxEngine
     /// </summary>
     [Tooltip("Graphics Device limits and constraints descriptor.")]
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct GPULimits
+    public unsafe partial struct GPULimits
     {
         /// <summary>
         /// True if device supports Compute shaders.

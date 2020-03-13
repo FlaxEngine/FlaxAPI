@@ -71,7 +71,7 @@ namespace FlaxEngine
         /// </summary>
         [Tooltip("Contains basic information about the animation asset contents.")]
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct InfoData
+        public unsafe partial struct InfoData
         {
             /// <summary>
             /// Length of the animation in seconds.

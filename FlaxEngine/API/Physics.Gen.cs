@@ -12,7 +12,7 @@ namespace FlaxEngine
     /// </summary>
     [Tooltip("Raycast hit result data.")]
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct RayCastHit
+    public unsafe partial struct RayCastHit
     {
         /// <summary>
         /// The collider that was hit.
