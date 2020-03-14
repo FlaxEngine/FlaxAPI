@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -39,6 +39,16 @@ namespace FlaxEditor.States
         /// Occurs when play mode is starting (after scene duplicating).
         /// </summary>
         public event Action SceneDuplicated;
+
+        /// <summary>
+        /// Occurs when play mode is applying game settings. Can be used to cache the editor local state of some settings.
+        /// </summary>
+        public event Action GameSettingsApplying;
+
+        /// <summary>
+        /// Occurs when play mode applied game settings. Can be used to preserve the editor local state of some settings.
+        /// </summary>
+        public event Action GameSettingsApplied;
 
         /// <summary>
         /// Occurs when play mode is ending (before scene restoring).
@@ -106,7 +116,9 @@ namespace FlaxEditor.States
             Editor.Scene.ClearRefsToSceneObjects(true);
 
             // Apply game settings (user may modify them before the gameplay)
+            GameSettingsApplying?.Invoke();
             GameSettings.Apply();
+            GameSettingsApplied?.Invoke();
 
             // Duplicate editor scene for simulation
             SceneDuplicating?.Invoke();
@@ -124,12 +136,10 @@ namespace FlaxEditor.States
         private void SetupEditorEnvOptions()
         {
             Time.TimeScale = 1.0f;
-            Time.UpdateFPS = 60;
-            Time.PhysicsFPS = 30;
-            Time.DrawFPS = 60;
             Physics.AutoSimulation = true;
             Screen.CursorVisible = true;
             Screen.CursorLock = CursorLockMode.None;
+            Editor.SetupEditorFPS();
         }
 
         /// <inheritdoc />

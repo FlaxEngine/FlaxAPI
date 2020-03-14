@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.Xml;
 using FlaxEngine;
@@ -99,7 +99,7 @@ namespace FlaxEditor.GUI.Docking
         /// <param name="hideOnClose">True if hide window on closing, otherwise it will be destroyed.</param>
         /// <param name="scrollBars">The scroll bars.</param>
         public DockWindow(MasterDockPanel masterPanel, bool hideOnClose, ScrollBars scrollBars)
-        : base(scrollBars, true)
+        : base(scrollBars)
         {
             _masterPanel = masterPanel;
             HideOnClose = hideOnClose;
@@ -384,6 +384,54 @@ namespace FlaxEditor.GUI.Docking
             base.Focus();
 
             SelectTab();
+        }
+
+        /// <inheritdoc />
+        public override bool OnKeyDown(Keys key)
+        {
+            if (base.OnKeyDown(key))
+                return true;
+
+            if (_dockedTo != null)
+            {
+                // Navigation shortcuts
+                switch (key)
+                {
+                case Keys.Tab:
+                {
+                    var win = RootWindow;
+                    if (win.GetKey(Keys.Control))
+                    {
+                        var index = _dockedTo.SelectedTabIndex;
+                        if (win.GetKey(Keys.Shift))
+                        {
+                            // Previous tab
+                            index = index == 0 ? _dockedTo.TabsCount - 1 : index - 1;
+                        }
+                        else
+                        {
+                            // Next tab
+                            index = (index + 1) % _dockedTo.TabsCount;
+                        }
+                        _dockedTo.SelectedTabIndex = index;
+                        return true;
+                    }
+                    break;
+                }
+                case Keys.W:
+                {
+                    var win = RootWindow;
+                    if (win.GetKey(Keys.Control))
+                    {
+                        Close(ClosingReason.User);
+                        return true;
+                    }
+                    break;
+                }
+                }
+            }
+
+            return false;
         }
 
         /// <inheritdoc />

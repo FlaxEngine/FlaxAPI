@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEditor.Surface.Elements;
@@ -169,7 +169,7 @@ namespace FlaxEditor.Surface.Archetypes
                     GetBox(MaterialNodeBoxes.Roughness).Enabled = isNotUnlit;
                     GetBox(MaterialNodeBoxes.AmbientOcclusion).Enabled = isNotUnlit;
                     GetBox(MaterialNodeBoxes.Normal).Enabled = isNotUnlit;
-                    GetBox(MaterialNodeBoxes.Opacity).Enabled = isTransparent || withSubsurface;
+                    GetBox(MaterialNodeBoxes.Opacity).Enabled = withSubsurface || info.BlendMode != MaterialBlendMode.Opaque;
                     GetBox(MaterialNodeBoxes.Refraction).Enabled = isTransparent;
                     GetBox(MaterialNodeBoxes.PositionOffset).Enabled = true;
                     GetBox(MaterialNodeBoxes.TessellationMultiplier).Enabled = withTess;

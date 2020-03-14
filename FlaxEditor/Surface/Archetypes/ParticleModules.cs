@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Linq;
@@ -63,6 +63,11 @@ namespace FlaxEditor.Surface.Archetypes
             /// Particles will use the custom vector for facing.
             /// </summary>
             CustomFacingVector,
+
+            /// <summary>
+            /// Particles will use the custom fixed axis for facing up.
+            /// </summary>
+            FixedAxis,
         }
 
         /// <summary>
@@ -460,7 +465,9 @@ namespace FlaxEditor.Surface.Archetypes
 
             private void UpdateInputBox()
             {
-                GetBox(0).Enabled = (ParticleSpriteFacingMode)Values[2] == ParticleSpriteFacingMode.CustomFacingVector;
+                var facingMode = (ParticleSpriteFacingMode)Values[2];
+                GetBox(0).Enabled = facingMode == ParticleSpriteFacingMode.CustomFacingVector
+                                    || facingMode == ParticleSpriteFacingMode.FixedAxis;
             }
         }
 
@@ -1449,7 +1456,7 @@ namespace FlaxEditor.Surface.Archetypes
                     true,
                     (int)ModuleType.Render,
                     Guid.Empty, // Material
-                    (int)DrawPass.Default, // Draw Modes
+                    (int)(DrawPass.Forward | DrawPass.Distortion), // Draw Modes
                 },
                 Elements = new[]
                 {
@@ -1521,7 +1528,7 @@ namespace FlaxEditor.Surface.Archetypes
                     (int)ModuleType.Render,
                     Guid.Empty, // Model
                     Guid.Empty, // Material
-                    (int)DrawPass.Default, // Draw Modes
+                    (int)(DrawPass.Forward | DrawPass.Distortion), // Draw Modes
                 },
                 Elements = new[]
                 {
@@ -1554,7 +1561,7 @@ namespace FlaxEditor.Surface.Archetypes
                     0.0f, // UV Tiling Distance
                     Vector2.One, // UV Scale
                     Vector2.Zero, // UV Offset
-                    (int)DrawPass.Default, // Draw Modes
+                    (int)(DrawPass.Forward | DrawPass.Distortion), // Draw Modes
                 },
                 Elements = new[]
                 {

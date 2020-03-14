@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -74,7 +74,7 @@ namespace FlaxEditor.Viewport
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
-            SelectionOutline.SelectionGetter = () => _window.Selection;
+            SelectionOutline.SelectionGetter = () => TransformGizmo.SelectedParents;
             Task.CustomPostFx.Add(SelectionOutline);
             EditorPrimitives = FlaxEngine.Object.New<EditorPrimitives>();
             EditorPrimitives.Viewport = this;

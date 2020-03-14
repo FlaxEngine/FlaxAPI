@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
 
@@ -53,6 +53,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 7,
                 Title = "Branch",
+                AlternativeTitles = new string[] { "if" },
                 Description = "Returns one of the input values based on the condition value",
                 Flags = NodeFlags.AllGraphs,
                 Size = new Vector2(100, 60),

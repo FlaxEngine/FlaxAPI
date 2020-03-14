@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -264,6 +264,10 @@ namespace FlaxEditor.Windows.Assets
 
                     switch (p.Type)
                     {
+                    case MaterialParameterType.ChannelMask:
+                        pType = typeof(ChannelMask);
+                        pValue = (ChannelMask)(int)pValue;
+                        break;
                     case MaterialParameterType.CubeTexture:
                         pType = typeof(CubeTexture);
                         break;
@@ -379,9 +383,9 @@ namespace FlaxEditor.Windows.Assets
         {
             // Undo
             _undo = new Undo();
-            _undo.UndoDone += OnUndo;
-            _undo.RedoDone += OnUndo;
-            _undo.ActionDone += OnUndo;
+            _undo.UndoDone += OnUndoRedo;
+            _undo.RedoDone += OnUndoRedo;
+            _undo.ActionDone += OnAction;
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
@@ -417,7 +421,14 @@ namespace FlaxEditor.Windows.Assets
             InputActions.Add(options => options.Redo, _undo.PerformRedo);
         }
 
-        private void OnUndo(IUndoAction action)
+        private void OnAction(IUndoAction action)
+        {
+            _paramValueChange = false;
+            MarkAsEdited();
+            UpdateToolstrip();
+        }
+
+        private void OnUndoRedo(IUndoAction action)
         {
             _paramValueChange = false;
             MarkAsEdited();
@@ -428,7 +439,7 @@ namespace FlaxEditor.Windows.Assets
         private void OnMaterialPropertyEdited()
         {
             _paramValueChange = false;
-            MarkAsEdited();
+            //MarkAsEdited();
         }
 
         /// <inheritdoc />

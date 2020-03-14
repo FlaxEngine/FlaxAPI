@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -35,6 +35,7 @@ namespace FlaxEditor.Windows.Assets
             GPUTextureArray = ParameterType.GPUTextureArray,
             GPUTextureVolume = ParameterType.GPUTextureVolume,
             Matrix = ParameterType.Matrix,
+            ChannelMask = ParameterType.ChannelMask,
         }
 
         /// <summary>

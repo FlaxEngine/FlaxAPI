@@ -1,12 +1,28 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
     public static partial class Content
     {
+        private static readonly Type[] ValidVirtualAssetTypes =
+        {
+            typeof(MaterialInstance),
+            typeof(Texture),
+            typeof(CubeTexture),
+            typeof(SpriteAtlas),
+            typeof(IESProfile),
+            typeof(SkinnedModel),
+            typeof(CollisionData),
+            typeof(ParticleSystem),
+            typeof(RawDataAsset),
+            typeof(Model),
+            typeof(SkeletonMask),
+        };
+
         // TODO: assets list get
 
         /// <summary>
@@ -27,7 +43,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not created (see log for error info).
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
@@ -46,7 +62,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
@@ -57,7 +73,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// </summary>
         /// <param name="path">Path to the asset.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
@@ -68,7 +84,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// </summary>
         /// <param name="internalPath">Internal path to the asset. Relative to the Engine startup folder.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
@@ -79,88 +95,88 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async. The current thread execution is blocked until asset is loaded.
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
+        /// <param name="timeoutInMilliseconds">Custom timeout value in milliseconds.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Asset Load(Guid id, double timeoutInMiliseconds = 10000.0)
+        public static Asset Load(Guid id, double timeoutInMilliseconds = 10000.0)
         {
-            return Load<Asset>(id, timeoutInMiliseconds);
+            return Load<Asset>(id, timeoutInMilliseconds);
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async. The current thread execution is blocked until asset is loaded.
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="path">Path to the asset.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
+        /// <param name="timeoutInMilliseconds">Custom timeout value in milliseconds.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Asset Load(string path, double timeoutInMiliseconds = 10000.0)
+        public static Asset Load(string path, double timeoutInMilliseconds = 10000.0)
         {
-            return Load<Asset>(path, timeoutInMiliseconds);
+            return Load<Asset>(path, timeoutInMilliseconds);
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="internalPath">Internal path to the asset. Relative to the Engine startup folder.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
+        /// <param name="timeoutInMilliseconds">Custom timeout value in milliseconds.</param>
         /// <returns>Asset instance if loaded, null otherwise</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Asset LoadInternal(string internalPath, double timeoutInMiliseconds = 10000.0)
+        public static Asset LoadInternal(string internalPath, double timeoutInMilliseconds = 10000.0)
         {
-            return LoadInternal<Asset>(internalPath, timeoutInMiliseconds);
+            return LoadInternal<Asset>(internalPath, timeoutInMilliseconds);
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
+        /// <param name="timeoutInMilliseconds">Custom timeout value in milliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T Load<T>(Guid id, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T Load<T>(Guid id, double timeoutInMilliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsync<T>(ref id);
-            if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
+            if (asset && asset.WaitForLoaded(timeoutInMilliseconds) == false)
                 return asset;
             return null;
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="path">Path to the asset.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
+        /// <param name="timeoutInMilliseconds">Custom timeout value in milliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T Load<T>(string path, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T Load<T>(string path, double timeoutInMilliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsync<T>(path);
-            if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
+            if (asset && asset.WaitForLoaded(timeoutInMilliseconds) == false)
                 return asset;
             return null;
         }
 
         /// <summary>
-        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset was not loaded.
+        /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// Waits until asset will be loaded. It's equivalent to LoadAsync + WaitForLoaded.
         /// </summary>
         /// <param name="internalPath">Internal path to the asset. Relative to the Engine startup folder and without an asset file extension.</param>
-        /// <param name="timeoutInMiliseconds">Custom timeout value in milliseconds.</param>
+        /// <param name="timeoutInMilliseconds">Custom timeout value in milliseconds.</param>
         /// <typeparam name="T">Type of the asset to load. Includes any asset types derived from the type.</typeparam>
         /// <returns>Asset instance if loaded, null otherwise</returns>
-        public static T LoadInternal<T>(string internalPath, double timeoutInMiliseconds = 10000.0) where T : Asset
+        public static T LoadInternal<T>(string internalPath, double timeoutInMilliseconds = 10000.0) where T : Asset
         {
             var asset = LoadAsyncInternal<T>(internalPath);
-            if (asset && asset.WaitForLoaded(timeoutInMiliseconds) == false)
+            if (asset && asset.WaitForLoaded(timeoutInMilliseconds) == false)
                 return asset;
             return null;
         }
@@ -222,18 +238,8 @@ namespace FlaxEngine
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
             string typeName = typeof(T).FullName;
-            if (typeof(T) != typeof(MaterialInstance) &&
-                typeof(T) != typeof(Texture) &&
-                typeof(T) != typeof(CubeTexture) &&
-                typeof(T) != typeof(SpriteAtlas) &&
-                typeof(T) != typeof(IESProfile) &&
-                typeof(T) != typeof(SkinnedModel) &&
-                typeof(T) != typeof(CollisionData) &&
-                typeof(T) != typeof(ParticleSystem) &&
-                typeof(T) != typeof(RawDataAsset) &&
-                typeof(T) != typeof(Model))
+            if (!ValidVirtualAssetTypes.Contains(typeof(T)))
                 throw new InvalidOperationException("Asset type " + typeName + " does not support virtual assets.");
-
             return (T)Internal_CreateVirtualAsset(typeof(T), typeName);
 #endif
         }

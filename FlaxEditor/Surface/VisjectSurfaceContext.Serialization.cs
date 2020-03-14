@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,46 @@ using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.Surface
 {
+    /// <summary>
+    /// The missing node. Cached the node group, type and stored values information.
+    /// </summary>
+    /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+    internal class MissingNode : SurfaceNode
+    {
+        /// <inheritdoc />
+        public MissingNode(uint id, VisjectSurfaceContext context, ushort originalGroupId, ushort originalNodeId)
+        : base(id, context, new NodeArchetype
+        {
+            TypeID = originalNodeId,
+            Title = "Missing Node :(",
+            Description = ":(",
+            Flags = NodeFlags.AllGraphs,
+            Size = new Vector2(200, 70),
+            Elements = new NodeElementArchetype[0],
+            DefaultValues = new object[32],
+        }, new GroupArchetype
+        {
+            GroupID = originalGroupId,
+            Name = string.Empty,
+            Color = Color.Black,
+            Archetypes = new NodeArchetype[0]
+        })
+        {
+        }
+    }
+
+    /// <summary>
+    /// The dummy custom node used to help custom surface nodes management (loading and layout preserving on missing type).
+    /// </summary>
+    internal class DummyCustomNode : SurfaceNode
+    {
+        /// <inheritdoc />
+        public DummyCustomNode(uint id, VisjectSurfaceContext context)
+        : base(id, context, new NodeArchetype(), new GroupArchetype())
+        {
+        }
+    }
+
     public partial class VisjectSurfaceContext
     {
         // Note: surface serialization is port from c++ code base (also a legacy)
@@ -360,14 +400,11 @@ namespace FlaxEditor.Surface
                     // Create node
                     SurfaceNode node;
                     if (groupId == Archetypes.Custom.GroupID)
-                        node = new Archetypes.Custom.DummyCustomNode(id, this);
+                        node = new DummyCustomNode(id, this);
                     else
                         node = NodeFactory.CreateNode(_surface.NodeArchetypes, id, this, groupId, typeId);
                     if (node == null)
-                    {
-                        // Error
-                        throw new Exception("Cannot create graph node.");
-                    }
+                        node = new MissingNode(id, this, groupId, typeId);
                     Nodes.Add(node);
                 }
 
@@ -410,46 +447,59 @@ namespace FlaxEditor.Surface
                     int valuesCnt = stream.ReadInt32();
                     int firstValueReadIdx = 0;
 
-                    // Special case for custom nodes
-                    if (node is Archetypes.Custom.DummyCustomNode dummyCustom)
+                    // Special case for missing nodes
+                    if (node is DummyCustomNode customNode)
                     {
-                        // TODO: maybe reuse the same dummy node (static) because is only a placeholder
+                        node = null;
 
                         // Values check
                         if (valuesCnt < 2)
                             throw new Exception("Missing custom nodes data.");
 
                         // Node typename check
-                        object typeName = null;
-                        Utils.ReadCommonValue(stream, ref typeName);
+                        object typeNameValue = null;
+                        Utils.ReadCommonValue(stream, ref typeNameValue);
                         firstValueReadIdx = 1;
-                        if (string.IsNullOrEmpty(typeName as string))
-                            throw new Exception("Missing custom node typename.");
+                        string typeName = typeNameValue as string ?? string.Empty;
 
                         // Find custom node archetype that matches this node type (it must be unique)
                         var customNodes = _surface.GetCustomNodes();
-                        if (customNodes?.Archetypes == null)
-                            throw new Exception("Cannot find any custom nodes archetype.");
-                        NodeArchetype arch = null;
-                        for (int j = 0; j < customNodes.Archetypes.Length; j++)
+                        if (customNodes?.Archetypes != null && typeName.Length != 0)
                         {
-                            if (string.Equals(Archetypes.Custom.GetNodeTypeName(customNodes.Archetypes[j]), (string)typeName, StringComparison.OrdinalIgnoreCase))
+                            NodeArchetype arch = null;
+                            for (int j = 0; j < customNodes.Archetypes.Length; j++)
                             {
-                                arch = customNodes.Archetypes[j];
-                                break;
+                                if (string.Equals(Archetypes.Custom.GetNodeTypeName(customNodes.Archetypes[j]), typeName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    arch = customNodes.Archetypes[j];
+                                    break;
+                                }
                             }
+                            if (arch != null)
+                                node = NodeFactory.CreateNode(customNode.ID, this, customNodes, arch);
                         }
-                        if (arch == null)
-                            throw new Exception("Missing custom node " + typeName);
 
-                        // Create custom node and replace dummy placeholder
-                        node = NodeFactory.CreateNode(dummyCustom.ID, this, customNodes, arch);
+                        // Fallback to the
                         if (node == null)
-                            throw new Exception("Failed to create custom node " + typeName);
+                        {
+                            Editor.LogWarning(string.Format("Cannot find custom node archetype for {0}", typeName));
+                            node = new MissingNode(customNode.ID, this, Archetypes.Custom.GroupID, customNode.Archetype.TypeID);
+                        }
                         Nodes[i] = node;
 
                         // Store node typename in values container
                         node.Values[0] = typeName;
+                    }
+                    if (node is MissingNode missingNode)
+                    {
+                        // Read all values
+                        Array.Resize(ref node.Values, valuesCnt);
+                        for (int j = firstValueReadIdx; j < valuesCnt; j++)
+                        {
+                            // ReSharper disable once PossibleNullReferenceException
+                            Utils.ReadCommonValue(stream, ref node.Values[j]);
+                        }
+                        firstValueReadIdx = valuesCnt = node.Values.Length;
                     }
 
                     // Values
@@ -464,7 +514,7 @@ namespace FlaxEditor.Surface
                     }
                     else
                     {
-                        Editor.LogWarning(String.Format("Invalid node values. Loaded: {0}, expected: {1}. Type: {2}, {3}", valuesCnt, nodeValuesCnt, node.Archetype.Title, node.Archetype.TypeID));
+                        Editor.LogWarning(string.Format("Invalid node values. Loaded: {0}, expected: {1}. Type: {2}, {3}", valuesCnt, nodeValuesCnt, node.Archetype.Title, node.Archetype.TypeID));
 
                         object dummy = null;
                         for (int j = firstValueReadIdx; j < valuesCnt; j++)

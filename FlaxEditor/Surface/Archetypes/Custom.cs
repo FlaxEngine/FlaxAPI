@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 namespace FlaxEditor.Surface.Archetypes
 {
@@ -7,19 +7,6 @@ namespace FlaxEditor.Surface.Archetypes
     /// </summary>
     public static class Custom
     {
-        /// <summary>
-        /// The dummy custom node used to help custom surface nodes management (loading and layout preserving on missing type).
-        /// </summary>
-        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
-        public class DummyCustomNode : SurfaceNode
-        {
-            /// <inheritdoc />
-            public DummyCustomNode(uint id, VisjectSurfaceContext context)
-            : base(id, context, new NodeArchetype(), new GroupArchetype())
-            {
-            }
-        }
-
         /// <summary>
         /// The custom nodes group identifier. Reserved for nodes that are provided by external source eg: game scripts or editor plugin. Handling of those nodes is surface-type dependant.
         /// </summary>

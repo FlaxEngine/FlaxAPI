@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Xml;
@@ -167,6 +167,10 @@ namespace FlaxEditor.Windows.Assets
                     object[] attributes = null;
                     switch (p.Type)
                     {
+                    case ParameterType.ChannelMask:
+                        pType = typeof(ChannelMask);
+                        pValue = (ChannelMask)(int)pValue;
+                        break;
                     case ParameterType.CubeTexture:
                         pType = typeof(CubeTexture);
                         break;
@@ -392,9 +396,9 @@ namespace FlaxEditor.Windows.Assets
         {
             // Undo
             _undo = new Undo();
-            _undo.UndoDone += OnUndo;
-            _undo.RedoDone += OnUndo;
-            _undo.ActionDone += OnUndo;
+            _undo.UndoDone += OnUndoRedo;
+            _undo.RedoDone += OnUndoRedo;
+            _undo.ActionDone += OnUndoRedo;
 
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
@@ -430,7 +434,7 @@ namespace FlaxEditor.Windows.Assets
             InputActions.Add(options => options.Redo, _undo.PerformRedo);
         }
 
-        private void OnUndo(IUndoAction action)
+        private void OnUndoRedo(IUndoAction action)
         {
             // Hack for emitter properties proxy object
             if (action is MultiUndoAction multiUndo &&
@@ -473,6 +477,9 @@ namespace FlaxEditor.Windows.Assets
             // Visject surface parameters are only value type objects so convert value if need to (eg. instead of texture ref write texture id)
             switch (param.Type)
             {
+            case ParameterType.ChannelMask:
+                valueToSet = (int)(ChannelMask)value;
+                break;
             case ParameterType.Asset:
             case ParameterType.Actor:
             case ParameterType.CubeTexture:

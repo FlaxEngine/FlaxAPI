@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Runtime.CompilerServices;
@@ -13,18 +13,18 @@ namespace FlaxEngine
         public struct Pose
         {
             /// <summary>
-            /// The per-bone final transformations in actor world-space.
+            /// The per-node final transformations in actor world-space.
             /// </summary>
-            public Matrix[] Bones;
+            public Matrix[] Nodes;
 
             /// <summary>
-            /// Gets the position of the bone in the actor local space.
+            /// Gets the position of the node in the actor local space.
             /// </summary>
-            /// <param name="index">The bone index.</param>
-            /// <returns>The bone position.</returns>
-            public Vector3 GetBonePosition(int index)
+            /// <param name="index">The node index.</param>
+            /// <returns>The node position.</returns>
+            public Vector3 GetNodePosition(int index)
             {
-                return Bones[index].TranslationVector;
+                return Nodes[index].TranslationVector;
             }
         }
 
@@ -225,7 +225,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Gets the current animated skeleton pose. Will allocate the bone transformation array memory or reuse the cached one.
+        /// Gets the current animated skeleton pose. Will allocate the node transformation array memory or reuse the cached one.
         /// </summary>
         /// <param name="pose">The output pose.</param>
         public void GetCurrentPose(ref Pose pose)

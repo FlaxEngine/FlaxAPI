@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
 using FlaxEditor.Content;
@@ -173,7 +173,9 @@ namespace FlaxEditor.Surface.ContextMenu
         /// <inheritdoc />
         public override bool OnKeyDown(Keys key)
         {
-            if (key == Keys.ArrowDown)
+            switch (key)
+            {
+            case Keys.ArrowDown:
             {
                 if (MatchedItems.Count == 0)
                     return true;
@@ -187,13 +189,15 @@ namespace FlaxEditor.Surface.ContextMenu
                         currentPos--;
                 }
                 else
+                {
                     currentPos = 0;
+                }
 
                 SelectedItem = MatchedItems[currentPos];
 
                 return true;
             }
-            else if (key == Keys.ArrowUp)
+            case Keys.ArrowUp:
             {
                 if (MatchedItems.Count == 0)
                     return true;
@@ -207,13 +211,15 @@ namespace FlaxEditor.Surface.ContextMenu
                         currentPos = 0;
                 }
                 else
+                {
                     currentPos = 0;
+                }
 
                 SelectedItem = MatchedItems[currentPos];
 
                 return true;
             }
-            else if (key == Keys.Return)
+            case Keys.Return:
             {
                 if (_selectedItem != null)
                 {
@@ -223,15 +229,14 @@ namespace FlaxEditor.Surface.ContextMenu
 
                 return true;
             }
-            else if (key == Keys.Escape)
+            case Keys.Escape:
             {
                 Hide();
                 return true;
             }
-            else
-            {
-                return base.OnKeyDown(key);
             }
+
+            return base.OnKeyDown(key);
         }
     }
 }

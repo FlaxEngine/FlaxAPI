@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -13,5 +13,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("4aaed6a2-38b1-4a31-ab04-9264a94a8eca")]
-[assembly: AssemblyVersion("0.6.6190")]
-[assembly: AssemblyFileVersion("0.6.6190")]
+[assembly: AssemblyVersion("0.6.6192")]
+[assembly: AssemblyFileVersion("0.6.6192")]

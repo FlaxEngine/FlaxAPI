@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEngine;
@@ -22,6 +22,39 @@ namespace FlaxEditor.GUI
         private Window _window;
 
         /// <summary>
+        /// Gets or sets the selected button (with opened context menu).
+        /// </summary>
+        public MainMenuButton Selected
+        {
+            get => _selected;
+            set
+            {
+                if (_selected == value)
+                    return;
+
+                if (_selected != null)
+                {
+                    _selected.ContextMenu.VisibleChanged -= OnSelectedContextMenuVisibleChanged;
+                    _selected.ContextMenu.Hide();
+                }
+
+                _selected = value;
+
+                if (_selected != null && _selected.ContextMenu.HasChildren)
+                {
+                    _selected.ContextMenu.Show(_selected, new Vector2(0, _selected.Height));
+                    _selected.ContextMenu.VisibleChanged += OnSelectedContextMenuVisibleChanged;
+                }
+            }
+        }
+
+        private void OnSelectedContextMenuVisibleChanged(Control control)
+        {
+            if (_selected != null)
+                Selected = null;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MainMenu"/> class.
         /// </summary>
         /// <param name="mainWindow">The main window.</param>
@@ -37,8 +70,8 @@ namespace FlaxEditor.GUI
                 BackgroundColor = Style.Current.LightBackground;
                 Height = 28;
 
-                var windowIcon = FlaxEngine.Content.LoadInternal<Texture>(EditorAssets.WindowIcon);
-                FontAsset windowIconsFont = FlaxEngine.Content.LoadInternal<FontAsset>(EditorAssets.WindowIconsFont);
+                var windowIcon = FlaxEngine.Content.LoadAsyncInternal<Texture>(EditorAssets.WindowIcon);
+                FontAsset windowIconsFont = FlaxEngine.Content.LoadAsyncInternal<FontAsset>(EditorAssets.WindowIconsFont);
                 Font iconFont = windowIconsFont?.CreateFont(9);
 
                 _window = mainWindow.RootWindow.Window;
@@ -67,7 +100,7 @@ namespace FlaxEditor.GUI
 
                 _closeButton = new Button
                 {
-                    Text = ((char)0xE711).ToString(),
+                    Text = ((char)EditorAssets.SegMDL2Icons.ChromeClose).ToString(),
                     Font = new FontReference(iconFont),
                     BackgroundColor = Color.Transparent,
                     BorderColor = Color.Transparent,
@@ -83,7 +116,7 @@ namespace FlaxEditor.GUI
 
                 _minimizeButton = new Button
                 {
-                    Text = ((char)0xE738).ToString(),
+                    Text = ((char)EditorAssets.SegMDL2Icons.ChromeMinimize).ToString(),
                     Font = new FontReference(iconFont),
                     BackgroundColor = Color.Transparent,
                     BorderColor = Color.Transparent,
@@ -98,7 +131,7 @@ namespace FlaxEditor.GUI
 
                 _maximizeButton = new Button
                 {
-                    Text = ((char)0xE923).ToString(),
+                    Text = ((char)(_window.IsMaximized ? EditorAssets.SegMDL2Icons.ChromeRestore : EditorAssets.SegMDL2Icons.ChromeMaximize)).ToString(),
                     Font = new FontReference(iconFont),
                     BackgroundColor = Color.Transparent,
                     BorderColor = Color.Transparent,
@@ -112,14 +145,29 @@ namespace FlaxEditor.GUI
                 _maximizeButton.Clicked += () =>
                 {
                     if (_window.IsMaximized)
+                    {
                         _window.Restore();
+                    }
                     else
+                    {
                         _window.Maximize();
+                    }
                 };
             }
             else
             {
                 BackgroundColor = Style.Current.LightBackground;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            if (_maximizeButton != null)
+            {
+                _maximizeButton.Text = ((char)(_window.IsMaximized ? EditorAssets.SegMDL2Icons.ChromeRestore : EditorAssets.SegMDL2Icons.ChromeMaximize)).ToString();
             }
         }
 
@@ -134,30 +182,28 @@ namespace FlaxEditor.GUI
 
         private WindowHitCodes OnHitTest(ref Vector2 mouse)
         {
-            var pos = _window.ScreenToClient(mouse);
+            var pos = _window.ScreenToClient(mouse * Platform.DpiScale);
 
             if (_window.IsMinimized)
-            {
                 return WindowHitCodes.NoWhere;
-            }
 
             if (!_window.IsMaximized)
             {
-                var rootWindow = RootWindow;
+                var winSize = RootWindow.Size * Platform.DpiScale;
 
-                if (pos.Y > rootWindow.Height - 5 && pos.X < 5)
+                if (pos.Y > winSize.Y - 5 && pos.X < 5)
                     return WindowHitCodes.BottomLeft;
 
-                if (pos.X > rootWindow.Width - 5 && pos.Y > rootWindow.Height - 5)
+                if (pos.X > winSize.X - 5 && pos.Y > winSize.Y - 5)
                     return WindowHitCodes.BottomRight;
 
                 if (pos.Y < 5 && pos.X < 5)
                     return WindowHitCodes.TopLeft;
 
-                if (pos.Y < 5 && pos.X > rootWindow.Width - 5)
+                if (pos.Y < 5 && pos.X > winSize.X - 5)
                     return WindowHitCodes.TopRight;
 
-                if (pos.X > rootWindow.Width - 5)
+                if (pos.X > winSize.X - 5)
                     return WindowHitCodes.Right;
 
                 if (pos.X < 5)
@@ -166,7 +212,7 @@ namespace FlaxEditor.GUI
                 if (pos.Y < 5)
                     return WindowHitCodes.Top;
 
-                if (pos.Y > rootWindow.Height - 5)
+                if (pos.Y > winSize.Y - 5)
                     return WindowHitCodes.Bottom;
             }
 
@@ -206,32 +252,6 @@ namespace FlaxEditor.GUI
                 }
             }
             return result;
-        }
-
-        /// <summary>
-        /// Selects the specified button. Used by <see cref="MainMenuButton"/>.
-        /// </summary>
-        /// <param name="button">The button.</param>
-        internal void Select(MainMenuButton button)
-        {
-            // Check if popup menu has been already hidden
-            if (_selected != null && !_selected.ContextMenu.Visible)
-                _selected = null;
-
-            if (_selected != button)
-            {
-                _selected = button;
-
-                if (_selected != null && _selected.ContextMenu.HasChildren)
-                {
-                    _selected.ContextMenu.Show(_selected, new Vector2(0, _selected.Height));
-                }
-            }
-            else if (_selected != null)
-            {
-                _selected.ContextMenu.Hide();
-                _selected = null;
-            }
         }
 
         /// <inheritdoc />

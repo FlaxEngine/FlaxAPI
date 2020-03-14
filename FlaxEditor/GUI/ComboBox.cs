@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,11 @@ namespace FlaxEditor.GUI
         protected List<string> _items = new List<string>();
 
         /// <summary>
+        /// The item tooltips (optional).
+        /// </summary>
+        protected string[] _tooltips;
+
+        /// <summary>
         /// The popup menu. May be null if has not been used yet.
         /// </summary>
         protected ContextMenu.ContextMenu _popupMenu;
@@ -43,7 +48,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The selected indices.
         /// </summary>
-        protected readonly List<int> _selectedIndices = new List<int>(4);
+        protected List<int> _selectedIndices = new List<int>(4);
 
         /// <summary>
         /// Gets or sets the items collection.
@@ -53,6 +58,16 @@ namespace FlaxEditor.GUI
         {
             get => _items;
             set => _items = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the items tooltips (optional).
+        /// </summary>
+        [NoSerialize, HideInEditor]
+        public string[] Tooltips
+        {
+            get => _tooltips;
+            set => _tooltips = value;
         }
 
         /// <summary>
@@ -346,6 +361,12 @@ namespace FlaxEditor.GUI
                 _popupMenu = null;
             }
 
+            _selectedIndices.Clear();
+            _selectedIndices = null;
+            _items.Clear();
+            _items = null;
+            _tooltips = null;
+
             base.OnDestroy();
         }
 
@@ -490,6 +511,10 @@ namespace FlaxEditor.GUI
                         if (_selectedIndices.Contains(i))
                         {
                             button.Icon = style.CheckBoxTick;
+                        }
+                        if (_tooltips != null && _tooltips.Length > i)
+                        {
+                            button.TooltipText = _tooltips[i];
                         }
 
                         button.Tag = i;

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -313,14 +313,10 @@ namespace FlaxEngine
             {
                 switch (index)
                 {
-                case 0:
-                    return X;
-                case 1:
-                    return Y;
-                case 2:
-                    return Z;
-                case 3:
-                    return W;
+                case 0: return X;
+                case 1: return Y;
+                case 2: return Z;
+                case 3: return W;
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(index), "Indices for Quaternion run from 0 to 3, inclusive.");
@@ -342,8 +338,7 @@ namespace FlaxEngine
                 case 3:
                     W = value;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(index), "Indices for Quaternion run from 0 to 3, inclusive.");
+                default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Quaternion run from 0 to 3, inclusive.");
                 }
             }
         }
@@ -1048,25 +1043,81 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Creates a rotation with the specified forward and upwards directions
+        /// Creates a rotation with the specified forward and upwards directions.
         /// </summary>
-        /// <param name="forward">Forward direction</param>
-        /// <param name="up">Up direction</param>
-        /// <returns>Calculated quaternion</returns>
+        /// <param name="forward">The forward direction. Direction to orient towards.</param>
+        /// <param name="up">Up direction. Constrains y axis orientation to a plane this vector lies on. This rule might be broken if forward and up direction are nearly parallel.</param>
+        /// <returns>The calculated quaternion.</returns>
         public static Quaternion LookRotation(Vector3 forward, Vector3 up)
         {
-            Vector3.OrthoNormalize(ref forward, ref up);
-            Vector3 right;
-            Vector3.Cross(ref up, ref forward, out right);
-
             Quaternion result;
-            result.W = Mathf.Sqrt(1.0f + right.X + up.Y + forward.Z) * 0.5f;
-            float w4_recip = 1.0f / (4.0f * result.W);
-            result.X = (up.Z - forward.Y) * w4_recip;
-            result.Y = (forward.X - right.Z) * w4_recip;
-            result.Z = (right.Y - up.X) * w4_recip;
-
+            LookRotation(ref forward, ref up, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Creates a rotation with the specified forward and upwards directions.
+        /// </summary>
+        /// <param name="forward">The forward direction. Direction to orient towards.</param>
+        /// <param name="up">The up direction. Constrains y axis orientation to a plane this vector lies on. This rule might be broken if forward and up direction are nearly parallel.</param>
+        /// <param name="result">The calculated quaternion.</param>
+        public static void LookRotation(ref Vector3 forward, ref Vector3 up, out Quaternion result)
+        {
+            Vector3 forwardNorm = forward;
+            forwardNorm.Normalize();
+            Vector3 rightNorm;
+            Vector3.Cross(ref up, ref forwardNorm, out rightNorm);
+            rightNorm.Normalize();
+            Vector3 upNorm;
+            Vector3.Cross(ref forwardNorm, ref rightNorm, out upNorm);
+
+            float m00 = rightNorm.X;
+            float m01 = rightNorm.Y;
+            float m02 = rightNorm.Z;
+            float m10 = upNorm.X;
+            float m11 = upNorm.Y;
+            float m12 = upNorm.Z;
+            float m20 = forwardNorm.X;
+            float m21 = forwardNorm.Y;
+            float m22 = forwardNorm.Z;
+
+            float sum = m00 + m11 + m22;
+            if (sum > 0)
+            {
+                float num = Mathf.Sqrt(sum + 1);
+                float invNumHalf = 0.5f / num;
+                result.X = (m12 - m21) * invNumHalf;
+                result.Y = (m20 - m02) * invNumHalf;
+                result.Z = (m01 - m10) * invNumHalf;
+                result.W = num * 0.5f;
+            }
+            else if ((m00 >= m11) && (m00 >= m22))
+            {
+                float num = Mathf.Sqrt(((1 + m00) - m11) - m22);
+                float invNumHalf = 0.5f / num;
+                result.X = 0.5f * num;
+                result.Y = (m01 + m10) * invNumHalf;
+                result.Z = (m02 + m20) * invNumHalf;
+                result.W = (m12 - m21) * invNumHalf;
+            }
+            else if (m11 > m22)
+            {
+                float num = Mathf.Sqrt(((1 + m11) - m00) - m22);
+                float invNumHalf = 0.5f / num;
+                result.X = (m10 + m01) * invNumHalf;
+                result.Y = 0.5f * num;
+                result.Z = (m21 + m12) * invNumHalf;
+                result.W = (m20 - m02) * invNumHalf;
+            }
+            else
+            {
+                float num = Mathf.Sqrt(((1 + m22) - m00) - m11);
+                float invNumHalf = 0.5f / num;
+                result.X = (m20 + m02) * invNumHalf;
+                result.Y = (m21 + m12) * invNumHalf;
+                result.Z = 0.5f * num;
+                result.W = (m01 - m10) * invNumHalf;
+            }
         }
 
         /// <summary>

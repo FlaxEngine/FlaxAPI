@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -270,6 +270,18 @@ namespace FlaxEditor.Content.Import
         public Int2 Size { get; set; } = new Int2(1024, 1024);
 
         /// <summary>
+        /// True if preserve alpha coverage in generated mips for alpha test reference. Scales mipmap alpha values to preserve alpha coverage based on an alpha test reference value.
+        /// </summary>
+        [EditorOrder(240), DefaultValue(false), Tooltip("Check to preserve alpha coverage in generated mips for alpha test reference. Scales mipmap alpha values to preserve alpha coverage based on an alpha test reference value.")]
+        public bool PreserveAlphaCoverage { get; set; } = false;
+
+        /// <summary>
+        /// The reference value for the alpha coverage preserving.
+        /// </summary>
+        [EditorOrder(250), VisibleIf("PreserveAlphaCoverage"), DefaultValue(0.5f), Tooltip("The reference value for the alpha coverage preserving.")]
+        public float PreserveAlphaCoverageReference { get; set; } = 0.5f;
+
+        /// <summary>
         /// The sprites. Used to keep created sprites on sprite atlas reimport.
         /// </summary>
         [HideInEditor]
@@ -287,6 +299,8 @@ namespace FlaxEditor.Content.Import
             public byte GenerateMipMaps;
             public byte FlipY;
             public byte Resize;
+            public byte PreserveAlphaCoverage;
+            public float PreserveAlphaCoverageReference;
             public float Scale;
             public int MaxSize;
             public Int2 Size;
@@ -307,6 +321,8 @@ namespace FlaxEditor.Content.Import
                 GenerateMipMaps = (byte)(GenerateMipMaps ? 1 : 0),
                 FlipY = (byte)(FlipY ? 1 : 0),
                 Resize = (byte)(Resize ? 1 : 0),
+                PreserveAlphaCoverage = (byte)(PreserveAlphaCoverage ? 1 : 0),
+                PreserveAlphaCoverageReference = PreserveAlphaCoverageReference,
                 Scale = Scale,
                 Size = Size,
                 MaxSize = (int)MaxSize
@@ -340,6 +356,8 @@ namespace FlaxEditor.Content.Import
             GenerateMipMaps = options.GenerateMipMaps != 0;
             FlipY = options.FlipY != 0;
             Resize = options.Resize != 0;
+            PreserveAlphaCoverage = options.PreserveAlphaCoverage != 0;
+            PreserveAlphaCoverageReference = options.PreserveAlphaCoverageReference;
             Scale = options.Scale;
             MaxSize = ConvertMaxSize(options.MaxSize);
             Size = options.Size;

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEditor.Content;
@@ -225,8 +225,9 @@ namespace FlaxEditor.Windows.Assets
         {
             base.OnShowContextMenu(menu);
 
-            var saveButton = menu.AddButton("Save", Save);
-            saveButton.Enabled = IsEdited;
+            menu.AddButton("Save", Save).Enabled = IsEdited;
+            menu.AddButton("Copy name", () => Platform.ClipboardText = Item.NamePath);
+
             menu.AddSeparator();
         }
 

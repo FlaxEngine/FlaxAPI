@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Runtime.InteropServices;
@@ -13,31 +13,37 @@ namespace FlaxEngine
         /// <summary>
         /// The surface material. Can be used to render the scene geometry including models and skinned models.
         /// </summary>
+        [Tooltip("The surface material. Can be used to render the scene geometry including models and skinned models.")]
         Surface = 0,
 
         /// <summary>
         /// The post process material. Can be used to perform custom post-processing of the rendered frame.
         /// </summary>
+        [Tooltip("The post process material. Can be used to perform custom post-processing of the rendered frame.")]
         PostProcess = 1,
 
         /// <summary>
         /// The deferred decal material. Can be used to apply custom overlay or surface modifications to the object surfaces in the world.
         /// </summary>
+        [Tooltip("The deferred decal material. Can be used to apply custom overlay or surface modifications to the object surfaces in the world.")]
         Decal = 2,
 
         /// <summary>
         /// The GUI shader. Can be used to draw custom control interface elements or to add custom effects to the GUI.
         /// </summary>
+        [Tooltip("The GUI shader. Can be used to draw custom control interface elements or to add custom effects to the GUI.")]
         GUI = 3,
 
         /// <summary>
         /// The terrain shader. Can be used only with landscape chunks geometry that use optimized vertex data and support multi-layered blending.
         /// </summary>
+        [Tooltip("The terrain shader. Can be used only with landscape chunks geometry that use optimized vertex data and support multi-layered blending.")]
         Terrain = 4,
 
         /// <summary>
         /// The particle shader. Can be used only with particles geometry (sprites, trails and ribbons). Supports reading particle data on a GPU.
         /// </summary>
+        [Tooltip("The particle shader. Can be used only with particles geometry (sprites, trails and ribbons). Supports reading particle data on a GPU.")]
         Particle = 5,
     }
 
@@ -49,21 +55,25 @@ namespace FlaxEngine
         /// <summary>
         /// The opaque material. Used during GBuffer pass rendering.
         /// </summary>
+        [Tooltip("The opaque material. Used during GBuffer pass rendering.")]
         Opaque = 0,
 
         /// <summary>
         /// The transparent material. Used during Forward pass rendering.
         /// </summary>
+        [Tooltip("The transparent material. Used during Forward pass rendering.")]
         Transparent = 1,
 
         /// <summary>
         /// The additive blend. Material color is used to add to color of the objects behind the surface. Used during Forward pass rendering.
         /// </summary>
+        [Tooltip("The additive blend. Material color is used to add to color of the objects behind the surface. Used during Forward pass rendering.")]
         Additive = 2,
 
         /// <summary>
         /// The multiply blend. Material color is used to multiply color of the objects behind the surface. Used during Forward pass rendering.
         /// </summary>
+        [Tooltip("The multiply blend. Material color is used to multiply color of the objects behind the surface. Used during Forward pass rendering.")]
         Multiply = 3,
     }
 
@@ -75,16 +85,19 @@ namespace FlaxEngine
         /// <summary>
         /// The unlit material. Emissive channel is used as an output color. Can perform custom lighting operations or just glow. Won't be affected by the lighting pipeline.
         /// </summary>
+        [Tooltip("The unlit material. Emissive channel is used as an output color. Can perform custom lighting operations or just glow. Won't be affected by the lighting pipeline.")]
         Unlit = 0,
 
         /// <summary>
         /// The default lit material. The most common choice for the material surfaces.
         /// </summary>
+        [Tooltip("The default lit material. The most common choice for the material surfaces.")]
         Lit = 1,
 
         /// <summary>
         /// The subsurface material. Intended for materials like vax or skin that need light scattering to transport simulation through the object.
         /// </summary>
+        [Tooltip("The subsurface material. Intended for materials like vax or skin that need light scattering to transport simulation through the object.")]
         Subsurface = 2,
     }
 
@@ -96,31 +109,37 @@ namespace FlaxEngine
         /// <summary>
         /// The after post processing pass using LDR input frame.
         /// </summary>
+        [Tooltip("The after post processing pass using LDR input frame.")]
         AfterPostProcessingPass = 0,
 
         /// <summary>
         /// The before post processing pass using HDR input frame.
         /// </summary>
+        [Tooltip("The before post processing pass using HDR input frame.")]
         BeforePostProcessingPass = 1,
 
         /// <summary>
         /// The before forward pass but after GBuffer with HDR input frame.
         /// </summary>
+        [Tooltip("The before forward pass but after GBuffer with HDR input frame.")]
         BeforeForwardPass = 2,
 
         /// <summary>
         /// The after custom post effects.
         /// </summary>
+        [Tooltip("The after custom post effects.")]
         AfterCustomPostEffects = 3,
 
         /// <summary>
         /// The 'before' Reflections pass. After the Light pass. Can be used to implement a custom light types that accumulate lighting to the light buffer.
         /// </summary>
+        [Tooltip("The 'before' Reflections pass. After the Light pass. Can be used to implement a custom light types that accumulate lighting to the light buffer.")]
         BeforeReflectionsPass = 4,
 
         /// <summary>
         /// The 'after' AA filter pass. Rendering is done to the output backbuffer.
         /// </summary>
+        [Tooltip("The 'after' AA filter pass. Rendering is done to the output backbuffer.")]
         AfterAntiAliasingPass = 5,
     }
 
@@ -132,21 +151,25 @@ namespace FlaxEngine
         /// <summary>
         /// Decal will be fully blended with the material surface.
         /// </summary>
+        [Tooltip("Decal will be fully blended with the material surface.")]
         Translucent = 0,
 
         /// <summary>
         /// Decal color will be blended with the material surface color (using multiplication).
         /// </summary>
+        [Tooltip("Decal color will be blended with the material surface color (using multiplication).")]
         Stain = 1,
 
         /// <summary>
         /// Decal will blend the normal vector only.
         /// </summary>
+        [Tooltip("Decal will blend the normal vector only.")]
         Normal = 2,
 
         /// <summary>
         /// Decal will apply the emissive light only.
         /// </summary>
+        [Tooltip("Decal will apply the emissive light only.")]
         Emissive = 3,
     }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 
@@ -31,6 +31,24 @@ namespace FlaxEngine
             /// The character has collision below.
             /// </summary>
             Below = (1 << 2),
+        }
+
+        /// <summary>
+        /// Specifies which sides a character is colliding with.
+        /// </summary>
+        public enum NonWalkableModes
+        {
+            /// <summary>
+            /// Stops character from climbing up non-walkable slopes, but doesn't move it otherwise.
+            /// </summary>
+            [Tooltip("Stops character from climbing up non-walkable slopes, but doesn't move it otherwise.")]
+            PreventClimbing,
+
+            /// <summary>
+            /// Stops character from climbing up non-walkable slopes, and forces it to slide down those slopes.
+            /// </summary>
+            [Tooltip("Stops character from climbing up non-walkable slopes, and forces it to slide down those slopes.")]
+            PreventClimbingAndForceSliding,
         }
 
         /// <summary>

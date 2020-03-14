@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEditor.Content.Thumbnails;
@@ -86,7 +86,7 @@ namespace FlaxEditor.Content
         private static void OnMaterialInstanceCreated(ContentItem item, BinaryAssetItem materialItem)
         {
             var assetItem = (AssetItem)item;
-            var materialInstance = FlaxEngine.Content.Load<MaterialInstance>(assetItem.ID);
+            var materialInstance = FlaxEngine.Content.LoadAsync<MaterialInstance>(assetItem.ID);
             if (materialInstance == null || materialInstance.WaitForLoaded())
             {
                 Editor.LogError("Failed to load created material instance.");

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -1089,7 +1089,7 @@ namespace FlaxEditor.GUI
         public override Vector2 ViewScale
         {
             get => _contents.Scale;
-            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.02f), new Vector2(10.0f));
+            set => _contents.Scale = Vector2.Clamp(value, new Vector2(0.0001f), new Vector2(1000.0f));
         }
 
         /// <summary>
@@ -1141,6 +1141,8 @@ namespace FlaxEditor.GUI
                 _showCollapsed = value;
                 UpdateKeyframes();
                 UpdateTangents();
+                if (value)
+                    ShowWholeCurve();
             }
         }
 

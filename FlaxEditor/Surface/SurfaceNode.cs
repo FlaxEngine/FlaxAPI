@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -53,7 +53,7 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// The values (node parameters in layout based on <see cref="NodeArchetype.DefaultValues"/>).
         /// </summary>
-        public readonly object[] Values;
+        public object[] Values;
 
         /// <summary>
         /// Gets or sets the node title text.

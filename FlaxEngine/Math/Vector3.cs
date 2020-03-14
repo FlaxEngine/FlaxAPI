@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 // -----------------------------------------------------------------------------
 // Original code from SharpDX project. https://github.com/sharpdx/SharpDX/
@@ -1512,19 +1512,6 @@ namespace FlaxEngine
                 newvector.Normalize();
                 destination[i] = newvector;
             }
-        }
-
-        /// <summary>
-        /// Makes vectors normalized and orthogonal to each other
-        /// </summary>
-        /// <param name="normal">Normal vector</param>
-        /// <param name="tangent">Tangent vector</param>
-        public static void OrthoNormalize(ref Vector3 normal, ref Vector3 tangent)
-        {
-            normal.Normalize();
-            Vector3 proj = normal * Dot(tangent, normal);
-            tangent = tangent - proj;
-            tangent.Normalize();
         }
 
         /// <summary>

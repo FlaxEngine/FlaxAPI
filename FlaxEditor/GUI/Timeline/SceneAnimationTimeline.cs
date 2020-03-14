@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEditor.Content;
@@ -55,7 +55,7 @@ namespace FlaxEditor.GUI.Timeline
         public SceneAnimationTimeline()
         : base(PlaybackButtons.Play | PlaybackButtons.Stop | PlaybackButtons.Navigation)
         {
-            PlaybackState = PlaybackStates.Disabled;
+            PlaybackState = PlaybackStates.Seeking;
             PropertiesEditObject = new Proxy(this);
 
             // Setup track types
@@ -129,19 +129,19 @@ namespace FlaxEditor.GUI.Timeline
             {
                 if (typeof(MaterialBase).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var material = FlaxEngine.Content.Load<MaterialBase>(binaryAssetItem.ID);
+                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(binaryAssetItem.ID);
                     if (material && !material.WaitForLoaded() && material.IsPostFx)
                         return true;
                 }
                 else if (typeof(SceneAnimation).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var sceneAnimation = FlaxEngine.Content.Load<SceneAnimation>(binaryAssetItem.ID);
+                    var sceneAnimation = FlaxEngine.Content.LoadAsync<SceneAnimation>(binaryAssetItem.ID);
                     if (sceneAnimation)
                         return true;
                 }
                 else if (typeof(AudioClip).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var audioClip = FlaxEngine.Content.Load<AudioClip>(binaryAssetItem.ID);
+                    var audioClip = FlaxEngine.Content.LoadAsync<AudioClip>(binaryAssetItem.ID);
                     if (audioClip)
                         return true;
                 }
@@ -158,7 +158,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     if (typeof(MaterialBase).IsAssignableFrom(binaryAssetItem.Type))
                     {
-                        var material = FlaxEngine.Content.Load<MaterialBase>(binaryAssetItem.ID);
+                        var material = FlaxEngine.Content.LoadAsync<MaterialBase>(binaryAssetItem.ID);
                         if (material && !material.WaitForLoaded() && material.IsPostFx)
                         {
                             var track = (PostProcessMaterialTrack)timeline.AddTrack(PostProcessMaterialTrack.GetArchetype());
@@ -168,7 +168,7 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     else if (typeof(SceneAnimation).IsAssignableFrom(binaryAssetItem.Type))
                     {
-                        var sceneAnimation = FlaxEngine.Content.Load<SceneAnimation>(binaryAssetItem.ID);
+                        var sceneAnimation = FlaxEngine.Content.LoadAsync<SceneAnimation>(binaryAssetItem.ID);
                         if (!sceneAnimation || sceneAnimation.WaitForLoaded())
                             continue;
                         var track = (NestedSceneAnimationTrack)timeline.AddTrack(NestedSceneAnimationTrack.GetArchetype());
@@ -178,7 +178,7 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     else if (typeof(AudioClip).IsAssignableFrom(binaryAssetItem.Type))
                     {
-                        var audioClip = FlaxEngine.Content.Load<AudioClip>(binaryAssetItem.ID);
+                        var audioClip = FlaxEngine.Content.LoadAsync<AudioClip>(binaryAssetItem.ID);
                         if (!audioClip || audioClip.WaitForLoaded())
                             continue;
                         var track = (AudioTrack)timeline.AddTrack(AudioTrack.GetArchetype());
@@ -194,7 +194,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             PlaybackStates state;
             if (!_player)
-                state = PlaybackStates.Disabled;
+                state = PlaybackStates.Seeking;
             else if (_player.IsPlaying)
                 state = PlaybackStates.Playing;
             else if (_player.IsPaused)
@@ -206,13 +206,10 @@ namespace FlaxEditor.GUI.Timeline
 
             PlaybackState = state;
 
-            if (_player && _player.Animation && _player.Animation.IsLoaded)
+            if (_player && _player.Animation)
             {
+                _player.Animation.WaitForLoaded();
                 CurrentFrame = (int)(_player.Time * _player.Animation.FramesPerSecond);
-            }
-            else
-            {
-                CurrentFrame = 0;
             }
         }
 
@@ -243,7 +240,15 @@ namespace FlaxEditor.GUI.Timeline
         /// <inheritdoc />
         public override void OnSeek(int frame)
         {
-            _player.Time = frame / _player.Animation.FramesPerSecond;
+            if (_player?.Animation)
+            {
+                _player.Animation.WaitForLoaded();
+                _player.Time = frame / _player.Animation.FramesPerSecond;
+            }
+            else
+            {
+                CurrentFrame = frame;
+            }
 
             base.OnSeek(frame);
         }

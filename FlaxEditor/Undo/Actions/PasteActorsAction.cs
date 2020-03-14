@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -111,10 +111,10 @@ namespace FlaxEditor.Actions
                     LinkBrokenParentReference(actor);
                 }
 
-                var foundNode = SceneGraphFactory.FindNode(actor.ID);
-                if (foundNode is ActorNode node)
+                var node = GetNode(actor.ID);
+                if (node is ActorNode actorNode)
                 {
-                    nodes.Add(node);
+                    nodes.Add(actorNode);
                 }
             }
 
@@ -146,8 +146,8 @@ namespace FlaxEditor.Actions
                 if (parent != null)
                 {
                     string name = node.Name;
-                    Actor[] children = parent.GetChildren();
-                    if (children.Count(x => x.Name == name) > 1)
+                    Actor[] children = parent.Children;
+                    if (children.Any(x => x.Name == name))
                     {
                         // Generate new name
                         node.Actor.Name = StringUtils.IncrementNameNumber(name, x => children.All(y => y.Name != x));
@@ -156,6 +156,16 @@ namespace FlaxEditor.Actions
 
                 Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
             }
+        }
+
+        /// <summary>
+        /// Gets the node.
+        /// </summary>
+        /// <param name="id">The actor id.</param>
+        /// <returns>The scene graph node.</returns>
+        protected virtual SceneGraphNode GetNode(Guid id)
+        {
+            return SceneGraphFactory.FindNode(id);
         }
 
         /// <inheritdoc />
@@ -170,7 +180,7 @@ namespace FlaxEditor.Actions
             // Remove objects
             for (int i = 0; i < _nodeParents.Count; i++)
             {
-                var node = SceneGraphFactory.FindNode(_nodeParents[i]);
+                var node = GetNode(_nodeParents[i]);
                 Editor.Instance.Scene.MarkSceneEdited(node.ParentScene);
                 node.Delete();
             }

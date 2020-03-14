@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -745,26 +745,26 @@ namespace FlaxEngine
         /// <returns>The HSV color.</returns>
         public Vector3 ToHSV()
         {
-            float RGBMin = Mathf.Min(R, G, B);
-            float RGBMax = Mathf.Max(R, G, B);
-            float RGBRange = RGBMax - RGBMin;
+            float rgbMin = Mathf.Min(R, G, B);
+            float rgbMax = Mathf.Max(R, G, B);
+            float rgbRange = rgbMax - rgbMin;
 
-            float Hue;
-            if (Mathf.NearEqual(RGBMax, RGBMin))
-                Hue = 0.0f;
-            else if (Mathf.NearEqual(RGBMax, R))
-                Hue = ((((G - B) / RGBRange) * 60.0f) + 360.0f) % 360.0f;
-            else if (Mathf.NearEqual(RGBMax, G))
-                Hue = (((B - R) / RGBRange) * 60.0f) + 120.0f;
-            else if (Mathf.NearEqual(RGBMax, B))
-                Hue = (((R - G) / RGBRange) * 60.0f) + 240.0f;
+            float hue;
+            if (Mathf.NearEqual(rgbMax, rgbMin))
+                hue = 0.0f;
+            else if (Mathf.NearEqual(rgbMax, R))
+                hue = ((((G - B) / rgbRange) * 60.0f) + 360.0f) % 360.0f;
+            else if (Mathf.NearEqual(rgbMax, G))
+                hue = (((B - R) / rgbRange) * 60.0f) + 120.0f;
+            else if (Mathf.NearEqual(rgbMax, B))
+                hue = (((R - G) / rgbRange) * 60.0f) + 240.0f;
             else
-                Hue = 0.0f;
+                hue = 0.0f;
 
-            float Saturation = Mathf.IsZero(RGBMax) ? 0.0f : RGBRange / RGBMax;
-            float Value = RGBMax;
+            float saturation = Mathf.IsZero(rgbMax) ? 0.0f : rgbRange / rgbMax;
+            float value = rgbMax;
 
-            return new Vector3(Hue, Saturation, Value);
+            return new Vector3(hue, saturation, value);
         }
 
         /// <summary>
@@ -882,6 +882,97 @@ namespace FlaxEngine
         public static Color PremultiplyAlpha(Color value)
         {
             return new Color(value.R * value.A, value.G * value.A, value.B * value.A, value.A);
+        }
+
+        /// <summary>
+        /// Returns a color containing the largest components of the specified colors.
+        /// </summary>
+        /// <param name="left">The first source color.</param>
+        /// <param name="right">The second source color.</param>
+        /// <param name="result">
+        /// When the method completes, contains an new color composed of the largest components of the source colors.
+        /// </param>
+        public static void Max(ref Color left, ref Color right, out Color result)
+        {
+            result = new Color(
+                Mathf.Max(left.R, right.R),
+                Mathf.Max(left.G, right.G),
+                Mathf.Max(left.B, right.B),
+                Mathf.Max(left.A, right.A)
+            );
+        }
+
+        /// <summary>
+        /// Returns a color containing the largest components of the specified colors.
+        /// </summary>
+        /// <param name="left">The first source color.</param>
+        /// <param name="right">The second source color.</param>
+        /// <returns>A color containing the largest components of the source colors.</returns>
+        public static Color Max(Color left, Color right)
+        {
+            Max(ref left, ref right, out var result);
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a color containing the smallest components of the specified colors.
+        /// </summary>
+        /// <param name="left">The first source color.</param>
+        /// <param name="right">The second source color.</param>
+        /// <param name="result">
+        /// When the method completes, contains an new color composed of the smallest components of the source colors.
+        /// </param>
+        public static void Min(ref Color left, ref Color right, out Color result)
+        {
+            result = new Color(
+                Mathf.Min(left.R, right.R),
+                Mathf.Min(left.G, right.G),
+                Mathf.Min(left.B, right.B),
+                Mathf.Min(left.A, right.A)
+            );
+        }
+
+        /// <summary>
+        /// Returns a color containing the smallest components of the specified colors.
+        /// </summary>
+        /// <param name="left">The first source color.</param>
+        /// <param name="right">The second source color.</param>
+        /// <returns>A color containing the smallest components of the source colors.</returns>
+        public static Color Min(Color left, Color right)
+        {
+            Min(ref left, ref right, out var result);
+            return result;
+        }
+
+        /// <summary>
+        /// Restricts a value to be within a specified range.
+        /// </summary>
+        /// <param name="value">The value to clamp.</param>
+        /// <param name="min">The minimum value.</param>
+        /// <param name="max">The maximum value.</param>
+        /// <param name="result">When the method completes, contains the clamped value.</param>
+        public static void Clamp(ref Color value, ref Color min, ref Color max, out Color result)
+        {
+            result = new Color(
+                Mathf.Clamp(value.R, min.R, max.R),
+                Mathf.Clamp(value.G, min.G, max.G),
+                Mathf.Clamp(value.B, min.B, max.B),
+                Mathf.Clamp(value.A, min.A, max.A)
+            );
+        }
+
+        /// <summary>
+        /// Restricts a value to be within a specified range.
+        /// </summary>
+        /// <param name="value">The value to clamp.</param>
+        /// <param name="min">The minimum value.</param>
+        /// <param name="max">The maximum value.</param>
+        /// <returns>The clamped value.</returns>
+        public static Color Clamp(Color value, Color min, Color max)
+        {
+            Color result;
+            Clamp(ref value, ref min, ref max, out result);
+            return result;
         }
 
         /// <summary>

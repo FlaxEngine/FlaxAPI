@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
 using FlaxEditor.GUI;
@@ -319,7 +319,7 @@ namespace FlaxEditor.Content
                     switch (key)
                     {
                     case Keys.D:
-                        Editor.Instance.Windows.ContentWin.Clone(Folder);
+                        Editor.Instance.Windows.ContentWin.Duplicate(Folder);
                         return true;
                     }
                 }

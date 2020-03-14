@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
@@ -485,12 +485,12 @@ namespace FlaxEditor.GUI.Docking
             menu.AddButton("Close All But This", OnTabMenuCloseAllButThisClicked);
             if (_panel.Tabs.IndexOf(tab) + 1 < _panel.TabsCount)
             {
-                menu.AddButton("Close All To the Right", OnTabMenuCloseAllToTheRightClicked);
+                menu.AddButton("Close All To The Right", OnTabMenuCloseAllToTheRightClicked);
             }
             if (!_panel.IsFloating)
             {
                 menu.AddSeparator();
-                menu.AddButton("Float", OnTabMenuFloatClicked);
+                menu.AddButton("Undock", OnTabMenuUndockClicked);
             }
             menu.Show(this, location);
         }
@@ -529,7 +529,7 @@ namespace FlaxEditor.GUI.Docking
             }
         }
 
-        private void OnTabMenuFloatClicked(ContextMenuButton button)
+        private void OnTabMenuUndockClicked(ContextMenuButton button)
         {
             var tab = (DockWindow)button.ParentContextMenu.Tag;
             tab.ShowFloating();

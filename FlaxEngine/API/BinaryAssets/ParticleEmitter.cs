@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 
@@ -12,16 +12,19 @@ namespace FlaxEngine
         /// <summary>
         /// The default model. Select the best simulation mode based on a target platform.
         /// </summary>
+        [Tooltip("The default model. Select the best simulation mode based on a target platform.")]
         Default = 0,
 
         /// <summary>
         /// Runs particles simulation on a CPU (always supported).
         /// </summary>
+        [Tooltip("Runs particles simulation on a CPU (always supported).")]
         CPU = 1,
 
         /// <summary>
         /// Runs particles simulation on a GPU (if supported).
         /// </summary>
+        [Tooltip("Runs particles simulation on a GPU (if supported).")]
         GPU = 2,
     }
 
@@ -33,11 +36,13 @@ namespace FlaxEngine
         /// <summary>
         /// Simulates particles in the world space.
         /// </summary>
+        [Tooltip("Simulates particles in the world space.")]
         World = 0,
 
         /// <summary>
         /// Simulates particles in the local space of the actor.
         /// </summary>
+        [Tooltip("Simulates particles in the local space of the actor.")]
         Local = 1,
     }
 

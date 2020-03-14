@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
 
@@ -211,13 +211,13 @@ namespace FlaxEngine.GUI
                     break;
                 }
             }
-            var endTextBlock = _textBlocks.Count;
-            for (int i = firstTextBlock + 1; i < _textBlocks.Count; i++)
+            var endTextBlock = firstTextBlock;
+            for (int i = _textBlocks.Count - 1; i > firstTextBlock; i--)
             {
                 ref TextBlock textBlock = ref textBlocks[i];
-                if (!textBlock.Bounds.Intersects(ref viewRect))
+                if (textBlock.Bounds.Intersects(ref viewRect))
                 {
-                    endTextBlock = i;
+                    endTextBlock = i + 1;
                     break;
                 }
             }

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.Collections.Generic;
 using FlaxEngine;
@@ -13,12 +13,12 @@ namespace FlaxEditor.Viewport.Previews
     public class AnimatedModelPreview : AssetPreview
     {
         private AnimatedModel _previewModel;
-        private StaticModel _previewBonesActor;
-        private Model _previewBonesModel;
+        private StaticModel _previewNodesActor;
+        private Model _previewNodesModel;
         private AnimatedModel.Pose _previewModelPose;
-        private int _previewBonesCounter;
-        private List<Vector3> _previewBonesVertex;
-        private List<int> _previewBonesIndex;
+        private int _previewNodesCounter;
+        private List<Vector3> _previewNodesVB;
+        private List<int> _previewNodesIB;
 
         /// <summary>
         /// Gets or sets the skinned model asset to preview.
@@ -40,9 +40,9 @@ namespace FlaxEditor.Viewport.Previews
         public bool PlayAnimation { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets a value indicating whether show animated model skeleton bones debug view.
+        /// Gets or sets a value indicating whether show animated model skeleton nodes debug view.
         /// </summary>
-        public bool ShowBones { get; set; } = false;
+        public bool ShowNodes { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether scale the model to the normalized bounds.
@@ -50,9 +50,9 @@ namespace FlaxEditor.Viewport.Previews
         public bool ScaleToFit { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the custom mask for the skeleton bones. Bones with false values will be skipped during rendering. Works only if <see cref="ShowBones"/> is set to true and the array matches the attached <see cref="SkinnedModel"/> bones hierarchy.
+        /// Gets or sets the custom mask for the skeleton nodes. Nodes missing from this list will be skipped during rendering. Works only if <see cref="ShowNodes"/> is set to true and the array matches the attached <see cref="SkinnedModel"/> nodes hierarchy.
         /// </summary>
-        public bool[] BonesMask { get; set; }
+        public bool[] NodesMask { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimatedModelPreview"/> class.
@@ -69,15 +69,15 @@ namespace FlaxEditor.Viewport.Previews
             _previewModel.UpdateWhenOffscreen = true;
             _previewModel.BoundsScale = 1000.0f;
             _previewModel.UpdateMode = AnimatedModel.AnimationUpdateMode.Manual;
-            _previewBonesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
-            _previewBonesModel.SetupLODs(1);
-            _previewBonesActor = StaticModel.New();
-            _previewBonesActor.Model = _previewBonesModel;
-            _previewBonesActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
+            _previewNodesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
+            _previewNodesModel.SetupLODs(1);
+            _previewNodesActor = StaticModel.New();
+            _previewNodesActor.Model = _previewNodesModel;
+            _previewNodesActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
 
             // Link actors for rendering
             Task.CustomActors.Add(_previewModel);
-            Task.CustomActors.Add(_previewBonesActor);
+            Task.CustomActors.Add(_previewNodesActor);
         }
 
         private void OnBegin(SceneRenderTask task, GPUContext context)
@@ -109,119 +109,119 @@ namespace FlaxEditor.Viewport.Previews
                 _previewModel.UpdateAnimation();
             }
 
-            // Update the bones debug (once every few frames)
-            _previewBonesActor.Transform = _previewModel.Transform;
-            var updateBonesCount = PlayAnimation || _previewBonesVertex?.Count == 0 ? 1 : 10;
-            _previewBonesActor.IsActive = ShowBones;
-            if (_previewBonesCounter++ % updateBonesCount == 0 && ShowBones)
+            // Update the nodes debug (once every few frames)
+            _previewNodesActor.Transform = _previewModel.Transform;
+            var updateNodesCount = PlayAnimation || _previewNodesVB?.Count == 0 ? 1 : 10;
+            _previewNodesActor.IsActive = ShowNodes;
+            if (_previewNodesCounter++ % updateNodesCount == 0 && ShowNodes)
             {
                 _previewModel.GetCurrentPose(ref _previewModelPose);
-                var bones = _previewModel.SkinnedModel?.Bones;
-                if (_previewModelPose.Bones == null || _previewModelPose.Bones.Length == 0 || bones == null)
+                var nodes = _previewModel.SkinnedModel?.Nodes;
+                if (_previewModelPose.Nodes == null || _previewModelPose.Nodes.Length == 0 || nodes == null)
                 {
-                    _previewBonesActor.IsActive = false;
+                    _previewNodesActor.IsActive = false;
                 }
                 else
                 {
-                    if (_previewBonesVertex == null)
-                        _previewBonesVertex = new List<Vector3>(1024 * 2);
+                    if (_previewNodesVB == null)
+                        _previewNodesVB = new List<Vector3>(1024 * 2);
                     else
-                        _previewBonesVertex.Clear();
-                    if (_previewBonesIndex == null)
-                        _previewBonesIndex = new List<int>(1024 * 3);
+                        _previewNodesVB.Clear();
+                    if (_previewNodesIB == null)
+                        _previewNodesIB = new List<int>(1024 * 3);
                     else
-                        _previewBonesIndex.Clear();
+                        _previewNodesIB.Clear();
 
-                    // Draw bounding box at the bone locations
-                    var bonesMask = BonesMask != null && BonesMask.Length == bones.Length ? BonesMask : null;
-                    var boneBox = new OrientedBoundingBox(new Vector3(-1.0f), new Vector3(1.0f));
-                    for (int i = 0; i < _previewModelPose.Bones.Length; i++)
+                    // Draw bounding box at the node locations
+                    var nodesMask = NodesMask != null && NodesMask.Length == nodes.Length ? NodesMask : null;
+                    var localBox = new OrientedBoundingBox(new Vector3(-1.0f), new Vector3(1.0f));
+                    for (int i = 0; i < _previewModelPose.Nodes.Length; i++)
                     {
-                        if (bonesMask != null && !bonesMask[i])
+                        if (nodesMask != null && !nodesMask[i])
                             continue;
 
-                        var boneTransform = _previewModelPose.Bones[i];
-                        boneTransform.Decompose(out var scale, out var _, out var _);
-                        boneTransform = Matrix.Invert(Matrix.Scaling(scale)) * boneTransform;
+                        var transform = _previewModelPose.Nodes[i];
+                        transform.Decompose(out var scale, out var _, out var _);
+                        transform = Matrix.Invert(Matrix.Scaling(scale)) * transform;
 
                         // Some inlined code to improve performance
-                        var box = boneBox * boneTransform;
+                        var box = localBox * transform;
                         //
-                        var iStart = _previewBonesVertex.Count;
-                        box.GetCorners(_previewBonesVertex);
+                        var iStart = _previewNodesVB.Count;
+                        box.GetCorners(_previewNodesVB);
                         //
-                        _previewBonesIndex.Add(iStart + 0);
-                        _previewBonesIndex.Add(iStart + 1);
-                        _previewBonesIndex.Add(iStart + 0);
+                        _previewNodesIB.Add(iStart + 0);
+                        _previewNodesIB.Add(iStart + 1);
+                        _previewNodesIB.Add(iStart + 0);
                         //
-                        _previewBonesIndex.Add(iStart + 0);
-                        _previewBonesIndex.Add(iStart + 4);
-                        _previewBonesIndex.Add(iStart + 0);
+                        _previewNodesIB.Add(iStart + 0);
+                        _previewNodesIB.Add(iStart + 4);
+                        _previewNodesIB.Add(iStart + 0);
                         //
-                        _previewBonesIndex.Add(iStart + 1);
-                        _previewBonesIndex.Add(iStart + 2);
-                        _previewBonesIndex.Add(iStart + 1);
+                        _previewNodesIB.Add(iStart + 1);
+                        _previewNodesIB.Add(iStart + 2);
+                        _previewNodesIB.Add(iStart + 1);
                         //
-                        _previewBonesIndex.Add(iStart + 1);
-                        _previewBonesIndex.Add(iStart + 5);
-                        _previewBonesIndex.Add(iStart + 1);
+                        _previewNodesIB.Add(iStart + 1);
+                        _previewNodesIB.Add(iStart + 5);
+                        _previewNodesIB.Add(iStart + 1);
                         //
-                        _previewBonesIndex.Add(iStart + 2);
-                        _previewBonesIndex.Add(iStart + 3);
-                        _previewBonesIndex.Add(iStart + 2);
+                        _previewNodesIB.Add(iStart + 2);
+                        _previewNodesIB.Add(iStart + 3);
+                        _previewNodesIB.Add(iStart + 2);
                         //
-                        _previewBonesIndex.Add(iStart + 2);
-                        _previewBonesIndex.Add(iStart + 6);
-                        _previewBonesIndex.Add(iStart + 2);
+                        _previewNodesIB.Add(iStart + 2);
+                        _previewNodesIB.Add(iStart + 6);
+                        _previewNodesIB.Add(iStart + 2);
                         //
-                        _previewBonesIndex.Add(iStart + 3);
-                        _previewBonesIndex.Add(iStart + 7);
-                        _previewBonesIndex.Add(iStart + 3);
+                        _previewNodesIB.Add(iStart + 3);
+                        _previewNodesIB.Add(iStart + 7);
+                        _previewNodesIB.Add(iStart + 3);
                         //
-                        _previewBonesIndex.Add(iStart + 4);
-                        _previewBonesIndex.Add(iStart + 5);
-                        _previewBonesIndex.Add(iStart + 4);
+                        _previewNodesIB.Add(iStart + 4);
+                        _previewNodesIB.Add(iStart + 5);
+                        _previewNodesIB.Add(iStart + 4);
                         //
-                        _previewBonesIndex.Add(iStart + 4);
-                        _previewBonesIndex.Add(iStart + 7);
-                        _previewBonesIndex.Add(iStart + 4);
+                        _previewNodesIB.Add(iStart + 4);
+                        _previewNodesIB.Add(iStart + 7);
+                        _previewNodesIB.Add(iStart + 4);
                         //
-                        _previewBonesIndex.Add(iStart + 5);
-                        _previewBonesIndex.Add(iStart + 6);
-                        _previewBonesIndex.Add(iStart + 5);
+                        _previewNodesIB.Add(iStart + 5);
+                        _previewNodesIB.Add(iStart + 6);
+                        _previewNodesIB.Add(iStart + 5);
                         //
-                        _previewBonesIndex.Add(iStart + 6);
-                        _previewBonesIndex.Add(iStart + 7);
-                        _previewBonesIndex.Add(iStart + 6);
+                        _previewNodesIB.Add(iStart + 6);
+                        _previewNodesIB.Add(iStart + 7);
+                        _previewNodesIB.Add(iStart + 6);
                         //
                     }
 
-                    // Bone bone connections
-                    for (int i = 0; i < bones.Length; i++)
+                    // Nodes connections
+                    for (int i = 0; i < nodes.Length; i++)
                     {
-                        int parentIndex = bones[i].ParentIndex;
+                        int parentIndex = nodes[i].ParentIndex;
 
                         if (parentIndex != -1)
                         {
-                            if (bonesMask != null && (!bonesMask[i] || !bonesMask[parentIndex]))
+                            if (nodesMask != null && (!nodesMask[i] || !nodesMask[parentIndex]))
                                 continue;
 
-                            var parentPos = _previewModelPose.GetBonePosition(parentIndex);
-                            var bonePos = _previewModelPose.GetBonePosition(i);
+                            var parentPos = _previewModelPose.GetNodePosition(parentIndex);
+                            var bonePos = _previewModelPose.GetNodePosition(i);
 
-                            var iStart = _previewBonesVertex.Count;
-                            _previewBonesVertex.Add(parentPos);
-                            _previewBonesVertex.Add(bonePos);
-                            _previewBonesIndex.Add(iStart + 0);
-                            _previewBonesIndex.Add(iStart + 1);
-                            _previewBonesIndex.Add(iStart + 0);
+                            var iStart = _previewNodesVB.Count;
+                            _previewNodesVB.Add(parentPos);
+                            _previewNodesVB.Add(bonePos);
+                            _previewNodesIB.Add(iStart + 0);
+                            _previewNodesIB.Add(iStart + 1);
+                            _previewNodesIB.Add(iStart + 0);
                         }
                     }
 
-                    if (_previewBonesIndex.Count > 0)
-                        _previewBonesModel.LODs[0].Meshes[0].UpdateMesh(_previewBonesVertex.ToArray(), _previewBonesIndex.ToArray());
+                    if (_previewNodesIB.Count > 0)
+                        _previewNodesModel.LODs[0].Meshes[0].UpdateMesh(_previewNodesVB.ToArray(), _previewNodesIB.ToArray());
                     else
-                        _previewBonesActor.IsActive = false;
+                        _previewNodesActor.IsActive = false;
                 }
             }
         }
@@ -230,11 +230,11 @@ namespace FlaxEditor.Viewport.Previews
         public override void OnDestroy()
         {
             // Ensure to cleanup created actor objects
-            _previewBonesActor.Model = null;
+            _previewNodesActor.Model = null;
             Object.Destroy(ref _previewModel);
-            Object.Destroy(ref _previewBonesActor);
-            Object.Destroy(ref _previewBonesModel);
-            BonesMask = null;
+            Object.Destroy(ref _previewNodesActor);
+            Object.Destroy(ref _previewNodesModel);
+            NodesMask = null;
 
             base.OnDestroy();
         }

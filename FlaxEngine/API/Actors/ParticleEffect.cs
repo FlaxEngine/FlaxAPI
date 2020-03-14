@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Runtime.CompilerServices;
@@ -15,11 +15,13 @@ namespace FlaxEngine
             /// <summary>
             /// Use realtime simulation updates. Updates particles during every game logic update.
             /// </summary>
+            [Tooltip("Use realtime simulation updates. Updates particles during every game logic update.")]
             Realtime = 0,
 
             /// <summary>
             /// Use fixed timestep delta time to update particles simulation with a custom frequency.
             /// </summary>
+            [Tooltip("Use fixed timestep delta time to update particles simulation with a custom frequency.")]
             FixedTimestep = 1,
         }
 
@@ -144,6 +146,11 @@ namespace FlaxEngine
             /// The GPU cube texture (created from code).
             /// </summary>
             GPUTextureCube = 22,
+
+            /// <summary>
+            /// The RGBA channel selection mask.
+            /// </summary>
+            ChannelMask = 23,
         }
 
         /// <summary>
@@ -248,6 +255,7 @@ namespace FlaxEngine
                         ptr = new IntPtr(&vBool);
                         break;
                     case ParameterType.Integer:
+                    case ParameterType.ChannelMask:
                         ptr = new IntPtr(&vInt);
                         break;
                     case ParameterType.Float:
@@ -268,7 +276,6 @@ namespace FlaxEngine
                     case ParameterType.Matrix:
                         ptr = new IntPtr(&vMatrix);
                         break;
-
                     case ParameterType.CubeTexture:
                     case ParameterType.Texture:
                     case ParameterType.NormalMap:
@@ -288,13 +295,13 @@ namespace FlaxEngine
                     {
                     case ParameterType.Bool: return vBool;
                     case ParameterType.Integer: return vInt;
+                    case ParameterType.ChannelMask: return (ChannelMask)vInt;
                     case ParameterType.Float: return vFloat;
                     case ParameterType.Vector2: return vVector2;
                     case ParameterType.Vector3: return vVector3;
                     case ParameterType.Vector4: return vVector4;
                     case ParameterType.Color: return vColor;
                     case ParameterType.Matrix: return vMatrix;
-
                     case ParameterType.CubeTexture:
                     case ParameterType.Texture:
                     case ParameterType.NormalMap: return Object.Find<Object>(ref vGuid);
@@ -302,7 +309,6 @@ namespace FlaxEngine
                     case ParameterType.GPUTextureCube:
                     case ParameterType.GPUTextureVolume:
                     case ParameterType.GPUTexture: return Object.TryFind<Object>(ref vGuid);
-
                     default: throw new ArgumentOutOfRangeException();
                     }
                 }
@@ -331,17 +337,14 @@ namespace FlaxEngine
                         ptr = new IntPtr(&vBool);
                         break;
                     case ParameterType.Integer:
-                    {
+                    case ParameterType.ChannelMask:
                         vInt = Convert.ToInt32(value);
                         ptr = new IntPtr(&vInt);
                         break;
-                    }
                     case ParameterType.Float:
-                    {
                         vFloat = Convert.ToSingle(value);
                         ptr = new IntPtr(&vFloat);
                         break;
-                    }
                     case ParameterType.Vector2:
                         vVector2 = (Vector2)value;
                         ptr = new IntPtr(&vVector2);
@@ -362,7 +365,6 @@ namespace FlaxEngine
                         vMatrix = (Matrix)value;
                         ptr = new IntPtr(&vMatrix);
                         break;
-
                     case ParameterType.CubeTexture:
                     case ParameterType.Texture:
                     case ParameterType.NormalMap:
@@ -372,7 +374,6 @@ namespace FlaxEngine
                     case ParameterType.GPUTextureVolume:
                         ptr = Object.GetUnmanagedPtr(value as Object);
                         break;
-
                     default: throw new ArgumentOutOfRangeException();
                     }
 

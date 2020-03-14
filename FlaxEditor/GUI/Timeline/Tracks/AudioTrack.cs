@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.IO;
@@ -361,19 +361,29 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnRightKeyClicked(Image image, MouseButton button)
         {
-            if (button == MouseButton.Left && _audioMedia != null)
+            if (button == MouseButton.Left && GetNextKeyframeFrame(Timeline.CurrentTime, out var frame))
             {
-                var time = (Timeline.CurrentFrame - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
+                Timeline.OnSeek(frame);
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool GetNextKeyframeFrame(float time, out int result)
+        {
+            if (_audioMedia != null)
+            {
+                var mediaTime = (time - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
                 for (int i = 0; i < Curve.Keyframes.Count; i++)
                 {
                     var k = Curve.Keyframes[i];
-                    if (k.Time > time)
+                    if (k.Time > mediaTime)
                     {
-                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond) + _audioMedia.StartFrame);
-                        break;
+                        result = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond) + _audioMedia.StartFrame;
+                        return true;
                     }
                 }
             }
+            return base.GetNextKeyframeFrame(time, out result);
         }
 
         private void OnAddKeyClicked(Image image, MouseButton button)
@@ -399,6 +409,10 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnLeftKeyClicked(Image image, MouseButton button)
         {
+            if (button == MouseButton.Left && GetPreviousKeyframeFrame(Timeline.CurrentTime, out var frame))
+            {
+                Timeline.OnSeek(frame);
+            }
             if (button == MouseButton.Left && _audioMedia != null)
             {
                 var time = (Timeline.CurrentFrame - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
@@ -412,6 +426,25 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     }
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override bool GetPreviousKeyframeFrame(float time, out int result)
+        {
+            if (_audioMedia != null)
+            {
+                var mediaTime = (time - _audioMedia.StartFrame) / Timeline.FramesPerSecond;
+                for (int i = Curve.Keyframes.Count - 1; i >= 0; i--)
+                {
+                    var k = Curve.Keyframes[i];
+                    if (k.Time < mediaTime)
+                    {
+                        result = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond) + _audioMedia.StartFrame;
+                        return true;
+                    }
+                }
+            }
+            return base.GetPreviousKeyframeFrame(time, out result);
         }
 
         private void UpdatePreviewValue()

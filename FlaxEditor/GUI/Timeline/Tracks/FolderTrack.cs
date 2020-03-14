@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System.IO;
 using FlaxEditor.GUI.Input;
@@ -73,7 +73,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             if (button == MouseButton.Left)
             {
-                ColorValueBox.ShowPickColorDialog?.Invoke(Color, OnColorChanged);
+                ColorValueBox.ShowPickColorDialog?.Invoke(this, Color, OnColorChanged);
             }
         }
 

@@ -1,6 +1,7 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using FlaxEngine;
 
 namespace FlaxEditor.Content.Settings
@@ -13,18 +14,21 @@ namespace FlaxEditor.Content.Settings
         /// <summary>
         /// The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.
         /// </summary>
+        [DefaultValue(256)]
         [EditorOrder(10), Limit(32, short.MaxValue), EditorDisplay("General", "Max assets per package"), Tooltip("The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.")]
         public int MaxAssetsPerPackage = 256;
 
         /// <summary>
         /// The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.
         /// </summary>
+        [DefaultValue(256)]
         [EditorOrder(20), Limit(16, short.MaxValue), EditorDisplay("General", "Max package size (in MB)"), Tooltip("The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.")]
         public int MaxPackageSizeMB = 256;
 
         /// <summary>
         /// The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the build game. Use 0 to randomize it during building.
         /// </summary>
+        [DefaultValue(0)]
         [EditorOrder(30), EditorDisplay("General"), Tooltip("The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the build game. Use 0 to randomize it during building.")]
         public int ContentKey = 0;
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -177,7 +177,7 @@ namespace FlaxEditor.GUI
             public override int Compare(Control other)
             {
                 if (other is Item otherItem)
-                    return String.Compare(Name, otherItem.Name, StringComparison.Ordinal);
+                    return string.Compare(Name, otherItem.Name, StringComparison.Ordinal);
                 return base.Compare(other);
             }
         }

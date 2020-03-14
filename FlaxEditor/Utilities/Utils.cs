@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -168,7 +168,7 @@ namespace FlaxEditor.Utilities
                 return Activator.CreateInstance(type);
             }
 
-            if (typeof(Object).IsAssignableFrom(type))
+            if (typeof(object).IsAssignableFrom(type))
                 return null;
             return Activator.CreateInstance(type);
         }

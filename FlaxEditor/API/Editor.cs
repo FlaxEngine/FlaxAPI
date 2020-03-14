@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -377,13 +377,9 @@ namespace FlaxEditor
                 StateMachine.Update();
                 UpdateAutoSave();
 
-                // Drop performance if app has no focus (only when game is not running)
                 if (!StateMachine.IsPlayMode)
                 {
-                    bool isFocused = Platform.HasFocus;
-                    Time.DrawFPS = isFocused ? 60 : 15;
-                    Time.UpdateFPS = isFocused ? 60 : 15;
-                    Time.PhysicsFPS = isFocused ? 30 : 20;
+                    SetupEditorFPS();
                 }
 
                 // Update modules
@@ -403,6 +399,33 @@ namespace FlaxEditor
             {
                 Debug.LogException(ex);
             }
+        }
+
+        internal void SetupEditorFPS()
+        {
+            var editorFps = Options.Options.General.EditorFPS;
+            if (!Platform.HasFocus)
+            {
+                // Drop performance if app has no focus
+                Time.DrawFPS = 15;
+                Time.UpdateFPS = 15;
+            }
+            else if (editorFps < 1)
+            {
+                // Unlimited power!!!
+                Time.DrawFPS = 0;
+                Time.UpdateFPS = 0;
+            }
+            else
+            {
+                // Custom or default value but just don't go too low
+                editorFps = Mathf.Max(editorFps, 10);
+                Time.DrawFPS = editorFps;
+                Time.UpdateFPS = editorFps;
+            }
+
+            // Physics is not so much used in edit time
+            Time.PhysicsFPS = 30;
         }
 
         private void UpdateAutoSave()
@@ -1209,7 +1232,7 @@ namespace FlaxEditor
         internal static extern void Internal_DrawNavMesh();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetPParticleEmitterParamValue(IntPtr effect, ref Guid paramId, IntPtr ptr);
+        internal static extern void Internal_GetParticleEmitterParamValue(IntPtr effect, ref Guid paramId, IntPtr ptr);
 #endif
 
         #endregion

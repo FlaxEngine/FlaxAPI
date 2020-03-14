@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Runtime.InteropServices;
@@ -13,26 +13,31 @@ namespace FlaxEngine
         /// <summary>
         /// Use the default hinting specified in the font.
         /// </summary>
+        [Tooltip("Use the default hinting specified in the font.")]
         Default,
 
         /// <summary>
         /// Force the use of an automatic hinting algorithm (over the font's native hinter).
         /// </summary>
+        [Tooltip("Force the use of an automatic hinting algorithm (over the font's native hinter).")]
         Auto,
 
         /// <summary>
         /// Force the use of an automatic light hinting algorithm, optimized for non-monochrome displays.
         /// </summary>
+        [Tooltip("Force the use of an automatic light hinting algorithm, optimized for non-monochrome displays.")]
         AutoLight,
 
         /// <summary>
         /// Force the use of an automatic hinting algorithm optimized for monochrome displays.
         /// </summary>
+        [Tooltip("Force the use of an automatic hinting algorithm optimized for monochrome displays.")]
         Monochrome,
 
         /// <summary>
         /// Do not use hinting. This generally generates 'blurrier' bitmap glyphs when the glyph are rendered in any of the anti-aliased modes.
         /// </summary>
+        [Tooltip("Do not use hinting. This generally generates 'blurrier' bitmap glyphs when the glyph are rendered in any of the anti-aliased modes.")]
         None,
     }
 
@@ -50,16 +55,19 @@ namespace FlaxEngine
         /// <summary>
         /// Enables using anti-aliasing for font characters. Otherwise font will use monochrome data.
         /// </summary>
+        [Tooltip("Enables using anti-aliasing for font characters. Otherwise font will use monochrome data.")]
         AntiAliasing = 1,
 
         /// <summary>
         /// Enables artificial embolden effect.
         /// </summary>
+        [Tooltip("Enables artificial embolden effect.")]
         Bold = 2,
 
         /// <summary>
         /// Enables slant effect, emulating italic style.
         /// </summary>
+        [Tooltip("Enables slant effect, emulating italic style.")]
         Italic = 4,
     }
 

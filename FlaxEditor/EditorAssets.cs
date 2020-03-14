@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
 
@@ -105,5 +105,20 @@ namespace FlaxEditor
         /// The foliage painting brush material.
         /// </summary>
         public static string FoliageBrushMaterial = "Editor/Gizmo/FoliageBrushMaterial";
+
+        /// <summary>
+        /// The icon lists used by editor from the SegMDL2 font.
+        /// </summary>
+        /// <remarks>
+        /// Reference: https://docs.microsoft.com/en-us/windows/uwp/design/style/segoe-ui-symbol-font.
+        /// </remarks>
+        public enum SegMDL2Icons
+        {
+            Cancel = 0xE711,
+            ChromeMinimize = 0xE921,
+            ChromeMaximize = 0xE922,
+            ChromeRestore = 0xE923,
+            ChromeClose = 0xE8BB,
+        }
     }
 }

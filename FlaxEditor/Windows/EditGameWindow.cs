@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -415,6 +415,7 @@ namespace FlaxEditor.Windows
             writer.WriteAttributeString("MovementSpeed", Viewport.MovementSpeed.ToString());
             writer.WriteAttributeString("OrthographicScale", Viewport.OrthographicScale.ToString());
             writer.WriteAttributeString("UseOrthographicProjection", Viewport.UseOrthographicProjection.ToString());
+            writer.WriteAttributeString("ViewFlags", ((long)Viewport.Task.View.Flags).ToString());
         }
 
         /// <inheritdoc />
@@ -422,6 +423,7 @@ namespace FlaxEditor.Windows
         {
             bool value1;
             float value2;
+            long value3;
 
             if (bool.TryParse(node.GetAttribute("GridEnabled"), out value1))
                 Viewport.Grid.Enabled = value1;
@@ -441,6 +443,8 @@ namespace FlaxEditor.Windows
                 Viewport.OrthographicScale = value2;
             if (bool.TryParse(node.GetAttribute("UseOrthographicProjection"), out value1))
                 Viewport.UseOrthographicProjection = value1;
+            if (long.TryParse(node.GetAttribute("ViewFlags"), out value3))
+                Viewport.Task.View.Flags = (ViewFlags)value3;
         }
 
         /// <inheritdoc />

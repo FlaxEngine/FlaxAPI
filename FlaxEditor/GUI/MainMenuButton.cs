@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -76,8 +76,20 @@ namespace FlaxEditor.GUI
         public override bool OnMouseDown(Vector2 location, MouseButton buttons)
         {
             Focus();
-            (Parent as MainMenu)?.Select(this);
+
+            if (Parent is MainMenu menu)
+                menu.Selected = this;
+
             return true;
+        }
+
+        /// <inheritdoc />
+        public override void OnMouseEnter(Vector2 location)
+        {
+            base.OnMouseEnter(location);
+
+            if (Parent is MainMenu menu && menu.Selected != null)
+                menu.Selected = this;
         }
 
         /// <inheritdoc />

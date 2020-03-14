@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 
@@ -93,6 +93,37 @@ namespace FlaxEngine
         /// The GPU cube texture (created from code).
         /// </summary>
         GPUTextureCube = 16,
+
+        /// <summary>
+        /// The RGBA channel selection mask.
+        /// </summary>
+        ChannelMask = 17,
+    }
+
+    /// <summary>
+    /// The channel mask modes.
+    /// </summary>
+    public enum ChannelMask
+    {
+        /// <summary>
+        /// The red channel.
+        /// </summary>
+        Red = 0,
+
+        /// <summary>
+        /// The green channel.
+        /// </summary>
+        Green = 1,
+
+        /// <summary>
+        /// The blue channel.
+        /// </summary>
+        Blue = 2,
+
+        /// <summary>
+        /// The alpha channel.
+        /// </summary>
+        Alpha = 3,
     }
 
     /// <summary>
@@ -174,6 +205,7 @@ namespace FlaxEngine
                     ptr = new IntPtr(&vBool);
                     break;
                 case MaterialParameterType.SceneTexture:
+                case MaterialParameterType.ChannelMask:
                 case MaterialParameterType.Integer:
                     ptr = new IntPtr(&vInt);
                     break;
@@ -195,7 +227,6 @@ namespace FlaxEngine
                 case MaterialParameterType.Matrix:
                     ptr = new IntPtr(&vMatrix);
                     break;
-
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:
@@ -205,7 +236,6 @@ namespace FlaxEngine
                 case MaterialParameterType.GPUTextureVolume:
                     ptr = new IntPtr(&vGuid);
                     break;
-
                 default: throw new ArgumentOutOfRangeException();
                 }
 
@@ -216,13 +246,13 @@ namespace FlaxEngine
                 case MaterialParameterType.Bool: return vBool;
                 case MaterialParameterType.SceneTexture:
                 case MaterialParameterType.Integer: return vInt;
+                case MaterialParameterType.ChannelMask: return (ChannelMask)vInt;
                 case MaterialParameterType.Float: return vFloat;
                 case MaterialParameterType.Vector2: return vVector2;
                 case MaterialParameterType.Vector3: return vVector3;
                 case MaterialParameterType.Vector4: return vVector4;
                 case MaterialParameterType.Color: return vColor;
                 case MaterialParameterType.Matrix: return vMatrix;
-
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap: return Object.Find<Object>(ref vGuid);
@@ -230,7 +260,6 @@ namespace FlaxEngine
                 case MaterialParameterType.GPUTextureCube:
                 case MaterialParameterType.GPUTextureVolume:
                 case MaterialParameterType.GPUTexture: return Object.TryFind<Object>(ref vGuid);
-
                 default: throw new ArgumentOutOfRangeException();
                 }
             }
@@ -259,18 +288,15 @@ namespace FlaxEngine
                     ptr = new IntPtr(&vBool);
                     break;
                 case MaterialParameterType.SceneTexture:
+                case MaterialParameterType.ChannelMask:
                 case MaterialParameterType.Integer:
-                {
                     vInt = Convert.ToInt32(value);
                     ptr = new IntPtr(&vInt);
                     break;
-                }
                 case MaterialParameterType.Float:
-                {
                     vFloat = Convert.ToSingle(value);
                     ptr = new IntPtr(&vFloat);
                     break;
-                }
                 case MaterialParameterType.Vector2:
                     vVector2 = (Vector2)value;
                     ptr = new IntPtr(&vVector2);
@@ -291,7 +317,6 @@ namespace FlaxEngine
                     vMatrix = (Matrix)value;
                     ptr = new IntPtr(&vMatrix);
                     break;
-
                 case MaterialParameterType.CubeTexture:
                 case MaterialParameterType.Texture:
                 case MaterialParameterType.NormalMap:

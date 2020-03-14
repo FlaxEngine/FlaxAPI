@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 namespace FlaxEngine
 {
@@ -15,21 +15,25 @@ namespace FlaxEngine
         /// <summary>
         /// Uses the average value of the touching materials: (a+b)/2.
         /// </summary>
+        [Tooltip("Uses the average value of the touching materials: (a+b)/2.")]
         Average = 0,
 
         /// <summary>
         /// Uses the smaller value of the touching materials: min(a,b).
         /// </summary>
+        [Tooltip("Uses the smaller value of the touching materials: min(a,b).")]
         Minimum = 1,
 
         /// <summary>
         /// Multiplies the values of the touching materials: a*b.
         /// </summary>
+        [Tooltip("Multiplies the values of the touching materials: a*b.")]
         Multiply = 2,
 
         /// <summary>
         /// Uses the larger value of the touching materials: max(a, b).
         /// </summary>
+        [Tooltip("Uses the larger value of the touching materials: max(a, b).")]
         Maximum = 3,
     }
 }

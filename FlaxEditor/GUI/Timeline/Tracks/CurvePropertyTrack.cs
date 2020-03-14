@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.IO;
@@ -169,20 +169,29 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnRightKeyClicked(Image image, MouseButton button)
         {
-            if (button == MouseButton.Left && Curve != null)
+            if (button == MouseButton.Left && GetNextKeyframeFrame(Timeline.CurrentTime, out var frame))
             {
-                var time = Timeline.CurrentTime;
+                Timeline.OnSeek(frame);
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool GetNextKeyframeFrame(float time, out int result)
+        {
+            if (Curve != null)
+            {
                 var keyframes = Curve.GetKeyframes();
                 for (int i = 0; i < keyframes.Length; i++)
                 {
                     var k = keyframes[i];
                     if (k.Time > time)
                     {
-                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond));
-                        break;
+                        result = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
+                        return true;
                     }
                 }
             }
+            return base.GetNextKeyframeFrame(time, out result);
         }
 
         private void OnAddKeyClicked(Image image, MouseButton button)
@@ -220,20 +229,29 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
         private void OnLeftKeyClicked(Image image, MouseButton button)
         {
-            if (button == MouseButton.Left && Curve != null)
+            if (button == MouseButton.Left && GetPreviousKeyframeFrame(Timeline.CurrentTime, out var frame))
             {
-                var time = Timeline.CurrentTime;
+                Timeline.OnSeek(frame);
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool GetPreviousKeyframeFrame(float time, out int result)
+        {
+            if (Curve != null)
+            {
                 var keyframes = Curve.GetKeyframes();
                 for (int i = keyframes.Length - 1; i >= 0; i--)
                 {
                     var k = keyframes[i];
                     if (k.Time < time)
                     {
-                        Timeline.OnSeek(Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond));
-                        break;
+                        result = Mathf.FloorToInt(k.Time * Timeline.FramesPerSecond);
+                        return true;
                     }
                 }
             }
+            return base.GetPreviousKeyframeFrame(time, out result);
         }
 
         private void UpdateCurve()
@@ -246,6 +264,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             Curve.ViewScale = new Vector2(Timeline.Zoom, Curve.ViewScale.Y);
             Curve.ShowCollapsed = !expanded;
             Curve.ShowBackground = expanded;
+            Curve.EnableZoom = expanded ? CurveEditorBase.UseMode.Vertical : CurveEditorBase.UseMode.Off;
+            Curve.EnablePanning = expanded ? CurveEditorBase.UseMode.Vertical : CurveEditorBase.UseMode.Off;
             Curve.ShowAxes = expanded;
             Curve.Visible = Visible;
             Curve.UpdateKeyframes();

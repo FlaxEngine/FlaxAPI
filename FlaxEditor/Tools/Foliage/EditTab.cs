@@ -1,11 +1,14 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI.Tabs;
+using FlaxEditor.Tools.Foliage.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
+
+// ReSharper disable UnusedMember.Local
 
 namespace FlaxEditor.Tools.Foliage
 {
@@ -73,14 +76,14 @@ namespace FlaxEditor.Tools.Foliage
             public int Index
             {
                 get => InstanceIndex;
-                set => throw new NotImplementedException();
+                set => throw new Exception();
             }
 
             [EditorOrder(0), EditorDisplay("Instance"), ReadOnly, Tooltip("The foliage instance model (read-only).")]
             public Model Model
             {
                 get => Foliage.GetFoliageTypeModel(_options.Type);
-                set => throw new NotImplementedException();
+                set => throw new Exception();
             }
 
             [EditorOrder(10), EditorDisplay("Instance"), Tooltip("The local-space position of the mesh relative to the foliage actor.")]
@@ -144,16 +147,24 @@ namespace FlaxEditor.Tools.Foliage
 
             private void OnDeleteButtonClicked()
             {
-                // TODO: support undo for removing selected foliage instance
-
                 var proxyObject = (ProxyObject)Values[0];
                 var mode = proxyObject.Mode;
                 var index = mode.SelectedInstanceIndex;
-                mode.SelectedInstanceIndex = -1;
                 var foliage = mode.SelectedFoliage;
+                if (!foliage)
+                    throw new InvalidOperationException("No foliage selected.");
+                var instanceIndex = mode.SelectedInstanceIndex;
+                if (instanceIndex < 0 || instanceIndex >= foliage.InstancesCount)
+                    throw new InvalidOperationException("No foliage instance selected.");
+
+                // Delete instance and deselect it
+                var action = new EditFoliageAction(foliage);
+                var newIndex = -1;
                 foliage.RemoveInstance(index);
                 foliage.RebuildClusters();
-                Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
+                action.RecordEnd();
+                Editor.Instance.Undo?.AddAction(new MultiUndoAction(action, new EditSelectedInstanceIndexAction(instanceIndex, newIndex)));
+                mode.SelectedInstanceIndex = newIndex;
             }
 
             /// <inheritdoc />
@@ -195,8 +206,7 @@ namespace FlaxEditor.Tools.Foliage
             _proxy = new ProxyObject(mode);
 
             // Options editor
-            // TODO: use editor undo for changing foliage instance options
-            var editor = new CustomEditorPresenter(null, "No foliage instance selected");
+            var editor = new CustomEditorPresenter(tab.Editor.Undo, "No foliage instance selected");
             editor.Panel.Parent = this;
             editor.Modified += OnModified;
             _presenter = editor;

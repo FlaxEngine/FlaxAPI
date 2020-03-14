@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -214,15 +214,15 @@ namespace FlaxEditor.SceneGraph
         /// <inheritdoc />
         public override SceneGraphNode RayCast(ref RayCastData ray, out float distance, out Vector3 normal)
         {
+            var hit = base.RayCast(ref ray, out distance, out normal);
+
             // Skip actors that should not be selected
-            if (_actor != null && (_actor.HideFlags & HideFlags.DontSelect) == HideFlags.DontSelect)
+            if (hit != null && _actor != null && (_actor.HideFlags & HideFlags.DontSelect) == HideFlags.DontSelect)
             {
-                distance = 0;
-                normal = Vector3.Up;
-                return null;
+                hit = ParentNode;
             }
 
-            return base.RayCast(ref ray, out distance, out normal);
+            return hit;
         }
 
         /// <inheritdoc />

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -71,7 +71,7 @@ namespace FlaxEditor.GUI.Timeline
             {
                 if (typeof(ParticleEmitter).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var emitter = FlaxEngine.Content.Load<ParticleEmitter>(binaryAssetItem.ID);
+                    var emitter = FlaxEngine.Content.LoadAsync<ParticleEmitter>(binaryAssetItem.ID);
                     if (emitter)
                         return true;
                 }
@@ -88,7 +88,7 @@ namespace FlaxEditor.GUI.Timeline
                 {
                     if (typeof(ParticleEmitter).IsAssignableFrom(binaryAssetItem.Type))
                     {
-                        var emitter = FlaxEngine.Content.Load<ParticleEmitter>(binaryAssetItem.ID);
+                        var emitter = FlaxEngine.Content.LoadAsync<ParticleEmitter>(binaryAssetItem.ID);
                         if (emitter)
                         {
                             var track = (ParticleEmitterTrack)timeline.AddTrack(ParticleEmitterTrack.GetArchetype());
@@ -240,6 +240,7 @@ namespace FlaxEditor.GUI.Timeline
         public override void OnDestroy()
         {
             _preview = null;
+            Emitters.Clear();
 
             base.OnDestroy();
         }

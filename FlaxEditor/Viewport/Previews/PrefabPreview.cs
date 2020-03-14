@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -69,7 +69,11 @@ namespace FlaxEditor.Viewport.Previews
         /// <summary>
         /// Gets the instance of the prefab spawned for the preview.
         /// </summary>
-        public Actor Instance => _instance;
+        public Actor Instance
+        {
+            get => _instance;
+            internal set => _instance = value;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PrefabPreview"/> class.

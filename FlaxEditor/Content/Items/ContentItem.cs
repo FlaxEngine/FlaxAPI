@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -257,7 +257,7 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the item short name (filename without extension).
         /// </summary>
-        public string ShortName { get; private set; }
+        public string ShortName { get; internal set; }
 
         /// <summary>
         /// Gets the asset name relative to the project root folder (without asset file extension)
@@ -603,7 +603,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override bool OnMouseUp(Vector2 location, MouseButton buttons)
         {
-            if (buttons == MouseButton.Left)
+            if (buttons == MouseButton.Left && _isMouseDown)
             {
                 // Clear flag
                 _isMouseDown = false;

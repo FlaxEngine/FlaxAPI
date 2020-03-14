@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -66,7 +66,7 @@ namespace FlaxEditor.Windows
             Title = "Content";
 
             // Content database events
-            editor.ContentDatabase.OnWorkspaceModified += () => _isWorkspaceDirty = true;
+            editor.ContentDatabase.WorkspaceModified += () => _isWorkspaceDirty = true;
             editor.ContentDatabase.ItemRemoved += ContentDatabaseOnItemRemoved;
 
             // Tool strip
@@ -140,7 +140,7 @@ namespace FlaxEditor.Windows
             _view.OnNavigateBack += NavigateBackward;
             _view.OnRename += Rename;
             _view.OnDelete += Delete;
-            _view.OnDuplicate += Clone;
+            _view.OnDuplicate += Duplicate;
             _view.OnPaste += Paste;
             _view.Parent = _split.Panel2;
         }
@@ -345,41 +345,27 @@ namespace FlaxEditor.Windows
         {
             string sourcePath = item.Path;
             string sourceFolder = Path.GetDirectoryName(sourcePath);
-            string destinationPath;
-            int i = 0;
 
             // Find new name for clone
+            string destinationName;
             if (item.IsFolder)
             {
-                do
-                {
-                    destinationPath = StringUtils.CombinePaths(sourceFolder, string.Format("{0} Copy ({1})", item.ShortName, i++));
-                } while (Directory.Exists(destinationPath));
+                destinationName = StringUtils.IncrementNameNumber(item.ShortName, x => !Directory.Exists(StringUtils.CombinePaths(sourceFolder, x)));
             }
             else
             {
                 string extension = Path.GetExtension(sourcePath);
-                do
-                {
-                    // TODO: better renaming cloned assets
-                    /*// Generate new name
-                    Function<bool, const String&> f;
-                    f.Bind<ContentWindow, &ContentWindow::isElementNameValid>(this);
-                    String name = StringUtils::IncrementNameNumber(el->GetName(), &f);
-                    _tmpList = nullptr;*/
-
-                    destinationPath = StringUtils.CombinePaths(sourceFolder, string.Format("{0} Copy ({1}){2}", item.ShortName, i++, extension));
-                } while (File.Exists(destinationPath));
+                destinationName = StringUtils.IncrementNameNumber(item.ShortName, x => !File.Exists(StringUtils.CombinePaths(sourceFolder, x + extension))) + extension;
             }
 
-            return destinationPath;
+            return StringUtils.CombinePaths(sourceFolder, destinationName);
         }
 
         /// <summary>
         /// Clones the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        public void Clone(ContentItem item)
+        public void Duplicate(ContentItem item)
         {
             // Skip null
             if (item == null)
@@ -404,10 +390,10 @@ namespace FlaxEditor.Windows
         }
 
         /// <summary>
-        /// Clones the specified items.
+        /// Duplicates the specified items.
         /// </summary>
         /// <param name="items">The items.</param>
-        public void Clone(List<ContentItem> items)
+        public void Duplicate(List<ContentItem> items)
         {
             // Skip empty or null case
             if (items == null || items.Count == 0)
@@ -418,7 +404,7 @@ namespace FlaxEditor.Windows
             // Check if it's just a single item
             if (items.Count == 1)
             {
-                Clone(items[0]);
+                Duplicate(items[0]);
             }
             else
             {

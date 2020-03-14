@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -83,6 +83,12 @@ namespace FlaxEditor.Gizmo
                                 break;
                             }
                         }
+                    }
+
+                    if (canChildBeSelected && sceneEditing.Selection.Count > 1)
+                    {
+                        // Don't select child node if multiple nodes are selected
+                        canChildBeSelected = false;
                     }
 
                     if (!canChildBeSelected)

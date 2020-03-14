@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -578,9 +578,9 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(1, "Scale", true, ConnectionType.Float, 1),
                     NodeElementArchetype.Factory.Output(0, "Result", ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2 + 5, "Luminance Factors"),
-                    NodeElementArchetype.Factory.Vector_X(0, 1 * Surface.Constants.LayoutOffsetY * 3 + 5, 0),
-                    NodeElementArchetype.Factory.Vector_Y(0, 2 * Surface.Constants.LayoutOffsetY * 3 + 5, 0),
-                    NodeElementArchetype.Factory.Vector_Z(0, 3 * Surface.Constants.LayoutOffsetY * 3 + 5, 0)
+                    NodeElementArchetype.Factory.Vector_X(0, Surface.Constants.LayoutOffsetY * 3 + 5, 0),
+                    NodeElementArchetype.Factory.Vector_Y(0, Surface.Constants.LayoutOffsetY * 4 + 5, 0),
+                    NodeElementArchetype.Factory.Vector_Z(0, Surface.Constants.LayoutOffsetY * 5 + 5, 0)
                 }
             },
             new NodeArchetype
@@ -728,11 +728,13 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 11,
                 Title = "Comment",
                 AlternativeTitles = new string[] { "//" },
-                TryParseText = (string filterText, out object[] data) => {
+                TryParseText = (string filterText, out object[] data) =>
+                {
                     data = null;
-                    if(filterText.StartsWith("//"))
+                    if (filterText.StartsWith("//"))
                     {
-                        data = new object[] {
+                        data = new object[]
+                        {
                             filterText.Substring(2),
                             new Color(1.0f, 1.0f, 1.0f, 0.2f),
                             new Vector2(400.0f, 400.0f),

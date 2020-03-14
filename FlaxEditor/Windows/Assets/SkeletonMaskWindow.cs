@@ -1,5 +1,7 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -39,17 +41,17 @@ namespace FlaxEditor.Windows.Assets
                     {
                         // Change skeleton, invalidate mask and request UI update
                         Window._preview.SkinnedModel = value;
-                        Window._preview.BonesMask = null;
+                        Window._preview.NodesMask = null;
                         Window._propertiesPresenter.BuildLayoutOnUpdate();
                     }
                 }
             }
 
             [HideInEditor]
-            public bool[] Mask
+            public bool[] NodesMask
             {
-                get => Window._preview.BonesMask;
-                set => Window._preview.BonesMask = value;
+                get => Window._preview.NodesMask;
+                set => Window._preview.NodesMask = value;
             }
 
             public void OnLoad(SkeletonMaskWindow window)
@@ -60,7 +62,7 @@ namespace FlaxEditor.Windows.Assets
 
                 // Get data from the asset
                 Skeleton = Asset.Skeleton;
-                Mask = Asset.GetMask(Mask);
+                NodesMask = Asset.GetNodesMask();
             }
 
             public void OnClean()
@@ -78,7 +80,6 @@ namespace FlaxEditor.Windows.Assets
                 public override void Initialize(LayoutElementsContainer layout)
                 {
                     var proxy = (PropertiesProxy)Values[0];
-
                     if (proxy.Asset == null || !proxy.Asset.IsLoaded)
                     {
                         layout.Label("Loading...");
@@ -100,26 +101,24 @@ namespace FlaxEditor.Windows.Assets
 
                     // Init mask if missing or validate it
                     var nodes = skeleton.Nodes;
-                    var bones = skeleton.Bones;
-                    if (nodes == null || bones == null || bones.Length == 0)
+                    if (nodes == null || nodes.Length == 0)
                         return;
-                    var mask = proxy.Mask;
-                    if (mask == null || mask.Length != bones.Length)
+                    var mask = proxy.NodesMask;
+                    if (mask == null || mask.Length != nodes.Length)
                     {
-                        mask = proxy.Mask = new bool[bones.Length];
-                        for (int i = 0; i < bones.Length; i++)
+                        mask = proxy.NodesMask = new bool[nodes.Length];
+                        for (int i = 0; i < nodes.Length; i++)
                             mask[i] = true;
                     }
 
                     // Skeleton Mask
                     var group = layout.Group("Mask");
                     var tree = group.Tree();
-
-                    for (int i = 0; i < bones.Length; i++)
+                    for (int nodeIndex = 0; nodeIndex < nodes.Length; nodeIndex++)
                     {
-                        if (bones[i].ParentIndex == -1)
+                        if (nodes[nodeIndex].ParentIndex == -1)
                         {
-                            BuildSkeletonNodeTree(mask, nodes, bones, tree, i);
+                            BuildSkeletonNodeTree(mask, nodes, nodeIndex, tree);
                         }
                     }
                 }
@@ -137,26 +136,26 @@ namespace FlaxEditor.Windows.Assets
                     base.Refresh();
                 }
 
-                private void BuildSkeletonNodeTree(bool[] mask, SkeletonNode[] nodes, SkeletonBone[] bones, ITreeElement layout, int boneIndex)
+                private void BuildSkeletonNodeTree(bool[] mask, SkeletonNode[] nodes, int nodeIndex, ITreeElement layout)
                 {
-                    var node = layout.Node(nodes[bones[boneIndex].NodeIndex].Name);
+                    var node = layout.Node(nodes[nodeIndex].Name);
                     node.TreeNode.ClipChildren = false;
                     node.TreeNode.TextMargin = new Margin(20.0f, 2.0f, 2.0f, 2.0f);
                     node.TreeNode.Expand(true);
-                    var checkbox = new CheckBox(0, 0, mask[boneIndex])
+                    var checkbox = new CheckBox(0, 0, mask[nodeIndex])
                     {
                         Height = 16.0f,
                         IsScrollable = false,
-                        Tag = boneIndex,
+                        Tag = nodeIndex,
                         Parent = node.TreeNode
                     };
                     checkbox.StateChanged += OnCheckChanged;
 
-                    for (int i = 0; i < bones.Length; i++)
+                    for (int i = 0; i < nodes.Length; i++)
                     {
-                        if (bones[i].ParentIndex == boneIndex)
+                        if (nodes[i].ParentIndex == nodeIndex)
                         {
-                            BuildSkeletonNodeTree(mask, nodes, bones, node, i);
+                            BuildSkeletonNodeTree(mask, nodes, i, node);
                         }
                     }
                 }
@@ -164,8 +163,8 @@ namespace FlaxEditor.Windows.Assets
                 private void OnCheckChanged(CheckBox checkBox)
                 {
                     var proxy = (PropertiesProxy)Values[0];
-                    int boneIndex = (int)checkBox.Tag;
-                    proxy.Mask[boneIndex] = checkBox.Checked;
+                    int nodeIndex = (int)checkBox.Tag;
+                    proxy.NodesMask[nodeIndex] = checkBox.Checked;
                     proxy.Window.MarkAsEdited();
                 }
             }
@@ -198,7 +197,7 @@ namespace FlaxEditor.Windows.Assets
             _preview = new AnimatedModelPreview(true)
             {
                 ViewportCamera = new FPSCamera(),
-                ShowBones = true,
+                ShowNodes = true,
                 Parent = _split.Panel1
             };
 
@@ -216,15 +215,20 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            // Wait until model asset file be fully loaded
-            if (_asset.WaitForLoaded())
+            _asset.Skeleton = _properties.Skeleton;
+            var count = _preview.NodesMask.Count(x => x);
+            var nodes = new string[count];
+            var i = 0;
+            for (int nodeIndex = 0; nodeIndex < _preview.NodesMask.Length; nodeIndex++)
             {
-                // Error
-                return;
+                if (_preview.NodesMask[nodeIndex])
+                {
+                    nodes[i] = _properties.Skeleton.Nodes[nodeIndex].Name;
+                    i++;
+                }
             }
-
-            // Call asset saving
-            if (_asset.Save(_properties.Skeleton, _properties.Mask))
+            _asset.MaskedNodes = nodes;
+            if (_asset.Save())
             {
                 // Error
                 Editor.LogError("Failed to save asset " + _item);

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 namespace FlaxEngine
 {
@@ -10,11 +10,13 @@ namespace FlaxEngine
         /// <summary>
         /// Brush adds
         /// </summary>
+        [Tooltip("Brush adds")]
         Additive = 0,
 
         /// <summary>
         /// Brush subtracts
         /// </summary>
+        [Tooltip("Brush subtracts")]
         Subtractive = 1,
     }
 }

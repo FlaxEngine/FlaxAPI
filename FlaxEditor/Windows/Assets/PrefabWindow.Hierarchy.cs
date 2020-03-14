@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -95,6 +95,9 @@ namespace FlaxEditor.Windows.Assets
 
             b = contextMenu.AddButton("Cut", Cut);
             b.Enabled = hasSthSelected && !isRootSelected;
+
+            b = contextMenu.AddButton("Set Root", SetRoot);
+            b.Enabled = isSingleActorSelected && !isRootSelected;
 
             // Prefab options
 

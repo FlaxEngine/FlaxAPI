@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -327,18 +327,11 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationBegin += OnCompilationBegin;
             ScriptsBuilder.CompilationError += OnCompilationError;
             ScriptsBuilder.CompilationWarning += OnCompilationWarning;
-            GameCooker.Event += OnGameCookerEvent;
         }
 
         private void OnEditorOptionsChanged(EditorOptions options)
         {
             _timestampsFormats = options.Interface.DebugLogTimestampsFormat;
-        }
-
-        private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
-        {
-            if (eventType == GameCooker.EventType.BuildFailed)
-                FocusOrShow();
         }
 
         /// <summary>
@@ -641,7 +634,6 @@ namespace FlaxEditor.Windows
             ScriptsBuilder.CompilationBegin -= OnCompilationBegin;
             ScriptsBuilder.CompilationError -= OnCompilationError;
             ScriptsBuilder.CompilationWarning -= OnCompilationWarning;
-            GameCooker.Event -= OnGameCookerEvent;
 
             base.OnDestroy();
         }

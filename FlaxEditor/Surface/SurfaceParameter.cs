@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using FlaxEngine;
@@ -87,6 +87,8 @@ namespace FlaxEditor.Surface
                 param.Value = false;
                 break;
             case ParameterType.Integer:
+            case ParameterType.ChannelMask:
+            case ParameterType.SceneTexture:
                 param.Value = 0;
                 break;
             case ParameterType.Float:
@@ -121,9 +123,6 @@ namespace FlaxEditor.Surface
                 break;
             case ParameterType.Transform:
                 param.Value = Transform.Identity;
-                break;
-            case ParameterType.SceneTexture:
-                param.Value = 0;
                 break;
             case ParameterType.Asset:
             case ParameterType.Actor:

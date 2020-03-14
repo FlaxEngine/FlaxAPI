@@ -84,6 +84,7 @@
     <Compile Include="CustomEditors\Editors\Int4Editor.cs" />
     <Compile Include="CustomEditors\Editors\StyleEditor.cs" />
     <Compile Include="CustomEditors\Editors\PostProcessSettingsEditor.cs" />
+    <Compile Include="CustomEditors\Editors\SkeletonNodeEditor.cs" />
     <Compile Include="Gizmo\TransformGizmoBase.cs" />
     <Compile Include="GUI\ActorSearchPopup.cs" />
     <Compile Include="GUI\CurveEditor.cs" />
@@ -161,7 +162,6 @@
     <Compile Include="CustomEditors\Editors\ModelEntryInfoEditor.cs" />
     <Compile Include="CustomEditors\Editors\ObjectSwitcherEditor.cs" />
     <Compile Include="CustomEditors\Editors\QuaternionEditor.cs" />
-    <Compile Include="CustomEditors\Editors\SkeletonBoneEditor.cs" />
     <Compile Include="CustomEditors\Editors\SpriteEditor.cs" />
     <Compile Include="CustomEditors\Editors\StringEditor.cs" />
     <Compile Include="CustomEditors\Editors\Vector2Editor.cs" />
@@ -512,6 +512,7 @@
     <Compile Include="Tools\Foliage\PaintFoliageGizmo.cs" />
     <Compile Include="Tools\Foliage\PaintFoliageGizmoMode.cs" />
     <Compile Include="Tools\Foliage\PaintTab.cs" />
+    <Compile Include="Tools\Foliage\Undo\EditSelectedInstanceIndexAction.cs" />
     <Compile Include="Tools\Terrain\Brushes\Brush.cs" />
     <Compile Include="Tools\Terrain\Brushes\CircleBrush.cs" />
     <Compile Include="Tools\Terrain\CarveTab.cs" />

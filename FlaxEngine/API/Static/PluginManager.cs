@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -112,6 +112,50 @@ namespace FlaxEngine
                 Debug.LogException(ex);
                 Debug.LogErrorFormat("Failed to deinitialize plugin {0}. {1}", plugin, ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Returns the first plugin of the provided type.
+        /// </summary>
+        /// <typeparam name="T">The plugin type.</typeparam>
+        /// <returns>The plugin, or null if not loaded.</returns>
+        public static T GetPlugin<T>() where T : class
+        {
+            foreach (Plugin p in _editorPlugins)
+            {
+                if (p.GetType() == typeof(T))
+                    return (T)Convert.ChangeType(p, typeof(T));
+            }
+
+            foreach (GamePlugin gp in _gamePlugins)
+            {
+                if (gp.GetType() == typeof(T))
+                    return (T)Convert.ChangeType(gp, typeof(T));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Return the first plugin using the provided name.
+        /// </summary>
+        /// /// <param name="name">The plugin name.</param>
+        /// <returns>The plugin, or null if not loaded.</returns>
+        public static Plugin GetPlugin(string name)
+        {
+            foreach (Plugin p in _editorPlugins)
+            {
+                if (p.Description.Name.Equals(name))
+                    return p;
+            }
+
+            foreach (GamePlugin gp in _gamePlugins)
+            {
+                if (gp.Description.Name.Equals(name))
+                    return gp;
+            }
+
+            return null;
         }
 
         internal static void Internal_LoadPlugin(Type type, bool isEditor)

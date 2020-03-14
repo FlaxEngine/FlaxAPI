@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 namespace FlaxEngine
 {
@@ -91,5 +91,10 @@ namespace FlaxEngine
         /// Draw materials subsurface color debug view
         /// </summary>
         SubsurfaceColor = 16,
+
+        /// <summary>
+        /// Draw materials colors with ambient occlusion
+        /// </summary>
+        Unlit = 17,
     }
 }

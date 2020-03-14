@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -183,6 +183,11 @@ namespace FlaxEditor.GUI.Timeline
             /// The timeline animation feature is disabled.
             /// </summary>
             Disabled,
+
+            /// <summary>
+            /// The timeline animation feature is disabled except for current frame seeking.
+            /// </summary>
+            Seeking,
 
             /// <summary>
             /// The timeline animation is stopped.
@@ -531,6 +536,7 @@ namespace FlaxEditor.GUI.Timeline
 
                 // Update buttons UI
                 var icons = Editor.Instance.Icons;
+                // TODO: cleanup this UI code
                 switch (value)
                 {
                 case PlaybackStates.Disabled:
@@ -553,6 +559,28 @@ namespace FlaxEditor.GUI.Timeline
                     if (_positionHandle != null)
                     {
                         _positionHandle.Visible = false;
+                    }
+                    break;
+                case PlaybackStates.Seeking:
+                    if (_playbackNavigation != null)
+                    {
+                        foreach (var e in _playbackNavigation)
+                        {
+                            e.Enabled = false;
+                            e.Visible = false;
+                        }
+                    }
+                    if (_playbackStop != null)
+                    {
+                        _playbackStop.Visible = false;
+                    }
+                    if (_playbackPlay != null)
+                    {
+                        _playbackPlay.Visible = false;
+                    }
+                    if (_positionHandle != null)
+                    {
+                        _positionHandle.Visible = true;
                     }
                     break;
                 case PlaybackStates.Stopped:
@@ -651,7 +679,7 @@ namespace FlaxEditor.GUI.Timeline
             get => _zoom;
             set
             {
-                value = Mathf.Clamp(value, 0.02f, 10.0f);
+                value = Mathf.Clamp(value, 0.0001f, 1000.0f);
                 if (Mathf.NearEqual(_zoom, value))
                     return;
 
@@ -1783,6 +1811,46 @@ namespace FlaxEditor.GUI.Timeline
             case Keys.End:
                 OnSeek(DurationFrames);
                 return true;
+            case Keys.PageUp:
+            {
+                bool hasValid = false;
+                int closestFrame = 0;
+                float time = CurrentTime;
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    if (_tracks[i].GetNextKeyframeFrame(time, out var frame) && (!hasValid || closestFrame > frame))
+                    {
+                        hasValid = true;
+                        closestFrame = frame;
+                    }
+                }
+                if (hasValid)
+                {
+                    OnSeek(closestFrame);
+                    return true;
+                }
+                break;
+            }
+            case Keys.PageDown:
+            {
+                bool hasValid = false;
+                int closestFrame = 0;
+                float time = CurrentTime;
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    if (_tracks[i].GetPreviousKeyframeFrame(time, out var frame) && (!hasValid || closestFrame < frame))
+                    {
+                        hasValid = true;
+                        closestFrame = frame;
+                    }
+                }
+                if (hasValid)
+                {
+                    OnSeek(closestFrame);
+                    return true;
+                }
+                break;
+            }
             }
 
             return false;

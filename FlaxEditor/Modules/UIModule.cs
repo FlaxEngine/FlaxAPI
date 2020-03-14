@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.IO;
@@ -391,10 +391,24 @@ namespace FlaxEditor.Modules
             return style;
         }
 
-        private IColorPickerDialog ShowPickColorDialog(Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, bool useDynamicEditing)
+        private IColorPickerDialog ShowPickColorDialog(Control targetControl, Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, ColorValueBox.ColorPickerClosedEvent pickerClosed, bool useDynamicEditing)
         {
-            var dialog = new ColorPickerDialog(initialValue, colorChanged, useDynamicEditing);
-            dialog.Show();
+            var dialog = new ColorPickerDialog(initialValue, colorChanged, pickerClosed, useDynamicEditing);
+            dialog.Show(targetControl);
+
+            // Place dialog nearby the target control
+            if (targetControl != null)
+            {
+                var targetControlDesktopCenter = targetControl.ClientToScreen(targetControl.Size * 0.5f);
+                var desktopSize = Platform.GetMonitorBounds(targetControlDesktopCenter);
+                var pos = targetControlDesktopCenter + new Vector2(10.0f, -dialog.Height * 0.5f);
+                var dialogEnd = pos + dialog.Size;
+                var desktopEnd = desktopSize.BottomRight - new Vector2(10.0f);
+                if (dialogEnd.X >= desktopEnd.X || dialogEnd.Y >= desktopEnd.Y)
+                    pos = targetControl.ClientToScreen(Vector2.Zero) - new Vector2(10.0f + dialog.Width, dialog.Height);
+                dialog.RootWindow.Window.Position = pos;
+            }
+
             return dialog;
         }
 
@@ -476,7 +490,7 @@ namespace FlaxEditor.Modules
             cm.AddButton("Profiler", Editor.Windows.ProfilerWin.FocusOrShow);
             cm.AddSeparator();
             _menuToolsSetTheCurrentSceneViewAsDefault = cm.AddButton("Set current scene view as project default", SetTheCurrentSceneViewAsDefault);
-            cm.AddButton("Take screenshot!", "F12", Editor.Windows.TakeScreenshot);
+            cm.AddButton("Take screenshot", "F12", Editor.Windows.TakeScreenshot);
             cm.AddSeparator();
             cm.AddButton("Plugin Exporter", PluginExporterDialog.ShowIt);
             cm.AddButton("Plugins", () => Editor.Windows.PluginsWin.Show());

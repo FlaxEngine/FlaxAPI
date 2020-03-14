@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -365,6 +365,30 @@ namespace FlaxEditor.GUI.Timeline
                 media.Visible = Visible;
                 media.Bounds = new Rectangle(media.X, Y + 2, media.Width, Height - 4);
             }
+        }
+
+        /// <summary>
+        /// Gets the frame of the next keyframe (if found).
+        /// </summary>
+        /// <param name="time">The start time.</param>
+        /// <param name="result">The result value.</param>
+        /// <returns>True if found next keyframe, otherwise false.</returns>
+        public virtual bool GetNextKeyframeFrame(float time, out int result)
+        {
+            result = 0;
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the frame of the previous keyframe (if found).
+        /// </summary>
+        /// <param name="time">The start time.</param>
+        /// <param name="result">The result value.</param>
+        /// <returns>True if found previous keyframe, otherwise false.</returns>
+        public virtual bool GetPreviousKeyframeFrame(float time, out int result)
+        {
+            result = 0;
+            return false;
         }
 
         /// <summary>

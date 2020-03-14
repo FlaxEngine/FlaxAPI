@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Xml;
@@ -38,7 +38,7 @@ namespace FlaxEditor.Windows.Assets
 
         private Undo _undo;
         private bool _focusCamera;
-        private bool _liveReload = true;
+        private bool _liveReload = false;
         private bool _isUpdatingSelection, _isScriptsReloading;
         private DateTime _modifiedTime = DateTime.MinValue;
 

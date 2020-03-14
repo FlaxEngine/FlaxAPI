@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 Wojciech Figat. All rights reserved.
+// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
     public sealed class LayersMatrixEditor : CustomEditor
     {
         private int _layersCount;
-        private List<CheckBox> _checkBoxs = new List<CheckBox>();
+        private List<CheckBox> _checkBoxes;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.InlineIntoParent;
@@ -24,8 +24,8 @@ namespace FlaxEditor.CustomEditors.Dedicated
         public override void Initialize(LayoutElementsContainer layout)
         {
             string[] layerNames = LayersAndTagsSettings.GetCurrentLayers();
-            _checkBoxs.Clear();
             int layersCount = Math.Max(4, layerNames.Length);
+            _checkBoxes = new List<CheckBox>();
             _layersCount = layersCount;
 
             float labelsWidth = 100.0f;
@@ -34,28 +34,24 @@ namespace FlaxEditor.CustomEditors.Dedicated
             var panel = layout.Space(100).Spacer;
             var gridPanel = new GridPanel(0)
             {
-                Parent = panel
+                Parent = panel,
             };
 
             var upperLeftCell = new Label
             {
-                Parent = gridPanel
+                Parent = gridPanel,
             };
 
-            var upperRightCellPanel = new Panel(ScrollBars.None)
-            {
-                Rotation = 90,
-                Pivot = new Vector2(1.0f, 0.0f),
-                Parent = gridPanel
-            };
             var upperRightCell = new VerticalPanel
             {
-                Offset = new Vector2(labelsWidth, 0),
+                ClipChildren = false,
+                Pivot = new Vector2(0.0f, 0.0f),
+                Offset = new Vector2(-labelsWidth, 0),
+                Rotation = -90,
                 Spacing = 0,
                 TopMargin = 0,
                 BottomMargin = 0,
-                DockStyle = DockStyle.Fill,
-                Parent = upperRightCellPanel
+                Parent = gridPanel,
             };
 
             var bottomLeftCell = new VerticalPanel
@@ -63,14 +59,14 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 Spacing = 0,
                 TopMargin = 0,
                 BottomMargin = 0,
-                Parent = gridPanel
+                Parent = gridPanel,
             };
 
             var grid = new UniformGridPanel(0)
             {
                 SlotsHorizontally = layersCount,
                 SlotsVertically = layersCount,
-                Parent = gridPanel
+                Parent = gridPanel,
             };
 
             // Set layer names
@@ -81,7 +77,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 {
                     Height = labelsHeight,
                     Text = layerNames[layerIndex],
-                    HorizontalAlignment = TextAlignment.Far,
+                    HorizontalAlignment = TextAlignment.Near,
                 });
                 bottomLeftCell.AddChild(new Label
                 {
@@ -97,7 +93,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 {
                     Height = labelsHeight,
                     Text = name,
-                    HorizontalAlignment = TextAlignment.Far,
+                    HorizontalAlignment = TextAlignment.Near,
                 });
                 bottomLeftCell.AddChild(new Label
                 {
@@ -121,11 +117,11 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     var box = new CheckBox(0, 0, true)
                     {
                         Tag = new Vector2(_layersCount - column - 1, row),
-                        Parent = grid
+                        Parent = grid,
+                        Checked = GetBit(column, row),
                     };
-                    box.Checked = GetBit(column, row);
                     box.StateChanged += OnCheckBoxChanged;
-                    _checkBoxs.Add(box);
+                    _checkBoxes.Add(box);
                 }
                 for (; column < layersCount; column++)
                 {
@@ -145,13 +141,22 @@ namespace FlaxEditor.CustomEditors.Dedicated
         public override void Refresh()
         {
             // Sync check boxes
-            for (int i = 0; i < _checkBoxs.Count; i++)
+            for (int i = 0; i < _checkBoxes.Count; i++)
             {
-                var box = _checkBoxs[i];
+                var box = _checkBoxes[i];
                 int column = (int)((Vector2)box.Tag).X;
                 int row = (int)((Vector2)box.Tag).Y;
                 box.Checked = GetBit(column, row);
             }
+        }
+
+        /// <inheritdoc />
+        protected override void Deinitialize()
+        {
+            base.Deinitialize();
+
+            _checkBoxes.Clear();
+            _checkBoxes = null;
         }
 
         private bool GetBit(int column, int row)
