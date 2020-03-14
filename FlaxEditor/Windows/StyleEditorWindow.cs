@@ -17,12 +17,12 @@ namespace FlaxEditor.Windows
     /// <inheritdoc />
     public class StyleEditorWindow : EditorWindow
     {
-        private const float BUTTONS_WIDTH = 60.0f;
-        private const float PICKER_MARGIN = 6.0f;
-        private const float PREVIEW_X = 50;
+        private const float ButtonsWidth = 60.0f;
+        private const float PickerMargin = 6.0f;
+        private const float PreviewX = 50;
 
-        private Style _oldStyle;
-        private Style _newStyle;
+        private Style _initialValue;
+        private Style _value;
 
         private bool _useDynamicEditing;
         private StyleValueEditor.ValueChangedEvent _onChanged;
@@ -42,9 +42,9 @@ namespace FlaxEditor.Windows
         /// <param name="useDynamicEditing">True if allow dynamic value editing (slider-like usage), otherwise will change event only on editing end.</param>
         public StyleEditorWindow(Editor editor, Style initialValue, StyleValueEditor.ValueChangedEvent valueChanged, bool useDynamicEditing) : base(editor, false, ScrollBars.None)
         {
-            this.Title = "Style";
-            _oldStyle = initialValue;
-            _newStyle = _oldStyle.DeepClone();
+            Title = "Style";
+            _initialValue = initialValue;
+            _value = _initialValue.DeepClone();
             _useDynamicEditing = useDynamicEditing;
             _onChanged = valueChanged;
 
@@ -61,21 +61,17 @@ namespace FlaxEditor.Windows
             _valueEditor = new CustomEditorPresenter(null);
             _valueEditor.Panel.Parent = optionsPanel;
             _valueEditor.OverrideEditor = new GenericEditor();
-            _valueEditor.Select(_newStyle);
+            _valueEditor.Select(_value);
             _valueEditor.Modified += OnEdited;
 
             _previewPanel = container.AddChild<Panel>();
             _previewPanel.DockStyle = DockStyle.Fill;
 
-            var preview = CreatePreview(_newStyle);
+            var preview = CreatePreview(_value);
             preview.Parent = _previewPanel;
-        }
 
-        /// <inheritdoc />
-        protected override void OnShow()
-        {
             // Cancel
-            _cCancel = new Button(Width - BUTTONS_WIDTH - PICKER_MARGIN, Height - Button.DefaultHeight - PICKER_MARGIN, BUTTONS_WIDTH)
+            _cCancel = new Button(Width - ButtonsWidth - PickerMargin, Height - Button.DefaultHeight - PickerMargin, ButtonsWidth)
             {
                 Text = "Cancel",
                 Parent = this,
@@ -84,7 +80,7 @@ namespace FlaxEditor.Windows
             _cCancel.Clicked += OnCancelClicked;
 
             // OK
-            _cOK = new Button(_cCancel.Left - BUTTONS_WIDTH - PICKER_MARGIN, _cCancel.Y, BUTTONS_WIDTH)
+            _cOK = new Button(_cCancel.Left - ButtonsWidth - PickerMargin, _cCancel.Y, ButtonsWidth)
             {
                 Text = "Ok",
                 Parent = this,
@@ -98,7 +94,7 @@ namespace FlaxEditor.Windows
         /// </summary>
         /// <param name="style">The style to use for the preview</param>
         /// <returns>The preview</returns>
-        private ContainerControl CreatePreview(Style style)
+        private static ContainerControl CreatePreview(Style style)
         {
             var currentStyle = Style.Current;
             Style.Current = style;
@@ -113,24 +109,24 @@ namespace FlaxEditor.Windows
             {
                 Text = "Example Label",
                 Parent = preview,
-                Location = new Vector2(PREVIEW_X, 50),
+                Location = new Vector2(PreviewX, 50),
                 TooltipText = "Example Tooltip"
             };
 
-            var button = new Button(PREVIEW_X, 100)
+            var button = new Button(PreviewX, 100)
             {
                 Text = "Example Button",
                 Parent = preview,
                 TooltipText = "Example Tooltip"
             };
 
-            var textBox = new TextBox(true, PREVIEW_X, 150)
+            var textBox = new TextBox(true, PreviewX, 150)
             {
                 Text = "Example TextBox",
                 Parent = preview
             };
 
-            var checkBox = new CheckBox(PREVIEW_X, 200)
+            var checkBox = new CheckBox(PreviewX, 200)
             {
                 Parent = preview
             };
@@ -138,7 +134,7 @@ namespace FlaxEditor.Windows
             var panel = new Panel()
             {
                 Parent = preview,
-                X = PREVIEW_X,
+                X = PreviewX,
                 Y = 250,
                 BackgroundColor = style.BackgroundSelected,
                 Width = 250,
@@ -154,14 +150,14 @@ namespace FlaxEditor.Windows
             var comboBox = new ComboBox()
             {
                 Items = new List<string>() { "Item 1", "Item 2", "Item 3" },
-                X = PREVIEW_X,
+                X = PreviewX,
                 Y = 300,
                 Parent = preview,
                 SelectedIndex = 0,
                 SelectedItem = "Item 1"
             };
 
-            var slider = new SliderControl(30, PREVIEW_X, 350, min: 0, max: 100)
+            var slider = new SliderControl(30, PreviewX, 350, min: 0, max: 100)
             {
                 Parent = preview,
                 Value = 31
@@ -179,18 +175,19 @@ namespace FlaxEditor.Windows
             if (_previewPanel != null)
             {
                 _previewPanel.DisposeChildren();
-                var preview = CreatePreview(_newStyle);
+                var preview = CreatePreview(_value);
                 preview.Parent = _previewPanel;
             }
             if (_useDynamicEditing)
             {
-                _onChanged?.Invoke(_newStyle, true);
+                _useDynamicEditing = false;
+                _onChanged?.Invoke(_value, true);
             }
         }
 
         private void OnOkClicked()
         {
-            _onChanged?.Invoke(_newStyle, false);
+            _onChanged?.Invoke(_value, false);
             Close();
         }
 
@@ -198,19 +195,18 @@ namespace FlaxEditor.Windows
         {
             // Restore old style
             if (_useDynamicEditing)
-                _onChanged?.Invoke(_oldStyle, false);
+                _onChanged?.Invoke(_initialValue, false);
 
             Close(ClosingReason.User);
         }
 
         /// <inheritdoc />
-        public override void OnDestroy()
+        protected override void OnClose()
         {
-            if (IsDisposing)
-                return;
+            base.OnClose();
 
             if (_useDynamicEditing)
-                _onChanged?.Invoke(_oldStyle, false);
+                _onChanged?.Invoke(_initialValue, false);
         }
     }
 }
