@@ -15,7 +15,7 @@ namespace FlaxEditor.CustomEditors.Editors
     [CustomEditor(typeof(Style)), DefaultEditor]
     public class StyleEditor : CustomEditor
     {
-        private CustomElement<StyleValueEditor> element;
+        private CustomElement<StyleValueEditor> _element;
 
         /// <inheritdoc />
         public override DisplayStyle Style => DisplayStyle.Inline;
@@ -28,14 +28,14 @@ namespace FlaxEditor.CustomEditors.Editors
         {
             Style style = (Style)this.Values[0];
 
-            element = layout.Custom<StyleValueEditor>();
-            element.CustomControl.Value = style;
-            element.CustomControl.ValueChanged += OnValueChanged;
+            _element = layout.Custom<StyleValueEditor>();
+            _element.CustomControl.Value = style;
+            _element.CustomControl.ValueChanged += OnValueChanged;
         }
 
         private void OnValueChanged()
         {
-            SetValue(element.CustomControl.Value);
+            SetValue(_element.CustomControl.Value);
         }
 
         /// <inheritdoc />
@@ -48,7 +48,7 @@ namespace FlaxEditor.CustomEditors.Editors
             }
             else
             {
-                element.CustomControl.Value = (Style)Values[0];
+                _element.CustomControl.Value = (Style)Values[0];
             }
         }
     }

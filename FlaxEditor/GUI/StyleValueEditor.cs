@@ -128,7 +128,7 @@ namespace FlaxEditor.GUI
                 Render2D.FillRectangle(new Rectangle(x, 2, size), Value.BorderSelected);
                 x += size.X;
                 Render2D.FillRectangle(new Rectangle(x, 2, size), Value.ProgressNormal);
-                x = 0;
+                x = 2;
 
                 Render2D.FillRectangle(new Rectangle(x, 2 + size.Y, size), Value.Background);
                 x += size.X;

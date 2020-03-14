@@ -272,9 +272,9 @@ namespace FlaxEditor.GUI
             BorderColorHighlighted = style.BorderSelected;
             BorderColorSelected = BorderColorHighlighted;
             ArrowImage = new SpriteBrush(style.ArrowDown);
-            ArrowColor = Color.White * 0.6f;
+            ArrowColor = style.Foreground * 0.6f;
             ArrowColorSelected = style.BackgroundSelected;
-            ArrowColorHighlighted = Color.White;
+            ArrowColorHighlighted = style.Foreground;
         }
 
         /// <summary>

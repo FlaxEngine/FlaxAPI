@@ -195,7 +195,6 @@ namespace FlaxEditor.Options
         {
             Editor.Log("Options file path: " + _optionsFilePath);
             Load();
-            Editor.UI.CreateStyle();
         }
     }
 }

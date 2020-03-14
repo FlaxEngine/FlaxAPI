@@ -7,6 +7,7 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Dialogs;
+using FlaxEditor.GUI.Input;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Utilities;
@@ -52,13 +53,13 @@ namespace FlaxEditor.Windows
             container.SlotsVertically = 1;
             container.SlotsHorizontally = 2;
 
-            var panel1 = container.AddChild<Panel>();
-            panel1.DockStyle = DockStyle.Fill;
-            panel1.IsScrollable = true;
-            panel1.ScrollBars = ScrollBars.Vertical;
+            var optionsPanel = container.AddChild<Panel>();
+            optionsPanel.DockStyle = DockStyle.Fill;
+            optionsPanel.IsScrollable = true;
+            optionsPanel.ScrollBars = ScrollBars.Vertical;
 
             _valueEditor = new CustomEditorPresenter(null);
-            _valueEditor.Panel.Parent = panel1;
+            _valueEditor.Panel.Parent = optionsPanel;
             _valueEditor.OverrideEditor = new GenericEditor();
             _valueEditor.Select(_newStyle);
             _valueEditor.Modified += OnEdited;
@@ -150,8 +151,7 @@ namespace FlaxEditor.Windows
                 Parent = panel
             };
 
-            // TODO: There seems to be a dropdown bug?
-            var dropDown = new Dropdown()
+            var comboBox = new ComboBox()
             {
                 Items = new List<string>() { "Item 1", "Item 2", "Item 3" },
                 X = PREVIEW_X,
@@ -163,9 +163,9 @@ namespace FlaxEditor.Windows
 
             var slider = new SliderControl(30, PREVIEW_X, 350, min: 0, max: 100)
             {
-                Parent = preview
+                Parent = preview,
+                Value = 31
             };
-            slider.Value = 31;
 
             Style.Current = currentStyle;
             return preview;
@@ -204,10 +204,8 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        public override void OnDestroy()
         {
-            base.Dispose();
-
             if (IsDisposing)
                 return;
 

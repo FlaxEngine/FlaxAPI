@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.GUI;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
