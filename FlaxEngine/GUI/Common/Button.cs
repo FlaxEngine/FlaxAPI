@@ -27,7 +27,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Button text property.
         /// </summary>
-        [EditorOrder(10), Tooltip("The buton label text.")]
+        [EditorOrder(10), Tooltip("The button label text.")]
         public string Text { get; set; }
 
         /// <summary>
