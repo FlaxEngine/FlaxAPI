@@ -14,10 +14,10 @@ namespace FlaxEditor.GUI
         private struct PlatformData
         {
             public PlatformType PlatformType;
-            public Sprite Icon;
+            public SpriteHandle Icon;
             public string PlatformName;
 
-            public PlatformData(PlatformType type, Sprite icon, string name)
+            public PlatformData(PlatformType type, SpriteHandle icon, string name)
             {
                 PlatformType = type;
                 Icon = icon;

@@ -173,11 +173,11 @@ namespace FlaxEditor.Windows
             private DragData _dragData;
 
             public Item(string text, DragData dragData = null)
-            : this(text, dragData, Sprite.Invalid)
+            : this(text, dragData, SpriteHandle.Invalid)
             {
             }
 
-            public Item(string text, DragData dragData, Sprite icon)
+            public Item(string text, DragData dragData, SpriteHandle icon)
             : base(false, icon, icon)
             {
                 Text = text;

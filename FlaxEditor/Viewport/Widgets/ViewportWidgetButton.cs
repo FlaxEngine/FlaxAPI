@@ -14,7 +14,7 @@ namespace FlaxEditor.Viewport.Widgets
     public class ViewportWidgetButton : Control
     {
         private string _text;
-        private Sprite _icon;
+        private SpriteHandle _icon;
         private ContextMenu _cm;
         private bool _checked;
         private bool _autoCheck;
@@ -59,7 +59,7 @@ namespace FlaxEditor.Viewport.Widgets
         /// <param name="icon">The icon.</param>
         /// <param name="contextMenu">The context menu.</param>
         /// <param name="autoCheck">if set to <c>true</c> will be automatic checked on mouse click.</param>
-        public ViewportWidgetButton(string text, Sprite icon, ContextMenu contextMenu = null, bool autoCheck = false)
+        public ViewportWidgetButton(string text, SpriteHandle icon, ContextMenu contextMenu = null, bool autoCheck = false)
         : base(0, 0, CalculateButtonWidth(0, icon.IsValid), ViewportWidgetsContainer.WidgetsHeight)
         {
             _text = text;

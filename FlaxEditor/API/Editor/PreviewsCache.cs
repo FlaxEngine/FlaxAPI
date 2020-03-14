@@ -4,7 +4,7 @@ using FlaxEngine;
 
 namespace FlaxEditor
 {
-    public sealed partial class PreviewsCache
+    partial class PreviewsCache
     {
         /// <summary>
         /// The default asset previews icon size (both width and height since it's a square).

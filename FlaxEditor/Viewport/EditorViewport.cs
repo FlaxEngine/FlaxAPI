@@ -460,7 +460,7 @@ namespace FlaxEditor.Viewport
                 // View mode widget
                 var viewMode = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
                 ViewWidgetButtonMenu = new ContextMenu();
-                var viewModeButton = new ViewportWidgetButton("View", Sprite.Invalid, ViewWidgetButtonMenu);
+                var viewModeButton = new ViewportWidgetButton("View", SpriteHandle.Invalid, ViewWidgetButtonMenu);
                 viewModeButton.TooltipText = "View properties";
                 viewModeButton.Parent = viewMode;
                 viewMode.Parent = this;
@@ -638,7 +638,7 @@ namespace FlaxEditor.Viewport
             {
                 _fpsCounter.Visible = value;
                 _fpsCounter.Enabled = value;
-                _showFpsButon.Icon = value ? Style.Current.CheckBoxTick : Sprite.Invalid;
+                _showFpsButon.Icon = value ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
             }
         }
 
@@ -1162,7 +1162,7 @@ namespace FlaxEditor.Viewport
                     var v = (float)b.Tag;
                     b.Icon = Mathf.Abs(MovementSpeed - v) < 0.001f
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -1180,7 +1180,7 @@ namespace FlaxEditor.Viewport
                     var v = (ViewMode)b.Tag;
                     b.Icon = Task.View.Mode == v
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -1238,7 +1238,7 @@ namespace FlaxEditor.Viewport
                     var v = (ViewFlags)b.Tag;
                     b.Icon = (Task.View.Flags & v) != 0
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }

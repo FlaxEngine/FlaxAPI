@@ -135,7 +135,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// The track icon.
         /// </summary>
-        public Sprite Icon;
+        public SpriteHandle Icon;
 
         /// <summary>
         /// The icon color (tint).

@@ -31,7 +31,7 @@ namespace FlaxEditor.GUI.Tree
         private float _xOffset, _textWidth;
         private float _headerHeight = 16.0f;
         private Rectangle _headerRect;
-        private Sprite _iconCollaped, _iconOpened;
+        private SpriteHandle _iconCollaped, _iconOpened;
         private Margin _margin = new Margin(2.0f);
         private string _text;
         private bool _textChanged;
@@ -281,7 +281,7 @@ namespace FlaxEditor.GUI.Tree
         /// </summary>
         /// <param name="canChangeOrder">Enable/disable changing node order in parent tree node.</param>
         public TreeNode(bool canChangeOrder)
-        : this(canChangeOrder, Sprite.Invalid, Sprite.Invalid)
+        : this(canChangeOrder, SpriteHandle.Invalid, SpriteHandle.Invalid)
         {
         }
 
@@ -291,7 +291,7 @@ namespace FlaxEditor.GUI.Tree
         /// <param name="canChangeOrder">Enable/disable changing node order in parent tree node.</param>
         /// <param name="iconCollapsed">The icon for node collapsed.</param>
         /// <param name="iconOpened">The icon for node opened.</param>
-        public TreeNode(bool canChangeOrder, Sprite iconCollapsed, Sprite iconOpened)
+        public TreeNode(bool canChangeOrder, SpriteHandle iconCollapsed, SpriteHandle iconOpened)
         : base(0, 0, 64, 16)
         {
             _canChangeOrder = canChangeOrder;

@@ -61,7 +61,7 @@ namespace FlaxEditor.Windows.Assets
             private void OnShowFloorModelClicked(ContextMenuButton obj)
             {
                 _floorModel.IsActive = !_floorModel.IsActive;
-                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : Sprite.Invalid;
+                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
             }
 
             /// <inheritdoc />

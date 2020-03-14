@@ -29,7 +29,7 @@ namespace FlaxEditor.Content
         public override ContentItemSearchFilter SearchFilter => ContentItemSearchFilter.Json;
 
         /// <inheritdoc />
-        public override Sprite DefaultThumbnail => Editor.Instance.Icons.Document64;
+        public override SpriteHandle DefaultThumbnail => Editor.Instance.Icons.Document64;
 
         /// <inheritdoc />
         protected override bool DrawShadow => false;

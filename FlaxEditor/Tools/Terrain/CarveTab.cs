@@ -53,7 +53,7 @@ namespace FlaxEditor.Tools.Terrain
         /// </summary>
         /// <param name="icon">The icon.</param>
         /// <param name="editor">The editor instance.</param>
-        public CarveTab(Sprite icon, Editor editor)
+        public CarveTab(SpriteHandle icon, Editor editor)
         : base(string.Empty, icon)
         {
             Editor = editor;

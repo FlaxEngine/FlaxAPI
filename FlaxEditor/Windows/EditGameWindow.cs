@@ -184,7 +184,7 @@ namespace FlaxEditor.Windows
                 {
                     Parent = Viewport,
                 };
-                _pilotWidget = new ViewportWidgetButton(string.Empty, Sprite.Invalid)
+                _pilotWidget = new ViewportWidgetButton(string.Empty, SpriteHandle.Invalid)
                 {
                     Parent = container,
                 };

@@ -83,7 +83,7 @@ namespace FlaxEditor.Windows
             private DebugLogWindow _window;
             public LogGroup Group;
             public LogEntryDescription Desc;
-            public Sprite Icon;
+            public SpriteHandle Icon;
 
             public LogEntry(DebugLogWindow window, ref LogEntryDescription desc)
             : base(0, 0, 120, DefaultHeight)
@@ -274,9 +274,9 @@ namespace FlaxEditor.Windows
         private readonly ToolStripButton _pauseOnErrorButton;
         private readonly ToolStripButton[] _groupButtons = new ToolStripButton[3];
 
-        internal Sprite IconInfo;
-        internal Sprite IconWarning;
-        internal Sprite IconError;
+        internal SpriteHandle IconInfo;
+        internal SpriteHandle IconWarning;
+        internal SpriteHandle IconError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebugLogWindow"/> class.

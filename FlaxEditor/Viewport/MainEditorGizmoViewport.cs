@@ -197,7 +197,7 @@ namespace FlaxEditor.Viewport
 
             // Add grid
             Grid = new GridGizmo(this);
-            Grid.EnabledChanged += gizmo => _showGridButton.Icon = gizmo.Enabled ? Style.Current.CheckBoxTick : Sprite.Invalid;
+            Grid.EnabledChanged += gizmo => _showGridButton.Icon = gizmo.Enabled ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
 
             editor.SceneEditing.SelectionChanged += OnSelectionChanged;
 
@@ -222,7 +222,7 @@ namespace FlaxEditor.Viewport
             };
             enableScaleSnapping.Toggled += OnScaleSnappingToggle;
             var scaleSnappingCM = new ContextMenu();
-            _scaleSnapping = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid, scaleSnappingCM);
+            _scaleSnapping = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), SpriteHandle.Invalid, scaleSnappingCM);
             _scaleSnapping.TooltipText = "Scale snapping values";
             for (int i = 0; i < EditorViewportScaleSnapValues.Length; i++)
             {
@@ -245,7 +245,7 @@ namespace FlaxEditor.Viewport
             };
             enableRotateSnapping.Toggled += OnRotateSnappingToggle;
             var rotateSnappingCM = new ContextMenu();
-            _rotateSnapping = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), Sprite.Invalid, rotateSnappingCM);
+            _rotateSnapping = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), SpriteHandle.Invalid, rotateSnappingCM);
             _rotateSnapping.TooltipText = "Rotation snapping values";
             for (int i = 0; i < EditorViewportRotateSnapValues.Length; i++)
             {
@@ -268,7 +268,7 @@ namespace FlaxEditor.Viewport
             };
             enableTranslateSnapping.Toggled += OnTranslateSnappingToggle;
             var translateSnappingCM = new ContextMenu();
-            _translateSnapping = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
+            _translateSnapping = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), SpriteHandle.Invalid, translateSnappingCM);
             _translateSnapping.TooltipText = "Position snapping values";
             for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
             {
@@ -529,7 +529,7 @@ namespace FlaxEditor.Viewport
                     var v = (float)b.Tag;
                     b.Icon = Mathf.Abs(TransformGizmo.ScaleSnapValue - v) < 0.001f
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -566,7 +566,7 @@ namespace FlaxEditor.Viewport
                     var v = (float)b.Tag;
                     b.Icon = Mathf.Abs(TransformGizmo.RotationSnapValue - v) < 0.001f
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -602,7 +602,7 @@ namespace FlaxEditor.Viewport
                     var v = (float)b.Tag;
                     b.Icon = Mathf.Abs(TransformGizmo.TranslationSnapValue - v) < 0.001f
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }

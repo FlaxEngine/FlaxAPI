@@ -70,7 +70,7 @@ namespace FlaxEditor.CustomEditors.Editors
             if (IsSetBlocked)
                 return;
 
-            Sprite value;
+            SpriteHandle value;
             value.Atlas = (SpriteAtlas)_atlasValues[0];
             value.Index = _spritePicker.SelectedIndex;
             SetValue(value);

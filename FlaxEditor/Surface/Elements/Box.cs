@@ -386,7 +386,7 @@ namespace FlaxEditor.Surface.Elements
             float alpha = Enabled ? 1.0f : 0.6f;
             Color color = _currentTypeColor * alpha;
             var style = Surface.Style;
-            Sprite icon;
+            SpriteHandle icon;
             if (_currentType == ConnectionType.Impulse || _currentType == ConnectionType.ImpulseSecondary)
                 icon = hasConnections ? style.Icons.ArrowClose : style.Icons.ArrowOpen;
             else

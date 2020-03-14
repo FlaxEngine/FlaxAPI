@@ -99,22 +99,22 @@ namespace FlaxEditor.Surface
             /// <summary>
             /// Icon for boxes without connections.
             /// </summary>
-            public Sprite BoxOpen;
+            public SpriteHandle BoxOpen;
 
             /// <summary>
             /// Icon for boxes with connections.
             /// </summary>
-            public Sprite BoxClose;
+            public SpriteHandle BoxClose;
 
             /// <summary>
             /// Icon for impulse boxes without connections.
             /// </summary>
-            public Sprite ArrowOpen;
+            public SpriteHandle ArrowOpen;
 
             /// <summary>
             /// Icon for impulse boxes with connections.
             /// </summary>
-            public Sprite ArrowClose;
+            public SpriteHandle ArrowClose;
         }
 
         /// <summary>

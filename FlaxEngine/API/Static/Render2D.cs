@@ -206,7 +206,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawSprite(Sprite sprite, Rectangle rect)
+        public static void DrawSprite(SpriteHandle sprite, Rectangle rect)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -226,7 +226,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawSprite(Sprite sprite, Rectangle rect, Color color)
+        public static void DrawSprite(SpriteHandle sprite, Rectangle rect, Color color)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -244,7 +244,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawSpritePoint(Sprite sprite, Rectangle rect)
+        public static void DrawSpritePoint(SpriteHandle sprite, Rectangle rect)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -264,7 +264,7 @@ namespace FlaxEngine
 		[Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawSpritePoint(Sprite sprite, Rectangle rect, Color color)
+        public static void DrawSpritePoint(SpriteHandle sprite, Rectangle rect, Color color)
         {
 #if UNIT_TEST_COMPILANT
 			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");

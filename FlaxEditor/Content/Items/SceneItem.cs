@@ -31,6 +31,6 @@ namespace FlaxEditor.Content
         public override ContentItemSearchFilter SearchFilter => ContentItemSearchFilter.Scene;
 
         /// <inheritdoc />
-        public override Sprite DefaultThumbnail => Editor.Instance.Icons.Scene64;
+        public override SpriteHandle DefaultThumbnail => Editor.Instance.Icons.Scene64;
     }
 }

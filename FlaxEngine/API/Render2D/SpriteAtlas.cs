@@ -1,36 +1,22 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-    /// <summary>
-    /// Sprite handle contains basic information about a sprite.
-    /// </summary>
-    public struct Sprite
+    partial struct SpriteHandle
     {
         /// <summary>
         /// Invalid sprite handle.
         /// </summary>
-        public static Sprite Invalid;
-
-        /// <summary>
-        /// The parent sprite atlas.
-        /// </summary>
-        public SpriteAtlas Atlas;
-
-        /// <summary>
-        /// The sprite index.
-        /// </summary>
-        public int Index;
+        public static SpriteHandle Invalid;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Sprite"/> struct.
         /// </summary>
         /// <param name="atlas">The atlas.</param>
         /// <param name="index">The index.</param>
-        public Sprite(SpriteAtlas atlas, int index)
+        public SpriteHandle(SpriteAtlas atlas, int index)
         {
             Atlas = atlas;
             Index = index;
@@ -39,7 +25,6 @@ namespace FlaxEngine
         /// <summary>
         /// Returns true if sprite is valid.
         /// </summary>
-        /// <returns>True if this sprite handle is valid, otherwise false.</returns>
         public bool IsValid => Atlas != null && Index != -1;
 
         /// <summary>
@@ -52,13 +37,15 @@ namespace FlaxEngine
             {
                 if (Atlas == null)
                     throw new InvalidOperationException("Cannot use invalid sprite.");
-                return SpriteAtlas.Internal_GetSpriteName(Atlas.unmanagedPtr, Index);
+                return Atlas.GetSprite(Index).Name;
             }
             set
             {
                 if (Atlas == null)
                     throw new InvalidOperationException("Cannot use invalid sprite.");
-                SpriteAtlas.Internal_SetSpriteName(Atlas.unmanagedPtr, Index, value);
+                var sprite = Atlas.GetSprite(Index);
+                sprite.Name = value;
+                Atlas.SetSprite(Index, ref sprite);
             }
         }
 
@@ -102,20 +89,20 @@ namespace FlaxEngine
             {
                 if (Atlas == null)
                     throw new InvalidOperationException("Cannot use invalid sprite.");
-                Rectangle result;
-                SpriteAtlas.Internal_GetSpriteArea(Atlas.unmanagedPtr, Index, out result);
-                return result;
+                return Atlas.GetSprite(Index).Area;
             }
             set
             {
                 if (Atlas == null)
                     throw new InvalidOperationException("Cannot use invalid sprite.");
-                SpriteAtlas.Internal_SetSpriteArea(Atlas.unmanagedPtr, Index, ref value);
+                var sprite = Atlas.GetSprite(Index);
+                sprite.Area = value;
+                Atlas.SetSprite(Index, ref sprite);
             }
         }
     }
 
-    partial class SpriteAtlas
+    /*partial class SpriteAtlas
     {
         /// <summary>
         /// Gets the sprite at the given index.
@@ -154,5 +141,5 @@ namespace FlaxEngine
 #endif
 
         #endregion
-    }
+    }*/
 }

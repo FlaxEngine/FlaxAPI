@@ -260,7 +260,7 @@ namespace FlaxEditor.Content.Thumbnails
                 _guiRoot.DisposeChildren();
 
                 // Copy backbuffer with rendered preview into atlas
-                Sprite icon = atlas.OccupySlot(_output, request.Item.ID);
+                SpriteHandle icon = atlas.OccupySlot(_output, request.Item.ID);
                 if (!icon.IsValid)
                 {
                     // Error

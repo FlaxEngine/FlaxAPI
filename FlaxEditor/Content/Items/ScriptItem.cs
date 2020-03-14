@@ -77,7 +77,7 @@ namespace FlaxEditor.Content
         public override ContentItemSearchFilter SearchFilter => ContentItemSearchFilter.Script;
 
         /// <inheritdoc />
-        public override Sprite DefaultThumbnail => Editor.Instance.Icons.Script64;
+        public override SpriteHandle DefaultThumbnail => Editor.Instance.Icons.Script64;
 
         /// <inheritdoc />
         public override ScriptItem FindScriptWitScriptName(string scriptName)

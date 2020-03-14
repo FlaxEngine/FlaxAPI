@@ -20,7 +20,7 @@ namespace FlaxEditor.GUI.Tabs
         /// <summary>
         /// Gets or sets the icon.
         /// </summary>
-        public Sprite Icon;
+        public SpriteHandle Icon;
 
         /// <summary>
         /// Occurs when tab gets selected.
@@ -31,7 +31,7 @@ namespace FlaxEditor.GUI.Tabs
         /// Initializes a new instance of the <see cref="Tab"/> class.
         /// </summary>
         /// <param name="icon">The icon.</param>
-        public Tab(Sprite icon)
+        public Tab(SpriteHandle icon)
         : this(string.Empty, icon)
         {
         }
@@ -41,7 +41,7 @@ namespace FlaxEditor.GUI.Tabs
         /// </summary>
         /// <param name="text">The text.</param>
         public Tab(string text)
-        : this(text, Sprite.Invalid)
+        : this(text, SpriteHandle.Invalid)
         {
         }
 
@@ -50,7 +50,7 @@ namespace FlaxEditor.GUI.Tabs
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="icon">The icon.</param>
-        public Tab(string text, Sprite icon)
+        public Tab(string text, SpriteHandle icon)
         {
             Text = text;
             Icon = icon;

@@ -22,7 +22,7 @@ namespace FlaxEditor.GUI.Dialogs
         /// </summary>
         protected Rectangle _wheelRect;
 
-        private readonly Sprite _colorWheelSprite;
+        private readonly SpriteHandle _colorWheelSprite;
         private bool _isMouseDownWheel;
 
         /// <summary>

@@ -31,6 +31,6 @@ namespace FlaxEditor.Content
         public override ContentItemSearchFilter SearchFilter => ContentItemSearchFilter.Prefab;
 
         /// <inheritdoc />
-        public override Sprite DefaultThumbnail => Sprite.Invalid;
+        public override SpriteHandle DefaultThumbnail => SpriteHandle.Invalid;
     }
 }

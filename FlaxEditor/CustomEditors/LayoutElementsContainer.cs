@@ -156,7 +156,7 @@ namespace FlaxEditor.CustomEditors
         /// </summary>
         /// <param name="sprite">The sprite.</param>
         /// <returns>The created element.</returns>
-        public ImageElement Image(Sprite sprite)
+        public ImageElement Image(SpriteHandle sprite)
         {
             ImageElement element = new ImageElement();
             element.Image.Brush = new SpriteBrush(sprite);

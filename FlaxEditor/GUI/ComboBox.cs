@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -12,6 +11,10 @@ namespace FlaxEditor.GUI
     /// <summary>
     /// Combo box control allows to choose one item or set of items from the provided collection of options.
     /// </summary>
+    /// <remarks>
+    /// Difference between <see cref="ComboBox"/> and <see cref="Dropdown"/> is that ComboBox uses native window to show the items list while Dropdown uses a custom panel added to parent window.
+    /// This means that Dropdown will work on all platforms that don't support multiple native windows (eg. Android, PS4, Xbox One).
+    /// </remarks>
     /// <seealso cref="FlaxEngine.GUI.Control" />
     [HideInEditor]
     public class ComboBox : Control

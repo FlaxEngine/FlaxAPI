@@ -184,7 +184,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <param name="context">The GPU rendering context.</param>
         /// <param name="req">The request data.</param>
         /// <param name="sprite">The thumbnail sprite.</param>
-        public void OnThumbnailRenderingEnd(SceneRenderTask task, GPUContext context, ref CameraCutThumbnailRenderer.Request req, ref Sprite sprite)
+        public void OnThumbnailRenderingEnd(SceneRenderTask task, GPUContext context, ref CameraCutThumbnailRenderer.Request req, ref SpriteHandle sprite)
         {
             var image = _thumbnails[req.ThumbnailIndex];
             if (image == null)
@@ -412,7 +412,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// Releases the thumbnail ans frees the sprite slot used by it.
         /// </summary>
         /// <param name="sprite">The sprite.</param>
-        public void ReleaseThumbnail(Sprite sprite)
+        public void ReleaseThumbnail(SpriteHandle sprite)
         {
             if (!sprite.IsValid)
                 return;
@@ -533,10 +533,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 var thumbnailSizeUV = new Vector2(width / atlasSize, height / atlasSize);
                 for (int i = 0; i < count; i++)
                 {
-                    var s = spriteAtlas.AddSprite();
                     var x = i % countX;
                     var y = i / countX;
-                    s.Area = new Rectangle(new Vector2(x, y) * thumbnailSizeUV, thumbnailSizeUV);
+                    var s = new Sprite
+                    {
+                        Name = string.Empty,
+                        Area = new Rectangle(new Vector2(x, y) * thumbnailSizeUV, thumbnailSizeUV),
+                    };
+                    spriteAtlas.AddSprite(s);
                 }
 
                 // Add atlas to the cached ones
@@ -569,7 +573,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 throw new FlaxException();
             atlas.Count++;
             _atlases[atlasIndex] = atlas;
-            var sprite = atlas.Texture.GetSprite(spriteIndex);
+            var sprite = new SpriteHandle(atlas.Texture, spriteIndex);
 
             // Copy output frame to the sprite atlas slot
             var spriteLocation = sprite.Location;

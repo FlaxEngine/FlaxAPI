@@ -177,8 +177,8 @@ namespace FlaxEditor.Content
         private Vector2 _mouseDownStartPos;
         private readonly List<IContentItemOwner> _references = new List<IContentItemOwner>(4);
 
-        private Sprite _thumbnail;
-        private Sprite _shadowIcon;
+        private SpriteHandle _thumbnail;
+        private SpriteHandle _shadowIcon;
 
         /// <summary>
         /// Gets the item domain.
@@ -283,7 +283,7 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the default name of the content item thumbnail. Returns null if not used.
         /// </summary>
-        public virtual Sprite DefaultThumbnail => Sprite.Invalid;
+        public virtual SpriteHandle DefaultThumbnail => SpriteHandle.Invalid;
 
         /// <summary>
         /// Gets a value indicating whether this item has default thumbnail.
@@ -293,7 +293,7 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets or sets the item thumbnail. Warning, thumbnail may not be available if item has no references (<see cref="ReferencesCount"/>).
         /// </summary>
-        public Sprite Thumbnail
+        public SpriteHandle Thumbnail
         {
             get => _thumbnail;
             set => _thumbnail = value;
@@ -536,7 +536,7 @@ namespace FlaxEditor.Content
         protected void ReleaseThumbnail()
         {
             // Simply unlink sprite
-            _thumbnail = Sprite.Invalid;
+            _thumbnail = SpriteHandle.Invalid;
         }
 
         /// <summary>

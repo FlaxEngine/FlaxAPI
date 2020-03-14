@@ -105,57 +105,57 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// The arrow right icon.
         /// </summary>
-        public Sprite ArrowRight;
+        public SpriteHandle ArrowRight;
 
         /// <summary>
         /// The arrow down icon.
         /// </summary>
-        public Sprite ArrowDown;
+        public SpriteHandle ArrowDown;
 
         /// <summary>
         /// The search icon.
         /// </summary>
-        public Sprite Search;
+        public SpriteHandle Search;
 
         /// <summary>
         /// The settings icon.
         /// </summary>
-        public Sprite Settings;
+        public SpriteHandle Settings;
 
         /// <summary>
         /// The cross icon.
         /// </summary>
-        public Sprite Cross;
+        public SpriteHandle Cross;
 
         /// <summary>
         /// The CheckBox intermediate icon.
         /// </summary>
-        public Sprite CheckBoxIntermediate;
+        public SpriteHandle CheckBoxIntermediate;
 
         /// <summary>
         /// The CheckBox tick icon.
         /// </summary>
-        public Sprite CheckBoxTick;
+        public SpriteHandle CheckBoxTick;
 
         /// <summary>
         /// The status bar size grip icon.
         /// </summary>
-        public Sprite StatusBarSizeGrip;
+        public SpriteHandle StatusBarSizeGrip;
 
         /// <summary>
         /// The translate icon.
         /// </summary>
-        public Sprite Translate;
+        public SpriteHandle Translate;
 
         /// <summary>
         /// The rotate icon.
         /// </summary>
-        public Sprite Rotate;
+        public SpriteHandle Rotate;
 
         /// <summary>
         /// The scale icon.
         /// </summary>
-        public Sprite Scale;
+        public SpriteHandle Scale;
 
         /// <summary>
         /// The shared tooltip control used by the controls if no custom tooltip is provided.

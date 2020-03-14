@@ -39,14 +39,14 @@ namespace FlaxEditor.Windows.Assets
 
                 if (Asset && Asset.IsLoaded)
                 {
-                    Rectangle area;
                     var count = Asset.SpritesCount;
                     var style = Style.Current;
 
                     // Draw all splits
                     for (int i = 0; i < count; i++)
                     {
-                        Asset.GetSpriteArea(i, out area);
+                        var sprite = Asset.GetSprite(i);
+                        var area = sprite.Area;
 
                         Vector2 position = area.Location * rect.Size + rect.Location;
                         Vector2 size = area.Size * rect.Size;
@@ -68,11 +68,11 @@ namespace FlaxEditor.Windows.Assets
             public class SpriteEntry
             {
                 [HideInEditor]
-                public Sprite Sprite;
+                public SpriteHandle Sprite;
 
                 public SpriteEntry(SpriteAtlas atlas, int index)
                 {
-                    Sprite = atlas.GetSprite(index);
+                    Sprite = new SpriteHandle(atlas, index);
                 }
 
                 [EditorOrder(0)]
@@ -246,7 +246,12 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.AddDoc32, () =>
             {
-                var sprite = Asset.AddSprite();
+                var sprite = new Sprite
+                {
+                    Name = "New Sprite",
+                    Area = new Rectangle(Vector2.Zero, Vector2.One),
+                };
+                Asset.AddSprite(sprite);
                 MarkAsEdited();
                 _properties.UpdateSprites();
                 _propertiesEditor.BuildLayout();
@@ -261,7 +266,7 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            if (Asset.Save())
+            if (Asset.SaveSprites())
             {
                 Editor.LogError("Cannot save asset.");
                 return;

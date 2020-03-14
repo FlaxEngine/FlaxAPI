@@ -81,7 +81,7 @@ namespace FlaxEditor.GUI
         /// <param name="sprite">The icon sprite.</param>
         /// <param name="onClick">The custom action to call on button clicked.</param>
         /// <returns>The button.</returns>
-        public ToolStripButton AddButton(Sprite sprite, Action onClick = null)
+        public ToolStripButton AddButton(SpriteHandle sprite, Action onClick = null)
         {
             var button = new ToolStripButton(ItemsHeight, ref sprite)
             {
@@ -99,7 +99,7 @@ namespace FlaxEditor.GUI
         /// <param name="text">The text.</param>
         /// <param name="onClick">The custom action to call on button clicked.</param>
         /// <returns>The button.</returns>
-        public ToolStripButton AddButton(Sprite sprite, string text, Action onClick = null)
+        public ToolStripButton AddButton(SpriteHandle sprite, string text, Action onClick = null)
         {
             var button = new ToolStripButton(ItemsHeight, ref sprite)
             {
@@ -119,7 +119,7 @@ namespace FlaxEditor.GUI
         /// <returns>The button.</returns>
         public ToolStripButton AddButton(string text, Action onClick = null)
         {
-            var button = new ToolStripButton(ItemsHeight, ref Sprite.Invalid)
+            var button = new ToolStripButton(ItemsHeight, ref SpriteHandle.Invalid)
             {
                 Text = text,
                 Parent = this,

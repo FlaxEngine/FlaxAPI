@@ -38,7 +38,7 @@ namespace FlaxEditor.GUI.ContextMenu
         /// <summary>
         /// Item icon (best is 16x16).
         /// </summary>
-        public Sprite Icon;
+        public SpriteHandle Icon;
 
         /// <summary>
         /// The checked state.

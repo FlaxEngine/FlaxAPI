@@ -95,7 +95,7 @@ namespace FlaxEditor.Tools.Foliage
         /// </summary>
         /// <param name="icon">The icon.</param>
         /// <param name="editor">The editor instance.</param>
-        public FoliageTab(Sprite icon, Editor editor)
+        public FoliageTab(SpriteHandle icon, Editor editor)
         : base(string.Empty, icon)
         {
             Editor = editor;

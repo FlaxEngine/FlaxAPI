@@ -12,7 +12,7 @@ namespace FlaxEngine.GUI
         /// The sprite.
         /// </summary>
         [ExpandGroups]
-        public Sprite Sprite;
+        public SpriteHandle Sprite;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpriteBrush"/> class.
@@ -25,7 +25,7 @@ namespace FlaxEngine.GUI
         /// Initializes a new instance of the <see cref="SpriteBrush"/> struct.
         /// </summary>
         /// <param name="sprite">The sprite.</param>
-        public SpriteBrush(Sprite sprite)
+        public SpriteBrush(SpriteHandle sprite)
         {
             Sprite = sprite;
         }
