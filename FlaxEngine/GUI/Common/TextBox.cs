@@ -110,7 +110,7 @@ namespace FlaxEngine.GUI
             }
 
             height = font.Height;
-            return font.GetCharPosition(_text, index, _layout);
+            return font.GetCharPosition(_text, index, ref _layout);
         }
 
         /// <inheritdoc />
@@ -122,7 +122,7 @@ namespace FlaxEngine.GUI
                 return 0;
             }
 
-            return font.HitTestText(_text, location, _layout);
+            return font.HitTestText(_text, location, ref _layout);
         }
 
         /// <inheritdoc />
@@ -158,8 +158,8 @@ namespace FlaxEngine.GUI
             // Check if sth is selected to draw selection
             if (HasSelection)
             {
-                Vector2 leftEdge = font.GetCharPosition(_text, SelectionLeft, _layout);
-                Vector2 rightEdge = font.GetCharPosition(_text, SelectionRight, _layout);
+                Vector2 leftEdge = font.GetCharPosition(_text, SelectionLeft, ref _layout);
+                Vector2 rightEdge = font.GetCharPosition(_text, SelectionRight, ref _layout);
                 float fontHeight = font.Height;
 
                 // Draw selection background

@@ -168,7 +168,7 @@ namespace FlaxEngine
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void DrawText(Font font, string text, ref GUI.TextRange textRange, Color color, Vector2 location, MaterialBase customMaterial = null)
+        public static void DrawText(Font font, string text, ref TextRange textRange, Color color, Vector2 location, MaterialBase customMaterial = null)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
@@ -501,7 +501,7 @@ namespace FlaxEngine
         internal static extern void Internal_DrawText3(IntPtr font, string text, ref Color color, ref Vector2 location, IntPtr customMaterial);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DrawText4(IntPtr font, string text, ref GUI.TextRange textRange, ref Color color, ref Vector2 location, IntPtr customMaterial);
+        internal static extern void Internal_DrawText4(IntPtr font, string text, ref TextRange textRange, ref Color color, ref Vector2 location, IntPtr customMaterial);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_FillRectangle1(ref Rectangle rect, ref Color color);

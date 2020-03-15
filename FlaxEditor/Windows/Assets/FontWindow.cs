@@ -37,9 +37,9 @@ namespace FlaxEditor.Windows.Assets
             [EditorOrder(40), EditorDisplay("Properties"), Tooltip("Enables slant effect, emulating italic style.")]
             public bool Italic;
 
-            public void Get(out FontAsset.FontOptions options)
+            public void Get(out FontOptions options)
             {
-                options = new FontAsset.FontOptions();
+                options = new FontOptions();
                 options.Hinting = Hinting;
                 if (AntiAliasing)
                     options.Flags |= FontFlags.AntiAliasing;
@@ -49,7 +49,7 @@ namespace FlaxEditor.Windows.Assets
                     options.Flags |= FontFlags.Italic;
             }
 
-            public void Set(ref FontAsset.FontOptions options)
+            public void Set(ref FontOptions options)
             {
                 Hinting = options.Hinting;
                 AntiAliasing = (options.Flags & FontFlags.AntiAliasing) == FontFlags.AntiAliasing;

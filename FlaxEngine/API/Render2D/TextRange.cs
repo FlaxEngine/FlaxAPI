@@ -1,26 +1,11 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Runtime.InteropServices;
 
-namespace FlaxEngine.GUI
+namespace FlaxEngine
 {
-    /// <summary>
-    /// The text range.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct TextRange
+    partial struct TextRange
     {
-        /// <summary>
-        /// The start index.
-        /// </summary>
-        public int StartIndex;
-
-        /// <summary>
-        /// The end index.
-        /// </summary>
-        public int EndIndex;
-
         /// <summary>
         /// Gets the range length.
         /// </summary>
