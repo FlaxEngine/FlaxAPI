@@ -200,11 +200,11 @@ namespace FlaxEngine.GUI
                 var color = TextColor;
                 if (!enabled)
                     color *= 0.6f;
-                Render2D.DrawText(font, TextMaterial, _text, color, ref _layout);
+                Render2D.DrawText(font, _text, color, ref _layout, TextMaterial);
             }
             else if (!string.IsNullOrEmpty(WatermarkText) && !IsFocused)
             {
-                Render2D.DrawText(font, TextMaterial, WatermarkText, WatermarkTextColor, ref _layout);
+                Render2D.DrawText(font, WatermarkText, WatermarkTextColor, ref _layout, TextMaterial);
             }
 
             // Caret

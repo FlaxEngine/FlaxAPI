@@ -212,6 +212,7 @@
     <Compile Include="API\Render2D\Font.Gen.cs" />
     <Compile Include="API\Render2D\FontAsset.Gen.cs" />
     <Compile Include="API\Render2D\FontTextureAtlas.Gen.cs" />
+    <Compile Include="API\Render2D\Render2D.Gen.cs" />
     <Compile Include="API\Render2D\SpriteAtlas.cs" />
     <Compile Include="API\Render2D\SpriteAtlas.Gen.cs" />
     <Compile Include="API\Render2D\TextLayoutOptions.Gen.cs" />
@@ -244,8 +245,7 @@
     <Compile Include="API\Static\PrefabManager.Gen.cs" />
     <Compile Include="API\Static\Profiler.cs" />
     <Compile Include="API\Static\Profiler.Gen.cs" />
-    <Compile Include="API\Static\Render2D.cs" />
-    <Compile Include="API\Static\Render2D.Gen.cs" />
+    <Compile Include="API\Render2D\Render2D.cs" />
     <Compile Include="API\Static\RenderTargetPool.Gen.cs" />
     <Compile Include="API\Static\Screen.Gen.cs" />
     <Compile Include="API\Static\Scripting.cs" />
