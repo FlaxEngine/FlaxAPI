@@ -215,16 +215,17 @@ namespace FlaxEngine
         /// <summary>
         /// Requests normal engine exit.
         /// </summary>
+        /// <param name="exitCode">The exit code.</param>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
         [UnmanagedCall]
-        public static void Exit()
+        public static void Exit(int exitCode = 0)
         {
 #if UNIT_TEST_COMPILANT
             throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
 #else
-            Internal_Exit();
+            Internal_Exit(exitCode);
 #endif
         }
 
@@ -375,7 +376,7 @@ namespace FlaxEngine
         internal static extern void Internal_OpenUrl(String url);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Exit();
+        internal static extern void Internal_Exit(int exitCode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_Fatal(string msg);

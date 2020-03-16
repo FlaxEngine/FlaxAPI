@@ -422,7 +422,7 @@ namespace FlaxEditor.Windows
         private string _preBuildAction;
         private string _postBuildAction;
         private BuildPreset[] _data;
-        private bool _isDataDirty, _exitOnBuildEnd;
+        private bool _isDataDirty, _exitOnBuildEnd, _lastBuildFailed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameCookerWindow"/> class.
@@ -469,6 +469,7 @@ namespace FlaxEditor.Windows
             else if (type == GameCooker.EventType.BuildFailed)
             {
                 _postBuildAction = null;
+                _lastBuildFailed = true;
             }
         }
 
@@ -801,7 +802,7 @@ namespace FlaxEditor.Windows
                 else if (_exitOnBuildEnd)
                 {
                     _exitOnBuildEnd = false;
-                    Platform.Exit();
+                    Platform.Exit(_lastBuildFailed ? 1 : 0);
                 }
             }
         }
