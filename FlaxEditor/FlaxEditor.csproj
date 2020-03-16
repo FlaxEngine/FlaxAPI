@@ -79,6 +79,7 @@
     <Compile Include="Content\Proxy\SceneAnimationProxy.cs" />
     <Compile Include="Content\Settings\LinuxPlatformSettings.cs" />
     <Compile Include="Content\Settings\NavigationSettings.cs" />
+    <Compile Include="Content\Settings\PS4PlatformSettings.cs" />
     <Compile Include="CustomEditors\Dedicated\CurveObjectEditor.cs" />
     <Compile Include="CustomEditors\Editors\Int2Editor.cs" />
     <Compile Include="CustomEditors\Editors\Int3Editor.cs" />

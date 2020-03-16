@@ -76,6 +76,11 @@ namespace FlaxEditor.Content.Create
             /// The Linux settings.
             /// </summary>
             LinuxPlatformSettings,
+
+            /// <summary>
+            /// The PS4 settings
+            /// </summary>
+            PS4PlatformSettings,
         }
 
         private static readonly Type[] _types =
@@ -92,6 +97,7 @@ namespace FlaxEditor.Content.Create
             typeof(WindowsPlatformSettings),
             typeof(UWPPlatformSettings),
             typeof(LinuxPlatformSettings),
+            typeof(PS4PlatformSettings),
         };
 
         /// <summary>
