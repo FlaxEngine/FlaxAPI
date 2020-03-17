@@ -156,7 +156,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             {
                 if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
                 {
-                    terrain.Scene.BuildNavMesh(brushBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                    Navigation.BuildNavMesh(terrain.Scene, brushBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
                 }
             }
         }

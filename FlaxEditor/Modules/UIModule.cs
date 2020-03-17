@@ -790,7 +790,7 @@ namespace FlaxEditor.Modules
         private void BuildNavMesh()
         {
             var scenes = Level.Scenes;
-            scenes.ToList().ForEach(x => x.BuildNavMesh(0));
+            scenes.ToList().ForEach(x => Navigation.BuildNavMesh(x, 0));
             Editor.Scene.MarkSceneEdited(scenes);
         }
 

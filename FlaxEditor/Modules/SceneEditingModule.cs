@@ -249,7 +249,7 @@ namespace FlaxEditor.Modules
             if (!isPlayMode && options.General.AutoRebuildNavMesh && actor.Scene && (actor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
             {
                 var bounds = actor.BoxWithChildren;
-                actor.Scene.BuildNavMesh(bounds, options.General.AutoRebuildNavMeshTimeoutMs);
+                Navigation.BuildNavMesh(actor.Scene, bounds, options.General.AutoRebuildNavMeshTimeoutMs);
             }
         }
 
@@ -304,7 +304,7 @@ namespace FlaxEditor.Modules
                     if (obj is ActorNode node && node.Actor.Scene && (node.Actor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
                     {
                         var bounds = node.Actor.BoxWithChildren;
-                        node.Actor.Scene.BuildNavMesh(bounds, options.General.AutoRebuildNavMeshTimeoutMs);
+                        Navigation.BuildNavMesh(node.Actor.Scene, bounds, options.General.AutoRebuildNavMeshTimeoutMs);
                     }
                 }
             }

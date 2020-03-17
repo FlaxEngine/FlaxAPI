@@ -69,7 +69,6 @@
     <Compile Include="API\Actors\Foliage.Gen.cs" />
     <Compile Include="API\Actors\Joint.cs" />
     <Compile Include="API\Actors\Joint.Gen.cs" />
-    <Compile Include="API\Actors\Light.Gen.cs" />
     <Compile Include="API\Actors\NavLink.Gen.cs" />
     <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
     <Compile Include="API\Actors\ParticleEffect.cs" />
@@ -78,8 +77,7 @@
     <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
     <Compile Include="API\Actors\RigidBody.cs" />
     <Compile Include="API\Actors\RigidBody.Gen.cs" />
-    <Compile Include="API\Actors\Scene.cs" />
-    <Compile Include="API\Actors\Scene.Gen.cs" />
+    <Compile Include="API\Level\Scene.cs" />
     <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
     <Compile Include="API\Actors\Sky.Gen.cs" />
     <Compile Include="API\Actors\Skybox.Gen.cs" />
@@ -97,8 +95,14 @@
     <Compile Include="API\BinaryAssets\CollisionData.cs" />
     <Compile Include="API\BinaryAssets\CollisionData.Gen.cs" />
     <Compile Include="API\Level\Actor.Gen.cs" />
+    <Compile Include="API\Level\DirectionalLight.Gen.cs" />
     <Compile Include="API\Level\Level.Gen.cs" />
+    <Compile Include="API\Level\Light.Gen.cs" />
+    <Compile Include="API\Level\PointLight.Gen.cs" />
     <Compile Include="API\Level\SceneObject.Gen.cs" />
+    <Compile Include="API\Level\SkyLight.Gen.cs" />
+    <Compile Include="API\Level\SpotLight.Gen.cs" />
+    <Compile Include="API\Navigation\Navigation.Gen.cs" />
     <Compile Include="API\Render2D\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\GameplayGlobals.Gen.cs" />
     <Compile Include="API\BinaryAssets\ParticleEmitter.cs" />
@@ -191,14 +195,6 @@
     <Compile Include="API\Level\Prefab.Gen.cs" />
     <Compile Include="API\Level\Scene.Gen.cs" />
     <Compile Include="API\Level\Types.Gen.cs" />
-    <Compile Include="API\Lights\LightWithShadow.Gen.cs" />
-    <Compile Include="API\Lights\SkyLight.cs" />
-    <Compile Include="API\Lights\SkyLight.Gen.cs" />
-    <Compile Include="API\LightWithShadows\DirectionalLight.Gen.cs" />
-    <Compile Include="API\LightWithShadows\PointLight.cs" />
-    <Compile Include="API\LightWithShadows\PointLight.Gen.cs" />
-    <Compile Include="API\LightWithShadows\SpotLight.cs" />
-    <Compile Include="API\LightWithShadows\SpotLight.Gen.cs" />
     <Compile Include="API\Level\Actor.cs" />
     <Compile Include="API\Objects\Script.cs" />
     <Compile Include="API\Objects\Script.Gen.cs" />
@@ -234,8 +230,6 @@
     <Compile Include="API\Level\Level.cs" />
     <Compile Include="API\Static\MessageBox.cs" />
     <Compile Include="API\Static\MessageBox.Gen.cs" />
-    <Compile Include="API\Static\Navigation.cs" />
-    <Compile Include="API\Static\Navigation.Gen.cs" />
     <Compile Include="API\Static\Physics.cs" />
     <Compile Include="API\Static\Physics.Gen.cs" />
     <Compile Include="API\Static\Platform.cs" />

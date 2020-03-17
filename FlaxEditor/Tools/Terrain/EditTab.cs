@@ -190,7 +190,7 @@ namespace FlaxEditor.Tools.Terrain
                 {
                     if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
                     {
-                        terrain.Scene.BuildNavMesh(patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                        Navigation.BuildNavMesh(terrain.Scene, patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
                     }
                 }
             }
