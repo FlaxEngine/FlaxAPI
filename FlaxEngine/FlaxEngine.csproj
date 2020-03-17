@@ -214,6 +214,7 @@
     <Compile Include="API\Render2D\SpriteAtlas.cs" />
     <Compile Include="API\Render2D\SpriteAtlas.Gen.cs" />
     <Compile Include="API\Render2D\TextLayoutOptions.Gen.cs" />
+    <Compile Include="API\Renderer\Lightmaps.Gen.cs" />
     <Compile Include="API\Renderer\Renderer.cs" />
     <Compile Include="API\Renderer\Renderer.Gen.cs" />
     <Compile Include="API\Renderer\RenderList.Gen.cs" />
@@ -409,7 +410,6 @@
     <Compile Include="Plugins\PluginDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\IDrawable.cs" />
-    <Compile Include="Engine\LightmapSettings.cs" />
     <Compile Include="Engine\PostProcessEffect.cs" />
     <Compile Include="Engine\PostProcessSettings.cs" />
     <Compile Include="Utilities\Extensions.cs" />

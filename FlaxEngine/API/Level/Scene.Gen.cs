@@ -28,6 +28,23 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Gets or sets the lightmap settings (per scene).
+        /// </summary>
+        [EditorDisplay("Lightmap Settings", EditorDisplayAttribute.InlineStyle)]
+        [Tooltip("The lightmap settings (per scene).")]
+        public LightmapSettings LightmapSettings
+        {
+            get { Internal_GetLightmapSettings(unmanagedPtr, out var resultAsRef); return resultAsRef; }
+            set { Internal_SetLightmapSettings(unmanagedPtr, ref value); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetLightmapSettings(IntPtr obj, out LightmapSettings resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetLightmapSettings(IntPtr obj, ref LightmapSettings value);
+
+        /// <summary>
         /// Gets path to the scene file
         /// </summary>
         [Tooltip("Gets path to the scene file")]
