@@ -91,11 +91,11 @@ namespace FlaxEngine
         /// <returns>True if found valid path between given two points (it may be partial), otherwise false if failed.</returns>
         public static bool FindPath(Vector3 startPosition, Vector3 endPosition, out Vector3[] resultPath)
         {
-            return Internal_FindPath(ref startPosition, ref endPosition, out resultPath);
+            return Internal_FindPath(ref startPosition, ref endPosition, out resultPath, typeof(Vector3));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_FindPath(ref Vector3 startPosition, ref Vector3 endPosition, out Vector3[] resultPath);
+        internal static extern bool Internal_FindPath(ref Vector3 startPosition, ref Vector3 endPosition, out Vector3[] resultPath, System.Type resultArrayItemType0);
 
         /// <summary>
         /// Projects the point to nav mesh surface (finds the nearest polygon).
