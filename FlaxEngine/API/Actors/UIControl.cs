@@ -150,7 +150,7 @@ namespace FlaxEngine
                 throw new InvalidOperationException("To add child to the control it has to be ContainerControl.");
 
             var child = New();
-            AddChild(child);
+            child.Parent = this;
             child.Control = (Control)Activator.CreateInstance(typeof(T));
             return child;
         }

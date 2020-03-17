@@ -12,6 +12,7 @@ using FlaxEditor.GUI.Drag;
 using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.CustomEditors.Dedicated
 {
@@ -455,7 +456,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
             for (int i = 0; i < actors.Count; i++)
             {
                 var actor = (Actor)actors[i];
-                actor.DeleteScript(index);
+                var script = actor.GetScript(index);
+                if (script)
+                {
+                    script.Parent = null;
+                    Object.Destroy(script);
+                }
                 Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
             }
         }

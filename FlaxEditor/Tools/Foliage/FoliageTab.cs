@@ -147,7 +147,7 @@ namespace FlaxEditor.Tools.Foliage
         private void OnSelected(Tab tab)
         {
             // Auto select first foliage actor to make usage easier
-            var actor = Actor.Find<FlaxEngine.Foliage>();
+            var actor = Level.FindActor<FlaxEngine.Foliage>();
             if (actor)
             {
                 Editor.SceneEditing.Select(actor);

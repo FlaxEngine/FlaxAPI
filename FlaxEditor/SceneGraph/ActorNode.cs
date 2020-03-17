@@ -228,7 +228,7 @@ namespace FlaxEditor.SceneGraph
         /// <inheritdoc />
         public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
         {
-            return _actor.IntersectsItself(ref ray.Ray, out distance, out normal);
+            return _actor.IntersectsItself(ray.Ray, out distance, out normal);
         }
 
         /// <inheritdoc />

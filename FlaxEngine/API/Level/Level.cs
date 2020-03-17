@@ -24,13 +24,8 @@ namespace FlaxEngine
     /// <param name="prevParent">The previous parent.</param>
     public delegate void ActorParentChangedDelegate(Actor actor, Actor prevParent);
 
-    public static partial class Level
+    partial class Level
     {
-        /// <summary>
-        /// Checks if any scene has been loaded. Loaded scene means deserialized and added to the scenes collection.
-        /// </summary>
-        public static bool IsAnySceneLoaded => ScenesCount != 0;
-
         /// <summary>
         /// Fired when scene starts saving.
         /// </summary>
@@ -219,6 +214,27 @@ namespace FlaxEngine
         public static bool LoadSceneAsync(SceneReference sceneAsset)
         {
             return LoadSceneAsync(sceneAsset.ID);
+        }
+
+        /// <summary>
+        /// Tries to find actor of the given type in all loaded scenes.
+        /// </summary>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <returns>Found actor or null.</returns>
+        public static T FindActor<T>() where T : Actor
+        {
+            return FindActor(typeof(T)) as T;
+        }
+
+        /// <summary>
+        /// Tries to find actor with the given ID in all loaded scenes. It's very fast O(1) lookup.
+        /// </summary>
+        /// <typeparam name="T">Type of the object.</typeparam>
+        /// <param name="id">The id.</param>
+        /// <returns>Found actor or null.</returns>
+        public static T FindActor<T>(ref Guid id) where T : Actor
+        {
+            return FindActor(id) as T;
         }
     }
 }

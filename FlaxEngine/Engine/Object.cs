@@ -45,6 +45,16 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Casts this object instance to the given object type.
+        /// </summary>
+        /// <typeparam name="T">object actor type.</typeparam>
+        /// <returns>The object instance cast to the given actor type.</returns>
+        public T As<T>() where T : Actor
+        {
+            return (T)this;
+        }
+
+        /// <summary>
         /// Creates the new instance of the Object.
         /// All unused objects should be released using <see cref="Destroy"/>.
         /// </summary>

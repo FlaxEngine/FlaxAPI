@@ -19,9 +19,9 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="renderContext">The rendering context.</param>
         /// <param name="scene">The scene.</param>
-        public static void DrawIcons(ref RenderContext renderContext, IntPtr scene)
+        public static void DrawIcons(ref RenderContext renderContext, Scene scene)
         {
-            Internal_DrawIcons(ref renderContext, scene);
+            Internal_DrawIcons(ref renderContext, FlaxEngine.Object.GetUnmanagedPtr(scene));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]

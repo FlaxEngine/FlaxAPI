@@ -36,12 +36,12 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="objectId">The ID of the object to get from prefab default object. It can be one of the child-actors or any script that exists in the prefab. Methods returns root if id is empty.</param>
         /// <returns>The object of the prefab loaded from the prefab. Contains the default values. It's not added to gameplay but deserialized with postLoad and init event fired.</returns>
-        public FlaxEngine.Object GetDefaultInstance(ref Guid objectId)
+        public SceneObject GetDefaultInstance(ref Guid objectId)
         {
             return Internal_GetDefaultInstance1(unmanagedPtr, ref objectId);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern FlaxEngine.Object Internal_GetDefaultInstance1(IntPtr obj, ref Guid objectId);
+        internal static extern SceneObject Internal_GetDefaultInstance1(IntPtr obj, ref Guid objectId);
     }
 }

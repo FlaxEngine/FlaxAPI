@@ -139,35 +139,27 @@ namespace FlaxEditor.Modules
         {
             // Create a sample scene
             var scene = Scene.New();
-            var sky = Sky.New();
-            var sun = DirectionalLight.New();
-            var skyLight = SkyLight.New();
-            var floor = StaticModel.New();
-            var cam = Camera.New();
-            //
             scene.StaticFlags = StaticFlags.FullyStatic;
-            scene.AddChild(sky);
-            scene.AddChild(sun);
-            scene.AddChild(skyLight);
-            scene.AddChild(floor);
-            scene.AddChild(cam);
             //
+            var sun = scene.AddChild<DirectionalLight>();
+            sun.Name = "Sun";
+            sun.LocalPosition = new Vector3(40, 160, 0);
+            sun.LocalEulerAngles = new Vector3(45, 0, 0);
+            sun.StaticFlags = StaticFlags.FullyStatic;
+            //
+            var sky = scene.AddChild<Sky>();
             sky.Name = "Sky";
             sky.LocalPosition = new Vector3(40, 150, 0);
             sky.SunLight = sun;
             sky.StaticFlags = StaticFlags.FullyStatic;
             //
-            sun.Name = "Sun";
-            sun.Brightness = 10.0f;
-            sun.LocalPosition = new Vector3(40, 160, 0);
-            sun.LocalEulerAngles = new Vector3(45, 0, 0);
-            sun.StaticFlags = StaticFlags.FullyStatic;
-            //
+            var skyLight = scene.AddChild<SkyLight>();
             skyLight.Mode = SkyLight.Modes.CustomTexture;
             skyLight.Brightness = 1.8f;
             skyLight.CustomTexture = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
             skyLight.StaticFlags = StaticFlags.FullyStatic;
             //
+            var floor = scene.AddChild<StaticModel>();
             floor.Name = "Floor";
             floor.Scale = new Vector3(4, 0.5f, 4);
             floor.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
@@ -178,6 +170,7 @@ namespace FlaxEditor.Modules
             }
             floor.StaticFlags = StaticFlags.FullyStatic;
             //
+            var cam = scene.AddChild<Camera>();
             cam.Name = "Camera";
             cam.Position = new Vector3(0, 150, -300);
 
@@ -302,11 +295,11 @@ namespace FlaxEditor.Modules
             {
                 // Ask user for further action
                 var result = MessageBox.Show(
-                    string.Format("Scene \'{0}\' has been edited. Save before closing?", scene.Name),
-                    "Close without saving?",
-                    MessageBox.Buttons.YesNoCancel,
-                    MessageBox.Icon.Question
-                );
+                                             string.Format("Scene \'{0}\' has been edited. Save before closing?", scene.Name),
+                                             "Close without saving?",
+                                             MessageBox.Buttons.YesNoCancel,
+                                             MessageBox.Icon.Question
+                                            );
                 if (result == DialogResult.OK || result == DialogResult.Yes)
                 {
                     // Save and close
@@ -336,11 +329,11 @@ namespace FlaxEditor.Modules
                 // Ask user for further action
                 var scenes = Level.Scenes;
                 var result = MessageBox.Show(
-                    scenes.Length == 1 ? string.Format("Scene \'{0}\' has been edited. Save before closing?", scenes[0].Name) : string.Format("{0} scenes have been edited. Save before closing?", scenes.Length),
-                    "Close without saving?",
-                    MessageBox.Buttons.YesNoCancel,
-                    MessageBox.Icon.Question
-                );
+                                             scenes.Length == 1 ? string.Format("Scene \'{0}\' has been edited. Save before closing?", scenes[0].Name) : string.Format("{0} scenes have been edited. Save before closing?", scenes.Length),
+                                             "Close without saving?",
+                                             MessageBox.Buttons.YesNoCancel,
+                                             MessageBox.Icon.Question
+                                            );
                 if (result == DialogResult.OK || result == DialogResult.Yes)
                 {
                     // Save and close

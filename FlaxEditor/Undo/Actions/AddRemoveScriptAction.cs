@@ -168,7 +168,7 @@ namespace FlaxEditor.Actions
             if (_scriptData != null)
                 FlaxEngine.Json.JsonSerializer.Deserialize(_script, _scriptData);
             _script.Enabled = _enabled;
-            parentActor.AddScript(_script);
+            _script.Parent = parentActor;
             if (_orderInParent != -1)
                 _script.OrderInParent = _orderInParent;
             if (_prefabObjectId != Guid.Empty)

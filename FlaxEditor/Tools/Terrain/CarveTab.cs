@@ -105,7 +105,7 @@ namespace FlaxEditor.Tools.Terrain
         private void OnSelected(Tab tab)
         {
             // Auto select first terrain actor to make usage easier
-            var actor = Actor.Find<FlaxEngine.Terrain>();
+            var actor = Level.FindActor<FlaxEngine.Terrain>();
             if (actor)
             {
                 Editor.SceneEditing.Select(actor);

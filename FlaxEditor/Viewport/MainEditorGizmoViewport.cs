@@ -97,7 +97,7 @@ namespace FlaxEditor.Viewport
                 for (int i = 0; i < Level.ScenesCount; i++)
                 {
                     var scene = Level.GetScene(i);
-                    ViewportIconsRenderer.DrawIcons(ref renderContext, scene.unmanagedPtr);
+                    ViewportIconsRenderer.DrawIcons(ref renderContext, scene);
                 }
 
                 // Sort draw calls

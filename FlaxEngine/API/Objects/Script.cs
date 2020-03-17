@@ -1,8 +1,5 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
-using System;
-using System.Runtime.CompilerServices;
-
 namespace FlaxEngine
 {
     public abstract partial class Script : ISceneObject
@@ -141,14 +138,5 @@ namespace FlaxEngine
         public virtual void OnDebugDrawSelected()
         {
         }
-
-        #region Internal Calls
-
-#if !UNIT_TEST_COMPILANT
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_LinkPrefab(IntPtr obj, ref Guid prefabId, ref Guid prefabObjectId);
-#endif
-
-        #endregion
     }
 }

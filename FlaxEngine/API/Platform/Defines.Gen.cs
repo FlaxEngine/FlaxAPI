@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// The platform the game is running. Can be accessed via <see cref="PLATFORM_TYPE"/> define (during compilation).
+    /// The platform the game is running.
     /// </summary>
-    [Tooltip("The platform the game is running. Can be accessed via <see cref=\"PLATFORM_TYPE\"/> define (during compilation).")]
+    [Tooltip("The platform the game is running.")]
     public enum PlatformType
     {
         /// <summary>
