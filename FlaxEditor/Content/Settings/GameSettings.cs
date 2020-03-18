@@ -205,7 +205,7 @@ namespace FlaxEditor.Content.Settings
             if (type == typeof(LinuxPlatformSettings))
                 return LoadAsset<LinuxPlatformSettings>(gameSettings.LinuxPlatform) as T;
             if (type == typeof(PS4PlatformSettings))
-                return LoadAsset<PS4PlatformSettings>(gameSettings.LinuxPlatform) as T;
+                return LoadAsset<PS4PlatformSettings>(gameSettings.PS4Platform) as T;
             if (type == typeof(AudioSettings))
                 return LoadAsset<AudioSettings>(gameSettings.Audio) as T;
 
