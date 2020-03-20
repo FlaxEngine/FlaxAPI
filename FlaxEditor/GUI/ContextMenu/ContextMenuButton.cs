@@ -113,7 +113,7 @@ namespace FlaxEditor.GUI.ContextMenu
             const float iconSize = 14;
             var icon = Checked ? Style.Current.CheckBoxTick : Icon;
             if (icon.IsValid)
-                Render2D.DrawSprite(icon, new Rectangle(-iconSize - 1, (Height - iconSize) / 2, iconSize, iconSize));
+                Render2D.DrawSprite(icon, new Rectangle(-iconSize - 1, (Height - iconSize) / 2, iconSize, iconSize), textColor);
         }
 
         /// <inheritdoc />

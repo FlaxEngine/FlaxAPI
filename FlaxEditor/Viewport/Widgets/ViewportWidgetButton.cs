@@ -107,7 +107,7 @@ namespace FlaxEditor.Viewport.Widgets
             if (_icon.IsValid)
             {
                 // Draw icon
-                Render2D.DrawSprite(_icon, iconRect);
+                Render2D.DrawSprite(_icon, iconRect, style.Foreground);
 
                 // Update text rectangle
                 textRect.Location.X += iconSize;

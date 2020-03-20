@@ -93,7 +93,7 @@ namespace FlaxEditor.GUI.Tabs
                 // Draw icon
                 if (Tab.Icon.IsValid)
                 {
-                    Render2D.DrawSprite(Tab.Icon, tabRect.MakeExpanded(-8));
+                    Render2D.DrawSprite(Tab.Icon, tabRect.MakeExpanded(-8), style.Foreground);
                 }
 
                 // Draw text
