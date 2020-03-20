@@ -208,7 +208,7 @@ namespace FlaxEngine.GUI
                 style.FontMedium,
                 _currentText,
                 GetClientArea(),
-                Color.White,
+                style.Foreground,
                 TextAlignment.Center,
                 TextAlignment.Center,
                 TextWrapping.WrapWords

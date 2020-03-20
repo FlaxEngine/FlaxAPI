@@ -311,6 +311,7 @@ namespace FlaxEngine.GUI
         /// <inheritdoc />
         public override void Draw()
         {
+            var style = Style.Current;
             var enabled = EnabledInHierarchy;
 
             // Paint Background
@@ -333,7 +334,7 @@ namespace FlaxEngine.GUI
             {
                 textLeft += 14;
                 var dropDownRect = new Rectangle(2, (HeaderHeight - 12) / 2, 12, 12);
-                var arrowColor = _mouseOverHeader ? Color.White : new Color(0.8f);
+                var arrowColor = _mouseOverHeader ? style.Foreground : style.ForegroundGrey;
                 if (_isClosed)
                     ArrowImageClosed?.Draw(dropDownRect, arrowColor);
                 else
