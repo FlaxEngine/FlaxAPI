@@ -351,7 +351,8 @@ namespace FlaxEditor.Modules
             style.Background = Color.FromBgra(0xFF1C1C1C);
             style.LightBackground = Color.FromBgra(0xFF2D2D30);
             style.Foreground = Color.FromBgra(0xFFFFFFFF);
-            style.ForegroundDisabled = new Color(0.6f);
+            style.ForegroundGrey = Color.FromBgra(0xFFA9A9B3);
+            style.ForegroundDisabled = Color.FromBgra(0xFF787883);
             style.BackgroundHighlighted = Color.FromBgra(0xFF54545C);
             style.BorderHighlighted = Color.FromBgra(0xFF6A6A75);
             style.BackgroundSelected = Color.FromBgra(0xFF007ACC);
