@@ -164,7 +164,7 @@ namespace FlaxEditor.GUI
         {
             if (Value == null)
             {
-                Value = Editor.Instance.UI.CreateDefaultStyle();
+                Value = Editor.Instance.Options.CreateDefaultStyle();
             }
 
             var editorWindow = new StyleEditorWindow(Editor.Instance, this.Value, OnValueChanged, true);
