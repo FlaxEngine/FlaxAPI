@@ -233,7 +233,7 @@ namespace FlaxEditor.GUI.Dialogs
         public override void Draw()
         {
             var style = Style.Current;
-            var textColor = Color.White;
+            var textColor = style.Foreground;
 
             base.Draw();
 

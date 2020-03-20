@@ -61,7 +61,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 AutoFocus = true,
                 AnchorStyle = AnchorStyle.CenterRight,
                 IsScrollable = false,
-                Color = new Color(0.7f),
+                Color = Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(Style.Current.Settings),
                 Parent = this

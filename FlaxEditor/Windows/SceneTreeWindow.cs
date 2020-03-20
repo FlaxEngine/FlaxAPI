@@ -201,6 +201,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void Draw()
         {
+            var style = Style.Current;
             // Draw overlay
             string overlayText = null;
             var state = Editor.StateMachine.CurrentState;
@@ -218,7 +219,7 @@ namespace FlaxEditor.Windows
             }
             if (overlayText != null)
             {
-                Render2D.DrawText(Style.Current.FontLarge, overlayText, GetClientArea(), new Color(0.8f), TextAlignment.Center, TextAlignment.Center);
+                Render2D.DrawText(Style.Current.FontLarge, overlayText, GetClientArea(), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
             }
 
             base.Draw();

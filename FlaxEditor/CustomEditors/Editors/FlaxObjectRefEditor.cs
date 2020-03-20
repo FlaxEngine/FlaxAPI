@@ -171,7 +171,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 Render2D.PopClip();
 
                 // Draw deselect button
-                Render2D.DrawSprite(style.Cross, button1Rect, new Color(button1Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Cross, button1Rect, button1Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
             }
             else
             {
@@ -183,7 +183,7 @@ namespace FlaxEditor.CustomEditors.Editors
             if (_supportsPickDropDown)
             {
                 var pickerRect = isSelected ? button2Rect : button1Rect;
-                Render2D.DrawSprite(style.ArrowDown, pickerRect, new Color(pickerRect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.ArrowDown, pickerRect, pickerRect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
             }
 
             // Check if drag is over

@@ -99,7 +99,7 @@ namespace FlaxEditor.GUI.Tabs
                 // Draw text
                 if (!string.IsNullOrEmpty(Tab.Text))
                 {
-                    Render2D.DrawText(style.FontMedium, Tab.Text, new Rectangle(tabRect.X + 8, tabRect.Y, tabRect.Width - 8, tabRect.Height), Color.White, TextAlignment.Near, TextAlignment.Center);
+                    Render2D.DrawText(style.FontMedium, Tab.Text, new Rectangle(tabRect.X + 8, tabRect.Y, tabRect.Width - 8, tabRect.Height), style.Foreground, TextAlignment.Near, TextAlignment.Center);
                 }
             }
         }

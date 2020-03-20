@@ -163,7 +163,7 @@ namespace FlaxEditor.Tools.Terrain
             {
                 DockStyle = DockStyle.Fill,
                 Text = "Generating terrain...",
-                BackgroundColor = Color.Black * 0.6f,
+                BackgroundColor = Style.Current.ForegroundDisabled,
                 Parent = this,
             };
 

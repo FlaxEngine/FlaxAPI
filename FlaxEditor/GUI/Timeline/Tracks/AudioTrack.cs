@@ -314,7 +314,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 AutoFocus = true,
                 AnchorStyle = AnchorStyle.CenterRight,
                 IsScrollable = false,
-                Color = new Color(0.8f),
+                Color = Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(icons.ArrowRight32),
                 Parent = this
@@ -326,7 +326,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 AutoFocus = true,
                 AnchorStyle = AnchorStyle.CenterRight,
                 IsScrollable = false,
-                Color = new Color(0.8f),
+                Color = Style.Current.ForegroundGrey,
                 Margin = new Margin(3),
                 Brush = new SpriteBrush(icons.Add48),
                 Parent = this
@@ -338,7 +338,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 AutoFocus = true,
                 AnchorStyle = AnchorStyle.CenterRight,
                 IsScrollable = false,
-                Color = new Color(0.8f),
+                Color = Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(icons.ArrowLeft32),
                 Parent = this
@@ -353,7 +353,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 AnchorStyle = AnchorStyle.CenterRight,
                 IsScrollable = false,
                 HorizontalAlignment = TextAlignment.Near,
-                TextColor = new Color(0.8f),
+                TextColor = Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Parent = this
             };

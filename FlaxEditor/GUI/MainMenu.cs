@@ -93,8 +93,8 @@ namespace FlaxEditor.GUI
                     HorizontalAlignment = TextAlignment.Center,
                     VerticalAlignment = TextAlignment.Center,
                     ClipText = true,
-                    TextColor = new Color(0.7f, 0.7f, 0.7f, 1.0f),
-                    TextColorHighlighted = new Color(0.7f, 0.7f, 0.7f, 1.0f),
+                    TextColor = Style.Current.ForegroundGrey,
+                    TextColorHighlighted = Style.Current.ForegroundGrey,
                     Parent = this,
                 };
 

@@ -294,7 +294,7 @@ namespace FlaxEditor.Windows
             {
                 var style = Style.Current;
 
-                Render2D.DrawText(style.FontLarge, "No camera", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+                Render2D.DrawText(style.FontLarge, "No camera", new Rectangle(Vector2.Zero, Size), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
             }
 
             if (Editor.StateMachine.IsPlayMode)
@@ -310,8 +310,8 @@ namespace FlaxEditor.Windows
                     var alpha = Mathf.Saturate(-animTime / fadeOutTime);
                     var rect = new Rectangle(new Vector2(6), Size - 12);
                     var text = "Press Shift+F11 to unlock the mouse";
-                    Render2D.DrawText(style.FontSmall, text, rect + new Vector2(1.0f), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
-                    Render2D.DrawText(style.FontSmall, text, rect, Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
+                    Render2D.DrawText(style.FontSmall, text, rect + new Vector2(1.0f), style.Background * alpha, TextAlignment.Near, TextAlignment.Far);
+                    Render2D.DrawText(style.FontSmall, text, rect, style.Foreground * alpha, TextAlignment.Near, TextAlignment.Far);
                 }
 
                 timeout = 1.0f;

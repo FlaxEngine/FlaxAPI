@@ -421,6 +421,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override void DrawConnections(ref Vector2 mousePosition)
             {
+                var style = Style.Current;
                 var targetState = FirstState;
                 if (targetState != null)
                 {
@@ -428,7 +429,7 @@ namespace FlaxEditor.Surface.Archetypes
                     var center = Size * 0.5f;
                     var startPos = PointToParent(ref center);
                     targetState.GetConnectionEndPoint(ref startPos, out var endPos);
-                    var color = Color.White;
+                    var color = style.Foreground;
                     StateMachineState.DrawConnection(Surface, ref startPos, ref endPos, ref color);
                 }
             }
@@ -981,6 +982,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             public void UpdateTransitionsColors()
             {
+                var style = Style.Current;
                 if (Transitions.Count == 0)
                     return;
 
@@ -991,7 +993,7 @@ namespace FlaxEditor.Surface.Archetypes
                     for (int i = 0; i < Transitions.Count; i++)
                     {
                         var t = Transitions[i];
-                        t.LineColor = t == firstSolo ? Color.White : Color.Gray;
+                        t.LineColor = t == firstSolo ? style.Foreground : style.ForegroundGrey;
                     }
                 }
                 else
@@ -999,7 +1001,7 @@ namespace FlaxEditor.Surface.Archetypes
                     for (int i = 0; i < Transitions.Count; i++)
                     {
                         var t = Transitions[i];
-                        t.LineColor = t.Enabled ? Color.White : Color.Gray;
+                        t.LineColor = t.Enabled ? style.Foreground : style.ForegroundGrey;
                     }
                 }
             }
@@ -1145,12 +1147,10 @@ namespace FlaxEditor.Surface.Archetypes
                 Render2D.DrawText(style.FontLarge, Title, _textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
 
                 // Close button
-                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, _closeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
 
                 // Rename button
-                alpha = _renameButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(style.Settings, _renameButtonRect, new Color(alpha));
+                Render2D.DrawSprite(style.Settings, _renameButtonRect, _renameButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
             }
 
             /// <inheritdoc />
