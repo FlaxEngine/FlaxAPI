@@ -159,6 +159,7 @@
     <Compile Include="CustomEditors\LayoutElementsContainer.cs" />
     <Compile Include="CustomEditors\SyncPointEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\ActorEditor.cs" />
+    <Compile Include="CustomEditors\Dedicated\AnimatedModelEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\CurveObjectEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\EnvironmentProbeEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\FontReferenceEditor.cs" />
