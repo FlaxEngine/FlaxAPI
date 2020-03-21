@@ -504,6 +504,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     entries[i].Visible = _properties.IsolateIndex == -1 || _properties.IsolateIndex == i;
                 }
+                _preview.PreviewActor.Entries = entries;
             }
 
             if (_properties.HighlightIndex != -1)
@@ -520,6 +521,7 @@ namespace FlaxEditor.Windows.Assets
                         entries[i].Visible = _properties.HighlightIndex == i;
                     }
                 }
+                _highlightActor.Entries = entries;
             }
             else
             {

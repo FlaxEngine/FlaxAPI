@@ -258,7 +258,7 @@ namespace FlaxEditor.CustomEditors
 
                 // Propagate values up (eg. when member of structure gets modified, also structure should be updated as a part of the other object)
                 var obj = _parent;
-                while (obj._parent != null && obj._parent != _presenter.Root && obj.NeedsValuePropagationUp)
+                while (obj._parent != null && obj._parent != _presenter.Root)// && obj.NeedsValuePropagationUp)
                 {
                     obj.Values.Set(obj._parent.Values, obj.Values);
                     obj = obj._parent;

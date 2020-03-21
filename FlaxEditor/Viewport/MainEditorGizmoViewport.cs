@@ -117,6 +117,7 @@ namespace FlaxEditor.Viewport
         private readonly ViewportDebugDrawData _debugDrawData = new ViewportDebugDrawData(32);
         private StaticModel _previewStaticModel;
         private int _previewModelEntryIndex;
+        private BrushSurface _previewBrushSurface;
         private EditorSpritesRenderer _editorSpritesRenderer;
 
         /// <summary>
@@ -396,6 +397,10 @@ namespace FlaxEditor.Viewport
             if (_previewStaticModel)
             {
                 _debugDrawData.HighlightModel(_previewStaticModel, _previewModelEntryIndex);
+            }
+            if (_previewBrushSurface != null)
+            {
+                _debugDrawData.HighlightBrushSurface(_previewBrushSurface);
             }
 
             if (ShowNavigation)
@@ -711,13 +716,18 @@ namespace FlaxEditor.Viewport
         {
             if (_dragAssets.HasValidDrag && _dragAssets.Objects[0].ItemDomain == ContentDomain.Material)
             {
-                SceneGraphNode hit;
-                GetHitLocation(ref location, out hit, out _);
+                GetHitLocation(ref location, out var hit, out _);
+                ClearDragEffects();
 
-                if (hit is StaticModelNode.EntryNode meshNode)
+                if (hit is StaticModelNode staticModelNode)
                 {
-                    _previewStaticModel = meshNode.Model;
-                    _previewModelEntryIndex = meshNode.Index;
+                    _previewStaticModel = (StaticModel)staticModelNode.Actor;
+                    var ray = ConvertMouseToRay(ref location);
+                    _previewStaticModel.IntersectsEntry(ref ray, out _, out _, out _previewModelEntryIndex);
+                }
+                else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
+                {
+                    _previewBrushSurface = brushSurfaceNode.Surface;
                 }
             }
         }
@@ -726,6 +736,7 @@ namespace FlaxEditor.Viewport
         {
             _previewStaticModel = null;
             _previewModelEntryIndex = -1;
+            _previewBrushSurface = null;
         }
 
         /// <inheritdoc />
@@ -818,7 +829,7 @@ namespace FlaxEditor.Viewport
             return location;
         }
 
-        private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector3 hitLocation)
+        private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector2 location, ref Vector3 hitLocation)
         {
             // TODO: refactor this and dont use ContentDomain but only asset Type for matching
 
@@ -852,11 +863,16 @@ namespace FlaxEditor.Viewport
             {
             case ContentDomain.Material:
             {
-                if (hit is StaticModelNode.EntryNode meshNode)
+                if (hit is StaticModelNode staticModelNode)
                 {
-                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                    using (new UndoBlock(Undo, meshNode.Model, "Change material"))
-                        meshNode.Entry.Material = material;
+                    var staticModel = (StaticModel)staticModelNode.Actor;
+                    var ray = ConvertMouseToRay(ref location);
+                    if (staticModel.IntersectsEntry(ref ray, out _, out _, out var entryIndex))
+                    {
+                        var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
+                        using (new UndoBlock(Undo, staticModel, "Change material"))
+                            staticModel.SetMaterial(entryIndex, material);
+                    }
                 }
                 else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
                 {
@@ -920,7 +936,7 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        private void Spawn(Type item, SceneGraphNode hit, ref Vector3 hitLocation)
+        private void Spawn(Type item, SceneGraphNode hit, ref Vector2 location, ref Vector3 hitLocation)
         {
             var actor = Object.New(item) as Actor;
             if (actor == null)
@@ -959,7 +975,7 @@ namespace FlaxEditor.Viewport
                 for (int i = 0; i < _dragAssets.Objects.Count; i++)
                 {
                     var item = _dragAssets.Objects[i];
-                    Spawn(item, hit, ref hitLocation);
+                    Spawn(item, hit, ref location, ref hitLocation);
                 }
             }
             // Drag actor type
@@ -971,11 +987,11 @@ namespace FlaxEditor.Viewport
                 for (int i = 0; i < _dragActorType.Objects.Count; i++)
                 {
                     var item = _dragActorType.Objects[i];
-                    Spawn(item, hit, ref hitLocation);
+                    Spawn(item, hit, ref location, ref hitLocation);
                 }
             }
 
-            DragHandlers.OnDragDrop(new DragDropEventArgs() { Hit = hit, HitLocation = hitLocation });
+            DragHandlers.OnDragDrop(new DragDropEventArgs { Hit = hit, HitLocation = hitLocation });
 
             return result;
         }

@@ -155,9 +155,7 @@ namespace FlaxEditor.Viewport.Previews
                 throw new Exception("Missing preview model asset.");
             if (_previewModel.Model.WaitForLoaded())
                 throw new Exception("Preview model asset failed to load.");
-            var entries = _previewModel.Entries;
-            if (entries.Length == 1)
-                entries[0].Material = surfaceMaterial;
+            _previewModel.SetMaterial(0, surfaceMaterial);
             _postFxMaterialsCache[0] = postFxMaterial;
             PostFxVolume.PostFxMaterials = new PostFxMaterialsSettings
             {

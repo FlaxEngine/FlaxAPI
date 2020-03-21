@@ -53,7 +53,7 @@ namespace FlaxEditor
             if (model.Model == null)
                 return;
 
-            ModelEntryInfo[] entries = model.Entries;
+            var entries = model.Entries;
             for (var i = 0; i < entries.Length; i++)
                 HighlightModel(model, i);
         }
@@ -94,7 +94,7 @@ namespace FlaxEditor
             if (_highlightMaterial == null)
                 return;
 
-            Matrix m1, m2, world;
+            Matrix world;
             for (var i = 0; i < _highlights.Count; i++)
             {
                 HighlightData highlight = _highlights[i];
@@ -104,9 +104,7 @@ namespace FlaxEditor
                     if (model == null)
                         continue;
 
-                    staticModel.Transform.GetWorld(out m1);
-                    staticModel.Entries[highlight.EntryIndex].Transform.GetWorld(out m2);
-                    Matrix.Multiply(ref m2, ref m1, out world);
+                    staticModel.Transform.GetWorld(out world);
 
                     BoundingSphere bounds = BoundingSphere.FromBox(staticModel.Box);
 

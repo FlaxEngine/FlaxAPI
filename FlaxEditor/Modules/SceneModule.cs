@@ -166,7 +166,7 @@ namespace FlaxEditor.Modules
             if (floor.Model)
             {
                 floor.Model.WaitForLoaded();
-                floor.Entries[0].Material = FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax"));
+                floor.SetMaterial(0, FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax")));
             }
             floor.StaticFlags = StaticFlags.FullyStatic;
             //

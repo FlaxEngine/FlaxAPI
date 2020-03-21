@@ -54,7 +54,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Editor\PreviewsCache.Gen.cs" />
     <Compile Include="ContentDomain.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
@@ -67,6 +66,8 @@
     <Compile Include="API\Profiling.cs" />
     <Compile Include="API\ProfilingTools.cs" />
     <Compile Include="API\ProfilingTools.Gen.cs" />
+    <Compile Include="API\Editor\PreviewsCache.cs" />
+    <Compile Include="API\Editor\PreviewsCache.Gen.cs" />
     <Compile Include="API\Editor\ViewportIconsRenderer.Gen.cs" />
     <Compile Include="API\Static\FoliageTools.cs" />
     <Compile Include="API\Static\FoliageTools.Gen.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="API\Static\ScriptsBuilder.Gen.cs" />
     <Compile Include="API\Static\TerrainTools.cs" />
     <Compile Include="API\Static\TerrainTools.Gen.cs" />
-    <Compile Include="API\Editor\PreviewsCache.cs" />
     <Compile Include="Content\AssetItemConverter.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
     <Compile Include="Content\Create\CreateFileEntry.cs" />
@@ -194,7 +194,7 @@
     <Compile Include="CustomEditors\Editors\IntegerEditor.cs" />
     <Compile Include="CustomEditors\Editors\ListEditor.cs" />
     <Compile Include="CustomEditors\Editors\MatrixEditor.cs" />
-    <Compile Include="CustomEditors\Editors\ModelEntryInfoEditor.cs" />
+    <Compile Include="CustomEditors\Editors\ModelInstanceEntryEditor.cs" />
     <Compile Include="CustomEditors\Editors\ObjectSwitcherEditor.cs" />
     <Compile Include="CustomEditors\Editors\PostProcessSettingsEditor.cs" />
     <Compile Include="CustomEditors\Editors\QuaternionEditor.cs" />
@@ -654,6 +654,5 @@
     <Compile Include="Windows\Profiler\SingleChart.cs" />
     <Compile Include="Windows\Profiler\Timeline.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

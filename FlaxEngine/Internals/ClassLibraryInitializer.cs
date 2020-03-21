@@ -15,13 +15,6 @@ namespace FlaxEngine
     {
     }
 
-    /// <summary>
-    /// The hidden class used in the Engine.
-    /// </summary>
-    class ModelInstanceActor
-    {
-    }
-
     internal static class ClassLibraryInitializer
     {
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)

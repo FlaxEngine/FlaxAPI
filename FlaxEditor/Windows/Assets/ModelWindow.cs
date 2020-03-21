@@ -454,6 +454,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     entries[i].Visible = _properties.IsolateIndex == -1 || _properties.IsolateIndex == i;
                 }
+                _preview.PreviewStaticModel.Entries = entries;
             }
 
             if (_properties.HighlightIndex != -1)
@@ -469,6 +470,7 @@ namespace FlaxEditor.Windows.Assets
                         entries[i].Material = highlightMaterial;
                         entries[i].Visible = _properties.HighlightIndex == i;
                     }
+                    _highlightActor.Entries = entries;
                 }
             }
             else

@@ -409,7 +409,7 @@ namespace FlaxEngine
         /// <param name="p1">The start point.</param>
         /// <param name="p2">The first control point.</param>
         /// <param name="p3">The second control point.</param>
-        /// <param name="p2">The end point.</param>
+        /// <param name="p4">The end point.</param>
         /// <param name="color">The line color</param>
         /// <param name="thickness">The line thickness.</param>
         public static void DrawBezier(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Color color, float thickness = 1.0f)

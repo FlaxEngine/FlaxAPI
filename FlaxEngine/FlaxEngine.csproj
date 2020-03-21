@@ -50,8 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Actors\AnimatedModel.cs" />
-    <Compile Include="API\Actors\AnimatedModel.Gen.cs" />
     <Compile Include="API\Actors\AudioListener.Gen.cs" />
     <Compile Include="API\Actors\AudioSource.cs" />
     <Compile Include="API\Actors\AudioSource.Gen.cs" />
@@ -77,12 +75,9 @@
     <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
     <Compile Include="API\Actors\RigidBody.cs" />
     <Compile Include="API\Actors\RigidBody.Gen.cs" />
-    <Compile Include="API\Level\Scene.cs" />
     <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
     <Compile Include="API\Actors\Sky.Gen.cs" />
     <Compile Include="API\Actors\Skybox.Gen.cs" />
-    <Compile Include="API\Actors\StaticModel.cs" />
-    <Compile Include="API\Actors\StaticModel.Gen.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />
     <Compile Include="API\Actors\UICanvas.Gen.cs" />
@@ -94,16 +89,6 @@
     <Compile Include="API\BinaryAssets\AudioClip.Gen.cs" />
     <Compile Include="API\BinaryAssets\CollisionData.cs" />
     <Compile Include="API\BinaryAssets\CollisionData.Gen.cs" />
-    <Compile Include="API\Level\Actor.Gen.cs" />
-    <Compile Include="API\Level\DirectionalLight.Gen.cs" />
-    <Compile Include="API\Level\Level.Gen.cs" />
-    <Compile Include="API\Level\Light.Gen.cs" />
-    <Compile Include="API\Level\PointLight.Gen.cs" />
-    <Compile Include="API\Level\SceneObject.Gen.cs" />
-    <Compile Include="API\Level\SkyLight.Gen.cs" />
-    <Compile Include="API\Level\SpotLight.Gen.cs" />
-    <Compile Include="API\Navigation\Navigation.Gen.cs" />
-    <Compile Include="API\Render2D\FontAsset.cs" />
     <Compile Include="API\BinaryAssets\GameplayGlobals.Gen.cs" />
     <Compile Include="API\BinaryAssets\ParticleEmitter.cs" />
     <Compile Include="API\BinaryAssets\ParticleEmitter.Gen.cs" />
@@ -125,11 +110,9 @@
     <Compile Include="API\Content\IESProfile.Gen.cs" />
     <Compile Include="API\Content\JsonAsset.cs" />
     <Compile Include="API\Content\JsonAsset.Gen.cs" />
-    <Compile Include="API\Content\Material.cs" />
     <Compile Include="API\Content\Material.Gen.cs" />
     <Compile Include="API\Content\MaterialBase.cs" />
     <Compile Include="API\Content\MaterialBase.Gen.cs" />
-    <Compile Include="API\Content\MaterialInstance.cs" />
     <Compile Include="API\Content\MaterialInstance.Gen.cs" />
     <Compile Include="API\Content\Model.Gen.cs" />
     <Compile Include="API\Content\ModelBase.Gen.cs" />
@@ -162,6 +145,7 @@
     <Compile Include="API\Graphics\Mesh.cs" />
     <Compile Include="API\Graphics\Mesh.Gen.cs" />
     <Compile Include="API\Graphics\Model.cs" />
+    <Compile Include="API\Graphics\ModelInstanceEntry.Gen.cs" />
     <Compile Include="API\Graphics\ModelLOD.Gen.cs" />
     <Compile Include="API\Graphics\PixelFormat.Gen.cs" />
     <Compile Include="API\Graphics\PixelFormatExtensions.Gen.cs" />
@@ -190,12 +174,27 @@
     <Compile Include="API\Joints\SliderJoint.Gen.cs" />
     <Compile Include="API\Joints\SphericalJoint.cs" />
     <Compile Include="API\Joints\SphericalJoint.Gen.cs" />
+    <Compile Include="API\Level\Actor.cs" />
+    <Compile Include="API\Level\Actor.Gen.cs" />
+    <Compile Include="API\Level\AnimatedModel.Gen.cs" />
     <Compile Include="API\Level\BoneSocket.Gen.cs" />
     <Compile Include="API\Level\Camera.Gen.cs" />
+    <Compile Include="API\Level\DirectionalLight.Gen.cs" />
+    <Compile Include="API\Level\Level.cs" />
+    <Compile Include="API\Level\Level.Gen.cs" />
+    <Compile Include="API\Level\Light.Gen.cs" />
+    <Compile Include="API\Level\ModelInstanceActor.Gen.cs" />
+    <Compile Include="API\Level\PointLight.Gen.cs" />
     <Compile Include="API\Level\Prefab.Gen.cs" />
+    <Compile Include="API\Level\PrefabManager.Gen.cs" />
+    <Compile Include="API\Level\Scene.cs" />
     <Compile Include="API\Level\Scene.Gen.cs" />
+    <Compile Include="API\Level\SceneObject.Gen.cs" />
+    <Compile Include="API\Level\SkyLight.Gen.cs" />
+    <Compile Include="API\Level\SpotLight.Gen.cs" />
+    <Compile Include="API\Level\StaticModel.Gen.cs" />
     <Compile Include="API\Level\Types.Gen.cs" />
-    <Compile Include="API\Level\Actor.cs" />
+    <Compile Include="API\Navigation\Navigation.Gen.cs" />
     <Compile Include="API\Objects\Script.cs" />
     <Compile Include="API\Objects\Script.Gen.cs" />
     <Compile Include="API\Objects\Window.cs" />
@@ -208,12 +207,16 @@
     <Compile Include="API\Platform\MessageBox.Gen.cs" />
     <Compile Include="API\Platform\WindowBase.Gen.cs" />
     <Compile Include="API\Render2D\Font.Gen.cs" />
+    <Compile Include="API\Render2D\FontAsset.cs" />
     <Compile Include="API\Render2D\FontAsset.Gen.cs" />
     <Compile Include="API\Render2D\FontTextureAtlas.Gen.cs" />
+    <Compile Include="API\Render2D\Render2D.cs" />
     <Compile Include="API\Render2D\Render2D.Gen.cs" />
     <Compile Include="API\Render2D\SpriteAtlas.cs" />
     <Compile Include="API\Render2D\SpriteAtlas.Gen.cs" />
+    <Compile Include="API\Render2D\TextLayoutOptions.cs" />
     <Compile Include="API\Render2D\TextLayoutOptions.Gen.cs" />
+    <Compile Include="API\Render2D\TextRange.cs" />
     <Compile Include="API\Renderer\Lightmaps.Gen.cs" />
     <Compile Include="API\Renderer\Renderer.cs" />
     <Compile Include="API\Renderer\Renderer.Gen.cs" />
@@ -228,7 +231,6 @@
     <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
     <Compile Include="API\Static\Input.cs" />
     <Compile Include="API\Static\Input.Gen.cs" />
-    <Compile Include="API\Level\Level.cs" />
     <Compile Include="API\Static\MessageBox.cs" />
     <Compile Include="API\Static\MessageBox.Gen.cs" />
     <Compile Include="API\Static\Physics.cs" />
@@ -237,11 +239,8 @@
     <Compile Include="API\Static\Platform.Gen.cs" />
     <Compile Include="API\Static\PluginManager.cs" />
     <Compile Include="API\Static\PluginManager.Gen.cs" />
-    <Compile Include="API\Static\PrefabManager.cs" />
-    <Compile Include="API\Static\PrefabManager.Gen.cs" />
     <Compile Include="API\Static\Profiler.cs" />
     <Compile Include="API\Static\Profiler.Gen.cs" />
-    <Compile Include="API\Render2D\Render2D.cs" />
     <Compile Include="API\Static\RenderTargetPool.Gen.cs" />
     <Compile Include="API\Static\Screen.Gen.cs" />
     <Compile Include="API\Static\Scripting.cs" />
@@ -282,7 +281,6 @@
     <Compile Include="Collections\CircularBuffer.cs" />
     <Compile Include="Collections\IOrderedDictionary.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
-    <Compile Include="Engine\AnimationGraphParameter.cs" />
     <Compile Include="Engine\AudioDevice.cs" />
     <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
@@ -293,6 +291,7 @@
     <Compile Include="Engine\FontReference.cs" />
     <Compile Include="Engine\Gamepad.cs" />
     <Compile Include="Engine\GamepadLayout.cs" />
+    <Compile Include="Engine\IDrawable.cs" />
     <Compile Include="Engine\ILogger.cs" />
     <Compile Include="Engine\ILogHandler.cs" />
     <Compile Include="Engine\InputAxis.cs" />
@@ -301,12 +300,12 @@
     <Compile Include="Engine\ITransformable.cs" />
     <Compile Include="Engine\Limits.cs" />
     <Compile Include="Engine\Logger.cs" />
-    <Compile Include="Engine\ModelEntryInfo.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
+    <Compile Include="Engine\PostProcessEffect.cs" />
+    <Compile Include="Engine\PostProcessSettings.cs" />
     <Compile Include="Engine\SceneReference.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
-    <Compile Include="API\Render2D\TextLayoutOptions.cs" />
     <Compile Include="Engine\Exceptions\FlaxException.cs" />
     <Compile Include="GUI\CanvasContainer.cs" />
     <Compile Include="GUI\CanvasRootControl.cs" />
@@ -324,7 +323,6 @@
     <Compile Include="GUI\Style.cs" />
     <Compile Include="GUI\TextBlock.cs" />
     <Compile Include="GUI\TextBlockStyle.cs" />
-    <Compile Include="API\Render2D\TextRange.cs" />
     <Compile Include="GUI\Tooltip.cs" />
     <Compile Include="GUI\WindowRootControl.cs" />
     <Compile Include="GUI\Brushes\GPUTextureBrush.cs" />
@@ -409,9 +407,6 @@
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Engine\IDrawable.cs" />
-    <Compile Include="Engine\PostProcessEffect.cs" />
-    <Compile Include="Engine\PostProcessSettings.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\PerlinNoise.cs" />
     <Compile Include="Utilities\State.cs" />
@@ -419,6 +414,5 @@
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

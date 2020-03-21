@@ -632,7 +632,7 @@ namespace FlaxEditor.Viewport
             return location;
         }
 
-        private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector3 hitLocation)
+        private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector2 location, ref Vector3 hitLocation)
         {
             // TODO: refactor this and dont use ContentDomain but only asset Type for matching
 
@@ -655,11 +655,16 @@ namespace FlaxEditor.Viewport
             {
             case ContentDomain.Material:
             {
-                if (hit is StaticModelNode.EntryNode meshNode)
+                if (hit is StaticModelNode staticModelNode)
                 {
-                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                    using (new UndoBlock(Undo, meshNode.Model, "Change material"))
-                        meshNode.Entry.Material = material;
+                    var staticModel = (StaticModel)staticModelNode.Actor;
+                    var ray = ConvertMouseToRay(ref location);
+                    if (staticModel.IntersectsEntry(ref ray, out _, out _, out var entryIndex))
+                    {
+                        var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
+                        using (new UndoBlock(Undo, staticModel, "Change material"))
+                            staticModel.SetMaterial(entryIndex, material);
+                    }
                 }
                 else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
                 {
@@ -772,7 +777,7 @@ namespace FlaxEditor.Viewport
                 for (int i = 0; i < _dragAssets.Objects.Count; i++)
                 {
                     var item = _dragAssets.Objects[i];
-                    Spawn(item, hit, ref hitLocation);
+                    Spawn(item, hit, ref location, ref hitLocation);
                 }
             }
             // Drag actor type

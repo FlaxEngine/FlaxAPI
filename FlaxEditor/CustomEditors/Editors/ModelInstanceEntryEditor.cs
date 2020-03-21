@@ -6,10 +6,10 @@ using FlaxEngine;
 namespace FlaxEditor.CustomEditors.Editors
 {
     /// <summary>
-    /// Default implementation of the inspector used to edit ModelEntryInfo value type properties.
+    /// Default implementation of the inspector used to edit <see cref="ModelInstanceEntry"/> value type properties.
     /// </summary>
-    [CustomEditor(typeof(ModelEntryInfo)), DefaultEditor]
-    public sealed class ModelEntryInfoEditor : GenericEditor
+    [CustomEditor(typeof(ModelInstanceEntry)), DefaultEditor]
+    public sealed class ModelInstanceEntryEditor : GenericEditor
     {
         private GroupElement _group;
         private bool _updateName;
@@ -27,28 +27,18 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <inheritdoc />
         public override void Refresh()
         {
-            if (_updateName)
+            if (_updateName &&
+                _group != null &&
+                ParentEditor?.ParentEditor != null &&
+                ParentEditor.ParentEditor.Values.Count > 0)
             {
-                TryToGetName();
-            }
-
-            base.Refresh();
-        }
-
-        private void TryToGetName()
-        {
-            if (_group != null &&
-                Values.Count > 0 &&
-                Values[0] is ModelEntryInfo entry
-                && ParentEditor?.ParentEditor != null
-                && ParentEditor.ParentEditor.Values.Count > 0)
-            {
+                var entryIndex = ParentEditor.ChildrenEditors.IndexOf(this);
                 if (ParentEditor.ParentEditor.Values[0] is StaticModel staticModel)
                 {
                     var model = staticModel.Model;
                     if (model && model.IsLoaded)
                     {
-                        _group.Panel.HeaderText = "Entry " + model.MaterialSlots[entry.Index].Name;
+                        _group.Panel.HeaderText = "Entry " + model.MaterialSlots[entryIndex].Name;
                         _updateName = false;
                     }
                 }
@@ -57,11 +47,13 @@ namespace FlaxEditor.CustomEditors.Editors
                     var model = animatedModel.SkinnedModel;
                     if (model && model.IsLoaded)
                     {
-                        _group.Panel.HeaderText = "Entry " + model.MaterialSlots[entry.Index].Name;
+                        _group.Panel.HeaderText = "Entry " + model.MaterialSlots[entryIndex].Name;
                         _updateName = false;
                     }
                 }
             }
+
+            base.Refresh();
         }
     }
 }

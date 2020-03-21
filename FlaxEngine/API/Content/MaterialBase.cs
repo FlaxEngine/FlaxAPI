@@ -33,11 +33,5 @@ namespace FlaxEngine
         /// Gets a value indicating whether this material is a particle shader (cannot be used with a normal meshes).
         /// </summary>
         public bool IsParticle => Info.Domain == MaterialDomain.Particle;
-
-        /// <summary>
-        /// Creates the virtual material instance of this material which allows to override any material parameters.
-        /// </summary>
-        /// <returns>The created virtual material instance asset.</returns>
-        public abstract MaterialInstance CreateVirtualInstance();
     }
 }

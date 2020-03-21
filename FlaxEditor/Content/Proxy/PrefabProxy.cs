@@ -88,7 +88,7 @@ namespace FlaxEditor.Content
                 Object.Destroy(actor, 20.0f);
             }
 
-            Editor.CreatePrefab(outputPath, actor, true);
+            PrefabManager.CreatePrefab(actor, outputPath, true);
         }
 
         /// <inheritdoc />

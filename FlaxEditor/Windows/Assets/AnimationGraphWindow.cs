@@ -142,12 +142,8 @@ namespace FlaxEditor.Windows.Assets
             /// <param name="window">The graph window.</param>
             public void OnLoad(AnimationGraphWindow window)
             {
-                // Link
                 Window = window;
-
-                var model = window.PreviewActor;
-                var param = model.GetParam(BaseModelId);
-                BaseModel = param?.Value as SkinnedModel;
+                BaseModel = window.PreviewActor.GetParameterValue(BaseModelId) as SkinnedModel;
             }
 
             /// <summary>
@@ -157,9 +153,7 @@ namespace FlaxEditor.Windows.Assets
             public void OnSave(AnimationGraphWindow window)
             {
                 var model = window.PreviewActor;
-                var param = model.GetParam(BaseModelId);
-                if (param != null)
-                    param.Value = BaseModel;
+                model.SetParameterValue(BaseModelId, BaseModel);
                 var surfaceParam = window.Surface.GetParameter(BaseModelId);
                 if (surfaceParam != null)
                     surfaceParam.Value = BaseModel?.ID ?? Guid.Empty;
@@ -232,7 +226,8 @@ namespace FlaxEditor.Windows.Assets
         {
             try
             {
-                PreviewActor.Parameters[index].Value = value;
+                var param = Surface.Parameters[index];
+                PreviewActor.SetParameterValue(param.ID, value);
             }
             catch
             {

@@ -76,5 +76,17 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetParameterValue(IntPtr obj, string name, object value);
+
+        /// <summary>
+        /// Creates the virtual material instance of this material which allows to override any material parameters.
+        /// </summary>
+        /// <returns>The created virtual material instance asset.</returns>
+        public MaterialInstance CreateVirtualInstance()
+        {
+            return Internal_CreateVirtualInstance(unmanagedPtr);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern MaterialInstance Internal_CreateVirtualInstance(IntPtr obj);
     }
 }

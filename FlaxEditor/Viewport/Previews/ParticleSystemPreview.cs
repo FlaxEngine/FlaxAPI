@@ -59,7 +59,7 @@ namespace FlaxEditor.Viewport.Previews
                         _boundsModel = StaticModel.New();
                         _boundsModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Gizmo/WireBox");
                         _boundsModel.Model.WaitForLoaded();
-                        _boundsModel.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialWireFocus");
+                        _boundsModel.SetMaterial(0, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialWireFocus"));
                         Task.AddCustomActor(_boundsModel);
                     }
                     else if (!_boundsModel.IsActive)
@@ -99,7 +99,7 @@ namespace FlaxEditor.Viewport.Previews
                         _originModel = StaticModel.New();
                         _originModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/Sphere");
                         _originModel.Model.WaitForLoaded();
-                        _originModel.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialAxisFocus");
+                        _originModel.SetMaterial(0, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialAxisFocus"));
                         _originModel.Position = _previewEffect.Position;
                         _originModel.Scale = new Vector3(0.1f);
                         Task.AddCustomActor(_originModel);
