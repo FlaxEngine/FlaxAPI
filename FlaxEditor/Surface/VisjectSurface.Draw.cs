@@ -224,7 +224,7 @@ namespace FlaxEditor.Surface
             // Draw border
             if (ContainsFocus)
             {
-                Render2D.DrawRectangle(new Rectangle(0, 0, rect.Width - 2, rect.Height - 2), style.BackgroundSelected);
+                Render2D.DrawRectangle(new Rectangle(1, 1, rect.Width - 2, rect.Height - 2), style.BackgroundSelected);
             }
 
             // Draw disabled overlay
