@@ -216,6 +216,18 @@ namespace FlaxEngine
         internal static extern void Internal_SetRootMotionTarget(IntPtr obj, IntPtr value);
 
         /// <summary>
+        /// Gets the anim graph instance parameters collection.
+        /// </summary>
+        [Tooltip("The anim graph instance parameters collection.")]
+        public AnimGraphParameter[] Parameters
+        {
+            get { return Internal_GetParameters(unmanagedPtr, typeof(AnimGraphParameter)); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern AnimGraphParameter[] Internal_GetParameters(IntPtr obj, System.Type resultArrayItemType0);
+
+        /// <summary>
         /// Resets the animation state (clears the instance state data but preserves the instance parameters values).
         /// </summary>
         public void ResetAnimation()

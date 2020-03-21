@@ -102,30 +102,4 @@ namespace FlaxEngine
         /// </summary>
         GameplayGlobal = 18,
     }
-
-    /// <summary>
-    /// The channel mask modes.
-    /// </summary>
-    public enum ChannelMask
-    {
-        /// <summary>
-        /// The red channel.
-        /// </summary>
-        Red = 0,
-
-        /// <summary>
-        /// The green channel.
-        /// </summary>
-        Green = 1,
-
-        /// <summary>
-        /// The blue channel.
-        /// </summary>
-        Blue = 2,
-
-        /// <summary>
-        /// The alpha channel.
-        /// </summary>
-        Alpha = 3,
-    }
 }

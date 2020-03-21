@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -85,6 +85,7 @@
     <Compile Include="API\Actors\UIControl.Gen.cs" />
     <Compile Include="API\Animations\AlphaBlend.Gen.cs" />
     <Compile Include="API\Animations\AnimationGraph.cs" />
+    <Compile Include="API\Animations\AnimGraph.Gen.cs" />
     <Compile Include="API\BinaryAssets\AudioClip.cs" />
     <Compile Include="API\BinaryAssets\AudioClip.Gen.cs" />
     <Compile Include="API\BinaryAssets\CollisionData.cs" />
@@ -249,6 +250,7 @@
     <Compile Include="API\Terrain\Terrain.cs" />
     <Compile Include="API\Terrain\Terrain.Gen.cs" />
     <Compile Include="API\Utilities\Screenshot.Gen.cs" />
+    <Compile Include="API\Visject\GraphParameter.Gen.cs" />
     <Compile Include="Assertions\Assert.cs" />
     <Compile Include="Assertions\AssertionException.cs" />
     <Compile Include="Assertions\FloatComparer.cs" />

@@ -910,6 +910,43 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
+        /// Gets the runtime object type of the graph parameter values objects.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The object type.</returns>
+        public static Type GetGraphParameterValueType(GraphParamType type)
+        {
+            switch (type)
+            {
+            case GraphParamType.Bool: return typeof(bool);
+            case GraphParamType.Integer: return typeof(int);
+            case GraphParamType.Float: return typeof(float);
+            case GraphParamType.Vector2: return typeof(Vector2);
+            case GraphParamType.Vector3: return typeof(Vector3);
+            case GraphParamType.Vector4: return typeof(Vector4);
+            case GraphParamType.Color: return typeof(Color);
+            case GraphParamType.Texture: return typeof(Texture);
+            case GraphParamType.NormalMap: return typeof(Texture);
+            case GraphParamType.String: return typeof(string);
+            case GraphParamType.Box: return typeof(BoundingBox);
+            case GraphParamType.Rotation: return typeof(Quaternion);
+            case GraphParamType.Transform: return typeof(Transform);
+            case GraphParamType.Asset: return typeof(Asset);
+            case GraphParamType.Actor: return typeof(Actor);
+            case GraphParamType.Rectangle: return typeof(Rectangle);
+            case GraphParamType.CubeTexture: return typeof(CubeTexture);
+            case GraphParamType.SceneTexture: return typeof(MaterialSceneTextures);
+            case GraphParamType.GPUTexture: return typeof(GPUTexture);
+            case GraphParamType.Matrix: return typeof(Matrix);
+            case GraphParamType.GPUTextureArray: return typeof(GPUTexture);
+            case GraphParamType.GPUTextureVolume: return typeof(GPUTexture);
+            case GraphParamType.GPUTextureCube: return typeof(GPUTexture);
+            case GraphParamType.ChannelMask: return typeof(ChannelMask);
+            default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        /// <summary>
         /// Shows the source code window.
         /// </summary>
         /// <param name="source">The source code.</param>
