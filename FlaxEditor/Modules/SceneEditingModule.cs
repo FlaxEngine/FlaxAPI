@@ -28,9 +28,6 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Gets a value indicating whether any object is selected.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if any object is selected; otherwise, <c>false</c>.
-        /// </value>
         public bool HasSthSelected => Selection.Count > 0;
 
         /// <summary>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -53,8 +53,6 @@
     <Compile Include="API\Actors\AudioListener.Gen.cs" />
     <Compile Include="API\Actors\AudioSource.cs" />
     <Compile Include="API\Actors\AudioSource.Gen.cs" />
-    <Compile Include="API\Actors\BoxBrush.cs" />
-    <Compile Include="API\Actors\BoxBrush.Gen.cs" />
     <Compile Include="API\Actors\Collider.cs" />
     <Compile Include="API\Actors\Collider.Gen.cs" />
     <Compile Include="API\Actors\Decal.cs" />
@@ -179,6 +177,7 @@
     <Compile Include="API\Level\Actor.Gen.cs" />
     <Compile Include="API\Level\AnimatedModel.Gen.cs" />
     <Compile Include="API\Level\BoneSocket.Gen.cs" />
+    <Compile Include="API\Level\BoxBrush.Gen.cs" />
     <Compile Include="API\Level\Camera.Gen.cs" />
     <Compile Include="API\Level\DirectionalLight.Gen.cs" />
     <Compile Include="API\Level\Level.cs" />
@@ -284,7 +283,6 @@
     <Compile Include="Collections\IOrderedDictionary.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
     <Compile Include="Engine\AudioDevice.cs" />
-    <Compile Include="Engine\BrushSurface.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />
     <Compile Include="Engine\CreateWindowSettings.cs" />

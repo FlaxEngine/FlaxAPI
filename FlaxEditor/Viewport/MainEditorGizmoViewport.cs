@@ -398,7 +398,7 @@ namespace FlaxEditor.Viewport
             {
                 _debugDrawData.HighlightModel(_previewStaticModel, _previewModelEntryIndex);
             }
-            if (_previewBrushSurface != null)
+            if (_previewBrushSurface.Brush != null)
             {
                 _debugDrawData.HighlightBrushSurface(_previewBrushSurface);
             }
@@ -736,7 +736,7 @@ namespace FlaxEditor.Viewport
         {
             _previewStaticModel = null;
             _previewModelEntryIndex = -1;
-            _previewBrushSurface = null;
+            _previewBrushSurface = new BrushSurface();
         }
 
         /// <inheritdoc />
@@ -878,7 +878,11 @@ namespace FlaxEditor.Viewport
                 {
                     var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
                     using (new UndoBlock(Undo, brushSurfaceNode.Brush, "Change material"))
-                        brushSurfaceNode.Surface.Material = material;
+                    {
+                        var surface = brushSurfaceNode.Surface;
+                        surface.Material = material;
+                        brushSurfaceNode.Surface = surface;
+                    }
                 }
 
                 break;

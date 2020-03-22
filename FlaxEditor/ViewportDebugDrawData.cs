@@ -78,7 +78,7 @@ namespace FlaxEditor
         /// <param name="surface">The surface.</param>
         public void HighlightBrushSurface(BrushSurface surface)
         {
-            var vertices = surface.GetVertices();
+            surface.Brush.GetVertices(surface.Index, out var vertices);
             if (vertices.Length > 0)
             {
                 _highlightTriangles.AddRange(vertices);

@@ -17,6 +17,80 @@ namespace FlaxEditor.SceneGraph.Actors
         /// <seealso cref="FlaxEditor.SceneGraph.ActorChildNode{T}" />
         public sealed class SideLinkNode : ActorChildNode<BoxBrushNode>
         {
+            private sealed class BrushSurfaceProxy
+            {
+                [HideInEditor]
+                public BoxBrush Brush;
+
+                [HideInEditor]
+                public int Index;
+
+                [EditorOrder(10), EditorDisplay("Brush")]
+                [Tooltip("The material used to render the brush surface.")]
+                public MaterialBase Material
+                {
+                    get => Brush.Surfaces[Index].Material;
+                    set
+                    {
+                        var surfaces = Brush.Surfaces;
+                        surfaces[Index].Material = value;
+                        Brush.Surfaces = surfaces;
+                    }
+                }
+
+                [EditorOrder(30), EditorDisplay("Brush", "UV Scale"), Limit(-1000, 1000, 0.01f)]
+                [Tooltip("The surface texture coordinates scale.")]
+                public Vector2 TexCoordScale
+                {
+                    get => Brush.Surfaces[Index].TexCoordScale;
+                    set
+                    {
+                        var surfaces = Brush.Surfaces;
+                        surfaces[Index].TexCoordScale = value;
+                        Brush.Surfaces = surfaces;
+                    }
+                }
+
+                [EditorOrder(40), EditorDisplay("Brush", "UV Offset"), Limit(-1000, 1000, 0.01f)]
+                [Tooltip("The surface texture coordinates offset.")]
+                public Vector2 TexCoordOffset
+                {
+                    get => Brush.Surfaces[Index].TexCoordOffset;
+                    set
+                    {
+                        var surfaces = Brush.Surfaces;
+                        surfaces[Index].TexCoordOffset = value;
+                        Brush.Surfaces = surfaces;
+                    }
+                }
+
+                [EditorOrder(50), EditorDisplay("Brush", "UV Rotation")]
+                [Tooltip("The surface texture coordinates rotation angle (in degrees).")]
+                public float TexCoordRotation
+                {
+                    get => Brush.Surfaces[Index].TexCoordRotation;
+                    set
+                    {
+                        var surfaces = Brush.Surfaces;
+                        surfaces[Index].TexCoordRotation = value;
+                        Brush.Surfaces = surfaces;
+                    }
+                }
+
+                [EditorOrder(20), EditorDisplay("Brush", "Scale In Lightmap"), Limit(0, 10000, 0.1f)]
+                [Tooltip("The scale in lightmap (per surface).")]
+                public float ScaleInLightmap
+                {
+                    get => Brush.Surfaces[Index].ScaleInLightmap;
+                    set
+                    {
+                        var surfaces = Brush.Surfaces;
+                        surfaces[Index].ScaleInLightmap = value;
+                        Brush.Surfaces = surfaces;
+                    }
+                }
+            }
+
             private Vector3 _offset;
 
             /// <summary>
@@ -27,7 +101,16 @@ namespace FlaxEditor.SceneGraph.Actors
             /// <summary>
             /// Gets the brush surface.
             /// </summary>
-            public BrushSurface Surface => Brush.Surfaces[Index];
+            public BrushSurface Surface
+            {
+                get => Brush.Surfaces[Index];
+                set
+                {
+                    var surfaces = Brush.Surfaces;
+                    surfaces[Index] = value;
+                    Brush.Surfaces = surfaces;
+                }
+            }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="SideLinkNode"/> class.
@@ -85,12 +168,16 @@ namespace FlaxEditor.SceneGraph.Actors
             }
 
             /// <inheritdoc />
-            public override object EditableObject => Brush.Surfaces[Index];
+            public override object EditableObject => new BrushSurfaceProxy
+            {
+                Brush = Brush,
+                Index = Index,
+            };
 
             /// <inheritdoc />
             public override bool RayCastSelf(ref RayCastData ray, out float distance, out Vector3 normal)
             {
-                return Brush.Surfaces[Index].Intersects(ref ray.Ray, out distance, out normal);
+                return Brush.Intersects(Index, ref ray.Ray, out distance, out normal);
             }
 
             /// <inheritdoc />
