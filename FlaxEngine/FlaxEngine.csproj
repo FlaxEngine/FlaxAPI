@@ -66,8 +66,6 @@
     <Compile Include="API\Actors\RigidBody.cs" />
     <Compile Include="API\Actors\RigidBody.Gen.cs" />
     <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
-    <Compile Include="API\Actors\Sky.Gen.cs" />
-    <Compile Include="API\Actors\Skybox.Gen.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />
     <Compile Include="API\Actors\UICanvas.Gen.cs" />
@@ -187,6 +185,8 @@
     <Compile Include="API\Level\Scene.cs" />
     <Compile Include="API\Level\Scene.Gen.cs" />
     <Compile Include="API\Level\SceneObject.Gen.cs" />
+    <Compile Include="API\Level\Sky.Gen.cs" />
+    <Compile Include="API\Level\Skybox.Gen.cs" />
     <Compile Include="API\Level\SkyLight.Gen.cs" />
     <Compile Include="API\Level\SpotLight.Gen.cs" />
     <Compile Include="API\Level\StaticModel.Gen.cs" />
