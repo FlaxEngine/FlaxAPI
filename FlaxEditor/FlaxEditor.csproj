@@ -197,7 +197,6 @@
     <Compile Include="CustomEditors\Editors\MatrixEditor.cs" />
     <Compile Include="CustomEditors\Editors\ModelInstanceEntryEditor.cs" />
     <Compile Include="CustomEditors\Editors\ObjectSwitcherEditor.cs" />
-    <Compile Include="CustomEditors\Editors\PostProcessSettingsEditor.cs" />
     <Compile Include="CustomEditors\Editors\QuaternionEditor.cs" />
     <Compile Include="CustomEditors\Editors\SkeletonNodeEditor.cs" />
     <Compile Include="CustomEditors\Editors\SpriteEditor.cs" />

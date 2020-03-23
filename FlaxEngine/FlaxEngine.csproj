@@ -63,7 +63,6 @@
     <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
     <Compile Include="API\Actors\ParticleEffect.cs" />
     <Compile Include="API\Actors\ParticleEffect.Gen.cs" />
-    <Compile Include="API\Actors\PostFxVolume.Gen.cs" />
     <Compile Include="API\Actors\RigidBody.cs" />
     <Compile Include="API\Actors\RigidBody.Gen.cs" />
     <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
@@ -301,7 +300,7 @@
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\PostProcessEffect.cs" />
-    <Compile Include="Engine\PostProcessSettings.cs" />
+    <Compile Include="API\Graphics\PostProcessSettings.cs" />
     <Compile Include="Engine\SceneReference.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
     <Compile Include="Engine\Exceptions\FlaxException.cs" />

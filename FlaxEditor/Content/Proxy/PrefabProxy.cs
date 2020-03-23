@@ -106,7 +106,7 @@ namespace FlaxEditor.Content
 
                 var eyeAdaptation = _preview.PostFxVolume.EyeAdaptation;
                 eyeAdaptation.Mode = EyeAdaptationMode.None;
-                eyeAdaptation.OverrideFlags |= EyeAdaptationSettings.Override.Mode;
+                eyeAdaptation.OverrideFlags |= EyeAdaptationSettingsOverride.Mode;
                 _preview.PostFxVolume.EyeAdaptation = eyeAdaptation;
             }
 
