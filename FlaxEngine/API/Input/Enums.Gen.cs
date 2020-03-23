@@ -80,49 +80,55 @@ namespace FlaxEngine
     /// Axis for gamepad.
     /// </summary>
     [Tooltip("Axis for gamepad.")]
-    public enum GamePadAxis
+    public enum GamepadAxis
     {
         /// <summary>
-        /// No axis
+        /// No axis.
         /// </summary>
-        [Tooltip("No axis")]
+        [Tooltip("No axis.")]
         None = 0,
 
         /// <summary>
-        /// The X-Axis of the left thumb stick
+        /// The X-Axis of the left thumb stick.
         /// </summary>
-        [Tooltip("The X-Axis of the left thumb stick")]
+        [Tooltip("The X-Axis of the left thumb stick.")]
         LeftStickX = 1,
 
         /// <summary>
-        /// The Y-Axis of the left thumb stick
+        /// The Y-Axis of the left thumb stick.
         /// </summary>
-        [Tooltip("The Y-Axis of the left thumb stick")]
+        [Tooltip("The Y-Axis of the left thumb stick.")]
         LeftStickY = 2,
 
         /// <summary>
-        /// The X-Axis of the right thumb stick
+        /// The X-Axis of the right thumb stick.
         /// </summary>
-        [Tooltip("The X-Axis of the right thumb stick")]
+        [Tooltip("The X-Axis of the right thumb stick.")]
         RightStickX = 3,
 
         /// <summary>
-        /// The Y-Axis of the right thumb stick
+        /// The Y-Axis of the right thumb stick.
         /// </summary>
-        [Tooltip("The Y-Axis of the right thumb stick")]
+        [Tooltip("The Y-Axis of the right thumb stick.")]
         RightStickY = 4,
 
         /// <summary>
-        /// The left trigger
+        /// The left trigger.
         /// </summary>
-        [Tooltip("The left trigger")]
+        [Tooltip("The left trigger.")]
         LeftTrigger = 5,
 
         /// <summary>
-        /// The right trigger
+        /// The right trigger.
         /// </summary>
-        [Tooltip("The right trigger")]
+        [Tooltip("The right trigger.")]
         RightTrigger = 6,
+
+        /// <summary>
+        /// The count of items in the GamepadAxis enum.
+        /// </summary>
+        [Tooltip("The count of items in the GamepadAxis enum.")]
+        MAX,
     }
 }
 
@@ -132,7 +138,7 @@ namespace FlaxEngine
     /// Buttons for gamepad.
     /// </summary>
     [Tooltip("Buttons for gamepad.")]
-    public enum GamePadButton
+    public enum GamepadButton
     {
         /// <summary>
         /// No buttons.
@@ -141,27 +147,27 @@ namespace FlaxEngine
         None = 0,
 
         /// <summary>
-        /// PadUp button. (DPad / Directional Pad)
+        /// PadUp button (DPad / Directional Pad).
         /// </summary>
-        [Tooltip("PadUp button. (DPad / Directional Pad)")]
+        [Tooltip("PadUp button (DPad / Directional Pad).")]
         DPadUp = 1,
 
         /// <summary>
-        /// PadDown button. (DPad / Directional Pad)
+        /// PadDown button (DPad / Directional Pad).
         /// </summary>
-        [Tooltip("PadDown button. (DPad / Directional Pad)")]
+        [Tooltip("PadDown button (DPad / Directional Pad).")]
         DPadDown = 2,
 
         /// <summary>
-        /// PadLeft button. (DPad / Directional Pad)
+        /// PadLeft button (DPad / Directional Pad).
         /// </summary>
-        [Tooltip("PadLeft button. (DPad / Directional Pad)")]
+        [Tooltip("PadLeft button (DPad / Directional Pad).")]
         DPadLeft = 3,
 
         /// <summary>
-        /// PadRight button. (DPad / Directional Pad)
+        /// PadRight button (DPad / Directional Pad).
         /// </summary>
-        [Tooltip("PadRight button. (DPad / Directional Pad)")]
+        [Tooltip("PadRight button (DPad / Directional Pad).")]
         DPadRight = 4,
 
         /// <summary>
@@ -213,27 +219,27 @@ namespace FlaxEngine
         RightTrigger = 12,
 
         /// <summary>
-        /// A button.
+        /// A (face button down).
         /// </summary>
-        [Tooltip("A button.")]
+        [Tooltip("A (face button down).")]
         A = 13,
 
         /// <summary>
-        /// B button.
+        /// B (face button right).
         /// </summary>
-        [Tooltip("B button.")]
+        [Tooltip("B (face button right).")]
         B = 14,
 
         /// <summary>
-        /// X button.
+        /// X (face button left).
         /// </summary>
-        [Tooltip("X button.")]
+        [Tooltip("X (face button left).")]
         X = 15,
 
         /// <summary>
-        /// Y button.
+        /// Y (face button up).
         /// </summary>
-        [Tooltip("Y button.")]
+        [Tooltip("Y (face button up).")]
         Y = 16,
 
         /// <summary>
@@ -283,6 +289,12 @@ namespace FlaxEngine
         /// </summary>
         [Tooltip("The right stick right.")]
         RightStickRight = 24,
+
+        /// <summary>
+        /// The count of items in the GamepadButton enum.
+        /// </summary>
+        [Tooltip("The count of items in the GamepadButton enum.")]
+        MAX,
     }
 }
 

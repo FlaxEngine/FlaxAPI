@@ -151,7 +151,12 @@
     <Compile Include="API\Graphics\TextureBase.Gen.cs" />
     <Compile Include="API\Input\Enums.Gen.cs" />
     <Compile Include="API\Input\Gamepad.Gen.cs" />
+    <Compile Include="API\Input\Input.Gen.cs" />
+    <Compile Include="API\Input\InputDevice.Gen.cs" />
+    <Compile Include="API\Input\Keyboard.Gen.cs" />
     <Compile Include="API\Input\Keys.Gen.cs" />
+    <Compile Include="API\Input\Mouse.Gen.cs" />
+    <Compile Include="API\Input\VirtualInput.Gen.cs" />
     <Compile Include="API\Joints\D6Joint.cs" />
     <Compile Include="API\Joints\D6Joint.Gen.cs" />
     <Compile Include="API\Joints\DistanceJoint.cs" />
@@ -226,8 +231,7 @@
     <Compile Include="API\Static\Globals.Gen.cs" />
     <Compile Include="API\Static\GraphicsSettings.cs" />
     <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
-    <Compile Include="API\Static\Input.cs" />
-    <Compile Include="API\Static\Input.Gen.cs" />
+    <Compile Include="API\Input\Input.cs" />
     <Compile Include="API\Static\MessageBox.cs" />
     <Compile Include="API\Static\MessageBox.Gen.cs" />
     <Compile Include="API\Static\Physics.cs" />

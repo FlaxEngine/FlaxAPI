@@ -4,7 +4,7 @@ using System;
 using System.Runtime.CompilerServices;
 
 #pragma warning disable 1591
-
+/*
 namespace FlaxEngine
 {
     /// <summary>
@@ -264,3 +264,4 @@ namespace FlaxEngine
         #endregion
     }
 }
+*/
