@@ -236,17 +236,17 @@ namespace FlaxEngine
         /// Parameter unique ID
         /// </summary>
         [Tooltip("Parameter unique ID")]
-        public Guid ID
+        public Guid Identifier
         {
-            get { Internal_GetID(unmanagedPtr, out var resultAsRef); return resultAsRef; }
-            set { Internal_SetID(unmanagedPtr, ref value); }
+            get { Internal_GetIdentifier(unmanagedPtr, out var resultAsRef); return resultAsRef; }
+            set { Internal_SetIdentifier(unmanagedPtr, ref value); }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetID(IntPtr obj, out Guid resultAsRef);
+        internal static extern void Internal_GetIdentifier(IntPtr obj, out Guid resultAsRef);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetID(IntPtr obj, ref Guid value);
+        internal static extern void Internal_SetIdentifier(IntPtr obj, ref Guid value);
 
         /// <summary>
         /// Parameter name
