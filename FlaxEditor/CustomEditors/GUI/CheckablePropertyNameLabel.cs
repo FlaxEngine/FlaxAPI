@@ -48,10 +48,11 @@ namespace FlaxEditor.CustomEditors.GUI
         /// </summary>
         public virtual void UpdateStyle()
         {
+            var style = Style.Current;
             bool check = CheckBox.Checked;
 
             // Update label text color
-            TextColor = check ? Color.White : new Color(0.6f);
+            TextColor = check ? style.Foreground : style.ForegroundGrey;
 
             // Update child controls enabled state
             if (FirstChildControlIndex >= 0 && Parent is PropertiesList propertiesList)

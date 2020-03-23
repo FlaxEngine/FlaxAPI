@@ -203,7 +203,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Update node text color (based on ActorNode.IsActiveInHierarchy but with optimized logic a little)
             if (Parent is ActorTreeNode)
             {
-                Color color = Color.White;
+                Color color = Style.Current.Foreground;
                 var actor = Actor;
                 if (actor != null && actor.HasPrefabLink)
                 {
@@ -214,7 +214,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 if (actor != null && !actor.IsActiveInHierarchy)
                 {
                     // Inactive
-                    return color * 0.6f;
+                    return Style.Current.ForegroundGrey;
                 }
 
                 if (actor?.Scene != null && Editor.Instance.StateMachine.IsPlayMode && actor.IsStatic)

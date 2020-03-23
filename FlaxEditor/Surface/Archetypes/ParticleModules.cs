@@ -203,12 +203,11 @@ namespace FlaxEditor.Surface.Archetypes
                 Render2D.DrawRectangle(new Rectangle(1, 0, Width - 2, Height - 1), Colors[idx]);
 
                 // Close button
-                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, _closeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
 
                 // Arrange button
-                alpha = _arrangeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(Editor.Instance.Icons.DragBar12, _arrangeButtonRect, _arrangeButtonInUse ? Color.Orange : new Color(alpha));
+                var dragBarColor = _arrangeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey;
+                Render2D.DrawSprite(Editor.Instance.Icons.DragBar12, _arrangeButtonRect, _arrangeButtonInUse ? Color.Orange : dragBarColor);
                 if (_arrangeButtonInUse && ArrangeAreaCheck(out _, out var arrangeTargetRect))
                 {
                     Render2D.FillRectangle(arrangeTargetRect, Color.Orange * 0.8f);

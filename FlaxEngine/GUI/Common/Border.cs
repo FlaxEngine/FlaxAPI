@@ -24,7 +24,8 @@ namespace FlaxEngine.GUI
         /// </summary>
         public Border()
         {
-            BorderColor = Color.White;
+            var style = Style.Current;
+            BorderColor = style.BorderNormal;
             BorderWidth = 2.0f;
         }
 

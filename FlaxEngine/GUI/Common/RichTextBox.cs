@@ -12,7 +12,7 @@ namespace FlaxEngine.GUI
         private TextBlockStyle _textStyle = new TextBlockStyle
         {
             Font = new FontReference(Style.Current.FontMedium),
-            Color = Color.White,
+            Color = Style.Current.Foreground,
             BackgroundSelectedBrush = new SolidColorBrush(Style.Current.BackgroundSelected),
         };
 

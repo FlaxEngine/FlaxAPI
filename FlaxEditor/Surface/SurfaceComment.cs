@@ -136,12 +136,10 @@ namespace FlaxEditor.Surface
             Render2D.DrawText(style.FontLarge, Title, _headerRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
 
             // Close button
-            float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-            Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+            Render2D.DrawSprite(style.Cross, _closeButtonRect, _closeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
 
             // Color button
-            alpha = _colorButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-            Render2D.DrawSprite(style.Settings, _colorButtonRect, new Color(alpha));
+            Render2D.DrawSprite(style.Settings, _colorButtonRect, _colorButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
 
             // Check if is resizing
             if (_isResizing)
@@ -151,8 +149,7 @@ namespace FlaxEditor.Surface
             }
 
             // Resize button
-            alpha = _resizeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-            Render2D.DrawSprite(style.Scale, _resizeButtonRect, new Color(alpha));
+            Render2D.DrawSprite(style.Scale, _resizeButtonRect, _resizeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
 
             // Selection outline
             if (_isSelected)

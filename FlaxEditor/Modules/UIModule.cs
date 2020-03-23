@@ -128,6 +128,8 @@ namespace FlaxEditor.Modules
         : base(editor)
         {
             InitOrder = -90;
+            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
+            ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
         }
 
         /// <summary>
@@ -314,57 +316,6 @@ namespace FlaxEditor.Modules
         {
             // Cleanup dock panel hint proxy windows (Flax will destroy them by var but it's better to clear them earlier)
             DockHintWindow.Proxy.Dispose();
-        }
-
-        internal void CreateStyle()
-        {
-            var style = new Style();
-
-            // Metro Style colors
-            style.Background = Color.FromBgra(0xFF1C1C1C);
-            style.LightBackground = Color.FromBgra(0xFF2D2D30);
-            style.Foreground = Color.FromBgra(0xFFFFFFFF);
-            style.ForegroundDisabled = new Color(0.6f);
-            style.BackgroundHighlighted = Color.FromBgra(0xFF54545C);
-            style.BorderHighlighted = Color.FromBgra(0xFF6A6A75);
-            style.BackgroundSelected = Color.FromBgra(0xFF007ACC);
-            style.BorderSelected = Color.FromBgra(0xFF1C97EA);
-            style.BackgroundNormal = Color.FromBgra(0xFF3F3F46);
-            style.BorderNormal = Color.FromBgra(0xFF54545C);
-            style.TextBoxBackground = Color.FromBgra(0xFF333337);
-            style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
-            style.DragWindow = style.BackgroundSelected * 0.7f;
-            style.ProgressNormal = Color.FromBgra(0xFF0ad328);
-
-            // Color picking
-            ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
-
-            // Fonts
-            var options = Editor.Options.Options;
-            style.FontTitle = options.Interface.TitleFont.GetFont();
-            style.FontLarge = options.Interface.LargeFont.GetFont();
-            style.FontMedium = options.Interface.MediumFont.GetFont();
-            style.FontSmall = options.Interface.SmallFont.GetFont();
-
-            // Icons
-            style.ArrowDown = Editor.Icons.ArrowDown12;
-            style.ArrowRight = Editor.Icons.ArrowRight12;
-            style.Search = Editor.Icons.Search12;
-            style.Settings = Editor.Icons.Settings12;
-            style.Cross = Editor.Icons.Cross12;
-            style.CheckBoxIntermediate = Editor.Icons.CheckBoxIntermediate12;
-            style.CheckBoxTick = Editor.Icons.CheckBoxTick12;
-            style.StatusBarSizeGrip = Editor.Icons.StatusBarSizeGrip12;
-            style.Translate = Editor.Icons.Translate16;
-            style.Rotate = Editor.Icons.Rotate16;
-            style.Scale = Editor.Icons.Scale16;
-
-            style.SharedTooltip = new Tooltip();
-
-            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
-
-            // Set as default
-            Style.Current = style;
         }
 
         private IColorPickerDialog ShowPickColorDialog(Control targetControl, Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, ColorValueBox.ColorPickerClosedEvent pickerClosed, bool useDynamicEditing)

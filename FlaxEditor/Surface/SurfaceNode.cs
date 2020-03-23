@@ -737,8 +737,7 @@ namespace FlaxEditor.Surface
             // Close button
             if ((Archetype.Flags & NodeFlags.NoCloseButton) == 0)
             {
-                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, _closeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
             }
 
             // Footer

@@ -74,7 +74,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 AutoFocus = true,
                 AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
-                Color = new Color(0.8f),
+                Color = Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(icons.Search12),
                 Offsets = new Margin(-buttonSize - 2 + _addButton.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
