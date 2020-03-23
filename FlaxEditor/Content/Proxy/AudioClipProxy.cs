@@ -59,8 +59,8 @@ namespace FlaxEditor.Content
                 preview = new AudioClipPreview
                 {
                     DrawMode = AudioClipPreview.DrawModes.Fill,
-                    DockStyle = DockStyle.Fill,
-                    Size = new Vector2(PreviewsCache.AssetIconSize)
+                    Offsets = Margin.Zero,
+                    AnchorPreset = AnchorPresets.StretchAll,
                 };
             }
 

@@ -48,6 +48,7 @@ This extension is available to download [here](https://marketplace.visualstudio.
 # Screenshots
 
 ![rendering](https://flaxengine.com/wp-content/images/flax-pic-1.png "Rendering")
+![performance](https://flaxengine.com/wp-content/images/flax-pic-3.png "High Performance")
 ![pbr-rendering](https://flaxengine.com/wp-content/images/flax-pic-2.png "PBR Rendering")
 ![terrain](https://flaxengine.com/wp-content/images/visuals/terrain.jpg "Terrain")
 ![gi](https://flaxengine.com/wp-content/images/visuals/gi.jpg "Global Illumination")

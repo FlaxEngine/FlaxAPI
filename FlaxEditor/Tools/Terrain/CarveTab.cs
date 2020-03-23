@@ -65,7 +65,8 @@ namespace FlaxEditor.Tools.Terrain
             {
                 Orientation = Orientation.Vertical,
                 UseScroll = true,
-                DockStyle = DockStyle.Fill,
+                Offsets = Margin.Zero,
+                AnchorPreset = AnchorPresets.StretchAll,
                 TabsSize = new Vector2(50, 32),
                 Parent = this
             };
@@ -79,20 +80,23 @@ namespace FlaxEditor.Tools.Terrain
 
             _noTerrainPanel = new ContainerControl
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 BackgroundColor = Style.Current.Background,
                 Parent = this
             };
             var noTerrainLabel = new Label
             {
                 Text = "Select terrain to edit\nor\n\n\n\n",
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = _noTerrainPanel
             };
             var noTerrainButton = new Button
             {
                 Text = "Create new terrain",
-                AnchorStyle = AnchorStyle.Center,
+                AnchorPreset = AnchorPresets.MiddleCenter,
+                Offsets = new Margin(-60, 120, -12, 24),
                 Parent = _noTerrainPanel
             };
             noTerrainButton.Clicked += OnCreateNewTerrainClicked;

@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using FlaxEngine.GUI;
@@ -91,6 +92,19 @@ namespace FlaxEngine
             // Link it as a GUI root control
             window.GUI.BackgroundColor = Color.Transparent;
             RootControl.GameRoot = window.GUI;
+        }
+
+        internal static Type MakeGenericType(Type genericType, Type[] genericArgs)
+        {
+            return genericType.MakeGenericType(genericArgs);
+        }
+
+        internal static object[] GetDictionaryKeys(IDictionary dictionary)
+        {
+            var keys = dictionary.Keys;
+            var result = new object[keys.Count];
+            keys.CopyTo(result, 0);
+            return result;
         }
 
         private static void CreateGuiStyle()

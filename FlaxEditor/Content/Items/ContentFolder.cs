@@ -2,6 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using FlaxEditor.GUI.Drag;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -149,6 +152,21 @@ namespace FlaxEditor.Content
 
             // Update node text
             Node.Text = ShortName;
+        }
+
+        public static long DirSize(DirectoryInfo dir)
+        {
+            return dir.GetFiles().Sum(fi => fi.Length) +
+                   dir.GetDirectories().Sum(DirSize);
+        }
+
+        /// <inheritdoc />
+        protected override void UpdateTooltipText()
+        {
+            var sb = new StringBuilder();
+            sb.Append("Size: ").Append(Utilities.Utils.FormatBytesCount((int)DirSize(new DirectoryInfo(Path)))).AppendLine();
+            sb.Append("Path: ").Append(Path).AppendLine();
+            TooltipText = sb.ToString();
         }
 
         /// <inheritdoc />

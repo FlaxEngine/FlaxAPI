@@ -9,7 +9,7 @@ namespace FlaxEditor.CustomEditors
     /// Custom <see cref="ValueContainer"/> for any type of storage and data management logic.
     /// </summary>
     /// <seealso cref="FlaxEditor.CustomEditors.ValueContainer" />
-    public sealed class CustomValueContainer : ValueContainer
+    public class CustomValueContainer : ValueContainer
     {
         /// <summary>
         /// Get value delegate.

@@ -7,23 +7,23 @@ using FlaxEngine.Json;
 namespace FlaxEditor.Utilities
 {
     /// <summary>
-    ///     This structure represents the comparison of one member of an object to the corresponding member of another object.
+    /// This structure represents the comparison of one member of an object to the corresponding member of another object.
     /// </summary>
     [Serializable]
     public struct MemberComparison
     {
         /// <summary>
-        ///     Members path this Comparison compares.
+        /// Members path this Comparison compares.
         /// </summary>
         public MemberInfoPath MemberPath;
 
         /// <summary>
-        ///     The value of first object respective member
+        /// The value of first object respective member
         /// </summary>
         public readonly object Value1;
 
         /// <summary>
-        ///     The value of second object respective member
+        /// The value of second object respective member
         /// </summary>
         public readonly object Value2;
 
@@ -63,7 +63,7 @@ namespace FlaxEditor.Utilities
             var finalMember = MemberPath.GetLastMember(ref instance);
 
             var type = finalMember.Type;
-            if (value != null)
+            if (value != null && type != null)
             {
                 if (type.IsEnum)
                 {

@@ -46,7 +46,8 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             Gradient = new GradientEditor
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this,
             };
             Gradient.Edited += OnGradientEdited;

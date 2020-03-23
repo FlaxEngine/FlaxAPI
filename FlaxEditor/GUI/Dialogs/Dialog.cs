@@ -30,6 +30,11 @@ namespace FlaxEditor.GUI.Dialogs
         protected DialogResult _result;
 
         /// <summary>
+        /// The dialog size.
+        /// </summary>
+        protected Vector2 _dialogSize = new Vector2(300, 100);
+
+        /// <summary>
         /// Gets the dialog result.
         /// </summary>
         public DialogResult Result => _result;
@@ -39,10 +44,10 @@ namespace FlaxEditor.GUI.Dialogs
         /// </summary>
         /// <param name="title">The title.</param>
         protected Dialog(string title)
-        : base(new Rectangle(0, 0, 300, 100))
         {
             BackgroundColor = Style.Current.Background;
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
             ClipChildren = false;
 
             _title = title;
@@ -138,7 +143,7 @@ namespace FlaxEditor.GUI.Dialogs
             // Setup initial window settings
             CreateWindowSettings settings = CreateWindowSettings.Default;
             settings.Title = _title;
-            settings.Size = Size * Platform.DpiScale;
+            settings.Size = _dialogSize * Platform.DpiScale;
             settings.AllowMaximize = false;
             settings.AllowMinimize = false;
             settings.HasSizingFrame = false;
@@ -155,6 +160,7 @@ namespace FlaxEditor.GUI.Dialogs
             _window.Closed += OnClosed;
 
             // Link to the window
+            Offsets = Margin.Zero;
             Parent = windowGUI;
 
             // Show

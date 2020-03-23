@@ -40,6 +40,7 @@ namespace FlaxEditor.Windows
                 { PlatformType.XboxOne, new XboxOne() },
                 { PlatformType.WindowsStore, new WindowsStore() },
                 { PlatformType.Linux, new Linux() },
+                { PlatformType.PS4, new PS4() },
             };
 
             public BuildTabProxy(GameCookerWindow win, PlatformSelector platformSelector)
@@ -51,6 +52,7 @@ namespace FlaxEditor.Windows
                 PerPlatformOptions[PlatformType.XboxOne].Init("Output/XboxOne", "XboxOne");
                 PerPlatformOptions[PlatformType.WindowsStore].Init("Output/WindowsStore", "UWP");
                 PerPlatformOptions[PlatformType.Linux].Init("Output/Linux", "Linux");
+                PerPlatformOptions[PlatformType.PS4].Init("Output/PS4", "PS4");
             }
 
             public abstract class Platform
@@ -65,7 +67,7 @@ namespace FlaxEditor.Windows
                 public bool ShowOutput = true;
 
                 [EditorOrder(20), Tooltip("Configuration build mode")]
-                public BuildMode ConfigurationMode;
+                public BuildConfiguration ConfigurationMode = BuildConfiguration.Development;
 
                 [EditorOrder(100), Tooltip("Custom macros")]
                 public string[] Defines;
@@ -77,8 +79,6 @@ namespace FlaxEditor.Windows
                     get
                     {
                         BuildOptions options = BuildOptions.None;
-                        if (ConfigurationMode == BuildMode.Debug)
-                            options |= BuildOptions.Debug;
                         if (ShowOutput)
                             options |= BuildOptions.ShowOutput;
                         return options;
@@ -98,12 +98,15 @@ namespace FlaxEditor.Windows
                 public virtual void OnNotAvailableLayout(LayoutElementsContainer layout)
                 {
                     layout.Label("Missing platform data tools for the target platform.", TextAlignment.Center);
-                    layout.Label("Use Flax Launcher and download the required package.", TextAlignment.Center);
+                    if (FlaxEditor.Editor.IsDevInstance())
+                        layout.Label("Build engine for this platform.", TextAlignment.Center);
+                    else
+                        layout.Label("Use Flax Launcher and download the required package.", TextAlignment.Center);
                 }
 
                 public virtual void Build()
                 {
-                    GameCooker.Build(BuildPlatform, Options, Output, Defines);
+                    GameCooker.Build(BuildPlatform, ConfigurationMode, Output, Options, Defines);
                 }
             }
 
@@ -167,6 +170,11 @@ namespace FlaxEditor.Windows
                 protected override BuildPlatform BuildPlatform => BuildPlatform.LinuxX64;
             }
 
+            public class PS4 : Platform
+            {
+                protected override BuildPlatform BuildPlatform => BuildPlatform.PS4;
+            }
+
             public class Editor : CustomEditor
             {
                 private PlatformType _platform;
@@ -194,6 +202,9 @@ namespace FlaxEditor.Windows
                             break;
                         case PlatformType.Linux:
                             name = "Linux";
+                            break;
+                        case PlatformType.PS4:
+                            name = "PlayStation 4";
                             break;
                         default:
                             name = CustomEditorsUtil.GetPropertyNameUI(_platform.ToString());
@@ -238,11 +249,15 @@ namespace FlaxEditor.Windows
 
         private class PresetsTargetsColumnBase : ContainerControl
         {
-            public PresetsTargetsColumnBase(bool isPresets, Action addClicked)
-            {
-                DockStyle = DockStyle.Left;
-                Width = 140;
+            protected GameCookerWindow _cooker;
 
+            protected PresetsTargetsColumnBase(ContainerControl parent, GameCookerWindow cooker, bool isPresets, Action addClicked)
+            {
+                AnchorPreset = AnchorPresets.VerticalStretchLeft;
+                Parent = parent;
+                Offsets = new Margin(isPresets ? 0 : 140, 140, 0, 0);
+
+                _cooker = cooker;
                 var title = new Label
                 {
                     Bounds = new Rectangle(0, 0, Width, 19),
@@ -276,9 +291,9 @@ namespace FlaxEditor.Windows
                 var selectButton = new Button
                 {
                     Text = name,
-                    Bounds = new Rectangle(6, y + 2, Width - 12 - 20, 22),
                     Tag = index,
                     Parent = this,
+                    Bounds = new Rectangle(6, y + 2, Width - 12 - 20, 22),
                 };
                 if (selectedIndex == index)
                     selectButton.SetColors(Color.FromBgra(0xFFAB8400));
@@ -286,9 +301,9 @@ namespace FlaxEditor.Windows
                 var removeButton = new Button
                 {
                     Text = "x",
-                    Bounds = new Rectangle(selectButton.Right + 4, y + 4, 18, 18),
                     Tag = index,
                     Parent = this,
+                    Bounds = new Rectangle(selectButton.Right + 4, y + 4, 18, 18),
                 };
                 removeButton.ButtonClicked += remove;
             }
@@ -306,10 +321,8 @@ namespace FlaxEditor.Windows
 
         private sealed class PresetsColumn : PresetsTargetsColumnBase
         {
-            private GameCookerWindow _cooker;
-
-            public PresetsColumn(GameCookerWindow cooker)
-            : base(true, cooker.AddPreset)
+            public PresetsColumn(ContainerControl parent, GameCookerWindow cooker)
+            : base(parent, cooker, true, cooker.AddPreset)
             {
                 _cooker = cooker;
             }
@@ -334,10 +347,8 @@ namespace FlaxEditor.Windows
 
         private sealed class TargetsColumn : PresetsTargetsColumnBase
         {
-            private GameCookerWindow _cooker;
-
-            public TargetsColumn(GameCookerWindow cooker)
-            : base(false, cooker.AddTarget)
+            public TargetsColumn(ContainerControl parent, GameCookerWindow cooker)
+            : base(parent, cooker, false, cooker.AddTarget)
             {
                 _cooker = cooker;
 
@@ -345,41 +356,41 @@ namespace FlaxEditor.Windows
                 var helpButton = new Button
                 {
                     Text = "Help",
-                    Bounds = new Rectangle(6, Height - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, Height - height, Width - 12, 22),
                 };
-                helpButton.Clicked += () => Platform.StartProcess(Constants.DocsUrl + "manual/editor/game-cooker/");
+                helpButton.Clicked += () => Platform.OpenUrl(Constants.DocsUrl + "manual/editor/game-cooker/");
                 var buildAllButton = new Button
                 {
                     Text = "Build All",
-                    Bounds = new Rectangle(6, helpButton.Top - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, helpButton.Top - height, Width - 12, 22),
                 };
                 buildAllButton.Clicked += _cooker.BuildAllTargets;
                 var buildButton = new Button
                 {
                     Text = "Build",
-                    Bounds = new Rectangle(6, buildAllButton.Top - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, buildAllButton.Top - height, Width - 12, 22),
                 };
                 buildButton.Clicked += _cooker.BuildTarget;
                 var discardButton = new Button
                 {
                     Text = "Discard",
-                    Bounds = new Rectangle(6, buildButton.Top - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, buildButton.Top - height, Width - 12, 22),
                 };
                 discardButton.Clicked += _cooker.GatherData;
                 var saveButton = new Button
                 {
                     Text = "Save",
-                    Bounds = new Rectangle(6, discardButton.Top - height, Width - 12, 22),
-                    AnchorStyle = AnchorStyle.BottomLeft,
                     Parent = this,
+                    AnchorPreset = AnchorPresets.BottomLeft,
+                    Bounds = new Rectangle(6, discardButton.Top - height, Width - 12, 22),
                 };
                 saveButton.Clicked += _cooker.SaveData;
             }
@@ -411,7 +422,7 @@ namespace FlaxEditor.Windows
         private string _preBuildAction;
         private string _postBuildAction;
         private BuildPreset[] _data;
-        private bool _isDataDirty, _exitOnBuildEnd;
+        private bool _isDataDirty, _exitOnBuildEnd, _lastBuildFailed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameCookerWindow"/> class.
@@ -425,7 +436,8 @@ namespace FlaxEditor.Windows
             var sections = new Tabs
             {
                 Orientation = Orientation.Vertical,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 TabsSize = new Vector2(120, 32),
                 Parent = this
             };
@@ -457,6 +469,7 @@ namespace FlaxEditor.Windows
             else if (type == GameCooker.EventType.BuildFailed)
             {
                 _postBuildAction = null;
+                _lastBuildFailed = true;
             }
         }
 
@@ -552,14 +565,14 @@ namespace FlaxEditor.Windows
                         Name = "Windows 64bit",
                         Output = "Output\\Win64",
                         Platform = BuildPlatform.Windows64,
-                        Mode = BuildMode.Debug,
+                        Mode = BuildConfiguration.Development,
                     },
                     new BuildTarget
                     {
                         Name = "Windows 32bit",
                         Output = "Output\\Win32",
                         Platform = BuildPlatform.Windows32,
-                        Mode = BuildMode.Debug,
+                        Mode = BuildConfiguration.Development,
                     },
                 }
             };
@@ -583,7 +596,7 @@ namespace FlaxEditor.Windows
                 Name = "Xbox One",
                 Output = "Output\\XboxOne",
                 Platform = BuildPlatform.XboxOne,
-                Mode = BuildMode.Release,
+                Mode = BuildConfiguration.Development,
             };
             _data[_selectedPresetIndex].Targets = targets;
 
@@ -677,17 +690,12 @@ namespace FlaxEditor.Windows
         {
             var tab = sections.AddTab(new Tab("Presets"));
 
-            _presets = new PresetsColumn(this)
-            {
-                Parent = tab,
-            };
-            _targets = new TargetsColumn(this)
-            {
-                Parent = tab,
-            };
+            _presets = new PresetsColumn(tab, this);
+            _targets = new TargetsColumn(tab, this);
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(140 * 2, 0, 0, 0),
                 Parent = tab
             };
 
@@ -718,13 +726,14 @@ namespace FlaxEditor.Windows
 
             var platformSelector = new PlatformSelector
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 BackgroundColor = Style.Current.LightBackground,
                 Parent = tab,
             };
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, platformSelector.Offsets.Height, 0),
                 Parent = tab
             };
 
@@ -788,12 +797,12 @@ namespace FlaxEditor.Windows
                     _preBuildAction = target.PreBuildAction;
                     _postBuildAction = target.PostBuildAction;
 
-                    GameCooker.Build(target.Platform, target.Options, target.Output, target.Defines);
+                    GameCooker.Build(target.Platform, target.Mode, target.Output, target.Options, target.Defines);
                 }
                 else if (_exitOnBuildEnd)
                 {
                     _exitOnBuildEnd = false;
-                    Platform.Exit();
+                    Platform.Exit(_lastBuildFailed ? 1 : 0);
                 }
             }
         }

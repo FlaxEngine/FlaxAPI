@@ -9,7 +9,6 @@ using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Newtonsoft.Json;
-using Object = System.Object;
 
 namespace FlaxEditor.Utilities
 {
@@ -163,11 +162,15 @@ namespace FlaxEditor.Utilities
         {
             if (type == typeof(string))
                 return string.Empty;
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
+            if (type == typeof(Color))
+                return Color.White;
+            if (type == typeof(Quaternion))
+                return Quaternion.Identity;
+            if (type == typeof(Transform))
+                return Transform.Identity;
 
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
             if (typeof(object).IsAssignableFrom(type))
                 return null;
             return Activator.CreateInstance(type);
@@ -347,6 +350,7 @@ namespace FlaxEditor.Utilities
             case ContentDomain.Audio: return typeof(AudioClip);
             case ContentDomain.Animation: return typeof(Animation);
             case ContentDomain.SkeletonMask: return typeof(SkeletonMask);
+            case ContentDomain.GameplayGlobals: return typeof(GameplayGlobals);
             }
 
             // Anything
@@ -395,9 +399,9 @@ namespace FlaxEditor.Utilities
         /// </summary>
         /// <param name="srcDirectoryPath">The source directory path.</param>
         /// <param name="dstDirectoryPath">The destination directory path.</param>
-        /// <param name="copySubdirs">If set to <c>true</c> copy subdirectories.</param>
+        /// <param name="copySubDirs">If set to <c>true</c> copy subdirectories.</param>
         /// <param name="overrideFiles">if set to <c>true</c> override existing files.</param>
-        public static void DirectoryCopy(string srcDirectoryPath, string dstDirectoryPath, bool copySubdirs = true, bool overrideFiles = false)
+        public static void DirectoryCopy(string srcDirectoryPath, string dstDirectoryPath, bool copySubDirs = true, bool overrideFiles = false)
         {
             var dir = new DirectoryInfo(srcDirectoryPath);
 
@@ -418,7 +422,7 @@ namespace FlaxEditor.Utilities
                 files[i].CopyTo(tmp, overrideFiles);
             }
 
-            if (copySubdirs)
+            if (copySubDirs)
             {
                 var dirs = dir.GetDirectories();
                 for (int i = 0; i < dirs.Length; i++)
@@ -909,7 +913,7 @@ namespace FlaxEditor.Utilities
         /// Shows the source code window.
         /// </summary>
         /// <param name="material">The material asset.</param>
-        public static void ShowSourceCode(string source, string title)
+        public static void ShowSourceCodeWindow(string source, string title)
         {
             if (string.IsNullOrEmpty(source))
             {
@@ -927,10 +931,12 @@ namespace FlaxEditor.Utilities
             settings.Title = title;
             var dialog = Window.Create(settings);
 
-            var copyButton = new Button(4, 4, 100);
-            copyButton.Text = "Copy";
+            var copyButton = new Button(4, 4, 100)
+            {
+                Text = "Copy",
+                Parent = dialog.GUI,
+            };
             copyButton.Clicked += () => Platform.ClipboardText = source;
-            copyButton.Parent = dialog.GUI;
 
             var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);
             sourceTextBox.Height = settings.Size.Y - sourceTextBox.Top - 2;

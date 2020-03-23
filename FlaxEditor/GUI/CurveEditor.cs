@@ -911,9 +911,9 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            protected override void SetLocationInternal(ref Vector2 location)
+            protected override void OnLocationChanged()
             {
-                base.SetLocationInternal(ref location);
+                base.OnLocationChanged();
 
                 UpdateTooltip();
             }
@@ -1164,7 +1164,8 @@ namespace FlaxEditor.GUI
             {
                 ScrollMargin = new Margin(150.0f),
                 AlwaysShowScrollbars = true,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
             _contents = new Contents(this)
@@ -1339,7 +1340,7 @@ namespace FlaxEditor.GUI
                     Parent = this
                 };
                 var editor = new CustomEditorPresenter(null);
-                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.AnchorPreset = AnchorPresets.HorizontalStretchTop;
                 editor.Panel.IsScrollable = true;
                 editor.Panel.Parent = panel1;
                 editor.Modified += OnModified;
@@ -2051,9 +2052,9 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             UpdateKeyframes();
         }

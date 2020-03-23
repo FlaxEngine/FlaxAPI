@@ -115,14 +115,33 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
+        /// Adds two margins.
+        /// </summary>
+        /// <param name="left">The first margins to add.</param>
+        /// <param name="right">The second margins to add.</param>
+        /// <returns>The sum of the two margins.</returns>
+        public static Margin operator +(Margin left, Margin right)
+        {
+            return new Margin(left.Left + right.Left, left.Right + right.Right, left.Top + right.Top, left.Bottom + right.Bottom);
+        }
+
+        /// <summary>
+        /// Subtracts two margins.
+        /// </summary>
+        /// <param name="left">The first margins to subtract from.</param>
+        /// <param name="right">The second margins to subtract.</param>
+        /// <returns>The result of subtraction of the two margins.</returns>
+        public static Margin operator -(Margin left, Margin right)
+        {
+            return new Margin(left.Left - right.Left, left.Right - right.Right, left.Top - right.Top, left.Bottom - right.Bottom);
+        }
+
+        /// <summary>
         /// Tests for equality between two objects.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
-        /// <returns>
-        /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
-        /// <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise, <c>false</c>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Margin left, Margin right)
         {
@@ -134,10 +153,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
-        /// <returns>
-        /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
-        /// <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise, <c>false</c>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Margin left, Margin right)
         {

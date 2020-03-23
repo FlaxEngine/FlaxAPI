@@ -50,38 +50,40 @@ namespace FlaxEditor.Windows
                 float margin = 4;
                 float iconSize = 64;
 
-                var iconImage = new Image(margin, margin, iconSize, iconSize)
+                var iconImage = new Image
                 {
                     Brush = new SpriteBrush(Editor.Instance.Icons.Plugin64),
                     Parent = this,
+                    Bounds = new Rectangle(margin, margin, iconSize, iconSize),
                 };
 
                 var icon = PluginUtils.TryGetPluginIcon(plugin);
                 if (icon)
                     iconImage.Brush = new TextureBrush(icon);
 
-                Width = 300;
-                Height = 100;
+                Size = new Vector2(300, 100);
 
                 float tmp1 = iconImage.Right + margin;
-                var nameLabel = new Label(tmp1, margin, Width - tmp1 - margin, 28)
+                var nameLabel = new Label
                 {
                     HorizontalAlignment = TextAlignment.Near,
-                    AnchorStyle = AnchorStyle.Upper,
+                    AnchorPreset = AnchorPresets.HorizontalStretchTop,
                     Text = desc.Name,
                     Font = new FontReference(Style.Current.FontLarge),
                     Parent = this,
+                    Bounds = new Rectangle(tmp1, margin, Width - tmp1 - margin, 28),
                 };
 
                 tmp1 = nameLabel.Bottom + margin + 8;
-                var descLabel = new Label(nameLabel.X, tmp1, nameLabel.Width, Height - tmp1 - margin)
+                var descLabel = new Label
                 {
                     HorizontalAlignment = TextAlignment.Near,
                     VerticalAlignment = TextAlignment.Near,
                     Wrapping = TextWrapping.WrapWords,
-                    AnchorStyle = AnchorStyle.Upper,
+                    AnchorPreset = AnchorPresets.HorizontalStretchTop,
                     Text = desc.Description,
                     Parent = this,
+                    Bounds = new Rectangle(nameLabel.X, tmp1, nameLabel.Width, Height - tmp1 - margin),
                 };
 
                 string versionString = string.Empty;
@@ -91,13 +93,14 @@ namespace FlaxEditor.Windows
                     versionString = "BETA ";
                 versionString += "Version ";
                 versionString += desc.Version != null ? desc.Version.ToString() : "1.0";
-                var versionLabel = new Label(Width - 140 - margin, margin, 140, 14)
+                var versionLabel = new Label
                 {
                     HorizontalAlignment = TextAlignment.Far,
                     VerticalAlignment = TextAlignment.Center,
-                    AnchorStyle = AnchorStyle.UpperRight,
+                    AnchorPreset = AnchorPresets.TopRight,
                     Text = versionString,
                     Parent = this,
+                    Bounds = new Rectangle(Width - 140 - margin, margin, 140, 14),
                 };
 
                 string url = null;
@@ -110,18 +113,19 @@ namespace FlaxEditor.Windows
                 versionLabel.Font.Font.WaitForLoaded();
                 var font = versionLabel.Font.GetFont();
                 var authorWidth = font.MeasureText(desc.Author).X + 8;
-                var authorLabel = new ClickLabel(Width - authorWidth - margin, versionLabel.Bottom + margin, authorWidth, 14)
+                var authorLabel = new ClickLabel
                 {
                     HorizontalAlignment = TextAlignment.Far,
                     VerticalAlignment = TextAlignment.Center,
-                    AnchorStyle = AnchorStyle.UpperRight,
+                    AnchorPreset = AnchorPresets.TopRight,
                     Text = desc.Author,
                     Parent = this,
+                    Bounds = new Rectangle(Width - authorWidth - margin, versionLabel.Bottom + margin, authorWidth, 14),
                 };
                 if (url != null)
                 {
                     authorLabel.TextColorHighlighted = Style.Current.BackgroundSelected;
-                    authorLabel.DoubleClick = () => Platform.StartProcess(url);
+                    authorLabel.DoubleClick = () => Platform.OpenUrl(url);
                 }
             }
 
@@ -131,11 +135,6 @@ namespace FlaxEditor.Windows
                 /// The double click event.
                 /// </summary>
                 public Action DoubleClick;
-
-                public ClickLabel(float x, float y, float width, float height)
-                : base(x, y, width, height)
-                {
-                }
 
                 /// <inheritdoc />
                 public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
@@ -167,12 +166,14 @@ namespace FlaxEditor.Windows
             {
                 var scroll = new Panel(ScrollBars.Vertical)
                 {
-                    DockStyle = DockStyle.Fill,
+                    AnchorPreset = AnchorPresets.StretchAll,
+                    Offsets = Margin.Zero,
                     Parent = this,
                 };
                 var panel = new VerticalPanel
                 {
-                    DockStyle = DockStyle.Top,
+                    AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                    Offsets = Margin.Zero,
                     IsScrollable = true,
                     Parent = scroll,
                 };
@@ -192,7 +193,8 @@ namespace FlaxEditor.Windows
             _tabs = new Tabs
             {
                 Orientation = Orientation.Vertical,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 TabsSize = new Vector2(120, 32),
                 Parent = this
             };
@@ -222,7 +224,8 @@ namespace FlaxEditor.Windows
             {
                 category = new CategoryEntry(desc.Category)
                 {
-                    DockStyle = DockStyle.Fill,
+                    AnchorPreset = AnchorPresets.StretchAll,
+                    Offsets = Margin.Zero,
                     Parent = _tabs
                 };
                 _categories.Add(category);

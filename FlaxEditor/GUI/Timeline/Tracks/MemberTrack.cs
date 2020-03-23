@@ -98,57 +98,61 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         protected MemberTrack(ref TrackCreateOptions options, bool useNavigationButtons = true, bool useValuePreview = true)
         : base(ref options)
         {
-            var uiLeft = _muteCheckbox.Left;
+            var uiLeft = _muteCheckbox.Offsets.Left;
 
             if (useNavigationButtons)
             {
                 // Navigation buttons
                 const float buttonSize = 14;
                 var icons = Editor.Instance.Icons;
-                _rightKey = new Image(uiLeft - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+                _rightKey = new Image
                 {
                     TooltipText = "Sets the time to the next key",
                     AutoFocus = true,
-                    AnchorStyle = AnchorStyle.CenterRight,
+                    AnchorPreset = AnchorPresets.MiddleRight,
                     IsScrollable = false,
                     Color = Style.Current.ForegroundGrey,
                     Margin = new Margin(1),
                     Brush = new SpriteBrush(icons.ArrowRight32),
-                    Parent = this
+                    Offsets = new Margin(-buttonSize - 2 + uiLeft, buttonSize, buttonSize * -0.5f, buttonSize),
+                    Parent = this,
                 };
-                _addKey = new Image(_rightKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+                _addKey = new Image
                 {
                     TooltipText = "Adds a new key at the current time",
                     AutoFocus = true,
-                    AnchorStyle = AnchorStyle.CenterRight,
+                    AnchorPreset = AnchorPresets.MiddleRight,
                     IsScrollable = false,
                     Color = Style.Current.ForegroundGrey,
                     Margin = new Margin(3),
                     Brush = new SpriteBrush(icons.Add48),
-                    Parent = this
+                    Offsets = new Margin(-buttonSize - 2 + _rightKey.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                    Parent = this,
                 };
-                _leftKey = new Image(_addKey.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+                _leftKey = new Image
                 {
                     TooltipText = "Sets the time to the previous key",
                     AutoFocus = true,
-                    AnchorStyle = AnchorStyle.CenterRight,
+                    AnchorPreset = AnchorPresets.MiddleRight,
                     IsScrollable = false,
                     Color = Style.Current.ForegroundGrey,
                     Margin = new Margin(1),
                     Brush = new SpriteBrush(icons.ArrowLeft32),
-                    Parent = this
+                    Offsets = new Margin(-buttonSize - 2 + _addKey.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                    Parent = this,
                 };
-                uiLeft = _leftKey.Left;
+                uiLeft = _leftKey.Offsets.Left;
             }
 
             if (useValuePreview)
             {
                 // Value preview
                 var previewWidth = 100.0f;
-                _previewValue = new Label(uiLeft - previewWidth - 2.0f, 0, previewWidth, TextBox.DefaultHeight)
+                _previewValue = new Label
                 {
                     AutoFocus = true,
-                    AnchorStyle = AnchorStyle.CenterRight,
+                    AnchorPreset = AnchorPresets.MiddleRight,
+                    Offsets = new Margin(-previewWidth - 2 + uiLeft, previewWidth, TextBox.DefaultHeight * -0.5f, TextBox.DefaultHeight),
                     IsScrollable = false,
                     AutoFitTextRange = new Vector2(0.01f, 1.0f),
                     AutoFitText = true,

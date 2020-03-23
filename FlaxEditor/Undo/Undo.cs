@@ -31,7 +31,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Stack of undo actions for future disposal.
+        /// Stack of undo actions for future disposal.
         /// </summary>
         private readonly OrderedDictionary<object, IUndoInternal> _snapshots = new OrderedDictionary<object, IUndoInternal>();
 
@@ -108,7 +108,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Internal class for keeping reference of undo action.
+        /// Internal class for keeping reference of undo action.
         /// </summary>
         internal class UndoInternal : IUndoInternal
         {
@@ -143,7 +143,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Begins recording for undo action.
+        /// Begins recording for undo action.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to record.</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
@@ -156,7 +156,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Ends recording for undo action.
+        /// Ends recording for undo action.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to finish recording, if null take last provided.</param>
         /// <param name="customActionBefore">Custom action to append to the undo block action before recorded modifications apply.</param>
@@ -196,7 +196,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Internal class for keeping reference of undo action that modifies collection of objects.
+        /// Internal class for keeping reference of undo action that modifies collection of objects.
         /// </summary>
         internal class UndoMultiInternal : IUndoInternal
         {
@@ -236,7 +236,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Begins recording for undo action.
+        /// Begins recording for undo action.
         /// </summary>
         /// <param name="snapshotInstances">Instances of objects to record.</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
@@ -249,7 +249,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Ends recording for undo action.
+        /// Ends recording for undo action.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to finish recording, if null take last provided.</param>
         /// <param name="customActionBefore">Custom action to append to the undo block action before recorded modifications apply.</param>
@@ -289,7 +289,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Creates new undo action for provided instance of object.
+        /// Creates new undo action for provided instance of object.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to record</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
@@ -302,7 +302,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Creates new undo action for provided instance of object.
+        /// Creates new undo action for provided instance of object.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to record</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
@@ -316,7 +316,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Creates new undo action for provided instance of object.
+        /// Creates new undo action for provided instance of object.
         /// </summary>
         /// <param name="snapshotInstance">Instance of an object to record</param>
         /// <param name="actionString">Name of action to be displayed in undo stack.</param>
@@ -346,7 +346,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Undo last recorded action
+        /// Undo last recorded action
         /// </summary>
         public void PerformUndo()
         {
@@ -360,7 +360,7 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        ///     Redo last undone action
+        /// Redo last undone action
         /// </summary>
         public void PerformRedo()
         {

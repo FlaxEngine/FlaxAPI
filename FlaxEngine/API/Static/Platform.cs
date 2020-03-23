@@ -4,6 +4,20 @@ using System.Threading;
 
 namespace FlaxEngine
 {
+    /// <summary>
+    /// Network connection types for device.
+    /// </summary>
+    public enum NetworkConnectionType
+    {
+        None,
+        Unknown,
+        AirplaneMode,
+        Cell,
+        WiFi,
+        Bluetooth,
+        Ethernet,
+    };
+
     public static partial class Platform
     {
         internal static bool _is64Bit;

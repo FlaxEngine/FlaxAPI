@@ -367,63 +367,18 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        /// Gets rectangle in local control coordinates with area for controls (without scroll bars, docked controls, etc.).
+        /// Gets rectangle in local control coordinates with area for controls (without scroll bars, anchored controls, etc.).
         /// </summary>
         /// <returns>The rectangle in local control coordinates with area for controls (without scroll bars etc.).</returns>
         public Rectangle GetClientArea()
         {
             Rectangle clientArea;
             GetDesireClientArea(out clientArea);
-
-            for (int i = 0; i < _children.Count; i++)
-            {
-                var child = _children[i];
-                if (!child.Visible)
-                    continue;
-
-                switch (child.DockStyle)
-                {
-                case DockStyle.None: break;
-                case DockStyle.Top:
-                {
-                    float height = Mathf.Min(child.Height, clientArea.Height);
-                    clientArea.Location.Y += height;
-                    clientArea.Size.Y -= height;
-                    break;
-                }
-                case DockStyle.Bottom:
-                {
-                    float height = Mathf.Min(child.Height, clientArea.Height);
-                    clientArea.Size.Y -= height;
-                    break;
-                }
-                case DockStyle.Fill:
-                {
-                    GetDesireClientArea(out clientArea);
-                    break;
-                }
-                case DockStyle.Left:
-                {
-                    float width = Mathf.Min(child.Width, clientArea.Width);
-                    clientArea.Location.X += width;
-                    clientArea.Size.X -= width;
-                    break;
-                }
-                case DockStyle.Right:
-                {
-                    float width = Mathf.Min(child.Width, clientArea.Width);
-                    clientArea.Size.X -= width;
-                    break;
-                }
-                default: throw new ArgumentOutOfRangeException();
-                }
-            }
-
             return clientArea;
         }
 
         /// <summary>
-        ///     Sort child controls list
+        /// Sort child controls list
         /// </summary>
         [NoAnimate]
         public void SortChildren()
@@ -433,7 +388,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Sort children using recursion
+        /// Sort children using recursion
         /// </summary>
         [NoAnimate]
         public void SortChildrenRecursive()
@@ -514,7 +469,7 @@ namespace FlaxEngine.GUI
         /// Gets the desire client area rectangle for all the controls.
         /// </summary>
         /// <param name="rect">The client area rectangle for child controls.</param>
-        protected virtual void GetDesireClientArea(out Rectangle rect)
+        public virtual void GetDesireClientArea(out Rectangle rect)
         {
             rect = new Rectangle(Vector2.Zero, Size);
         }
@@ -527,13 +482,13 @@ namespace FlaxEngine.GUI
         /// <param name="location">The location in this container control space.</param>
         /// <param name="childSpaceLocation">The output location in child control space.</param>
         /// <returns>True if point is over the control content, otherwise false.</returns>
-        protected virtual bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
+        public virtual bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
         {
             return child.IntersectsContent(ref location, out childSpaceLocation);
         }
 
         /// <summary>
-        ///     Update contain focus state and all it's children
+        /// Update contain focus state and all it's children
         /// </summary>
         protected void UpdateContainsFocus()
         {
@@ -568,128 +523,22 @@ namespace FlaxEngine.GUI
         }
 
         /// <summary>
-        ///     Arrange docked controls and return final client area for other controls
+        /// Updates child controls bounds.
         /// </summary>
-        /// <param name="clientArea">Result client area</param>
-        protected void ArrangeDockedControls(ref Rectangle clientArea)
+        protected void UpdateChildrenBounds()
         {
             for (int i = 0; i < _children.Count; i++)
             {
-                var child = _children[i];
-
-                if (!child.Visible)
-                    continue;
-
-                switch (child.DockStyle)
-                {
-                case DockStyle.None: break;
-
-                case DockStyle.Bottom:
-                {
-                    float height = child.Height;
-                    float width = clientArea.Width;
-                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Bottom - height, width, height);
-                    clientArea.Size.Y -= height;
-                    break;
-                }
-                case DockStyle.Fill:
-                {
-                    child.Bounds = clientArea;
-                    GetDesireClientArea(out clientArea);
-                    break;
-                }
-                case DockStyle.Left:
-                {
-                    float width = child.Width;
-                    float height = clientArea.Height;
-                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Top, width, height);
-                    clientArea.Location.X += width;
-                    clientArea.Size.X -= width;
-                    break;
-                }
-                case DockStyle.Right:
-                {
-                    float width = child.Width;
-                    float height = clientArea.Height;
-                    child.Bounds = new Rectangle(clientArea.Right - width, clientArea.Top, width, height);
-                    clientArea.Size.X -= width;
-                    break;
-                }
-                case DockStyle.Top:
-                {
-                    float height = child.Height;
-                    float width = clientArea.Width;
-                    child.Bounds = new Rectangle(clientArea.Left, clientArea.Top, width, height);
-                    clientArea.Location.Y += height;
-                    clientArea.Size.Y -= height;
-                    break;
-                }
-                default: throw new ArgumentOutOfRangeException();
-                }
+                _children[i].UpdateBounds();
             }
         }
 
         /// <summary>
-        ///     Use docked controls to calculate return final client area for other controls
-        /// </summary>
-        /// <param name="clientArea">Result client area</param>
-        protected void CalculateDockedControlsClientRect(out Rectangle clientArea)
-        {
-            GetDesireClientArea(out clientArea);
-
-            for (int i = 0; i < _children.Count; i++)
-            {
-                var child = _children[i];
-
-                if (!child.Visible)
-                    continue;
-
-                switch (child.DockStyle)
-                {
-                case DockStyle.None: break;
-                case DockStyle.Top:
-                {
-                    float height = child.Height;
-                    clientArea.Location.Y += height;
-                    clientArea.Size.Y -= height;
-                    break;
-                }
-                case DockStyle.Bottom:
-                {
-                    clientArea.Size.Y -= child.Height;
-                    break;
-                }
-                case DockStyle.Fill:
-                {
-                    GetDesireClientArea(out clientArea);
-                    break;
-                }
-                case DockStyle.Left:
-                {
-                    float width = child.Width;
-                    clientArea.Location.X += width;
-                    clientArea.Size.X -= width;
-                    break;
-                }
-                case DockStyle.Right:
-                {
-                    clientArea.Size.X -= child.Width;
-                    break;
-                }
-                default: throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Perform layout for that container control
+        /// Perform layout for that container control
         /// </summary>
         protected virtual void PerformLayoutSelf()
         {
-            // By default we arrange only docked controls
-            Rectangle clientArea;
-            GetDesireClientArea(out clientArea);
-            ArrangeDockedControls(ref clientArea);
+            UpdateChildrenBounds();
         }
 
         #endregion
@@ -757,8 +606,7 @@ namespace FlaxEngine.GUI
             // Push clipping mask
             if (ClipChildren)
             {
-                Rectangle clientArea;
-                GetDesireClientArea(out clientArea);
+                GetDesireClientArea(out var clientArea);
                 Render2D.PushClip(ref clientArea);
             }
 
@@ -780,7 +628,6 @@ namespace FlaxEngine.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
-
                 if (child.Visible)
                 {
                     Render2D.PushTransform(ref child._cachedTransform);
@@ -1161,22 +1008,19 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
             // Lock updates to prevent additional layout calculations
             bool wasLayoutLocked = IsLayoutLocked;
             IsLayoutLocked = true;
 
-            // Cache previous size
-            Vector2 prevSize = Size;
-
             // Base
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             // Fire event
             for (int i = 0; i < _children.Count; i++)
             {
-                _children[i].OnParentResized(ref prevSize);
+                _children[i].OnParentResized();
             }
 
             // Restore state

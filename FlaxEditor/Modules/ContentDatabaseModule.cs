@@ -873,6 +873,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new AnimationGraphProxy());
             Proxy.Add(new AnimationProxy());
             Proxy.Add(new SkeletonMaskProxy());
+            Proxy.Add(new GameplayGlobalsProxy());
             Proxy.Add(new FileProxy());
             Proxy.Add(new SpawnableJsonAssetProxy<PhysicalMaterial>());
 
@@ -888,6 +889,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<WindowsPlatformSettings>());
             Proxy.Add(new SettingsProxy<UWPPlatformSettings>());
             Proxy.Add(new SettingsProxy<LinuxPlatformSettings>());
+            Proxy.Add(new SettingsProxy<PS4PlatformSettings>());
             Proxy.Add(new SettingsProxy<AudioSettings>());
 
             // Last add generic json (won't override other json proxies)

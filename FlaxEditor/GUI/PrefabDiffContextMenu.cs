@@ -58,7 +58,7 @@ namespace FlaxEditor.GUI
             };
             Tree = new Tree.Tree
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 IsScrollable = true,
                 Parent = panel1
             };

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -168,6 +169,11 @@ namespace FlaxEditor.GUI
         public event Action<ComboBox> PopupShowing;
 
         /// <summary>
+        /// Custom popup creation function.
+        /// </summary>
+        public event Func<ComboBox, ContextMenu.ContextMenu> PopupCreate;
+
+        /// <summary>
         /// Gets the popup menu (it may be null if not used - lazy init).
         /// </summary>
         public ContextMenu.ContextMenu Popup => _popupMenu;
@@ -316,6 +322,26 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
+        /// Determines whether the specified item is selected.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns><c>true</c> if the item is selected; otherwise, <c>false</c>.</returns>
+        public bool IsSelected(string item)
+        {
+            return IsSelected(_items.IndexOf(item));
+        }
+
+        /// <summary>
+        /// Determines whether the item at the specified index is selected.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns><c>true</c> if the item is selected; otherwise, <c>false</c>.</returns>
+        public bool IsSelected(int index)
+        {
+            return index != -1 && _selectedIndices.Contains(index);
+        }
+
+        /// <summary>
         /// Called when selected item index gets changed.
         /// </summary>
         protected virtual void OnSelectedIndexChanged()
@@ -346,8 +372,10 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Creates the popup menu.
         /// </summary>
-        protected virtual ContextMenu.ContextMenu CreatePopup()
+        protected virtual ContextMenu.ContextMenu OnCreatePopup()
         {
+            if (PopupCreate != null)
+                return PopupCreate(this);
             return new ContextMenu.ContextMenu();
         }
 
@@ -467,7 +495,7 @@ namespace FlaxEditor.GUI
                 // Ensure to have valid menu
                 if (_popupMenu == null)
                 {
-                    _popupMenu = CreatePopup();
+                    _popupMenu = OnCreatePopup();
                     _popupMenu.MaximumItemsInViewCount = MaximumItemsInViewCount;
 
                     // Bind events
@@ -478,7 +506,7 @@ namespace FlaxEditor.GUI
                         if (!_blockPopup)
                             Focus();
                     };
-                    _popupMenu.ButtonClicked += (button) =>
+                    _popupMenu.ButtonClicked += button =>
                     {
                         OnItemClicked((int)button.Tag);
                         _popupMenu?.Hide();

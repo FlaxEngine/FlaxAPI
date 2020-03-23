@@ -68,7 +68,7 @@ namespace FlaxEditor.GUI.Input
                         _value = value;
 
                         // Update
-                        updateThumb();
+                        UpdateThumb();
                         ValueChanged?.Invoke();
                     }
                 }
@@ -123,7 +123,7 @@ namespace FlaxEditor.GUI.Input
                 ThumbColorSelected = style.BackgroundSelected;
             }
 
-            private void updateThumb()
+            private void UpdateThumb()
             {
                 // Cache data
                 float trackSize = TrackSize;
@@ -231,11 +231,11 @@ namespace FlaxEditor.GUI.Input
             }
 
             /// <inheritdoc />
-            protected override void SetSizeInternal(ref Vector2 size)
+            protected override void OnSizeChanged()
             {
-                base.SetSizeInternal(ref size);
+                base.OnSizeChanged();
 
-                updateThumb();
+                UpdateThumb();
             }
         }
 

@@ -46,7 +46,8 @@ namespace FlaxEditor.Content
             guiRoot.AddChild(new Label
             {
                 Text = Path.GetFileNameWithoutExtension(request.Asset.Path),
-                Size = guiRoot.Size,
+                Offsets = Margin.Zero,
+                AnchorPreset = AnchorPresets.StretchAll,
                 Wrapping = TextWrapping.WrapWords
             });
         }

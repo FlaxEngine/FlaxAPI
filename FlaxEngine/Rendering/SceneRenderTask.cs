@@ -159,7 +159,7 @@ namespace FlaxEngine
             // Prepare view
             OnBegin(context);
             Viewport viewport = new Viewport(Vector2.Zero, Buffers.Size);
-            if (Camera != null)
+            if (Camera)
             {
                 View.CopyFrom(Camera, ref viewport);
             }
@@ -173,7 +173,7 @@ namespace FlaxEngine
                 foreach (var e in GlobalCustomPostFx)
                     _postFx.Add(e);
             }
-            if (Camera != null)
+            if (Camera)
             {
                 var perCameraPostFx = Camera.GetScripts<PostProcessEffect>();
                 for (int i = 0; i < perCameraPostFx.Length; i++)

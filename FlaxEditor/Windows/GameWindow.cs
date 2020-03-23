@@ -186,7 +186,8 @@ namespace FlaxEditor.Windows
             // Setup viewport
             _viewport = new RenderOutputControl(task)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 AutoFocus = false,
                 Parent = this
             };
@@ -194,7 +195,8 @@ namespace FlaxEditor.Windows
             // Override the game GUI root
             _guiRoot = new GameRoot
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 //Visible = false,
                 AutoFocus = false,
                 Parent = _viewport

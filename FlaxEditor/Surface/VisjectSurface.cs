@@ -276,7 +276,8 @@ namespace FlaxEditor.Surface
         /// <param name="groups">The custom surface node types. Pass null to use the default nodes set.</param>
         public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo = null, SurfaceStyle style = null, List<GroupArchetype> groups = null)
         {
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
             AutoFocus = false; // Disable to prevent autofocus and event handling on OnMouseDown event
 
             Owner = owner;
@@ -735,17 +736,6 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
-        {
-            // Keep view stable
-            var viewCenter = ViewCenterPosition;
-
-            base.SetSizeInternal(ref size);
-
-            ViewCenterPosition = viewCenter;
-        }
-
-        /// <inheritdoc />
         public override void OnDestroy()
         {
             if (IsDisposing)
@@ -791,7 +781,7 @@ namespace FlaxEditor.Surface
             case ParameterType.Texture:
             case ParameterType.NormalMap: return typeof(Texture);
             case ParameterType.String: return typeof(string);
-            case ParameterType.Box: return typeof(Box);
+            case ParameterType.Box: return typeof(BoundingBox);
             case ParameterType.Rotation: return typeof(Quaternion);
             case ParameterType.Transform: return typeof(Transform);
             case ParameterType.Asset: return typeof(Asset);
@@ -805,6 +795,65 @@ namespace FlaxEditor.Surface
             case ParameterType.GPUTextureCube: return typeof(bool);
             default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        /// <summary>
+        /// Gets the type of the connection (enum to runtime value type).
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The runtime value time.</returns>
+        public static Type GetConnectionTypeValueType(ConnectionType type)
+        {
+            switch (type)
+            {
+            case ConnectionType.Bool: return typeof(bool);
+            case ConnectionType.Integer: return typeof(int);
+            case ConnectionType.Float: return typeof(float);
+            case ConnectionType.Vector2: return typeof(Vector2);
+            case ConnectionType.Vector3: return typeof(Vector3);
+            case ConnectionType.Vector4: return typeof(Vector4);
+            case ConnectionType.String: return typeof(string);
+            case ConnectionType.Box: return typeof(BoundingBox);
+            case ConnectionType.Rotation: return typeof(Quaternion);
+            case ConnectionType.Transform: return typeof(Transform);
+            case ConnectionType.Object: return typeof(object);
+            case ConnectionType.UnsignedInteger: return typeof(uint);
+            default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        /// <summary>
+        /// Gets the type of the connection (runtime value type to enum).
+        /// </summary>
+        /// <param name="type">The runtime value type.</param>
+        /// <returns>The connection time.</returns>
+        public static ConnectionType GetValueTypeConnectionType(Type type)
+        {
+            if (type == typeof(bool))
+                return ConnectionType.Bool;
+            if (type == typeof(int))
+                return ConnectionType.Integer;
+            if (type == typeof(float))
+                return ConnectionType.Float;
+            if (type == typeof(Vector2))
+                return ConnectionType.Vector2;
+            if (type == typeof(Vector3))
+                return ConnectionType.Vector3;
+            if (type == typeof(Vector4) || type == typeof(Color))
+                return ConnectionType.Vector4;
+            if (type == typeof(string))
+                return ConnectionType.String;
+            if (type == typeof(BoundingBox))
+                return ConnectionType.Box;
+            if (type == typeof(Quaternion))
+                return ConnectionType.Rotation;
+            if (type == typeof(Transform))
+                return ConnectionType.Transform;
+            if (type == typeof(object))
+                return ConnectionType.Object;
+            if (type == typeof(uint))
+                return ConnectionType.UnsignedInteger;
+            throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
     }
 }

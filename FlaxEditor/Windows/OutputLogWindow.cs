@@ -127,18 +127,14 @@ namespace FlaxEditor.Windows
                 Parent = this,
             };
             _searchBox.TextChanged += OnSearchBoxTextChanged;
-            _hScroll = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+            _hScroll = new HScrollBar(this, Height - ScrollBar.DefaultSize, Width)
             {
-                AnchorStyle = AnchorStyle.Bottom,
                 Maximum = 0,
-                Parent = this,
             };
             _hScroll.ValueChanged += OnHScrollValueChanged;
-            _vScroll = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+            _vScroll = new VScrollBar(this, Width - ScrollBar.DefaultSize, Height)
             {
-                AnchorStyle = AnchorStyle.Right,
                 Maximum = 0,
-                Parent = this,
             };
             _vScroll.ValueChanged += OnVScrollValueChanged;
             _output = new OutputTextBox
@@ -228,6 +224,9 @@ namespace FlaxEditor.Windows
 
         private void OnOutputTextChanged()
         {
+            if (IsLayoutLocked)
+                return;
+
             _hScroll.Maximum = _output.TextSize.X;
             _vScroll.Maximum = Mathf.Max(_output.TextSize.Y - _output.Height, _vScroll.Minimum);
         }
@@ -387,9 +386,9 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             // Update scroll range
             OnOutputTextChanged();

@@ -68,7 +68,7 @@ namespace FlaxEditor.Viewport.Previews
                         Task.CustomActors.Add(_boundsModel);
                     }
 
-                    UpdateBounds();
+                    UpdateBoundsModel();
                 }
                 else
                 {
@@ -163,7 +163,7 @@ namespace FlaxEditor.Viewport.Previews
             }
         }
 
-        private void UpdateBounds()
+        private void UpdateBoundsModel()
         {
             var bounds = _previewEffect.Box;
             Transform t = Transform.Identity;
@@ -200,7 +200,7 @@ namespace FlaxEditor.Viewport.Previews
             // Keep bounds matching the model
             if (_boundsModel && _boundsModel.IsActive)
             {
-                UpdateBounds();
+                UpdateBoundsModel();
             }
         }
 

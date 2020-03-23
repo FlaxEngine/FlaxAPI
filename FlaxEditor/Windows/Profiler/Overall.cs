@@ -24,12 +24,14 @@ namespace FlaxEditor.Windows.Profiler
             // Layout
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this,
             };
             var layout = new VerticalPanel
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = Margin.Zero,
                 IsScrollable = true,
                 Parent = panel,
             };

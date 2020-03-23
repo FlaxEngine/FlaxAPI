@@ -407,7 +407,8 @@ namespace FlaxEditor.Windows.Assets
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.None)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.6f,
                 Parent = this
             };
@@ -415,7 +416,8 @@ namespace FlaxEditor.Windows.Assets
             // Split Panel 2
             _split2 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 SplitterValue = 0.5f,
                 Parent = _split1.Panel1
             };
@@ -431,7 +433,8 @@ namespace FlaxEditor.Windows.Assets
             // Timeline
             _timeline = new ParticleSystemTimeline(_preview)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = _split1.Panel2,
                 Enabled = false
             };
@@ -454,7 +457,7 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/particles/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/particles/index.html")).LinkTooltip("See documentation to learn more");
         }
 
         private void OnTimelineModified()
@@ -522,28 +525,20 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Save()
         {
-            // Check if don't need to push any new changes to the original asset
             if (!IsEdited)
                 return;
 
-            // Just in case refresh data
             if (RefreshTempAsset())
             {
-                // Error
                 return;
             }
 
-            // Update original particle system so user can see changes in the scene
             if (SaveToOriginal())
             {
-                // Error
                 return;
             }
 
-            // Clear flag
             ClearEditedFlag();
-
-            // Update
             _item.RefreshThumbnail();
         }
 

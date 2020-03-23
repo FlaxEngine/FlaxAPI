@@ -57,7 +57,7 @@ namespace FlaxEngine
         /// Gets the view to the surface at index in an array.
         /// </summary>
         /// <remarks>
-        /// To use per depth/array slice view you need to specify the <see cref="GPUTextureFlags.PerSliceHandles"/> when creating the resource.
+        /// To use per depth/array slice view you need to specify the <see cref="GPUTextureFlags.PerSliceViews"/> when creating the resource.
         /// </remarks>
         /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
         /// <returns>The view for the render target.</returns>
@@ -70,7 +70,7 @@ namespace FlaxEngine
         /// Gets the view to the surface at index in an array.
         /// </summary>
         /// <remarks>
-        /// To use per mip map view you need to specify the <see cref="GPUTextureFlags.PerMipHandles"/> when creating the resource.
+        /// To use per mip map view you need to specify the <see cref="GPUTextureFlags.PerMipViews"/> when creating the resource.
         /// </remarks>
         /// <param name="arrayOrDepthIndex">The index of the surface in an array (or depth slice index).</param>
         /// <param name="mipMapIndex">The index of the mip level.</param>

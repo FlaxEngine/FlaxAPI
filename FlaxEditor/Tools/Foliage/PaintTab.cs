@@ -240,16 +240,16 @@ namespace FlaxEditor.Tools.Foliage
             var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
             {
                 SplitterValue = 0.2f,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
 
             // Foliage types list
             _items = new VerticalPanel
             {
-                Y = 4,
-                Height = 4,
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(4, 4, 4, 0),
                 IsScrollable = true,
                 Parent = splitPanel.Panel1
             };
@@ -320,8 +320,8 @@ namespace FlaxEditor.Tools.Foliage
 
                     var itemCheck = new CheckBox
                     {
-                        DockStyle = DockStyle.Left,
-                        Width = 18,
+                        AnchorPreset = AnchorPresets.VerticalStretchLeft,
+                        Offsets = new Margin(0, 18, 0, 0),
                         TooltipText = "If checked, enables painting with this foliage type.",
                         Tag = i,
                         Parent = itemPanel,
@@ -340,14 +340,15 @@ namespace FlaxEditor.Tools.Foliage
 
                     var itemView = new AssetSearchPopup.AssetItemView(asset)
                     {
-                        DockStyle = DockStyle.Fill,
+                        AnchorPreset = AnchorPresets.StretchAll,
+                        Offsets = new Margin(itemCheck.Width + 2, 0, 1, 1),
                         TooltipText = asset.NamePath,
                         Tag = i,
                         Parent = itemPanel,
                     };
                     itemView.Clicked += OnFoliageTypeListItemClicked;
 
-                    itemPanel.Height = itemView.Height;
+                    itemPanel.Height = 34;
                     itemPanel.Parent = _items;
 
                     itemPanel.UnlockChildrenRecursive();

@@ -226,7 +226,7 @@ namespace FlaxEngine.GUI
 
             // Calculate size of the tooltip
             var size = Vector2.Zero;
-            if (style.FontMedium && !string.IsNullOrEmpty(_currentText))
+            if (style != null && style.FontMedium && !string.IsNullOrEmpty(_currentText))
             {
                 var layout = TextLayoutOptions.Default;
                 layout.Bounds = new Rectangle(0, 0, MaxWidth, 10000000);
@@ -236,7 +236,7 @@ namespace FlaxEngine.GUI
                 var items = style.FontMedium.ProcessText(_currentText, ref layout);
                 for (int i = 0; i < items.Length; i++)
                 {
-                    size.X = Mathf.Max(size.X, items[i].Size.X);
+                    size.X = Mathf.Max(size.X, items[i].Size.X + 8.0f);
                     size.Y += items[i].Size.Y;
                 }
                 //size.X += style.FontMedium.MeasureText(_currentText).X;

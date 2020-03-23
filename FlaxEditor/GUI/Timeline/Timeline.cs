@@ -748,15 +748,17 @@ namespace FlaxEditor.GUI.Timeline
             _splitter = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
                 SplitterValue = 0.4f,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
 
-            var headerTopArea = new ContainerControl(0, 0, _splitter.Panel1.Width, HeaderTopAreaHeight)
+            var headerTopArea = new ContainerControl
             {
                 AutoFocus = false,
                 BackgroundColor = Style.Current.LightBackground,
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(0, 0, 0, HeaderTopAreaHeight),
                 Parent = _splitter.Panel1
             };
             var addTrackButtonWidth = 40.0f;
@@ -798,18 +800,22 @@ namespace FlaxEditor.GUI.Timeline
 
             var playbackButtonsSize = 24.0f;
             var icons = Editor.Instance.Icons;
-            var playbackButtonsArea = new ContainerControl(0, 0, 100, playbackButtonsSize)
+            var playbackButtonsArea = new ContainerControl
             {
                 AutoFocus = false,
+                ClipChildren = false,
                 BackgroundColor = Style.Current.LightBackground,
-                DockStyle = DockStyle.Bottom,
+                AnchorPreset = AnchorPresets.HorizontalStretchBottom,
+                Offsets = new Margin(0, 0, -playbackButtonsSize, playbackButtonsSize),
                 Parent = _splitter.Panel1
             };
-            var playbackButtonsPanel = new ContainerControl(0, 0, 0, playbackButtonsSize)
+            var playbackButtonsPanel = new ContainerControl
             {
                 AutoFocus = false,
-                AnchorStyle = AnchorStyle.Center,
-                Parent = playbackButtonsArea
+                ClipChildren = false,
+                AnchorPreset = AnchorPresets.VerticalStretchCenter,
+                Offsets = Margin.Zero,
+                Parent = playbackButtonsArea,
             };
             if ((playbackButtons & PlaybackButtons.Navigation) == PlaybackButtons.Navigation)
             {
@@ -889,25 +895,28 @@ namespace FlaxEditor.GUI.Timeline
                 _playbackNavigation[3].Clicked += (image, button) => OnSeek(DurationFrames);
                 playbackButtonsPanel.Width += playbackButtonsSize;
             }
+            playbackButtonsPanel.X = (playbackButtonsPanel.Parent.Width - playbackButtonsPanel.Width) * 0.5f;
 
             _tracksPanelArea = new TracksPanelArea(this)
             {
                 AutoFocus = false,
-                Size = new Vector2(_splitter.Panel1.Width, _splitter.Panel1.Height - playbackButtonsSize - HeaderTopAreaHeight),
-                DockStyle = DockStyle.Fill,
-                Parent = _splitter.Panel1
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, HeaderTopAreaHeight, playbackButtonsSize),
+                Parent = _splitter.Panel1,
             };
             _tracksPanel = new VerticalPanel
             {
                 AutoFocus = false,
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = Margin.Zero,
                 IsScrollable = true,
                 BottomMargin = 40.0f,
                 Parent = _tracksPanelArea
             };
             _noTracksLabel = new Label
             {
-                AnchorStyle = AnchorStyle.Center,
+                AnchorPreset = AnchorPresets.MiddleCenter,
+                Offsets = Margin.Zero,
                 TextColor = Color.Gray,
                 TextColorHighlighted = Color.Gray * 1.1f,
                 Text = "No tracks",
@@ -918,8 +927,8 @@ namespace FlaxEditor.GUI.Timeline
             {
                 AutoFocus = false,
                 BackgroundColor = Style.Current.Background.RGBMultiplied(0.9f),
-                Height = HeaderTopAreaHeight,
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(0, 0, 0, HeaderTopAreaHeight),
                 Parent = _splitter.Panel2
             };
             _backgroundArea = new Panel(ScrollBars.Both)
@@ -927,31 +936,32 @@ namespace FlaxEditor.GUI.Timeline
                 AutoFocus = false,
                 ClipChildren = false,
                 BackgroundColor = Style.Current.Background.RGBMultiplied(0.7f),
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, HeaderTopAreaHeight, 0),
                 Parent = _splitter.Panel2
             };
             _backgroundScroll = new ContainerControl
             {
                 AutoFocus = false,
                 ClipChildren = false,
-                Height = 0,
+                Offsets = Margin.Zero,
                 Parent = _backgroundArea
             };
             _background = new Background(this)
             {
                 AutoFocus = false,
                 ClipChildren = false,
-                Height = 0,
+                Offsets = Margin.Zero,
                 Parent = _backgroundArea
             };
             _leftEdge = new TimelineEdge(this, true, false)
             {
-                Height = 0,
+                Offsets = Margin.Zero,
                 Parent = _backgroundArea
             };
             _rightEdge = new TimelineEdge(this, false, true)
             {
-                Height = 0,
+                Offsets = Margin.Zero,
                 Parent = _backgroundArea
             };
             _positionHandle = new PositionHandle(this)
@@ -1659,6 +1669,7 @@ namespace FlaxEditor.GUI.Timeline
 
             _tracksPanel.IsLayoutLocked = false;
             _tracksPanel.PerformLayout();
+            ArrangeTracks();
         }
 
         /// <summary>
@@ -1884,7 +1895,7 @@ namespace FlaxEditor.GUI.Timeline
                     Parent = this
                 };
                 var editor = new CustomEditorPresenter(null);
-                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.AnchorPreset = AnchorPresets.HorizontalStretchTop;
                 editor.Panel.IsScrollable = true;
                 editor.Panel.Parent = panel1;
                 editor.Modified += OnModified;

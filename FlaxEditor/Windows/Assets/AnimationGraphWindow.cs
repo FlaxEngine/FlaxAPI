@@ -213,7 +213,7 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _toolstrip.AddButton(editor.Icons.Bone32, () => _preview.ShowNodes = !_preview.ShowNodes).SetAutoCheck(true).LinkTooltip("Show animated model nodes debug view");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/anim-graph/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/animation/anim-graph/index.html")).LinkTooltip("See documentation to learn more");
 
             // Navigation bar
             _navigationBar = new NavigationBar
@@ -284,6 +284,7 @@ namespace FlaxEditor.Windows.Assets
                     Editor.LogError("Failed to save animation graph surface data");
                     return;
                 }
+                _asset.Reload();
 
                 // Reset any root motion
                 _preview.PreviewActor.ResetLocalTransform();

@@ -2,7 +2,6 @@
 
 using System.ComponentModel;
 using FlaxEditor.CustomEditors;
-using FlaxEditor.States;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Json;
@@ -99,6 +98,7 @@ namespace FlaxEditor.Windows
             Title = "Graphics Quality";
 
             var presenter = new CustomEditorPresenter(null);
+            presenter.Panel.Offsets = Margin.Zero;
             presenter.Panel.Parent = this;
             presenter.Select(_viewModel = new ViewModel());
         }

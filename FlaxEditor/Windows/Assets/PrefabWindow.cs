@@ -97,7 +97,8 @@ namespace FlaxEditor.Windows.Assets
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.None)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.2f,
                 Parent = this
             };
@@ -105,28 +106,36 @@ namespace FlaxEditor.Windows.Assets
             // Split Panel 2
             _split2 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 SplitterValue = 0.6f,
                 Parent = _split1.Panel2
             };
 
             // Prefab structure tree searching query input box
-            var headerPanel = new ContainerControl();
-            headerPanel.DockStyle = DockStyle.Top;
-            headerPanel.IsScrollable = true;
-            headerPanel.Parent = _split1.Panel1;
-            _searchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
-            _searchBox.AnchorStyle = AnchorStyle.Upper;
-            _searchBox.WatermarkText = "Search...";
-            _searchBox.Parent = headerPanel;
+            var headerPanel = new ContainerControl
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                IsScrollable = true,
+                Offsets = new Margin(0, 0, 0, 18 + 6),
+                Parent = _split1.Panel1,
+            };
+            _searchBox = new TextBox
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
+                WatermarkText = "Search...",
+                Parent = headerPanel,
+                Bounds = new Rectangle(4, 4, headerPanel.Width - 8, 18),
+            };
             _searchBox.TextChanged += OnSearchBoxTextChanged;
-            headerPanel.Height = _searchBox.Bottom + 6;
 
             // Prefab structure tree
             Graph = new LocalSceneGraph(new CustomRootNode(this));
-            _tree = new PrefabTree();
-            _tree.Y = headerPanel.Bottom;
-            _tree.Margin = new Margin(0.0f, 0.0f, -16.0f, 0.0f); // Hide root node
+            _tree = new PrefabTree
+            {
+                Y = headerPanel.Bottom,
+                Margin = new Margin(0.0f, 0.0f, -16.0f, 0.0f), // Hide root node
+            };
             _tree.AddChild(Graph.Root.TreeNode);
             _tree.SelectedChanged += OnTreeSelectedChanged;
             _tree.RightClick += OnTreeRightClick;

@@ -11,11 +11,11 @@ namespace FlaxEditor.Windows
 {
     public sealed partial class ContentWindow
     {
-        private class SearchFilterComboBox : ComboBox
+        private class ViewDropdown : ComboBox
         {
-            public SearchFilterComboBox(float x, float y, float width)
-            : base(x, y, width)
+            public void OnClicked(int index)
             {
+                OnItemClicked(index);
             }
 
             /// <inheritdoc />
@@ -57,11 +57,53 @@ namespace FlaxEditor.Windows
                 var textRect = new Rectangle(margin, 0, clientRect.Width - boxSize - 2.0f * margin, clientRect.Height);
                 Render2D.PushClip(textRect);
                 var textColor = TextColor;
-                Render2D.DrawText(Font.GetFont(), "Filters", textRect, enabled ? textColor : textColor * 0.5f, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
+                Render2D.DrawText(Font.GetFont(), "View", textRect, enabled ? textColor : textColor * 0.5f, TextAlignment.Near, TextAlignment.Center, TextWrapping.NoWrap, 1.0f, textScale);
                 Render2D.PopClip();
 
                 // Arrow
                 ArrowImage?.Draw(new Rectangle(clientRect.Width - margin - boxSize, margin, boxSize, boxSize), arrowColor);
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            {
+                // Check flags
+                if (_mouseDown && !_blockPopup)
+                {
+                    // Clear flag
+                    _mouseDown = false;
+
+                    // Ensure to have valid menu
+                    if (_popupMenu == null)
+                    {
+                        _popupMenu = OnCreatePopup();
+                        _popupMenu.MaximumItemsInViewCount = MaximumItemsInViewCount;
+                        _popupMenu.VisibleChanged += cm =>
+                        {
+                            var win = Root;
+                            _blockPopup = win != null && new Rectangle(Vector2.Zero, Size).Contains(PointFromWindow(win.MousePosition));
+                            if (!_blockPopup)
+                                Focus();
+                        };
+                    }
+
+                    // Check if menu hs been already shown
+                    if (_popupMenu.Visible)
+                    {
+                        // Hide
+                        _popupMenu.Hide();
+                        return true;
+                    }
+
+                    // Show
+                    _popupMenu.Show(this, new Vector2(1, Height));
+                }
+                else
+                {
+                    _blockPopup = false;
+                }
+
+                return true;
             }
         }
 
@@ -89,13 +131,13 @@ namespace FlaxEditor.Windows
         public void ClearItemsSearch()
         {
             // Skip if already cleared
-            if (_itemsSearchBox.TextLength == 0 && !_itemsFilterBox.HasSelection)
+            if (_itemsSearchBox.TextLength == 0 && !_viewDowndown.HasSelection)
                 return;
 
             IsLayoutLocked = true;
 
             _itemsSearchBox.Clear();
-            _itemsFilterBox.SelectedIndex = -1;
+            _viewDowndown.SelectedIndex = -1;
 
             IsLayoutLocked = false;
 
@@ -120,7 +162,7 @@ namespace FlaxEditor.Windows
                 return;
 
             // Check if clear filters
-            if (_itemsSearchBox.TextLength == 0 && !_itemsFilterBox.HasSelection)
+            if (_itemsSearchBox.TextLength == 0 && !_viewDowndown.HasSelection)
             {
                 RefreshView();
                 return;
@@ -129,13 +171,13 @@ namespace FlaxEditor.Windows
             // Apply filter
             var items = new List<ContentItem>(8);
             var query = _itemsSearchBox.Text;
-            var filters = new bool[_itemsFilterBox.Items.Count];
-            if (_itemsFilterBox.HasSelection)
+            var filters = new bool[_viewDowndown.Items.Count];
+            if (_viewDowndown.HasSelection)
             {
                 // Update filters flags
                 for (int i = 0; i < filters.Length; i++)
                 {
-                    filters[i] = _itemsFilterBox.Selection.Contains(i);
+                    filters[i] = _viewDowndown.Selection.Contains(i);
                 }
             }
             else

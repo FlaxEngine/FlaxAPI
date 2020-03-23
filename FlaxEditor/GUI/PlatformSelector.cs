@@ -15,11 +15,13 @@ namespace FlaxEditor.GUI
         {
             public PlatformType PlatformType;
             public Sprite Icon;
+            public string PlatformName;
 
-            public PlatformData(PlatformType type, Sprite icon)
+            public PlatformData(PlatformType type, Sprite icon, string name)
             {
                 PlatformType = type;
                 Icon = icon;
+                PlatformName = name;
             }
         }
 
@@ -80,15 +82,17 @@ namespace FlaxEditor.GUI
             var icons = Editor.Instance.Icons;
             var platforms = new[]
             {
-                new PlatformData(PlatformType.Windows, icons.Windows),
-                new PlatformData(PlatformType.XboxOne, icons.XboxOne),
-                new PlatformData(PlatformType.WindowsStore, icons.WindowsStore),
-                new PlatformData(PlatformType.Linux, icons.Linux),
+                new PlatformData(PlatformType.Windows, icons.Windows, "Windows"),
+                new PlatformData(PlatformType.XboxOne, icons.XboxOne, "Xbox One"),
+                new PlatformData(PlatformType.WindowsStore, icons.WindowsStore, "Windows Store"),
+                new PlatformData(PlatformType.Linux, icons.Linux, "Linux"),
+                new PlatformData(PlatformType.PS4, icons.Linux, "PlayStation 4"),
             };
 
             const float IconSize = 48.0f;
             TileSize = new Vector2(IconSize);
             AutoResize = true;
+            Offsets = new Margin(0, 0, 0, IconSize);
 
             _mouseOverColor = style.Foreground;
             _selectedColor = style.Foreground;
@@ -102,7 +106,7 @@ namespace FlaxEditor.GUI
                     MouseOverColor = _mouseOverColor,
                     Color = _defaultColor,
                     Tag = platforms[i].PlatformType,
-                    TooltipText = CustomEditors.CustomEditorsUtil.GetPropertyNameUI(platforms[i].PlatformType.ToString()),
+                    TooltipText = platforms[i].PlatformName,
                     Parent = this,
                 };
                 tile.Clicked += OnTileClicked;
@@ -114,9 +118,9 @@ namespace FlaxEditor.GUI
             ((Image)Children[0]).MouseOverColor = _selectedColor;
         }
 
-        private void OnTileClicked(Image image, MouseButton MouseButton)
+        private void OnTileClicked(Image image, MouseButton mouseButton)
         {
-            if (MouseButton == MouseButton.Left)
+            if (mouseButton == MouseButton.Left)
             {
                 Selected = (PlatformType)image.Tag;
             }

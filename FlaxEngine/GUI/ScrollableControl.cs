@@ -67,7 +67,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
+        public override bool IntersectsChildContent(Control child, Vector2 location, out Vector2 childSpaceLocation)
         {
             // Apply offset on scrollable controls
             if (child.IsScrollable)

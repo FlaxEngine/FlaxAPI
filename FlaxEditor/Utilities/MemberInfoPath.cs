@@ -22,9 +22,9 @@ namespace FlaxEditor.Utilities
             public readonly MemberInfo Member;
 
             /// <summary>
-            /// The array index.
+            /// The collection index or key.
             /// </summary>
-            public readonly int Index;
+            public readonly object Index;
 
             /// <summary>
             /// Gets the member type (field or property type).
@@ -40,7 +40,7 @@ namespace FlaxEditor.Utilities
                         result = ((PropertyInfo)Member).PropertyType;
 
                     // Special case for collections
-                    if (Index != -1)
+                    if (Index != null)
                         result = result.GetElementType();
 
                     return result;
@@ -51,8 +51,8 @@ namespace FlaxEditor.Utilities
             /// Initializes a new instance of the <see cref="Entry"/> struct.
             /// </summary>
             /// <param name="member">The member.</param>
-            /// <param name="index">The array index.</param>
-            public Entry(MemberInfo member, int index = -1)
+            /// <param name="index">The collection index or key.</param>
+            public Entry(MemberInfo member, object index = null)
             {
                 Member = member;
                 Index = index;
@@ -68,11 +68,22 @@ namespace FlaxEditor.Utilities
                 object value;
 
                 // Special case for collections
-                if (Index != -1)
+                if (Index != null)
                 {
-                    // Get value at index
-                    var list = (System.Collections.IList)instance;
-                    value = list[Index];
+                    if (instance is System.Collections.IList asList)
+                    {
+                        // Get value at index
+                        value = asList[(int)Index];
+                    }
+                    else if (instance is System.Collections.IDictionary asDictionary)
+                    {
+                        // Get value at key
+                        value = asDictionary[Index];
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
                 }
                 else
                 {
@@ -94,11 +105,22 @@ namespace FlaxEditor.Utilities
             public void SetValue(object instance, object value)
             {
                 // Special case for collections
-                if (Index != -1)
+                if (Index != null)
                 {
-                    // Set value at index
-                    var list = (System.Collections.IList)instance;
-                    list[Index] = value;
+                    if (instance is System.Collections.IList asList)
+                    {
+                        // Set value at index
+                        asList[(int)Index] = value;
+                    }
+                    else if (instance is System.Collections.IDictionary asDictionary)
+                    {
+                        // Set value at key
+                        asDictionary[Index] = value;
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
                 }
                 else
                 {
@@ -127,14 +149,15 @@ namespace FlaxEditor.Utilities
             {
                 var hashCode = 2005110182;
                 hashCode = hashCode * -1521134295 + EqualityComparer<MemberInfo>.Default.GetHashCode(Member);
-                hashCode = hashCode * -1521134295 + Index.GetHashCode();
+                if (Index != null)
+                    hashCode = hashCode * -1521134295 + Index.GetHashCode();
                 return hashCode;
             }
 
             /// <inheritdoc />
             public override string ToString()
             {
-                if (Index != -1)
+                if (Index != null)
                     return "[" + Index + "]";
                 return Member.Name;
             }
@@ -146,8 +169,8 @@ namespace FlaxEditor.Utilities
         /// Initializes a new instance of the <see cref="MemberInfoPath"/> class.
         /// </summary>
         /// <param name="member">The member.</param>
-        /// <param name="index">The array index.</param>
-        public MemberInfoPath(MemberInfo member, int index = -1)
+        /// <param name="index">The collection index or key.</param>
+        public MemberInfoPath(MemberInfo member, object index = null)
         {
             if (member == null)
                 throw new ArgumentNullException();

@@ -189,16 +189,19 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (image == null)
             {
                 if (req.ThumbnailIndex == 0)
-                    image = new Image(2, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height)
+                    image = new Image
                     {
-                        AnchorStyle = AnchorStyle.Left,
+                        AnchorPreset = AnchorPresets.MiddleLeft,
+                        Parent = this,
+                        Bounds = new Rectangle(2, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height),
                     };
                 else
-                    image = new Image(Width - 2 - CameraCutThumbnailRenderer.Width, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height)
+                    image = new Image
                     {
-                        AnchorStyle = AnchorStyle.Right,
+                        AnchorPreset = AnchorPresets.MiddleRight,
+                        Parent = this,
+                        Bounds = new Rectangle(Width - 2 - CameraCutThumbnailRenderer.Width, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height),
                     };
-                image.Parent = this;
                 image.UnlockChildrenRecursive();
                 _thumbnails[req.ThumbnailIndex] = image;
                 UpdateUI();
@@ -252,9 +255,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             UpdateUI();
         }
@@ -670,16 +673,17 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             // Pilot Camera button
             const float buttonSize = 14;
             var icons = Editor.Instance.Icons;
-            _pilotCamera = new Image(_selectActor.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            _pilotCamera = new Image
             {
                 TooltipText = "Starts piloting camera (in scene edit window)",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
                 Color = Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(icons.Camera32),
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + _selectActor.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             _pilotCamera.Clicked += OnClickedPilotCamera;
         }

@@ -23,11 +23,6 @@ namespace FlaxEditor.GUI
         public const int DefaultMarginH = 2;
 
         /// <summary>
-        /// The default height.
-        /// </summary>
-        public const int DefaultHeight = 34;
-
-        /// <summary>
         /// Event fired when button gets clicked.
         /// </summary>
         public Action<ToolStripButton> ButtonClicked;
@@ -73,12 +68,10 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// Initializes a new instance of the <see cref="ToolStrip"/> class.
         /// </summary>
-        /// <param name="height">The height.</param>
-        public ToolStrip(float height = DefaultHeight)
-        : base(0, 0, 100, height)
+        public ToolStrip()
         {
             AutoFocus = false;
-            DockStyle = DockStyle.Top;
+            AnchorPreset = AnchorPresets.HorizontalStretchTop;
             BackgroundColor = Style.Current.LightBackground;
         }
 

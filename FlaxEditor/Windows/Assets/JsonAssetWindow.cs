@@ -29,7 +29,8 @@ namespace FlaxEditor.Windows.Assets
             // Panel
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 Parent = this
             };
 
@@ -45,22 +46,17 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            // Wait until asset file be fully loaded
             if (_asset.WaitForLoaded())
             {
-                // Error
                 return;
             }
 
-            // Save
             if (Editor.SaveJsonAsset(_item.Path, _object))
             {
-                // Error
-                Editor.LogError("Failed to save " + _item);
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 
-            // Update
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }

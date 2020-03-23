@@ -5,110 +5,72 @@ using System;
 namespace FlaxEngine.GUI
 {
     /// <summary>
-    /// Specifies the position and manner in which a control is docked
+    /// UI control anchors presets.
     /// </summary>
-    public enum DockStyle
+    public enum AnchorPresets
     {
         /// <summary>
-        /// The none.
+        /// The empty preset.
         /// </summary>
-        None = 0,
+        Custom,
 
         /// <summary>
-        /// The top edge.
+        /// The top left corner of the parent control.
         /// </summary>
-        Top = 1,
+        TopLeft,
 
         /// <summary>
-        /// The bottom edge.
+        /// The center of the top edge of the parent control.
         /// </summary>
-        Bottom = 2,
+        TopCenter,
 
         /// <summary>
-        /// The left edge.
+        /// The top right corner of the parent control.
         /// </summary>
-        Left = 3,
+        TopRight,
 
         /// <summary>
-        /// The right edge
+        /// The middle of the left edge of the parent control.
         /// </summary>
-        Right = 4,
+        MiddleLeft,
 
         /// <summary>
-        /// The whole area.
+        /// The middle center! Right in the middle of the parent control.
         /// </summary>
-        Fill = 5,
-    }
-
-    /// <summary>
-    /// Specifies the location of the anchor point used to position control in the parent container.
-    /// </summary>
-    public enum AnchorStyle
-    {
-        /// <summary>
-        /// The upper left corner.
-        /// </summary>
-        UpperLeft = 0,
+        MiddleCenter,
 
         /// <summary>
-        /// The center of the upper edge.
+        /// The middle of the right edge of the parent control.
         /// </summary>
-        UpperCenter,
+        MiddleRight,
 
         /// <summary>
-        /// The upper right corner.
-        /// </summary>
-        UpperRight,
-
-        /// <summary>
-        /// The upper edge.
-        /// </summary>
-        Upper,
-
-        /// <summary>
-        /// The center of the left edge.
-        /// </summary>
-        CenterLeft,
-
-        /// <summary>
-        /// The center.
-        /// </summary>
-        Center,
-
-        /// <summary>
-        /// The center of the right edge.
-        /// </summary>
-        CenterRight,
-
-        /// <summary>
-        /// The bottom left corner.
+        /// The bottom left corner of the parent control.
         /// </summary>
         BottomLeft,
 
         /// <summary>
-        /// The center of the bottom edge.
+        /// The center of the bottom edge of the parent control.
         /// </summary>
         BottomCenter,
 
         /// <summary>
-        /// The bottom right corner.
+        /// The bottom right corner of the parent control.
         /// </summary>
         BottomRight,
 
-        /// <summary>
-        /// The bottom edge.
-        /// </summary>
-        Bottom,
+        VerticalStretchLeft,
+        VerticalStretchRight,
+        VerticalStretchCenter,
+
+        HorizontalStretchTop,
+        HorizontalStretchMiddle,
+        HorizontalStretchBottom,
 
         /// <summary>
-        /// The left edge.
+        /// All parent control edges.
         /// </summary>
-        Left,
-
-        /// <summary>
-        /// The right edge.
-        /// </summary>
-        Right,
+        StretchAll,
     }
 
     /// <summary>
@@ -120,21 +82,25 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Don't use scroll bars.
         /// </summary>
+        [Tooltip("Don't use scroll bars.")]
         None = 0,
 
         /// <summary>
         /// Use horizontal scrollbar.
         /// </summary>
+        [Tooltip("Use horizontal scrollbar.")]
         Horizontal = 1,
 
         /// <summary>
         /// Use vertical scrollbar.
         /// </summary>
+        [Tooltip("Use vertical scrollbar.")]
         Vertical = 2,
 
         /// <summary>
         /// Use horizontal and vertical scrollbar.
         /// </summary>
+        [Tooltip("Use horizontal and vertical scrollbar.")]
         Both = Horizontal | Vertical
     }
 

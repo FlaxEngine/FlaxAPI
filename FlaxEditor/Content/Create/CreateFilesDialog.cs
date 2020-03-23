@@ -33,36 +33,41 @@ namespace FlaxEditor.Content.Create
             Width = TotalWidth;
 
             // Header and help description
-            var headerLabel = new Label(0, 0, TotalWidth, 40)
+            var headerLabel = new Label
             {
                 Text = "Asset Options",
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(0, 0, 0, 40),
                 Parent = this,
                 Font = new FontReference(Style.Current.FontTitle)
             };
-            var infoLabel = new Label(10, headerLabel.Bottom + 5, TotalWidth - 20, 40)
+            var infoLabel = new Label
             {
                 Text = "Specify options for creating new asset",
                 HorizontalAlignment = TextAlignment.Near,
                 Margin = new Margin(7),
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(10, -20, 45, 70),
                 Parent = this
             };
 
             // Buttons
             const float ButtonsWidth = 60;
+            const float ButtonsHeight = 24;
             const float ButtonsMargin = 8;
-            var createButton = new Button(TotalWidth - ButtonsMargin - ButtonsWidth, infoLabel.Bottom - 30, ButtonsWidth)
+            var createButton = new Button
             {
                 Text = "Create",
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.BottomRight,
+                Offsets = new Margin(-ButtonsWidth - ButtonsMargin, ButtonsWidth, -ButtonsHeight - ButtonsMargin, ButtonsHeight),
                 Parent = this
             };
             createButton.Clicked += OnCreate;
-            var cancelButton = new Button(createButton.Left - ButtonsMargin - ButtonsWidth, createButton.Y, ButtonsWidth)
+            var cancelButton = new Button
             {
                 Text = "Cancel",
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.BottomRight,
+                Offsets = new Margin(-ButtonsWidth - ButtonsMargin - ButtonsWidth - ButtonsMargin, ButtonsWidth, -ButtonsHeight - ButtonsMargin, ButtonsHeight),
                 Parent = this
             };
             cancelButton.Clicked += OnCancel;
@@ -70,9 +75,8 @@ namespace FlaxEditor.Content.Create
             // Panel for settings editor
             var panel = new Panel(ScrollBars.Vertical)
             {
-                Y = infoLabel.Bottom,
-                Size = new Vector2(TotalWidth, EditorHeight),
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(2, 2, infoLabel.Bottom + 2, EditorHeight),
                 Parent = this
             };
 
@@ -80,7 +84,7 @@ namespace FlaxEditor.Content.Create
             _settingsEditor = new CustomEditorPresenter(null);
             _settingsEditor.Panel.Parent = panel;
 
-            Size = new Vector2(TotalWidth, panel.Bottom);
+            _dialogSize = new Vector2(TotalWidth, panel.Bottom);
 
             _settingsEditor.Select(_entry.Settings);
         }

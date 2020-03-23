@@ -8,9 +8,9 @@ using System.Linq;
 namespace FlaxEngine.Collections
 {
     /// <summary>
-    ///     A dictionary object that allows rapid hash lookups using keys, but also
-    ///     maintains the key insertion order so that values can be retrieved by
-    ///     key index.
+    /// A dictionary object that allows rapid hash lookups using keys, but also
+    /// maintains the key insertion order so that values can be retrieved by
+    /// key index.
     /// </summary>
     [Serializable]
     public class OrderedDictionary<TKey, TValue> : IOrderedDictionary<TKey, TValue>
@@ -20,7 +20,7 @@ namespace FlaxEngine.Collections
         private KeyedCollectionInternal<TKey, KeyValuePair<TKey, TValue>> _keyedCollection;
 
         /// <summary>
-        ///     Gets or sets the value associated with the specified key.
+        /// Gets or sets the value associated with the specified key.
         /// </summary>
         /// <param name="key">The key associated with the value to get or set.</param>
         public TValue this[TKey key]
@@ -30,7 +30,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets or sets the value at the specified index.
+        /// Gets or sets the value at the specified index.
         /// </summary>
         /// <param name="index">The index of the value to get or set.</param>
         public TValue this[int index]
@@ -40,7 +40,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets the number of elements contained in the <see cref="OrderedDictionary{TKey,TValue}" />.
+        /// Gets the number of elements contained in the <see cref="OrderedDictionary{TKey,TValue}" />.
         /// </summary>
         /// <returns>The number of elements contained in the T:System.Collections.ICollection.</returns>
         public int Count
@@ -49,12 +49,12 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets an <see cref="T:System.Collections.ICollection" /> object containing the keys in the
-        ///     <see cref="OrderedDictionary{TKey,TValue}" /> object.
+        /// Gets an <see cref="T:System.Collections.ICollection" /> object containing the keys in the
+        /// <see cref="OrderedDictionary{TKey,TValue}" /> object.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.ICollection" /> object containing the keys in the
-        ///     <see cref="OrderedDictionary{TKey,TValue}" /> object.
+        /// An <see cref="T:System.Collections.ICollection" /> object containing the keys in the
+        /// <see cref="OrderedDictionary{TKey,TValue}" /> object.
         /// </returns>
         public ICollection<TKey> Keys
         {
@@ -62,12 +62,12 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets an <see cref="T:System.Collections.ICollection" /> object containing the values in the
-        ///     <see cref="OrderedDictionary{TKey,TValue}" /> object.
+        /// Gets an <see cref="T:System.Collections.ICollection" /> object containing the values in the
+        /// <see cref="OrderedDictionary{TKey,TValue}" /> object.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.ICollection" /> object containing the values in the
-        ///     <see cref="OrderedDictionary{TKey,TValue}" /> object.
+        /// An <see cref="T:System.Collections.ICollection" /> object containing the values in the
+        /// <see cref="OrderedDictionary{TKey,TValue}" /> object.
         /// </returns>
         public ICollection<TValue> Values
         {
@@ -81,9 +81,9 @@ namespace FlaxEngine.Collections
         #region Constructors
 
         /// <summary>
-        ///     A dictionary object that allows rapid hash lookups using keys, but also
-        ///     maintains the key insertion order so that values can be retrieved by
-        ///     key index.
+        /// A dictionary object that allows rapid hash lookups using keys, but also
+        /// maintains the key insertion order so that values can be retrieved by
+        /// key index.
         /// </summary>
         public OrderedDictionary()
         {
@@ -91,7 +91,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     <inheritdoc cref="OrderedDictionary{TKey,TValue}" />
+        /// <inheritdoc cref="OrderedDictionary{TKey,TValue}" />
         /// </summary>
         /// <remarks>Allows custom comparer for items</remarks>
         public OrderedDictionary(IEqualityComparer<TKey> comparer)
@@ -100,7 +100,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     <inheritdoc cref="OrderedDictionary{TKey,TValue}" />
+        /// <inheritdoc cref="OrderedDictionary{TKey,TValue}" />
         /// </summary>
         /// <remarks>Copy constructor</remarks>
         public OrderedDictionary(IOrderedDictionary<TKey, TValue> dictionary)
@@ -111,7 +111,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     <inheritdoc cref="OrderedDictionary{TKey,TValue}" />
+        /// <inheritdoc cref="OrderedDictionary{TKey,TValue}" />
         /// </summary>
         /// <remarks>Copy constructor with custom items comparer</remarks>
         public OrderedDictionary(IOrderedDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
@@ -143,7 +143,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Clears the contents of the <see cref="OrderedDictionary{TKey,TValue}" /> instance.
+        /// Clears the contents of the <see cref="OrderedDictionary{TKey,TValue}" /> instance.
         /// </summary>
         public void Clear()
         {
@@ -151,8 +151,8 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Performs additional custom processes before inserting a new element into the
-        ///     <see cref="OrderedDictionary{TKey,TValue}" /> instance.
+        /// Performs additional custom processes before inserting a new element into the
+        /// <see cref="OrderedDictionary{TKey,TValue}" /> instance.
         /// </summary>
         /// <param name="key">The key of the element to insert. </param>
         /// <param name="value">The value of the element to insert. </param>
@@ -162,15 +162,15 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Determines whether an element is in the <see cref="OrderedDictionary{TKey,TValue}" />.
+        /// Determines whether an element is in the <see cref="OrderedDictionary{TKey,TValue}" />.
         /// </summary>
         /// <returns>
-        ///     true if <paramref name="key" /> is found in the <see cref="OrderedDictionary{TKey,TValue}" />; otherwise,
-        ///     false.
+        /// true if <paramref name="key" /> is found in the <see cref="OrderedDictionary{TKey,TValue}" />; otherwise,
+        /// false.
         /// </returns>
         /// <param name="key">
-        ///     The object to locate in the current dictionary. The element to locate can be null for reference
-        ///     types.
+        /// The object to locate in the current dictionary. The element to locate can be null for reference
+        /// types.
         /// </param>
         public int IndexOf(TKey key)
         {
@@ -182,8 +182,8 @@ namespace FlaxEngine.Collections
 
         /// <summary>Determines whether the <see cref="OrderedDictionary{TKey,TValue}" /> contains a specific value.</summary>
         /// <returns>
-        ///     true if the <see cref="OrderedDictionary{TKey,TValue}" /> contains an element with the specified value;
-        ///     otherwise, false.
+        /// true if the <see cref="OrderedDictionary{TKey,TValue}" /> contains an element with the specified value;
+        /// otherwise, false.
         /// </returns>
         /// <param name="value">The value to locate in the <see cref="OrderedDictionary{TKey,TValue}" />.</param>
         public bool ContainsValue(TValue value)
@@ -192,11 +192,11 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Determines whether the <see cref="OrderedDictionary{TKey,TValue}" /> contains a specific value.
+        /// Determines whether the <see cref="OrderedDictionary{TKey,TValue}" /> contains a specific value.
         /// </summary>
         /// <returns>
-        ///     true if the <see cref="OrderedDictionary{TKey,TValue}" /> contains an element with the specified value;
-        ///     otherwise, false.
+        /// true if the <see cref="OrderedDictionary{TKey,TValue}" /> contains an element with the specified value;
+        /// otherwise, false.
         /// </returns>
         /// <param name="value">The value to locate in the <see cref="OrderedDictionary{TKey,TValue}" />.</param>
         /// <param name="comparer">The custom <see cref="IEqualityComparer" /> for this search</param>
@@ -206,11 +206,11 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Determines whether the <see cref="OrderedDictionary{TKey,TValue}" /> contains a specific key.
+        /// Determines whether the <see cref="OrderedDictionary{TKey,TValue}" /> contains a specific key.
         /// </summary>
         /// <returns>
-        ///     true if the <see cref="OrderedDictionary{TKey,TValue}" /> contains an element with the specified key;
-        ///     otherwise, false.
+        /// true if the <see cref="OrderedDictionary{TKey,TValue}" /> contains an element with the specified key;
+        /// otherwise, false.
         /// </returns>
         /// <param name="key">The key to locate in the <see cref="OrderedDictionary{TKey,TValue}" />.</param>
         public bool ContainsKey(TKey key)
@@ -219,11 +219,11 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets item at given index.
+        /// Gets item at given index.
         /// </summary>
         /// <param name="index">Requested key at index</param>
         /// <exception cref="ArgumentException">
-        ///     Thrown when the index specified does not refer to a KeyValuePair in this object
+        /// Thrown when the index specified does not refer to a KeyValuePair in this object
         /// </exception>
         public KeyValuePair<TKey, TValue> GetItem(int index)
         {
@@ -234,12 +234,12 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Sets the value at the index specified.
+        /// Sets the value at the index specified.
         /// </summary>
         /// <param name="index">The index of the value desired</param>
         /// <param name="value">The value to set</param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when the index specified does not refer to a KeyValuePair in this object
+        /// Thrown when the index specified does not refer to a KeyValuePair in this object
         /// </exception>
         public void SetItem(int index, TValue value)
         {
@@ -250,8 +250,8 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Collections.IEnumerator" /> that iterates through the
-        ///     <see cref="OrderedDictionary{TKey,TValue}" />.
+        /// Returns an <see cref="T:System.Collections.IEnumerator" /> that iterates through the
+        /// <see cref="OrderedDictionary{TKey,TValue}" />.
         /// </summary>
         /// <returns>An <see cref="T:System.Collections.IEnumerator" /> for the <see cref="OrderedDictionary{TKey,TValue}" />.</returns>
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
@@ -260,8 +260,8 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Performs additional custom processes before removing an element from the
-        ///     <see cref="OrderedDictionary{TKey,TValue}" /> instance.
+        /// Performs additional custom processes before removing an element from the
+        /// <see cref="OrderedDictionary{TKey,TValue}" /> instance.
         /// </summary>
         /// <param name="key">The key of the element to remove. </param>
         public bool Remove(TKey key)
@@ -270,7 +270,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Removes the <see cref="OrderedDictionary{TKey,TValue}" /> item at the specified index.
+        /// Removes the <see cref="OrderedDictionary{TKey,TValue}" /> item at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index of the item to remove. </param>
         public void RemoveAt(int index)
@@ -281,7 +281,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Gets the value associated with the specified key.
+        /// Gets the value associated with the specified key.
         /// </summary>
         /// <param name="key">The key associated with the value to get.</param>
         public TValue GetValue(TKey key)
@@ -293,7 +293,7 @@ namespace FlaxEngine.Collections
         }
 
         /// <summary>
-        ///     Sets the value associated with the specified key.
+        /// Sets the value associated with the specified key.
         /// </summary>
         /// <param name="key">The key associated with the value to set.</param>
         /// <param name="value">The the value to set.</param>

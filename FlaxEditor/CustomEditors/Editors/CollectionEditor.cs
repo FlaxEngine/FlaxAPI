@@ -169,7 +169,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 {
                     Text = "+",
                     TooltipText = "Add new item",
-                    AnchorStyle = AnchorStyle.UpperRight,
+                    AnchorPreset = AnchorPresets.TopRight,
                     Parent = area.ContainerControl
                 };
                 addButton.Clicked += () =>
@@ -183,7 +183,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 {
                     Text = "-",
                     TooltipText = "Remove last item",
-                    AnchorStyle = AnchorStyle.UpperRight,
+                    AnchorPreset = AnchorPresets.TopRight,
                     Parent = area.ContainerControl,
                     Enabled = size > 0
                 };

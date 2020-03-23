@@ -230,7 +230,7 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.BracketsSlash32, () => ShowSourceCode(_asset)).LinkTooltip("Show generated shader source code");
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/materials/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/graphics/materials/index.html")).LinkTooltip("See documentation to learn more");
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(Material material)
         {
             var source = Editor.GetMaterialShaderSourceCode(material);
-            Utilities.Utils.ShowSourceCode(source, "Material Source");
+            Utilities.Utils.ShowSourceCodeWindow(source, "Material Source");
         }
 
         /// <summary>
@@ -332,6 +332,7 @@ namespace FlaxEditor.Windows.Assets
                     _surface.MarkAsEdited();
                     Editor.LogError("Failed to save material surface data");
                 }
+                _asset.Reload();
             }
         }
 
