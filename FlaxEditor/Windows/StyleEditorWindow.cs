@@ -49,12 +49,14 @@ namespace FlaxEditor.Windows
             _onChanged = valueChanged;
 
             var container = this.AddChild<UniformGridPanel>();
-            container.DockStyle = DockStyle.Fill;
+            container.Offsets = Margin.Zero;
+            container.AnchorPreset = AnchorPresets.StretchAll;
             container.SlotsVertically = 1;
             container.SlotsHorizontally = 2;
 
             var optionsPanel = container.AddChild<Panel>();
-            optionsPanel.DockStyle = DockStyle.Fill;
+            container.Offsets = Margin.Zero;
+            container.AnchorPreset = AnchorPresets.StretchAll;
             optionsPanel.IsScrollable = true;
             optionsPanel.ScrollBars = ScrollBars.Vertical;
 
@@ -65,26 +67,29 @@ namespace FlaxEditor.Windows
             _valueEditor.Modified += OnEdited;
 
             _previewPanel = container.AddChild<Panel>();
-            _previewPanel.DockStyle = DockStyle.Fill;
+            container.Offsets = Margin.Zero;
+            container.AnchorPreset = AnchorPresets.StretchAll;
 
             var preview = CreatePreview(_value);
             preview.Parent = _previewPanel;
 
             // Cancel
-            _cCancel = new Button(Width - ButtonsWidth - PickerMargin, Height - Button.DefaultHeight - PickerMargin, ButtonsWidth)
+            _cCancel = new Button
             {
                 Text = "Cancel",
                 Parent = this,
-                AnchorStyle = AnchorStyle.BottomRight
+                Bounds = new Rectangle(Width - ButtonsWidth - PickerMargin, Height - Button.DefaultHeight - PickerMargin, Button.DefaultHeight, ButtonsWidth),
+                AnchorPreset = AnchorPresets.BottomRight,
             };
             _cCancel.Clicked += OnCancelClicked;
 
             // OK
-            _cOK = new Button(_cCancel.Left - ButtonsWidth - PickerMargin, _cCancel.Y, ButtonsWidth)
+            _cOK = new Button
             {
                 Text = "Ok",
                 Parent = this,
-                AnchorStyle = AnchorStyle.BottomRight
+                Bounds = new Rectangle(_cCancel.Left - ButtonsWidth - PickerMargin, _cCancel.Y, Button.DefaultHeight, ButtonsWidth),
+                AnchorPreset = AnchorPresets.BottomRight,
             };
             _cOK.Clicked += OnOkClicked;
         }
@@ -101,7 +106,8 @@ namespace FlaxEditor.Windows
 
             var preview = new ContainerControl
             {
-                DockStyle = DockStyle.Fill,
+                Offsets = Margin.Zero,
+                AnchorPreset = AnchorPresets.StretchAll,
                 BackgroundColor = style.Background
             };
 
