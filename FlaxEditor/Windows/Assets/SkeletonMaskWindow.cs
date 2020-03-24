@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -106,6 +105,8 @@ namespace FlaxEditor.Windows.Assets
                     var mask = proxy.NodesMask;
                     if (mask == null || mask.Length != nodes.Length)
                     {
+                        if (mask != null)
+                            Debug.Write(LogType.Error, $"Invalid size nodes mask (got {mask.Length} but there are {nodes.Length} nodes)");
                         mask = proxy.NodesMask = new bool[nodes.Length];
                         for (int i = 0; i < nodes.Length; i++)
                             mask[i] = true;
@@ -217,15 +218,24 @@ namespace FlaxEditor.Windows.Assets
                 return;
 
             _asset.Skeleton = _properties.Skeleton;
-            var count = _preview.NodesMask.Count(x => x);
-            var nodes = new string[count];
-            var i = 0;
-            for (int nodeIndex = 0; nodeIndex < _preview.NodesMask.Length; nodeIndex++)
+            int count = 0;
+            var nodesMask = _preview.NodesMask;
+            if (nodesMask != null)
             {
-                if (_preview.NodesMask[nodeIndex])
+                for (int nodeIndex = 0; nodeIndex < nodesMask.Length; nodeIndex++)
                 {
-                    nodes[i] = _properties.Skeleton.Nodes[nodeIndex].Name;
-                    i++;
+                    if (nodesMask[nodeIndex])
+                        count++;
+                }
+            }
+            var nodes = new string[count];
+            if (nodesMask != null)
+            {
+                var i = 0;
+                for (int nodeIndex = 0; nodeIndex < nodesMask.Length; nodeIndex++)
+                {
+                    if (nodesMask[nodeIndex])
+                        nodes[i++] = _properties.Skeleton.Nodes[nodeIndex].Name;
                 }
             }
             _asset.MaskedNodes = nodes;

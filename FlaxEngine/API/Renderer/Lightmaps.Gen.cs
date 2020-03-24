@@ -1,7 +1,6 @@
 // This code was auto-generated. Do not modify it.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;

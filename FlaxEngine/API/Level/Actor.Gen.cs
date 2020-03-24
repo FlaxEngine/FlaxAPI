@@ -1,7 +1,6 @@
 // This code was auto-generated. Do not modify it.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -852,13 +851,13 @@ namespace FlaxEngine
         /// <param name="data">The input data.</param>
         /// <param name="idsMapping">The serialized objects Ids mapping. Can be used to convert the spawned objects ids and references to them.</param>
         /// <returns>The output actors.</returns>
-        public static Actor[] FromBytes(byte[] data, Dictionary<Guid, Guid> idsMapping)
+        public static Actor[] FromBytes(byte[] data, System.Collections.Generic.Dictionary<Guid, Guid> idsMapping)
         {
             return Internal_FromBytes1(data, idsMapping, typeof(Actor));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Actor[] Internal_FromBytes1(byte[] data, Dictionary<Guid, Guid> idsMapping, System.Type resultArrayItemType0);
+        internal static extern Actor[] Internal_FromBytes1(byte[] data, System.Collections.Generic.Dictionary<Guid, Guid> idsMapping, System.Type resultArrayItemType0);
 
         /// <summary>
         /// Tries the get serialized objects ids from the raw bytes.

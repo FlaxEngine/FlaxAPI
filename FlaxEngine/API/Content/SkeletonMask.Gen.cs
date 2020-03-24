@@ -1,7 +1,6 @@
 // This code was auto-generated. Do not modify it.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -57,11 +56,11 @@ namespace FlaxEngine
         [Tooltip("The per-skeleton-node boolean mask (read-only).")]
         public bool[] NodesMask
         {
-            get { return Internal_GetNodesMask(unmanagedPtr, typeof(bool)); }
+            get { return Internal_GetNodesMask(unmanagedPtr); }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool[] Internal_GetNodesMask(IntPtr obj, System.Type resultArrayItemType0);
+        internal static extern bool[] Internal_GetNodesMask(IntPtr obj);
 
         /// <summary>
         /// Saves this asset to the file. Supported only in Editor.
