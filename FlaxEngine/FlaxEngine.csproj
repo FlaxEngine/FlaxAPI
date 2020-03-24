@@ -50,9 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Actors\AudioListener.Gen.cs" />
-    <Compile Include="API\Actors\AudioSource.cs" />
-    <Compile Include="API\Actors\AudioSource.Gen.cs" />
     <Compile Include="API\Actors\Collider.cs" />
     <Compile Include="API\Actors\Collider.Gen.cs" />
     <Compile Include="API\Actors\Foliage.cs" />
@@ -74,8 +71,13 @@
     <Compile Include="API\Animations\AlphaBlend.Gen.cs" />
     <Compile Include="API\Animations\AnimationGraph.cs" />
     <Compile Include="API\Animations\AnimGraph.Gen.cs" />
-    <Compile Include="API\BinaryAssets\AudioClip.cs" />
-    <Compile Include="API\BinaryAssets\AudioClip.Gen.cs" />
+    <Compile Include="API\Audio\Audio.cs" />
+    <Compile Include="API\Audio\Audio.Gen.cs" />
+    <Compile Include="API\Audio\AudioClip.Gen.cs" />
+    <Compile Include="API\Audio\AudioDevice.Gen.cs" />
+    <Compile Include="API\Audio\AudioListener.Gen.cs" />
+    <Compile Include="API\Audio\AudioSource.Gen.cs" />
+    <Compile Include="API\Audio\Types.Gen.cs" />
     <Compile Include="API\BinaryAssets\CollisionData.cs" />
     <Compile Include="API\BinaryAssets\CollisionData.Gen.cs" />
     <Compile Include="API\BinaryAssets\GameplayGlobals.Gen.cs" />
@@ -226,8 +228,6 @@
     <Compile Include="API\Renderer\Renderer.cs" />
     <Compile Include="API\Renderer\Renderer.Gen.cs" />
     <Compile Include="API\Renderer\RenderList.Gen.cs" />
-    <Compile Include="API\Static\Audio.cs" />
-    <Compile Include="API\Static\Audio.Gen.cs" />
     <Compile Include="API\Content\Content.cs" />
     <Compile Include="API\Static\Globals.cs" />
     <Compile Include="API\Static\Globals.Gen.cs" />
@@ -284,7 +284,6 @@
     <Compile Include="Collections\CircularBuffer.cs" />
     <Compile Include="Collections\IOrderedDictionary.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
-    <Compile Include="Engine\AudioDevice.cs" />
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\ContactPoint.cs" />
     <Compile Include="Engine\CreateWindowSettings.cs" />
@@ -414,5 +413,6 @@
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

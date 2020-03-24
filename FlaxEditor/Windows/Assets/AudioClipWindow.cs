@@ -43,8 +43,7 @@ namespace FlaxEditor.Windows.Assets
                     // Audio properties
                     {
                         var audio = window.Asset;
-                        AudioClip.AudioDataInfo info;
-                        audio.GetInfo(out info);
+                        AudioDataInfo info = audio.Info;
                         int originalSize, importedSize;
                         Editor.Internal_GetAudioClipMetadata(audio.unmanagedPtr, out originalSize, out importedSize);
 
