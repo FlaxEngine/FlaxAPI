@@ -56,6 +56,7 @@ namespace FlaxEditor.Windows
             CreateTab("Viewport", () => _options.Viewport);
             CreateTab("Visual", () => _options.Visual);
             CreateTab("Source Code", () => _options.SourceCode);
+            CreateTab("Theme", () => _options.Theme);
 
             _tabs.SelectedTabIndex = 0;
         }

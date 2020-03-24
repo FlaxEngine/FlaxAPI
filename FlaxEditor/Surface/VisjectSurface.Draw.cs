@@ -138,7 +138,7 @@ namespace FlaxEditor.Surface
         protected virtual void DrawInputBrackets()
         {
             var style = FlaxEngine.GUI.Style.Current;
-            Color fadedColor = style.Foreground * 0.6f;
+            Color fadedColor = style.ForegroundGrey;
             foreach (var inputBracket in _inputBrackets)
             {
                 // Draw brackets

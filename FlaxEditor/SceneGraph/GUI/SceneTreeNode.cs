@@ -2,6 +2,7 @@
 
 using FlaxEditor.SceneGraph.Actors;
 using FlaxEngine;
+using FlaxEngine.GUI;
 
 namespace FlaxEditor.SceneGraph.GUI
 {
@@ -33,7 +34,7 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <inheritdoc />
         protected override Color CacheTextColor()
         {
-            return Color.White;
+            return Style.Current.Foreground;
         }
     }
 }

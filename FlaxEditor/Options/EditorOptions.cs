@@ -41,6 +41,11 @@ namespace FlaxEditor.Options
         public SourceCodeOptions SourceCode = new SourceCodeOptions();
 
         /// <summary>
+        /// The theme options.
+        /// </summary>
+        public ThemeOptions Theme = new ThemeOptions();
+
+        /// <summary>
         /// The custom settings collection. Can be used by the editor plugins to provide customization for options. Key is a settings tab name and the value is the serialized settings object (for a custom editor).
         /// </summary>
         public readonly Dictionary<string, string> CustomSettings = new Dictionary<string, string>();

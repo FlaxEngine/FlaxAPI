@@ -127,6 +127,12 @@ namespace FlaxEditor.Content.Settings
         public JsonAsset LinuxPlatform;
 
         /// <summary>
+        /// Reference to <see cref="PS4PlatformSettings"/> asset. Used to apply configuration on PS4 platform.
+        /// </summary>
+        [EditorOrder(2040), EditorDisplay("Platform Settings", "PlayStation 4"), AssetReference(typeof(PS4PlatformSettings), true), Tooltip("Reference to PS4 Platform Settings asset")]
+        public JsonAsset PS4Platform;
+
+        /// <summary>
         /// Gets the absolute path to the game settings asset file.
         /// </summary>
         public static string GameSettingsAssetPath
@@ -198,6 +204,8 @@ namespace FlaxEditor.Content.Settings
                 return LoadAsset<UWPPlatformSettings>(gameSettings.UWPPlatform) as T;
             if (type == typeof(LinuxPlatformSettings))
                 return LoadAsset<LinuxPlatformSettings>(gameSettings.LinuxPlatform) as T;
+            if (type == typeof(PS4PlatformSettings))
+                return LoadAsset<PS4PlatformSettings>(gameSettings.PS4Platform) as T;
             if (type == typeof(AudioSettings))
                 return LoadAsset<AudioSettings>(gameSettings.Audio) as T;
 
@@ -277,6 +285,8 @@ namespace FlaxEditor.Content.Settings
                 return SaveAsset(gameSettings, ref gameSettings.UWPPlatform, obj);
             if (type == typeof(LinuxPlatformSettings))
                 return SaveAsset(gameSettings, ref gameSettings.LinuxPlatform, obj);
+            if (type == typeof(PS4PlatformSettings))
+                return SaveAsset(gameSettings, ref gameSettings.PS4Platform, obj);
             if (type == typeof(AudioSettings))
                 return SaveAsset(gameSettings, ref gameSettings.Audio, obj);
 

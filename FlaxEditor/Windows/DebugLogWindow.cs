@@ -134,7 +134,7 @@ namespace FlaxEditor.Windows
                     Render2D.FillRectangle(clientRect, style.Background * 0.9f);
 
                 // Icon
-                Render2D.DrawSprite(Icon, new Rectangle(5, 8, 32, 32), Color.White);
+                Render2D.DrawSprite(Icon, new Rectangle(5, 8, 32, 32), style.Foreground);
 
                 // Title
                 var textRect = new Rectangle(38, 6, clientRect.Width - 40, clientRect.Height - 10);

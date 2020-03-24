@@ -83,7 +83,7 @@ namespace FlaxEngine.GUI
             var style = Style.Current;
             Font = new FontReference(style.FontMedium);
             TextColor = style.Foreground;
-            WatermarkTextColor = new Color(0.7f);
+            WatermarkTextColor = style.ForegroundDisabled;
             SelectionColor = style.BackgroundSelected;
         }
 

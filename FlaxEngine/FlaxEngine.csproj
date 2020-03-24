@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -98,6 +98,7 @@
     <Compile Include="API\Content\Asset.Gen.cs" />
     <Compile Include="API\Content\AssetInfo.Gen.cs" />
     <Compile Include="API\Content\BinaryAsset.Gen.cs" />
+    <Compile Include="API\Content\Content.cs" />
     <Compile Include="API\Content\Content.Gen.cs" />
     <Compile Include="API\Content\CubeTexture.Gen.cs" />
     <Compile Include="API\Content\IESProfile.Gen.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="API\Graphics\ModelLOD.Gen.cs" />
     <Compile Include="API\Graphics\PixelFormat.Gen.cs" />
     <Compile Include="API\Graphics\PixelFormatExtensions.Gen.cs" />
+    <Compile Include="API\Graphics\PostProcessSettings.cs" />
     <Compile Include="API\Graphics\PostProcessSettings.Gen.cs" />
     <Compile Include="API\Graphics\RenderBuffers.Gen.cs" />
     <Compile Include="API\Graphics\RenderTargetPool.Gen.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="API\Graphics\TextureBase.Gen.cs" />
     <Compile Include="API\Input\Enums.Gen.cs" />
     <Compile Include="API\Input\Gamepad.Gen.cs" />
+    <Compile Include="API\Input\Input.cs" />
     <Compile Include="API\Input\Input.Gen.cs" />
     <Compile Include="API\Input\InputDevice.Gen.cs" />
     <Compile Include="API\Input\Keyboard.Gen.cs" />
@@ -228,12 +231,10 @@
     <Compile Include="API\Renderer\Renderer.cs" />
     <Compile Include="API\Renderer\Renderer.Gen.cs" />
     <Compile Include="API\Renderer\RenderList.Gen.cs" />
-    <Compile Include="API\Content\Content.cs" />
     <Compile Include="API\Static\Globals.cs" />
     <Compile Include="API\Static\Globals.Gen.cs" />
     <Compile Include="API\Static\GraphicsSettings.cs" />
     <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
-    <Compile Include="API\Input\Input.cs" />
     <Compile Include="API\Static\MessageBox.cs" />
     <Compile Include="API\Static\MessageBox.Gen.cs" />
     <Compile Include="API\Static\Physics.cs" />
@@ -302,7 +303,6 @@
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\PostProcessEffect.cs" />
-    <Compile Include="API\Graphics\PostProcessSettings.cs" />
     <Compile Include="Engine\SceneReference.cs" />
     <Compile Include="Engine\SpringParameters.cs" />
     <Compile Include="Engine\Exceptions\FlaxException.cs" />
@@ -413,6 +413,5 @@
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

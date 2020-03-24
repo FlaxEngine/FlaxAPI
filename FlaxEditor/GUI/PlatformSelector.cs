@@ -78,6 +78,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         public PlatformSelector()
         {
+            var style = Style.Current;
             var icons = Editor.Instance.Icons;
             var platforms = new[]
             {
@@ -93,9 +94,9 @@ namespace FlaxEditor.GUI
             AutoResize = true;
             Offsets = new Margin(0, 0, 0, IconSize);
 
-            _mouseOverColor = Color.White;
-            _selectedColor = Color.White;
-            _defaultColor = new Color(0.6f);
+            _mouseOverColor = style.Foreground;
+            _selectedColor = style.Foreground;
+            _defaultColor = style.ForegroundGrey;
 
             for (int i = 0; i < platforms.Length; i++)
             {

@@ -93,13 +93,13 @@ namespace FlaxEditor.GUI.Tabs
                 // Draw icon
                 if (Tab.Icon.IsValid)
                 {
-                    Render2D.DrawSprite(Tab.Icon, tabRect.MakeExpanded(-8));
+                    Render2D.DrawSprite(Tab.Icon, tabRect.MakeExpanded(-8), style.Foreground);
                 }
 
                 // Draw text
                 if (!string.IsNullOrEmpty(Tab.Text))
                 {
-                    Render2D.DrawText(style.FontMedium, Tab.Text, new Rectangle(tabRect.X + 8, tabRect.Y, tabRect.Width - 8, tabRect.Height), Color.White, TextAlignment.Near, TextAlignment.Center);
+                    Render2D.DrawText(style.FontMedium, Tab.Text, new Rectangle(tabRect.X + 8, tabRect.Y, tabRect.Width - 8, tabRect.Height), style.Foreground, TextAlignment.Near, TextAlignment.Center);
                 }
             }
         }

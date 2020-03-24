@@ -168,7 +168,7 @@ namespace FlaxEditor.Tools.Terrain
                 AnchorPreset = AnchorPresets.StretchAll,
                 Offsets = Margin.Zero,
                 Text = "Generating terrain...",
-                BackgroundColor = Color.Black * 0.6f,
+                BackgroundColor = Style.Current.ForegroundDisabled,
                 Parent = this,
             };
 

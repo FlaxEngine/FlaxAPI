@@ -250,7 +250,7 @@ namespace FlaxEditor.GUI
             var button3Rect = Button3Rect;
 
             // Draw asset picker button
-            Render2D.DrawSprite(style.ArrowDown, button1Rect, new Color(button1Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+            Render2D.DrawSprite(style.ArrowDown, button1Rect, button1Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
 
             // Check if has item selected
             if (_selectedItem != null)
@@ -259,10 +259,10 @@ namespace FlaxEditor.GUI
                 _selectedItem.DrawThumbnail(ref iconRect);
 
                 // Draw find button
-                Render2D.DrawSprite(style.Search, button2Rect, new Color(button2Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Search, button2Rect, button2Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
 
                 // Draw remove button
-                Render2D.DrawSprite(style.Cross, button3Rect, new Color(button3Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Cross, button3Rect, button3Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
 
                 // Draw name
                 float sizeForTextLeft = Width - button1Rect.Right;
@@ -272,7 +272,7 @@ namespace FlaxEditor.GUI
                         style.FontSmall,
                         _selectedItem.ShortName,
                         new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
-                        Color.White,
+                        style.Foreground,
                         TextAlignment.Near,
                         TextAlignment.Center);
                 }
@@ -281,7 +281,7 @@ namespace FlaxEditor.GUI
             else if (_selected)
             {
                 // Draw remove button
-                Render2D.DrawSprite(style.Cross, button3Rect, new Color(button3Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Cross, button3Rect, button3Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
 
                 // Draw name
                 float sizeForTextLeft = Width - button1Rect.Right;
@@ -294,7 +294,7 @@ namespace FlaxEditor.GUI
                         style.FontSmall,
                         name,
                         new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
-                        Color.White,
+                        style.Foreground,
                         TextAlignment.Near,
                         TextAlignment.Center);
                 }
