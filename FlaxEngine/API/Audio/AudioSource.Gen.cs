@@ -176,6 +176,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the current time of playback. If playback has not yet started, it specifies the time at which playback will start at. The time is in seconds, in range [0, ClipLength].
         /// </summary>
+        [HideInEditor]
         [Tooltip("The current time of playback. If playback has not yet started, it specifies the time at which playback will start at. The time is in seconds, in range [0, ClipLength].")]
         public float Time
         {
