@@ -820,12 +820,10 @@ namespace FlaxEditor.Modules
                     ContentItem item = null;
 
                     // Try using in-build asset
-                    string typeName;
-                    Guid id;
-                    if (FlaxEngine.Content.GetAssetInfo(path, out typeName, out id))
+                    if (FlaxEngine.Content.GetAssetInfo(path, out var assetInfo))
                     {
-                        var proxy = GetAssetProxy(typeName, path);
-                        item = proxy?.ConstructItem(path, typeName, ref id);
+                        var proxy = GetAssetProxy(assetInfo.TypeName, path);
+                        item = proxy?.ConstructItem(path, assetInfo.TypeName, ref assetInfo.ID);
                     }
 
                     // Generic file
@@ -927,16 +925,14 @@ namespace FlaxEditor.Modules
             if (item is BinaryAssetItem binaryAssetItem)
             {
                 // Get asset info from the registry (content layer will update cache it just after import)
-                string typeName;
-                Guid id;
-                if (FlaxEngine.Content.GetAssetInfo(binaryAssetItem.Path, out typeName, out id))
+                if (FlaxEngine.Content.GetAssetInfo(binaryAssetItem.Path, out var assetInfo))
                 {
                     // If asset type id has been changed we HAVE TO close all windows that use it
                     // For eg. change texture to sprite atlas on reimport
-                    if (binaryAssetItem.TypeName != typeName)
+                    if (binaryAssetItem.TypeName != assetInfo.TypeName)
                     {
                         // Asset type has been changed!
-                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeName, typeName));
+                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeName, assetInfo.TypeName));
                         Editor.Windows.CloseAllEditors(item);
 
                         // Remove this item from the database and some related data
@@ -955,7 +951,7 @@ namespace FlaxEditor.Modules
                     else
                     {
                         // Refresh element data that could change during importing
-                        binaryAssetItem.OnReimport(ref id);
+                        binaryAssetItem.OnReimport(ref assetInfo.ID);
                     }
                 }
 

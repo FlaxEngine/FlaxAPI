@@ -173,7 +173,7 @@ namespace FlaxEditor.Modules
                 return;
 
             var prefabId = ((ActorNode)selection[0]).Actor.PrefabID;
-            var prefab = FlaxEngine.Content.LoadAsync<Prefab>(ref prefabId);
+            var prefab = FlaxEngine.Content.LoadAsync<Prefab>(prefabId);
             Editor.Windows.ContentWin.Select(prefab);
         }
 

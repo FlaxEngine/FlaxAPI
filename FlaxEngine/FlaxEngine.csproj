@@ -94,7 +94,9 @@
     <Compile Include="API\Content\AnimationGraph.Gen.cs" />
     <Compile Include="API\Content\Asset.cs" />
     <Compile Include="API\Content\Asset.Gen.cs" />
+    <Compile Include="API\Content\AssetInfo.Gen.cs" />
     <Compile Include="API\Content\BinaryAsset.Gen.cs" />
+    <Compile Include="API\Content\Content.Gen.cs" />
     <Compile Include="API\Content\CubeTexture.Gen.cs" />
     <Compile Include="API\Content\IESProfile.Gen.cs" />
     <Compile Include="API\Content\JsonAsset.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="API\Graphics\PixelFormatExtensions.Gen.cs" />
     <Compile Include="API\Graphics\PostProcessSettings.Gen.cs" />
     <Compile Include="API\Graphics\RenderBuffers.Gen.cs" />
+    <Compile Include="API\Graphics\RenderTargetPool.Gen.cs" />
     <Compile Include="API\Graphics\RenderTask.cs" />
     <Compile Include="API\Graphics\RenderTask.Gen.cs" />
     <Compile Include="API\Graphics\RenderTools.Gen.cs" />
@@ -225,8 +228,7 @@
     <Compile Include="API\Renderer\RenderList.Gen.cs" />
     <Compile Include="API\Static\Audio.cs" />
     <Compile Include="API\Static\Audio.Gen.cs" />
-    <Compile Include="API\Static\Content.cs" />
-    <Compile Include="API\Static\Content.Gen.cs" />
+    <Compile Include="API\Content\Content.cs" />
     <Compile Include="API\Static\Globals.cs" />
     <Compile Include="API\Static\Globals.Gen.cs" />
     <Compile Include="API\Static\GraphicsSettings.cs" />
@@ -242,7 +244,6 @@
     <Compile Include="API\Static\PluginManager.Gen.cs" />
     <Compile Include="API\Static\Profiler.cs" />
     <Compile Include="API\Static\Profiler.Gen.cs" />
-    <Compile Include="API\Static\RenderTargetPool.Gen.cs" />
     <Compile Include="API\Static\Screen.Gen.cs" />
     <Compile Include="API\Static\Scripting.cs" />
     <Compile Include="API\Static\Time.cs" />

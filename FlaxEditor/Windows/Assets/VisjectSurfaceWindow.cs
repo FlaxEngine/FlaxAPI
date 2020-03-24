@@ -103,8 +103,8 @@ namespace FlaxEditor.Windows.Assets
                 if (Type == ParameterType.NormalMap)
                 {
                     // Use default normal map texture (don't load asset here, just lookup registry for id at path)
-                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out _, out var id);
-                    param.Value = id;
+                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out var assetInfo);
+                    param.Value = assetInfo.ID;
                 }
                 Window.Surface.Parameters.Insert(Index, param);
                 Window.Surface.OnParamCreated(param);
