@@ -1,29 +1,12 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
     partial class Content
     {
-        private static readonly Type[] ValidVirtualAssetTypes =
-        {
-            typeof(MaterialInstance),
-            typeof(Texture),
-            typeof(CubeTexture),
-            typeof(SpriteAtlas),
-            typeof(IESProfile),
-            typeof(SkinnedModel),
-            typeof(CollisionData),
-            typeof(ParticleSystem),
-            typeof(RawDataAsset),
-            typeof(Model),
-            typeof(SkeletonMask),
-            typeof(GameplayGlobals),
-        };
-
         /// <summary>
         /// Occurs when asset is being disposed and will be unloaded (by force). All references to it should be released.
         /// </summary>
@@ -203,9 +186,6 @@ namespace FlaxEngine
         /// <returns>Asset instance if created, null otherwise. See log for error message if need to.</returns>
         public static T CreateVirtualAsset<T>() where T : Asset
         {
-            string typeName = typeof(T).FullName;
-            if (!ValidVirtualAssetTypes.Contains(typeof(T)))
-                throw new InvalidOperationException("Asset type " + typeName + " does not support virtual assets.");
             return (T)Internal_CreateVirtualAsset(typeof(T));
         }
     }
