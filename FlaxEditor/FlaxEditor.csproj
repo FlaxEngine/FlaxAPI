@@ -48,9 +48,6 @@
   <ItemGroup>
     <Compile Include="API\Editor.cs" />
     <Compile Include="API\Editor.Gen.cs" />
-    <Compile Include="API\Profiling.cs" />
-    <Compile Include="API\ProfilingTools.cs" />
-    <Compile Include="API\ProfilingTools.Gen.cs" />
     <Compile Include="API\Static\FoliageTools.cs" />
     <Compile Include="API\Static\FoliageTools.Gen.cs" />
     <Compile Include="API\Static\GameCooker.cs" />

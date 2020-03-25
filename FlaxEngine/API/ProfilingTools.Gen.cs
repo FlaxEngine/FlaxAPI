@@ -6,10 +6,10 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace FlaxEditor.Profiling
+namespace FlaxEngine
 {
     /// <summary>
-    /// Profiler tools for editor. Allows to gather profiling data and events from the engine.
+    /// Profiler tools for development. Allows to gather profiling data and events from the engine.
     /// </summary>
     public partial class ProfilingTools
     {

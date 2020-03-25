@@ -2,7 +2,7 @@
 
 using System;
 using FlaxEditor.GUI.Tabs;
-using FlaxEditor.Profiling;
+using FlaxEngine;
 
 namespace FlaxEditor.Windows.Profiler
 {

@@ -2,7 +2,6 @@
 
 using System;
 using FlaxEditor.GUI;
-using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
 

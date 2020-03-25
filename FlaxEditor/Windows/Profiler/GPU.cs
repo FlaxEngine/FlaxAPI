@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using FlaxEditor.GUI;
-using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
 

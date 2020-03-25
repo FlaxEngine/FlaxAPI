@@ -201,6 +201,8 @@
     <Compile Include="API\Objects\GPUResource.Gen.cs" />
     <Compile Include="API\Objects\RenderBuffers.cs" />
     <Compile Include="API\Objects\RenderBuffers.Gen.cs" />
+    <Compile Include="API\Profiling.cs" />
+    <Compile Include="API\ProfilingTools.Gen.cs" />
     <Compile Include="API\Static\RenderTargetPool.cs" />
     <Compile Include="API\Static\RenderTargetPool.Gen.cs" />
     <Compile Include="API\Objects\RenderTask.cs" />
