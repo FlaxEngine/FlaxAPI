@@ -147,11 +147,11 @@ namespace FlaxEngine
         /// <returns>The result data or empty if failed.</returns>
         public static byte[] SaveSceneToBytes(Scene scene, bool prettyJson = true)
         {
-            return Internal_SaveSceneToBytes(FlaxEngine.Object.GetUnmanagedPtr(scene), prettyJson, typeof(byte));
+            return Internal_SaveSceneToBytes(FlaxEngine.Object.GetUnmanagedPtr(scene), prettyJson);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern byte[] Internal_SaveSceneToBytes(IntPtr scene, bool prettyJson, System.Type resultArrayItemType0);
+        internal static extern byte[] Internal_SaveSceneToBytes(IntPtr scene, bool prettyJson);
 
         /// <summary>
         /// Saves scene to the asset. Done in the background.

@@ -131,11 +131,14 @@ namespace FlaxEditor.Windows.Assets
                 Asset = window.Asset;
 
                 // Setup cooking parameters
-                Type = Asset.Type;
+                var options = Asset.Options;
+                Type = options.Type;
                 if (Type == CollisionDataType.None)
                     Type = CollisionDataType.ConvexMesh;
-                Model = Asset.Model;
-                Asset.GetCookOptions(out ModelLodIndex, out ConvexFlags, out ConvexVertexLimit);
+                Model = FlaxEngine.Content.LoadAsync<Model>(options.Model);
+                ModelLodIndex = options.ModelLodIndex;
+                ConvexFlags = options.ConvexFlags;
+                ConvexVertexLimit = options.ConvexVertexLimit;
             }
 
             public void OnClean()
@@ -227,7 +230,7 @@ namespace FlaxEditor.Windows.Assets
             }
             _collisionWiresShowActor.Model = _collisionWiresModel;
             _collisionWiresShowActor.SetMaterial(0, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial));
-            _preview.Model = _asset.Model;
+            _preview.Model = FlaxEngine.Content.LoadAsync<Model>(_asset.Options.Model);
         }
 
         /// <inheritdoc />

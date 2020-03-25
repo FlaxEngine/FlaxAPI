@@ -40,12 +40,12 @@ namespace FlaxEngine
         [Tooltip("The per-skeleton node mask (by name).")]
         public string[] MaskedNodes
         {
-            get { return Internal_GetMaskedNodes(unmanagedPtr, typeof(string)); }
+            get { return Internal_GetMaskedNodes(unmanagedPtr); }
             set { Internal_SetMaskedNodes(unmanagedPtr, value); }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string[] Internal_GetMaskedNodes(IntPtr obj, System.Type resultArrayItemType0);
+        internal static extern string[] Internal_GetMaskedNodes(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetMaskedNodes(IntPtr obj, string[] value);

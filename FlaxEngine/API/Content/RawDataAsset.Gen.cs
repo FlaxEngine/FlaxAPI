@@ -24,12 +24,12 @@ namespace FlaxEngine
         [Tooltip("The bytes array stored in the asset.")]
         public byte[] Data
         {
-            get { return Internal_GetData(unmanagedPtr, typeof(byte)); }
+            get { return Internal_GetData(unmanagedPtr); }
             set { Internal_SetData(unmanagedPtr, value); }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern byte[] Internal_GetData(IntPtr obj, System.Type resultArrayItemType0);
+        internal static extern byte[] Internal_GetData(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetData(IntPtr obj, byte[] value);

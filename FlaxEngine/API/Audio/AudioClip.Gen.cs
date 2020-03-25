@@ -100,11 +100,11 @@ namespace FlaxEngine
         /// <returns>True if failed, otherwise false.</returns>
         public bool ExtractData(out byte[] resultData, out AudioDataInfo resultDataInfo)
         {
-            return Internal_ExtractData(unmanagedPtr, out resultData, out resultDataInfo, typeof(byte));
+            return Internal_ExtractData(unmanagedPtr, out resultData, out resultDataInfo);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_ExtractData(IntPtr obj, out byte[] resultData, out AudioDataInfo resultDataInfo, System.Type resultArrayItemType0);
+        internal static extern bool Internal_ExtractData(IntPtr obj, out byte[] resultData, out AudioDataInfo resultDataInfo);
 
         /// <summary>
         /// Extracts the raw audio data (PCM format) from the asset storage and converts it to the normalized float format (in range [-1;1]). Loads the whole asset.
@@ -114,11 +114,11 @@ namespace FlaxEngine
         /// <returns>True if failed, otherwise false.</returns>
         public bool ExtractDataFloat(out float[] resultData, out AudioDataInfo resultDataInfo)
         {
-            return Internal_ExtractDataFloat(unmanagedPtr, out resultData, out resultDataInfo, typeof(float));
+            return Internal_ExtractDataFloat(unmanagedPtr, out resultData, out resultDataInfo);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_ExtractDataFloat(IntPtr obj, out float[] resultData, out AudioDataInfo resultDataInfo, System.Type resultArrayItemType0);
+        internal static extern bool Internal_ExtractDataFloat(IntPtr obj, out float[] resultData, out AudioDataInfo resultDataInfo);
 
         /// <summary>
         /// Extracts the raw audio data (PCM format) from the asset storage. Loads the whole asset.
@@ -128,10 +128,10 @@ namespace FlaxEngine
         /// <returns>True if failed, otherwise false.</returns>
         public bool ExtractDataRaw(out byte[] resultData, out AudioDataInfo resultDataInfo)
         {
-            return Internal_ExtractDataRaw(unmanagedPtr, out resultData, out resultDataInfo, typeof(byte));
+            return Internal_ExtractDataRaw(unmanagedPtr, out resultData, out resultDataInfo);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_ExtractDataRaw(IntPtr obj, out byte[] resultData, out AudioDataInfo resultDataInfo, System.Type resultArrayItemType0);
+        internal static extern bool Internal_ExtractDataRaw(IntPtr obj, out byte[] resultData, out AudioDataInfo resultDataInfo);
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -71,6 +71,7 @@
     <Compile Include="API\Animations\AlphaBlend.Gen.cs" />
     <Compile Include="API\Animations\AnimationGraph.cs" />
     <Compile Include="API\Animations\AnimGraph.Gen.cs" />
+    <Compile Include="API\Animations\SceneAnimation.Gen.cs" />
     <Compile Include="API\Audio\Audio.cs" />
     <Compile Include="API\Audio\Audio.Gen.cs" />
     <Compile Include="API\Audio\AudioClip.Gen.cs" />
@@ -78,14 +79,10 @@
     <Compile Include="API\Audio\AudioListener.Gen.cs" />
     <Compile Include="API\Audio\AudioSource.Gen.cs" />
     <Compile Include="API\Audio\Types.Gen.cs" />
-    <Compile Include="API\BinaryAssets\CollisionData.cs" />
-    <Compile Include="API\BinaryAssets\CollisionData.Gen.cs" />
-    <Compile Include="API\BinaryAssets\GameplayGlobals.Gen.cs" />
     <Compile Include="API\BinaryAssets\ParticleEmitter.cs" />
     <Compile Include="API\BinaryAssets\ParticleEmitter.Gen.cs" />
     <Compile Include="API\BinaryAssets\ParticleSystem.cs" />
     <Compile Include="API\BinaryAssets\ParticleSystem.Gen.cs" />
-    <Compile Include="API\BinaryAssets\SceneAnimation.Gen.cs" />
     <Compile Include="API\Colliders\BoxCollider.Gen.cs" />
     <Compile Include="API\Colliders\CapsuleCollider.Gen.cs" />
     <Compile Include="API\Colliders\CharacterController.cs" />
@@ -209,6 +206,7 @@
     <Compile Include="API\Objects\Script.Gen.cs" />
     <Compile Include="API\Objects\Window.cs" />
     <Compile Include="API\Objects\Window.Gen.cs" />
+    <Compile Include="API\Physics\CollisionData.Gen.cs" />
     <Compile Include="API\Physics\Physics.Gen.cs" />
     <Compile Include="API\Physics\PhysicsColliderActor.Gen.cs" />
     <Compile Include="API\Physics\Types.Gen.cs" />

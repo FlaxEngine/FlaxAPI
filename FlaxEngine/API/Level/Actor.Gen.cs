@@ -826,11 +826,11 @@ namespace FlaxEngine
         /// <returns>The output data, empty if failed.</returns>
         public static byte[] ToBytes(Actor[] actors)
         {
-            return Internal_ToBytes(actors, typeof(byte));
+            return Internal_ToBytes(actors);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern byte[] Internal_ToBytes(Actor[] actors, System.Type resultArrayItemType0);
+        internal static extern byte[] Internal_ToBytes(Actor[] actors);
 
         /// <summary>
         /// Performs actors deserialization from the raw bytes.
