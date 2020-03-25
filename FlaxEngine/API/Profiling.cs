@@ -2,7 +2,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace FlaxEditor.Profiling
+namespace FlaxEngine
 {
     /// <summary>
     /// Engine profiling data header. Contains main info and stats.

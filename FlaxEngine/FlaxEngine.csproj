@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -50,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Profiling.cs" />
+    <Compile Include="API\ProfilingTools.Gen.cs" />
     <Compile Include="API\Actors\Collider.cs" />
     <Compile Include="API\Actors\Collider.Gen.cs" />
     <Compile Include="API\Actors\Foliage.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="API\CSG\Types.Gen.cs" />
     <Compile Include="API\Debug\DebugDraw.cs" />
     <Compile Include="API\Debug\DebugDraw.Gen.cs" />
+    <Compile Include="API\Engine\GameplayGlobals.Gen.cs" />
     <Compile Include="API\Graphics\Enums.Gen.cs" />
     <Compile Include="API\Graphics\GPUAdapter.Gen.cs" />
     <Compile Include="API\Graphics\GPUBuffer.Gen.cs" />
