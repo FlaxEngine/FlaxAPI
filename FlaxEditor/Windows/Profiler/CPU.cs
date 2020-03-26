@@ -225,7 +225,7 @@ namespace FlaxEditor.Windows.Profiler
             double scale = 100.0;
             float x = (float)((e.Start - startTime) * scale);
             float width = (float)(length * scale);
-            string name = new string(e.Name);
+            string name = new string(e.Name).Replace("::", ".");
 
             var control = new Timeline.Event(x + xOffset, e.Depth + depthOffset, width)
             {
@@ -272,15 +272,18 @@ namespace FlaxEditor.Windows.Profiler
             if (_events.Count == 0)
                 return 0;
             var data = _events.Get(_mainChart.SelectedSampleIndex);
-            if (data == null || data.Length == 0 || data[0].Events == null)
+            if (data == null || data.Length == 0)
                 return 0;
 
             // Find the first event start time (for the timeline start time)
-            double startTime = data[0].Events[0].Start;
-            for (int i = 1; i < data.Length; i++)
+            double startTime = double.MaxValue;
+            for (int i = 0; i < data.Length; i++)
             {
-                startTime = Math.Min(startTime, data[i].Events[0].Start);
+                if (data[i].Events != null && data[i].Events.Length != 0)
+                    startTime = Math.Min(startTime, data[i].Events[0].Start);
             }
+            if (startTime >= double.MaxValue)
+                return 0;
 
             var container = _timeline.EventsContainer;
 
@@ -289,6 +292,8 @@ namespace FlaxEditor.Windows.Profiler
             for (int i = 0; i < data.Length; i++)
             {
                 var events = data[i].Events;
+                if (events == null)
+                    continue;
 
                 // Check maximum depth
                 int maxDepth = -1;
@@ -394,7 +399,7 @@ namespace FlaxEditor.Windows.Profiler
                         subEventsMemoryTotal += sub.ManagedMemoryAllocation + e.NativeMemoryAllocation;
                     }
 
-                    string name = new string(e.Name);
+                    string name = new string(e.Name).Replace("::", ".");
 
                     var row = new Row
                     {
