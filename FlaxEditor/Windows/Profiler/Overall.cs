@@ -98,8 +98,8 @@ namespace FlaxEditor.Windows.Profiler
             _updateTimeChart.AddSample(sharedData.Stats.UpdateTimeMs);
             _drawTimeCPUChart.AddSample(sharedData.Stats.DrawCPUTimeMs);
             _drawTimeGPUChart.AddSample(sharedData.Stats.DrawGPUTimeMs);
-            _cpuMemChart.AddSample(sharedData.Stats.ProcessMemory_UsedPhysicalMemory / 1024 / 1024);
-            _gpuMemChart.AddSample(sharedData.Stats.MemoryGPU_Used / 1024 / 1024);
+            _cpuMemChart.AddSample(sharedData.Stats.ProcessMemory.UsedPhysicalMemory / 1024 / 1024);
+            _gpuMemChart.AddSample(sharedData.Stats.MemoryGPU.Used / 1024 / 1024);
         }
 
         /// <inheritdoc />

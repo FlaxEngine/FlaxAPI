@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
+using System;
 using FlaxEngine.GUI;
 
 namespace FlaxEditor.Windows.Profiler
@@ -65,9 +66,12 @@ namespace FlaxEditor.Windows.Profiler
             var length = events?.Length ?? 0;
             for (int i = 0; i < length; i++)
             {
-                for (int j = 0; j < events[i].Events.Length; j++)
+                var ee = events[i].Events;
+                if (ee == null)
+                    continue;
+                for (int j = 0; j < ee.Length; j++)
                 {
-                    var e = events[i].Events[j];
+                    ref var e = ref ee[j];
                     nativeMemoryAllocation += e.NativeMemoryAllocation;
                     managedMemoryAllocation += e.ManagedMemoryAllocation;
                 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -50,8 +50,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Profiling.cs" />
-    <Compile Include="API\ProfilingTools.Gen.cs" />
+    <Compile Include="API\Platform\MemoryStats.Gen.cs" />
+    <Compile Include="API\Profiler\ProfilerCPU.Gen.cs" />
+    <Compile Include="API\Profiler\ProfilerGPU.Gen.cs" />
+    <Compile Include="API\Profiler\ProfilingTools.Gen.cs" />
+    <Compile Include="API\Profiler\RenderStats.Gen.cs" />
     <Compile Include="API\Actors\Collider.cs" />
     <Compile Include="API\Actors\Collider.Gen.cs" />
     <Compile Include="API\Actors\Foliage.cs" />
@@ -414,5 +417,6 @@
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

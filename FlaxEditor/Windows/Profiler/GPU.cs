@@ -10,13 +10,13 @@ namespace FlaxEditor.Windows.Profiler
     /// The GPU performance profiling mode.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.Profiler.ProfilerMode" />
-    internal sealed class GPU : ProfilerMode
+    internal sealed unsafe class GPU : ProfilerMode
     {
         private readonly SingleChart _drawTimeCPU;
         private readonly SingleChart _drawTimeGPU;
         private readonly Timeline _timeline;
         private readonly Table _table;
-        private readonly SamplesBuffer<EventGPU[]> _events = new SamplesBuffer<EventGPU[]>();
+        private readonly SamplesBuffer<ProfilerGPU.Event[]> _events = new SamplesBuffer<ProfilerGPU.Event[]>();
 
         public GPU()
         : base("GPU")
@@ -149,17 +149,18 @@ namespace FlaxEditor.Windows.Profiler
             UpdateTable();
         }
 
-        private float AddEvent(float x, int maxDepth, int index, EventGPU[] events, ContainerControl parent)
+        private float AddEvent(float x, int maxDepth, int index, ProfilerGPU.Event[] events, ContainerControl parent)
         {
-            EventGPU e = events[index];
+            ref ProfilerGPU.Event e = ref events[index];
 
             double scale = 100.0;
             float width = (float)(e.Time * scale);
+            string name = new string(e.Name);
 
             var control = new Timeline.Event(x, e.Depth, width)
             {
-                Name = e.Name,
-                TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(e.Time * 10000.0) / 10000.0f)),
+                Name = name,
+                TooltipText = string.Format("{0}, {1} ms", name, ((int)(e.Time * 10000.0) / 10000.0f)),
                 Parent = parent,
             };
 
@@ -276,13 +277,14 @@ namespace FlaxEditor.Windows.Profiler
             for (int i = 0; i < data.Length; i++)
             {
                 var e = data[i];
+                string name = new string(e.Name);
 
                 var row = new Row
                 {
                     Values = new object[]
                     {
                         // Event
-                        e.Name,
+                        name,
 
                         // Total (%)
                         (int)(e.Time / totalTimeMs * 1000.0f) / 10.0f,
