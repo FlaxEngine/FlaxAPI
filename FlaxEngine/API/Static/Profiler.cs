@@ -4,7 +4,13 @@ using System.Runtime.CompilerServices;
 
 namespace FlaxEngine
 {
-    public static partial class Profiler
+    /// <summary>
+    /// Provides C# scripts profiling methods.
+    /// </summary>
+    /// <remarks>
+    /// Profiler is available in the editor and Debug builds. Release builds don't have profiling tools.
+    /// </remarks>
+    public static class Profiler
     {
         /// <summary>
         /// Begins profiling a piece of code with a custom label.

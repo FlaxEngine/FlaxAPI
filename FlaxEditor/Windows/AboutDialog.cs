@@ -46,7 +46,7 @@ namespace FlaxEditor.Windows
             };
             new Label(nameLabel.Left, nameLabel.Bottom + 4, nameLabel.Width, 50)
             {
-                Text = string.Format("Version: {0}\nCopyright (c) 2012-2020 Wojciech Figat.\nAll rights reserved.", Globals.Version),
+                Text = string.Format("Version: {0}\nCopyright (c) 2012-2020 Wojciech Figat.\nAll rights reserved.", Globals.EngineVersion),
                 HorizontalAlignment = TextAlignment.Near,
                 VerticalAlignment = TextAlignment.Near,
                 Parent = this
@@ -57,7 +57,7 @@ namespace FlaxEditor.Windows
                 TooltipText = "Copies the current engine version information to system clipboard.",
                 Parent = this
             };
-            copyVersionButton.Clicked += () => Platform.ClipboardText = Globals.Version;
+            copyVersionButton.Clicked += () => Platform.ClipboardText = Globals.EngineVersion;
             return icon;
         }
 

@@ -50,11 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Platform\MemoryStats.Gen.cs" />
-    <Compile Include="API\Profiler\ProfilerCPU.Gen.cs" />
-    <Compile Include="API\Profiler\ProfilerGPU.Gen.cs" />
-    <Compile Include="API\Profiler\ProfilingTools.Gen.cs" />
-    <Compile Include="API\Profiler\RenderStats.Gen.cs" />
     <Compile Include="API\Actors\Collider.cs" />
     <Compile Include="API\Actors\Collider.Gen.cs" />
     <Compile Include="API\Actors\Foliage.cs" />
@@ -124,6 +119,8 @@
     <Compile Include="API\Debug\DebugDraw.cs" />
     <Compile Include="API\Debug\DebugDraw.Gen.cs" />
     <Compile Include="API\Engine\GameplayGlobals.Gen.cs" />
+    <Compile Include="API\Engine\Globals.Gen.cs" />
+    <Compile Include="API\Engine\Screen.Gen.cs" />
     <Compile Include="API\Graphics\Enums.Gen.cs" />
     <Compile Include="API\Graphics\GPUAdapter.Gen.cs" />
     <Compile Include="API\Graphics\GPUBuffer.Gen.cs" />
@@ -218,8 +215,13 @@
     <Compile Include="API\Physics\Types.Gen.cs" />
     <Compile Include="API\Platform\CreateWindowSettings.Gen.cs" />
     <Compile Include="API\Platform\Defines.Gen.cs" />
+    <Compile Include="API\Platform\MemoryStats.Gen.cs" />
     <Compile Include="API\Platform\MessageBox.Gen.cs" />
     <Compile Include="API\Platform\WindowBase.Gen.cs" />
+    <Compile Include="API\Profiler\ProfilerCPU.Gen.cs" />
+    <Compile Include="API\Profiler\ProfilerGPU.Gen.cs" />
+    <Compile Include="API\Profiler\ProfilingTools.Gen.cs" />
+    <Compile Include="API\Profiler\RenderStats.Gen.cs" />
     <Compile Include="API\Render2D\Font.Gen.cs" />
     <Compile Include="API\Render2D\FontAsset.cs" />
     <Compile Include="API\Render2D\FontAsset.Gen.cs" />
@@ -235,8 +237,6 @@
     <Compile Include="API\Renderer\Renderer.cs" />
     <Compile Include="API\Renderer\Renderer.Gen.cs" />
     <Compile Include="API\Renderer\RenderList.Gen.cs" />
-    <Compile Include="API\Static\Globals.cs" />
-    <Compile Include="API\Static\Globals.Gen.cs" />
     <Compile Include="API\Static\GraphicsSettings.cs" />
     <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
     <Compile Include="API\Static\MessageBox.cs" />
@@ -248,8 +248,6 @@
     <Compile Include="API\Static\PluginManager.cs" />
     <Compile Include="API\Static\PluginManager.Gen.cs" />
     <Compile Include="API\Static\Profiler.cs" />
-    <Compile Include="API\Static\Profiler.Gen.cs" />
-    <Compile Include="API\Static\Screen.Gen.cs" />
     <Compile Include="API\Static\Scripting.cs" />
     <Compile Include="API\Static\Time.cs" />
     <Compile Include="API\Static\Time.Gen.cs" />
@@ -417,6 +415,8 @@
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="API\Scripting\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

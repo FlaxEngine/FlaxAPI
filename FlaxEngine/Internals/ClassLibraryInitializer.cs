@@ -59,8 +59,6 @@ namespace FlaxEngine
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
             TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 
-            Globals.Init();
-
             if (!Platform.IsEditor)
             {
                 CreateGuiStyle();
