@@ -88,7 +88,7 @@ namespace FlaxEngine
         /// Gets keyboard key down state.
         /// </summary>
         /// <param name="key">Key to check.</param>
-        /// <returns>True during the frame the user releases the key.</returns>
+        /// <returns>True during the frame the user starts pressing down the key.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
@@ -106,7 +106,7 @@ namespace FlaxEngine
         /// Gets keyboard key up state.
         /// </summary>
         /// <param name="key">Key to check.</param>
-        /// <returns>True during the frame the user starts pressing down the key.</returns>
+        /// <returns>True during the frame the user releases the key.</returns>
 #if UNIT_TEST_COMPILANT
         [Obsolete("Unit tests, don't support methods calls.")]
 #endif
