@@ -13,8 +13,10 @@ namespace FlaxEngine
     [Tooltip("Global engine variables container.")]
     public static unsafe partial class Globals
     {
-        /// Paths
+        /// <summary>
         /// Main engine directory path.
+        /// </summary>
+        [Tooltip("Main engine directory path.")]
         public static string StartupPath
         {
             get { return Internal_GetStartupPath(); }
@@ -155,8 +157,10 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetMonoPath();
 
-        /// Threading
+        /// <summary>
         /// Main Engine thread id
+        /// </summary>
+        [Tooltip("Main Engine thread id")]
         public static ulong MainThreadID
         {
             get { return Internal_GetMainThreadID(); }
@@ -165,10 +169,10 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Internal_GetMainThreadID();
 
-        /// Config
         /// <summary>
         /// The full engine version.
         /// </summary>
+        [Tooltip("The full engine version.")]
         public static string EngineVersion
         {
             get { return Internal_GetEngineVersion(); }

@@ -639,11 +639,11 @@ namespace FlaxEngine
         [Tooltip("The flags for overriden properties.")]
         public ColorGradingSettingsOverride OverrideFlags;
 
-        /// Global
         /// <summary>
         /// Gets or sets the color saturation (applies globally to the whole image). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1"), CustomEditorAlias("FlaxEditor.CustomEditors.Editors.ColorTrackball"), EditorOrder(0), PostProcessSetting((int)ColorGradingSettingsOverride.ColorSaturation), Limit(0, 2, 0.01f), EditorDisplay("Global", "Saturation")]
+        [Tooltip("Gets or sets the color saturation (applies globally to the whole image). Default is 1.")]
         public Vector4 ColorSaturation;
 
         /// <summary>
@@ -674,11 +674,11 @@ namespace FlaxEngine
         [Tooltip("Gets or sets the color offset (applies globally to the whole image). Default is 0.")]
         public Vector4 ColorOffset;
 
-        /// Shadows
         /// <summary>
         /// Gets or sets the color saturation (applies to shadows only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1"), CustomEditorAlias("FlaxEditor.CustomEditors.Editors.ColorTrackball"), EditorOrder(5), PostProcessSetting((int)ColorGradingSettingsOverride.ColorSaturationShadows), Limit(0, 2, 0.01f), EditorDisplay("Shadows", "Shadows Saturation")]
+        [Tooltip("Gets or sets the color saturation (applies to shadows only). Default is 1.")]
         public Vector4 ColorSaturationShadows;
 
         /// <summary>
@@ -709,11 +709,11 @@ namespace FlaxEngine
         [Tooltip("Gets or sets the color offset (applies to shadows only). Default is 0.")]
         public Vector4 ColorOffsetShadows;
 
-        /// Midtones
         /// <summary>
         /// Gets or sets the color saturation (applies to midtones only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1"), CustomEditorAlias("FlaxEditor.CustomEditors.Editors.ColorTrackball"), EditorOrder(10), PostProcessSetting((int)ColorGradingSettingsOverride.ColorSaturationMidtones), Limit(0, 2, 0.01f), EditorDisplay("Midtones", "Midtones Saturation")]
+        [Tooltip("Gets or sets the color saturation (applies to midtones only). Default is 1.")]
         public Vector4 ColorSaturationMidtones;
 
         /// <summary>
@@ -744,11 +744,11 @@ namespace FlaxEngine
         [Tooltip("Gets or sets the color offset (applies to midtones only). Default is 0.")]
         public Vector4 ColorOffsetMidtones;
 
-        /// Highlights
         /// <summary>
         /// Gets or sets the color saturation (applies to highlights only). Default is 1.
         /// </summary>
         [DefaultValue(typeof(Vector4), "1,1,1,1"), CustomEditorAlias("FlaxEditor.CustomEditors.Editors.ColorTrackball"), EditorOrder(15), PostProcessSetting((int)ColorGradingSettingsOverride.ColorSaturationHighlights), Limit(0, 2, 0.01f), EditorDisplay("Highlights", "Highlights Saturation")]
+        [Tooltip("Gets or sets the color saturation (applies to highlights only). Default is 1.")]
         public Vector4 ColorSaturationHighlights;
 
         /// <summary>
@@ -779,11 +779,11 @@ namespace FlaxEngine
         [Tooltip("Gets or sets the color offset (applies to highlights only). Default is 0.")]
         public Vector4 ColorOffsetHighlights;
 
-        //
         /// <summary>
         /// The shadows maximum value. Default is 0.09.
         /// </summary>
         [DefaultValue(0.09f), Limit(-1, 1, 0.01f), EditorOrder(20), PostProcessSetting((int)ColorGradingSettingsOverride.ShadowsMax)]
+        [Tooltip("The shadows maximum value. Default is 0.09.")]
         public float ShadowsMax;
 
         /// <summary>

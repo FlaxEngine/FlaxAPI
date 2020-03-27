@@ -7,14 +7,10 @@ using System.Runtime.InteropServices;
 
 namespace FlaxEngine
 {
-    /// Short documentation for the prefabs system:
-    /// Prefab - an asset in json format that contains a prefab data
-    /// Prefab Data - serialized data of the prefab objects collection, the first object in the prefab data is a root object of the prefab
-    /// Prefab Instance - spawned prefab objects, contain links to prefab asset and prefab objects, can be modified at runtime, can contain more than one actor (whole actors tree, including nested prefabs)
-    /// Diff - modified properties of the prefab instance object compared to the prefab asset
     /// <summary>
     /// The prefab manager handles the prefabs creation, synchronization and serialization.
     /// </summary>
+    [Tooltip("The prefab manager handles the prefabs creation, synchronization and serialization.")]
     public static unsafe partial class PrefabManager
     {
         /// <summary>
