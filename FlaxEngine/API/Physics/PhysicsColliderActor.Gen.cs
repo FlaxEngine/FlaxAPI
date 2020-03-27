@@ -11,7 +11,6 @@ namespace FlaxEngine
     /// A base class for all physical collider actors.
     /// </summary>
     /// <seealso cref="Actor" />
-    /// <seealso cref="IPhysicsColliderActor" />
     [Tooltip("A base class for all physical collider actors.")]
     public abstract unsafe partial class PhysicsColliderActor : Actor
     {
@@ -19,5 +18,17 @@ namespace FlaxEngine
         protected PhysicsColliderActor() : base()
         {
         }
+
+        /// <summary>
+        /// Gets the attached rigid body.
+        /// </summary>
+        [Tooltip("The attached rigid body.")]
+        public RigidBody AttachedRigidBody
+        {
+            get { return Internal_GetAttachedRigidBody(unmanagedPtr); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern RigidBody Internal_GetAttachedRigidBody(IntPtr obj);
     }
 }

@@ -4,7 +4,7 @@ using System;
 
 namespace FlaxEngine
 {
-    public abstract partial class Joint
+    partial class Joint
     {
         /// <summary>
         /// Occurs when a joint gets broken during simulation.

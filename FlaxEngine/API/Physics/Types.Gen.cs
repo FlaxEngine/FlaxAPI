@@ -97,37 +97,37 @@ namespace FlaxEngine
         /// Freeze motion along the X-axis.
         /// </summary>
         [Tooltip("Freeze motion along the X-axis.")]
-        LockPositionX = (1 << 0),
+        LockPositionX = 1 << 0,
 
         /// <summary>
         /// Freeze motion along the Y-axis.
         /// </summary>
         [Tooltip("Freeze motion along the Y-axis.")]
-        LockPositionY = (1 << 1),
+        LockPositionY = 1 << 1,
 
         /// <summary>
         /// Freeze motion along the Z-axis.
         /// </summary>
         [Tooltip("Freeze motion along the Z-axis.")]
-        LockPositionZ = (1 << 2),
+        LockPositionZ = 1 << 2,
 
         /// <summary>
         /// Freeze rotation along the X-axis.
         /// </summary>
         [Tooltip("Freeze rotation along the X-axis.")]
-        LockRotationX = (1 << 3),
+        LockRotationX = 1 << 3,
 
         /// <summary>
         /// Freeze rotation along the Y-axis.
         /// </summary>
         [Tooltip("Freeze rotation along the Y-axis.")]
-        LockRotationY = (1 << 4),
+        LockRotationY = 1 << 4,
 
         /// <summary>
         /// Freeze rotation along the Z-axis.
         /// </summary>
         [Tooltip("Freeze rotation along the Z-axis.")]
-        LockRotationZ = (1 << 5),
+        LockRotationZ = 1 << 5,
 
         /// <summary>
         /// Freeze motion along all axes.
