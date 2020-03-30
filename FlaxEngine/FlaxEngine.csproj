@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -139,6 +139,7 @@
     <Compile Include="API\Graphics\RenderTask.Gen.cs" />
     <Compile Include="API\Graphics\RenderTools.Gen.cs" />
     <Compile Include="API\Graphics\RenderView.cs" />
+    <Compile Include="API\Graphics\RenderView.Gen.cs" />
     <Compile Include="API\Graphics\SkeletonData.Gen.cs" />
     <Compile Include="API\Graphics\SkinnedMesh.cs" />
     <Compile Include="API\Graphics\SkinnedMesh.Gen.cs" />
