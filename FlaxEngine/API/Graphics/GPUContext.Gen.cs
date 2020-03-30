@@ -363,7 +363,7 @@ namespace FlaxEngine
         internal static extern void Internal_DrawIndexedInstanced(IntPtr obj, uint indicesCount, uint instanceCount, int startInstance, int startVertex, int startIndex);
 
         /// <summary>
-        /// Draws the instanced GPU-generated primitives.
+        /// Draws the instanced GPU-generated primitives. Buffer must contain GPUDrawIndirectArgs.
         /// </summary>
         /// <param name="bufferForArgs">The buffer with drawing arguments.</param>
         /// <param name="offsetForArgs">The aligned byte offset for arguments.</param>
@@ -376,7 +376,7 @@ namespace FlaxEngine
         internal static extern void Internal_DrawInstancedIndirect(IntPtr obj, IntPtr bufferForArgs, uint offsetForArgs);
 
         /// <summary>
-        /// Draws the instanced GPU-generated indexed primitives.
+        /// Draws the instanced GPU-generated indexed primitives. Buffer must contain GPUDrawIndexedIndirectArgs.
         /// </summary>
         /// <param name="bufferForArgs">The buffer with drawing arguments.</param>
         /// <param name="offsetForArgs">The aligned byte offset for arguments.</param>
