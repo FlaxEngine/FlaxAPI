@@ -742,12 +742,12 @@ namespace FlaxEditor.GUI.Tree
                     // Check if user is pressing control key
                     var tree = ParentTree;
                     var window = tree.Root;
-                    if (window.GetKey(Keys.Shift))
+                    if (window.GetKey(KeyboardKeys.Shift))
                     {
                         // Select range
                         tree.SelectRange(this);
                     }
-                    else if (window.GetKey(Keys.Control))
+                    else if (window.GetKey(KeyboardKeys.Control))
                     {
                         // Add/Remove
                         tree.AddOrRemoveSelection(this);
@@ -860,7 +860,7 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Base
             if (_opened)
@@ -869,7 +869,7 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(Keys key)
+        public override void OnKeyUp(KeyboardKeys key)
         {
             // Base
             if (_opened)

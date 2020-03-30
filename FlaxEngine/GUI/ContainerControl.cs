@@ -866,7 +866,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {
@@ -880,7 +880,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(Keys key)
+        public override void OnKeyUp(KeyboardKeys key)
         {
             for (int i = 0; i < _children.Count && _children.Count > 0; i++)
             {

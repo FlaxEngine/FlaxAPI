@@ -29,11 +29,11 @@ namespace FlaxEngine
         public InputActionMode Mode;
 
         /// <summary>
-        /// The keyboard key to map for this action. Use <see cref="Keys.None"/> to ignore it.
+        /// The keyboard key to map for this action. Use <see cref="KeyboardKeys.None"/> to ignore it.
         /// </summary>
         [EditorOrder(10)]
-        [Tooltip("The keyboard key to map for this action. Use <see cref=\"Keys.None\"/> to ignore it.")]
-        public Keys Key;
+        [Tooltip("The keyboard key to map for this action. Use <see cref=\"KeyboardKeys.None\"/> to ignore it.")]
+        public KeyboardKeys Key;
 
         /// <summary>
         /// The mouse button to map for this action. Use <see cref="MouseButton.None"/> to ignore it.
@@ -89,18 +89,18 @@ namespace FlaxEngine
         public InputGamepadIndex Gamepad;
 
         /// <summary>
-        /// The button to be pressed for movement in positive direction. Use <see cref="Keys.None"/> to ignore it.
+        /// The button to be pressed for movement in positive direction. Use <see cref="KeyboardKeys.None"/> to ignore it.
         /// </summary>
         [EditorOrder(30)]
-        [Tooltip("The button to be pressed for movement in positive direction. Use <see cref=\"Keys.None\"/> to ignore it.")]
-        public Keys PositiveButton;
+        [Tooltip("The button to be pressed for movement in positive direction. Use <see cref=\"KeyboardKeys.None\"/> to ignore it.")]
+        public KeyboardKeys PositiveButton;
 
         /// <summary>
-        /// The button to be pressed for movement in negative direction. Use <see cref="Keys.None"/> to ignore it.
+        /// The button to be pressed for movement in negative direction. Use <see cref="KeyboardKeys.None"/> to ignore it.
         /// </summary>
         [EditorOrder(40)]
-        [Tooltip("The button to be pressed for movement in negative direction. Use <see cref=\"Keys.None\"/> to ignore it.")]
-        public Keys NegativeButton;
+        [Tooltip("The button to be pressed for movement in negative direction. Use <see cref=\"KeyboardKeys.None\"/> to ignore it.")]
+        public KeyboardKeys NegativeButton;
 
         /// <summary>
         /// Any positive or negative values that are less than this number will register as zero. Useful for gamepads to specify the deadzone.

@@ -920,7 +920,7 @@ namespace FlaxEngine.GUI
                 var hitPos = CharIndexAtPoint(ref location);
 
                 // Select range with shift
-                if (_selectionStart != -1 && RootWindow.GetKey(Keys.Shift) && SelectionLength == 0)
+                if (_selectionStart != -1 && RootWindow.GetKey(KeyboardKeys.Shift) && SelectionLength == 0)
                 {
                     if (hitPos < _selectionStart)
                         SetSelection(hitPos, _selectionStart);
@@ -981,62 +981,62 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             var window = Root;
-            bool shiftDown = window.GetKey(Keys.Shift);
-            bool ctrDown = window.GetKey(Keys.Control);
+            bool shiftDown = window.GetKey(KeyboardKeys.Shift);
+            bool ctrDown = window.GetKey(KeyboardKeys.Control);
 
             switch (key)
             {
-            case Keys.ArrowRight:
+            case KeyboardKeys.ArrowRight:
                 MoveRight(shiftDown, ctrDown);
                 return true;
-            case Keys.ArrowLeft:
+            case KeyboardKeys.ArrowLeft:
                 MoveLeft(shiftDown, ctrDown);
                 return true;
-            case Keys.ArrowUp:
+            case KeyboardKeys.ArrowUp:
                 MoveUp(shiftDown, ctrDown);
                 return true;
-            case Keys.ArrowDown:
+            case KeyboardKeys.ArrowDown:
                 MoveDown(shiftDown, ctrDown);
                 return true;
-            case Keys.C:
+            case KeyboardKeys.C:
                 if (ctrDown)
                 {
                     Copy();
                     return true;
                 }
                 break;
-            case Keys.V:
+            case KeyboardKeys.V:
                 if (ctrDown)
                 {
                     Paste();
                     return true;
                 }
                 break;
-            case Keys.D:
+            case KeyboardKeys.D:
                 if (ctrDown)
                 {
                     Duplicate();
                     return true;
                 }
                 break;
-            case Keys.X:
+            case KeyboardKeys.X:
                 if (ctrDown)
                 {
                     Cut();
                     return true;
                 }
                 break;
-            case Keys.A:
+            case KeyboardKeys.A:
                 if (ctrDown)
                 {
                     SelectAll();
                     return true;
                 }
                 break;
-            case Keys.Backspace:
+            case KeyboardKeys.Backspace:
             {
                 if (IsReadOnly)
                     return true;
@@ -1058,7 +1058,7 @@ namespace FlaxEngine.GUI
 
                 return true;
             }
-            case Keys.Delete:
+            case KeyboardKeys.Delete:
             {
                 if (IsReadOnly)
                     return true;
@@ -1079,7 +1079,7 @@ namespace FlaxEngine.GUI
 
                 return true;
             }
-            case Keys.Escape:
+            case KeyboardKeys.Escape:
             {
                 // Restore text from start
                 SetSelection(-1);
@@ -1090,7 +1090,7 @@ namespace FlaxEngine.GUI
 
                 return true;
             }
-            case Keys.Return:
+            case KeyboardKeys.Return:
             {
                 if (IsMultiline)
                 {
@@ -1105,13 +1105,13 @@ namespace FlaxEngine.GUI
 
                 return true;
             }
-            case Keys.Home:
+            case KeyboardKeys.Home:
             {
                 // Move caret to the first character
                 SetSelection(0);
                 return true;
             }
-            case Keys.End:
+            case KeyboardKeys.End:
             {
                 // Move caret after last character
                 SetSelection(TextLength);

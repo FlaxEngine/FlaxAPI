@@ -55,7 +55,7 @@ namespace FlaxEngine
         /// Perform keyboard action.
         /// </summary>
         /// <param name="key">The key.</param>
-        public delegate void KeyboardDelegate(Keys key);
+        public delegate void KeyboardDelegate(KeyboardKeys key);
 
         /// <summary>
         /// Event fired on character input.
@@ -186,13 +186,13 @@ namespace FlaxEngine
             GUI.OnCharInput(c);
         }
 
-        internal void Internal_OnKeyDown(Keys key)
+        internal void Internal_OnKeyDown(KeyboardKeys key)
         {
             KeyDown?.Invoke(key);
             GUI.OnKeyDown(key);
         }
 
-        internal void Internal_OnKeyUp(Keys key)
+        internal void Internal_OnKeyUp(KeyboardKeys key)
         {
             KeyUp?.Invoke(key);
             GUI.OnKeyUp(key);

@@ -94,9 +94,9 @@ namespace FlaxEditor.Viewport
             /// <param name="useMouse">True if use mouse input, otherwise will skip mouse.</param>
             public void Gather(Window window, bool useMouse)
             {
-                IsControlDown = window.GetKey(Keys.Control);
-                IsShiftDown = window.GetKey(Keys.Shift);
-                IsAltDown = window.GetKey(Keys.Alt);
+                IsControlDown = window.GetKey(KeyboardKeys.Control);
+                IsShiftDown = window.GetKey(KeyboardKeys.Shift);
+                IsAltDown = window.GetKey(KeyboardKeys.Alt);
 
                 IsMouseRightDown = useMouse && window.GetMouseButton(MouseButton.Right);
                 IsMouseMiddleDown = useMouse && window.GetMouseButton(MouseButton.Middle);
@@ -1017,19 +1017,19 @@ namespace FlaxEditor.Viewport
 
                     // Get input movement
                     Vector3 moveDelta = Vector3.Zero;
-                    if (win.GetKey(Keys.ArrowRight))
+                    if (win.GetKey(KeyboardKeys.ArrowRight))
                     {
                         moveDelta += Vector3.Right;
                     }
-                    if (win.GetKey(Keys.ArrowLeft))
+                    if (win.GetKey(KeyboardKeys.ArrowLeft))
                     {
                         moveDelta += Vector3.Left;
                     }
-                    if (win.GetKey(Keys.ArrowUp))
+                    if (win.GetKey(KeyboardKeys.ArrowUp))
                     {
                         moveDelta += Vector3.Up;
                     }
-                    if (win.GetKey(Keys.ArrowDown))
+                    if (win.GetKey(KeyboardKeys.ArrowDown))
                     {
                         moveDelta += Vector3.Down;
                     }
@@ -1085,7 +1085,7 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Base
             if (base.OnKeyDown(key))

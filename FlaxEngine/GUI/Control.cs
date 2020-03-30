@@ -721,7 +721,7 @@ namespace FlaxEngine.GUI
         /// <param name="key">Key value</param>
         /// <returns>True if event has been handled, otherwise false</returns>
         [NoAnimate]
-        public virtual bool OnKeyDown(Keys key)
+        public virtual bool OnKeyDown(KeyboardKeys key)
         {
             return false;
         }
@@ -731,7 +731,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="key">Key value</param>
         [NoAnimate]
-        public virtual void OnKeyUp(Keys key)
+        public virtual void OnKeyUp(KeyboardKeys key)
         {
         }
 

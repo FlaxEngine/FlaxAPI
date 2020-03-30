@@ -1803,26 +1803,26 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (base.OnKeyDown(key))
                 return true;
 
             switch (key)
             {
-            case Keys.ArrowLeft:
+            case KeyboardKeys.ArrowLeft:
                 OnSeek(CurrentFrame - 1);
                 return true;
-            case Keys.ArrowRight:
+            case KeyboardKeys.ArrowRight:
                 OnSeek(CurrentFrame + 1);
                 return true;
-            case Keys.Home:
+            case KeyboardKeys.Home:
                 OnSeek(0);
                 return true;
-            case Keys.End:
+            case KeyboardKeys.End:
                 OnSeek(DurationFrames);
                 return true;
-            case Keys.PageUp:
+            case KeyboardKeys.PageUp:
             {
                 bool hasValid = false;
                 int closestFrame = 0;
@@ -1842,7 +1842,7 @@ namespace FlaxEditor.GUI.Timeline
                 }
                 break;
             }
-            case Keys.PageDown:
+            case KeyboardKeys.PageDown:
             {
                 bool hasValid = false;
                 int closestFrame = 0;
@@ -1935,9 +1935,9 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
-                if (key == Keys.Escape)
+                if (key == KeyboardKeys.Escape)
                 {
                     Hide();
                     return true;

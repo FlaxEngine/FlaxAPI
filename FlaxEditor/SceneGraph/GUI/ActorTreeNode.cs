@@ -303,11 +303,11 @@ namespace FlaxEditor.SceneGraph.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (IsFocused)
             {
-                if (key == Keys.F2)
+                if (key == KeyboardKeys.F2)
                 {
                     StartRenaming();
                     return true;
@@ -543,7 +543,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Drag actors
             if (_dragActors != null && _dragActors.HasValidDrag)
             {
-                bool worldPositionLock = Root.GetKey(Keys.Control) == false;
+                bool worldPositionLock = Root.GetKey(KeyboardKeys.Control) == false;
                 var singleObject = _dragActors.Objects.Count == 1;
                 if (singleObject)
                 {

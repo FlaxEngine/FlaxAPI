@@ -388,7 +388,7 @@ namespace FlaxEditor.Windows
             // TODO: call camera preview update only on selection change, or state change
             UpdateCameraPreview();
 
-            if (Root.GetKeyDown(Keys.F12))
+            if (Root.GetKeyDown(KeyboardKeys.F12))
             {
                 Viewport.TakeScreenshot();
             }

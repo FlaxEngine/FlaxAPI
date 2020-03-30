@@ -982,7 +982,7 @@ namespace FlaxEditor.GUI.Timeline
             if (!_mouseOverArrow)
             {
                 var window = Root;
-                if (window.GetKey(Keys.Control))
+                if (window.GetKey(KeyboardKeys.Control))
                 {
                     // Add/Remove
                     if (_timeline.SelectedTracks.Contains(this))
@@ -1186,21 +1186,21 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (IsFocused)
             {
                 Track toSelect = null;
                 switch (key)
                 {
-                case Keys.F2:
+                case KeyboardKeys.F2:
                     if (CanRename)
                         StartRenaming();
                     return true;
-                case Keys.Delete:
+                case KeyboardKeys.Delete:
                     _timeline.DeleteSelection();
                     return true;
-                case Keys.ArrowLeft:
+                case KeyboardKeys.ArrowLeft:
                     if (CanExpand && IsExpanded)
                     {
                         Collapse();
@@ -1211,7 +1211,7 @@ namespace FlaxEditor.GUI.Timeline
                         toSelect = ParentTrack;
                     }
                     break;
-                case Keys.ArrowRight:
+                case KeyboardKeys.ArrowRight:
                     if (CanExpand)
                     {
                         if (IsExpanded && HasSubTracks)
@@ -1225,7 +1225,7 @@ namespace FlaxEditor.GUI.Timeline
                         }
                     }
                     break;
-                case Keys.ArrowUp:
+                case KeyboardKeys.ArrowUp:
                 {
                     int index = IndexInParent;
                     if (index > 0)
@@ -1237,7 +1237,7 @@ namespace FlaxEditor.GUI.Timeline
                     }
                     break;
                 }
-                case Keys.ArrowDown:
+                case KeyboardKeys.ArrowDown:
                 {
                     int index = IndexInParent;
                     if (index < Parent.ChildrenCount - 1)
@@ -1265,7 +1265,7 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(Keys key)
+        public override void OnKeyUp(KeyboardKeys key)
         {
             // Base
             if (_opened)

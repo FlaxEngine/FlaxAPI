@@ -428,14 +428,14 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
-            if (key == Keys.Escape)
+            if (key == KeyboardKeys.Escape)
             {
                 Hide();
                 return true;
             }
-            else if (key == Keys.Return)
+            else if (key == KeyboardKeys.Return)
             {
                 if (SelectedItem != null)
                     OnClickItem(SelectedItem);
@@ -443,7 +443,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     Hide();
                 return true;
             }
-            else if (key == Keys.ArrowUp)
+            else if (key == KeyboardKeys.ArrowUp)
             {
                 if (SelectedItem == null)
                     return true;
@@ -463,7 +463,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
                 return true;
             }
-            else if (key == Keys.ArrowDown)
+            else if (key == KeyboardKeys.ArrowDown)
             {
                 if (SelectedItem == null)
                     return true;

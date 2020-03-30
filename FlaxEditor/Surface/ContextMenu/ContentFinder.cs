@@ -171,11 +171,11 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             switch (key)
             {
-            case Keys.ArrowDown:
+            case KeyboardKeys.ArrowDown:
             {
                 if (MatchedItems.Count == 0)
                     return true;
@@ -197,7 +197,7 @@ namespace FlaxEditor.Surface.ContextMenu
 
                 return true;
             }
-            case Keys.ArrowUp:
+            case KeyboardKeys.ArrowUp:
             {
                 if (MatchedItems.Count == 0)
                     return true;
@@ -219,7 +219,7 @@ namespace FlaxEditor.Surface.ContextMenu
 
                 return true;
             }
-            case Keys.Return:
+            case KeyboardKeys.Return:
             {
                 if (_selectedItem != null)
                 {
@@ -229,7 +229,7 @@ namespace FlaxEditor.Surface.ContextMenu
 
                 return true;
             }
-            case Keys.Escape:
+            case KeyboardKeys.Escape:
             {
                 Hide();
                 return true;

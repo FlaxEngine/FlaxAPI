@@ -233,17 +233,17 @@ namespace FlaxEditor.Tools.Terrain
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (_isWorking)
                 return true;
 
             switch (key)
             {
-            case Keys.Escape:
+            case KeyboardKeys.Escape:
                 OnCancel();
                 return true;
-            case Keys.Return:
+            case KeyboardKeys.Return:
                 OnCreate();
                 return true;
             }

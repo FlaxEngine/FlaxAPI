@@ -468,7 +468,7 @@ namespace FlaxEditor.Content.GUI
             bool isSelected = _selection.Contains(item);
 
             // Add/remove from selection
-            if (Root.GetKey(Keys.Control))
+            if (Root.GetKey(KeyboardKeys.Control))
             {
                 if (isSelected)
                     Deselect(item);
@@ -476,7 +476,7 @@ namespace FlaxEditor.Content.GUI
                     Select(item, true);
             }
             // Range select
-            else if (Root.GetKey(Keys.Shift))
+            else if (Root.GetKey(KeyboardKeys.Shift))
             {
                 int min = _selection.Min(x => x.IndexInParent);
                 int max = _selection.Max(x => x.IndexInParent);
@@ -571,7 +571,7 @@ namespace FlaxEditor.Content.GUI
         public override bool OnMouseWheel(Vector2 location, float delta)
         {
             // Check if pressing control key
-            if (Root.GetKey(Keys.Control))
+            if (Root.GetKey(KeyboardKeys.Control))
             {
                 // Zoom
                 ViewScale += delta * 0.05f;
@@ -584,10 +584,10 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Navigate backward
-            if (key == Keys.Backspace)
+            if (key == KeyboardKeys.Backspace)
             {
                 OnNavigateBack?.Invoke();
                 return true;
@@ -600,7 +600,7 @@ namespace FlaxEditor.Content.GUI
             if (HasSelection)
             {
                 // Open
-                if (key == Keys.Return && _selection.Count == 1)
+                if (key == KeyboardKeys.Return && _selection.Count == 1)
                 {
                     OnOpen?.Invoke(_selection[0]);
                     return true;
@@ -612,19 +612,19 @@ namespace FlaxEditor.Content.GUI
                     Vector2 size = root.Size;
                     Vector2 offset = Vector2.Minimum;
                     ContentItem item = null;
-                    if (key == Keys.ArrowUp)
+                    if (key == KeyboardKeys.ArrowUp)
                     {
                         offset = new Vector2(0, -size.Y);
                     }
-                    else if (key == Keys.ArrowDown)
+                    else if (key == KeyboardKeys.ArrowDown)
                     {
                         offset = new Vector2(0, size.Y);
                     }
-                    else if (key == Keys.ArrowRight)
+                    else if (key == KeyboardKeys.ArrowRight)
                     {
                         offset = new Vector2(size.X, 0);
                     }
-                    else if (key == Keys.ArrowLeft)
+                    else if (key == KeyboardKeys.ArrowLeft)
                     {
                         offset = new Vector2(-size.X, 0);
                     }

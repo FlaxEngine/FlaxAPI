@@ -179,39 +179,39 @@ namespace FlaxEngine
         /// </summary>
         /// <param name="key">Key ID to check</param>
         /// <returns>True while the user holds down the key identified by id</returns>
-        public static bool GetKey(Keys key)
+        public static bool GetKey(KeyboardKeys key)
         {
             return Internal_GetKey(key);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetKey(Keys key);
+        internal static extern bool Internal_GetKey(KeyboardKeys key);
 
         /// <summary>
         /// Gets the key 'down' state (true if key was pressed in this frame).
         /// </summary>
         /// <param name="key">Key ID to check</param>
         /// <returns>True during the frame the user starts pressing down the key</returns>
-        public static bool GetKeyDown(Keys key)
+        public static bool GetKeyDown(KeyboardKeys key)
         {
             return Internal_GetKeyDown(key);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetKeyDown(Keys key);
+        internal static extern bool Internal_GetKeyDown(KeyboardKeys key);
 
         /// <summary>
         /// Gets the key 'up' state (true if key was released in this frame).
         /// </summary>
         /// <param name="key">Key ID to check</param>
         /// <returns>True during the frame the user releases the key</returns>
-        public static bool GetKeyUp(Keys key)
+        public static bool GetKeyUp(KeyboardKeys key)
         {
             return Internal_GetKeyUp(key);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_GetKeyUp(Keys key);
+        internal static extern bool Internal_GetKeyUp(KeyboardKeys key);
 
         /// <summary>
         /// Gets the mouse button state.

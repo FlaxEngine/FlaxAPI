@@ -549,14 +549,14 @@ namespace FlaxEditor.Modules
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
                 switch (key)
                 {
-                case Keys.Escape:
+                case KeyboardKeys.Escape:
                     OnCancel();
                     return true;
-                case Keys.Return:
+                case KeyboardKeys.Return:
                     OnOk();
                     return true;
                 }

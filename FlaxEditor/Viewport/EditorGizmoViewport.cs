@@ -65,10 +65,10 @@ namespace FlaxEditor.Viewport
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;
 
         /// <inheritdoc />
-        public bool UseSnapping => Root.GetKey(Keys.Control);
+        public bool UseSnapping => Root.GetKey(KeyboardKeys.Control);
 
         /// <inheritdoc />
-        public bool UseDuplicate => Root.GetKey(Keys.Shift);
+        public bool UseDuplicate => Root.GetKey(KeyboardKeys.Shift);
 
         /// <inheritdoc />
         public Undo Undo { get; }

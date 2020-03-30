@@ -162,10 +162,10 @@ namespace FlaxEditor.Windows
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
                 // Up
-                if (key == Keys.ArrowUp)
+                if (key == KeyboardKeys.ArrowUp)
                 {
                     int index = IndexInParent - 1;
                     if (index >= 0)
@@ -177,7 +177,7 @@ namespace FlaxEditor.Windows
                     }
                 }
                 // Down
-                else if (key == Keys.ArrowDown)
+                else if (key == KeyboardKeys.ArrowDown)
                 {
                     int index = IndexInParent + 1;
                     if (index < Parent.ChildrenCount)
@@ -189,7 +189,7 @@ namespace FlaxEditor.Windows
                     }
                 }
                 // Ctrl+C
-                else if (key == Keys.C && Root.GetKey(Keys.Control))
+                else if (key == KeyboardKeys.C && Root.GetKey(KeyboardKeys.Control))
                 {
                     Copy();
                     return true;

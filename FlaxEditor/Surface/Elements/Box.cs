@@ -452,7 +452,7 @@ namespace FlaxEditor.Surface.Elements
                 {
                     // Click
 
-                    if (Root.GetKey(Keys.Control))
+                    if (Root.GetKey(KeyboardKeys.Control))
                     {
                         // Add to selection
                         if (!ParentNode.IsSelected)

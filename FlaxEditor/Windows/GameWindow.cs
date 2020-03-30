@@ -98,7 +98,7 @@ namespace FlaxEditor.Windows
                 return base.OnDragMove(ref location, data);
             }
 
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
                 if (!EnableEvents)
                     return false;
@@ -106,7 +106,7 @@ namespace FlaxEditor.Windows
                 return base.OnKeyDown(key);
             }
 
-            public override void OnKeyUp(Keys key)
+            public override void OnKeyUp(KeyboardKeys key)
             {
                 if (!EnableEvents)
                     return;
@@ -349,20 +349,20 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             switch (key)
             {
-            case Keys.Pause:
+            case KeyboardKeys.Pause:
                 Editor.Simulation.RequestResumeOrPause();
                 UnlockMouseInPlay();
                 return true;
-            case Keys.F12:
+            case KeyboardKeys.F12:
                 Screenshot.Capture(string.Empty);
                 return true;
-            case Keys.F11:
+            case KeyboardKeys.F11:
             {
-                if (Root.GetKey(Keys.Shift))
+                if (Root.GetKey(KeyboardKeys.Shift))
                 {
                     // Unlock mouse in game mode
                     UnlockMouseInPlay();

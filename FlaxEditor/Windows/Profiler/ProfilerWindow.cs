@@ -219,17 +219,17 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (base.OnKeyDown(key))
                 return true;
 
             switch (key)
             {
-            case Keys.ArrowLeft:
+            case KeyboardKeys.ArrowLeft:
                 ViewFrameIndex--;
                 return true;
-            case Keys.ArrowRight:
+            case KeyboardKeys.ArrowRight:
                 ViewFrameIndex++;
                 return true;
             }

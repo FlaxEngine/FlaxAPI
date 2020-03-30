@@ -388,7 +388,7 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (base.OnKeyDown(key))
                 return true;
@@ -398,13 +398,13 @@ namespace FlaxEditor.GUI.Docking
                 // Navigation shortcuts
                 switch (key)
                 {
-                case Keys.Tab:
+                case KeyboardKeys.Tab:
                 {
                     var win = RootWindow;
-                    if (win.GetKey(Keys.Control))
+                    if (win.GetKey(KeyboardKeys.Control))
                     {
                         var index = _dockedTo.SelectedTabIndex;
-                        if (win.GetKey(Keys.Shift))
+                        if (win.GetKey(KeyboardKeys.Shift))
                         {
                             // Previous tab
                             index = index == 0 ? _dockedTo.TabsCount - 1 : index - 1;
@@ -419,10 +419,10 @@ namespace FlaxEditor.GUI.Docking
                     }
                     break;
                 }
-                case Keys.W:
+                case KeyboardKeys.W:
                 {
                     var win = RootWindow;
-                    if (win.GetKey(Keys.Control))
+                    if (win.GetKey(KeyboardKeys.Control))
                     {
                         Close(ClosingReason.User);
                         return true;

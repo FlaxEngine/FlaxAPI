@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// Enumeration for key codes.
     /// </summary>
     [Tooltip("Enumeration for key codes.")]
-    public enum Keys
+    public enum KeyboardKeys
     {
         /// <summary>
         /// The 'none' key
@@ -986,9 +986,9 @@ namespace FlaxEngine
         OemClear = 0xFE,
 
         /// <summary>
-        /// The count of items in the Keys enum.
+        /// The count of items in the KeyboardKeys enum.
         /// </summary>
-        [Tooltip("The count of items in the Keys enum.")]
+        [Tooltip("The count of items in the KeyboardKeys enum.")]
         MAX,
     }
 }

@@ -95,9 +95,9 @@ namespace FlaxEditor.Surface
                 foreach (char character in input)
                 {
                     // OnKeyDown-- > VisjectCM focuses on the text-thingy
-                    _activeVisjectCM.OnKeyDown(Keys.None);
+                    _activeVisjectCM.OnKeyDown(KeyboardKeys.None);
                     _activeVisjectCM.OnCharInput(character);
-                    _activeVisjectCM.OnKeyUp(Keys.None);
+                    _activeVisjectCM.OnKeyUp(KeyboardKeys.None);
                 }
             }
         }

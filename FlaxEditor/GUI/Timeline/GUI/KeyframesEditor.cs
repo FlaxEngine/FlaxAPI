@@ -242,7 +242,7 @@ namespace FlaxEditor.GUI
                     if (_leftMouseDown)
                     {
                         // Check if user is pressing control
-                        if (Root.GetKey(Keys.Control))
+                        if (Root.GetKey(KeyboardKeys.Control))
                         {
                             // Add to selection
                             keyframe.Select();
@@ -866,12 +866,12 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
                 if (base.OnKeyDown(key))
                     return true;
 
-                if (key == Keys.Escape)
+                if (key == KeyboardKeys.Escape)
                 {
                     Hide();
                     return true;
@@ -1080,22 +1080,22 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (base.OnKeyDown(key))
                 return true;
 
-            if (key == Keys.Delete)
+            if (key == KeyboardKeys.Delete)
             {
                 RemoveKeyframes();
                 return true;
             }
 
-            if (Root.GetKey(Keys.Control))
+            if (Root.GetKey(KeyboardKeys.Control))
             {
                 switch (key)
                 {
-                case Keys.A:
+                case KeyboardKeys.A:
                     SelectAll();
                     return true;
                 }
