@@ -136,14 +136,17 @@ namespace FlaxEditor.GUI.Input
 
         private void OnColorChanged(Color color, bool sliding)
         {
-            // HACK: Force send ValueChanged event is sliding state gets modified by the color picker (e.g the color picker window closing event)
+            // Force send ValueChanged event is sliding state gets modified by the color picker (e.g the color picker window closing event)
             if (_isSliding != sliding)
             {
-                _value = _value == Color.Black ? Color.Red : Color.Black;
+                _isSliding = sliding;
+                _value = color;
+                OnValueChanged();
             }
-
-            _isSliding = sliding;
-            Value = color;
+            else
+            {
+                Value = color;
+            }
         }
 
         private void OnPickerClosed()

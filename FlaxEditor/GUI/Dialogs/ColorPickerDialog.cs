@@ -34,6 +34,7 @@ namespace FlaxEditor.GUI.Dialogs
         private Color _value;
         private bool _disableEvents;
         private bool _useDynamicEditing;
+        private bool _isClosing;
         private ColorValueBox.ColorPickerEvent _onChanged;
         private ColorValueBox.ColorPickerClosedEvent _onClosed;
 
@@ -183,6 +184,10 @@ namespace FlaxEditor.GUI.Dialogs
 
         private void OnOkClicked()
         {
+            if (_isClosing)
+                return;
+            _isClosing = true;
+
             // Send color event if modified
             if (_value != _initialValue)
             {
@@ -194,6 +199,10 @@ namespace FlaxEditor.GUI.Dialogs
 
         private void OnCancelClicked()
         {
+            if (_isClosing)
+                return;
+            _isClosing = true;
+
             // Restore color if modified
             if (_useDynamicEditing && _initialValue != _value)
             {
