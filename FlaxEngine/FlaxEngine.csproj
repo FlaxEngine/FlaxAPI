@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -109,6 +109,7 @@
     <Compile Include="API\Engine\GameplayGlobals.Gen.cs" />
     <Compile Include="API\Engine\Globals.Gen.cs" />
     <Compile Include="API\Engine\Screen.Gen.cs" />
+    <Compile Include="API\Engine\Time.Gen.cs" />
     <Compile Include="API\Graphics\Enums.Gen.cs" />
     <Compile Include="API\Graphics\GPUAdapter.Gen.cs" />
     <Compile Include="API\Graphics\GPUBuffer.Gen.cs" />
@@ -248,8 +249,6 @@
     <Compile Include="API\Static\PluginManager.Gen.cs" />
     <Compile Include="API\Static\Profiler.cs" />
     <Compile Include="API\Static\Scripting.cs" />
-    <Compile Include="API\Static\Time.cs" />
-    <Compile Include="API\Static\Time.Gen.cs" />
     <Compile Include="API\Terrain\Terrain.cs" />
     <Compile Include="API\Terrain\Terrain.Gen.cs" />
     <Compile Include="API\Utilities\Screenshot.Gen.cs" />
