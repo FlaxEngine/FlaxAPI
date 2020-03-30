@@ -485,7 +485,7 @@ namespace FlaxEditor.Windows
             {
                 var tmpBat = StringUtils.CombinePaths(Globals.TemporaryFolder, Guid.NewGuid().ToString("N") + ".bat");
                 File.WriteAllText(tmpBat, command);
-                Platform.StartProcess(tmpBat, null, true, true);
+                Platform.StartProcess(tmpBat, null, null, true, true);
                 File.Delete(tmpBat);
             }
             catch (Exception ex)
@@ -802,7 +802,7 @@ namespace FlaxEditor.Windows
                 else if (_exitOnBuildEnd)
                 {
                     _exitOnBuildEnd = false;
-                    Platform.Exit(_lastBuildFailed ? 1 : 0);
+                    Platform.RequestExit(_lastBuildFailed ? 1 : 0);
                 }
             }
         }

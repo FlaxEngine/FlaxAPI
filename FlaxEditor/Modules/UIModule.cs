@@ -532,7 +532,8 @@ namespace FlaxEditor.Modules
         private void OpenProject()
         {
             // Ask user to select project file
-            var files = MessageBox.OpenFileDialog(Editor.Windows.MainWindow, null, "Project files (Project.xml)\0Project.xml\0All files (*.*)\0*.*\0", false, "Select project file");
+            if (FileSystem.ShowOpenFileDialog(Editor.Windows.MainWindow, null, "Project files (Project.xml)\0Project.xml\0All files (*.*)\0*.*\0", false, "Select project file", out var files))
+                return;
             if (files != null && files.Length > 0)
             {
                 Editor.OpenProject(files[0]);

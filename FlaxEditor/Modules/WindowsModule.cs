@@ -16,7 +16,6 @@ using FlaxEditor.Windows.Profiler;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
-using FlaxEngine.Utilities;
 using DockPanel = FlaxEditor.GUI.Docking.DockPanel;
 using DockState = FlaxEditor.GUI.Docking.DockState;
 using FloatWindowDockPanel = FlaxEditor.GUI.Docking.FloatWindowDockPanel;
@@ -159,7 +158,7 @@ namespace FlaxEditor.Modules
             if (mainWindow)
             {
                 var projectPath = Globals.ProjectFolder.Replace('/', '\\');
-                var platformBit = Platform.Is64bitApp ? "64" : "32";
+                var platformBit = Platform.Is64BitApp ? "64" : "32";
                 var title = string.Format("Flax Editor - \'{0}\' ({1}-bit)", projectPath, platformBit);
                 mainWindow.Title = title;
             }
@@ -705,7 +704,7 @@ namespace FlaxEditor.Modules
                 settings.HasSizingFrame = false;
             }
 
-            MainWindow = Window.Create(settings);
+            MainWindow = Platform.CreateWindow(ref settings);
 
             if (MainWindow == null)
             {
@@ -853,7 +852,7 @@ namespace FlaxEditor.Modules
             else
             {
                 // Close editor
-                Platform.Exit();
+                Platform.RequestExit();
             }
         }
 
@@ -903,7 +902,7 @@ namespace FlaxEditor.Modules
             {
                 Editor.Log("Closing Editor after project icon screenshot");
                 EditWin.Viewport.SaveProjectIconEnd();
-                Platform.Exit();
+                Platform.RequestExit();
             }
 
             // Update editor windows
@@ -934,10 +933,10 @@ namespace FlaxEditor.Modules
             MainWindow = null;
 
             // Close all windows
-            var windows = Window.Windows.ToArray();
+            var windows = Windows.ToArray();
             for (int i = 0; i < windows.Length; i++)
             {
-                if (windows[i] && windows[i].IsVisible)
+                if (windows[i] != null)
                     windows[i].Close(ClosingReason.EngineExit);
             }
         }

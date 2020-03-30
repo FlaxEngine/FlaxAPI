@@ -1,15 +1,12 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using FlaxEngine.GUI;
 
 namespace FlaxEngine
 {
-    public partial class Window
+    partial class Window
     {
-        internal static List<Window> Windows = new List<Window>();
         internal float _dpiScale;
 
         /// <summary>
@@ -137,39 +134,9 @@ namespace FlaxEngine
         public event Action Closed;
 
         /// <summary>
-        /// Gets a value indicating whether this window is in windowed mode.
-        /// </summary>
-        public bool IsWindowed => !IsFullscreen;
-
-        /// <summary>
         /// The window GUI root object.
         /// </summary>
         public readonly WindowRootControl GUI;
-
-        // Hidden constructor. Object created from C++ side.
-        private Window()
-        {
-            GUI = new WindowRootControl(this);
-            _dpiScale = Platform.DpiScale;
-        }
-
-        /// <summary>
-        /// Gets the mouse tracking offset.
-        /// </summary>
-        [UnmanagedCall]
-        public Vector2 TrackingMouseOffset
-        {
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-            get
-            {
-                Vector2 result;
-                Internal_GetTrackingMouseOffset(unmanagedPtr, out result);
-                return result;
-            }
-#endif
-        }
 
         /// <summary>
         /// Starts the drag and drop operation.
@@ -177,34 +144,20 @@ namespace FlaxEngine
         /// <param name="data">The data.</param>
         public void DoDragDrop(DragData data)
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             if (data is DragDataText text)
-                Internal_DoDragDropText(unmanagedPtr, text.Text);
+                DoDragDrop(text.Text);
             else
                 throw new NotImplementedException("Only DragDataText drag and drop is supported.");
-#endif
         }
 
-        #region Internal Calls
-
-#if !UNIT_TEST_COMPILANT
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetTrackingMouseOffset(IntPtr obj, out Vector2 result);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_DoDragDropText(IntPtr obj, string text);
-#endif
-
-        #endregion
-
-        #region Internal Events
+        private Window()
+        {
+            GUI = new WindowRootControl(this);
+            _dpiScale = Platform.DpiScale;
+        }
 
         internal void Internal_OnShow()
         {
-            Windows.Add(this);
-
             GUI.UnlockChildrenRecursive();
             GUI.PerformLayout();
         }
@@ -329,7 +282,7 @@ namespace FlaxEngine
             }
         }
 
-        internal void Internal_OnLButtonHit(WindowHitCodes hit, ref bool result)
+        internal void Internal_OnLeftButtonHit(WindowHitCodes hit, ref bool result)
         {
             if (LeftButtonHit != null)
             {
@@ -386,8 +339,6 @@ namespace FlaxEngine
 
             GUI.Dispose();
 
-            Windows.Remove(this);
-
             // Force clear all events (we cannot use window after close)
             KeyDown = null;
             KeyUp = null;
@@ -404,7 +355,5 @@ namespace FlaxEngine
             Closing = null;
             Closed = null;
         }
-
-        #endregion
     }
 }

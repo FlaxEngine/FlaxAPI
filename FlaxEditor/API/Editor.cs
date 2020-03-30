@@ -509,7 +509,7 @@ namespace FlaxEditor
                 string editorExePath = Globals.StartupPath + "/Win64/FlaxEditor.exe";
                 string args = string.Format("-project \"{0}\"", _projectToOpen);
                 _projectToOpen = null;
-                Platform.StartProcess(editorExePath, args);
+                Platform.StartProcess(editorExePath, args, null);
             }
         }
 
@@ -1025,7 +1025,7 @@ namespace FlaxEditor
         internal void BuildCommand(string arg)
         {
             if (TryBuildCommand(arg))
-                Platform.Exit();
+                Platform.RequestExit();
         }
 
         private bool TryBuildCommand(string arg)
@@ -1098,22 +1098,56 @@ namespace FlaxEditor
             return StateMachine.CurrentState.CanEditScene;
         }
 
-        internal void Internal_GetMousePosition(out Vector2 resultAsRef)
+        internal bool Internal_HasGameViewportFocus()
         {
-            resultAsRef = Vector2.Zero;
             if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
             {
                 var win = Windows.GameWin.Root;
-                if (win != null)
-                    resultAsRef = Vector2.Round(Windows.GameWin.Viewport.PointFromWindow(win.MousePosition));
+                if (win != null && win.RootWindow is WindowRootControl root && root.Window.IsFocused)
+                {
+                    return true;
+                }
             }
+            return false;
         }
 
-        internal void Internal_SetMousePosition(ref Vector2 val)
+        internal void Internal_ScreenToGameViewport(ref Vector2 pos)
         {
             if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
             {
-                Windows.GameWin.SetGameMousePosition(ref val);
+                var win = Windows.GameWin.Root;
+                if (win != null && win.RootWindow is WindowRootControl root && root.Window.IsFocused)
+                {
+                    pos = Vector2.Round(Windows.GameWin.Viewport.PointFromWindow(root.ScreenToClient(pos)));
+                }
+                else
+                {
+                    pos = Vector2.Minimum;
+                }
+            }
+            else
+            {
+                pos = Vector2.Minimum;
+            }
+        }
+
+        internal void Internal_GameViewportToScreen(ref Vector2 pos)
+        {
+            if (Windows.GameWin != null && Windows.GameWin.ContainsFocus)
+            {
+                var win = Windows.GameWin.Root;
+                if (win != null && win.RootWindow is WindowRootControl root && root.Window.IsFocused)
+                {
+                    pos = Vector2.Round(root.Window.ClientToScreen(Windows.GameWin.Viewport.PointToWindow(pos)));
+                }
+                else
+                {
+                    pos = Vector2.Minimum;
+                }
+            }
+            else
+            {
+                pos = Vector2.Minimum;
             }
         }
 

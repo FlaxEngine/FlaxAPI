@@ -55,13 +55,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public bool IsMaximized => _window.IsMaximized;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WindowRootControl"/> class.
-        /// </summary>
-        /// <param name="window">Native window object.</param>
         internal WindowRootControl(Window window)
         {
-            _window = window ?? throw new ArgumentNullException(nameof(window));
+            _window = window;
             ClipChildren = false;
 
             if (Style.Current != null)

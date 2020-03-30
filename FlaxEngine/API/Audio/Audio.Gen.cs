@@ -84,7 +84,6 @@ namespace FlaxEngine
         /// <summary>
         /// Sets the doppler effect factor. Scale for source and listener velocities. Default is 1.
         /// </summary>
-        /// <param name="value">The value.</param>
         [Tooltip("Sets the doppler effect factor. Scale for source and listener velocities. Default is 1.")]
         public static float DopplerFactor
         {

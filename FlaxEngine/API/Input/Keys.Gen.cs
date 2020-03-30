@@ -984,5 +984,11 @@ namespace FlaxEngine
         /// </summary>
         [Tooltip("Clear key")]
         OemClear = 0xFE,
+
+        /// <summary>
+        /// The count of items in the Keys enum.
+        /// </summary>
+        [Tooltip("The count of items in the Keys enum.")]
+        MAX,
     }
 }

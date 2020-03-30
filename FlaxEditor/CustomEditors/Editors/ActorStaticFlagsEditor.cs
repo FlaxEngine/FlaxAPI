@@ -31,7 +31,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 // Ask user
                 var result = MessageBox.Show(
                     "Do you want to set static flags to all child actors as well?",
-                    "Change actor static flags", MessageBox.Buttons.YesNoCancel);
+                    "Change actor static flags", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Cancel)
                     return;
 

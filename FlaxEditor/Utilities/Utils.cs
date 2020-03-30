@@ -959,7 +959,7 @@ namespace FlaxEditor.Utilities
                 return;
             }
 
-            CreateWindowSettings settings = CreateWindowSettings.Default;
+            var settings = CreateWindowSettings.Default;
             settings.ActivateWhenFirstShown = true;
             settings.AllowMaximize = false;
             settings.AllowMinimize = false;
@@ -967,14 +967,14 @@ namespace FlaxEditor.Utilities
             settings.StartPosition = WindowStartPosition.CenterScreen;
             settings.Size = new Vector2(500, 600) * Platform.DpiScale;
             settings.Title = title;
-            var dialog = Window.Create(settings);
+            var dialog = Platform.CreateWindow(ref settings);
 
             var copyButton = new Button(4, 4, 100)
             {
                 Text = "Copy",
                 Parent = dialog.GUI,
             };
-            copyButton.Clicked += () => Platform.ClipboardText = source;
+            copyButton.Clicked += () => Clipboard.Text = source;
 
             var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);
             sourceTextBox.Height = settings.Size.Y - sourceTextBox.Top - 2;

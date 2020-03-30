@@ -114,7 +114,7 @@ namespace FlaxEditor.Windows.Assets
                     var result = MessageBox.Show(
                         string.Format("Asset \'{0}\' has been edited. Save before closing?", _item.Path),
                         "Save before closing?",
-                        MessageBox.Buttons.YesNoCancel
+                        MessageBoxButtons.YesNoCancel
                     );
                     if (result == DialogResult.OK || result == DialogResult.Yes)
                     {
@@ -232,7 +232,7 @@ namespace FlaxEditor.Windows.Assets
             base.OnShowContextMenu(menu);
 
             menu.AddButton("Save", Save).Enabled = IsEdited;
-            menu.AddButton("Copy name", () => Platform.ClipboardText = Item.NamePath);
+            menu.AddButton("Copy name", () => Clipboard.Text = Item.NamePath);
 
             menu.AddSeparator();
         }

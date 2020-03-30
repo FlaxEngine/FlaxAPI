@@ -52,7 +52,7 @@ namespace FlaxEditor.CustomEditors.Editors
                 // Ask user
                 var result = MessageBox.Show(
                     string.Format("Do you want to change layer to \"{0}\" for all child actors as well?", valueText),
-                    "Change actor layer", MessageBox.Buttons.YesNoCancel);
+                    "Change actor layer", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Cancel)
                     return;
 

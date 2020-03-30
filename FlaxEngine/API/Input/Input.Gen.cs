@@ -14,6 +14,42 @@ namespace FlaxEngine
     public static unsafe partial class Input
     {
         /// <summary>
+        /// Gets the mouse (null if platform does not support mouse or it is not connected).
+        /// </summary>
+        [Tooltip("The mouse (null if platform does not support mouse or it is not connected).")]
+        public static Mouse Mouse
+        {
+            get { return Internal_GetMouse(); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Mouse Internal_GetMouse();
+
+        /// <summary>
+        /// Gets the keyboard (null if platform does not support keyboard or it is not connected).
+        /// </summary>
+        [Tooltip("The keyboard (null if platform does not support keyboard or it is not connected).")]
+        public static Keyboard Keyboard
+        {
+            get { return Internal_GetKeyboard(); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Keyboard Internal_GetKeyboard();
+
+        /// <summary>
+        /// Gets the gamepads.
+        /// </summary>
+        [Tooltip("The gamepads.")]
+        public static Gamepad[] Gamepads
+        {
+            get { return Internal_GetGamepads(typeof(Gamepad)); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Gamepad[] Internal_GetGamepads(System.Type resultArrayItemType0);
+
+        /// <summary>
         /// Maps a discrete button or key press events to a "friendly name" that will later be bound to event-driven behavior. The end effect is that pressing (and/or releasing) a key, mouse button, or keypad button.
         /// </summary>
         [Tooltip("Maps a discrete button or key press events to a \"friendly name\" that will later be bound to event-driven behavior. The end effect is that pressing (and/or releasing) a key, mouse button, or keypad button.")]
@@ -46,22 +82,33 @@ namespace FlaxEngine
         internal static extern void Internal_SetAxisMappings(AxisConfig[] value);
 
         /// <summary>
-        /// Gets the text entered during the current frame (Unicode).
+        /// Gets the gamepads count.
         /// </summary>
-        /// <param name="text">The input text (Unicode).</param>
-        [Tooltip("The text entered during the current frame (Unicode).")]
-        public static string InputText
+        [Tooltip("The gamepads count.")]
+        public static int GamepadsCount
         {
-            set { Internal_GetInputText(value); }
+            get { return Internal_GetGamepadsCount(); }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetInputText(string text);
+        internal static extern int Internal_GetGamepadsCount();
 
         /// <summary>
-        /// Gets or sets the mouse position in game screen coordinates.
+        /// Gets the text entered during the current frame (Unicode).
         /// </summary>
-        [Tooltip("The mouse position in game screen coordinates.")]
+        [Tooltip("The text entered during the current frame (Unicode).")]
+        public static string InputText
+        {
+            get { return Internal_GetInputText(); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string Internal_GetInputText();
+
+        /// <summary>
+        /// Gets or sets the mouse position in game window coordinates.
+        /// </summary>
+        [Tooltip("The mouse position in game window coordinates.")]
         public static Vector2 MousePosition
         {
             get { Internal_GetMousePosition(out var resultAsRef); return resultAsRef; }
@@ -73,6 +120,22 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetMousePosition(ref Vector2 position);
+
+        /// <summary>
+        /// Gets or sets the mouse position in screen-space coordinates.
+        /// </summary>
+        [Tooltip("The mouse position in screen-space coordinates.")]
+        public static Vector2 MouseScreenPosition
+        {
+            get { Internal_GetMouseScreenPosition(out var resultAsRef); return resultAsRef; }
+            set { Internal_SetMouseScreenPosition(ref value); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetMouseScreenPosition(out Vector2 resultAsRef);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetMouseScreenPosition(ref Vector2 position);
 
         /// <summary>
         /// Gets the mouse position change during the last frame.
@@ -99,28 +162,17 @@ namespace FlaxEngine
         internal static extern float Internal_GetMouseScrollDelta();
 
         /// <summary>
-        /// Gets the gamepads.
-        /// </summary>
-        [Tooltip("The gamepads.")]
-        public static Gamepad[] Gamepads
-        {
-            get { return Internal_GetGamepads(typeof(Gamepad)); }
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Gamepad[] Internal_GetGamepads(System.Type resultArrayItemType0);
-
-        /// <summary>
         /// Gets the gamepads count.
         /// </summary>
-        [Tooltip("The gamepads count.")]
-        public static int GamepadsCount
+        /// <param name="index">The gamepad index.</param>
+        /// <returns>The gamepad device or null if index is invalid.</returns>
+        public static Gamepad GetGamepad(int index)
         {
-            get { return Internal_GetGamepadsCount(); }
+            return Internal_GetGamepad(index);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int Internal_GetGamepadsCount();
+        internal static extern Gamepad Internal_GetGamepad(int index);
 
         /// <summary>
         /// Gets the key state (true if key is being pressed during this frame).
@@ -199,6 +251,118 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetMouseButtonUp(MouseButton button);
+
+        /// <summary>
+        /// Gets the gamepad axis value.
+        /// </summary>
+        /// <param name="gamepadIndex">The gamepad index</param>
+        /// <param name="axis">Gamepad axis to check</param>
+        /// <returns>Axis value.</returns>
+        public static float GetGamepadAxis(int gamepadIndex, GamepadAxis axis)
+        {
+            return Internal_GetGamepadAxis(gamepadIndex, axis);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetGamepadAxis(int gamepadIndex, GamepadAxis axis);
+
+        /// <summary>
+        /// Gets the gamepad button state (true if being pressed during the current frame).
+        /// </summary>
+        /// <param name="gamepadIndex">The gamepad index</param>
+        /// <param name="button">Gamepad button to check</param>
+        /// <returns>True if user holds down the button, otherwise false.</returns>
+        public static bool GetGamepadButton(int gamepadIndex, GamepadButton button)
+        {
+            return Internal_GetGamepadButton(gamepadIndex, button);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetGamepadButton(int gamepadIndex, GamepadButton button);
+
+        /// <summary>
+        /// Gets the gamepad button down state (true if was pressed during the current frame).
+        /// </summary>
+        /// <param name="gamepadIndex">The gamepad index</param>
+        /// <param name="button">Gamepad button to check</param>
+        /// <returns>True if user starts pressing down the button, otherwise false.</returns>
+        public static bool GetGamepadButtonDown(int gamepadIndex, GamepadButton button)
+        {
+            return Internal_GetGamepadButtonDown(gamepadIndex, button);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetGamepadButtonDown(int gamepadIndex, GamepadButton button);
+
+        /// <summary>
+        /// Gets the gamepad button up state (true if was released during the current frame).
+        /// </summary>
+        /// <param name="gamepadIndex">The gamepad index</param>
+        /// <param name="button">Gamepad button to check</param>
+        /// <returns>True if user releases the button, otherwise false.</returns>
+        public static bool GetGamepadButtonUp(int gamepadIndex, GamepadButton button)
+        {
+            return Internal_GetGamepadButtonUp(gamepadIndex, button);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetGamepadButtonUp(int gamepadIndex, GamepadButton button);
+
+        /// <summary>
+        /// Gets the gamepad axis value.
+        /// </summary>
+        /// <param name="gamepad">The gamepad</param>
+        /// <param name="axis">Gamepad axis to check</param>
+        /// <returns>Axis value.</returns>
+        public static float GetGamepadAxis(InputGamepadIndex gamepad, GamepadAxis axis)
+        {
+            return Internal_GetGamepadAxis1(gamepad, axis);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetGamepadAxis1(InputGamepadIndex gamepad, GamepadAxis axis);
+
+        /// <summary>
+        /// Gets the gamepad button state (true if being pressed during the current frame).
+        /// </summary>
+        /// <param name="gamepad">The gamepad</param>
+        /// <param name="button">Gamepad button to check</param>
+        /// <returns>True if user holds down the button, otherwise false.</returns>
+        public static bool GetGamepadButton(InputGamepadIndex gamepad, GamepadButton button)
+        {
+            return Internal_GetGamepadButton1(gamepad, button);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetGamepadButton1(InputGamepadIndex gamepad, GamepadButton button);
+
+        /// <summary>
+        /// Gets the gamepad button down state (true if was pressed during the current frame).
+        /// </summary>
+        /// <param name="gamepad">The gamepad</param>
+        /// <param name="button">Gamepad button to check</param>
+        /// <returns>True if user starts pressing down the button, otherwise false.</returns>
+        public static bool GetGamepadButtonDown(InputGamepadIndex gamepad, GamepadButton button)
+        {
+            return Internal_GetGamepadButtonDown1(gamepad, button);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetGamepadButtonDown1(InputGamepadIndex gamepad, GamepadButton button);
+
+        /// <summary>
+        /// Gets the gamepad button up state (true if was released during the current frame).
+        /// </summary>
+        /// <param name="gamepad">The gamepad</param>
+        /// <param name="button">Gamepad button to check</param>
+        /// <returns>True if user releases the button, otherwise false.</returns>
+        public static bool GetGamepadButtonUp(InputGamepadIndex gamepad, GamepadButton button)
+        {
+            return Internal_GetGamepadButtonUp1(gamepad, button);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetGamepadButtonUp1(InputGamepadIndex gamepad, GamepadButton button);
 
         /// <summary>
         /// Gets the value of the virtual action identified by name. Use <see cref="ActionMappings"/> to get the current config.

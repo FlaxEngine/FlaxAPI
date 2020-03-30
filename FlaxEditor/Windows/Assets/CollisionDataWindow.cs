@@ -207,7 +207,7 @@ namespace FlaxEditor.Windows.Assets
         private void UpdateWiresModel()
         {
             // Don't update on a importer/worker thread
-            if (!Platform.IsInMainThread)
+            if (Platform.CurrentThreadID != Globals.MainThreadID)
             {
                 _updateWireMesh = true;
                 return;

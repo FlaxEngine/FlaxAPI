@@ -118,19 +118,6 @@ namespace FlaxEngine
         internal static extern bool Internal_GetButtonUp(IntPtr obj, GamepadButton button);
 
         /// <summary>
-        /// Gets the packed state of the button. 0x1 flag for the current state and 0x2 flag for the previous frame state. Used by the C# API.
-        /// </summary>
-        /// <param name="button">The button.</param>
-        /// <returns>The buttons flags state.</returns>
-        public int GetButtonState(GamepadButton button)
-        {
-            return Internal_GetButtonState(unmanagedPtr, button);
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int Internal_GetButtonState(IntPtr obj, GamepadButton button);
-
-        /// <summary>
         /// Sets the state of the gamepad vibration. Ignored if controller does not support this.
         /// </summary>
         /// <param name="state">The state.</param>

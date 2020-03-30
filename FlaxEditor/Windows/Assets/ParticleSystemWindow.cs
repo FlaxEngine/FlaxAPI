@@ -64,7 +64,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     if (!_track.Timeline.IsTrackNameValid(value))
                     {
-                        MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBox.Buttons.OK, MessageBox.Icon.Warning);
+                        MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
@@ -358,7 +358,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     if (!_track.Timeline.IsTrackNameValid(value))
                     {
-                        MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBox.Buttons.OK, MessageBox.Icon.Warning);
+                        MessageBox.Show("Invalid name. It must be unique.", "Invalid track name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 

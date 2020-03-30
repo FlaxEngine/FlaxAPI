@@ -70,6 +70,12 @@ namespace FlaxEngine
         /// </summary>
         [Tooltip("Extended button 2 (or XButton2).")]
         Extended2 = 5,
+
+        /// <summary>
+        /// The count of items in the MouseButton enum.
+        /// </summary>
+        [Tooltip("The count of items in the MouseButton enum.")]
+        MAX,
     }
 }
 

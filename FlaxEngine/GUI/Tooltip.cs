@@ -94,7 +94,7 @@ namespace FlaxEngine.GUI
             desc.IsTopmost = true;
             desc.IsRegularWindow = false;
             desc.HasSizingFrame = false;
-            _window = Window.Create(desc);
+            _window = Platform.CreateWindow(ref desc);
             if (_window == null)
                 throw new InvalidOperationException("Failed to create tooltip window.");
 
@@ -183,7 +183,7 @@ namespace FlaxEngine.GUI
         public override void Update(float deltaTime)
         {
             // Auto hide if mouse leaves control area
-            Vector2 mousePos = Platform.MousePosition;
+            Vector2 mousePos = Input.MouseScreenPosition;
             Vector2 location = _showTarget.ScreenToClient(mousePos / Platform.DpiScale);
             if (!_showTarget.OnTestTooltipOverControl(ref location))
             {

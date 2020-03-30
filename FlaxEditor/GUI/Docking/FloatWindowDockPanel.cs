@@ -93,7 +93,7 @@ namespace FlaxEditor.GUI.Docking
             settings.StartPosition = startPosition;
 
             // Create window
-            return FlaxEngine.Window.Create(settings);
+            return Platform.CreateWindow(ref settings);
         }
 
         private bool OnLeftButtonHit(WindowHitCodes hitTest)

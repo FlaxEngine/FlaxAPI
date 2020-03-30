@@ -152,7 +152,7 @@ namespace FlaxEditor.GUI.Dialogs
             SetupWindowSettings(ref settings);
 
             // Create window
-            _window = Window.Create(settings);
+            _window = Platform.CreateWindow(ref settings);
             var windowGUI = _window.GUI;
 
             // Attach events

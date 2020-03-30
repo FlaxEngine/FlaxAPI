@@ -27,7 +27,7 @@ namespace FlaxEditor.Surface
 
             if (selection.Count == 0)
             {
-                Platform.ClipboardText = string.Empty;
+                Clipboard.Text = string.Empty;
                 return;
             }
 
@@ -152,7 +152,7 @@ namespace FlaxEditor.Surface
                 jsonWriter.WriteEnd();
             }
 
-            Platform.ClipboardText = sw.ToString();
+            Clipboard.Text = sw.ToString();
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace FlaxEditor.Surface
         /// <returns>True if can paste data, otherwise false.</returns>
         public bool CanPaste()
         {
-            var data = Platform.ClipboardText;
+            var data = Clipboard.Text;
             if (data == null || data.Length < 2)
                 return false;
 
@@ -275,7 +275,7 @@ namespace FlaxEditor.Surface
         /// </summary>
         public void Paste()
         {
-            var data = Platform.ClipboardText;
+            var data = Clipboard.Text;
             if (data == null || data.Length < 2)
                 return;
 
@@ -496,7 +496,7 @@ namespace FlaxEditor.Surface
             {
                 Editor.LogWarning("Failed to paste Visject Surface nodes");
                 Editor.LogWarning(ex);
-                MessageBox.Show("Failed to paste Visject Surface nodes. " + ex.Message, "Paste failed", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                MessageBox.Show("Failed to paste Visject Surface nodes. " + ex.Message, "Paste failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

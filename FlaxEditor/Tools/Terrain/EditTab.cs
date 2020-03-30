@@ -298,7 +298,8 @@ namespace FlaxEditor.Tools.Terrain
             if (_isUpdatingUI)
                 return;
 
-            string outputFolder = MessageBox.BrowseFolderDialog(null, null, "Select the output folder");
+            if (FileSystem.ShowBrowseFolderDialog(null, null, "Select the output folder", out var outputFolder))
+                return;
             TerrainTools.ExportTerrain(CarveTab.SelectedTerrain, outputFolder);
         }
 

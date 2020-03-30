@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using System.Threading;
 using System.Threading.Tasks;
 using FlaxEngine.GUI;
 
@@ -34,20 +33,13 @@ namespace FlaxEngine
         /// <summary>
         /// Initializes Flax API. Called before everything else from native code.
         /// </summary>
-        /// <param name="flags">The packed flags with small meta for the API.</param>
-        /// <param name="platform">The runtime platform.</param>
-        internal static void Init(int flags, PlatformType platform)
+        internal static void Init()
         {
 #if DEBUG
             Debug.Logger.LogHandler.LogWrite(LogType.Info, "Using FlaxAPI in Debug");
 #else
             Debug.Logger.LogHandler.LogWrite(LogType.Info, "Using FlaxAPI in Release");
 #endif
-
-            Platform._is64Bit = (flags & 0x01) != 0;
-            Platform._isEditor = (flags & 0x02) != 0;
-            Platform._mainThreadId = Thread.CurrentThread.ManagedThreadId;
-            Platform._platform = platform;
 
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
             TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;

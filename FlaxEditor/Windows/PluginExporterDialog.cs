@@ -103,7 +103,7 @@ namespace FlaxEditor.Windows
 
             if (!PluginUtils.GetPluginToExport(out var gamePlugin, out var editorPlugin, out var errorMsg))
             {
-                MessageBox.Show(parentWin, errorMsg, "Cannot export plugin", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                MessageBox.Show(parentWin, errorMsg, "Cannot export plugin", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -179,12 +179,12 @@ namespace FlaxEditor.Windows
             var errorMsg = DoExport(ref _options);
             if (errorMsg != null)
             {
-                MessageBox.Show("Cannot export plugin. " + errorMsg, "Failed to export plugin.", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                MessageBox.Show("Cannot export plugin. " + errorMsg, "Failed to export plugin.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Show the output folder
-            Platform.StartProcess(_options.OutputPath);
+            Platform.StartProcess(_options.OutputPath, null, null);
 
             Close(DialogResult.OK);
         }

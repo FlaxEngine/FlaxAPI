@@ -291,10 +291,11 @@ namespace FlaxEditor.Windows
         /// </summary>
         public void LoadLogFile()
         {
-            var result = MessageBox.OpenFileDialog(null, Path.Combine(Globals.ProjectFolder, "Logs"), null, false, "Pick a log file to load");
-            if (result != null && result.Length > 0)
+            if (FileSystem.ShowOpenFileDialog(null, Path.Combine(Globals.ProjectFolder, "Logs"), null, false, "Pick a log file to load", out var files))
+                return;
+            if (files != null && files.Length > 0)
             {
-                LoadLogFile(result[0]);
+                LoadLogFile(files[0]);
             }
         }
 

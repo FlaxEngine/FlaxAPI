@@ -37,7 +37,7 @@ namespace FlaxEditor.GUI.Docking
             window.Focus();
 
             // Calculate dragging offset and move window to the destination position
-            Vector2 mouse = Platform.MousePosition;
+            Vector2 mouse = FlaxEngine.Input.MouseScreenPosition;
             Vector2 baseWinPos = window.Position;
             _dragOffset = mouse - baseWinPos;
 
@@ -66,6 +66,7 @@ namespace FlaxEditor.GUI.Docking
 
             // Enable hit window presentation
             Proxy.Window.RenderingEnabled = true;
+            Proxy.Window.Show();
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace FlaxEditor.GUI.Docking
             if (_toSet == DockState.Float)
             {
                 var window = _toMove.Window.Window;
-                Vector2 mouse = Platform.MousePosition;
+                Vector2 mouse = FlaxEngine.Input.MouseScreenPosition;
 
                 // Move base window
                 window.Position = mouse - _dragOffset;
@@ -169,7 +170,7 @@ namespace FlaxEditor.GUI.Docking
 
             // Move window to the mouse position (with some offset for caption bar)
             var window = (WindowRootControl)toMove.Root;
-            Vector2 mouse = Platform.MousePosition;
+            Vector2 mouse = FlaxEngine.Input.MouseScreenPosition;
             window.Window.Position = mouse - new Vector2(8, 8);
 
             // Get floating panel
@@ -214,7 +215,7 @@ namespace FlaxEditor.GUI.Docking
         private void UpdateRects()
         {
             // Cache mouse position
-            _mouse = Platform.MousePosition;
+            _mouse = FlaxEngine.Input.MouseScreenPosition;
 
             // Check intersection with any dock panel
             var dpiScale = Platform.DpiScale;
@@ -390,7 +391,7 @@ namespace FlaxEditor.GUI.Docking
                 if (Window == null)
                 {
                     // Create proxy window
-                    CreateWindowSettings settings = CreateWindowSettings.Default;
+                    var settings = CreateWindowSettings.Default;
                     settings.Title = "DockHint.Window";
                     settings.Size = initSize;
                     settings.AllowInput = true;
@@ -404,7 +405,7 @@ namespace FlaxEditor.GUI.Docking
                     settings.ShowAfterFirstPaint = true;
                     settings.IsTopmost = true;
 
-                    Window = Window.Create(settings);
+                    Window = Platform.CreateWindow(ref settings);
 
                     // Set opacity and background color
                     Window.Opacity = 0.6f;
@@ -424,7 +425,7 @@ namespace FlaxEditor.GUI.Docking
                 if (win != null)
                     return;
 
-                CreateWindowSettings settings = CreateWindowSettings.Default;
+                var settings = CreateWindowSettings.Default;
                 settings.Title = name;
                 settings.Size = new Vector2(HintWindowsSize);
                 settings.AllowInput = false;
@@ -438,7 +439,7 @@ namespace FlaxEditor.GUI.Docking
                 settings.ActivateWhenFirstShown = false;
                 settings.IsTopmost = true;
 
-                win = Window.Create(settings);
+                win = Platform.CreateWindow(ref settings);
 
                 win.Opacity = 0.6f;
                 win.GUI.BackgroundColor = Style.Current.DragWindow;

@@ -223,7 +223,7 @@ namespace FlaxEditor.Windows.Assets
                 var result = MessageBox.Show(
                                              string.Format("Asset \'{0}\' has been edited. Save before scripts reload?", _item.Path),
                                              "Save before reloading?",
-                                             MessageBox.Buttons.YesNo
+                                             MessageBoxButtons.YesNo
                                             );
                 if (result == DialogResult.OK || result == DialogResult.Yes)
                 {

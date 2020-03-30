@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -50,24 +50,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Physics\BoxCollider.Gen.cs" />
-    <Compile Include="API\Physics\CapsuleCollider.Gen.cs" />
-    <Compile Include="API\Physics\CharacterController.Gen.cs" />
-    <Compile Include="API\Physics\Collider.cs" />
     <Compile Include="API\Actors\Foliage.cs" />
     <Compile Include="API\Actors\Foliage.Gen.cs" />
-    <Compile Include="API\Physics\Collider.Gen.cs" />
-    <Compile Include="API\Physics\Collisions.Gen.cs" />
-    <Compile Include="API\Physics\DistanceJoint.Gen.cs" />
-    <Compile Include="API\Physics\FixedJoint.Gen.cs" />
-    <Compile Include="API\Physics\HingeJoint.Gen.cs" />
-    <Compile Include="API\Physics\Joint.cs" />
     <Compile Include="API\Actors\NavLink.Gen.cs" />
     <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
     <Compile Include="API\Actors\ParticleEffect.cs" />
     <Compile Include="API\Actors\ParticleEffect.Gen.cs" />
-    <Compile Include="API\Physics\MeshCollider.Gen.cs" />
-    <Compile Include="API\Physics\RigidBody.cs" />
     <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />
@@ -165,8 +153,6 @@
     <Compile Include="API\Input\Keys.Gen.cs" />
     <Compile Include="API\Input\Mouse.Gen.cs" />
     <Compile Include="API\Input\VirtualInput.Gen.cs" />
-    <Compile Include="API\Physics\D6Joint.cs" />
-    <Compile Include="API\Physics\HingeJoint.cs" />
     <Compile Include="API\Level\Actor.cs" />
     <Compile Include="API\Level\Actor.Gen.cs" />
     <Compile Include="API\Level\AnimatedModel.Gen.cs" />
@@ -198,24 +184,43 @@
     <Compile Include="API\Navigation\Navigation.Gen.cs" />
     <Compile Include="API\Objects\Script.cs" />
     <Compile Include="API\Objects\Script.Gen.cs" />
-    <Compile Include="API\Objects\Window.cs" />
-    <Compile Include="API\Objects\Window.Gen.cs" />
+    <Compile Include="API\Physics\BoxCollider.Gen.cs" />
+    <Compile Include="API\Physics\CapsuleCollider.Gen.cs" />
+    <Compile Include="API\Physics\CharacterController.Gen.cs" />
+    <Compile Include="API\Physics\Collider.cs" />
+    <Compile Include="API\Physics\Collider.Gen.cs" />
     <Compile Include="API\Physics\CollisionData.Gen.cs" />
+    <Compile Include="API\Physics\Collisions.Gen.cs" />
+    <Compile Include="API\Physics\D6Joint.cs" />
     <Compile Include="API\Physics\D6Joint.Gen.cs" />
+    <Compile Include="API\Physics\DistanceJoint.Gen.cs" />
+    <Compile Include="API\Physics\FixedJoint.Gen.cs" />
+    <Compile Include="API\Physics\HingeJoint.cs" />
+    <Compile Include="API\Physics\HingeJoint.Gen.cs" />
+    <Compile Include="API\Physics\Joint.cs" />
     <Compile Include="API\Physics\Joint.Gen.cs" />
+    <Compile Include="API\Physics\Limits.cs" />
     <Compile Include="API\Physics\Limits.Gen.cs" />
+    <Compile Include="API\Physics\MeshCollider.Gen.cs" />
     <Compile Include="API\Physics\Physics.Gen.cs" />
     <Compile Include="API\Physics\PhysicsActor.Gen.cs" />
     <Compile Include="API\Physics\PhysicsColliderActor.Gen.cs" />
+    <Compile Include="API\Physics\RigidBody.cs" />
     <Compile Include="API\Physics\RigidBody.Gen.cs" />
     <Compile Include="API\Physics\SliderJoint.Gen.cs" />
     <Compile Include="API\Physics\SphereCollider.Gen.cs" />
     <Compile Include="API\Physics\SphericalJoint.Gen.cs" />
     <Compile Include="API\Physics\Types.Gen.cs" />
+    <Compile Include="API\Platform\ClipboardBase.Gen.cs" />
+    <Compile Include="API\Platform\CPUInfo.Gen.cs" />
+    <Compile Include="API\Platform\CreateWindowSettings.cs" />
     <Compile Include="API\Platform\CreateWindowSettings.Gen.cs" />
     <Compile Include="API\Platform\Defines.Gen.cs" />
+    <Compile Include="API\Platform\FileSystemBase.Gen.cs" />
     <Compile Include="API\Platform\MemoryStats.Gen.cs" />
     <Compile Include="API\Platform\MessageBox.Gen.cs" />
+    <Compile Include="API\Platform\PlatformBase.Gen.cs" />
+    <Compile Include="API\Platform\Window.cs" />
     <Compile Include="API\Platform\WindowBase.Gen.cs" />
     <Compile Include="API\Profiler\ProfilerCPU.Gen.cs" />
     <Compile Include="API\Profiler\ProfilerGPU.Gen.cs" />
@@ -238,10 +243,6 @@
     <Compile Include="API\Renderer\RenderList.Gen.cs" />
     <Compile Include="API\Static\GraphicsSettings.cs" />
     <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
-    <Compile Include="API\Static\MessageBox.cs" />
-    <Compile Include="API\Static\MessageBox.Gen.cs" />
-    <Compile Include="API\Static\Platform.cs" />
-    <Compile Include="API\Static\Platform.Gen.cs" />
     <Compile Include="API\Static\PluginManager.cs" />
     <Compile Include="API\Static\PluginManager.Gen.cs" />
     <Compile Include="API\Static\Profiler.cs" />
@@ -285,7 +286,6 @@
     <Compile Include="Collections\IOrderedDictionary.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
     <Compile Include="Engine\Collision.cs" />
-    <Compile Include="Engine\CreateWindowSettings.cs" />
     <Compile Include="Engine\Curve.cs" />
     <Compile Include="Engine\Debug.cs" />
     <Compile Include="Engine\FontReference.cs" />
@@ -296,7 +296,6 @@
     <Compile Include="Engine\InputEvent.cs" />
     <Compile Include="Engine\ISceneObject.cs" />
     <Compile Include="Engine\ITransformable.cs" />
-    <Compile Include="API\Physics\Limits.cs" />
     <Compile Include="Engine\Logger.cs" />
     <Compile Include="Engine\Object.cs" />
     <Compile Include="Engine\PhysicalMaterial.cs" />
@@ -409,9 +408,6 @@
     <Compile Include="Utilities\StateMachine.cs" />
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="API\Scripting\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

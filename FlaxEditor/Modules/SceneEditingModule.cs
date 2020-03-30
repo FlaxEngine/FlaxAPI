@@ -327,7 +327,7 @@ namespace FlaxEditor.Modules
             }
 
             // Copy data
-            Platform.ClipboardRawData = data;
+            Clipboard.RawData = data;
         }
 
 
@@ -346,7 +346,7 @@ namespace FlaxEditor.Modules
         public void Paste(Actor pasteTargetActor)
         {
             // Get clipboard data
-            var data = Platform.ClipboardRawData;
+            var data = Clipboard.RawData;
 
             // Set paste target if only one actor is selected and no target provided
             if (pasteTargetActor == null && SelectionCount == 1 && Selection[0] is ActorNode actorNode)

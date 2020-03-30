@@ -729,7 +729,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void OnClickCopyName(ContextMenuButton button)
         {
             var script = (Script)button.ParentContextMenu.Tag;
-            Platform.ClipboardText = script.GetType().FullName;
+            Clipboard.Text = script.GetType().FullName;
         }
 
         private void OnClickEditScript(ContextMenuButton button)

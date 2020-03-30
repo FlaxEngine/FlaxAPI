@@ -519,7 +519,7 @@ namespace FlaxEditor.CustomEditors
                     text = JsonSerializer.Serialize(Values[0]);
                 }
 
-                Platform.ClipboardText = text;
+                Clipboard.Text = text;
             }
             catch (Exception ex)
             {
@@ -531,7 +531,7 @@ namespace FlaxEditor.CustomEditors
         private bool GetClipboardObject(out object result)
         {
             result = null;
-            var text = Platform.ClipboardText;
+            var text = Clipboard.Text;
             if (string.IsNullOrEmpty(text))
                 return false;
 

@@ -280,7 +280,7 @@ namespace FlaxEditor.Windows
             if (!item.CanRename)
             {
                 // Cannot
-                MessageBox.Show("Cannot rename this item.", "Cannot rename", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                MessageBox.Show("Cannot rename this item.", "Cannot rename", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -291,8 +291,8 @@ namespace FlaxEditor.Windows
                 // Invalid name
                 MessageBox.Show("Given asset name is invalid. " + hint,
                                 "Invalid name",
-                                MessageBox.Buttons.OK,
-                                MessageBox.Icon.Error);
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                 return;
             }
 
@@ -390,8 +390,8 @@ namespace FlaxEditor.Windows
                 // Single item
                 if (MessageBox.Show(string.Format("Are you sure to delete \'{0}\'?\nThis action cannot be undone. Files will be deleted permanently.", items[0].Path),
                                     "Delete asset(s)",
-                                    MessageBox.Buttons.OKCancel,
-                                    MessageBox.Icon.Question)
+                                    MessageBoxButtons.OKCancel,
+                                    MessageBoxIcon.Question)
                     != DialogResult.OK)
                 {
                     // Break
@@ -403,8 +403,8 @@ namespace FlaxEditor.Windows
                 // Many items
                 if (MessageBox.Show(string.Format("Are you sure to delete {0} selected items?\nThis action cannot be undone. Files will be deleted permanently.", items.Count),
                                     "Delete asset(s)",
-                                    MessageBox.Buttons.OKCancel,
-                                    MessageBox.Icon.Question)
+                                    MessageBoxButtons.OKCancel,
+                                    MessageBoxIcon.Question)
                     != DialogResult.OK)
                 {
                     // Break
