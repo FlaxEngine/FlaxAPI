@@ -162,6 +162,7 @@
     <Compile Include="CustomEditors\Dedicated\EnvironmentProbeEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\FontReferenceEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\LayersMatrixEditor.cs" />
+    <Compile Include="CustomEditors\Dedicated\ParticleEffectEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\PhysicalMaterialEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\PostProcessSettingsEditor.cs" />
     <Compile Include="CustomEditors\Dedicated\RigidBodyEditor.cs" />

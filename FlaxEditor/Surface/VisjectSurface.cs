@@ -788,36 +788,11 @@ namespace FlaxEditor.Surface
             case ParameterType.Actor: return typeof(Actor);
             case ParameterType.Rectangle: return typeof(Rectangle);
             case ParameterType.CubeTexture: return typeof(CubeTexture);
-            case ParameterType.GPUTexture: return typeof(bool);
+            case ParameterType.GPUTexture: return typeof(GPUTexture);
             case ParameterType.Matrix: return typeof(Matrix);
-            case ParameterType.GPUTextureArray: return typeof(bool);
-            case ParameterType.GPUTextureVolume: return typeof(bool);
-            case ParameterType.GPUTextureCube: return typeof(bool);
-            default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-        }
-
-        /// <summary>
-        /// Gets the type of the connection (enum to runtime value type).
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>The runtime value time.</returns>
-        public static Type GetConnectionTypeValueType(ConnectionType type)
-        {
-            switch (type)
-            {
-            case ConnectionType.Bool: return typeof(bool);
-            case ConnectionType.Integer: return typeof(int);
-            case ConnectionType.Float: return typeof(float);
-            case ConnectionType.Vector2: return typeof(Vector2);
-            case ConnectionType.Vector3: return typeof(Vector3);
-            case ConnectionType.Vector4: return typeof(Vector4);
-            case ConnectionType.String: return typeof(string);
-            case ConnectionType.Box: return typeof(BoundingBox);
-            case ConnectionType.Rotation: return typeof(Quaternion);
-            case ConnectionType.Transform: return typeof(Transform);
-            case ConnectionType.Object: return typeof(object);
-            case ConnectionType.UnsignedInteger: return typeof(uint);
+            case ParameterType.GPUTextureArray: return typeof(GPUTextureView);
+            case ParameterType.GPUTextureVolume: return typeof(GPUTextureView);
+            case ParameterType.GPUTextureCube: return typeof(GPUTextureView);
             default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }

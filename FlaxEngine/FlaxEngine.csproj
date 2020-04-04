@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -54,8 +54,6 @@
     <Compile Include="API\Actors\Foliage.Gen.cs" />
     <Compile Include="API\Actors\NavLink.Gen.cs" />
     <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
-    <Compile Include="API\Actors\ParticleEffect.cs" />
-    <Compile Include="API\Actors\ParticleEffect.Gen.cs" />
     <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
     <Compile Include="API\Actors\TextRender.Gen.cs" />
     <Compile Include="API\Actors\UICanvas.cs" />
@@ -73,10 +71,6 @@
     <Compile Include="API\Audio\AudioListener.Gen.cs" />
     <Compile Include="API\Audio\AudioSource.Gen.cs" />
     <Compile Include="API\Audio\Types.Gen.cs" />
-    <Compile Include="API\BinaryAssets\ParticleEmitter.cs" />
-    <Compile Include="API\BinaryAssets\ParticleEmitter.Gen.cs" />
-    <Compile Include="API\BinaryAssets\ParticleSystem.cs" />
-    <Compile Include="API\BinaryAssets\ParticleSystem.Gen.cs" />
     <Compile Include="API\Content\Animation.Gen.cs" />
     <Compile Include="API\Content\AnimationGraph.Gen.cs" />
     <Compile Include="API\Content\Asset.cs" />
@@ -186,6 +180,11 @@
     <Compile Include="API\Navigation\Navigation.Gen.cs" />
     <Compile Include="API\Objects\Script.cs" />
     <Compile Include="API\Objects\Script.Gen.cs" />
+    <Compile Include="API\Particles\ParticleEffect.cs" />
+    <Compile Include="API\Particles\ParticleEffect.Gen.cs" />
+    <Compile Include="API\Particles\ParticleEmitter.Gen.cs" />
+    <Compile Include="API\Particles\ParticleSystem.Gen.cs" />
+    <Compile Include="API\Particles\Types.Gen.cs" />
     <Compile Include="API\Physics\BoxCollider.Gen.cs" />
     <Compile Include="API\Physics\CapsuleCollider.Gen.cs" />
     <Compile Include="API\Physics\CharacterController.Gen.cs" />

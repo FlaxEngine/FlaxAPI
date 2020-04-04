@@ -1,53 +1,49 @@
-// Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
+// This code was auto-generated. Do not modify it.
 
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FlaxEngine
 {
     /// <summary>
-    /// The particles simulation execution mode.
+    /// Binary asset that contains a particle emitter definition graph for running particles simulation on CPU and GPU.
     /// </summary>
-    public enum ParticlesSimulationMode
+    [Tooltip("Binary asset that contains a particle emitter definition graph for running particles simulation on CPU and GPU.")]
+    public unsafe partial class ParticleEmitter : BinaryAsset
     {
-        /// <summary>
-        /// The default model. Select the best simulation mode based on a target platform.
-        /// </summary>
-        [Tooltip("The default model. Select the best simulation mode based on a target platform.")]
-        Default = 0,
+        /// <inheritdoc />
+        protected ParticleEmitter() : base()
+        {
+        }
 
         /// <summary>
-        /// Runs particles simulation on a CPU (always supported).
+        /// Tries to load surface graph from the asset.
         /// </summary>
-        [Tooltip("Runs particles simulation on a CPU (always supported).")]
-        CPU = 1,
+        /// <param name="createDefaultIfMissing">True if create default surface if missing.</param>
+        /// <returns>The output surface data, or empty if failed to load.</returns>
+        public byte[] LoadSurface(bool createDefaultIfMissing)
+        {
+            return Internal_LoadSurface(unmanagedPtr, createDefaultIfMissing);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern byte[] Internal_LoadSurface(IntPtr obj, bool createDefaultIfMissing);
 
         /// <summary>
-        /// Runs particles simulation on a GPU (if supported).
+        /// Updates surface (saves new one, discard cached data, reloads asset).
         /// </summary>
-        [Tooltip("Runs particles simulation on a GPU (if supported).")]
-        GPU = 2,
-    }
+        /// <param name="data">The surface graph data.</param>
+        /// <returns>True if cannot save it, otherwise false.</returns>
+        public bool SaveSurface(byte[] data)
+        {
+            return Internal_SaveSurface(unmanagedPtr, data);
+        }
 
-    /// <summary>
-    /// The particles simulation space modes.
-    /// </summary>
-    public enum ParticlesSimulationSpace
-    {
-        /// <summary>
-        /// Simulates particles in the world space.
-        /// </summary>
-        [Tooltip("Simulates particles in the world space.")]
-        World = 0,
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_SaveSurface(IntPtr obj, byte[] data);
 
-        /// <summary>
-        /// Simulates particles in the local space of the actor.
-        /// </summary>
-        [Tooltip("Simulates particles in the local space of the actor.")]
-        Local = 1,
-    }
-
-    public sealed partial class ParticleEmitter
-    {
         /// <summary>
         /// Spawns the particles at the given location.
         /// </summary>
@@ -57,8 +53,11 @@ namespace FlaxEngine
         /// <returns>The spawned effect.</returns>
         public ParticleEffect Spawn(Vector3 position, float duration = float.MaxValue, bool autoDestroy = false)
         {
-            return Spawn(null, new Transform(position), duration, autoDestroy);
+            return Internal_Spawn(unmanagedPtr, ref position, duration, autoDestroy);
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ParticleEffect Internal_Spawn(IntPtr obj, ref Vector3 position, float duration, bool autoDestroy);
 
         /// <summary>
         /// Spawns the particles at the given location.
@@ -70,8 +69,11 @@ namespace FlaxEngine
         /// <returns>The spawned effect.</returns>
         public ParticleEffect Spawn(Vector3 position, Quaternion rotation, float duration = float.MaxValue, bool autoDestroy = false)
         {
-            return Spawn(null, new Transform(position, rotation), duration, autoDestroy);
+            return Internal_Spawn1(unmanagedPtr, ref position, ref rotation, duration, autoDestroy);
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ParticleEffect Internal_Spawn1(IntPtr obj, ref Vector3 position, ref Quaternion rotation, float duration, bool autoDestroy);
 
         /// <summary>
         /// Spawns the particles at the given location.
@@ -82,8 +84,11 @@ namespace FlaxEngine
         /// <returns>The spawned effect.</returns>
         public ParticleEffect Spawn(Transform transform, float duration = float.MaxValue, bool autoDestroy = false)
         {
-            return Spawn(null, transform, duration, autoDestroy);
+            return Internal_Spawn2(unmanagedPtr, ref transform, duration, autoDestroy);
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ParticleEffect Internal_Spawn2(IntPtr obj, ref Transform transform, float duration, bool autoDestroy);
 
         /// <summary>
         /// Spawns the particles at the given location.
@@ -95,8 +100,11 @@ namespace FlaxEngine
         /// <returns>The spawned effect.</returns>
         public ParticleEffect Spawn(Actor parent, Vector3 position, float duration = float.MaxValue, bool autoDestroy = false)
         {
-            return Spawn(parent, new Transform(position), duration, autoDestroy);
+            return Internal_Spawn3(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(parent), ref position, duration, autoDestroy);
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ParticleEffect Internal_Spawn3(IntPtr obj, IntPtr parent, ref Vector3 position, float duration, bool autoDestroy);
 
         /// <summary>
         /// Spawns the particles at the given location.
@@ -109,8 +117,11 @@ namespace FlaxEngine
         /// <returns>The spawned effect.</returns>
         public ParticleEffect Spawn(Actor parent, Vector3 position, Quaternion rotation, float duration = float.MaxValue, bool autoDestroy = false)
         {
-            return Spawn(parent, new Transform(position, rotation), duration, autoDestroy);
+            return Internal_Spawn4(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(parent), ref position, ref rotation, duration, autoDestroy);
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ParticleEffect Internal_Spawn4(IntPtr obj, IntPtr parent, ref Vector3 position, ref Quaternion rotation, float duration, bool autoDestroy);
 
         /// <summary>
         /// Spawns the particles at the given location.
@@ -122,24 +133,10 @@ namespace FlaxEngine
         /// <returns>The spawned effect.</returns>
         public ParticleEffect Spawn(Actor parent, Transform transform, float duration = float.MaxValue, bool autoDestroy = false)
         {
-            if (WaitForLoaded())
-                throw new Exception("Failed to load " + ToString() + '.');
-
-            var system = Content.CreateVirtualAsset<ParticleSystem>();
-            if (!system)
-                throw new Exception("Failed to create virtual particle system.");
-            system.Init(this, duration);
-
-            var effect = ParticleEffect.New();
-            effect.Transform = transform;
-            effect.ParticleSystem = system;
-
-            Level.SpawnActor(effect, parent);
-
-            if (autoDestroy && duration < float.MaxValue)
-                Destroy(effect, duration);
-
-            return effect;
+            return Internal_Spawn5(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(parent), ref transform, duration, autoDestroy);
         }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ParticleEffect Internal_Spawn5(IntPtr obj, IntPtr parent, ref Transform transform, float duration, bool autoDestroy);
     }
 }

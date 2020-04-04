@@ -14,6 +14,7 @@ using FlaxEditor.Surface;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -105,176 +106,18 @@ namespace FlaxEditor.Windows.Assets
 
             private sealed class EmitterTrackProxyEditor : GenericEditor
             {
-                private static unsafe object GetParticleEmitterParamDefaultValue(ParticleEffect.Parameter p)
-                {
-                    IntPtr ptr;
-                    bool vBool = false;
-                    int vInt = 0;
-                    float vFloat = 0;
-                    Vector2 vVector2 = new Vector2();
-                    Vector3 vVector3 = new Vector3();
-                    Vector4 vVector4 = new Vector4();
-                    Color vColor = new Color();
-                    Guid vGuid = new Guid();
-                    Matrix vMatrix = new Matrix();
-
-                    switch (p.Type)
-                    {
-                    case ParticleEffect.ParameterType.Bool:
-                        ptr = new IntPtr(&vBool);
-                        break;
-                    case ParticleEffect.ParameterType.Integer:
-                    case ParticleEffect.ParameterType.ChannelMask:
-                        ptr = new IntPtr(&vInt);
-                        break;
-                    case ParticleEffect.ParameterType.Float:
-                        ptr = new IntPtr(&vFloat);
-                        break;
-                    case ParticleEffect.ParameterType.Vector2:
-                        ptr = new IntPtr(&vVector2);
-                        break;
-                    case ParticleEffect.ParameterType.Vector3:
-                        ptr = new IntPtr(&vVector3);
-                        break;
-                    case ParticleEffect.ParameterType.Vector4:
-                        ptr = new IntPtr(&vVector4);
-                        break;
-                    case ParticleEffect.ParameterType.Color:
-                        ptr = new IntPtr(&vColor);
-                        break;
-                    case ParticleEffect.ParameterType.Matrix:
-                        ptr = new IntPtr(&vMatrix);
-                        break;
-                    case ParticleEffect.ParameterType.CubeTexture:
-                    case ParticleEffect.ParameterType.Texture:
-                    case ParticleEffect.ParameterType.NormalMap:
-                    case ParticleEffect.ParameterType.GPUTexture:
-                    case ParticleEffect.ParameterType.GPUTextureArray:
-                    case ParticleEffect.ParameterType.GPUTextureCube:
-                    case ParticleEffect.ParameterType.GPUTextureVolume:
-                        ptr = new IntPtr(&vGuid);
-                        break;
-
-                    default: throw new ArgumentOutOfRangeException();
-                    }
-
-                    var id = p.ID;
-                    Editor.Internal_GetParticleEmitterParamValue(p.Emitter.unmanagedPtr, ref id, ptr);
-
-                    switch (p.Type)
-                    {
-                    case ParticleEffect.ParameterType.Bool: return vBool;
-                    case ParticleEffect.ParameterType.Integer: return vInt;
-                    case ParticleEffect.ParameterType.ChannelMask: return (ChannelMask)vInt;
-                    case ParticleEffect.ParameterType.Float: return vFloat;
-                    case ParticleEffect.ParameterType.Vector2: return vVector2;
-                    case ParticleEffect.ParameterType.Vector3: return vVector3;
-                    case ParticleEffect.ParameterType.Vector4: return vVector4;
-                    case ParticleEffect.ParameterType.Color: return vColor;
-                    case ParticleEffect.ParameterType.Matrix: return vMatrix;
-                    case ParticleEffect.ParameterType.CubeTexture:
-                    case ParticleEffect.ParameterType.Texture:
-                    case ParticleEffect.ParameterType.NormalMap: return FlaxEngine.Object.Find<FlaxEngine.Object>(ref vGuid);
-                    case ParticleEffect.ParameterType.GPUTextureArray:
-                    case ParticleEffect.ParameterType.GPUTextureCube:
-                    case ParticleEffect.ParameterType.GPUTextureVolume:
-                    case ParticleEffect.ParameterType.GPUTexture: return FlaxEngine.Object.TryFind<FlaxEngine.Object>(ref vGuid);
-
-                    default: throw new ArgumentOutOfRangeException();
-                    }
-                }
-
-                private static unsafe object GetParticleEmitterParamValue(ParticleEffect.Parameter p)
-                {
-                    IntPtr ptr;
-                    bool vBool = false;
-                    int vInt = 0;
-                    float vFloat = 0;
-                    Vector2 vVector2 = new Vector2();
-                    Vector3 vVector3 = new Vector3();
-                    Vector4 vVector4 = new Vector4();
-                    Color vColor = new Color();
-                    Guid vGuid = new Guid();
-                    Matrix vMatrix = new Matrix();
-
-                    switch (p.Type)
-                    {
-                    case ParticleEffect.ParameterType.Bool:
-                        ptr = new IntPtr(&vBool);
-                        break;
-                    case ParticleEffect.ParameterType.Integer:
-                    case ParticleEffect.ParameterType.ChannelMask:
-                        ptr = new IntPtr(&vInt);
-                        break;
-                    case ParticleEffect.ParameterType.Float:
-                        ptr = new IntPtr(&vFloat);
-                        break;
-                    case ParticleEffect.ParameterType.Vector2:
-                        ptr = new IntPtr(&vVector2);
-                        break;
-                    case ParticleEffect.ParameterType.Vector3:
-                        ptr = new IntPtr(&vVector3);
-                        break;
-                    case ParticleEffect.ParameterType.Vector4:
-                        ptr = new IntPtr(&vVector4);
-                        break;
-                    case ParticleEffect.ParameterType.Color:
-                        ptr = new IntPtr(&vColor);
-                        break;
-                    case ParticleEffect.ParameterType.Matrix:
-                        ptr = new IntPtr(&vMatrix);
-                        break;
-                    case ParticleEffect.ParameterType.CubeTexture:
-                    case ParticleEffect.ParameterType.Texture:
-                    case ParticleEffect.ParameterType.NormalMap:
-                    case ParticleEffect.ParameterType.GPUTexture:
-                    case ParticleEffect.ParameterType.GPUTextureArray:
-                    case ParticleEffect.ParameterType.GPUTextureCube:
-                    case ParticleEffect.ParameterType.GPUTextureVolume:
-                        ptr = new IntPtr(&vGuid);
-                        break;
-
-                    default: throw new ArgumentOutOfRangeException();
-                    }
-
-                    var id = p.ID;
-                    Editor.Internal_GetParticleEmitterParamValue(p.Emitter.unmanagedPtr, ref id, ptr);
-
-                    switch (p.Type)
-                    {
-                    case ParticleEffect.ParameterType.Bool: return vBool;
-                    case ParticleEffect.ParameterType.Integer: return vInt;
-                    case ParticleEffect.ParameterType.ChannelMask: return (ChannelMask)vInt;
-                    case ParticleEffect.ParameterType.Float: return vFloat;
-                    case ParticleEffect.ParameterType.Vector2: return vVector2;
-                    case ParticleEffect.ParameterType.Vector3: return vVector3;
-                    case ParticleEffect.ParameterType.Vector4: return vVector4;
-                    case ParticleEffect.ParameterType.Color: return vColor;
-                    case ParticleEffect.ParameterType.Matrix: return vMatrix;
-                    case ParticleEffect.ParameterType.CubeTexture:
-                    case ParticleEffect.ParameterType.Texture:
-                    case ParticleEffect.ParameterType.NormalMap: return FlaxEngine.Object.Find<FlaxEngine.Object>(ref vGuid);
-                    case ParticleEffect.ParameterType.GPUTextureArray:
-                    case ParticleEffect.ParameterType.GPUTextureCube:
-                    case ParticleEffect.ParameterType.GPUTextureVolume:
-                    case ParticleEffect.ParameterType.GPUTexture: return FlaxEngine.Object.TryFind<FlaxEngine.Object>(ref vGuid);
-
-                    default: throw new ArgumentOutOfRangeException();
-                    }
-                }
-
-                private static object ParameterValueToOverride(ParticleEffect.ParameterType type, object value)
+                private static object ParameterValueToOverride(GraphParamType type, object value)
                 {
                     switch (type)
                     {
-                    case ParticleEffect.ParameterType.ChannelMask: return (int)value;
-                    case ParticleEffect.ParameterType.CubeTexture:
-                    case ParticleEffect.ParameterType.Texture:
-                    case ParticleEffect.ParameterType.NormalMap:
-                    case ParticleEffect.ParameterType.GPUTexture:
-                    case ParticleEffect.ParameterType.GPUTextureArray:
-                    case ParticleEffect.ParameterType.GPUTextureCube:
-                    case ParticleEffect.ParameterType.GPUTextureVolume: return ((FlaxEngine.Object)value).ID;
+                    case GraphParamType.ChannelMask: return (int)value;
+                    case GraphParamType.CubeTexture:
+                    case GraphParamType.Texture:
+                    case GraphParamType.NormalMap:
+                    case GraphParamType.GPUTexture:
+                    case GraphParamType.GPUTextureArray:
+                    case GraphParamType.GPUTextureCube:
+                    case GraphParamType.GPUTextureVolume: return ((Object)value)?.ID ?? Guid.Empty;
                     default: return value;
                     }
                 }
@@ -299,7 +142,7 @@ namespace FlaxEditor.Windows.Assets
 
                     foreach (var p in parameters)
                     {
-                        var type = VisjectSurface.GetParameterValueType((ParameterType)p.Type);
+                        var type = VisjectSurface.GetParameterValueType((ParameterType)p.ParamType);
                         var defaultValue = p.Value;
 
                         // Parameter value accessor
@@ -311,27 +154,27 @@ namespace FlaxEditor.Windows.Assets
                             value._window._isEditingInstancedParameterValue = true;
                             p.Value = _;
 
-                            var id = p.ID;
+                            var id = p.ParamIdentifier;
                             if (value._track.ParametersOverrides.ContainsKey(id))
                             {
-                                value._track.ParametersOverrides[id] = ParameterValueToOverride(p.Type, _);
+                                value._track.ParametersOverrides[id] = ParameterValueToOverride(p.ParamType, _);
                                 value._window.Timeline.OnEmittersParametersOverridesEdited();
                                 value._window.MarkAsEdited();
                             }
                         });
-                        propertyValue.SetDefaultValue(GetParticleEmitterParamDefaultValue(p));
+                        propertyValue.SetDefaultValue(p.DefaultEmitterValue);
 
                         // Use label with parameter value override checkbox
                         var label = new CheckablePropertyNameLabel(p.Name);
-                        label.CheckBox.Checked = value._track.ParametersOverrides.ContainsKey(p.ID);
+                        label.CheckBox.Checked = value._track.ParametersOverrides.ContainsKey(p.ParamIdentifier);
                         label.CheckBox.Tag = value;
                         label.CheckChanged += nameLabel =>
                         {
                             var proxy = (EmitterTrackProxy)nameLabel.CheckBox.Tag;
                             if (nameLabel.CheckBox.Checked)
-                                proxy._track.ParametersOverrides.Add(p.ID, ParameterValueToOverride(p.Type, p.Value));
+                                proxy._track.ParametersOverrides.Add(p.ParamIdentifier, ParameterValueToOverride(p.ParamType, p.Value));
                             else
-                                proxy._track.ParametersOverrides.Remove(p.ID);
+                                proxy._track.ParametersOverrides.Remove(p.ParamIdentifier);
                             value._window.Timeline.OnEmittersParametersOverridesEdited();
                             proxy._window.Timeline.MarkAsEdited();
                         };
@@ -389,6 +232,7 @@ namespace FlaxEditor.Windows.Assets
         private bool _tmpParticleSystemIsDirty;
         private bool _isWaitingForTimelineLoad;
         private bool _isEditingInstancedParameterValue;
+        private uint _parametersVersion;
 
         /// <summary>
         /// Gets the particle system preview.
@@ -428,7 +272,6 @@ namespace FlaxEditor.Windows.Assets
                 PlaySimulation = true,
                 Parent = _split2.Panel1
             };
-            _preview.PreviewActor.ParametersChanged += e => OnTimelineSelectionChanged();
 
             // Timeline
             _timeline = new ParticleSystemTimeline(_preview)
@@ -572,6 +415,13 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Update(float deltaTime)
         {
+            // Check if need to refresh the parameters
+            if (_parametersVersion != _preview.PreviewActor.ParametersVersion)
+            {
+                _parametersVersion = _preview.PreviewActor.ParametersVersion;
+                _propertiesEditor2.BuildLayoutOnUpdate();
+            }
+
             base.Update(deltaTime);
 
             // Check if temporary asset need to be updated
