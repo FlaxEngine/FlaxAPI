@@ -244,43 +244,49 @@ namespace FlaxEngine
         /// True if device supports Compute shaders.
         /// </summary>
         [Tooltip("True if device supports Compute shaders.")]
-        public bool IsComputeSupported;
+        public bool HasCompute;
 
         /// <summary>
         /// True if device supports Tessellation shaders (domain and hull shaders).
         /// </summary>
         [Tooltip("True if device supports Tessellation shaders (domain and hull shaders).")]
-        public bool IsTessellationSupported;
+        public bool HasTessellation;
 
         /// <summary>
         /// True if device supports Geometry shaders.
         /// </summary>
         [Tooltip("True if device supports Geometry shaders.")]
-        public bool IsGeometryShadersSupported;
+        public bool HasGeometryShaders;
 
         /// <summary>
         /// True if device supports hardware geometry instancing.
         /// </summary>
         [Tooltip("True if device supports hardware geometry instancing.")]
-        public bool IsInstancingSupported;
+        public bool HasInstancing;
 
         /// <summary>
         /// True if device supports rendering to volume textures using Geometry shaders.
         /// </summary>
         [Tooltip("True if device supports rendering to volume textures using Geometry shaders.")]
-        public bool IsVolumeTextureRenderingSupported;
+        public bool HasVolumeTextureRendering;
 
         /// <summary>
-        /// True if device supports indirect drawing (append buffers with counters and pixel shader write to UAV).
+        /// True if device supports indirect drawing (including pixel shader write to UAV).
         /// </summary>
-        [Tooltip("True if device supports indirect drawing (append buffers with counters and pixel shader write to UAV).")]
-        public bool IsDrawIndirectSupported;
+        [Tooltip("True if device supports indirect drawing (including pixel shader write to UAV).")]
+        public bool HasDrawIndirect;
+
+        /// <summary>
+        /// True if device supports append/consume buffers with counters.
+        /// </summary>
+        [Tooltip("True if device supports append/consume buffers with counters.")]
+        public bool HasAppendConsumeBuffers;
 
         /// <summary>
         /// True if device supports separate render target blending states.
         /// </summary>
         [Tooltip("True if device supports separate render target blending states.")]
-        public bool IsSupportingSeparateRTBlendState;
+        public bool HasSeparateRenderTargetBlendState;
 
         /// <summary>
         /// True if device supports depth buffer texture as a shader resource view.
