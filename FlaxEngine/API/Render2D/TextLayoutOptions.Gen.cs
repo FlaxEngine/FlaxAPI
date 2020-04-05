@@ -73,36 +73,42 @@ namespace FlaxEngine
         /// <summary>
         /// The layout rectangle (text bounds).
         /// </summary>
+        [EditorOrder(0)]
         [Tooltip("The layout rectangle (text bounds).")]
         public Rectangle Bounds;
 
         /// <summary>
         /// The horizontal alignment mode.
         /// </summary>
+        [EditorOrder(10)]
         [Tooltip("The horizontal alignment mode.")]
         public TextAlignment HorizontalAlignment;
 
         /// <summary>
         /// The vertical alignment mode.
         /// </summary>
+        [EditorOrder(20)]
         [Tooltip("The vertical alignment mode.")]
         public TextAlignment VerticalAlignment;
 
         /// <summary>
         /// The text wrapping mode.
         /// </summary>
+        [EditorOrder(30), DefaultValue(TextWrapping.NoWrap)]
         [Tooltip("The text wrapping mode.")]
         public TextWrapping TextWrapping;
 
         /// <summary>
         /// The text scale factor. Default is 1.
         /// </summary>
+        [EditorOrder(40), DefaultValue(1.0f), Limit(-1000, 1000, 0.01f)]
         [Tooltip("The text scale factor. Default is 1.")]
         public float Scale;
 
         /// <summary>
         /// Base line gap scale. Default is 1.
         /// </summary>
+        [EditorOrder(50), DefaultValue(1.0f), Limit(-1000, 1000, 0.01f)]
         [Tooltip("Base line gap scale. Default is 1.")]
         public float BaseLinesGapScale;
     }

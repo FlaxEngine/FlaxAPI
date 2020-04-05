@@ -77,7 +77,7 @@ namespace FlaxEngine
         }
     }
 
-    public sealed partial class UICanvas
+    partial class UICanvas
     {
         private CanvasRenderMode _renderMode;
         private readonly CanvasRootControl _guiRoot;

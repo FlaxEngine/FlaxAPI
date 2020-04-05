@@ -50,18 +50,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Actors\NavLink.Gen.cs" />
-    <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
-    <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
-    <Compile Include="API\Actors\TextRender.Gen.cs" />
-    <Compile Include="API\Actors\UICanvas.cs" />
-    <Compile Include="API\Actors\UICanvas.Gen.cs" />
-    <Compile Include="API\Actors\UIControl.cs" />
-    <Compile Include="API\Actors\UIControl.Gen.cs" />
+    <Compile Include="API\UI\UICanvas.cs" />
+    <Compile Include="API\UI\UICanvas.Gen.cs" />
+    <Compile Include="API\UI\UIControl.cs" />
     <Compile Include="API\Animations\AlphaBlend.Gen.cs" />
     <Compile Include="API\Animations\AnimationGraph.cs" />
     <Compile Include="API\Animations\AnimGraph.Gen.cs" />
     <Compile Include="API\Animations\SceneAnimation.Gen.cs" />
+    <Compile Include="API\Animations\SceneAnimationPlayer.Gen.cs" />
     <Compile Include="API\Audio\Audio.cs" />
     <Compile Include="API\Audio\Audio.Gen.cs" />
     <Compile Include="API\Audio\AudioClip.Gen.cs" />
@@ -179,6 +175,8 @@
     <Compile Include="API\Level\StaticModel.Gen.cs" />
     <Compile Include="API\Level\Types.Gen.cs" />
     <Compile Include="API\Navigation\Navigation.Gen.cs" />
+    <Compile Include="API\Navigation\NavLink.Gen.cs" />
+    <Compile Include="API\Navigation\NavMeshBoundsVolume.Gen.cs" />
     <Compile Include="API\Objects\Script.cs" />
     <Compile Include="API\Objects\Script.Gen.cs" />
     <Compile Include="API\Particles\ParticleEffect.cs" />
@@ -251,6 +249,8 @@
     <Compile Include="API\Static\Scripting.cs" />
     <Compile Include="API\Terrain\Terrain.cs" />
     <Compile Include="API\Terrain\Terrain.Gen.cs" />
+    <Compile Include="API\UI\TextRender.Gen.cs" />
+    <Compile Include="API\UI\UIControl.Gen.cs" />
     <Compile Include="API\Utilities\Screenshot.Gen.cs" />
     <Compile Include="API\Visject\GraphParameter.Gen.cs" />
     <Compile Include="Assertions\Assert.cs" />

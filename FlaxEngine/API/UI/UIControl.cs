@@ -10,7 +10,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace FlaxEngine
 {
-    public sealed partial class UIControl
+    partial class UIControl
     {
         private Control _control;
 
