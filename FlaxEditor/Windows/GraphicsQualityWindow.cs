@@ -9,7 +9,7 @@ using FlaxEngine.Json;
 namespace FlaxEditor.Windows
 {
     /// <summary>
-    /// Window used to show and edit current graphics rendering settings via <see cref="GraphicsSettings"/>.
+    /// Window used to show and edit current graphics rendering settings via <see cref="Graphics"/>.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.EditorWindow" />
     public class GraphicsQualityWindow : EditorWindow
@@ -28,63 +28,63 @@ namespace FlaxEditor.Windows
             [EditorOrder(0), EditorDisplay("Rendering", "Use V-Sync"), Tooltip("Enables rendering synchronization with the refresh rate of the display device to avoid \"tearing\" artifacts.")]
             public bool UseVSync
             {
-                get => GraphicsSettings.UseVSync;
-                set => GraphicsSettings.UseVSync = value;
+                get => Graphics.UseVSync;
+                set => Graphics.UseVSync = value;
             }
 
             [DefaultValue(Quality.Medium)]
             [EditorOrder(1000), EditorDisplay("Quality", "AA Quality"), Tooltip("Anti Aliasing quality.")]
             public Quality AAQuality
             {
-                get => GraphicsSettings.AAQuality;
-                set => GraphicsSettings.AAQuality = value;
+                get => Graphics.AAQuality;
+                set => Graphics.AAQuality = value;
             }
 
             [DefaultValue(Quality.Medium)]
             [EditorOrder(1100), EditorDisplay("Quality", "SSR Quality"), Tooltip("Screen Space Reflections quality.")]
             public Quality SSRQuality
             {
-                get => GraphicsSettings.SSRQuality;
-                set => GraphicsSettings.SSRQuality = value;
+                get => Graphics.SSRQuality;
+                set => Graphics.SSRQuality = value;
             }
 
             [EditorOrder(1200), EditorDisplay("Quality", "SSAO Quality"), Tooltip("Screen Space Ambient Occlusion quality setting.")]
             public Quality SSAOQuality
             {
-                get => GraphicsSettings.SSAOQuality;
-                set => GraphicsSettings.SSAOQuality = value;
+                get => Graphics.SSAOQuality;
+                set => Graphics.SSAOQuality = value;
             }
 
             [DefaultValue(Quality.High)]
             [EditorOrder(1250), EditorDisplay("Quality", "Volumetric Fog Quality"), Tooltip("Volumetric Fog quality setting.")]
             public Quality VolumetricFogQuality
             {
-                get => GraphicsSettings.VolumetricFogQuality;
-                set => GraphicsSettings.VolumetricFogQuality = value;
+                get => Graphics.VolumetricFogQuality;
+                set => Graphics.VolumetricFogQuality = value;
             }
 
             [DefaultValue(Quality.Medium)]
             [EditorOrder(1300), EditorDisplay("Quality", "Shadows Quality"), Tooltip("The shadows quality.")]
             public Quality ShadowsQuality
             {
-                get => GraphicsSettings.ShadowsQuality;
-                set => GraphicsSettings.ShadowsQuality = value;
+                get => Graphics.ShadowsQuality;
+                set => Graphics.ShadowsQuality = value;
             }
 
             [DefaultValue(Quality.Medium)]
             [EditorOrder(1310), EditorDisplay("Quality", "Shadow Maps Quality"), Tooltip("The shadow maps quality (textures resolution).")]
             public Quality ShadowMapsQuality
             {
-                get => GraphicsSettings.ShadowMapsQuality;
-                set => GraphicsSettings.ShadowMapsQuality = value;
+                get => Graphics.ShadowMapsQuality;
+                set => Graphics.ShadowMapsQuality = value;
             }
 
             [DefaultValue(false)]
             [EditorOrder(1320), EditorDisplay("Quality", "Allow CSM Blending"), Tooltip("Enables cascades splits blending for directional light shadows.")]
             public bool AllowCSMBlending
             {
-                get => GraphicsSettings.AllowCSMBlending;
-                set => GraphicsSettings.AllowCSMBlending = value;
+                get => Graphics.AllowCSMBlending;
+                set => Graphics.AllowCSMBlending = value;
             }
         }
 

@@ -50,9 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\UI\UICanvas.cs" />
-    <Compile Include="API\UI\UICanvas.Gen.cs" />
-    <Compile Include="API\UI\UIControl.cs" />
     <Compile Include="API\Animations\AlphaBlend.Gen.cs" />
     <Compile Include="API\Animations\AnimationGraph.cs" />
     <Compile Include="API\Animations\AnimGraph.Gen.cs" />
@@ -111,6 +108,7 @@
     <Compile Include="API\Graphics\GPUTexture.Gen.cs" />
     <Compile Include="API\Graphics\GPUTextureDescription.cs" />
     <Compile Include="API\Graphics\GPUTextureDescription.Gen.cs" />
+    <Compile Include="API\Graphics\Graphics.Gen.cs" />
     <Compile Include="API\Graphics\MaterialInfo.cs" />
     <Compile Include="API\Graphics\MaterialInfo.Gen.cs" />
     <Compile Include="API\Graphics\MaterialParams.cs" />
@@ -222,6 +220,7 @@
     <Compile Include="API\Platform\PlatformBase.Gen.cs" />
     <Compile Include="API\Platform\Window.cs" />
     <Compile Include="API\Platform\WindowBase.Gen.cs" />
+    <Compile Include="API\Profiler\Profiler.cs" />
     <Compile Include="API\Profiler\ProfilerCPU.Gen.cs" />
     <Compile Include="API\Profiler\ProfilerGPU.Gen.cs" />
     <Compile Include="API\Profiler\ProfilingTools.Gen.cs" />
@@ -241,15 +240,15 @@
     <Compile Include="API\Renderer\Renderer.cs" />
     <Compile Include="API\Renderer\Renderer.Gen.cs" />
     <Compile Include="API\Renderer\RenderList.Gen.cs" />
-    <Compile Include="API\Static\GraphicsSettings.cs" />
-    <Compile Include="API\Static\GraphicsSettings.Gen.cs" />
-    <Compile Include="API\Static\PluginManager.cs" />
-    <Compile Include="API\Static\PluginManager.Gen.cs" />
-    <Compile Include="API\Static\Profiler.cs" />
-    <Compile Include="API\Static\Scripting.cs" />
+    <Compile Include="API\Scripting\PluginManager.Gen.cs" />
+    <Compile Include="API\Scripting\PluginManager.cs" />
+    <Compile Include="API\Scripting\Scripting.cs" />
     <Compile Include="API\Terrain\Terrain.cs" />
     <Compile Include="API\Terrain\Terrain.Gen.cs" />
     <Compile Include="API\UI\TextRender.Gen.cs" />
+    <Compile Include="API\UI\UICanvas.cs" />
+    <Compile Include="API\UI\UICanvas.Gen.cs" />
+    <Compile Include="API\UI\UIControl.cs" />
     <Compile Include="API\UI\UIControl.Gen.cs" />
     <Compile Include="API\Utilities\Screenshot.Gen.cs" />
     <Compile Include="API\Visject\GraphParameter.Gen.cs" />
@@ -301,7 +300,7 @@
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\PostProcessEffect.cs" />
     <Compile Include="Engine\SceneReference.cs" />
-    <Compile Include="Engine\Exceptions\FlaxException.cs" />
+    <Compile Include="Engine\FlaxException.cs" />
     <Compile Include="GUI\CanvasContainer.cs" />
     <Compile Include="GUI\CanvasRootControl.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
