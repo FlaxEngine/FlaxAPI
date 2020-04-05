@@ -164,17 +164,5 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float Internal_GetTimeSinceStartup();
-
-        /// <summary>
-        /// Gets the amount of frames rendered during last second known as Frames Per Second. User scripts updates or fixed updates for physics may run at a different frequency than scene rendering. Use this property to get an accurate amount of frames rendered during the last second.
-        /// </summary>
-        [Tooltip("The amount of frames rendered during last second known as Frames Per Second. User scripts updates or fixed updates for physics may run at a different frequency than scene rendering. Use this property to get an accurate amount of frames rendered during the last second.")]
-        public static int FramesPerSecond
-        {
-            get { return Internal_GetFramesPerSecond(); }
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int Internal_GetFramesPerSecond();
     }
 }

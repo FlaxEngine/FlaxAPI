@@ -852,7 +852,7 @@ namespace FlaxEditor.Modules
             else
             {
                 // Close editor
-                Platform.RequestExit();
+                Engine.RequestExit();
             }
         }
 
@@ -902,7 +902,7 @@ namespace FlaxEditor.Modules
             {
                 Editor.Log("Closing Editor after project icon screenshot");
                 EditWin.Viewport.SaveProjectIconEnd();
-                Platform.RequestExit();
+                Engine.RequestExit();
             }
 
             // Update editor windows

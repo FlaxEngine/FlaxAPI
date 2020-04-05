@@ -802,7 +802,7 @@ namespace FlaxEditor.Windows
                 else if (_exitOnBuildEnd)
                 {
                     _exitOnBuildEnd = false;
-                    Platform.RequestExit(_lastBuildFailed ? 1 : 0);
+                    Engine.RequestExit(_lastBuildFailed ? 1 : 0);
                 }
             }
         }

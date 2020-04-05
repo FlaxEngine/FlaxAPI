@@ -389,16 +389,6 @@ namespace FlaxEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_GetWorkingDirectory();
 
-        /// Requests normal engine exit.
-        /// TODO: move it to Engine
-        public static void RequestExit(int exitCode = 0)
-        {
-            Internal_RequestExit(exitCode);
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_RequestExit(int exitCode);
-
         /// <summary>
         /// Shows the fatal error message to the user.
         /// </summary>

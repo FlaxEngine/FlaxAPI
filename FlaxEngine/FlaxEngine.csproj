@@ -90,7 +90,7 @@
     <Compile Include="API\Core\PlatformSettings.Gen.cs" />
     <Compile Include="API\CSG\Types.Gen.cs" />
     <Compile Include="API\Debug\DebugDraw.cs" />
-    <Compile Include="API\Debug\DebugDraw.Gen.cs" />
+    <Compile Include="API\Engine\Engine.Gen.cs" />
     <Compile Include="API\Engine\GameplayGlobals.Gen.cs" />
     <Compile Include="API\Engine\Globals.Gen.cs" />
     <Compile Include="API\Engine\Screen.Gen.cs" />
@@ -240,8 +240,8 @@
     <Compile Include="API\Renderer\Renderer.cs" />
     <Compile Include="API\Renderer\Renderer.Gen.cs" />
     <Compile Include="API\Renderer\RenderList.Gen.cs" />
-    <Compile Include="API\Scripting\PluginManager.Gen.cs" />
     <Compile Include="API\Scripting\PluginManager.cs" />
+    <Compile Include="API\Scripting\PluginManager.Gen.cs" />
     <Compile Include="API\Scripting\Scripting.cs" />
     <Compile Include="API\Terrain\Terrain.cs" />
     <Compile Include="API\Terrain\Terrain.Gen.cs" />
@@ -287,6 +287,7 @@
     <Compile Include="Engine\Collision.cs" />
     <Compile Include="Engine\Curve.cs" />
     <Compile Include="Engine\Debug.cs" />
+    <Compile Include="Engine\FlaxException.cs" />
     <Compile Include="Engine\FontReference.cs" />
     <Compile Include="Engine\IDrawable.cs" />
     <Compile Include="Engine\ILogger.cs" />
@@ -300,7 +301,6 @@
     <Compile Include="Engine\PhysicalMaterial.cs" />
     <Compile Include="Engine\PostProcessEffect.cs" />
     <Compile Include="Engine\SceneReference.cs" />
-    <Compile Include="Engine\FlaxException.cs" />
     <Compile Include="GUI\CanvasContainer.cs" />
     <Compile Include="GUI\CanvasRootControl.cs" />
     <Compile Include="GUI\ContainerControl.cs" />
@@ -351,8 +351,7 @@
     <Compile Include="GUI\Panels\UniformGridPanel.cs" />
     <Compile Include="GUI\Panels\VerticalPanel.cs" />
     <Compile Include="GUI\Panels\VScrollBar.cs" />
-    <Compile Include="Internals\ClassLibraryInitializer.cs" />
-    <Compile Include="Internals\DebugLogHandler.cs" />
+    <Compile Include="Engine\DebugLogHandler.cs" />
     <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\UnmanagedStringReader.cs" />
     <Compile Include="Json\JsonCustomSerializers\ExtendedDefaultContractResolver.cs" />

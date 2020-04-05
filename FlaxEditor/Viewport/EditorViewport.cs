@@ -615,7 +615,7 @@ namespace FlaxEditor.Viewport
             {
                 base.Draw();
 
-                int fps = Time.FramesPerSecond;
+                int fps = Engine.FramesPerSecond;
                 Color color = Color.Green;
                 if (fps < 13)
                     color = Color.Red;
