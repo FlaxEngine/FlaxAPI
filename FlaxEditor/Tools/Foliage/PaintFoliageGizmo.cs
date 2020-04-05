@@ -133,7 +133,7 @@ namespace FlaxEditor.Tools.Foliage
                 _foliageTypesIndices.Clear();
             for (int index = 0; index < foliageTypesCount; index++)
             {
-                var model = foliage.GetFoliageTypeModel(index);
+                var model = foliage.GetFoliageType(index).Model;
                 if (model && (!foliageTypeModelIdsToPaint.TryGetValue(model.ID, out var selected) || selected))
                 {
                     _foliageTypesIndices.Add(index);

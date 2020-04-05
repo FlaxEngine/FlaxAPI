@@ -57,7 +57,7 @@ namespace FlaxEditor.Tools.Foliage
             var instanceIndex = GizmoMode.SelectedInstanceIndex;
             if (instanceIndex < 0 || instanceIndex >= foliage.InstancesCount)
                 throw new InvalidOperationException("No foliage instance selected.");
-            foliage.GetInstance(instanceIndex, out var instance);
+            var instance = foliage.GetInstance(instanceIndex);
             return foliage.Transform.LocalToWorld(instance.Transform);
         }
 
@@ -96,7 +96,7 @@ namespace FlaxEditor.Tools.Foliage
             var instanceIndex = GizmoMode.SelectedInstanceIndex;
             if (instanceIndex < 0 || instanceIndex >= foliage.InstancesCount)
                 throw new InvalidOperationException("No foliage instance selected.");
-            foliage.GetInstance(instanceIndex, out var instance);
+            var instance = foliage.GetInstance(instanceIndex);
             var trans = foliage.Transform.LocalToWorld(instance.Transform);
 
             // Apply rotation
@@ -126,7 +126,8 @@ namespace FlaxEditor.Tools.Foliage
 
             // Transform foliage instance
             instance.Transform = foliage.Transform.WorldToLocal(trans);
-            foliage.SetInstance(instanceIndex, ref instance);
+            foliage.SetInstanceTransform(instanceIndex, ref instance.Transform);
+            foliage.RebuildClusters();
         }
 
         /// <inheritdoc />
@@ -152,7 +153,7 @@ namespace FlaxEditor.Tools.Foliage
             var instanceIndex = GizmoMode.SelectedInstanceIndex;
             if (instanceIndex < 0 || instanceIndex >= foliage.InstancesCount)
                 throw new InvalidOperationException("No foliage instance selected.");
-            foliage.GetInstance(instanceIndex, out var instance);
+            var instance = foliage.GetInstance(instanceIndex);
             var action = new EditFoliageAction(foliage);
 
             // Duplicate instance and select it
@@ -178,8 +179,8 @@ namespace FlaxEditor.Tools.Foliage
             if (instanceIndex < 0 || instanceIndex >= foliage.InstancesCount)
                 return;
 
-            foliage.GetInstance(instanceIndex, out var instance);
-            var model = foliage.GetFoliageTypeModel(instance.Type);
+            var instance = foliage.GetInstance(instanceIndex);
+            var model = foliage.GetFoliageType(instance.Type).Model;
             if (model)
             {
                 foliage.GetLocalToWorldMatrix(out var world);
@@ -201,7 +202,7 @@ namespace FlaxEditor.Tools.Foliage
             if (!foliage)
                 return;
             var ray = Owner.MouseRay;
-            FoliageTools.Intersects(foliage, ray, out _, out _, out var instanceIndex);
+            foliage.Intersects(ref ray, out _, out _, out var instanceIndex);
 
             // Change the selection (with undo)
             if (GizmoMode.SelectedInstanceIndex == instanceIndex)

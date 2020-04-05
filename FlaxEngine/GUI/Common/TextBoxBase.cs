@@ -660,7 +660,7 @@ namespace FlaxEngine.GUI
         /// <summary>
         /// Sets the caret position.
         /// </summary>
-        /// <param name="start">The caret position.</param>
+        /// <param name="caret">The caret position.</param>
         /// <param name="withScroll">If set to <c>true</c> with auto-scroll.</param>
         protected void SetSelection(int caret, bool withScroll = true)
         {

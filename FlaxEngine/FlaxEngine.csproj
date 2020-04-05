@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -50,8 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Actors\Foliage.cs" />
-    <Compile Include="API\Actors\Foliage.Gen.cs" />
     <Compile Include="API\Actors\NavLink.Gen.cs" />
     <Compile Include="API\Actors\NavMeshBoundsVolume.Gen.cs" />
     <Compile Include="API\Actors\SceneAnimationPlayer.Gen.cs" />
@@ -104,6 +102,9 @@
     <Compile Include="API\Engine\Globals.Gen.cs" />
     <Compile Include="API\Engine\Screen.Gen.cs" />
     <Compile Include="API\Engine\Time.Gen.cs" />
+    <Compile Include="API\Foliage\Foliage.Gen.cs" />
+    <Compile Include="API\Foliage\FoliageInstance.Gen.cs" />
+    <Compile Include="API\Foliage\FoliageType.Gen.cs" />
     <Compile Include="API\Graphics\Enums.Gen.cs" />
     <Compile Include="API\Graphics\GPUAdapter.Gen.cs" />
     <Compile Include="API\Graphics\GPUBuffer.Gen.cs" />
@@ -408,5 +409,6 @@
     <Compile Include="Utilities\StringUtils.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

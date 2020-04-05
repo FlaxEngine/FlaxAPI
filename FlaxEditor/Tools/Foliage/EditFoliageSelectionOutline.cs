@@ -47,8 +47,8 @@ namespace FlaxEditor.Tools.Foliage
                 return;
 
             // Draw single instance
-            foliage.GetInstance(instanceIndex, out var instance);
-            var model = foliage.GetFoliageTypeModel(instance.Type);
+            var instance = foliage.GetInstance(instanceIndex);
+            var model = foliage.GetFoliageType(instance.Type).Model;
             if (model)
             {
                 Transform instanceWorld = foliage.Transform.LocalToWorld(instance.Transform);

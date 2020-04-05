@@ -52,13 +52,13 @@ namespace FlaxEditor.Tools.Foliage
                 InstanceIndex = -1;
             }
 
-            private FlaxEngine.Foliage.Instance _options;
+            private FoliageInstance _instance;
 
             public void SyncOptions()
             {
                 if (Foliage != null && InstanceIndex > -1 && InstanceIndex < Foliage.InstancesCount)
                 {
-                    Foliage.GetInstance(InstanceIndex, out _options);
+                    _instance = Foliage.GetInstance(InstanceIndex);
                 }
             }
 
@@ -66,7 +66,8 @@ namespace FlaxEditor.Tools.Foliage
             {
                 if (Foliage != null && InstanceIndex > -1 && InstanceIndex < Foliage.InstancesCount)
                 {
-                    Foliage.SetInstance(InstanceIndex, ref _options);
+                    Foliage.SetInstanceTransform(InstanceIndex, ref _instance.Transform);
+                    Foliage.RebuildClusters();
                 }
             }
 
@@ -82,17 +83,17 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(0), EditorDisplay("Instance"), ReadOnly, Tooltip("The foliage instance model (read-only).")]
             public Model Model
             {
-                get => Foliage.GetFoliageTypeModel(_options.Type);
+                get => Foliage.GetFoliageType(_instance.Type).Model;
                 set => throw new Exception();
             }
 
             [EditorOrder(10), EditorDisplay("Instance"), Tooltip("The local-space position of the mesh relative to the foliage actor.")]
             public Vector3 Position
             {
-                get => _options.Transform.Translation;
+                get => _instance.Transform.Translation;
                 set
                 {
-                    _options.Transform.Translation = value;
+                    _instance.Transform.Translation = value;
                     SetOptions();
                 }
             }
@@ -100,10 +101,10 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(20), EditorDisplay("Instance"), Tooltip("The local-space rotation of the mesh relative to the foliage actor.")]
             public Quaternion Rotation
             {
-                get => _options.Transform.Orientation;
+                get => _instance.Transform.Orientation;
                 set
                 {
-                    _options.Transform.Orientation = value;
+                    _instance.Transform.Orientation = value;
                     SetOptions();
                 }
             }
@@ -111,10 +112,10 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(30), EditorDisplay("Instance"), Tooltip("The local-space scale of the mesh relative to the foliage actor.")]
             public Vector3 Scale
             {
-                get => _options.Transform.Scale;
+                get => _instance.Transform.Scale;
                 set
                 {
-                    _options.Transform.Scale = value;
+                    _instance.Transform.Scale = value;
                     SetOptions();
                 }
             }
