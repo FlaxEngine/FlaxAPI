@@ -1,8 +1,14 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
+using System;
+using System.Runtime.CompilerServices;
+
 namespace FlaxEngine
 {
-    public abstract partial class Script : ISceneObject
+    /// <summary>
+    /// Base class from which every every script derives.
+    /// </summary>
+    public abstract partial class Script : SceneObject, ISceneObject
     {
         /// <summary>
         /// Gets the scene object which contains this script.
@@ -138,5 +144,77 @@ namespace FlaxEngine
         public virtual void OnDebugDrawSelected()
         {
         }
+        
+        /// <summary>
+        /// Enable/disable script updates.
+        /// </summary>
+        [UnmanagedCall]
+        [HideInEditor]
+        public bool Enabled
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetEnabled(unmanagedPtr); }
+            set { Internal_SetEnabled(unmanagedPtr, value); }
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the actor owning that script.
+        /// </summary>
+        /// <remarks>
+        /// Changing script parent breaks any existing prefab links.
+        /// </remarks>
+        [UnmanagedCall]
+        [HideInEditor, NoAnimate]
+        public Actor Actor
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetActor(unmanagedPtr); }
+            set { Internal_SetActor(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
+#endif
+        }
+        
+        /// <summary>
+        /// Tries to find the script of the given type in all the loaded scenes.
+        /// </summary>
+        /// <param name="type">The type of the script to find.</param>
+        /// <returns>Script instance if found, null otherwise.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static Script Find(Type type)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_FindByType(type);
+#endif
+        }
+        
+        #region Internal Calls
+
+#if !UNIT_TEST_COMPILANT
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetEnabled(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetEnabled(IntPtr obj, bool val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Actor Internal_GetActor(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetActor(IntPtr obj, IntPtr val);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Script Internal_FindByType(Type type);
+#endif
+
+        #endregion
     }
 }

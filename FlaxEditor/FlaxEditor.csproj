@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -54,12 +54,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Editor\CodeEditor.Gen.cs" />
-    <Compile Include="API\Editor\CookingData.Gen.cs" />
-    <Compile Include="API\Editor\FoliageTools.Gen.cs" />
-    <Compile Include="API\Editor\GameCooker.Gen.cs" />
-    <Compile Include="API\Editor\ScriptsBuilder.Gen.cs" />
-    <Compile Include="API\Editor\TerrainTools.Gen.cs" />
     <Compile Include="ContentDomain.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
@@ -68,11 +62,17 @@
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="ViewportDebugDrawData.cs" />
     <Compile Include="API\Editor.cs" />
+    <Compile Include="API\Editor\CodeEditor.Gen.cs" />
+    <Compile Include="API\Editor\CookingData.Gen.cs" />
+    <Compile Include="API\Editor\FoliageTools.Gen.cs" />
+    <Compile Include="API\Editor\GameCooker.cs" />
+    <Compile Include="API\Editor\GameCooker.Gen.cs" />
     <Compile Include="API\Editor\PreviewsCache.cs" />
     <Compile Include="API\Editor\PreviewsCache.Gen.cs" />
-    <Compile Include="API\Editor\ViewportIconsRenderer.Gen.cs" />
-    <Compile Include="API\Editor\GameCooker.cs" />
     <Compile Include="API\Editor\ScriptsBuilder.cs" />
+    <Compile Include="API\Editor\ScriptsBuilder.Gen.cs" />
+    <Compile Include="API\Editor\TerrainTools.Gen.cs" />
+    <Compile Include="API\Editor\ViewportIconsRenderer.Gen.cs" />
     <Compile Include="Content\AssetItemConverter.cs" />
     <Compile Include="Content\IFileEntryAction.cs" />
     <Compile Include="Content\Create\CreateFileEntry.cs" />
@@ -656,6 +656,5 @@
     <Compile Include="Windows\Profiler\SingleChart.cs" />
     <Compile Include="Windows\Profiler\Timeline.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
