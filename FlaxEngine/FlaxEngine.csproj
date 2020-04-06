@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -262,7 +262,6 @@
     <Compile Include="Attributes\NoSerializeAttribute.cs" />
     <Compile Include="Attributes\RequireChildActorAttribute.cs" />
     <Compile Include="Attributes\SerializeAttribute.cs" />
-    <Compile Include="Attributes\UnmanagedCallAttribute.cs" />
     <Compile Include="Attributes\Editor\AssetReferenceAttribute.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAliasAttribute.cs" />
     <Compile Include="Attributes\Editor\CustomEditorAttribute.cs" />

@@ -16,15 +16,11 @@ namespace FlaxEngine
         [HideInEditor, NoSerialize]
         public Scene Scene
         {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
             get
             {
                 var parent = Actor;
                 return parent ? parent.Scene : null;
             }
-#endif
         }
 
         /// <summary>
@@ -52,17 +48,9 @@ namespace FlaxEngine
         /// </summary>
         /// <typeparam name="T">The type of the script to find.</typeparam>
         /// <returns>Script instance if found, null otherwise.</returns>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static T Find<T>() where T : Script
         {
-#if UNIT_TEST_COMPILANT
-            return null;
-#else
             return Internal_FindByType(typeof(T)) as T;
-#endif
         }
 
         /// <summary>
@@ -144,20 +132,15 @@ namespace FlaxEngine
         public virtual void OnDebugDrawSelected()
         {
         }
-        
+
         /// <summary>
         /// Enable/disable script updates.
         /// </summary>
-        [UnmanagedCall]
         [HideInEditor]
         public bool Enabled
         {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
             get { return Internal_GetEnabled(unmanagedPtr); }
             set { Internal_SetEnabled(unmanagedPtr, value); }
-#endif
         }
 
         /// <summary>
@@ -166,36 +149,23 @@ namespace FlaxEngine
         /// <remarks>
         /// Changing script parent breaks any existing prefab links.
         /// </remarks>
-        [UnmanagedCall]
         [HideInEditor, NoAnimate]
         public Actor Actor
         {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
             get { return Internal_GetActor(unmanagedPtr); }
             set { Internal_SetActor(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
-#endif
         }
-        
+
         /// <summary>
         /// Tries to find the script of the given type in all the loaded scenes.
         /// </summary>
         /// <param name="type">The type of the script to find.</param>
         /// <returns>Script instance if found, null otherwise.</returns>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static Script Find(Type type)
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             return Internal_FindByType(type);
-#endif
         }
-        
+
         #region Internal Calls
 
 #if !UNIT_TEST_COMPILANT

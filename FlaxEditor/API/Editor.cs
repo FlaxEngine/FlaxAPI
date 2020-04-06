@@ -685,17 +685,9 @@ namespace FlaxEditor
         /// <param name="inputPath">The source file path.</param>
         /// <param name="outputPath">The result asset file path.</param>
         /// <returns>True if importing failed, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool Import(string inputPath, string outputPath)
         {
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             return Internal_Import(inputPath, outputPath, IntPtr.Zero);
-#endif
         }
 
         /// <summary>
@@ -705,21 +697,14 @@ namespace FlaxEditor
         /// <param name="outputPath">The result asset file path.</param>
         /// <param name="settings">The settings.</param>
         /// <returns>True if importing failed, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool Import(string inputPath, string outputPath, TextureImportSettings settings)
         {
             if (settings == null)
                 throw new ArgumentNullException();
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
+
             TextureImportSettings.InternalOptions internalOptions;
             settings.ToInternal(out internalOptions);
             return Internal_ImportTexture(inputPath, outputPath, ref internalOptions);
-#endif
         }
 
         /// <summary>
@@ -729,21 +714,14 @@ namespace FlaxEditor
         /// <param name="outputPath">The result asset file path.</param>
         /// <param name="settings">The settings.</param>
         /// <returns>True if importing failed, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool Import(string inputPath, string outputPath, ModelImportSettings settings)
         {
             if (settings == null)
                 throw new ArgumentNullException();
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
+
             ModelImportSettings.InternalOptions internalOptions;
             settings.ToInternal(out internalOptions);
             return Internal_ImportModel(inputPath, outputPath, ref internalOptions);
-#endif
         }
 
         /// <summary>
@@ -753,21 +731,14 @@ namespace FlaxEditor
         /// <param name="outputPath">The result asset file path.</param>
         /// <param name="settings">The settings.</param>
         /// <returns>True if importing failed, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool Import(string inputPath, string outputPath, AudioImportSettings settings)
         {
             if (settings == null)
                 throw new ArgumentNullException();
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
+
             AudioImportSettings.InternalOptions internalOptions;
             settings.ToInternal(out internalOptions);
             return Internal_ImportAudio(inputPath, outputPath, ref internalOptions);
-#endif
         }
 
         /// <summary>
@@ -776,20 +747,12 @@ namespace FlaxEditor
         /// <param name="outputPath">The result asset file path.</param>
         /// <param name="obj">The obj to serialize.</param>
         /// <returns>True if saving failed, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool SaveJsonAsset(string outputPath, object obj)
         {
             if (obj == null)
                 throw new ArgumentNullException();
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             string str = JsonSerializer.Serialize(obj);
             return Internal_SaveJsonAsset(outputPath, str, obj.GetType().FullName);
-#endif
         }
 
         /// <summary>
@@ -874,17 +837,9 @@ namespace FlaxEditor
         /// <summary>
         /// Closes editor splash screen popup window.
         /// </summary>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static void CloseSplashScreen()
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             Internal_CloseSplashScreen();
-#endif
         }
 
         /// <summary>
@@ -892,17 +847,9 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="type">New asset type.</param>
         /// <param name="outputPath">Output asset path.</param>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool CreateAsset(NewAssetType type, string outputPath)
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             return Internal_CreateAsset(type, outputPath);
-#endif
         }
 
         /// <summary>
@@ -910,17 +857,9 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="extension">The file extension.</param>
         /// <returns>True if can import files with given extension, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool CanImport(string extension)
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             return Internal_CanImport(extension);
-#endif
         }
 
         /// <summary>
@@ -928,17 +867,9 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="path">The asset path (absolute path with an extension).</param>
         /// <returns>True if can export given asset, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool CanExport(string path)
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             return Internal_CanExport(path);
-#endif
         }
 
         /// <summary>
@@ -947,30 +878,17 @@ namespace FlaxEditor
         /// <param name="inputPath">The input asset path (absolute path with an extension).</param>
         /// <param name="outputFolder">The output folder path (filename with extension is computed by auto).</param>
         /// <returns>True if given asset has been exported, otherwise false.</returns>
-#if UNIT_TEST_COMPILANT
-        [Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        [UnmanagedCall]
         public static bool Export(string inputPath, string outputFolder)
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             return Internal_Export(inputPath, outputFolder);
-#endif
         }
 
         /// <summary>
         /// Checks if every managed assembly has been loaded (including user scripts assembly).
         /// </summary>
-        [UnmanagedCall]
         public static bool IsEveryAssemblyLoaded
         {
-#if UNIT_TEST_COMPILANT
-            get; set;
-#else
             get { return Internal_GetIsEveryAssemblyLoaded(); }
-#endif
         }
 
         #region Env Probes Baking
