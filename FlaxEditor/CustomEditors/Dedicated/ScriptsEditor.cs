@@ -9,7 +9,6 @@ using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
-using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;

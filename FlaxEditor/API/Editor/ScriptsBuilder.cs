@@ -1,39 +1,11 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Runtime.CompilerServices;
 
-namespace FlaxEditor.Scripting
+namespace FlaxEditor
 {
-    /// <summary>
-    /// Game scrips building service. Compiles user C# scripts into binary assemblies.
-    /// Exposes many events used to track scripts compilation and reloading.
-    /// </summary>
-    public static partial class ScriptsBuilder
+    partial class ScriptsBuilder
     {
-        public enum BuildMode
-        {
-            Debug = 0,
-            Release = 1,
-        };
-
-        // TODO: expose api to inject custom defines to compilation and more customizations
-
-        internal enum InBuildEditorTypes
-        {
-            Custom,
-            SystemDefault,
-            VS2008,
-            VS2010,
-            VS2012,
-            VS2013,
-            VS2015,
-            VS2017,
-            VS2019,
-
-            MAX
-        };
-
         /// <summary>
         /// Compilation end event delegate.
         /// </summary>
@@ -114,15 +86,6 @@ namespace FlaxEditor.Scripting
         /// </summary>
         public static event Action CodeEditorAsyncOpenEnd;
 
-        /// <summary>
-        /// Checks if need to compile source code. If so calls compilation.
-        /// </summary>
-        public static void CheckForCompile()
-        {
-            if (IsSourceDirty)
-                Compile();
-        }
-
         internal enum EventType
         {
             CompileBegin = 0,
@@ -183,29 +146,5 @@ namespace FlaxEditor.Scripting
             else
                 CodeEditorAsyncOpenBegin?.Invoke();
         }
-
-        internal enum ApiEngineType
-        {
-            Engine = 0,
-            Editor = 1,
-        }
-
-        #region Internal Calls
-
-#if !UNIT_TEST_COMPILANT
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern unsafe void Internal_GetExistingEditors(byte* resultArray);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_OpenSolution(InBuildEditorTypes editorType);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_OpenFile(InBuildEditorTypes editorType, string path, int line);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GenerateApi(ApiEngineType type);
-#endif
-
-        #endregion
     }
 }

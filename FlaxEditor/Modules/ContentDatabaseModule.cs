@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Settings;
-using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 

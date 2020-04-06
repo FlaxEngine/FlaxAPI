@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.Dialogs;
-using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
 

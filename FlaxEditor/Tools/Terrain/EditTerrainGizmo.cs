@@ -259,7 +259,7 @@ namespace FlaxEditor.Tools.Terrain
                     {
                         // Perform detailed tracing
                         var terrain = (FlaxEngine.Terrain)hit.Actor;
-                        TerrainTools.RayCastChunk(terrain, ray, out _, out var patchCoord, out var chunkCoord);
+                        terrain.RayCast(ray, out _, out var patchCoord, out var chunkCoord);
                         Mode.SetSelectedChunk(ref patchCoord, ref chunkCoord);
                     }
 

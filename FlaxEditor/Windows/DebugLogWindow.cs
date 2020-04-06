@@ -8,7 +8,6 @@ using System.Xml;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Options;
-using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FlaxEditor.Options;
-using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -85,7 +84,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         {
         }
 
-        internal InBuildSourceCodeEditor GetInBuildEditor(ScriptsBuilder.InBuildEditorTypes editorType)
+        internal InBuildSourceCodeEditor GetInBuildEditor(CodeEditorTypes editorType)
         {
             for (var i = 0; i < Editors.Count; i++)
             {
@@ -160,13 +159,13 @@ namespace FlaxEditor.Modules.SourceCodeEditing
 
         private unsafe void GetInBuildEditors()
         {
-            var resultArray = stackalloc byte[(int)ScriptsBuilder.InBuildEditorTypes.MAX];
-            ScriptsBuilder.Internal_GetExistingEditors(resultArray);
-            for (int i = 0; i < (int)ScriptsBuilder.InBuildEditorTypes.MAX; i++)
+            var resultArray = stackalloc int[(int)CodeEditorTypes.MAX];
+            ScriptsBuilder.GetExistingEditors(resultArray, (int)CodeEditorTypes.MAX);
+            for (int i = 0; i < (int)CodeEditorTypes.MAX; i++)
             {
                 if (resultArray[i] != 0)
                 {
-                    var editor = new InBuildSourceCodeEditor((ScriptsBuilder.InBuildEditorTypes)i);
+                    var editor = new InBuildSourceCodeEditor((CodeEditorTypes)i);
                     AddEditor(editor);
                 }
             }
@@ -293,7 +292,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             // Skip editor
             if (name.Name == "FlaxEditor")
                 return false;
-            
+
             // Skip assemblies not referencing editor
             var references = a.GetReferencedAssemblies();
             return references.Any(x => x.Name == "FlaxEditor");

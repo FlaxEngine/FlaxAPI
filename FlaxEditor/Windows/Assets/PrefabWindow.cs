@@ -7,7 +7,6 @@ using FlaxEditor.CustomEditors;
 using FlaxEditor.Gizmo;
 using FlaxEditor.GUI;
 using FlaxEditor.SceneGraph;
-using FlaxEditor.Scripting;
 using FlaxEditor.Viewport;
 using FlaxEngine;
 using FlaxEngine.GUI;

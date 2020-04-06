@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using FlaxEditor.Scripting;
 using FlaxEngine.Utilities;
 
 namespace FlaxEditor.States

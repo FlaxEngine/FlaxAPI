@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
-using System;
 using FlaxEngine;
 
 namespace FlaxEditor.Tools.Terrain.Sculpt
@@ -54,7 +53,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             Profiler.EndEvent();
 
             // Update terrain patch
-            TerrainTools.ModifyHolesMask(p.Terrain, ref p.PatchCoord, new IntPtr(p.TempBuffer), ref p.ModifiedOffset, ref p.ModifiedSize);
+            TerrainTools.ModifyHolesMask(p.Terrain, ref p.PatchCoord, tempBuffer, ref p.ModifiedOffset, ref p.ModifiedSize);
         }
     }
 }

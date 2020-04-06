@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
-using FlaxEditor.Scripting;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
 using Animation = FlaxEditor.Surface.Archetypes.Animation;

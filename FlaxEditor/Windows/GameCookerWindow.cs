@@ -106,7 +106,8 @@ namespace FlaxEditor.Windows
 
                 public virtual void Build()
                 {
-                    GameCooker.Build(BuildPlatform, ConfigurationMode, Output, Options, Defines);
+                    var output = StringUtils.ConvertRelativePathToAbsolute(Globals.ProjectFolder, StringUtils.NormalizePath(Output));
+                    GameCooker.Build(BuildPlatform, ConfigurationMode, output, Options, Defines);
                 }
             }
 
@@ -450,7 +451,7 @@ namespace FlaxEditor.Windows
             sections.SelectedTabIndex = 1;
         }
 
-        private void OnGameCookerEvent(GameCooker.EventType type, ref GameCooker.Options options1)
+        private void OnGameCookerEvent(GameCooker.EventType type)
         {
             if (type == GameCooker.EventType.BuildStarted)
             {

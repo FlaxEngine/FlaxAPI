@@ -10,7 +10,6 @@ using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.GUI.Input;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
-using FlaxEditor.Scripting;
 using FlaxEditor.Utilities;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Windows;
@@ -358,12 +357,6 @@ namespace FlaxEditor.Modules
             cm.AddSeparator();
             cm.AddButton("Open project...", OpenProject);
             cm.AddSeparator();
-            if (Editor.IsDevInstance())
-            {
-                cm.AddButton("Regenerate Engine API", () => ScriptsBuilder.Internal_GenerateApi(ScriptsBuilder.ApiEngineType.Engine));
-                cm.AddButton("Regenerate Editor API", () => ScriptsBuilder.Internal_GenerateApi(ScriptsBuilder.ApiEngineType.Editor));
-                cm.AddSeparator();
-            }
             cm.AddButton("Exit", "Alt+F4", () => Editor.Windows.MainWindow.Close(ClosingReason.User));
 
             // Edit

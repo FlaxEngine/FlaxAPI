@@ -8,97 +8,7 @@ using FlaxEngine;
 
 namespace FlaxEditor
 {
-    /// <summary>
-    /// Game building options. Used as flags.
-    /// </summary>
-    [Flags]
-    public enum BuildOptions
-    {
-        /// <summary>
-        /// No special options declared.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// Shows the output directory folder on building end.
-        /// </summary>
-        ShowOutput = 1 << 0,
-    }
-
-    /// <summary>
-    /// Game build target platform.
-    /// </summary>
-    public enum BuildPlatform
-    {
-        /// <summary>
-        /// Windows (x86 architecture)
-        /// </summary>
-        [EditorDisplay(null, "Windows 32bit")]
-        [Tooltip("Windows (x86 architecture)")]
-        Windows32 = 1,
-
-        /// <summary>
-        /// Windows (x64 architecture)
-        /// </summary>
-        [EditorDisplay(null, "Windows 64bit")]
-        [Tooltip("Windows (x64 architecture)")]
-        Windows64 = 2,
-
-        /// <summary>
-        /// Universal Windows Platform (UWP) (x86 architecture)
-        /// </summary>
-        [EditorDisplay(null, "Windows Store x86")]
-        [Tooltip("Windows Store (UWP) (x86 architecture)")]
-        WindowsStoreX86 = 3,
-
-        /// <summary>
-        /// Universal Windows Platform (UWP) (x64 architecture)
-        /// </summary>
-        [EditorDisplay(null, "Windows Store x64")]
-        [Tooltip("Windows Store (UWP) (x64 architecture)")]
-        WindowsStoreX64 = 4,
-
-        /// <summary>
-        /// Xbox One
-        /// </summary>
-        [EditorDisplay(null, " Xbox One")]
-        XboxOne = 5,
-
-        /// <summary>
-        /// Linux (x64 architecture)
-        /// </summary>
-        [EditorDisplay(null, " Linux x64")]
-        LinuxX64 = 6,
-
-        /// <summary>
-        /// PlayStation 4
-        /// </summary>
-        [EditorDisplay(null, " PlayStation 4")]
-        PS4 = 7,
-    }
-
-    /// <summary>
-    /// Game build configuration modes.
-    /// </summary>
-    public enum BuildConfiguration
-    {
-        /// <summary>
-        /// Debug configuration. Without optimizations but with full debugging information.
-        /// </summary>
-        Debug = 0,
-
-        /// <summary>
-        /// Development configuration. With basic optimizations and partial debugging data.
-        /// </summary>
-        Development = 1,
-
-        /// <summary>
-        /// Shipping configuration. With full optimization and no debugging data.
-        /// </summary>
-        Release = 2,
-    }
-
-    public static partial class GameCooker
+    partial class GameCooker
     {
         /// <summary>
         /// Build options data.
@@ -131,33 +41,6 @@ namespace FlaxEditor
             public string[] Defines;
         }
 
-        private static Options _lastOptions;
-
-        /// <summary>
-        /// Starts building game for the specified platform.
-        /// </summary>
-        /// <param name="platform">The target platform.</param>
-        /// <param name="configuration">The build configuration.</param>
-        /// <param name="options">The build options.</param>
-        /// <param name="outputPath">The output path (output directory).</param>
-        /// <param name="defines">Scripts compilation define symbols (macros).</param>
-        public static void Build(BuildPlatform platform, BuildConfiguration configuration, string outputPath, BuildOptions options = BuildOptions.None, string[] defines = null)
-        {
-            if (IsRunning)
-                throw new InvalidOperationException("Cannot start build while already running.");
-            if (string.IsNullOrEmpty(outputPath))
-                throw new ArgumentNullException(nameof(outputPath));
-
-            // Cache options (reuse them for build step events)
-            _lastOptions.Platform = platform;
-            _lastOptions.Configuration = configuration;
-            _lastOptions.Flags = options;
-            _lastOptions.OutputPath = StringUtils.ConvertRelativePathToAbsolute(Globals.ProjectFolder, StringUtils.NormalizePath(outputPath));
-            _lastOptions.Defines = defines;
-
-            Internal_Build(platform, configuration, outputPath, options, defines);
-        }
-
         /// <summary>
         /// Building event type.
         /// </summary>
@@ -184,7 +67,7 @@ namespace FlaxEditor
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="options">The build options (read only).</param>
-        public delegate void BuildEventDelegate(EventType type, ref Options options);
+        public delegate void BuildEventDelegate(EventType type);
 
         /// <summary>
         /// Game building progress reporting delegate type.
@@ -225,7 +108,7 @@ namespace FlaxEditor
 
         internal static void Internal_OnEvent(EventType type)
         {
-            Event?.Invoke(type, ref _lastOptions);
+            Event?.Invoke(type);
         }
 
         internal static void Internal_OnProgress(string info, float totalProgress)
@@ -257,14 +140,5 @@ namespace FlaxEditor
             Debug.Write(LogType.Info, "Use game plugin from assembly " + assembly.FullName);
             result = true;
         }
-
-        #region Internal Calls
-
-#if !UNIT_TEST_COMPILANT
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Build(BuildPlatform platform, BuildConfiguration configuration, string outputPath, BuildOptions options, string[] defines);
-#endif
-
-        #endregion
     }
 }

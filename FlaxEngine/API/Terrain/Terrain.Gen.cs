@@ -411,6 +411,23 @@ namespace FlaxEngine
         internal static extern bool Internal_RayCast(IntPtr obj, ref Vector3 origin, ref Vector3 direction, ref float resultHitDistance, float maxDistance);
 
         /// <summary>
+        /// Performs a raycast against this terrain collision shape. Returns the hit chunk.
+        /// </summary>
+        /// <param name="ray">The ray to test.</param>
+        /// <param name="resultHitDistance">The raycast result hit position distance from the ray origin. Valid only if raycast hits anything.</param>
+        /// <param name="resultPatchCoord">The raycast result hit terrain patch coordinates (x and z). Valid only if raycast hits anything.</param>
+        /// <param name="resultChunkCoord">The raycast result hit terrain chunk coordinates (relative to the patch, x and z). Valid only if raycast hits anything.</param>
+        /// <param name="maxDistance">The maximum distance the ray should check for collisions.</param>
+        /// <returns>True if ray hits an object, otherwise false.</returns>
+        public bool RayCast(Ray ray, out float resultHitDistance, out Int2 resultPatchCoord, out Int2 resultChunkCoord, float maxDistance = float.MaxValue)
+        {
+            return Internal_RayCast1(unmanagedPtr, ref ray, out resultHitDistance, out resultPatchCoord, out resultChunkCoord, maxDistance);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_RayCast1(IntPtr obj, ref Ray ray, out float resultHitDistance, out Int2 resultPatchCoord, out Int2 resultChunkCoord, float maxDistance);
+
+        /// <summary>
         /// Performs a raycast against terrain collision, returns results in a RayCastHit structure.
         /// </summary>
         /// <param name="origin">The origin of the ray.</param>
@@ -420,11 +437,11 @@ namespace FlaxEngine
         /// <returns>True if ray hits an object, otherwise false.</returns>
         public bool RayCast(Vector3 origin, Vector3 direction, out RayCastHit hitInfo, float maxDistance = float.MaxValue)
         {
-            return Internal_RayCast1(unmanagedPtr, ref origin, ref direction, out hitInfo, maxDistance);
+            return Internal_RayCast2(unmanagedPtr, ref origin, ref direction, out hitInfo, maxDistance);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_RayCast1(IntPtr obj, ref Vector3 origin, ref Vector3 direction, out RayCastHit hitInfo, float maxDistance);
+        internal static extern bool Internal_RayCast2(IntPtr obj, ref Vector3 origin, ref Vector3 direction, out RayCastHit hitInfo, float maxDistance);
 
         /// <summary>
         /// Gets a point on the terrain collider that is closest to a given location. Can be used to find a hit location or position to apply explosion force or any other special effects.

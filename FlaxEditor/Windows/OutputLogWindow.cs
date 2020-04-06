@@ -260,7 +260,7 @@ namespace FlaxEditor.Windows
             Refresh();
         }
 
-        private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
+        private void OnGameCookerEvent(GameCooker.EventType eventType)
         {
             if (eventType == GameCooker.EventType.BuildFailed && !Editor.IsHeadlessMode)
                 FocusOrShow();

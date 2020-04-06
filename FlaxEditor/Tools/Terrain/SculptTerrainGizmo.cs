@@ -167,7 +167,7 @@ namespace FlaxEditor.Tools.Terrain
                 // Freeze cursor
             }
             // Perform detailed tracing to find cursor location on the terrain
-            else if (TerrainTools.RayCastChunk(terrain, mouseRay, out var closest, out var patchCoord, out var chunkCoord))
+            else if (terrain.RayCast(mouseRay, out var closest, out var patchCoord, out var chunkCoord))
             {
                 var hitLocation = mouseRay.GetPoint(closest);
                 Mode.SetCursor(ref hitLocation);

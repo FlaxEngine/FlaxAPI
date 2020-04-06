@@ -12,7 +12,6 @@ using FlaxEditor.Content.Thumbnails;
 using FlaxEditor.Modules;
 using FlaxEditor.Modules.SourceCodeEditing;
 using FlaxEditor.Options;
-using FlaxEditor.Scripting;
 using FlaxEditor.States;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
@@ -23,6 +22,9 @@ using FlaxEngine.Json;
 
 namespace FlaxEditor
 {
+    /// <summary>
+    /// The main managed editor class. Editor root object.
+    /// </summary>
     public sealed partial class Editor
     {
         /// <summary>
@@ -869,6 +871,108 @@ namespace FlaxEditor
             Internal_GetEditorBoxWithChildren(actor.unmanagedPtr, out box);
         }
 
+        /// <summary>
+        /// Closes editor splash screen popup window.
+        /// </summary>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static void CloseSplashScreen()
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            Internal_CloseSplashScreen();
+#endif
+        }
+
+        /// <summary>
+        /// Creates new asset at the target location.
+        /// </summary>
+        /// <param name="type">New asset type.</param>
+        /// <param name="outputPath">Output asset path.</param>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool CreateAsset(NewAssetType type, string outputPath)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_CreateAsset(type, outputPath);
+#endif
+        }
+
+        /// <summary>
+        /// Checks if can import asset with the given extension.
+        /// </summary>
+        /// <param name="extension">The file extension.</param>
+        /// <returns>True if can import files with given extension, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool CanImport(string extension)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_CanImport(extension);
+#endif
+        }
+
+        /// <summary>
+        /// Checks if the given asset can be exported.
+        /// </summary>
+        /// <param name="path">The asset path (absolute path with an extension).</param>
+        /// <returns>True if can export given asset, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool CanExport(string path)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_CanExport(path);
+#endif
+        }
+
+        /// <summary>
+        /// Exports the given asset to the specified file location.
+        /// </summary>
+        /// <param name="inputPath">The input asset path (absolute path with an extension).</param>
+        /// <param name="outputFolder">The output folder path (filename with extension is computed by auto).</param>
+        /// <returns>True if given asset has been exported, otherwise false.</returns>
+#if UNIT_TEST_COMPILANT
+        [Obsolete("Unit tests, don't support methods calls.")]
+#endif
+        [UnmanagedCall]
+        public static bool Export(string inputPath, string outputFolder)
+        {
+#if UNIT_TEST_COMPILANT
+            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
+#else
+            return Internal_Export(inputPath, outputFolder);
+#endif
+        }
+
+        /// <summary>
+        /// Checks if every managed assembly has been loaded (including user scripts assembly).
+        /// </summary>
+        [UnmanagedCall]
+        public static bool IsEveryAssemblyLoaded
+        {
+#if UNIT_TEST_COMPILANT
+            get; set;
+#else
+            get { return Internal_GetIsEveryAssemblyLoaded(); }
+#endif
+        }
+
         #region Env Probes Baking
 
         /// <summary>
@@ -1247,6 +1351,24 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_GetParticleEmitterParamValue(IntPtr effect, ref Guid paramId, IntPtr ptr);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_CloseSplashScreen();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CreateAsset(NewAssetType type, string outputPath);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CanImport(string extension);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_CanExport(string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_Export(string inputPath, string outputFolder);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool Internal_GetIsEveryAssemblyLoaded();
 #endif
 
         #endregion
