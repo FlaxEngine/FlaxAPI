@@ -42,26 +42,6 @@ namespace FlaxEngine
             }
         }
 
-        /*/// <summary>
-        /// Gets a list of all scripts attached to this object. It's read-only array. Use AddScript/RemoveScript to modify collection.
-        /// </summary>
-        [UnmanagedCall]
-        [HideInEditor, NoAnimate, EditorDisplay("Scripts", EditorDisplayAttribute.InlineStyle), EditorOrder(-5), MemberCollection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]
-        public Script[] Scripts
-        {
-#if UNIT_TEST_COMPILANT
-			get; set;
-#else
-            get
-            {
-                if (Internal_GetScriptsCount(unmanagedPtr) == 0)
-                    return Utils.GetEmptyArray<Script>();
-                return Internal_GetScripts(unmanagedPtr);
-            }
-            internal set { }
-#endif
-        }*/
-
         /// <summary>
         /// Returns true if actor has any children
         /// </summary>
@@ -159,64 +139,6 @@ namespace FlaxEngine
         {
             return GetScript(typeof(T)) as T;
         }
-
-        /*/// <summary>
-        /// Serializes the actor object to the raw bytes. Serialized are actor properties and scripts but no child actors.
-        /// Serializes references to the other objects in a proper way using IDs.
-        /// </summary>
-        /// <param name="actor">The actor.</param>
-        /// <returns>The bytes array with serialized actor data. Returns null if fails.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        public static byte[] ToBytes(Actor actor)
-        {
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            return Internal_ToBytes1(GetUnmanagedPtr(actor));
-#endif
-        }
-        /// <summary>
-        /// Serializes the actor objects to the raw bytes. Serialized are actor properties and scripts but no child actors.
-        /// Serializes references to the other objects in a proper way using IDs.
-        /// </summary>
-        /// <param name="actors">The actors.</param>
-        /// <returns>The bytes array with serialized actors data. Returns null if fails.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        public static byte[] ToBytes(Actor[] actors)
-        {
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            return Internal_ToBytes2(Array.ConvertAll(actors, GetUnmanagedPtr));
-#endif
-        }
-
-        /// <summary>
-        /// Deserializes the actor objects from the raw bytes. Deserialized are actor properties and scripts but no child actors.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="idsMapping">
-        /// The serialized objects ids mapping table used to change object ids and keep valid reference
-        /// links. Use null value to skip ids mapping. To generate a new ids for the loaded objects use <see cref="TryGetSerializedObjectsIds"/> to extract the object ids from the data.
-        /// </param>
-        /// <returns>Spawned actors deserialized from the data. Returns null if fails.</returns>
-#if UNIT_TEST_COMPILANT
-		[Obsolete("Unit tests, don't support methods calls.")]
-#endif
-        public static Actor[] FromBytes(byte[] data, Dictionary<Guid, Guid> idsMapping = null)
-        {
-#if UNIT_TEST_COMPILANT
-			throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
-            Guid[] keys = idsMapping?.Keys.ToArray();
-            Guid[] values = idsMapping?.Values.ToArray();
-            return Internal_FromBytes(data, keys, values);
-#endif
-        }*/
 
         /// <summary>
         /// Searches for all actors of a specific type in this actor children list.

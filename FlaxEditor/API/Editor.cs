@@ -59,15 +59,8 @@ namespace FlaxEditor
         /// <summary>
         /// Gets a value indicating whether this Editor is running a dev instance of the engine.
         /// </summary>
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool IsDevInstance();
-#else
-        internal static bool IsDevInstance()
-        {
-            return false;
-        }
-#endif
 
         /// <summary>
         /// The windows module.
@@ -1212,7 +1205,6 @@ namespace FlaxEditor
             return true;
         }
 
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int Internal_ReadOutputLogs(string[] outMessages, byte[] outLogTypes, long[] outLogTimes);
 
@@ -1287,7 +1279,6 @@ namespace FlaxEditor
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetIsEveryAssemblyLoaded();
-#endif
 
         #endregion
     }

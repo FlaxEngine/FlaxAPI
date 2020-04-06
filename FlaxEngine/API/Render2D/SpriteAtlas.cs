@@ -101,45 +101,4 @@ namespace FlaxEngine
             }
         }
     }
-
-    /*partial class SpriteAtlas
-    {
-        /// <summary>
-        /// Gets the sprite at the given index.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <returns>The sprite</returns>
-        public Sprite GetSprite(int index)
-        {
-            return new Sprite(this, index);
-        }
-
-        /// <summary>
-        /// Gets the sprite area (normalized).
-        /// </summary>
-        /// <param name="index">The sprite index.</param>
-        /// <param name="spriteArea">The result sprite area.</param>
-        public void GetSpriteArea(int index, out Rectangle spriteArea)
-        {
-            Internal_GetSpriteArea(unmanagedPtr, index, out spriteArea);
-        }
-
-        #region Internal Calls
-
-#if !UNIT_TEST_COMPILANT
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetSpriteName(IntPtr obj, int index);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetSpriteName(IntPtr obj, int index, string value);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetSpriteArea(IntPtr obj, int index, out Rectangle resultAsRef);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetSpriteArea(IntPtr obj, int index, ref Rectangle value);
-#endif
-
-        #endregion
-    }*/
 }

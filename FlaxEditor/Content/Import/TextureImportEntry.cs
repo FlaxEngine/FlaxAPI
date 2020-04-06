@@ -489,10 +489,8 @@ namespace FlaxEditor.Content.Import
 
         #region Internal Calls
 
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetTextureImportOptions(string path, out TextureImportSettings.InternalOptions result);
-#endif
 
         #endregion
     }

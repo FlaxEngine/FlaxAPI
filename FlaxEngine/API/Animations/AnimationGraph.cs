@@ -194,7 +194,6 @@ namespace FlaxEngine
 
         #region Internal Calls
 
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_HasConnection(ref CustomNode.Context context, int boxId);
 
@@ -203,7 +202,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Internal_GetOutputImpulseData(ref CustomNode.Context context);
-#endif
 
         #endregion
     }

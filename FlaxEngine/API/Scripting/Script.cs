@@ -168,7 +168,6 @@ namespace FlaxEngine
 
         #region Internal Calls
 
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetEnabled(IntPtr obj);
 
@@ -183,7 +182,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Script Internal_FindByType(Type type);
-#endif
 
         #endregion
     }

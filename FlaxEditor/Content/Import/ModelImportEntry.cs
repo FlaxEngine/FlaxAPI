@@ -394,10 +394,8 @@ namespace FlaxEditor.Content.Import
 
         #region Internal Calls
 
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetModelImportOptions(string path, out ModelImportSettings.InternalOptions result);
-#endif
 
         #endregion
     }

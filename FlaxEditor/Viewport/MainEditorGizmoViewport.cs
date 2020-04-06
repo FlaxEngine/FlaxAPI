@@ -405,9 +405,7 @@ namespace FlaxEditor.Viewport
 
             if (ShowNavigation)
             {
-#if !UNIT_TEST_COMPILANT
                 Editor.Internal_DrawNavMesh();
-#endif
             }
 
             _debugDrawData.OnDraw(ref renderContext);
