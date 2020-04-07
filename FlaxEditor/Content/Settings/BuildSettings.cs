@@ -36,7 +36,7 @@ namespace FlaxEditor.Content.Settings
         /// Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.
         /// </summary>
         [DefaultValue(false)]
-        [EditorOrder(100), EditorDisplay("Content"), Tooltip("Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
+        [EditorOrder(100), EditorDisplay("Content", "Shaders No Optimize"), Tooltip("Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
         public bool ShadersNoOptimize;
 
         /// <summary>
