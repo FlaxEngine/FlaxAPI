@@ -505,7 +505,8 @@ namespace FlaxEditor.Viewport
 
             // Get mouse ray and try to hit any object
             var ray = MouseRay;
-            var hit = _window.Graph.Root.RayCast(ref ray, out _, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+            var view = new Ray(ViewPosition, ViewDirection);
+            var hit = _window.Graph.Root.RayCast(ref ray, ref view, out _, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
 
             // Update selection
             if (hit != null)
@@ -749,7 +750,8 @@ namespace FlaxEditor.Viewport
             {
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);
-                hit = _window.Graph.Root.RayCast(ref ray, out var closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+                var view = new Ray(ViewPosition, ViewDirection);
+                hit = _window.Graph.Root.RayCast(ref ray, ref view, out var closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
                 if (hit != null)
                 {
                     // Use hit location

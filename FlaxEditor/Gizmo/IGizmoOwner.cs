@@ -45,6 +45,11 @@ namespace FlaxEditor.Gizmo
         bool SnapToGround { get; }
 
         /// <summary>
+        /// Gets the view forward direction.
+        /// </summary>
+        Vector3 ViewDirection { get; }
+
+        /// <summary>
         /// Gets the view position.
         /// </summary>
         Vector3 ViewPosition { get; }

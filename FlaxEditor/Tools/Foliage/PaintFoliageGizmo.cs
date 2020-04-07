@@ -188,8 +188,9 @@ namespace FlaxEditor.Tools.Foliage
             // Perform detailed tracing to find cursor location for the foliage placement
             var mouseRay = Owner.MouseRay;
             var ray = Owner.MouseRay;
+            var view = new Ray(Owner.ViewPosition, Owner.ViewDirection);
             var rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.SkipEditorPrimitives | SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, out var closest, out var hitNormal, rayCastFlags);
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref view, out var closest, out var hitNormal, rayCastFlags);
             if (hit != null)
             {
                 var hitLocation = mouseRay.GetPoint(closest);

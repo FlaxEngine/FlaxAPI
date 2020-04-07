@@ -437,20 +437,20 @@ namespace FlaxEditor.Viewport
 
                 // Render editor primitives, gizmo and debug shapes in debug view modes
                 // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
-                if (EditorPrimitives.CanRender)
+                if (EditorPrimitives && EditorPrimitives.CanRender)
                 {
                     EditorPrimitives.Render(context, ref renderContext, task.Output, task.Output);
                 }
 
                 // Render editor sprites
-                if (_editorSpritesRenderer.CanRender)
+                if (_editorSpritesRenderer && _editorSpritesRenderer.CanRender)
                 {
                     _editorSpritesRenderer.Render(context, ref renderContext, task.Output, task.Output);
                 }
 
                 // Render selection outline
                 var selectionOutline = _customSelectionOutline ?? SelectionOutline;
-                if (selectionOutline.CanRender)
+                if (selectionOutline && selectionOutline.CanRender)
                 {
                     // Use temporary intermediate buffer
                     var desc = task.Output.Description;
@@ -690,9 +690,10 @@ namespace FlaxEditor.Viewport
         {
             // Get mouse ray and try to hit any object
             var ray = ConvertMouseToRay(ref location);
+            var view = new Ray(ViewPosition, ViewDirection);
             var gridPlane = new Plane(Vector3.Zero, Vector3.Up);
             var flags = SceneGraphNode.RayCastData.FlagTypes.SkipColliders | SceneGraphNode.RayCastData.FlagTypes.SkipEditorPrimitives;
-            hit = Editor.Instance.Scene.Root.RayCast(ref ray, out var closest, flags);
+            hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref view, out var closest, flags);
             if (hit != null)
             {
                 // Use hit location

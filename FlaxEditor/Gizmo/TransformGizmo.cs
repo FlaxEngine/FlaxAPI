@@ -58,11 +58,12 @@ namespace FlaxEditor.Gizmo
 
             // Get mouse ray and try to hit any object
             var ray = Owner.MouseRay;
+            var view = new Ray(Owner.ViewPosition, Owner.ViewDirection);
             bool selectColliders = (Owner.RenderTask.View.Flags & ViewFlags.PhysicsDebug) == ViewFlags.PhysicsDebug;
             SceneGraphNode.RayCastData.FlagTypes rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.None;
             if (!selectColliders)
                 rayCastFlags |= SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, out _, rayCastFlags);
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref view, out _, rayCastFlags);
 
             // Update selection
             var sceneEditing = Editor.Instance.SceneEditing;

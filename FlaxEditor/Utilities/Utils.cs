@@ -984,5 +984,59 @@ namespace FlaxEditor.Utilities
             dialog.Show();
             dialog.Focus();
         }
+
+        private static OrientedBoundingBox GetWriteBox(ref Vector3 min, ref Vector3 max, float margin)
+        {
+            var box = new OrientedBoundingBox();
+            Vector3 vec = max - min;
+            Vector3 up = Vector3.Right;
+            if (Vector3.Dot(vec, Vector3.Up) < 0.999f)
+                up = Vector3.Cross(vec, Vector3.Right);
+            box.Transformation = Matrix.CreateWorld(min + vec * 0.5f, Vector3.Normalize(vec), up);
+            Matrix inv;
+            Matrix.Invert(ref box.Transformation, out inv);
+            Vector3 vecLocal = Vector3.TransformNormal(vec * 0.5f, inv);
+            box.Extents.X = margin;
+            box.Extents.Y = margin;
+            box.Extents.Z = vecLocal.Z;
+            return box;
+        }
+
+        /// <summary>
+        /// Checks if given ray intersects with the oriented bounding wire box.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        /// <param name="ray">The ray.</param>
+        /// <param name="distance">The result intersection distance.</param>
+        /// <param name="viewPosition">The view position used to scale the wires thickness depending on the wire distance from the view.</param>
+        /// <returns>True ray hits bounds, otherwise false.</returns>
+        public static unsafe bool RayCastWire(ref OrientedBoundingBox box, ref Ray ray, out float distance, ref Vector3 viewPosition)
+        {
+            var corners = stackalloc Vector3[8];
+            box.GetCorners(corners);
+
+            var minDistance = Vector3.DistanceSquared(ref viewPosition, ref corners[0]);
+            for (int i = 1; i < 8; i++)
+                minDistance = Mathf.Min(minDistance, Vector3.DistanceSquared(ref viewPosition, ref corners[i]));
+            minDistance = Mathf.Sqrt(minDistance);
+            var margin = Mathf.Clamp(minDistance / 100.0f, 0.1f, 100.0f);
+
+            if (GetWriteBox(ref corners[0], ref corners[1], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[0], ref corners[3], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[0], ref corners[4], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[1], ref corners[2], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[1], ref corners[5], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[2], ref corners[3], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[2], ref corners[6], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[3], ref corners[7], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[4], ref corners[5], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[4], ref corners[7], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[5], ref corners[6], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[6], ref corners[7], margin).Intersects(ref ray, out distance))
+                return true;
+
+            distance = 0;
+            return false;
+        }
     }
 }

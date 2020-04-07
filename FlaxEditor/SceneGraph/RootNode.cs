@@ -78,15 +78,18 @@ namespace FlaxEditor.SceneGraph
         /// Performs raycasting over nodes hierarchy trying to get the closest object hit by the given ray.
         /// </summary>
         /// <param name="ray">The ray.</param>
+        /// <param name="view">The view.</param>
         /// <param name="distance">The result distance.</param>
         /// <param name="flags">The raycasting flags.</param>
         /// <returns>Hit object or null if there is no intersection at all.</returns>
-        public SceneGraphNode RayCast(ref Ray ray, out float distance, RayCastData.FlagTypes flags = RayCastData.FlagTypes.None)
+        public SceneGraphNode RayCast(ref Ray ray, ref Ray view, out float distance, RayCastData.FlagTypes flags = RayCastData.FlagTypes.None)
         {
-            RayCastData data;
-            data.Ray = ray;
-            data.Flags = flags;
-
+            var data = new RayCastData
+            {
+                Ray = ray,
+                View = view,
+                Flags = flags
+            };
             return RayCast(ref data, out distance, out _);
         }
 
@@ -94,16 +97,19 @@ namespace FlaxEditor.SceneGraph
         /// Performs raycasting over nodes hierarchy trying to get the closest object hit by the given ray.
         /// </summary>
         /// <param name="ray">The ray.</param>
+        /// <param name="view">The view.</param>
         /// <param name="distance">The result distance.</param>
         /// <param name="normal">The result intersection surface normal vector.</param>
         /// <param name="flags">The raycasting flags.</param>
         /// <returns>Hit object or null if there is no intersection at all.</returns>
-        public SceneGraphNode RayCast(ref Ray ray, out float distance, out Vector3 normal, RayCastData.FlagTypes flags = RayCastData.FlagTypes.None)
+        public SceneGraphNode RayCast(ref Ray ray, ref Ray view, out float distance, out Vector3 normal, RayCastData.FlagTypes flags = RayCastData.FlagTypes.None)
         {
-            RayCastData data;
-            data.Ray = ray;
-            data.Flags = flags;
-
+            var data = new RayCastData
+            {
+                Ray = ray,
+                View = view,
+                Flags = flags
+            };
             return RayCast(ref data, out distance, out normal);
         }
 

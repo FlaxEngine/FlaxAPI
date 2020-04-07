@@ -196,6 +196,11 @@ namespace FlaxEditor.SceneGraph
             public Ray Ray;
 
             /// <summary>
+            /// The camera view ray.
+            /// </summary>
+            public Ray View;
+
+            /// <summary>
             /// The flags.
             /// </summary>
             public FlagTypes Flags;

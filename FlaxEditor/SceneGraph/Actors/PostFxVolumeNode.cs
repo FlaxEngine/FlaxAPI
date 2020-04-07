@@ -121,7 +121,7 @@ namespace FlaxEditor.SceneGraph.Actors
             // Check itself
             var volume = (PostFxVolume)_actor;
             var box = volume.OrientedBox;
-            return box.Contains(ref ray.Ray.Position) == ContainmentType.Disjoint && box.Intersects(ref ray.Ray, out distance);
+            return Utilities.Utils.RayCastWire(ref box, ref ray.Ray, out distance, ref ray.View.Position);
         }
     }
 }

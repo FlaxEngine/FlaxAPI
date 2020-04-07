@@ -175,6 +175,31 @@ namespace FlaxEngine
         /// <summary>
         /// Retrieves the eight corners of the bounding box.
         /// </summary>
+        /// <param name="corners">An array of points representing the eight corners of the bounding box.</param>
+        public unsafe void GetCorners(Vector3* corners)
+        {
+            var xv = new Vector3(Extents.X, 0, 0);
+            var yv = new Vector3(0, Extents.Y, 0);
+            var zv = new Vector3(0, 0, Extents.Z);
+            Vector3.TransformNormal(ref xv, ref Transformation, out xv);
+            Vector3.TransformNormal(ref yv, ref Transformation, out yv);
+            Vector3.TransformNormal(ref zv, ref Transformation, out zv);
+
+            Vector3 center = Transformation.TranslationVector;
+
+            corners[0] = center + xv + yv + zv;
+            corners[1] = center + xv + yv - zv;
+            corners[2] = center - xv + yv - zv;
+            corners[3] = center - xv + yv + zv;
+            corners[4] = center + xv - yv + zv;
+            corners[5] = center + xv - yv - zv;
+            corners[6] = center - xv - yv - zv;
+            corners[7] = center - xv - yv + zv;
+        }
+
+        /// <summary>
+        /// Retrieves the eight corners of the bounding box.
+        /// </summary>
         /// <param name="corners">An collection to add the corners of the bounding box.</param>
         public void GetCorners(List<Vector3> corners)
         {
