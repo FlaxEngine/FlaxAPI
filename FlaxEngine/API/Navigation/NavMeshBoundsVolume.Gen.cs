@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// A special type of volume that defines the areas of the scene in which navigation meshes are generated.
     /// </summary>
     [Tooltip("A special type of volume that defines the areas of the scene in which navigation meshes are generated.")]
-    public unsafe partial class NavMeshBoundsVolume : Actor
+    public unsafe partial class NavMeshBoundsVolume : BoxVolume
     {
         /// <inheritdoc />
         protected NavMeshBoundsVolume() : base()
@@ -26,34 +26,5 @@ namespace FlaxEngine
         {
             return Internal_Create(typeof(NavMeshBoundsVolume)) as NavMeshBoundsVolume;
         }
-
-        /// <summary>
-        /// Gets or sets the size of the volume (in local space).
-        /// </summary>
-        [EditorDisplay("Nav Mesh Bounds"), DefaultValue(typeof(Vector3), "1000,1000,1000"), EditorOrder(0)]
-        [Tooltip("The size of the volume (in local space).")]
-        public Vector3 Size
-        {
-            get { Internal_GetSize(unmanagedPtr, out var resultAsRef); return resultAsRef; }
-            set { Internal_SetSize(unmanagedPtr, ref value); }
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 value);
-
-        /// <summary>
-        /// Gets the volume bounding box (oriented in world space).
-        /// </summary>
-        [Tooltip("The volume bounding box (oriented in world space).")]
-        public OrientedBoundingBox OrientedBox
-        {
-            get { Internal_GetOrientedBox(unmanagedPtr, out var resultAsRef); return resultAsRef; }
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetOrientedBox(IntPtr obj, out OrientedBoundingBox resultAsRef);
     }
 }

@@ -11,7 +11,7 @@ namespace FlaxEngine
     /// A special type of volume that blends custom set of post process settings into the rendering.
     /// </summary>
     [Tooltip("A special type of volume that blends custom set of post process settings into the rendering.")]
-    public unsafe partial class PostFxVolume : Actor
+    public unsafe partial class PostFxVolume : BoxVolume
     {
         /// <inheritdoc />
         protected PostFxVolume() : base()
@@ -232,23 +232,6 @@ namespace FlaxEngine
         internal static extern void Internal_SetPostFxMaterials(IntPtr obj, ref PostFxMaterialsSettings value);
 
         /// <summary>
-        /// Gets or sets the size of the volume (in the local space of the actor).
-        /// </summary>
-        [EditorDisplay("PostFx Volume"), EditorOrder(50)]
-        [Tooltip("The size of the volume (in the local space of the actor).")]
-        public Vector3 Size
-        {
-            get { Internal_GetSize(unmanagedPtr, out var resultAsRef); return resultAsRef; }
-            set { Internal_SetSize(unmanagedPtr, ref value); }
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetSize(IntPtr obj, out Vector3 resultAsRef);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_SetSize(IntPtr obj, ref Vector3 value);
-
-        /// <summary>
         /// Gets or sets the order in which multiple volumes are blended together.
         /// The volume with the highest priority takes precedence over all other overlapping volumes.
         /// </summary>
@@ -316,18 +299,6 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetIsBounded(IntPtr obj, bool value);
-
-        /// <summary>
-        /// Gets the volume bounding box (oriented).
-        /// </summary>
-        [Tooltip("The volume bounding box (oriented).")]
-        public OrientedBoundingBox OrientedBox
-        {
-            get { Internal_GetOrientedBox(unmanagedPtr, out var resultAsRef); return resultAsRef; }
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetOrientedBox(IntPtr obj, out OrientedBoundingBox resultAsRef);
 
         /// <summary>
         /// Adds the post fx material to the settings.

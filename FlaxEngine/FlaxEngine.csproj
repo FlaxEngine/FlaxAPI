@@ -150,6 +150,7 @@
     <Compile Include="API\Level\AnimatedModel.Gen.cs" />
     <Compile Include="API\Level\BoneSocket.Gen.cs" />
     <Compile Include="API\Level\BoxBrush.Gen.cs" />
+    <Compile Include="API\Level\BoxVolume.Gen.cs" />
     <Compile Include="API\Level\Camera.Gen.cs" />
     <Compile Include="API\Level\Decal.Gen.cs" />
     <Compile Include="API\Level\DirectionalLight.Gen.cs" />

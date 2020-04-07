@@ -989,10 +989,14 @@ namespace FlaxEditor.Utilities
         {
             var box = new OrientedBoundingBox();
             Vector3 vec = max - min;
-            Vector3 up = Vector3.Right;
-            if (Vector3.Dot(vec, Vector3.Up) < 0.999f)
-                up = Vector3.Cross(vec, Vector3.Right);
-            box.Transformation = Matrix.CreateWorld(min + vec * 0.5f, Vector3.Normalize(vec), up);
+            Vector3 dir = Vector3.Normalize(vec);
+            Quaternion orientation;
+            if (Vector3.Dot(dir, Vector3.Up) >= 0.999f)
+                orientation = Quaternion.RotationAxis(Vector3.Left, Mathf.PiOverTwo);
+            else
+                orientation = Quaternion.LookRotation(dir, Vector3.Cross(Vector3.Cross(dir, Vector3.Up), dir));
+            Vector3 up = Vector3.Up * orientation;
+            box.Transformation = Matrix.CreateWorld(min + vec * 0.5f, dir, up);
             Matrix inv;
             Matrix.Invert(ref box.Transformation, out inv);
             Vector3 vecLocal = Vector3.TransformNormal(vec * 0.5f, inv);
@@ -1019,7 +1023,7 @@ namespace FlaxEditor.Utilities
             for (int i = 1; i < 8; i++)
                 minDistance = Mathf.Min(minDistance, Vector3.DistanceSquared(ref viewPosition, ref corners[i]));
             minDistance = Mathf.Sqrt(minDistance);
-            var margin = Mathf.Clamp(minDistance / 100.0f, 0.1f, 100.0f);
+            var margin = Mathf.Clamp(minDistance / 80.0f, 0.1f, 100.0f);
 
             if (GetWriteBox(ref corners[0], ref corners[1], margin).Intersects(ref ray, out distance) ||
                 GetWriteBox(ref corners[0], ref corners[3], margin).Intersects(ref ray, out distance) ||
