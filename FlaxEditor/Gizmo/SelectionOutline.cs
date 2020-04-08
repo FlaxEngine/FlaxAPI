@@ -121,7 +121,7 @@ namespace FlaxEditor.Gizmo
             Profiler.BeginEventGPU("Selection Outline");
 
             // Pick a temporary depth buffer
-            var desc = GPUTextureDescription.New2D(input.Width, input.Height, PixelFormat.R32_Typeless, GPUTextureFlags.DepthStencil | GPUTextureFlags.ShaderResource);
+            var desc = GPUTextureDescription.New2D(input.Width, input.Height, PixelFormat.D32_Float, GPUTextureFlags.DepthStencil | GPUTextureFlags.ShaderResource);
             var customDepth = RenderTargetPool.Get(ref desc);
             context.ClearDepth(customDepth);
 
