@@ -332,6 +332,8 @@ namespace FlaxEditor.Modules
                 var desktopEnd = desktopSize.BottomRight - new Vector2(10.0f);
                 if (dialogEnd.X >= desktopEnd.X || dialogEnd.Y >= desktopEnd.Y)
                     pos = targetControl.ClientToScreen(Vector2.Zero) - new Vector2(10.0f + dialog.Width, dialog.Height);
+                var desktopBounds = Platform.VirtualDesktopBounds;
+                pos = Vector2.Clamp(pos, desktopBounds.UpperLeft, desktopBounds.BottomRight - dialog.Size);
                 dialog.RootWindow.Window.Position = pos;
             }
 
