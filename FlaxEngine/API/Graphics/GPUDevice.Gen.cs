@@ -54,6 +54,18 @@ namespace FlaxEngine
         internal static extern void Internal_GetLimits(IntPtr obj, out GPULimits resultAsRef);
 
         /// <summary>
+        /// The available video output modes.
+        /// </summary>
+        [Tooltip("The available video output modes.")]
+        public VideoOutputMode[] VideoOutputModes
+        {
+            get { return Internal_GetVideoOutputModes(unmanagedPtr, typeof(VideoOutputMode)); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern VideoOutputMode[] Internal_GetVideoOutputModes(IntPtr obj, System.Type resultArrayItemType0);
+
+        /// <summary>
         /// Gets the device renderer type.
         /// </summary>
         [Tooltip("The device renderer type.")]
@@ -162,5 +174,31 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern GPUTexture Internal_CreateTexture(IntPtr obj, string name);
+
+        /// <summary>
+        /// Describes a video output display mode.
+        /// </summary>
+        [Tooltip("Describes a video output display mode.")]
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe partial struct VideoOutputMode
+        {
+            /// <summary>
+            /// The resolution width (in pixel).
+            /// </summary>
+            [Tooltip("The resolution width (in pixel).")]
+            public uint Width;
+
+            /// <summary>
+            /// The resolution height (in pixel).
+            /// </summary>
+            [Tooltip("The resolution height (in pixel).")]
+            public uint Height;
+
+            /// <summary>
+            /// The screen refresh rate (in hertz).
+            /// </summary>
+            [Tooltip("The screen refresh rate (in hertz).")]
+            public uint RefreshRate;
+        }
     }
 }
