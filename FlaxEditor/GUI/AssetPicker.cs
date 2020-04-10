@@ -159,7 +159,7 @@ namespace FlaxEditor.GUI
                 return true;
 
             // Json assets can contain any type of the object defined by the C# type (data oriented design)
-            if (_type == typeof(JsonAsset) && item is JsonAssetItem)
+            if (item is JsonAssetItem && (_type == typeof(JsonAsset) || _type == typeof(Asset)))
                 return true;
 
             // Special case for scene asset references
