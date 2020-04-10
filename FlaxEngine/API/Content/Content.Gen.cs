@@ -66,6 +66,19 @@ namespace FlaxEngine
         internal static extern bool Internal_GetAssetInfo1(string path, out AssetInfo info);
 
         /// <summary>
+        /// Finds all the asset IDs by type (exact type, without inheritance checks). Uses asset registry.
+        /// </summary>
+        /// <param name="type">The asset type.</param>
+        /// <returns>The list of asset IDs that match the given type.</returns>
+        public static Guid[] GetAllAssetsByType(System.Type type)
+        {
+            return Internal_GetAllAssetsByType(type, typeof(Guid));
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Guid[] Internal_GetAllAssetsByType(System.Type type, System.Type resultArrayItemType0);
+
+        /// <summary>
         /// Generates temporary asset path.
         /// </summary>
         /// <returns>Asset path for a temporary usage.</returns>
