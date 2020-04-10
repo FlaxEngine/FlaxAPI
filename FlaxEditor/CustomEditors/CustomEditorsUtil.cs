@@ -112,11 +112,11 @@ namespace FlaxEditor.CustomEditors
             }
             if (canUseRefPicker)
             {
-                if (targetType.IsSubclassOf(typeof(Asset)))
+                if (typeof(Asset).IsAssignableFrom(targetType))
                 {
                     return new AssetRefEditor();
                 }
-                if (targetType.IsSubclassOf(typeof(FlaxEngine.Object)))
+                if (typeof(FlaxEngine.Object).IsAssignableFrom(targetType))
                 {
                     return new FlaxObjectRefEditor();
                 }
