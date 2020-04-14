@@ -490,8 +490,7 @@ namespace FlaxEditor.Windows.Assets
         protected override T LoadAsset()
         {
             // Clone asset
-            string clonePath;
-            if (Editor.ContentEditing.FastTempAssetClone(_item, out clonePath))
+            if (Editor.ContentEditing.FastTempAssetClone(_item.Path, out var clonePath))
                 return null;
 
             // Load cloned asset

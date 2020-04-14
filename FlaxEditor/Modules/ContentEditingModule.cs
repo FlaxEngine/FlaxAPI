@@ -151,16 +151,16 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Clones the asset to the temporary folder.
         /// </summary>
-        /// <param name="item">The item to clone.</param>
+        /// <param name="srcPath">The path of the source asset to clone.</param>
         /// <param name="resultPath">The result path.</param>
         /// <returns>True if failed, otherwise false.</returns>
-        public bool FastTempAssetClone(AssetItem item, out string resultPath)
+        public bool FastTempAssetClone(string srcPath, out string resultPath)
         {
-            var extension = System.IO.Path.GetExtension(item.Path);
+            var extension = System.IO.Path.GetExtension(srcPath);
             var id = Guid.NewGuid();
             resultPath = StringUtils.CombinePaths(Globals.TemporaryFolder, id.ToString("N")) + extension;
 
-            if (CloneAssetFile(item.Path, resultPath, id))
+            if (CloneAssetFile(srcPath, resultPath, id))
                 return true;
 
             return false;

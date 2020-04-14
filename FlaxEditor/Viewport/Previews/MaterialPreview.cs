@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.Surface;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
@@ -11,7 +12,7 @@ namespace FlaxEditor.Viewport.Previews
     /// Material or Material Instance asset preview editor viewport.
     /// </summary>
     /// <seealso cref="AssetPreview" />
-    public class MaterialPreview : AssetPreview
+    public class MaterialPreview : AssetPreview, IVisjectSurfaceOwner
     {
         private static readonly string[] Models =
         {
@@ -25,6 +26,11 @@ namespace FlaxEditor.Viewport.Previews
         private StaticModel _previewModel;
         private Decal _decal;
         private Terrain _terrain;
+        private ParticleEffect _particleEffect;
+        private MaterialBase _particleEffectMaterial;
+        private ParticleEmitter _particleEffectEmitter;
+        private ParticleSystem _particleEffectSystem;
+        private ParticleEmitterSurface _particleEffectSurface;
         private MaterialBase _material;
         private int _selectedModelIndex;
         private Image _guiMaterialControl;
@@ -124,6 +130,7 @@ namespace FlaxEditor.Viewport.Previews
             MaterialBase decalMaterial = null;
             MaterialBase guiMaterial = null;
             MaterialBase terrainMaterial = null;
+            MaterialBase particleMaterial = null;
             bool usePreviewActor = true;
             if (_material != null)
             {
@@ -145,6 +152,7 @@ namespace FlaxEditor.Viewport.Previews
                         decalMaterial = _material;
                         break;
                     case MaterialDomain.GUI:
+                        usePreviewActor = false;
                         guiMaterial = _material;
                         break;
                     case MaterialDomain.Terrain:
@@ -152,7 +160,8 @@ namespace FlaxEditor.Viewport.Previews
                         terrainMaterial = _material;
                         break;
                     case MaterialDomain.Particle:
-                        // TODO: draw a simple particle effect with a fixed single sprite particle
+                        usePreviewActor = false;
+                        particleMaterial = _material;
                         break;
                     default: throw new ArgumentOutOfRangeException();
                     }
@@ -225,6 +234,42 @@ namespace FlaxEditor.Viewport.Previews
                 _terrain.IsActive = terrainMaterial != null;
                 _terrain.Material = terrainMaterial;
             }
+
+            // Particle
+            if (particleMaterial && _particleEffect == null)
+            {
+                _particleEffect = ParticleEffect.New();
+                _particleEffect.IsLooping = true;
+                _particleEffect.UseTimeScale = false;
+                Task.AddCustomActor(_particleEffect);
+            }
+            if (_particleEffect != null)
+            {
+                _particleEffect.IsActive = particleMaterial != null;
+                if (particleMaterial)
+                    _particleEffect.UpdateSimulation();
+                if (_particleEffectMaterial != particleMaterial && particleMaterial)
+                {
+                    _particleEffectMaterial = particleMaterial;
+                    if (!_particleEffectEmitter)
+                    {
+                        var srcAsset = FlaxEngine.Content.LoadInternal<ParticleEmitter>("Editor/Particles/Particle Material Preview");
+                        Editor.Instance.ContentEditing.FastTempAssetClone(srcAsset.Path, out var clonedPath);
+                        _particleEffectEmitter = FlaxEngine.Content.Load<ParticleEmitter>(clonedPath);
+                    }
+                    if (_particleEffectSurface == null)
+                        _particleEffectSurface = new ParticleEmitterSurface(this, null, null);
+                    if (_particleEffectEmitter)
+                    {
+                        if (!_particleEffectSurface.Load())
+                        {
+                            var spriteModuleNode = _particleEffectSurface.FindNode(15, 400);
+                            spriteModuleNode.Values[2] = particleMaterial.ID;
+                            _particleEffectSurface.Save();
+                        }
+                    }
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -238,12 +283,57 @@ namespace FlaxEditor.Viewport.Previews
                 _guiMaterialControl = null;
             }
 
-            // Ensure to cleanup created actor objects
             Object.Destroy(ref _previewModel);
             Object.Destroy(ref _decal);
             Object.Destroy(ref _terrain);
+            Object.Destroy(ref _particleEffect);
+            Object.Destroy(ref _particleEffectEmitter);
+            Object.Destroy(ref _particleEffectSystem);
+            _particleEffectMaterial = null;
+            _particleEffectSurface = null;
 
             base.OnDestroy();
+        }
+
+        /// <inheritdoc />
+        string ISurfaceContext.SurfaceName => string.Empty;
+
+        /// <inheritdoc />
+        byte[] ISurfaceContext.SurfaceData
+        {
+            get => _particleEffectEmitter.LoadSurface(false);
+            set
+            {
+                _particleEffectEmitter.SaveSurface(value);
+                _particleEffectEmitter.Reload();
+
+                if (!_particleEffectSystem)
+                {
+                    _particleEffectSystem = FlaxEngine.Content.CreateVirtualAsset<ParticleSystem>();
+                    _particleEffectSystem.Init(_particleEffectEmitter, 5.0f);
+                    _particleEffect.ParticleSystem = _particleEffectSystem;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        void ISurfaceContext.OnContextCreated(VisjectSurfaceContext context)
+        {
+        }
+
+        /// <inheritdoc />
+        void IVisjectSurfaceOwner.OnSurfaceEditedChanged()
+        {
+        }
+
+        /// <inheritdoc />
+        void IVisjectSurfaceOwner.OnSurfaceGraphEdited()
+        {
+        }
+
+        /// <inheritdoc />
+        void IVisjectSurfaceOwner.OnSurfaceClose()
+        {
         }
     }
 }
