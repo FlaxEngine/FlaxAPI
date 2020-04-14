@@ -875,7 +875,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.ComboBox(0, 70, 120),
-                    NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.GameplayGlobals),
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, typeof(GameplayGlobals)),
                     NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.Variable, 0),
                 }
             },

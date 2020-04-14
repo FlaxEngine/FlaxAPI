@@ -1378,7 +1378,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Material
                     NodeElementArchetype.Factory.Text(0, -10, "Material", 80.0f, 16.0f, "The material used for sprites rendering (quads). It must have Domain set to Particle."),
-                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, ContentDomain.Material),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, typeof(MaterialBase)),
 
                     // Draw Modes
                     NodeElementArchetype.Factory.Text(0, -10 + 70, "Draw Modes:", 40),
@@ -1450,11 +1450,11 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Model
                     NodeElementArchetype.Factory.Text(0, -10, "Model", 80.0f, 16.0f, "model material used for rendering."),
-                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, ContentDomain.Model),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, typeof(Model)),
 
                     // Material
                     NodeElementArchetype.Factory.Text(0, -10 + 70, "Material", 80.0f, 16.0f, "The material used for models rendering. It must have Domain set to Particle."),
-                    NodeElementArchetype.Factory.Asset(100.0f, -10 + 70, 3, ContentDomain.Material),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10 + 70, 3, typeof(MaterialBase)),
 
                     // Draw Modes
                     NodeElementArchetype.Factory.Text(0, -10 + 140, "Draw Modes:", 40),
@@ -1483,7 +1483,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Material
                     NodeElementArchetype.Factory.Text(0, -10, "Material", 80.0f, 16.0f, "The material used for ribbons rendering. It must have Domain set to Particle."),
-                    NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Material),
+                    NodeElementArchetype.Factory.Asset(80, -10, 2, typeof(MaterialBase)),
 
                     // UV options
                     NodeElementArchetype.Factory.Text(0.0f, 3.0f * Surface.Constants.LayoutOffsetY, "UV Tiling Distance"),

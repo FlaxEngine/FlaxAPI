@@ -713,7 +713,7 @@ namespace FlaxEditor.Viewport
 
         private void SetDragEffects(ref Vector2 location)
         {
-            if (_dragAssets.HasValidDrag && _dragAssets.Objects[0].ItemDomain == ContentDomain.Material)
+            if (_dragAssets.HasValidDrag && _dragAssets.Objects[0].IsOfType<MaterialBase>())
             {
                 GetHitLocation(ref location, out var hit, out _);
                 ClearDragEffects();
@@ -761,21 +761,23 @@ namespace FlaxEditor.Viewport
 
             if (contentItem is BinaryAssetItem binaryAssetItem)
             {
-                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                if (binaryAssetItem.IsOfType<ParticleSystem>())
                     return true;
-                if (binaryAssetItem.Type == typeof(SceneAnimation))
+                if (binaryAssetItem.IsOfType<SceneAnimation>())
+                    return true;
+                if (binaryAssetItem.IsOfType<MaterialBase>())
+                    return true;
+                if (binaryAssetItem.IsOfType<ModelBase>())
+                    return true;
+                if (binaryAssetItem.IsOfType<AudioClip>())
+                    return true;
+                if (binaryAssetItem.IsOfType<Prefab>())
+                    return true;
+                if (binaryAssetItem.IsOfType<Scene>())
                     return true;
             }
 
-            switch (contentItem.ItemDomain)
-            {
-            case ContentDomain.Material:
-            case ContentDomain.Model:
-            case ContentDomain.Audio:
-            case ContentDomain.Prefab: return true;
-            case ContentDomain.Scene: return true;
-            default: return false;
-            }
+            return false;
         }
 
         private static bool ValidateDragActorType(Type actorType)
@@ -830,11 +832,9 @@ namespace FlaxEditor.Viewport
 
         private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector2 location, ref Vector3 hitLocation)
         {
-            // TODO: refactor this and dont use ContentDomain but only asset Type for matching
-
             if (item is BinaryAssetItem binaryAssetItem)
             {
-                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                if (binaryAssetItem.IsOfType<ParticleSystem>())
                 {
                     var asset = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
                     var actor = ParticleEffect.New();
@@ -842,10 +842,9 @@ namespace FlaxEditor.Viewport
                     actor.ParticleSystem = asset;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Editor.Instance.SceneEditing.Spawn(actor);
-
                     return;
                 }
-                if (binaryAssetItem.Type == typeof(SceneAnimation))
+                if (binaryAssetItem.IsOfType<SceneAnimation>())
                 {
                     var asset = FlaxEngine.Content.LoadAsync<SceneAnimation>(item.ID);
                     var actor = SceneAnimationPlayer.New();
@@ -853,42 +852,34 @@ namespace FlaxEditor.Viewport
                     actor.Animation = asset;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Editor.Instance.SceneEditing.Spawn(actor);
-
                     return;
                 }
-            }
-
-            switch (item.ItemDomain)
-            {
-            case ContentDomain.Material:
-            {
-                if (hit is StaticModelNode staticModelNode)
+                if (binaryAssetItem.IsOfType<MaterialBase>())
                 {
-                    var staticModel = (StaticModel)staticModelNode.Actor;
-                    var ray = ConvertMouseToRay(ref location);
-                    if (staticModel.IntersectsEntry(ref ray, out _, out _, out var entryIndex))
+                    if (hit is StaticModelNode staticModelNode)
+                    {
+                        var staticModel = (StaticModel)staticModelNode.Actor;
+                        var ray = ConvertMouseToRay(ref location);
+                        if (staticModel.IntersectsEntry(ref ray, out _, out _, out var entryIndex))
+                        {
+                            var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
+                            using (new UndoBlock(Undo, staticModel, "Change material"))
+                                staticModel.SetMaterial(entryIndex, material);
+                        }
+                    }
+                    else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
                     {
                         var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                        using (new UndoBlock(Undo, staticModel, "Change material"))
-                            staticModel.SetMaterial(entryIndex, material);
+                        using (new UndoBlock(Undo, brushSurfaceNode.Brush, "Change material"))
+                        {
+                            var surface = brushSurfaceNode.Surface;
+                            surface.Material = material;
+                            brushSurfaceNode.Surface = surface;
+                        }
                     }
+                    return;
                 }
-                else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
-                {
-                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                    using (new UndoBlock(Undo, brushSurfaceNode.Brush, "Change material"))
-                    {
-                        var surface = brushSurfaceNode.Surface;
-                        surface.Material = material;
-                        brushSurfaceNode.Surface = surface;
-                    }
-                }
-
-                break;
-            }
-            case ContentDomain.Model:
-            {
-                if (item.TypeName == typeof(SkinnedModel).FullName)
+                if (binaryAssetItem.IsOfType<SkinnedModel>())
                 {
                     var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
                     var actor = AnimatedModel.New();
@@ -896,8 +887,9 @@ namespace FlaxEditor.Viewport
                     actor.SkinnedModel = model;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Editor.Instance.SceneEditing.Spawn(actor);
+                    return;
                 }
-                else
+                if (binaryAssetItem.IsOfType<Model>())
                 {
                     var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
                     var actor = StaticModel.New();
@@ -905,37 +897,32 @@ namespace FlaxEditor.Viewport
                     actor.Model = model;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Editor.Instance.SceneEditing.Spawn(actor);
+                    return;
                 }
-
-                break;
-            }
-            case ContentDomain.Audio:
-            {
-                var clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
-                var actor = AudioSource.New();
-                actor.Name = item.ShortName;
-                actor.Clip = clip;
-                actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
-                Editor.Instance.SceneEditing.Spawn(actor);
-
-                break;
-            }
-            case ContentDomain.Prefab:
-            {
-                var prefab = FlaxEngine.Content.LoadAsync<Prefab>(item.ID);
-                var actor = PrefabManager.SpawnPrefab(prefab, null);
-                actor.Name = item.ShortName;
-                actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
-                Editor.Instance.SceneEditing.Spawn(actor);
-
-                break;
-            }
-            case ContentDomain.Scene:
-            {
-                Editor.Instance.Scene.OpenScene(item.ID, true);
-                break;
-            }
-            default: throw new ArgumentOutOfRangeException();
+                if (binaryAssetItem.IsOfType<AudioClip>())
+                {
+                    var clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
+                    var actor = AudioSource.New();
+                    actor.Name = item.ShortName;
+                    actor.Clip = clip;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Editor.Instance.SceneEditing.Spawn(actor);
+                    return;
+                }
+                if (binaryAssetItem.IsOfType<Prefab>())
+                {
+                    var prefab = FlaxEngine.Content.LoadAsync<Prefab>(item.ID);
+                    var actor = PrefabManager.SpawnPrefab(prefab, null);
+                    actor.Name = item.ShortName;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Editor.Instance.SceneEditing.Spawn(actor);
+                    return;
+                }
+                if (binaryAssetItem.IsOfType<Scene>())
+                {
+                    Editor.Instance.Scene.OpenScene(item.ID, true);
+                    return;
+                }
             }
         }
 

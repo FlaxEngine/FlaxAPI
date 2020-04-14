@@ -61,7 +61,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "B", ConnectionType.Float, 4),
                     NodeElementArchetype.Factory.Output(5, "A", ConnectionType.Float, 5),
-                    NodeElementArchetype.Factory.Asset(0, 20, 0, ContentDomain.Texture)
+                    NodeElementArchetype.Factory.Asset(0, 20, 0, typeof(Texture))
                 }
             },
             new NodeArchetype
@@ -97,7 +97,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(3, "G", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "B", ConnectionType.Float, 4),
                     NodeElementArchetype.Factory.Output(5, "A", ConnectionType.Float, 5),
-                    NodeElementArchetype.Factory.Asset(0, 20, 0, ContentDomain.CubeTexture)
+                    NodeElementArchetype.Factory.Asset(0, 20, 0, typeof(CubeTexture))
                 }
             },
             new NodeArchetype
@@ -119,7 +119,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(2, "X", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Y", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "Z", ConnectionType.Float, 4),
-                    NodeElementArchetype.Factory.Asset(0, 20, 0, ContentDomain.Texture)
+                    NodeElementArchetype.Factory.Asset(0, 20, 0, typeof(Texture))
                 }
             },
             new NodeArchetype
@@ -270,7 +270,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 0),
-                    NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.Texture)
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, typeof(Texture))
                 }
             },
             /*new NodeArchetype
@@ -287,7 +287,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Object, 0),
-                    NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.CubeTexture)
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, typeof(CubeTexture))
                 }
             },*/
             new NodeArchetype

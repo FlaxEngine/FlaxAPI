@@ -282,7 +282,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(0, "Speed", true, ConnectionType.Float, 5, 1),
                     NodeElementArchetype.Factory.Input(1, "Loop", true, ConnectionType.Bool, 6, 2),
                     NodeElementArchetype.Factory.Input(2, "Start Position", true, ConnectionType.Float, 7, 3),
-                    NodeElementArchetype.Factory.Asset(0, Surface.Constants.LayoutOffsetY * 3, 0, ContentDomain.Animation),
+                    NodeElementArchetype.Factory.Asset(0, Surface.Constants.LayoutOffsetY * 3, 0, typeof(Animation)),
                 }
             },
             new NodeArchetype
@@ -467,7 +467,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(0, "Pose A", true, ConnectionType.Impulse, 1),
                     NodeElementArchetype.Factory.Input(1, "Pose B", true, ConnectionType.Impulse, 2),
                     NodeElementArchetype.Factory.Input(2, "Alpha", true, ConnectionType.Float, 3, 0),
-                    NodeElementArchetype.Factory.Asset(100, 20, 1, ContentDomain.SkeletonMask),
+                    NodeElementArchetype.Factory.Asset(100, 20, 1, typeof(SkeletonMask)),
                 }
             },
             new NodeArchetype

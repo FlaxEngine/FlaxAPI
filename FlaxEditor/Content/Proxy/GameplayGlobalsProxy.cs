@@ -26,9 +26,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0xccff33);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.GameplayGlobals;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(GameplayGlobals);
 
         /// <inheritdoc />
