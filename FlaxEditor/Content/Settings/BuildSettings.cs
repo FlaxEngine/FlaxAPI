@@ -33,23 +33,35 @@ namespace FlaxEditor.Content.Settings
         public int ContentKey = 0;
 
         /// <summary>
+        /// The additional assets to include into build (into root assets set).
+        /// </summary>
+        [EditorOrder(1000), EditorDisplay("Additional Data"), Tooltip("The additional assets to include into build (into root assets set).")]
+        public Asset[] AdditionalAssets;
+
+        /// <summary>
+        /// The additional folders with assets to include into build (into root assets set). List of paths relative to the project directory (or absolute).
+        /// </summary>
+        [EditorOrder(1010), EditorDisplay("Additional Data"), Tooltip("The additional folders with assets to include into build (to root assets set). List of paths relative to the project directory (or absolute).")]
+        public string[] AdditionalAssetFolders;
+
+        /// <summary>
         /// Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.
         /// </summary>
         [DefaultValue(false)]
-        [EditorOrder(100), EditorDisplay("Content", "Shaders No Optimize"), Tooltip("Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
+        [EditorOrder(2000), EditorDisplay("Content", "Shaders No Optimize"), Tooltip("Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
         public bool ShadersNoOptimize;
 
         /// <summary>
         /// Enables shader debug data generation for shaders in cooked game (depends on the target platform rendering backend).
         /// </summary>
         [DefaultValue(false)]
-        [EditorOrder(110), EditorDisplay("Content"), Tooltip("Enables shader debug data generation for shaders in cooked game (depends on the target platform rendering backend).")]
+        [EditorOrder(2010), EditorDisplay("Content"), Tooltip("Enables shader debug data generation for shaders in cooked game (depends on the target platform rendering backend).")]
         public bool ShadersGenerateDebugData;
 
         /// <summary>
         /// The build presets.
         /// </summary>
-        [EditorOrder(1000), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
+        [EditorOrder(5000), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
         public BuildPreset[] Presets =
         {
             new BuildPreset
