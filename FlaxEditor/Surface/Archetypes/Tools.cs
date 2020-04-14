@@ -876,7 +876,28 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.ComboBox(0, 70, 120),
                     NodeElementArchetype.Factory.Asset(0, 0, 0, ContentDomain.GameplayGlobals),
-                    NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.All, 0),
+                    NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.Variable, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 17,
+                Title = "Platform Switch",
+                Description = "Gets the input value based on the runtime-platform type",
+                Flags = NodeFlags.AllGraphs,
+                Size = new Vector2(220, 130),
+                DefaultType = ConnectionType.Variable,
+                IndependentBoxes = new[] { 1, 2, 3, 4, 5, 6 },
+                DependentBoxes = new[] { 0 },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Variable, 0),
+                    NodeElementArchetype.Factory.Input(0, "Default", true, ConnectionType.Variable, 1),
+                    NodeElementArchetype.Factory.Input(1, "Windows", true, ConnectionType.Variable, 2),
+                    NodeElementArchetype.Factory.Input(2, "Xbox One", true, ConnectionType.Variable, 3),
+                    NodeElementArchetype.Factory.Input(3, "Windows Store", true, ConnectionType.Variable, 4),
+                    NodeElementArchetype.Factory.Input(4, "Linux", true, ConnectionType.Variable, 5),
+                    NodeElementArchetype.Factory.Input(5, "PlayStation 4", true, ConnectionType.Variable, 6),
                 }
             },
         };
