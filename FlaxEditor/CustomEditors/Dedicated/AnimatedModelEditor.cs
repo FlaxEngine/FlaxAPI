@@ -30,7 +30,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     if (!param.IsPublic)
                         continue;
 
-                    var id = param.ID;
+                    var id = param.Identifier;
                     var value = param.Value;
                     var valueType = Utilities.Utils.GetGraphParameterValueType(param.Type);
                     var valueContainer = new CustomValueContainer(

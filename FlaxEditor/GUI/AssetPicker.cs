@@ -26,7 +26,7 @@ namespace FlaxEditor.GUI
         private bool _isMouseDown;
         private Vector2 _mouseDownPos;
         private Vector2 _mousePos;
-        private readonly DragAssets _dragOverElement;
+        private DragAssets _dragOverElement;
 
         /// <summary>
         /// Gets or sets the selected item.
@@ -187,7 +187,6 @@ namespace FlaxEditor.GUI
         {
             _type = assetType;
             _mousePos = Vector2.Minimum;
-            _dragOverElement = new DragAssets(IsValid);
         }
 
         /// <summary>
@@ -269,12 +268,12 @@ namespace FlaxEditor.GUI
                 if (sizeForTextLeft > 30)
                 {
                     Render2D.DrawText(
-                        style.FontSmall,
-                        _selectedItem.ShortName,
-                        new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
-                        style.Foreground,
-                        TextAlignment.Near,
-                        TextAlignment.Center);
+                                      style.FontSmall,
+                                      _selectedItem.ShortName,
+                                      new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
+                                      style.Foreground,
+                                      TextAlignment.Near,
+                                      TextAlignment.Center);
                 }
             }
             // Check if has no item but has an asset (eg. virtual asset)
@@ -291,12 +290,12 @@ namespace FlaxEditor.GUI
                     if (_selected.IsVirtual)
                         name += " (virtual)";
                     Render2D.DrawText(
-                        style.FontSmall,
-                        name,
-                        new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
-                        style.Foreground,
-                        TextAlignment.Near,
-                        TextAlignment.Center);
+                                      style.FontSmall,
+                                      name,
+                                      new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
+                                      style.Foreground,
+                                      TextAlignment.Near,
+                                      TextAlignment.Center);
                 }
             }
             else
@@ -307,7 +306,7 @@ namespace FlaxEditor.GUI
             }
 
             // Check if drag is over
-            if (IsDragOver && _dragOverElement.HasValidDrag)
+            if (IsDragOver && _dragOverElement != null && _dragOverElement.HasValidDrag)
                 Render2D.FillRectangle(iconRect, style.BackgroundSelected * 0.4f);
         }
 
@@ -437,6 +436,8 @@ namespace FlaxEditor.GUI
             base.OnDragEnter(ref location, data);
 
             // Check if drop asset
+            if (_dragOverElement == null)
+                _dragOverElement = new DragAssets(IsValid);
             if (_dragOverElement.OnDragEnter(data))
             {
             }

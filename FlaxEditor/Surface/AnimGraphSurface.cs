@@ -174,7 +174,7 @@ namespace FlaxEditor.Surface
                 var assetItem = objects[i];
                 SurfaceNode node = null;
 
-                if (assetItem.IsOfType<SkeletonMask>())
+                if (assetItem.IsOfType<FlaxEngine.Animation>())
                 {
                     node = Context.SpawnNode(9, 2, args.SurfaceLocation, new object[]
                     {
@@ -184,7 +184,7 @@ namespace FlaxEditor.Surface
                         0.0f,
                     });
                 }
-                else if (assetItem.IsOfType<FlaxEngine.Animation>())
+                else if (assetItem.IsOfType<SkeletonMask>())
                 {
                     node = Context.SpawnNode(9, 11, args.SurfaceLocation, new object[]
                     {
