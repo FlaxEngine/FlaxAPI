@@ -151,6 +151,17 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
+        public override string GetConnectionTypeName(ConnectionType type)
+        {
+            switch (type)
+            {
+            case ConnectionType.Impulse: return "Local-space Pose";
+            case ConnectionType.ImpulseSecondary: return "Global-space Pose";
+            default: return base.GetConnectionTypeName(type);
+            }
+        }
+
+        /// <inheritdoc />
         public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
             return (nodeArchetype.Flags & NodeFlags.AnimGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);

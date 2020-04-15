@@ -143,10 +143,10 @@ namespace FlaxEditor.Surface.ContextMenu
                 nodes.Clear();
                 foreach (var nodeArchetype in groupArchetype.Archetypes)
                 {
-                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0 || !info.CanSpawnNode(nodeArchetype))
-                        continue;
-
-                    nodes.Add(nodeArchetype);
+                    if (info.CanSpawnNode(nodeArchetype))
+                    {
+                        nodes.Add(nodeArchetype);
+                    }
                 }
 
                 // Check if can create group for them

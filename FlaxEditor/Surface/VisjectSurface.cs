@@ -365,6 +365,16 @@ namespace FlaxEditor.Surface
             DragHandlers.Add(_dragParameters = new DragNames<DragDropEventArgs>(SurfaceParameter.DragPrefix, ValidateDragParameter));
         }
 
+        /// <summary>
+        /// Gets the display name of the connection type used in the surface.
+        /// </summary>
+        /// <param name="type">The graph connection type.</param>
+        /// <returns>The display name (for UI).</returns>
+        public virtual string GetConnectionTypeName(ConnectionType type)
+        {
+            return type.ToString();
+        }
+
         private void OnRootContextModified(VisjectSurfaceContext context, bool graphEdited)
         {
             Owner.OnSurfaceEditedChanged();
@@ -463,7 +473,7 @@ namespace FlaxEditor.Surface
         /// <returns>True if can spawn this node archetype, otherwise false.</returns>
         public virtual bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
-            return true;
+            return (nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) == 0;
         }
 
         /// <summary>

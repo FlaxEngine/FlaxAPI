@@ -21,6 +21,17 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
+        public override string GetConnectionTypeName(ConnectionType type)
+        {
+            switch (type)
+            {
+            case ConnectionType.Impulse: return "Material";
+            case ConnectionType.Object: return "Texture";
+            default: return base.GetConnectionTypeName(type);
+            }
+        }
+
+        /// <inheritdoc />
         public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
         {
             return (nodeArchetype.Flags & NodeFlags.MaterialGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);

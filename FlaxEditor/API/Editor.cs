@@ -670,6 +670,11 @@ namespace FlaxEditor
             /// The <see cref="FlaxEngine.SceneAnimation"/>.
             /// </summary>
             SceneAnimation = 7,
+
+            /// <summary>
+            /// The <see cref="FlaxEngine.MaterialFunction"/>.
+            /// </summary>
+            MaterialFunction = 8,
         }
 
         /// <summary>

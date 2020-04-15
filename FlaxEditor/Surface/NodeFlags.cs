@@ -22,6 +22,7 @@ namespace FlaxEditor.Surface
 
         /// <summary>
         /// Node should use dependant and independent boxes types.
+        /// TODO: unused UseDependantBoxes flag, remove it
         /// </summary>
         UseDependantBoxes = 2,
 

@@ -28,6 +28,16 @@ namespace FlaxEditor.Surface
         {
         }
 
+        /// <inheritdoc />
+        public override string GetConnectionTypeName(ConnectionType type)
+        {
+            switch (type)
+            {
+            case ConnectionType.Object: return "Texture";
+            default: return base.GetConnectionTypeName(type);
+            }
+        }
+
         /// <summary>
         /// Arranges the particle modules nodes.
         /// </summary>

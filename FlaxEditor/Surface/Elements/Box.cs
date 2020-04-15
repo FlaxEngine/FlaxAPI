@@ -140,7 +140,7 @@ namespace FlaxEditor.Surface.Elements
             _currentType = DefaultType;
 
             Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
-            TooltipText = CurrentType.ToString();
+            TooltipText = Surface.GetConnectionTypeName(CurrentType);
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace FlaxEditor.Surface.Elements
         protected virtual void OnCurrentTypeChanged()
         {
             Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
-            TooltipText = CurrentType.ToString();
+            TooltipText = Surface.GetConnectionTypeName(CurrentType);
             CurrentTypeChanged?.Invoke(this);
         }
 
