@@ -100,8 +100,15 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
+        [VisibleIf("CalculateNormals")]
         [EditorOrder(30), DefaultValue(175.0f), Limit(0, 175, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two face normals at the same vertex position that their are smoothed together. The default value is 175.")]
         public float SmoothingNormalsAngle { get; set; } = 175.0f;
+
+        /// <summary>
+        /// If checked, the imported normal vectors of the mesh will be flipped (scaled by -1).
+        /// </summary>
+        [EditorOrder(35), DefaultValue(false), EditorDisplay("Geometry"), Tooltip("If checked, the imported normal vectors of the mesh will be flipped (scaled by -1).")]
+        public bool FlipNormals { get; set; } = false;
 
         /// <summary>
         /// True if calculate model tangents, otherwise will import them.
@@ -112,6 +119,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
+        [VisibleIf("CalculateTangents")]
         [EditorOrder(45), DefaultValue(45.0f), Limit(0, 45, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two vertex tangents that their tangents and bi-tangents are smoothed. The default value is 45.")]
         public float SmoothingTangentsAngle { get; set; } = 45.0f;
 
@@ -245,6 +253,7 @@ namespace FlaxEditor.Content.Import
             // Geometry
             public byte CalculateNormals;
             public float SmoothingNormalsAngle;
+            public byte FlipNormals;
             public float SmoothingTangentsAngle;
             public byte CalculateTangents;
             public byte OptimizeMeshes;
@@ -282,6 +291,7 @@ namespace FlaxEditor.Content.Import
                 Type = Type,
                 CalculateNormals = (byte)(CalculateNormals ? 1 : 0),
                 SmoothingNormalsAngle = SmoothingNormalsAngle,
+                FlipNormals = (byte)(FlipNormals ? 1 : 0),
                 SmoothingTangentsAngle = SmoothingTangentsAngle,
                 CalculateTangents = (byte)(CalculateTangents ? 1 : 0),
                 OptimizeMeshes = (byte)(OptimizeMeshes ? 1 : 0),
@@ -312,6 +322,7 @@ namespace FlaxEditor.Content.Import
             Type = options.Type;
             CalculateNormals = options.CalculateNormals != 0;
             SmoothingNormalsAngle = options.SmoothingNormalsAngle;
+            FlipNormals = options.FlipNormals != 0;
             SmoothingTangentsAngle = options.SmoothingTangentsAngle;
             CalculateTangents = options.CalculateTangents != 0;
             OptimizeMeshes = options.OptimizeMeshes != 0;
