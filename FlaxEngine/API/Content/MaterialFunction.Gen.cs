@@ -31,6 +31,17 @@ namespace FlaxEngine
         internal static extern byte[] Internal_LoadSurface(IntPtr obj);
 
         /// <summary>
+        /// Gets the function signature for Visject Surface editor.
+        /// </summary>
+        public void GetSignature(out int[] types, out string[] names)
+        {
+            Internal_GetSignature(unmanagedPtr, out types, out names);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_GetSignature(IntPtr obj, out int[] types, out string[] names);
+
+        /// <summary>
         /// Updates the material graph surface (save new one, discards cached data, reloads asset).
         /// </summary>
         /// <param name="data">The surface graph data.</param>

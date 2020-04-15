@@ -46,6 +46,8 @@ namespace FlaxEditor.Surface
                 return true;
             if (assetItem.IsOfType<MaterialBase>())
                 return true;
+            if (assetItem.IsOfType<MaterialFunction>())
+                return true;
             return base.ValidateDragItem(assetItem);
         }
 
@@ -81,6 +83,10 @@ namespace FlaxEditor.Surface
                 else if (assetItem.IsOfType<MaterialBase>())
                 {
                     node = Context.SpawnNode(8, 1, args.SurfaceLocation, new object[] { assetItem.ID });
+                }
+                else if (assetItem.IsOfType<MaterialFunction>())
+                {
+                    node = Context.SpawnNode(1, 24, args.SurfaceLocation, new object[] { assetItem.ID });
                 }
 
                 if (node != null)

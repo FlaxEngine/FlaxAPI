@@ -1,7 +1,9 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using FlaxEditor.GUI;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -21,6 +23,105 @@ namespace FlaxEditor.Surface.Archetypes
             /// Gets the allowed types for function inputs/outputs.
             /// </summary>
             ConnectionType[] FunctionTypes { get; }
+        }
+
+        internal abstract class FunctionNode : SurfaceNode
+        {
+            private AssetPicker _assetPicker;
+            private readonly List<ISurfaceNodeElement> _dynamicChildren = new List<ISurfaceNodeElement>();
+
+            /// <inheritdoc />
+            public FunctionNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            protected abstract void LoadSignature(Guid id, out int[] types, out string[] names);
+
+            /// <inheritdoc />
+            public override void OnLoaded()
+            {
+                base.OnLoaded();
+
+                _assetPicker = GetChild<AssetPicker>();
+                _assetPicker.Bounds = new Rectangle(4, 32.0f, Width - 8, 48.0f);
+                UpdateUI();
+                _assetPicker.SelectedItemChanged += OnAssetPickerSelectedItemChanged;
+            }
+
+            /// <inheritdoc />
+            public override void OnValuesChanged()
+            {
+                base.OnValuesChanged();
+
+                UpdateUI();
+            }
+
+            private void OnAssetPickerSelectedItemChanged()
+            {
+                SetValue(0, _assetPicker.SelectedID);
+            }
+
+            private void UpdateUI()
+            {
+                // Clear existing dynamic UI
+                for (int i = 0; i < _dynamicChildren.Count; i++)
+                {
+                    RemoveElement(_dynamicChildren[i]);
+                }
+                _dynamicChildren.Clear();
+
+                // Extract function signature parameters (inputs and outputs packed)
+                LoadSignature(_assetPicker.SelectedID, out var types, out var names);
+                if (types != null && names != null)
+                {
+                    int inputsCount = 0;
+                    int outputsCount = 0;
+
+                    // Inputs
+                    for (var i = 0; i < 8; i++)
+                    {
+                        if (string.IsNullOrEmpty(names[i]))
+                            break;
+
+                        var arch = NodeElementArchetype.Factory.Input(inputsCount + 3, names[i], true, (ConnectionType)types[i], i);
+                        var element = AddElement(arch);
+                        _dynamicChildren.Add(element);
+                        inputsCount++;
+                    }
+
+                    // Outputs
+                    for (var i = 8; i < 16; i++)
+                    {
+                        if (string.IsNullOrEmpty(names[i]))
+                            break;
+
+                        var arch = NodeElementArchetype.Factory.Output(outputsCount + 3, names[i], (ConnectionType)types[i], i);
+                        var element = AddElement(arch);
+                        _dynamicChildren.Add(element);
+                        outputsCount++;
+                    }
+
+                    Title = _assetPicker.SelectedItem.ShortName;
+                    var style = Style.Current;
+                    var width = Mathf.Max(Archetype.Size.X, style.FontLarge.MeasureText(Title).X + 30);
+                    var height = 60.0f + Mathf.Max(inputsCount, outputsCount) * 20.0f;
+                    Resize(width, height);
+                }
+                else
+                {
+                    Resize(Archetype.Size.X, 60.0f);
+                    Title = Archetype.Title;
+                }
+            }
+
+            /// <inheritdoc />
+            public override void OnDestroy()
+            {
+                _assetPicker = null;
+
+                base.OnDestroy();
+            }
         }
 
         private sealed class FunctionInputNode : SurfaceNode

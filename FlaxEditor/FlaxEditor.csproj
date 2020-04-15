@@ -112,6 +112,7 @@
     <Compile Include="Content\Proxy\GameplayGlobalsProxy.cs" />
     <Compile Include="Content\Proxy\IESProfileProxy.cs" />
     <Compile Include="Content\Proxy\JsonAssetProxy.cs" />
+    <Compile Include="Content\Proxy\MaterialFunctionProxy.cs" />
     <Compile Include="Content\Proxy\MaterialInstanceProxy.cs" />
     <Compile Include="Content\Proxy\MaterialProxy.cs" />
     <Compile Include="Content\Proxy\ModelProxy.cs" />
@@ -358,12 +359,6 @@
     <Compile Include="Modules\SourceCodeEditing\DefaultSourceCodeEditor.cs" />
     <Compile Include="Modules\SourceCodeEditing\InBuildSourceCodeEditor.cs" />
     <Compile Include="Modules\SourceCodeEditing\ISourceCodeEditor.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
-    <Compile Include="obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Options\Editor.cs" />
     <Compile Include="Options\EditorOptions.cs" />
     <Compile Include="Options\GeneralOptions.cs" />
@@ -444,6 +439,7 @@
     <Compile Include="Surface\ISurfaceContext.cs" />
     <Compile Include="Surface\ISurfaceNodeElement.cs" />
     <Compile Include="Surface\IVisjectSurfaceOwner.cs" />
+    <Compile Include="Surface\MaterialFunctionSurface.cs" />
     <Compile Include="Surface\MaterialSurface.cs" />
     <Compile Include="Surface\NodeArchetype.cs" />
     <Compile Include="Surface\NodeElementArchetype.cs" />
@@ -482,6 +478,7 @@
     <Compile Include="Surface\Archetypes\Comparisons.cs" />
     <Compile Include="Surface\Archetypes\Constants.cs" />
     <Compile Include="Surface\Archetypes\Custom.cs" />
+    <Compile Include="Surface\Archetypes\Function.cs" />
     <Compile Include="Surface\Archetypes\Layers.cs" />
     <Compile Include="Surface\Archetypes\Material.cs" />
     <Compile Include="Surface\Archetypes\Math.cs" />
@@ -637,6 +634,7 @@
     <Compile Include="Windows\Assets\GameplayGlobalsWindow.cs" />
     <Compile Include="Windows\Assets\IESProfileWindow.cs" />
     <Compile Include="Windows\Assets\JsonAssetWindow.cs" />
+    <Compile Include="Windows\Assets\MaterialFunctionWindow.cs" />
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
@@ -652,6 +650,7 @@
     <Compile Include="Windows\Assets\SkinnedModelWindow.cs" />
     <Compile Include="Windows\Assets\SpriteAtlasWindow.cs" />
     <Compile Include="Windows\Assets\TextureWindow.cs" />
+    <Compile Include="Windows\Assets\VisjectFunctionSurfaceWindow.cs" />
     <Compile Include="Windows\Assets\VisjectSurfaceWindow.cs" />
     <Compile Include="Windows\Profiler\CPU.cs" />
     <Compile Include="Windows\Profiler\GPU.cs" />
