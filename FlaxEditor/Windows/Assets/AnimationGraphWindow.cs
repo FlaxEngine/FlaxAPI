@@ -289,17 +289,8 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override bool LoadSurface()
         {
-            // Load surface data from the asset
-            byte[] data = _asset.LoadSurface();
-            if (data == null)
-            {
-                // Error
-                Editor.LogError("Failed to load animation graph surface data.");
-                return true;
-            }
-
             // Load surface graph
-            if (_surface.Load(data))
+            if (_surface.Load())
             {
                 // Error
                 Editor.LogError("Failed to load animation graph surface.");

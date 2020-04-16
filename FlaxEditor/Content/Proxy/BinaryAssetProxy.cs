@@ -41,7 +41,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override AssetItem ConstructItem(string path, string typeName, ref Guid id)
         {
-            return new BinaryAssetItem(path, id, typeName, Domain);
+            return new BinaryAssetItem(path, id, typeName);
         }
     }
 }

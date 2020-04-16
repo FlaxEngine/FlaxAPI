@@ -32,9 +32,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0xFF790200);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Other;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(ParticleSystem);
 
         /// <inheritdoc />

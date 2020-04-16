@@ -30,7 +30,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Input(0, "UVs", true, ConnectionType.Vector2, 0),
                     NodeElementArchetype.Factory.Output(0, "", ConnectionType.Impulse, 1),
-                    NodeElementArchetype.Factory.Asset(0, Surface.Constants.LayoutOffsetY, 0, ContentDomain.Material)
+                    NodeElementArchetype.Factory.Asset(0, Surface.Constants.LayoutOffsetY, 0, typeof(MaterialBase))
                 }
             },
             new NodeArchetype

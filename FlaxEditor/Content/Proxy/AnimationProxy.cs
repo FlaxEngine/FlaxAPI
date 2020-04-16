@@ -35,9 +35,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0xB37200);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Animation;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(Animation);
 
         /// <inheritdoc />

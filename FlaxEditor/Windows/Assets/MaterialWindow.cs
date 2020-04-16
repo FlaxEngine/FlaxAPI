@@ -342,17 +342,8 @@ namespace FlaxEditor.Windows.Assets
             // Init material properties and parameters proxy
             _properties.OnLoad(this);
 
-            // Load surface data from the asset
-            byte[] data = _asset.LoadSurface(true);
-            if (data == null)
-            {
-                // Error
-                Editor.LogError("Failed to load material surface data.");
-                return true;
-            }
-
             // Load surface graph
-            if (_surface.Load(data))
+            if (_surface.Load())
             {
                 // Error
                 Editor.LogError("Failed to load material surface.");

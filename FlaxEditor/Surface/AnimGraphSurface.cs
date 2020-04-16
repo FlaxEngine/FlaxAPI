@@ -159,11 +159,10 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         protected override bool ValidateDragItem(AssetItem assetItem)
         {
-            switch (assetItem.ItemDomain)
-            {
-            case ContentDomain.SkeletonMask:
-            case ContentDomain.Animation: return true;
-            }
+            if (assetItem.IsOfType<SkeletonMask>())
+                return true;
+            if (assetItem.IsOfType<FlaxEngine.Animation>())
+                return true;
             return base.ValidateDragItem(assetItem);
         }
 
@@ -172,31 +171,28 @@ namespace FlaxEditor.Surface
         {
             for (int i = 0; i < objects.Count; i++)
             {
-                var item = objects[i];
+                var assetItem = objects[i];
                 SurfaceNode node = null;
-                switch (item.ItemDomain)
-                {
-                case ContentDomain.Animation:
+
+                if (assetItem.IsOfType<FlaxEngine.Animation>())
                 {
                     node = Context.SpawnNode(9, 2, args.SurfaceLocation, new object[]
                     {
-                        item.ID,
+                        assetItem.ID,
                         1.0f,
                         true,
                         0.0f,
                     });
-                    break;
                 }
-                case ContentDomain.SkeletonMask:
+                else if (assetItem.IsOfType<SkeletonMask>())
                 {
                     node = Context.SpawnNode(9, 11, args.SurfaceLocation, new object[]
                     {
                         0.0f,
-                        item.ID,
+                        assetItem.ID,
                     });
-                    break;
                 }
-                }
+
                 if (node != null)
                 {
                     args.SurfaceLocation.X += node.Width + 10;

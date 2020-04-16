@@ -32,9 +32,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x16a085);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Material;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(Material);
 
         /// <inheritdoc />
@@ -76,11 +73,9 @@ namespace FlaxEditor.Content
         {
             if (materialItem == null)
                 throw new ArgumentNullException();
-            if (materialItem.ItemDomain != ContentDomain.Material)
-                throw new ArgumentException();
 
-            var materialIntanceProxy = Editor.Instance.ContentDatabase.GetProxy<MaterialInstance>();
-            Editor.Instance.Windows.ContentWin.NewItem(materialIntanceProxy, null, (item) => OnMaterialInstanceCreated(item, materialItem));
+            var materialInstanceProxy = Editor.Instance.ContentDatabase.GetProxy<MaterialInstance>();
+            Editor.Instance.Windows.ContentWin.NewItem(materialInstanceProxy, null, item => OnMaterialInstanceCreated(item, materialItem));
         }
 
         private static void OnMaterialInstanceCreated(ContentItem item, BinaryAssetItem materialItem)

@@ -24,9 +24,11 @@ namespace FlaxEditor.Surface
         /// <summary>
         /// Loads surface from the bytes.
         /// </summary>
-        /// <param name="bytes">The bytes.</param>
+        /// <remarks>
+        /// The method calls the <see cref="ISurfaceContext.SurfaceData"/> getter to load the surface data bytes.
+        /// </remarks>
         /// <returns>True if failed, otherwise false.</returns>
-        public bool Load(byte[] bytes)
+        public bool Load()
         {
             Enabled = false;
 

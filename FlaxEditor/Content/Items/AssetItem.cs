@@ -46,10 +46,27 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override ContentDomain ItemDomain => ContentDomain.Other;
-
-        /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Asset;
+
+        /// <summary>
+        /// Determines whether asset is of the specified type (included inheritance checks).
+        /// </summary>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <returns><c>true</c> if asset is of the specified type (including inherited types); otherwise, <c>false</c>.</returns>
+        public bool IsOfType<T>()
+        {
+            return IsOfType(typeof(T));
+        }
+
+        /// <summary>
+        /// Determines whether asset is of the specified type (included inheritance checks).
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns><c>true</c> if asset is of the specified type (including inherited types); otherwise, <c>false</c>.</returns>
+        public virtual bool IsOfType(Type type)
+        {
+            return false;
+        }
 
         /// <inheritdoc />
         protected override bool DrawShadow => true;

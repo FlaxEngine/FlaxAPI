@@ -38,9 +38,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0xB3452B);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Audio;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(AudioClip);
 
         /// <inheritdoc />

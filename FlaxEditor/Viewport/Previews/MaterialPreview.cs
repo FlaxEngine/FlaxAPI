@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using FlaxEditor.Surface;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Object = FlaxEngine.Object;
@@ -11,9 +12,9 @@ namespace FlaxEditor.Viewport.Previews
     /// Material or Material Instance asset preview editor viewport.
     /// </summary>
     /// <seealso cref="AssetPreview" />
-    public class MaterialPreview : AssetPreview
+    public class MaterialPreview : AssetPreview, IVisjectSurfaceOwner
     {
-        private string[] Models =
+        private static readonly string[] Models =
         {
             "Sphere",
             "Cube",
@@ -24,6 +25,12 @@ namespace FlaxEditor.Viewport.Previews
 
         private StaticModel _previewModel;
         private Decal _decal;
+        private Terrain _terrain;
+        private ParticleEffect _particleEffect;
+        private MaterialBase _particleEffectMaterial;
+        private ParticleEmitter _particleEffectEmitter;
+        private ParticleSystem _particleEffectSystem;
+        private ParticleEmitterSurface _particleEffectSurface;
         private MaterialBase _material;
         private int _selectedModelIndex;
         private Image _guiMaterialControl;
@@ -76,10 +83,6 @@ namespace FlaxEditor.Viewport.Previews
             // Link actors for rendering
             Task.AddCustomActor(_previewModel);
 
-            // TODO: don't wait for model but assign material in async on task begin or sth?
-            // do it like in c++ editor
-            _previewModel.Model?.WaitForLoaded();
-
             // Create context menu for primitive switching
             if (useWidgets && ViewWidgetButtonMenu != null)
             {
@@ -99,7 +102,16 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
-        public override bool HasLoadedAssets => base.HasLoadedAssets && _previewModel.Model.IsLoaded;
+        public override bool HasLoadedAssets
+        {
+            get
+            {
+                if (!base.HasLoadedAssets)
+                    return false;
+                UpdateMaterial();
+                return true;
+            }
+        }
 
         /// <inheritdoc />
         public override void Update(float deltaTime)
@@ -117,6 +129,9 @@ namespace FlaxEditor.Viewport.Previews
             MaterialBase postFxMaterial = null;
             MaterialBase decalMaterial = null;
             MaterialBase guiMaterial = null;
+            MaterialBase terrainMaterial = null;
+            MaterialBase particleMaterial = null;
+            bool usePreviewActor = true;
             if (_material != null)
             {
                 if (_material is MaterialInstance materialInstance && materialInstance.BaseMaterial == null)
@@ -137,25 +152,31 @@ namespace FlaxEditor.Viewport.Previews
                         decalMaterial = _material;
                         break;
                     case MaterialDomain.GUI:
+                        usePreviewActor = false;
                         guiMaterial = _material;
                         break;
                     case MaterialDomain.Terrain:
-                        // TODO: create a temporary, virtual terrain chunk to preview the material
+                        usePreviewActor = false;
+                        terrainMaterial = _material;
                         break;
                     case MaterialDomain.Particle:
-                        // TODO: draw a simple particle effect with a fixed single sprite particle
+                        usePreviewActor = false;
+                        particleMaterial = _material;
                         break;
                     default: throw new ArgumentOutOfRangeException();
                     }
                 }
             }
 
-            // PostFx
+            // Surface
             if (_previewModel.Model == null)
                 throw new Exception("Missing preview model asset.");
             if (_previewModel.Model.WaitForLoaded())
                 throw new Exception("Preview model asset failed to load.");
             _previewModel.SetMaterial(0, surfaceMaterial);
+            _previewModel.IsActive = usePreviewActor;
+
+            // PostFx
             _postFxMaterialsCache[0] = postFxMaterial;
             PostFxVolume.PostFxMaterials = new PostFxMaterialsSettings
             {
@@ -171,7 +192,9 @@ namespace FlaxEditor.Viewport.Previews
                 Task.AddCustomActor(_decal);
             }
             if (_decal)
+            {
                 _decal.Material = decalMaterial;
+            }
 
             // GUI
             if (guiMaterial && _guiMaterialControl == null)
@@ -190,6 +213,63 @@ namespace FlaxEditor.Viewport.Previews
                 ((MaterialBrush)_guiMaterialControl.Brush).Material = guiMaterial;
                 _guiMaterialControl.Enabled = _guiMaterialControl.Visible = guiMaterial != null;
             }
+
+            // Terrain
+            if (terrainMaterial && _terrain == null)
+            {
+                _terrain = Terrain.New();
+                _terrain.Setup(1, 63);
+                var chunkSize = _terrain.ChunkSize;
+                var heightMapSize = chunkSize * Terrain.PatchEdgeChunksCount + 1;
+                var heightMapLength = heightMapSize * heightMapSize;
+                var heightmap = new float[heightMapLength];
+                var patchCoord = new Int2(0, 0);
+                _terrain.AddPatch(ref patchCoord);
+                _terrain.SetupPatchHeightMap(ref patchCoord, heightmap, null, true);
+                _terrain.LocalPosition = new Vector3(-1000, 0, -1000);
+                Task.AddCustomActor(_terrain);
+            }
+            if (_terrain != null)
+            {
+                _terrain.IsActive = terrainMaterial != null;
+                _terrain.Material = terrainMaterial;
+            }
+
+            // Particle
+            if (particleMaterial && _particleEffect == null)
+            {
+                _particleEffect = ParticleEffect.New();
+                _particleEffect.IsLooping = true;
+                _particleEffect.UseTimeScale = false;
+                Task.AddCustomActor(_particleEffect);
+            }
+            if (_particleEffect != null)
+            {
+                _particleEffect.IsActive = particleMaterial != null;
+                if (particleMaterial)
+                    _particleEffect.UpdateSimulation();
+                if (_particleEffectMaterial != particleMaterial && particleMaterial)
+                {
+                    _particleEffectMaterial = particleMaterial;
+                    if (!_particleEffectEmitter)
+                    {
+                        var srcAsset = FlaxEngine.Content.LoadInternal<ParticleEmitter>("Editor/Particles/Particle Material Preview");
+                        Editor.Instance.ContentEditing.FastTempAssetClone(srcAsset.Path, out var clonedPath);
+                        _particleEffectEmitter = FlaxEngine.Content.Load<ParticleEmitter>(clonedPath);
+                    }
+                    if (_particleEffectSurface == null)
+                        _particleEffectSurface = new ParticleEmitterSurface(this, null, null);
+                    if (_particleEffectEmitter)
+                    {
+                        if (!_particleEffectSurface.Load())
+                        {
+                            var spriteModuleNode = _particleEffectSurface.FindNode(15, 400);
+                            spriteModuleNode.Values[2] = particleMaterial.ID;
+                            _particleEffectSurface.Save();
+                        }
+                    }
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -203,11 +283,57 @@ namespace FlaxEditor.Viewport.Previews
                 _guiMaterialControl = null;
             }
 
-            // Ensure to cleanup created actor objects
             Object.Destroy(ref _previewModel);
             Object.Destroy(ref _decal);
+            Object.Destroy(ref _terrain);
+            Object.Destroy(ref _particleEffect);
+            Object.Destroy(ref _particleEffectEmitter);
+            Object.Destroy(ref _particleEffectSystem);
+            _particleEffectMaterial = null;
+            _particleEffectSurface = null;
 
             base.OnDestroy();
+        }
+
+        /// <inheritdoc />
+        string ISurfaceContext.SurfaceName => string.Empty;
+
+        /// <inheritdoc />
+        byte[] ISurfaceContext.SurfaceData
+        {
+            get => _particleEffectEmitter.LoadSurface(false);
+            set
+            {
+                _particleEffectEmitter.SaveSurface(value);
+                _particleEffectEmitter.Reload();
+
+                if (!_particleEffectSystem)
+                {
+                    _particleEffectSystem = FlaxEngine.Content.CreateVirtualAsset<ParticleSystem>();
+                    _particleEffectSystem.Init(_particleEffectEmitter, 5.0f);
+                    _particleEffect.ParticleSystem = _particleEffectSystem;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        void ISurfaceContext.OnContextCreated(VisjectSurfaceContext context)
+        {
+        }
+
+        /// <inheritdoc />
+        void IVisjectSurfaceOwner.OnSurfaceEditedChanged()
+        {
+        }
+
+        /// <inheritdoc />
+        void IVisjectSurfaceOwner.OnSurfaceGraphEdited()
+        {
+        }
+
+        /// <inheritdoc />
+        void IVisjectSurfaceOwner.OnSurfaceClose()
+        {
         }
     }
 }

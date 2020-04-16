@@ -181,11 +181,6 @@ namespace FlaxEditor.Content
         private SpriteHandle _shadowIcon;
 
         /// <summary>
-        /// Gets the item domain.
-        /// </summary>
-        public virtual ContentDomain ItemDomain => ContentDomain.Invalid;
-
-        /// <summary>
         /// Gets the type of the item.
         /// </summary>
         public abstract ContentItemType ItemType { get; }

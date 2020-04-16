@@ -294,18 +294,17 @@ namespace FlaxEditor.Surface
             /// <param name="x">The x location (in node area space).</param>
             /// <param name="y">The y location (in node area space).</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
-            /// <param name="domain">The allowed assets domain to use.</param>
+            /// <param name="type">The allowed assets type to use (including inherited types).</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype Asset(float x, float y, int valueIndex, ContentDomain domain)
+            public static NodeElementArchetype Asset(float x, float y, int valueIndex, Type type)
             {
                 return new NodeElementArchetype
                 {
                     Type = NodeElementType.Asset,
                     Position = new Vector2(x, y),
-                    Text = null,
+                    Text = type.FullName,
                     Single = false,
                     ValueIndex = valueIndex,
-                    BoxID = (int)domain, // Pack it to int
                     ConnectionsType = ConnectionType.Invalid
                 };
             }

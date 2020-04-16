@@ -23,9 +23,6 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override ContentDomain ItemDomain => ContentDomain.Document;
-
-        /// <inheritdoc />
         public override ContentItemSearchFilter SearchFilter => ContentItemSearchFilter.Json;
 
         /// <inheritdoc />

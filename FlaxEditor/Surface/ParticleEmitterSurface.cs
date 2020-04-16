@@ -92,10 +92,10 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         protected override bool ValidateDragItem(AssetItem assetItem)
         {
-            switch (assetItem.ItemDomain)
-            {
-            case ContentDomain.Texture: return true;
-            }
+            if (assetItem.IsOfType<Texture>())
+                return true;
+            if (assetItem.IsOfType<CubeTexture>())
+                return true;
             return base.ValidateDragItem(assetItem);
         }
 
@@ -104,22 +104,16 @@ namespace FlaxEditor.Surface
         {
             for (int i = 0; i < objects.Count; i++)
             {
-                var item = objects[i];
+                var assetItem = objects[i];
                 SurfaceNode node = null;
 
-                switch (item.ItemDomain)
+                if (assetItem.IsOfType<Texture>())
                 {
-                case ContentDomain.Texture:
-                {
-                    node = Context.SpawnNode(5, 11, args.SurfaceLocation, new object[] { item.ID });
-                    break;
+                    node = Context.SpawnNode(5, 11, args.SurfaceLocation, new object[] { assetItem.ID });
                 }
-
-                case ContentDomain.CubeTexture:
+                else if (assetItem.IsOfType<CubeTexture>())
                 {
-                    node = Context.SpawnNode(5, 12, args.SurfaceLocation, new object[] { item.ID });
-                    break;
-                }
+                    node = Context.SpawnNode(5, 12, args.SurfaceLocation, new object[] { assetItem.ID });
                 }
 
                 if (node != null)

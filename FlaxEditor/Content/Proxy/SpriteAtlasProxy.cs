@@ -37,9 +37,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x5C7F69);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Texture;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(SpriteAtlas);
 
         /// <inheritdoc />

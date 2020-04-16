@@ -278,7 +278,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentDomain.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
     <Compile Include="EditorIcons.cs" />
@@ -618,6 +617,7 @@
     <Compile Include="SceneGraph\Actors\AudioSourceNode.cs" />
     <Compile Include="SceneGraph\Actors\BoneSocketNode.cs" />
     <Compile Include="SceneGraph\Actors\BoxBrushNode.cs" />
+    <Compile Include="SceneGraph\Actors\BoxColliderNode.cs" />
     <Compile Include="SceneGraph\Actors\BoxVolumeNode.cs" />
     <Compile Include="SceneGraph\Actors\CameraNode.cs" />
     <Compile Include="SceneGraph\Actors\ColliderNode.cs" />

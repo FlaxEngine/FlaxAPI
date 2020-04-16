@@ -22,9 +22,6 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override ContentDomain ItemDomain => ContentDomain.Prefab;
-
-        /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Asset;
 
         /// <inheritdoc />
