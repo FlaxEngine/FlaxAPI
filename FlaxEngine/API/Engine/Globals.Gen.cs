@@ -110,18 +110,6 @@ namespace FlaxEngine
         internal static extern string Internal_GetSourceFolder();
 
         /// <summary>
-        /// Folder with C# API assemblies
-        /// </summary>
-        [Tooltip("Folder with C# API assemblies")]
-        public static string ManagedAssembliesFolder
-        {
-            get { return Internal_GetManagedAssembliesFolder(); }
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetManagedAssembliesFolder();
-
-        /// <summary>
         /// Content directory path
         /// </summary>
         [Tooltip("Content directory path")]

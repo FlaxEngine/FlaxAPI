@@ -41,7 +41,7 @@ namespace FlaxEditor.Windows
         };
 
         /// <summary>
-        /// The output log textbox.
+        /// The output log text box.
         /// </summary>
         /// <seealso cref="FlaxEngine.GUI.RichTextBoxBase" />
         private sealed class OutputTextBox : RichTextBoxBase

@@ -17,5 +17,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.7.6194")]
 [assembly: AssemblyFileVersion("0.7.6194")]
 
-[assembly: InternalsVisibleTo("FlaxEditor")]
+[assembly: InternalsVisibleTo("FlaxEditor.CSharp")]
 [assembly: InternalsVisibleTo("FlaxEngine.Tests")]
