@@ -12,7 +12,7 @@ namespace FlaxEditor.Windows.Assets
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.Assets.AssetEditorWindow" />
     /// <seealso cref="FlaxEditor.Surface.IVisjectSurfaceOwner" />
-    public abstract class VisjectFunctionSurfaceWindow<TAsset, TSurface> : AssetEditorWindowBase<TAsset>, IVisjectSurfaceOwner
+    public abstract class VisjectFunctionSurfaceWindow<TAsset, TSurface> : ClonedAssetEditorWindowBase<TAsset>, IVisjectSurfaceOwner
     where TAsset : Asset
     where TSurface : VisjectSurface
     {
@@ -27,9 +27,9 @@ namespace FlaxEditor.Windows.Assets
         private bool _showWholeGraphOnLoad = true;
 
         /// <summary>
-        /// True if asset is dirty, otherwise false.
+        /// True if temporary asset is dirty, otherwise false.
         /// </summary>
-        protected bool _assetIsDirty;
+        protected bool _tmpAssetIsDirty;
 
         /// <summary>
         /// True if window is waiting for asset load to load surface.
@@ -118,6 +118,11 @@ namespace FlaxEditor.Windows.Assets
                 return;
             }
 
+            if (SaveToOriginal())
+            {
+                return;
+            }
+
             ClearEditedFlag();
             OnSurfaceEditedChanged();
             _item.RefreshThumbnail();
@@ -171,7 +176,7 @@ namespace FlaxEditor.Windows.Assets
         public void OnSurfaceGraphEdited()
         {
             // Mark as dirty
-            _assetIsDirty = true;
+            _tmpAssetIsDirty = true;
         }
 
         /// <inheritdoc />
@@ -197,9 +202,9 @@ namespace FlaxEditor.Windows.Assets
         {
             base.Update(deltaTime);
 
-            if (_assetIsDirty)
+            if (_tmpAssetIsDirty)
             {
-                _assetIsDirty = false;
+                _tmpAssetIsDirty = false;
 
                 RefreshTempAsset();
             }
