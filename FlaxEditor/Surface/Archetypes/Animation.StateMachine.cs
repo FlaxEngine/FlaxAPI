@@ -66,7 +66,7 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <summary>
-            /// Gets or sets a value indicating whether skip any triggered transitions durig first animation state machine update.
+            /// Gets or sets a value indicating whether skip any triggered transitions during first animation state machine update.
             /// </summary>
             public bool SkipFirstUpdateTransition
             {
@@ -86,28 +86,34 @@ namespace FlaxEditor.Surface.Archetypes
                 editButton.Parent = this;
                 editButton.Clicked += Edit;
 
-                var maxTransitionsPerUpdateLabel = new Label(marginX, editButton.Bottom + 4, 153, TextBox.DefaultHeight);
-                maxTransitionsPerUpdateLabel.HorizontalAlignment = TextAlignment.Near;
-                maxTransitionsPerUpdateLabel.Text = "Max Transitions Per Update:";
-                maxTransitionsPerUpdateLabel.Parent = this;
+                var maxTransitionsPerUpdateLabel = new Label(marginX, editButton.Bottom + 4, 153, TextBox.DefaultHeight)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Text = "Max Transitions Per Update:",
+                    Parent = this,
+                };
 
                 _maxTransitionsPerUpdate = new IntValueBox(3, maxTransitionsPerUpdateLabel.Right + 4, maxTransitionsPerUpdateLabel.Y, 40, 1, 32, 0.1f);
                 _maxTransitionsPerUpdate.ValueChanged += () => MaxTransitionsPerUpdate = _maxTransitionsPerUpdate.Value;
                 _maxTransitionsPerUpdate.Parent = this;
 
-                var reinitializeOnBecomingRelevantLabel = new Label(marginX, maxTransitionsPerUpdateLabel.Bottom + 4, 185, TextBox.DefaultHeight);
-                reinitializeOnBecomingRelevantLabel.HorizontalAlignment = TextAlignment.Near;
-                reinitializeOnBecomingRelevantLabel.Text = "Reinitialize On Becoming Relevant:";
-                reinitializeOnBecomingRelevantLabel.Parent = this;
+                var reinitializeOnBecomingRelevantLabel = new Label(marginX, maxTransitionsPerUpdateLabel.Bottom + 4, 185, TextBox.DefaultHeight)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Text = "Reinitialize On Becoming Relevant:",
+                    Parent = this,
+                };
 
                 _reinitializeOnBecomingRelevant = new CheckBox(reinitializeOnBecomingRelevantLabel.Right + 4, reinitializeOnBecomingRelevantLabel.Y, true, TextBox.DefaultHeight);
                 _reinitializeOnBecomingRelevant.StateChanged += (checkbox) => ReinitializeOnBecomingRelevant = checkbox.Checked;
                 _reinitializeOnBecomingRelevant.Parent = this;
 
-                var skipFirstUpdateTransitionLabel = new Label(marginX, reinitializeOnBecomingRelevantLabel.Bottom + 4, 152, TextBox.DefaultHeight);
-                skipFirstUpdateTransitionLabel.HorizontalAlignment = TextAlignment.Near;
-                skipFirstUpdateTransitionLabel.Text = "Skip First Update Transition:";
-                skipFirstUpdateTransitionLabel.Parent = this;
+                var skipFirstUpdateTransitionLabel = new Label(marginX, reinitializeOnBecomingRelevantLabel.Bottom + 4, 152, TextBox.DefaultHeight)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Text = "Skip First Update Transition:",
+                    Parent = this,
+                };
 
                 _skipFirstUpdateTransition = new CheckBox(skipFirstUpdateTransitionLabel.Right + 4, skipFirstUpdateTransitionLabel.Y, true, TextBox.DefaultHeight);
                 _skipFirstUpdateTransition.StateChanged += (checkbox) => SkipFirstUpdateTransition = checkbox.Checked;
