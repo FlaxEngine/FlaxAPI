@@ -41,7 +41,7 @@ namespace FlaxEngine
         /// Finds the asset info by id.
         /// </summary>
         /// <param name="id">The asset id.</param>
-        /// <param name="info">The output asset info. Filled with valid values if method returns true.</param>
+        /// <param name="info">The output asset info. Filled with valid values only if method returns true.</param>
         /// <returns>True if found any asset, otherwise false.</returns>
         public static bool GetAssetInfo(Guid id, out AssetInfo info)
         {
@@ -55,7 +55,7 @@ namespace FlaxEngine
         /// Finds the asset info by path.
         /// </summary>
         /// <param name="path">The asset path.</param>
-        /// <param name="info">The output asset info. Filled with valid values if method returns true.</param>
+        /// <param name="info">The output asset info. Filled with valid values only if method returns true.</param>
         /// <returns>True if found any asset, otherwise false.</returns>
         public static bool GetAssetInfo(string path, out AssetInfo info)
         {
