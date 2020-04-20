@@ -25,6 +25,23 @@ namespace FlaxEngine
         }
 
         /// <summary>
+        /// Occurs when asset is being reloaded and will be unloaded (by force) to be loaded again (e.g. after reimport). Always called from the main thread.
+        /// </summary>
+        public static event Action<Asset> AssetReloading;
+
+        internal static void Internal_AssetReloading(Asset asset)
+        {
+            try
+            {
+                AssetReloading?.Invoke(asset);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        /// <summary>
         /// Loads asset to the Content Pool and holds it until it won't be referenced by any object. Returns null if asset is missing. Actual asset data loading is performed on a other thread in async.
         /// </summary>
         /// <param name="id">Asset unique ID.</param>
