@@ -85,7 +85,7 @@ namespace FlaxEditor.GUI
             _inputField.Parent = this;
         }
 
-        private bool IsInputValid => _inputField.Text == _startValue || Validate == null || Validate(this, _inputField.Text);
+        private bool IsInputValid => !string.IsNullOrWhiteSpace(_inputField.Text) && (_inputField.Text == _startValue || Validate == null || Validate(this, _inputField.Text));
 
         private void OnTextChanged()
         {
@@ -130,7 +130,7 @@ namespace FlaxEditor.GUI
         private void OnEnd()
         {
             var text = Text;
-            if (text.Length > 0 && text != _startValue && IsInputValid)
+            if (text != _startValue && IsInputValid)
             {
                 Renamed?.Invoke(this);
             }
