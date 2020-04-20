@@ -33,6 +33,9 @@ namespace FlaxEditor.Surface.Archetypes
             private Asset _asset; // Keep reference to the asset to keep it loaded and handle function signature changes reload event
             private bool _isRegistered;
 
+            public static int MaxInputs = 16;
+            public static int MaxOutputs = 16;
+
             protected FunctionNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
             {
@@ -125,13 +128,13 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Count inputs and outputs
                     int inputsCount = 0;
-                    for (var i = 0; i < 8; i++)
+                    for (var i = 0; i < MaxInputs; i++)
                     {
                         if (!string.IsNullOrEmpty(names[i]))
                             inputsCount++;
                     }
                     int outputsCount = 0;
-                    for (var i = 8; i < 16; i++)
+                    for (var i = MaxInputs; i < MaxInputs + MaxOutputs; i++)
                     {
                         if (!string.IsNullOrEmpty(names[i]))
                             outputsCount++;
@@ -151,7 +154,7 @@ namespace FlaxEditor.Surface.Archetypes
                     _outputs = new Box[outputsCount];
                     for (var i = 0; i < outputsCount; i++)
                     {
-                        var arch = NodeElementArchetype.Factory.Output(i + 3, names[i + 8], (ConnectionType)types[i + 8], i + 8);
+                        var arch = NodeElementArchetype.Factory.Output(i + 3, names[i + MaxInputs], (ConnectionType)types[i + MaxInputs], i + MaxInputs);
                         var box = new OutputBox(this, arch);
                         TryRestoreConnections(box, prevOutputs, ref arch);
                         _outputs[i] = box;
@@ -267,6 +270,7 @@ namespace FlaxEditor.Surface.Archetypes
                     value = name + " " + count++;
                 }
                 Values[1] = value;
+                _nameField.Text = value;
 
                 // Let user pick a name
                 StartRenaming();
