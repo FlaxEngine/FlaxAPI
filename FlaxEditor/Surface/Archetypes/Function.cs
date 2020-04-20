@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FlaxEditor.GUI;
 using FlaxEditor.Surface.Elements;
 using FlaxEngine;
@@ -124,13 +125,140 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
-        private sealed class FunctionInputNode : SurfaceNode
+        private class FunctionInputOutputNode : SurfaceNode
+        {
+            protected Label _nameField;
+
+            /// <summary>
+            /// Gets or sets the function input/output name.
+            /// </summary>
+            public string SignatureName
+            {
+                get => (string)Values[1];
+                set
+                {
+                    if (!string.Equals(value, (string)Values[1], StringComparison.Ordinal))
+                    {
+                        SetValue(1, value);
+                        _nameField.Text = value;
+                    }
+                }
+            }
+
+            /// <inheritdoc />
+            public FunctionInputOutputNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+                _nameField = new Label
+                {
+                    Width = 140.0f,
+                    TextColorHighlighted = Style.Current.ForegroundGrey,
+                    HorizontalAlignment = TextAlignment.Near,
+                    Parent = this,
+                };
+            }
+
+            /// <inheritdoc />
+            public override void OnSurfaceLoaded()
+            {
+                base.OnSurfaceLoaded();
+
+                _nameField.Text = SignatureName;
+            }
+
+            /// <inheritdoc />
+            public override void OnSpawned()
+            {
+                base.OnSpawned();
+
+                // Ensure to have unique name
+                var name = SignatureName;
+                var value = name;
+                int count = 1;
+                while (!OnRenameValidate(null, value))
+                {
+                    value = name + " " + count++;
+                }
+                Values[1] = value;
+
+                // Let user pick a name
+                StartRenaming();
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            {
+                if (base.OnMouseDoubleClick(location, buttons))
+                    return true;
+
+                if (_nameField.Bounds.Contains(ref location))
+                {
+                    StartRenaming();
+                    return true;
+                }
+
+                return false;
+            }
+
+            /// <inheritdoc />
+            public override void OnShowSecondaryContextMenu(FlaxEditor.GUI.ContextMenu.ContextMenu menu, Vector2 location)
+            {
+                base.OnShowSecondaryContextMenu(menu, location);
+
+                menu.AddButton("Rename", StartRenaming);
+            }
+
+            /// <summary>
+            /// Starts the function input/output parameter renaming by showing a rename popup to the user.
+            /// </summary>
+            private void StartRenaming()
+            {
+                Surface.Select(this);
+                var dialog = RenamePopup.Show(this, _nameField.Bounds, SignatureName, false);
+                dialog.Validate += OnRenameValidate;
+                dialog.Renamed += OnRenamed;
+            }
+
+            private bool OnRenameValidate(RenamePopup popup, string value)
+            {
+                if (string.IsNullOrEmpty(value))
+                    return false;
+                return Context.Nodes.All(node =>
+                {
+                    if (node != this && node is FunctionInputOutputNode inputOutputNode)
+                        return inputOutputNode.SignatureName != value;
+                    return true;
+                });
+            }
+
+            private void OnRenamed(RenamePopup renamePopup)
+            {
+                SignatureName = renamePopup.Text;
+            }
+
+            /// <inheritdoc />
+            public override void OnValuesChanged()
+            {
+                base.OnValuesChanged();
+
+                _nameField.Text = SignatureName;
+            }
+
+            /// <inheritdoc />
+            public override void OnDestroy()
+            {
+                _nameField = null;
+
+                base.OnDestroy();
+            }
+        }
+
+        private sealed class FunctionInputNode : FunctionInputOutputNode
         {
             private ConnectionType[] _types;
             private ComboBox _typePicker;
-            private TextBox _nameField;
-            private Elements.Box _outputBox;
-            private Elements.Box _defaultValueBox;
+            private Box _outputBox;
+            private Box _defaultValueBox;
 
             /// <inheritdoc />
             public FunctionInputNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
@@ -145,12 +273,7 @@ namespace FlaxEditor.Surface.Archetypes
                 };
                 for (int i = 0; i < _types.Length; i++)
                     _typePicker.AddItem(Surface.GetConnectionTypeName(_types[i]));
-                _nameField = new TextBox
-                {
-                    Location = new Vector2(_typePicker.Right + 2.0f, _typePicker.Y),
-                    Width = 140.0f,
-                    Parent = this,
-                };
+                _nameField.Location = new Vector2(_typePicker.Right + 2.0f, _typePicker.Y);
             }
 
             /// <inheritdoc />
@@ -164,18 +287,11 @@ namespace FlaxEditor.Surface.Archetypes
                 _defaultValueBox.CurrentType = _outputBox.CurrentType;
                 _typePicker.SelectedIndex = Array.IndexOf(_types, _outputBox.CurrentType);
                 _typePicker.SelectedIndexChanged += OnTypePickerSelectedIndexChanged;
-                _nameField.Text = (string)Values[1];
-                _nameField.TextChanged += OnNameFieldTextChanged;
             }
 
             private void OnTypePickerSelectedIndexChanged(ComboBox picker)
             {
                 SetValue(0, (int)_types[picker.SelectedIndex]);
-            }
-
-            private void OnNameFieldTextChanged()
-            {
-                SetValue(1, _nameField.Text);
             }
 
             /// <inheritdoc />
@@ -186,7 +302,6 @@ namespace FlaxEditor.Surface.Archetypes
                 _outputBox.CurrentType = (ConnectionType)(int)Values[0];
                 _defaultValueBox.CurrentType = _outputBox.CurrentType;
                 _typePicker.SelectedIndex = Array.IndexOf(_types, _outputBox.CurrentType);
-                _nameField.Text = (string)Values[1];
             }
 
             /// <inheritdoc />
@@ -194,7 +309,6 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 _types = null;
                 _typePicker = null;
-                _nameField = null;
                 _outputBox = null;
                 _defaultValueBox = null;
 
@@ -202,12 +316,11 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
-        private sealed class FunctionOutputNode : SurfaceNode
+        private sealed class FunctionOutputNode : FunctionInputOutputNode
         {
             private ConnectionType[] _types;
             private ComboBox _typePicker;
-            private TextBox _nameField;
-            private Elements.Box _inputBox;
+            private Box _inputBox;
 
             /// <inheritdoc />
             public FunctionOutputNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
@@ -222,12 +335,7 @@ namespace FlaxEditor.Surface.Archetypes
                 };
                 for (int i = 0; i < _types.Length; i++)
                     _typePicker.AddItem(Surface.GetConnectionTypeName(_types[i]));
-                _nameField = new TextBox
-                {
-                    Location = new Vector2(_typePicker.Right + 2.0f, _typePicker.Y),
-                    Width = 140.0f,
-                    Parent = this,
-                };
+                _nameField.Location = new Vector2(_typePicker.Right + 2.0f, _typePicker.Y);
             }
 
             /// <inheritdoc />
@@ -239,18 +347,11 @@ namespace FlaxEditor.Surface.Archetypes
                 _inputBox.CurrentType = (ConnectionType)(int)Values[0];
                 _typePicker.SelectedIndex = Array.IndexOf(_types, _inputBox.CurrentType);
                 _typePicker.SelectedIndexChanged += OnTypePickerSelectedIndexChanged;
-                _nameField.Text = (string)Values[1];
-                _nameField.TextChanged += OnNameFieldTextChanged;
             }
 
             private void OnTypePickerSelectedIndexChanged(ComboBox picker)
             {
                 SetValue(0, (int)_types[picker.SelectedIndex]);
-            }
-
-            private void OnNameFieldTextChanged()
-            {
-                SetValue(1, _nameField.Text);
             }
 
             /// <inheritdoc />
@@ -260,7 +361,6 @@ namespace FlaxEditor.Surface.Archetypes
 
                 _inputBox.CurrentType = (ConnectionType)(int)Values[0];
                 _typePicker.SelectedIndex = Array.IndexOf(_types, _inputBox.CurrentType);
-                _nameField.Text = (string)Values[1];
             }
 
             /// <inheritdoc />
@@ -268,7 +368,6 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 _types = null;
                 _typePicker = null;
-                _nameField = null;
                 _inputBox = null;
 
                 base.OnDestroy();
