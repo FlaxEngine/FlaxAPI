@@ -199,7 +199,6 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override void OnDestroy()
             {
-                _assetPicker.SelectedAsset = null;
                 _assetPicker = null;
                 _asset = null;
                 if (_isRegistered)
