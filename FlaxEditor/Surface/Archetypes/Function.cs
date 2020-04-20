@@ -100,6 +100,11 @@ namespace FlaxEditor.Surface.Archetypes
                     {
                         box.Connections.AddRange(prevBox.Connections);
                         prevBox.Connections.Clear();
+                        foreach (var connection in box.Connections)
+                        {
+                            connection.Connections.Remove(prevBox);
+                            connection.Connections.Add(box);
+                        }
                         box.ConnectionTick();
                         prevBox.ConnectionTick();
                         foreach (var connection in box.Connections)
