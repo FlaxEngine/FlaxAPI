@@ -266,13 +266,14 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            protected override void LoadSignature(Guid id, out int[] types, out string[] names)
+            protected override Asset LoadSignature(Guid id, out int[] types, out string[] names)
             {
                 types = null;
                 names = null;
                 var function = FlaxEngine.Content.Load<MaterialFunction>(id);
                 if (function)
                     function.GetSignature(out types, out names);
+                return function;
             }
         }
 

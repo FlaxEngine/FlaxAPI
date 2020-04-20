@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.GUI;
 using FlaxEditor.Surface.Elements;
@@ -29,25 +28,48 @@ namespace FlaxEditor.Surface.Archetypes
         internal abstract class FunctionNode : SurfaceNode
         {
             private AssetPicker _assetPicker;
-            private readonly List<ISurfaceNodeElement> _dynamicChildren = new List<ISurfaceNodeElement>();
+            private Box[] _inputs;
+            private Box[] _outputs;
+            private Asset _asset; // Keep reference to the asset to keep it loaded and handle function signature changes reload event
+            private bool _isRegistered;
 
-            /// <inheritdoc />
-            public FunctionNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            protected FunctionNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
             : base(id, context, nodeArch, groupArch)
             {
             }
 
-            protected abstract void LoadSignature(Guid id, out int[] types, out string[] names);
+            protected abstract Asset LoadSignature(Guid id, out int[] types, out string[] names);
 
             /// <inheritdoc />
             public override void OnLoaded()
             {
                 base.OnLoaded();
 
+                FlaxEngine.Content.AssetReloading += OnAssetReloading;
+                FlaxEngine.Content.AssetDisposing += OnContentAssetDisposing;
+                _isRegistered = true;
+
                 _assetPicker = GetChild<AssetPicker>();
                 _assetPicker.Bounds = new Rectangle(4, 32.0f, Width - 8, 48.0f);
                 UpdateUI();
                 _assetPicker.SelectedItemChanged += OnAssetPickerSelectedItemChanged;
+            }
+
+            private void OnContentAssetDisposing(Asset asset)
+            {
+                // Ensure to clear reference if need to
+                if (asset == _asset)
+                    _asset = null;
+            }
+
+            private void OnAssetReloading(Asset asset)
+            {
+                // Update when used function gets modified (signature might be modified)
+                if (_asset == asset)
+                {
+                    UpdateUI();
+                    Surface.MarkAsEdited();
+                }
             }
 
             /// <inheritdoc />
@@ -63,44 +85,71 @@ namespace FlaxEditor.Surface.Archetypes
                 SetValue(0, _assetPicker.SelectedID);
             }
 
+            private void TryRestoreConnections(Box box, Box[] prevBoxes, ref NodeElementArchetype arch)
+            {
+                if (prevBoxes == null)
+                    return;
+
+                for (int j = 0; j < prevBoxes.Length; j++)
+                {
+                    var prevBox = prevBoxes[j];
+                    if (prevBox != null &&
+                        prevBox.HasAnyConnection &&
+                        prevBox.Archetype.Text == arch.Text &&
+                        box.CanUseType(prevBox.Connections[0].CurrentType))
+                    {
+                        box.Connections.AddRange(prevBox.Connections);
+                        prevBox.Connections.Clear();
+                        box.ConnectionTick();
+                        prevBox.ConnectionTick();
+                        foreach (var connection in box.Connections)
+                            connection.ConnectionTick();
+                        break;
+                    }
+                }
+            }
+
             private void UpdateUI()
             {
-                // Clear existing dynamic UI
-                for (int i = 0; i < _dynamicChildren.Count; i++)
-                {
-                    RemoveElement(_dynamicChildren[i]);
-                }
-                _dynamicChildren.Clear();
+                var prevInputs = _inputs;
+                var prevOutputs = _outputs;
 
                 // Extract function signature parameters (inputs and outputs packed)
-                LoadSignature(_assetPicker.SelectedID, out var types, out var names);
+                _asset = LoadSignature(_assetPicker.SelectedID, out var types, out var names);
                 if (types != null && names != null)
                 {
+                    // Count inputs and outputs
                     int inputsCount = 0;
-                    int outputsCount = 0;
-
-                    // Inputs
                     for (var i = 0; i < 8; i++)
                     {
-                        if (string.IsNullOrEmpty(names[i]))
-                            break;
+                        if (!string.IsNullOrEmpty(names[i]))
+                            inputsCount++;
+                    }
+                    int outputsCount = 0;
+                    for (var i = 8; i < 16; i++)
+                    {
+                        if (!string.IsNullOrEmpty(names[i]))
+                            outputsCount++;
+                    }
 
-                        var arch = NodeElementArchetype.Factory.Input(inputsCount + 3, names[i], true, (ConnectionType)types[i], i);
-                        var element = AddElement(arch);
-                        _dynamicChildren.Add(element);
-                        inputsCount++;
+                    // Inputs
+                    _inputs = new Box[inputsCount];
+                    for (var i = 0; i < inputsCount; i++)
+                    {
+                        var arch = NodeElementArchetype.Factory.Input(i + 3, names[i], true, (ConnectionType)types[i], i);
+                        var box = new InputBox(this, arch);
+                        TryRestoreConnections(box, prevInputs, ref arch);
+                        _inputs[i] = box;
                     }
 
                     // Outputs
-                    for (var i = 8; i < 16; i++)
+                    _outputs = new Box[outputsCount];
+                    for (var i = 0; i < outputsCount; i++)
                     {
-                        if (string.IsNullOrEmpty(names[i]))
-                            break;
-
-                        var arch = NodeElementArchetype.Factory.Output(outputsCount + 3, names[i], (ConnectionType)types[i], i);
-                        var element = AddElement(arch);
-                        _dynamicChildren.Add(element);
-                        outputsCount++;
+                        var arch = NodeElementArchetype.Factory.Output(i + 3, names[i + 8], (ConnectionType)types[i + 8], i + 8);
+                        var box = new OutputBox(this, arch);
+                        TryRestoreConnections(box, prevOutputs, ref arch);
+                        _outputs[i] = box;
                     }
 
                     Title = _assetPicker.SelectedItem.ShortName;
@@ -111,15 +160,49 @@ namespace FlaxEditor.Surface.Archetypes
                 }
                 else
                 {
+                    _inputs = null;
+                    _outputs = null;
                     Resize(Archetype.Size.X, 60.0f);
                     Title = Archetype.Title;
+                }
+
+                // Remove previous boxes
+                if (prevInputs != null)
+                {
+                    for (int i = 0; i < prevInputs.Length; i++)
+                        RemoveElement(prevInputs[i]);
+                }
+                if (prevOutputs != null)
+                {
+                    for (int i = 0; i < prevOutputs.Length; i++)
+                        RemoveElement(prevOutputs[i]);
+                }
+
+                // Add new boxes
+                if (_inputs != null)
+                {
+                    for (int i = 0; i < _inputs.Length; i++)
+                        AddElement(_inputs[i]);
+                }
+                if (_outputs != null)
+                {
+                    for (int i = 0; i < _outputs.Length; i++)
+                        AddElement(_outputs[i]);
                 }
             }
 
             /// <inheritdoc />
             public override void OnDestroy()
             {
+                _assetPicker.SelectedAsset = null;
                 _assetPicker = null;
+                _asset = null;
+                if (_isRegistered)
+                {
+                    _isRegistered = false;
+                    FlaxEngine.Content.AssetReloading -= OnAssetReloading;
+                    FlaxEngine.Content.AssetDisposing -= OnContentAssetDisposing;
+                }
 
                 base.OnDestroy();
             }
