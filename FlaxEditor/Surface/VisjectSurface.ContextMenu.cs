@@ -1,9 +1,11 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
+using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEditor.Surface.Elements;
+using FlaxEditor.Surface.Undo;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -14,8 +16,6 @@ namespace FlaxEditor.Surface
         private ContextMenuButton _cmCopyButton;
         private ContextMenuButton _cmPasteButton;
         private ContextMenuButton _cmDuplicateButton;
-        private ContextMenuButton _cmCutButton;
-        private ContextMenuButton _cmDeleteButton;
         private ContextMenuButton _cmRemoveNodeConnectionsButton;
         private ContextMenuButton _cmRemoveBoxConnectionsButton;
         private readonly Vector2 ContextMenuOffset = new Vector2(5);
@@ -106,24 +106,89 @@ namespace FlaxEditor.Surface
         /// Shows the secondary context menu.
         /// </summary>
         /// <param name="location">The location in the Surface Space.</param>
-        public virtual void ShowSecondaryCM(Vector2 location)
+        /// <param name="controlUnderMouse">The Surface Control that is under the cursor. Used to customize the menu.</param>
+        public virtual void ShowSecondaryCM(Vector2 location, SurfaceControl controlUnderMouse)
         {
             var selection = SelectedNodes;
             if (selection.Count == 0)
                 return;
 
-            // Update context menu buttons
-            _cmPasteButton.Enabled = CanPaste();
-            _cmCutButton.Enabled = selection.All(node => (node.Archetype.Flags & NodeFlags.NoRemove) == 0);
-            _cmDeleteButton.Enabled = _cmCutButton.Enabled;
-            var boxUnderMouse = GetChildAtRecursive(location) as Box;
-            _cmRemoveBoxConnectionsButton.Enabled = boxUnderMouse != null && boxUnderMouse.HasAnyConnection;
-            _cmRemoveBoxConnectionsButton.Tag = boxUnderMouse;
+            // Create secondary context menu
+            var menu = new FlaxEditor.GUI.ContextMenu.ContextMenu();
+            menu.AddButton("Save", _onSave);
+            menu.AddSeparator();
+            _cmCopyButton = menu.AddButton("Copy", Copy);
+            menu.AddButton("Paste", Paste).Enabled = CanPaste();
+            _cmDuplicateButton = menu.AddButton("Duplicate", Duplicate);
+            var canRemove = selection.All(node => (node.Archetype.Flags & NodeFlags.NoRemove) == 0);
+            menu.AddButton("Cut", Cut).Enabled = canRemove;
+            menu.AddButton("Delete", Delete).Enabled = canRemove;
+            menu.AddSeparator();
+            _cmRemoveNodeConnectionsButton = menu.AddButton("Remove all connections to that node(s)", () =>
+            {
+                var nodes = ((List<SurfaceNode>)menu.Tag);
+
+                if (Undo != null)
+                {
+                    var actions = new List<IUndoAction>(nodes.Count);
+                    foreach (var node in nodes)
+                    {
+                        var action = new EditNodeConnections(Context, node);
+                        node.RemoveConnections();
+                        action.End();
+                        actions.Add(action);
+                    }
+                    Undo.AddAction(new MultiUndoAction(actions, actions[0].ActionString));
+                }
+                else
+                {
+                    foreach (var node in nodes)
+                    {
+                        node.RemoveConnections();
+                    }
+                }
+
+                MarkAsEdited();
+            });
+            _cmRemoveBoxConnectionsButton = menu.AddButton("Remove all connections to that box", () =>
+            {
+                var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
+
+                if (Undo != null)
+                {
+                    var action = new EditNodeConnections(Context, boxUnderMouse.ParentNode);
+                    boxUnderMouse.RemoveConnections();
+                    action.End();
+                    Undo.AddAction(action);
+                }
+                else
+                {
+                    boxUnderMouse.RemoveConnections();
+                }
+
+                MarkAsEdited();
+            });
+            {
+                var boxUnderMouse = GetChildAtRecursive(location) as Box;
+                _cmRemoveBoxConnectionsButton.Enabled = boxUnderMouse != null && boxUnderMouse.HasAnyConnection;
+                _cmRemoveBoxConnectionsButton.Tag = boxUnderMouse;
+            }
+            controlUnderMouse?.OnShowSecondaryContextMenu(menu, controlUnderMouse.PointFromParent(location));
+            OnShowSecondaryContextMenu(menu, controlUnderMouse);
 
             // Show secondary context menu
             _cmStartPos = location;
-            _cmSecondaryMenu.Tag = selection;
-            _cmSecondaryMenu.Show(this, location);
+            menu.Tag = selection;
+            menu.Show(this, location);
+        }
+
+        /// <summary>
+        /// Called when editor is showing secondary context menu. Can be used to inject custom options for surface logic.
+        /// </summary>
+        /// <param name="controlUnderMouse">The Surface Control that is under the cursor. Used to customize the menu.</param>
+        /// <param name="menu">The menu.</param>
+        protected virtual void OnShowSecondaryContextMenu(FlaxEditor.GUI.ContextMenu.ContextMenu menu, SurfaceControl controlUnderMouse)
+        {
         }
 
         private void OnPrimaryMenuVisibleChanged(Control primaryMenu)
@@ -142,11 +207,11 @@ namespace FlaxEditor.Surface
         protected virtual void OnPrimaryMenuButtonClick(VisjectCMItem visjectCmItem, Box selectedBox)
         {
             var node = Context.SpawnNode(
-                visjectCmItem.GroupArchetype,
-                visjectCmItem.NodeArchetype,
-                _rootControl.PointFromParent(ref _cmStartPos),
-                visjectCmItem.Data
-            );
+                                         visjectCmItem.GroupArchetype,
+                                         visjectCmItem.NodeArchetype,
+                                         _rootControl.PointFromParent(ref _cmStartPos),
+                                         visjectCmItem.Data
+                                        );
             if (node == null)
                 return;
 
@@ -204,7 +269,6 @@ namespace FlaxEditor.Surface
                 ConnectingStart(startBox);
             }
             ConnectingEnd(endBox);
-
 
             // Smart-Select next box
             /*

@@ -95,6 +95,15 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Called when editor is showing secondary context menu. Can be used to inject custom options for node logic.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        /// <param name="location">The show location (in control space).</param>
+        public virtual void OnShowSecondaryContextMenu(FlaxEditor.GUI.ContextMenu.ContextMenu menu, Vector2 location)
+        {
+        }
+
+        /// <summary>
         /// Called after <see cref="IsSelected"/> changes
         /// </summary>
         protected virtual void OnSelectionChanged()

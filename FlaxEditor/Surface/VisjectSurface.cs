@@ -7,7 +7,6 @@ using FlaxEditor.GUI.Drag;
 using FlaxEditor.Options;
 using FlaxEditor.Surface.Archetypes;
 using FlaxEditor.Surface.ContextMenu;
-using FlaxEditor.Surface.Elements;
 using FlaxEditor.Surface.GUI;
 using FlaxEditor.Surface.Undo;
 using FlaxEngine;
@@ -35,6 +34,7 @@ namespace FlaxEditor.Surface
         private VisjectCM _activeVisjectCM;
         private GroupArchetype _customNodesGroup;
         private List<NodeArchetype> _customNodes;
+        private Action _onSave;
 
         /// <summary>
         /// The left mouse down flag.
@@ -90,11 +90,6 @@ namespace FlaxEditor.Surface
         /// The primary context menu.
         /// </summary>
         protected VisjectCM _cmPrimaryMenu;
-
-        /// <summary>
-        /// The secondary context menu.
-        /// </summary>
-        protected FlaxEditor.GUI.ContextMenu.ContextMenu _cmSecondaryMenu;
 
         /// <summary>
         /// The context menu start position.
@@ -286,65 +281,11 @@ namespace FlaxEditor.Surface
                 throw new InvalidOperationException("Missing visject surface style.");
             NodeArchetypes = groups ?? NodeFactory.DefaultGroups;
             Undo = undo;
+            _onSave = onSave;
 
             // Initialize with the root context
             OpenContext(owner);
             RootContext.Modified += OnRootContextModified;
-
-            // Create secondary menu (for other actions)
-            _cmSecondaryMenu = new FlaxEditor.GUI.ContextMenu.ContextMenu();
-            _cmSecondaryMenu.AddButton("Save", onSave);
-            _cmSecondaryMenu.AddSeparator();
-            _cmCopyButton = _cmSecondaryMenu.AddButton("Copy", Copy);
-            _cmPasteButton = _cmSecondaryMenu.AddButton("Paste", Paste);
-            _cmDuplicateButton = _cmSecondaryMenu.AddButton("Duplicate", Duplicate);
-            _cmCutButton = _cmSecondaryMenu.AddButton("Cut", Cut);
-            _cmDeleteButton = _cmSecondaryMenu.AddButton("Delete", Delete);
-            _cmSecondaryMenu.AddSeparator();
-            _cmRemoveNodeConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that node(s)", () =>
-            {
-                var nodes = ((List<SurfaceNode>)_cmSecondaryMenu.Tag);
-
-                if (Undo != null)
-                {
-                    var actions = new List<IUndoAction>(nodes.Count);
-                    foreach (var node in nodes)
-                    {
-                        var action = new EditNodeConnections(Context, node);
-                        node.RemoveConnections();
-                        action.End();
-                        actions.Add(action);
-                    }
-                    Undo.AddAction(new MultiUndoAction(actions, actions[0].ActionString));
-                }
-                else
-                {
-                    foreach (var node in nodes)
-                    {
-                        node.RemoveConnections();
-                    }
-                }
-
-                MarkAsEdited();
-            });
-            _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
-            {
-                var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
-
-                if (Undo != null)
-                {
-                    var action = new EditNodeConnections(Context, boxUnderMouse.ParentNode);
-                    boxUnderMouse.RemoveConnections();
-                    action.End();
-                    Undo.AddAction(action);
-                }
-                else
-                {
-                    boxUnderMouse.RemoveConnections();
-                }
-
-                MarkAsEdited();
-            });
 
             // Setup input actions
             InputActions = new InputActionsContainer(new[]
@@ -755,6 +696,7 @@ namespace FlaxEditor.Surface
             // Cleanup context cache
             _root = null;
             _context = null;
+            _onSave = null;
             ContextStack.Clear();
             foreach (var context in _contextCache.Values)
             {
@@ -765,7 +707,6 @@ namespace FlaxEditor.Surface
             // Cleanup
             _activeVisjectCM = null;
             _cmPrimaryMenu?.Dispose();
-            _cmSecondaryMenu.Dispose();
 
             base.OnDestroy();
         }

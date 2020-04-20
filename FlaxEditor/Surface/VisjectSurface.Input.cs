@@ -472,7 +472,7 @@ namespace FlaxEditor.Surface
                             Select(controlUnderMouse);
 
                         // Show secondary context menu
-                        ShowSecondaryCM(_cmStartPos);
+                        ShowSecondaryCM(_cmStartPos, controlUnderMouse);
                     }
                     else
                     {
