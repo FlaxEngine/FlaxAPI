@@ -40,7 +40,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Linear Layer Blend",
                 Description = "Create blended layer using linear math",
                 Flags = NodeFlags.MaterialGraph | NodeFlags.NoSpawnViaGUI,
-                Size = new Vector2(170, 80),
+                Size = new Vector2(200, 80),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, "Bottom", true, ConnectionType.Impulse, 0),
@@ -101,7 +101,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Title = "Linear Layer Blend",
                 Description = "Create blended layer using linear math",
                 Flags = NodeFlags.MaterialGraph,
-                Size = new Vector2(170, 80),
+                Size = new Vector2(200, 80),
                 DefaultValues = new object[]
                 {
                     0.0f,
