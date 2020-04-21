@@ -414,6 +414,11 @@ namespace FlaxEditor.Content.Import
                 _settings.Type = TextureImportSettings.CustomTextureFormatType.HdrRGBA;
                 _settings.Compress = false;
             }
+            else if (extension == ".hdr")
+            {
+                // HDR sky texture
+                _settings.Type = TextureImportSettings.CustomTextureFormatType.HdrRGB;
+            }
             else if (_settings.Type != TextureImportSettings.CustomTextureFormatType.ColorRGB)
             {
                 // Skip checking
