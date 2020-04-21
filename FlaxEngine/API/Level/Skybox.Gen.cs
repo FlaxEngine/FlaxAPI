@@ -45,10 +45,27 @@ namespace FlaxEngine
         internal static extern void Internal_SetCubeTexture(IntPtr obj, IntPtr value);
 
         /// <summary>
-        /// The skybox custom material used to override default (domain set to surface).
+        /// The panoramic texture to draw.
         /// </summary>
         [EditorOrder(20), DefaultValue(null), EditorDisplay("Skybox")]
-        [Tooltip("The skybox custom material used to override default (domain set to surface).")]
+        [Tooltip("The panoramic texture to draw.")]
+        public Texture PanoramicTexture
+        {
+            get { return Internal_GetPanoramicTexture(unmanagedPtr); }
+            set { Internal_SetPanoramicTexture(unmanagedPtr, FlaxEngine.Object.GetUnmanagedPtr(value)); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern Texture Internal_GetPanoramicTexture(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetPanoramicTexture(IntPtr obj, IntPtr value);
+
+        /// <summary>
+        /// The skybox custom material used to override default (domain set to surface). Must have CubeTexture, Color, PanoramicTexture and IsPanoramic parameters like Engine/SkyboxMaterial material.
+        /// </summary>
+        [EditorOrder(30), DefaultValue(null), EditorDisplay("Skybox")]
+        [Tooltip("The skybox custom material used to override default (domain set to surface). Must have CubeTexture, Color, PanoramicTexture and IsPanoramic parameters like Engine/SkyboxMaterial material.")]
         public MaterialBase CustomMaterial
         {
             get { return Internal_GetCustomMaterial(unmanagedPtr); }
@@ -64,7 +81,7 @@ namespace FlaxEngine
         /// <summary>
         /// The skybox texture tint color.
         /// </summary>
-        [EditorOrder(30), DefaultValue(typeof(Color), "1,1,1,1"), EditorDisplay("Skybox")]
+        [EditorOrder(40), DefaultValue(typeof(Color), "1,1,1,1"), EditorDisplay("Skybox")]
         [Tooltip("The skybox texture tint color.")]
         public Color Color
         {
@@ -77,5 +94,22 @@ namespace FlaxEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetColor(IntPtr obj, ref Color value);
+
+        /// <summary>
+        /// The skybox texture exposure value. Can be used to make skybox brighter or dimmer.
+        /// </summary>
+        [EditorOrder(50), DefaultValue(0.0f), Limit(-100, 100, 0.01f), EditorDisplay("Skybox")]
+        [Tooltip("The skybox texture exposure value. Can be used to make skybox brighter or dimmer.")]
+        public float Exposure
+        {
+            get { return Internal_GetExposure(unmanagedPtr); }
+            set { Internal_SetExposure(unmanagedPtr, value); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetExposure(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetExposure(IntPtr obj, float value);
     }
 }
