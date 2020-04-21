@@ -45,10 +45,10 @@ namespace FlaxEngine
         internal static extern void Internal_SetCubeTexture(IntPtr obj, IntPtr value);
 
         /// <summary>
-        /// The panoramic texture to draw.
+        /// The panoramic texture to draw. It should have a resolution ratio close to 2:1.
         /// </summary>
         [EditorOrder(20), DefaultValue(null), EditorDisplay("Skybox")]
-        [Tooltip("The panoramic texture to draw.")]
+        [Tooltip("The panoramic texture to draw. It should have a resolution ratio close to 2:1.")]
         public Texture PanoramicTexture
         {
             get { return Internal_GetPanoramicTexture(unmanagedPtr); }
@@ -62,10 +62,10 @@ namespace FlaxEngine
         internal static extern void Internal_SetPanoramicTexture(IntPtr obj, IntPtr value);
 
         /// <summary>
-        /// The skybox custom material used to override default (domain set to surface). Must have CubeTexture, Color, PanoramicTexture and IsPanoramic parameters like Engine/SkyboxMaterial material.
+        /// The skybox custom material used to override default (domain set to surface).
         /// </summary>
         [EditorOrder(30), DefaultValue(null), EditorDisplay("Skybox")]
-        [Tooltip("The skybox custom material used to override default (domain set to surface). Must have CubeTexture, Color, PanoramicTexture and IsPanoramic parameters like Engine/SkyboxMaterial material.")]
+        [Tooltip("The skybox custom material used to override default (domain set to surface).")]
         public MaterialBase CustomMaterial
         {
             get { return Internal_GetCustomMaterial(unmanagedPtr); }
