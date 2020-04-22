@@ -189,13 +189,26 @@ namespace FlaxEditor.Windows.Assets
         /// Loads the surface from the asset. Called during <see cref="Update"/> when asset is loaded and surface is missing.
         /// </summary>
         /// <returns>True if failed, otherwise false.</returns>
-        protected abstract bool LoadSurface();
+        protected virtual bool LoadSurface()
+        {
+            if (_surface.Load())
+            {
+                Editor.LogError("Failed to load surface.");
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Saves the surface to the asset. Called during <see cref="Update"/> when asset is loaded and surface is missing.
         /// </summary>
         /// <returns>True if failed, otherwise false.</returns>
-        protected abstract bool SaveSurface();
+        protected virtual bool SaveSurface()
+        {
+            _surface.Save();
+            return false;
+        }
+
 
         /// <inheritdoc />
         public override void Update(float deltaTime)

@@ -49,23 +49,5 @@ namespace FlaxEditor.Windows.Assets
                 _asset.Reload();
             }
         }
-
-        /// <inheritdoc />
-        protected override bool LoadSurface()
-        {
-            if (_surface.Load())
-            {
-                Editor.LogError("Failed to load surface.");
-                return true;
-            }
-            return false;
-        }
-
-        /// <inheritdoc />
-        protected override bool SaveSurface()
-        {
-            _surface.Save();
-            return false;
-        }
     }
 }

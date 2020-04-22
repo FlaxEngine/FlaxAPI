@@ -138,7 +138,7 @@ namespace FlaxEditor.Surface
                     _cmStateMachineTransitionMenu = new VisjectCM(new VisjectCM.InitInfo
                     {
                         Groups = NodeFactory.DefaultGroups,
-                        CanSpawnNode = CanSpawnNodeType,
+                        CanSpawnNode = CanUseNodeType,
                         ParametersGetter = null,
                         CustomNodesGroup = GetCustomNodes(),
                     });
@@ -162,9 +162,9 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        public override bool CanUseNodeType(NodeArchetype nodeArchetype)
         {
-            return (nodeArchetype.Flags & NodeFlags.AnimGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);
+            return (nodeArchetype.Flags & NodeFlags.AnimGraph) != 0 && base.CanUseNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />
@@ -173,6 +173,8 @@ namespace FlaxEditor.Surface
             if (assetItem.IsOfType<SkeletonMask>())
                 return true;
             if (assetItem.IsOfType<FlaxEngine.Animation>())
+                return true;
+            if (assetItem.IsOfType<AnimationGraphFunction>())
                 return true;
             return base.ValidateDragItem(assetItem);
         }
@@ -202,6 +204,10 @@ namespace FlaxEditor.Surface
                         0.0f,
                         assetItem.ID,
                     });
+                }
+                else if (assetItem.IsOfType<AnimationGraphFunction>())
+                {
+                    node = Context.SpawnNode(9, 24, args.SurfaceLocation, new object[] { assetItem.ID, });
                 }
 
                 if (node != null)

@@ -87,9 +87,9 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        public override bool CanUseNodeType(NodeArchetype nodeArchetype)
         {
-            return (nodeArchetype.Flags & NodeFlags.ParticleEmitterGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);
+            return (nodeArchetype.Flags & NodeFlags.ParticleEmitterGraph) != 0 && base.CanUseNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />

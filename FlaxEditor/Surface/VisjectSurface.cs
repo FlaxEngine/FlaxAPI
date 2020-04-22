@@ -408,11 +408,11 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Determines whether the specified node archetype can be spawned into the surface.
+        /// Determines whether the specified node archetype can be used in the surface.
         /// </summary>
         /// <param name="nodeArchetype">The node archetype.</param>
-        /// <returns>True if can spawn this node archetype, otherwise false.</returns>
-        public virtual bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        /// <returns>True if can use this node archetype, otherwise false.</returns>
+        public virtual bool CanUseNodeType(NodeArchetype nodeArchetype)
         {
             return (nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) == 0;
         }

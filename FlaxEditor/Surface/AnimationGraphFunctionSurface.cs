@@ -6,13 +6,13 @@ using FlaxEditor.Surface.Archetypes;
 namespace FlaxEditor.Surface
 {
     /// <summary>
-    /// The Visject Surface implementation for the material functions editor.
+    /// The Visject Surface implementation for the animation graph functions editor.
     /// </summary>
-    /// <seealso cref="MaterialSurface" />
+    /// <seealso cref="AnimGraphSurface" />
     /// <seealso cref="Function.IFunctionSurface" />
-    public class MaterialFunctionSurface : MaterialSurface, Function.IFunctionSurface
+    public class AnimationGraphFunctionSurface : AnimGraphSurface, Function.IFunctionSurface
     {
-        private static readonly ConnectionType[] MaterialFunctionTypes =
+        private static readonly ConnectionType[] AnimationGraphFunctionTypes =
         {
             ConnectionType.Bool,
             ConnectionType.Integer,
@@ -20,12 +20,12 @@ namespace FlaxEditor.Surface
             ConnectionType.Vector2,
             ConnectionType.Vector3,
             ConnectionType.Vector4,
-            ConnectionType.Object,
             ConnectionType.Impulse,
+            ConnectionType.ImpulseSecondary,
         };
 
         /// <inheritdoc />
-        public MaterialFunctionSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo)
+        public AnimationGraphFunctionSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo)
         : base(owner, onSave, undo)
         {
         }
@@ -33,14 +33,17 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         public override bool CanUseNodeType(NodeArchetype nodeArchetype)
         {
-            if (nodeArchetype.Title == "Function Input" ||
-                nodeArchetype.Title == "Function Output")
+            if (nodeArchetype.Title == "Function Input")
+                return true;
+
+            // Allow to use Function Output only in the root graph (not in state machine sub-graphs)
+            if (Context == RootContext && nodeArchetype.Title == "Function Output")
                 return true;
 
             return base.CanUseNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />
-        public ConnectionType[] FunctionTypes => MaterialFunctionTypes;
+        public ConnectionType[] FunctionTypes => AnimationGraphFunctionTypes;
     }
 }

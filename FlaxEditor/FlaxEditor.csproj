@@ -54,13 +54,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Content\Proxy\ParticleEmitterFunctionProxy.cs" />
+    <Compile Include="Content\Proxy\AnimationGraphFunctionProxy.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
     <Compile Include="EditorIcons.cs" />
     <Compile Include="IEditable.cs" />
     <Compile Include="ProjectInfo.cs" />
-    <Compile Include="Surface\ParticleEmitterFunctionSurface.cs" />
+    <Compile Include="Surface\AnimationGraphFunctionSurface.cs" />
     <Compile Include="ViewportDebugDrawData.cs" />
     <Compile Include="API\Editor.cs" />
     <Compile Include="API\Editor\CodeEditor.Gen.cs" />
@@ -118,6 +118,7 @@
     <Compile Include="Content\Proxy\MaterialInstanceProxy.cs" />
     <Compile Include="Content\Proxy\MaterialProxy.cs" />
     <Compile Include="Content\Proxy\ModelProxy.cs" />
+    <Compile Include="Content\Proxy\ParticleEmitterFunctionProxy.cs" />
     <Compile Include="Content\Proxy\ParticleEmitterProxy.cs" />
     <Compile Include="Content\Proxy\ParticleSystemProxy.cs" />
     <Compile Include="Content\Proxy\PrefabProxy.cs" />
@@ -449,6 +450,7 @@
     <Compile Include="Surface\NodeFactory.cs" />
     <Compile Include="Surface\NodeFlags.cs" />
     <Compile Include="Surface\ParameterType.cs" />
+    <Compile Include="Surface\ParticleEmitterFunctionSurface.cs" />
     <Compile Include="Surface\ParticleEmitterSurface.cs" />
     <Compile Include="Surface\SurfaceComment.cs" />
     <Compile Include="Surface\SurfaceControl.cs" />
@@ -605,7 +607,7 @@
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
-    <Compile Include="Windows\Assets\ParticleEmitterFunctionWindow.cs" />
+    <Compile Include="Windows\Assets\AnimationGraphFunctionWindow.cs" />
     <Compile Include="Windows\ContentWindow.ContextMenu.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
@@ -641,6 +643,7 @@
     <Compile Include="Windows\Assets\MaterialInstanceWindow.cs" />
     <Compile Include="Windows\Assets\MaterialWindow.cs" />
     <Compile Include="Windows\Assets\ModelWindow.cs" />
+    <Compile Include="Windows\Assets\ParticleEmitterFunctionWindow.cs" />
     <Compile Include="Windows\Assets\ParticleEmitterWindow.cs" />
     <Compile Include="Windows\Assets\ParticleSystemWindow.cs" />
     <Compile Include="Windows\Assets\PrefabWindow.Actions.cs" />

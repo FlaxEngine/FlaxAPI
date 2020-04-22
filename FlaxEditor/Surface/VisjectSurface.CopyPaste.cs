@@ -341,7 +341,7 @@ namespace FlaxEditor.Surface
                         throw new InvalidOperationException("Unknown node type.");
 
                     // Validate given node type
-                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0 || !CanSpawnNodeType(nodeArchetype))
+                    if (!CanUseNodeType(nodeArchetype))
                         continue;
 
                     // Create

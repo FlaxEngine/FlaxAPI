@@ -680,6 +680,11 @@ namespace FlaxEditor
             /// The <see cref="FlaxEngine.ParticleEmitterFunction"/>.
             /// </summary>
             ParticleEmitterFunction = 9,
+
+            /// <summary>
+            /// The <see cref="FlaxEngine.AnimationGraphFunction"/>.
+            /// </summary>
+            AnimationGraphFunction = 10,
         }
 
         /// <summary>

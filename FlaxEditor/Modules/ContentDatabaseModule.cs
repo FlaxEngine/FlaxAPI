@@ -870,6 +870,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new CollisionDataProxy());
             Proxy.Add(new AudioClipProxy());
             Proxy.Add(new AnimationGraphProxy());
+            Proxy.Add(new AnimationGraphFunctionProxy());
             Proxy.Add(new AnimationProxy());
             Proxy.Add(new SkeletonMaskProxy());
             Proxy.Add(new GameplayGlobalsProxy());

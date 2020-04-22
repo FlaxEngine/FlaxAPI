@@ -8,25 +8,25 @@ using FlaxEngine;
 namespace FlaxEditor.Content
 {
     /// <summary>
-    /// A <see cref="ParticleEmitterFunction"/> asset proxy object.
+    /// A <see cref="AnimationGraphFunction"/> asset proxy object.
     /// </summary>
     /// <seealso cref="FlaxEditor.Content.BinaryAssetProxy" />
-    public class ParticleEmitterFunctionProxy : BinaryAssetProxy
+    public class AnimationGraphFunctionProxy : BinaryAssetProxy
     {
         /// <inheritdoc />
-        public override string Name => "Particle Emitter Function";
+        public override string Name => "Animation Graph Function";
 
         /// <inheritdoc />
         public override EditorWindow Open(Editor editor, ContentItem item)
         {
-            return new ParticleEmitterFunctionWindow(editor, item as AssetItem);
+            return new AnimationGraphFunctionWindow(editor, item as AssetItem);
         }
 
         /// <inheritdoc />
-        public override Color AccentColor => Color.FromRGB(0x1795a3);
+        public override Color AccentColor => Color.FromRGB(0x991597);
 
         /// <inheritdoc />
-        public override Type AssetType => typeof(ParticleEmitterFunction);
+        public override Type AssetType => typeof(AnimationGraphFunction);
 
         /// <inheritdoc />
         public override bool CanCreate(ContentFolder targetLocation)
@@ -37,7 +37,7 @@ namespace FlaxEditor.Content
         /// <inheritdoc />
         public override void Create(string outputPath, object arg)
         {
-            if (Editor.CreateAsset(Editor.NewAssetType.ParticleEmitterFunction, outputPath))
+            if (Editor.CreateAsset(Editor.NewAssetType.AnimationGraphFunction, outputPath))
                 throw new Exception("Failed to create new asset.");
         }
     }

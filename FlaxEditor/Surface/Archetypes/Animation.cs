@@ -135,8 +135,8 @@ namespace FlaxEditor.Surface.Archetypes
                     {
                         Type = NodeElementType.Input,
                         Position = new Vector2(
-                            FlaxEditor.Surface.Constants.NodeMarginX - FlaxEditor.Surface.Constants.BoxOffsetX,
-                            FlaxEditor.Surface.Constants.NodeMarginY + FlaxEditor.Surface.Constants.NodeHeaderSize + ylevel * FlaxEditor.Surface.Constants.LayoutOffsetY),
+                                               FlaxEditor.Surface.Constants.NodeMarginX - FlaxEditor.Surface.Constants.BoxOffsetX,
+                                               FlaxEditor.Surface.Constants.NodeMarginY + FlaxEditor.Surface.Constants.NodeHeaderSize + ylevel * FlaxEditor.Surface.Constants.LayoutOffsetY),
                         Text = "Pose " + _blendPoses.Count,
                         Single = true,
                         ValueIndex = -1,
@@ -231,6 +231,26 @@ namespace FlaxEditor.Surface.Archetypes
             /// Enable root motion (remove from root node transform and apply to the target).
             /// </summary>
             Enable = 2,
+        }
+
+        private sealed class AnimationGraphFunctionNode : Function.FunctionNode
+        {
+            /// <inheritdoc />
+            public AnimationGraphFunctionNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            protected override Asset LoadSignature(Guid id, out int[] types, out string[] names)
+            {
+                types = null;
+                names = null;
+                var function = FlaxEngine.Content.Load<AnimationGraphFunction>(id);
+                if (function)
+                    function.GetSignature(out types, out names);
+                return function;
+            }
         }
 
         /// <summary>
@@ -738,6 +758,23 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(2, "Normalized Time", ConnectionType.Float, 2),
                     NodeElementArchetype.Factory.Output(3, "Reaming Time", ConnectionType.Float, 3),
                     NodeElementArchetype.Factory.Output(4, "Reaming Normalized Time", ConnectionType.Float, 4),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 24,
+                Create = (id, context, arch, groupArch) => new AnimationGraphFunctionNode(id, context, arch, groupArch),
+                Title = "Animation Graph Function",
+                Description = "Calls animation graph function",
+                Flags = NodeFlags.AnimGraph,
+                Size = new Vector2(240, 120),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, typeof(AnimationGraphFunction)),
                 }
             },
         };

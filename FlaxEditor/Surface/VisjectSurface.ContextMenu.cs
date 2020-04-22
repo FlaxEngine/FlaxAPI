@@ -14,7 +14,6 @@ namespace FlaxEditor.Surface
     public partial class VisjectSurface
     {
         private ContextMenuButton _cmCopyButton;
-        private ContextMenuButton _cmPasteButton;
         private ContextMenuButton _cmDuplicateButton;
         private ContextMenuButton _cmRemoveNodeConnectionsButton;
         private ContextMenuButton _cmRemoveBoxConnectionsButton;
@@ -61,7 +60,7 @@ namespace FlaxEditor.Surface
             return new VisjectCM(new VisjectCM.InitInfo
             {
                 Groups = NodeArchetypes,
-                CanSpawnNode = CanSpawnNodeType,
+                CanSpawnNode = CanUseNodeType,
                 ParametersGetter = () => Parameters,
                 CustomNodesGroup = GetCustomNodes(),
                 ParameterGetNodeArchetype = GetParameterGetterNodeArchetype(out _),
@@ -72,6 +71,7 @@ namespace FlaxEditor.Surface
         /// Shows the primary menu.
         /// </summary>
         /// <param name="location">The location in the Surface Space.</param>
+        /// <param name="input">The user text input for nodes search..</param>
         public virtual void ShowPrimaryMenu(Vector2 location, string input = null)
         {
             // TODO: If the menu is not fully visible, move the surface a bit
@@ -87,6 +87,7 @@ namespace FlaxEditor.Surface
 
             // Show primary menu
             _cmStartPos = location;
+
             // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
             _activeVisjectCM.Show(this, location + ContextMenuOffset, _connectionInstigator as Box);
 
@@ -94,7 +95,7 @@ namespace FlaxEditor.Surface
             {
                 foreach (char character in input)
                 {
-                    // OnKeyDown-- > VisjectCM focuses on the text-thingy
+                    // OnKeyDown -> VisjectCM focuses on the text-thingy
                     _activeVisjectCM.OnKeyDown(KeyboardKeys.None);
                     _activeVisjectCM.OnCharInput(character);
                     _activeVisjectCM.OnKeyUp(KeyboardKeys.None);

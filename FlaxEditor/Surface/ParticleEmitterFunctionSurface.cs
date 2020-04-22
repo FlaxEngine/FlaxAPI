@@ -30,13 +30,13 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        public override bool CanUseNodeType(NodeArchetype nodeArchetype)
         {
             if (nodeArchetype.Title == "Function Input" ||
                 nodeArchetype.Title == "Function Output")
                 return true;
 
-            return base.CanSpawnNodeType(nodeArchetype);
+            return base.CanUseNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />
