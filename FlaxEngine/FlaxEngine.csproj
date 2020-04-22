@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -181,6 +181,7 @@
     <Compile Include="API\Particles\ParticleEffect.cs" />
     <Compile Include="API\Particles\ParticleEffect.Gen.cs" />
     <Compile Include="API\Particles\ParticleEmitter.Gen.cs" />
+    <Compile Include="API\Particles\ParticleEmitterFunction.Gen.cs" />
     <Compile Include="API\Particles\ParticleSystem.Gen.cs" />
     <Compile Include="API\Particles\Types.Gen.cs" />
     <Compile Include="API\Physics\BoxCollider.Gen.cs" />

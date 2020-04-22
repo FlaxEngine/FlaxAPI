@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -54,11 +54,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Content\Proxy\ParticleEmitterFunctionProxy.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
     <Compile Include="EditorIcons.cs" />
     <Compile Include="IEditable.cs" />
     <Compile Include="ProjectInfo.cs" />
+    <Compile Include="Surface\ParticleEmitterFunctionSurface.cs" />
     <Compile Include="ViewportDebugDrawData.cs" />
     <Compile Include="API\Editor.cs" />
     <Compile Include="API\Editor\CodeEditor.Gen.cs" />
@@ -603,6 +605,7 @@
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
+    <Compile Include="Windows\Assets\ParticleEmitterFunctionWindow.cs" />
     <Compile Include="Windows\ContentWindow.ContextMenu.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />

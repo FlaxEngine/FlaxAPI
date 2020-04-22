@@ -6,13 +6,13 @@ using FlaxEditor.Surface.Archetypes;
 namespace FlaxEditor.Surface
 {
     /// <summary>
-    /// The Visject Surface implementation for the material functions editor.
+    /// The Visject Surface implementation for the particle emitter functions editor.
     /// </summary>
-    /// <seealso cref="MaterialSurface" />
+    /// <seealso cref="ParticleEmitterSurface" />
     /// <seealso cref="Function.IFunctionSurface" />
-    public class MaterialFunctionSurface : MaterialSurface, Function.IFunctionSurface
+    public class ParticleEmitterFunctionSurface : ParticleEmitterSurface, Function.IFunctionSurface
     {
-        private static readonly ConnectionType[] MaterialFunctionTypes =
+        private static readonly ConnectionType[] ParticleEmitterFunctionTypes =
         {
             ConnectionType.Bool,
             ConnectionType.Integer,
@@ -21,11 +21,10 @@ namespace FlaxEditor.Surface
             ConnectionType.Vector3,
             ConnectionType.Vector4,
             ConnectionType.Object,
-            ConnectionType.Impulse,
         };
 
         /// <inheritdoc />
-        public MaterialFunctionSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo)
+        public ParticleEmitterFunctionSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo)
         : base(owner, onSave, undo)
         {
         }
@@ -41,6 +40,6 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public ConnectionType[] FunctionTypes => MaterialFunctionTypes;
+        public ConnectionType[] FunctionTypes => ParticleEmitterFunctionTypes;
     }
 }

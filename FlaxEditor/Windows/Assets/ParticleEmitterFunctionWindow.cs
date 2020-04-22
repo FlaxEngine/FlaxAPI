@@ -8,18 +8,18 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Windows.Assets
 {
     /// <summary>
-    /// Material function window allows to view and edit <see cref="MaterialFunction"/> asset.
+    /// Particle function window allows to view and edit <see cref="ParticleEmitterFunction"/> asset.
     /// </summary>
-    /// <seealso cref="MaterialFunction" />
-    /// <seealso cref="MaterialFunctionSurface" />
-    public sealed class MaterialFunctionWindow : VisjectFunctionSurfaceWindow<MaterialFunction, MaterialFunctionSurface>
+    /// <seealso cref="ParticleEmitterFunction" />
+    /// <seealso cref="ParticleEmitterFunctionSurface" />
+    public sealed class ParticleEmitterFunctionWindow : VisjectFunctionSurfaceWindow<ParticleEmitterFunction, ParticleEmitterFunctionSurface>
     {
         /// <inheritdoc />
-        public MaterialFunctionWindow(Editor editor, AssetItem item)
+        public ParticleEmitterFunctionWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
             // Surface
-            _surface = new MaterialFunctionSurface(this, Save, _undo)
+            _surface = new ParticleEmitterFunctionSurface(this, Save, _undo)
             {
                 AnchorPreset = AnchorPresets.StretchAll,
                 Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
@@ -29,11 +29,11 @@ namespace FlaxEditor.Windows.Assets
 
             // Toolstrip
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/graphics/materials/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/particles/index.html")).LinkTooltip("See documentation to learn more");
         }
 
         /// <inheritdoc />
-        public override string SurfaceName => "Material Function";
+        public override string SurfaceName => "Particle Emitter Function";
 
         /// <inheritdoc />
         public override byte[] SurfaceData

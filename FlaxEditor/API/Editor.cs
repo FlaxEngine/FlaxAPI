@@ -675,6 +675,11 @@ namespace FlaxEditor
             /// The <see cref="FlaxEngine.MaterialFunction"/>.
             /// </summary>
             MaterialFunction = 8,
+
+            /// <summary>
+            /// The <see cref="FlaxEngine.ParticleEmitterFunction"/>.
+            /// </summary>
+            ParticleEmitterFunction = 9,
         }
 
         /// <summary>

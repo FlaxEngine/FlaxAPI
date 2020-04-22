@@ -301,6 +301,26 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
+        private sealed class ParticleEmitterFunctionNode : Function.FunctionNode
+        {
+            /// <inheritdoc />
+            public ParticleEmitterFunctionNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            protected override Asset LoadSignature(Guid id, out int[] types, out string[] names)
+            {
+                types = null;
+                names = null;
+                var function = FlaxEngine.Content.Load<ParticleEmitterFunction>(id);
+                if (function)
+                    function.GetSignature(out types, out names);
+                return function;
+            }
+        }
+
         /// <summary>
         /// The nodes for that group.
         /// </summary>
@@ -492,6 +512,8 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 0),
                 }
             },
+
+            // Simulation data access nodes
             new NodeArchetype
             {
                 TypeID = 200,
@@ -590,6 +612,8 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(1, "Inv Size", ConnectionType.Vector2, 1),
                 }
             },
+
+            // Random values generation
             new NodeArchetype
             {
                 TypeID = 208,
@@ -752,6 +776,25 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Vector_Y(83, Surface.Constants.LayoutOffsetY, 1),
                     NodeElementArchetype.Factory.Vector_Z(136, Surface.Constants.LayoutOffsetY, 1),
                     NodeElementArchetype.Factory.Vector_W(189, Surface.Constants.LayoutOffsetY, 1),
+                }
+            },
+
+            // Utilities
+            new NodeArchetype
+            {
+                TypeID = 300,
+                Create = (id, context, arch, groupArch) => new ParticleEmitterFunctionNode(id, context, arch, groupArch),
+                Title = "Particle Emitter Function",
+                Description = "Calls particle emitter function",
+                Flags = NodeFlags.ParticleEmitterGraph,
+                Size = new Vector2(220, 120),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, typeof(ParticleEmitterFunction)),
                 }
             },
         };

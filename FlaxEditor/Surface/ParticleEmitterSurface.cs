@@ -106,6 +106,8 @@ namespace FlaxEditor.Surface
                 return true;
             if (assetItem.IsOfType<CubeTexture>())
                 return true;
+            if (assetItem.IsOfType<ParticleEmitterFunction>())
+                return true;
             return base.ValidateDragItem(assetItem);
         }
 
@@ -124,6 +126,10 @@ namespace FlaxEditor.Surface
                 else if (assetItem.IsOfType<CubeTexture>())
                 {
                     node = Context.SpawnNode(5, 12, args.SurfaceLocation, new object[] { assetItem.ID });
+                }
+                else if (assetItem.IsOfType<ParticleEmitterFunction>())
+                {
+                    node = Context.SpawnNode(14, 300, args.SurfaceLocation, new object[] { assetItem.ID });
                 }
 
                 if (node != null)

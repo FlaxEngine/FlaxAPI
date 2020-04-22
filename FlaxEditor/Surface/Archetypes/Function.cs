@@ -121,6 +121,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 var prevInputs = _inputs;
                 var prevOutputs = _outputs;
+                float width, height;
 
                 // Extract function signature parameters (inputs and outputs packed)
                 _asset = LoadSignature(_assetPicker.SelectedID, out var types, out var names);
@@ -162,16 +163,16 @@ namespace FlaxEditor.Surface.Archetypes
 
                     Title = _assetPicker.SelectedItem.ShortName;
                     var style = Style.Current;
-                    var width = Mathf.Max(Archetype.Size.X, style.FontLarge.MeasureText(Title).X + 30);
-                    var height = 60.0f + Mathf.Max(inputsCount, outputsCount) * 20.0f;
-                    Resize(width, height);
+                    width = Mathf.Max(Archetype.Size.X, style.FontLarge.MeasureText(Title).X + 30);
+                    height = 60.0f + Mathf.Max(inputsCount, outputsCount) * 20.0f;
                 }
                 else
                 {
                     _inputs = null;
                     _outputs = null;
-                    Resize(Archetype.Size.X, 60.0f);
                     Title = Archetype.Title;
+                    width = Archetype.Size.X;
+                    height = 60.0f;
                 }
 
                 // Remove previous boxes
@@ -196,6 +197,15 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     for (int i = 0; i < _outputs.Length; i++)
                         AddElement(_outputs[i]);
+                }
+
+                Resize(width, height);
+                for (int i = 0; i < Elements.Count; i++)
+                {
+                    if (Elements[i] is OutputBox box)
+                    {
+                        box.Location = box.Archetype.Position + new Vector2(width, 0);
+                    }
                 }
             }
 
