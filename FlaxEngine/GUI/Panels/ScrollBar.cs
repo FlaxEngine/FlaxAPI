@@ -420,7 +420,7 @@ namespace FlaxEngine.GUI
             base.AddUpdateCallbacks(root);
 
             if (_update != null)
-                root.UpdateCallbacksToRemove.Add(_update);
+                root.UpdateCallbacksToAdd.Add(_update);
         }
 
         /// <inheritdoc />
