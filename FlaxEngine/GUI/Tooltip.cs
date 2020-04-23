@@ -51,6 +51,10 @@ namespace FlaxEngine.GUI
             // Ensure to be closed
             Hide();
 
+            // Block showing tooltips when application is not focused
+            if (!Platform.HasFocus)
+                return;
+
             // Unlock and perform controls update
             UnlockChildrenRecursive();
             PerformLayout();
@@ -205,14 +209,14 @@ namespace FlaxEngine.GUI
 
             // Tooltip text
             Render2D.DrawText(
-                style.FontMedium,
-                _currentText,
-                GetClientArea(),
-                style.Foreground,
-                TextAlignment.Center,
-                TextAlignment.Center,
-                TextWrapping.WrapWords
-            );
+                              style.FontMedium,
+                              _currentText,
+                              GetClientArea(),
+                              style.Foreground,
+                              TextAlignment.Center,
+                              TextAlignment.Center,
+                              TextWrapping.WrapWords
+                             );
 
             base.Draw();
         }
