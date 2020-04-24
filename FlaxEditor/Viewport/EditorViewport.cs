@@ -621,8 +621,10 @@ namespace FlaxEditor.Viewport
                     color = Color.Red;
                 else if (fps < 22)
                     color = Color.Yellow;
-                string text = string.Format("FPS: {0}", fps);
-                Render2D.DrawText(Style.Current.FontMedium, text, new Rectangle(Vector2.Zero, Size), color);
+                var text = string.Format("FPS: {0}", fps);
+                var font = Style.Current.FontMedium;
+                Render2D.DrawText(font, text, new Rectangle(Vector2.One, Size), Color.Black);
+                Render2D.DrawText(font, text, new Rectangle(Vector2.Zero, Size), color);
             }
         }
 

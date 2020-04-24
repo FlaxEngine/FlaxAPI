@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -54,13 +54,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Content\Proxy\AnimationGraphFunctionProxy.cs" />
     <Compile Include="CustomEditorWindow.cs" />
     <Compile Include="EditorAssets.cs" />
     <Compile Include="EditorIcons.cs" />
     <Compile Include="IEditable.cs" />
     <Compile Include="ProjectInfo.cs" />
-    <Compile Include="Surface\AnimationGraphFunctionSurface.cs" />
     <Compile Include="ViewportDebugDrawData.cs" />
     <Compile Include="API\Editor.cs" />
     <Compile Include="API\Editor\CodeEditor.Gen.cs" />
@@ -101,6 +99,7 @@
     <Compile Include="Content\Items\PrefabItem.cs" />
     <Compile Include="Content\Items\SceneItem.cs" />
     <Compile Include="Content\Items\ScriptItem.cs" />
+    <Compile Include="Content\Proxy\AnimationGraphFunctionProxy.cs" />
     <Compile Include="Content\Proxy\AnimationGraphProxy.cs" />
     <Compile Include="Content\Proxy\AnimationProxy.cs" />
     <Compile Include="Content\Proxy\AssetProxy.cs" />
@@ -434,6 +433,7 @@
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\PlayingState.cs" />
     <Compile Include="States\ReloadingScriptsState.cs" />
+    <Compile Include="Surface\AnimationGraphFunctionSurface.cs" />
     <Compile Include="Surface\AnimGraphSurface.cs" />
     <Compile Include="Surface\ConnectionType.cs" />
     <Compile Include="Surface\Constants.cs" />
@@ -607,7 +607,6 @@
     <Compile Include="Viewport\Widgets\ViewportWidgetButton.cs" />
     <Compile Include="Viewport\Widgets\ViewportWidgetsContainer.cs" />
     <Compile Include="Windows\AboutDialog.cs" />
-    <Compile Include="Windows\Assets\AnimationGraphFunctionWindow.cs" />
     <Compile Include="Windows\ContentWindow.ContextMenu.cs" />
     <Compile Include="Windows\ContentWindow.cs" />
     <Compile Include="Windows\ContentWindow.Navigation.cs" />
@@ -629,6 +628,7 @@
     <Compile Include="Windows\SceneTreeWindow.cs" />
     <Compile Include="Windows\StyleEditorWindow.cs" />
     <Compile Include="Windows\ToolboxWindow.cs" />
+    <Compile Include="Windows\Assets\AnimationGraphFunctionWindow.cs" />
     <Compile Include="Windows\Assets\AnimationGraphWindow.cs" />
     <Compile Include="Windows\Assets\AnimationWindow.cs" />
     <Compile Include="Windows\Assets\AssetEditorWindow.cs" />

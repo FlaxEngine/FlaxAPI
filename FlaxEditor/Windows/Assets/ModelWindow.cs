@@ -31,7 +31,9 @@ namespace FlaxEditor.Windows.Assets
         {
             private readonly ModelWindow _window;
             private ContextMenuButton _showFloorButton;
+            private ContextMenuButton _showCurrentLODButton;
             private StaticModel _floorModel;
+            private bool _showCurrentLOD;
 
             public Preview(ModelWindow window)
             : base(true)
@@ -41,6 +43,10 @@ namespace FlaxEditor.Windows.Assets
                 // Show floor widget
                 _showFloorButton = ViewWidgetShowMenu.AddButton("Floor", OnShowFloorModelClicked);
                 _showFloorButton.IndexInParent = 1;
+
+                // Show current LOD widget
+                _showCurrentLODButton = ViewWidgetShowMenu.AddButton("Current LOD", OnShowCurrentLODClicked);
+                _showCurrentLODButton.IndexInParent = 2;
 
                 // Floor model
                 _floorModel = StaticModel.New();
@@ -63,15 +69,79 @@ namespace FlaxEditor.Windows.Assets
                 _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
             }
 
+            private void OnShowCurrentLODClicked(ContextMenuButton obj)
+            {
+                _showCurrentLOD = !_showCurrentLOD;
+                _showCurrentLODButton.Icon = _showCurrentLOD ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
+            }
+
+            private int ComputeLODIndex(Model model)
+            {
+                if (PreviewStaticModel.ForcedLOD != -1)
+                    return PreviewStaticModel.ForcedLOD;
+
+                // Based on RenderTools::ComputeModelLOD
+                CreateProjectionMatrix(out var projectionMatrix);
+                float screenMultiple = 0.5f * Mathf.Max(projectionMatrix.M11, projectionMatrix.M22);
+                var sphere = PreviewStaticModel.Sphere;
+                var viewOrigin = ViewPosition;
+                float distSqr = Vector3.DistanceSquared(ref sphere.Center, ref viewOrigin);
+                var screenRadiusSquared = Mathf.Square(screenMultiple * sphere.Radius) / Mathf.Max(1.0f, distSqr);
+
+                // Check if model is being culled
+                if (Mathf.Square(model.MinScreenSize * 0.5f) > screenRadiusSquared)
+                    return -1;
+
+                // Skip if no need to calculate LOD
+                var lods = model.LODs;
+                if (lods.Length <= 1)
+                    return 0;
+
+                // Iterate backwards and return the first matching LOD
+                for (int lodIndex = lods.Length - 1; lodIndex >= 0; lodIndex--)
+                {
+                    if (Mathf.Square(lods[lodIndex].ScreenSize * 0.5f) >= screenRadiusSquared)
+                    {
+                        return Mathf.Clamp(lodIndex + PreviewStaticModel.LODBias, 0, lods.Length - 1);
+                    }
+                }
+
+                return 0;
+            }
+
             /// <inheritdoc />
             public override void Draw()
             {
                 base.Draw();
 
                 var style = Style.Current;
-                if (_window.Asset == null || !_window.Asset.IsLoaded)
+                var asset = _window.Asset;
+                if (asset == null || !asset.IsLoaded)
                 {
                     Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+                    return;
+                }
+
+                if (_showCurrentLOD)
+                {
+                    var lodIndex = ComputeLODIndex(asset);
+                    string text = string.Format("Current LOD: {0}", lodIndex);
+                    if (lodIndex != -1)
+                    {
+                        var lod = asset.LODs[lodIndex];
+                        int triangleCount = 0, vertexCount = 0;
+                        for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
+                        {
+                            var mesh = lod.Meshes[meshIndex];
+                            triangleCount += mesh.TriangleCount;
+                            vertexCount += mesh.VertexCount;
+                        }
+                        text += string.Format("\nTriangles: {0}\nVertices: {1}", triangleCount, vertexCount);
+                    }
+                    var font = Style.Current.FontMedium;
+                    var pos = new Vector2(10, 50);
+                    Render2D.DrawText(font, text, new Rectangle(pos + Vector2.One, Size), Color.Black);
+                    Render2D.DrawText(font, text, new Rectangle(pos, Size), Color.White);
                 }
             }
 
