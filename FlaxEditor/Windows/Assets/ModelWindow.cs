@@ -93,8 +93,12 @@ namespace FlaxEditor.Windows.Assets
                     return -1;
 
                 // Skip if no need to calculate LOD
+                if (model.LoadedLODs == 0)
+                    return -1;
                 var lods = model.LODs;
-                if (lods.Length <= 1)
+                if (lods.Length == 0)
+                    return -1;
+                if (lods.Length == 1)
                     return 0;
 
                 // Iterate backwards and return the first matching LOD
@@ -102,7 +106,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     if (Mathf.Square(lods[lodIndex].ScreenSize * 0.5f) >= screenRadiusSquared)
                     {
-                        return Mathf.Clamp(lodIndex + PreviewStaticModel.LODBias, 0, lods.Length - 1);
+                        return lodIndex + PreviewStaticModel.LODBias;
                     }
                 }
 
@@ -128,7 +132,9 @@ namespace FlaxEditor.Windows.Assets
                     string text = string.Format("Current LOD: {0}", lodIndex);
                     if (lodIndex != -1)
                     {
-                        var lod = asset.LODs[lodIndex];
+                        var lods = asset.LODs;
+                        lodIndex = Mathf.Clamp(lodIndex + PreviewStaticModel.LODBias, 0, lods.Length - 1);
+                        var lod = lods[lodIndex];
                         int triangleCount = 0, vertexCount = 0;
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
                         {
