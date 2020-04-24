@@ -240,9 +240,33 @@ namespace FlaxEditor.Content.Import
         public int AnimationIndex { get; set; } = -1;
 
         /// <summary>
+        /// If checked, the importer will generate a sequence of LODs based on the base LOD index.
+        /// </summary>
+        [EditorOrder(1100), DefaultValue(false), EditorDisplay("Level Of Detail", "Generate LODs"), Tooltip("If checked, the importer will generate a sequence of LODs based on the base LOD index.")]
+        public bool GenerateLODs { get; set; } = false;
+
+        /// <summary>
+        /// The index of the LOD from the source model data to use as a reference for following LODs generation.
+        /// </summary>
+        [EditorOrder(1110), DefaultValue(0), Limit(0, Model.MaxLODs - 1), EditorDisplay("Level Of Detail", "Base LOD"), Tooltip("The index of the LOD from the source model data to use as a reference for following LODs generation.")]
+        public int BaseLOD { get; set; } = 0;
+
+        /// <summary>
+        /// The amount of LODs to include in the model (all reaming ones starting from Base LOD will be generated).
+        /// </summary>
+        [EditorOrder(1120), DefaultValue(4), Limit(1, Model.MaxLODs), EditorDisplay("Level Of Detail", "LOD Count"), Tooltip("The amount of LODs to include in the model (all reaming ones starting from Base LOD will be generated).")]
+        public int LODCount { get; set; } = 4;
+
+        /// <summary>
+        /// The target amount of triangles for the generated LOD (based on the higher LOD). Normalized to range 0-1. For instance 0.4 cuts the triangle count to 40%.
+        /// </summary>
+        [EditorOrder(1130), DefaultValue(0.5f), Limit(0, 1, 0.001f), EditorDisplay("Level Of Detail"), Tooltip("The target amount of triangles for the generated LOD (based on the higher LOD). Normalized to range 0-1. For instance 0.4 cuts the triangle count to 40%.")]
+        public float TriangleReduction { get; set; } = 0.5f;
+
+        /// <summary>
         /// If checked, the importer will try to restore the model material slots.
         /// </summary>
-        [EditorOrder(1100), DefaultValue(true), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the assigned materials to the model slots.")]
+        [EditorOrder(1200), DefaultValue(true), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the assigned materials to the model slots.")]
         public bool RestoreMaterialsOnReimport { get; set; } = true;
 
         [StructLayout(LayoutKind.Sequential)]
@@ -280,6 +304,12 @@ namespace FlaxEditor.Content.Import
             public string RootNodeName;
             public int AnimationIndex;
 
+            // Level Of Detail
+            public byte GenerateLODs;
+            public int BaseLOD;
+            public int LODCount;
+            public float TriangleReduction;
+
             // Misc
             public byte RestoreMaterialsOnReimport;
         }
@@ -313,6 +343,10 @@ namespace FlaxEditor.Content.Import
                 EnableRootMotion = (byte)(EnableRootMotion ? 1 : 0),
                 RootNodeName = RootNodeName,
                 AnimationIndex = AnimationIndex,
+                GenerateLODs = (byte)(GenerateLODs ? 1 : 0),
+                BaseLOD = BaseLOD,
+                LODCount = LODCount,
+                TriangleReduction = TriangleReduction,
                 RestoreMaterialsOnReimport = (byte)(RestoreMaterialsOnReimport ? 1 : 0),
             };
         }
@@ -343,6 +377,10 @@ namespace FlaxEditor.Content.Import
             EnableRootMotion = options.EnableRootMotion != 0;
             RootNodeName = options.RootNodeName;
             AnimationIndex = options.AnimationIndex;
+            GenerateLODs = options.GenerateLODs != 0;
+            BaseLOD = options.BaseLOD;
+            LODCount = options.LODCount;
+            TriangleReduction = options.TriangleReduction;
             RestoreMaterialsOnReimport = options.RestoreMaterialsOnReimport != 0;
         }
 
