@@ -20,7 +20,7 @@ namespace FlaxEditor.Surface
 
             // Navigate when mouse is near the edge and is doing sth
             bool isMovingWithMouse = false;
-            if (IsMovingSelection || IsConnecting)
+            if (IsMovingSelection || (IsConnecting && !IsPrimaryMenuOpened))
             {
                 Vector2 moveVector = Vector2.Zero;
                 float edgeDetectDistance = 22.0f;
