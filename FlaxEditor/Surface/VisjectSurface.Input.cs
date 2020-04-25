@@ -495,8 +495,8 @@ namespace FlaxEditor.Surface
                 return true;
             }
 
-            // Right clicking while attempting to connect a node to something
-            if (!_rightMouseDown && !_isMovingSelection && _connectionInstigator != null)
+            // Letting go of a connection or right clicking while creating a connection
+            if (!_isMovingSelection && _connectionInstigator != null && !IsPrimaryMenuOpened)
             {
                 _cmStartPos = location;
                 Cursor = CursorType.Default;
