@@ -114,11 +114,6 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
             }
 
-            if (selectedBox == null)
-            {
-                SortScore = 0;
-            }
-
             SortChildren();
         }
 

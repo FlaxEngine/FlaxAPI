@@ -20,6 +20,7 @@ namespace FlaxEditor.Surface.ContextMenu
         private List<Rectangle> _highlights;
         private GroupArchetype _groupArchetype;
         private NodeArchetype _archetype;
+        private bool _isStartsWithMatch;
 
         /// <summary>
         /// Gets the item's group
@@ -69,19 +70,22 @@ namespace FlaxEditor.Surface.ContextMenu
             // Start off by resetting the score!
             SortScore = 0;
 
-            if (selectedBox == null)
-                return;
             if (!(_highlights?.Count > 0))
                 return;
             if (!Visible)
                 return;
 
-            if (CanConnectTo(selectedBox, NodeArchetype))
+            if (selectedBox != null && CanConnectTo(selectedBox, NodeArchetype))
             {
                 SortScore += 1;
             }
 
             if (Data != null)
+            {
+                SortScore += 1;
+            }
+
+            if (_isStartsWithMatch)
             {
                 SortScore += 1;
             }
@@ -118,11 +122,13 @@ namespace FlaxEditor.Surface.ContextMenu
             {
                 // Clear filter
                 _highlights?.Clear();
+                _isStartsWithMatch = false;
                 Visible = true;
             }
             else
             {
                 object[] data;
+                _isStartsWithMatch = false;
 
                 QueryFilterHelper.Range[] ranges;
                 if (QueryFilterHelper.Match(filterText, _archetype.Title, out ranges))
@@ -139,6 +145,11 @@ namespace FlaxEditor.Surface.ContextMenu
                         var start = font.GetCharPosition(_archetype.Title, ranges[i].StartIndex);
                         var end = font.GetCharPosition(_archetype.Title, ranges[i].EndIndex);
                         _highlights.Add(new Rectangle(start.X + 2, 0, end.X - start.X, Height));
+
+                        if (ranges[i].StartIndex <= 0)
+                        {
+                            _isStartsWithMatch = true;
+                        }
                     }
                     Visible = true;
                 }
