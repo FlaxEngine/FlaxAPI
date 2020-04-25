@@ -23,7 +23,7 @@ namespace FlaxEditor.Surface.Elements
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         /// <param name="color">The color.</param>
-        public static void DrawConnection(ref Vector2 start, ref Vector2 end, ref Color color)
+        public static void DrawConnection(ref Vector2 start, ref Vector2 end, ref Color color, float thickness = 1)
         {
             // Calculate control points
             var dst = (end - start) * new Vector2(0.5f, 0.05f);
@@ -31,7 +31,7 @@ namespace FlaxEditor.Surface.Elements
             Vector2 control2 = new Vector2(end.X - dst.X, end.Y + dst.Y);
 
             // Draw line
-            Render2D.DrawBezier(start, control1, control2, end, color);
+            Render2D.DrawBezier(start, control1, control2, end, color, thickness);
 
             /*
             // Debug drawing control points
@@ -57,6 +57,20 @@ namespace FlaxEditor.Surface.Elements
                 Vector2 endPos = targetBox.Parent.PointToParent(ref tmp);
                 DrawConnection(ref startPos, ref endPos, ref _currentTypeColor);
             }
+        }
+
+        /// <summary>
+        /// Draw a selected connections coming from this box.
+        /// </summary>
+        public void DrawSelectedConnection(Box targetBox)
+        {
+            // Draw all the connections
+            var center = Size * 0.5f;
+            var tmp = PointToParent(ref center);
+            var startPos = Parent.PointToParent(ref tmp);
+            tmp = targetBox.PointToParent(ref center);
+            Vector2 endPos = targetBox.Parent.PointToParent(ref tmp);
+            DrawConnection(ref startPos, ref endPos, ref _currentTypeColor, 2);
         }
 
         /// <inheritdoc />
