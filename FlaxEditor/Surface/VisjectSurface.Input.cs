@@ -579,12 +579,12 @@ namespace FlaxEditor.Surface
                 if (_inputBrackets.Count == 0)
                 {
                     ResetInput();
-                    ShowPrimaryMenu(_mousePos, currentInputText);
+                    ShowPrimaryMenu(_mousePos, false, currentInputText);
                 }
                 else
                 {
                     InputText = "";
-                    ShowPrimaryMenu(_rootControl.PointToParent(_inputBrackets.Peek().Area.Location), currentInputText);
+                    ShowPrimaryMenu(_rootControl.PointToParent(_inputBrackets.Peek().Area.Location), true, currentInputText);
                 }
                 return;
             }
@@ -651,7 +651,7 @@ namespace FlaxEditor.Surface
                 ConnectingStart(selectedBox);
                 Cursor = CursorType.Default; // Do I need this?
                 EndMouseCapture();
-                ShowPrimaryMenu(_rootControl.PointToParent(FindEmptySpace(selectedBox)), currentInputText);
+                ShowPrimaryMenu(_rootControl.PointToParent(FindEmptySpace(selectedBox)), true, currentInputText);
             }
         }
 
