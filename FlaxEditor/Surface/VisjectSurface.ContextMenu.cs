@@ -71,11 +71,9 @@ namespace FlaxEditor.Surface
         /// Shows the primary menu.
         /// </summary>
         /// <param name="location">The location in the Surface Space.</param>
-        /// <param name="input">The user text input for nodes search..</param>
-        public virtual void ShowPrimaryMenu(Vector2 location, string input = null)
-        {
-            // TODO: If the menu is not fully visible, move the surface a bit
-
+        /// <param name="moveSurface">If the surface should be moved to accommodate for the menu.</param>
+        /// <param name="input">The user text input for nodes search.</param>
+        public virtual void ShowPrimaryMenu(Vector2 location, bool moveSurface = false, string input = null)
             // Check if need to create default context menu (no override specified)
             if (_activeVisjectCM == null && _cmPrimaryMenu == null)
             {
@@ -85,11 +83,20 @@ namespace FlaxEditor.Surface
                 _activeVisjectCM.VisibleChanged += OnPrimaryMenuVisibleChanged;
             }
 
-            // Show primary menu
+            if (moveSurface)
+            {
+                const float leftPadding = 20;
+                Vector2 delta = Vector2.Min(location - leftPadding, Vector2.Zero) +
+                                Vector2.Max((location + _activeVisjectCM.Size) - Size, Vector2.Zero);
+
+                location -= delta;
+                _rootControl.Location -= delta;
+            }
+
             _cmStartPos = location;
 
             // Offset added in case the user doesn't like the box and wants to quickly get rid of it by clicking
-            _activeVisjectCM.Show(this, location + ContextMenuOffset, _connectionInstigator as Box);
+            _activeVisjectCM.Show(this, _cmStartPos + ContextMenuOffset, _connectionInstigator as Box);
 
             if (!string.IsNullOrEmpty(input))
             {
@@ -305,6 +312,12 @@ namespace FlaxEditor.Surface
             {
                 Select(nextBox.ParentNode);
                 nextBox.ParentNode.SelectBox(nextBox);
+
+                Vector2 padding = new Vector2(20);
+                Vector2 delta = Vector2.Min(_rootControl.PointToParent(nextBox.ParentNode.Location) - padding, Vector2.Zero) +
+                                Vector2.Max((_rootControl.PointToParent(nextBox.ParentNode.BottomRight) + padding) - Size, Vector2.Zero);
+
+                _rootControl.Location -= delta;
             }
         }
     }

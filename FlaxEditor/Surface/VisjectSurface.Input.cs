@@ -65,8 +65,6 @@ namespace FlaxEditor.Surface
             }
         }
 
-        private bool HasInputSelection => HasNodesSelection;
-
         private string InputText
         {
             get => _currentInputText;
@@ -495,8 +493,8 @@ namespace FlaxEditor.Surface
                 return true;
             }
 
-            // Right clicking while attempting to connect a node to something
-            if (!_rightMouseDown && !_isMovingSelection && _connectionInstigator != null)
+            // Letting go of a connection or right clicking while creating a connection
+            if (!_isMovingSelection && _connectionInstigator != null && !IsPrimaryMenuOpened)
             {
                 _cmStartPos = location;
                 Cursor = CursorType.Default;
@@ -526,7 +524,7 @@ namespace FlaxEditor.Surface
             if (InputActions.Process(Editor.Instance, this, key))
                 return true;
 
-            if (HasInputSelection)
+            if (HasNodesSelection)
             {
                 if (key == KeyboardKeys.Backspace)
                 {
@@ -534,11 +532,12 @@ namespace FlaxEditor.Surface
                         InputText = InputText.Substring(0, InputText.Length - 1);
                     return true;
                 }
-                else if (key == KeyboardKeys.Escape)
+                if (key == KeyboardKeys.Escape)
                 {
                     ClearSelection();
+                    return true;
                 }
-                else if (key == KeyboardKeys.Return)
+                if (key == KeyboardKeys.Return)
                 {
                     Box selectedBox = GetSelectedBox(SelectedNodes);
                     if (selectedBox != null)
@@ -551,6 +550,7 @@ namespace FlaxEditor.Surface
                             toSelect.ParentNode.SelectBox(toSelect);
                         }
                     }
+                    return true;
                 }
             }
 
@@ -579,12 +579,12 @@ namespace FlaxEditor.Surface
                 if (_inputBrackets.Count == 0)
                 {
                     ResetInput();
-                    ShowPrimaryMenu(_mousePos, currentInputText);
+                    ShowPrimaryMenu(_mousePos, false, currentInputText);
                 }
                 else
                 {
                     InputText = "";
-                    ShowPrimaryMenu(_rootControl.PointToParent(_inputBrackets.Peek().Area.Location), currentInputText);
+                    ShowPrimaryMenu(_rootControl.PointToParent(_inputBrackets.Peek().Area.Location), true, currentInputText);
                 }
                 return;
             }
@@ -651,7 +651,7 @@ namespace FlaxEditor.Surface
                 ConnectingStart(selectedBox);
                 Cursor = CursorType.Default; // Do I need this?
                 EndMouseCapture();
-                ShowPrimaryMenu(_rootControl.PointToParent(FindEmptySpace(selectedBox)), currentInputText);
+                ShowPrimaryMenu(_rootControl.PointToParent(FindEmptySpace(selectedBox)), true, currentInputText);
             }
         }
 

@@ -420,6 +420,27 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
+        /// Returns true if any box is selected by the user (one or more).
+        /// </summary>
+        public bool HasBoxesSelection
+        {
+            get
+            {
+                if (!IsSelected)
+                    return false;
+                //is Box box
+
+                for (int i = 0; i < Elements.Count; i++)
+                {
+                    if (Elements[i] is Box box && box.IsSelected)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Selects all the boxes.
         /// </summary>
         public void SelectAllBoxes()
@@ -582,6 +603,34 @@ namespace FlaxEditor.Surface
                 if (Elements[j] is OutputBox ob && ob.HasAnyConnection)
                 {
                     ob.DrawConnections();
+                }
+            }
+
+            if (_isSelected)
+            {
+                bool hasBoxesSelection = HasBoxesSelection;
+                for (int j = 0; j < Elements.Count; j++)
+                {
+                    if (Elements[j] is Box box && box.HasAnyConnection && (!hasBoxesSelection || box.IsSelected))
+                    {
+                        if (box is OutputBox ob)
+                        {
+                            for (int i = 0; i < ob.Connections.Count; i++)
+                            {
+                                ob.DrawSelectedConnection(ob.Connections[i]);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < box.Connections.Count; i++)
+                            {
+                                if (box.Connections[i] is OutputBox outputBox)
+                                {
+                                    outputBox.DrawSelectedConnection(box);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
