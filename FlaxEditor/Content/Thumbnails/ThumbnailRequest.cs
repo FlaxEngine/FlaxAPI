@@ -96,7 +96,7 @@ namespace FlaxEditor.Content.Thumbnails
         /// Finishes the rendering and updates the item thumbnail.
         /// </summary>
         /// <param name="icon">The icon.</param>
-        public void FinishRender(ref Sprite icon)
+        public void FinishRender(ref SpriteHandle icon)
         {
             if (State != States.Prepared)
                 throw new InvalidOperationException();

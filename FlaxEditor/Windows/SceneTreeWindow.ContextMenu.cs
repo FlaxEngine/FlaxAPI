@@ -25,7 +25,7 @@ namespace FlaxEditor.Windows
 
             bool hasSthSelected = Editor.SceneEditing.HasSthSelected;
             bool isSingleActorSelected = Editor.SceneEditing.SelectionCount == 1 && Editor.SceneEditing.Selection[0] is ActorNode;
-            bool canEditScene = Editor.StateMachine.CurrentState.CanEditScene && SceneManager.IsAnySceneLoaded;
+            bool canEditScene = Editor.StateMachine.CurrentState.CanEditScene && Level.IsAnySceneLoaded;
 
             // Create popup
 

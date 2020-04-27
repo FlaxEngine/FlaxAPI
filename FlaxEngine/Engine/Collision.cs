@@ -188,10 +188,10 @@ namespace FlaxEngine
 
             Assert.AreEqual(data->ContactsCount, _contacts.Length);
 
-            ContactPointData* ptr = &data->Contacts0;
+            ContactPoint* ptr = &data->Contacts0;
             for (int i = 0; i < data->ContactsCount; i++)
             {
-                _contacts[i] = new ContactPoint(ref ptr[i]);
+                _contacts[i] = ptr[i];
             }
         }
 
@@ -221,14 +221,6 @@ namespace FlaxEngine
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct ContactPointData
-        {
-            public Vector3 Point;
-            public float Separation;
-            public Vector3 Normal;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
         internal struct CollisionData
         {
             public Guid ActorA;
@@ -238,14 +230,14 @@ namespace FlaxEngine
             public Vector3 VelocityB;
             public int ContactsCount;
 
-            public ContactPointData Contacts0;
-            public ContactPointData Contacts1;
-            public ContactPointData Contacts2;
-            public ContactPointData Contacts3;
-            public ContactPointData Contacts4;
-            public ContactPointData Contacts5;
-            public ContactPointData Contacts6;
-            public ContactPointData Contacts7;
+            public ContactPoint Contacts0;
+            public ContactPoint Contacts1;
+            public ContactPoint Contacts2;
+            public ContactPoint Contacts3;
+            public ContactPoint Contacts4;
+            public ContactPoint Contacts5;
+            public ContactPoint Contacts6;
+            public ContactPoint Contacts7;
         }
     }
 }

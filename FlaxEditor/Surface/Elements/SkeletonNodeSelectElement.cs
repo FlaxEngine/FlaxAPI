@@ -29,7 +29,7 @@ namespace FlaxEditor.Surface.Elements
                 ParentNode.ValuesChanged += OnNodeValuesChanged;
             }
         }
-        
+
         private void OnNodeValuesChanged()
         {
             _selectedIndices.Clear();

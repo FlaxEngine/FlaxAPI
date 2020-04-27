@@ -75,7 +75,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             Profiler.EndEvent();
 
             // Update terrain patch
-            TerrainTools.ModifyHeightMap(p.Terrain, ref p.PatchCoord, new IntPtr(p.TempBuffer), ref p.ModifiedOffset, ref p.ModifiedSize);
+            TerrainTools.ModifyHeightMap(p.Terrain, ref p.PatchCoord, p.TempBuffer, ref p.ModifiedOffset, ref p.ModifiedSize);
         }
     }
 }

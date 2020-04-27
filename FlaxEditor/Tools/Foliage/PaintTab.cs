@@ -48,16 +48,11 @@ namespace FlaxEditor.Tools.Foliage
                 SelectedFoliageTypeIndex = -1;
             }
 
-            private FlaxEngine.Foliage.TypeOptions _options;
+            private FlaxEngine.FoliageType _type;
 
             public void SyncOptions()
             {
-                Foliage.GetFoliageTypeOptions(SelectedFoliageTypeIndex, out _options);
-            }
-
-            public void SetOptions()
-            {
-                Foliage.SetFoliageTypeOptions(SelectedFoliageTypeIndex, ref _options);
+                _type = Foliage.GetFoliageType(SelectedFoliageTypeIndex);
             }
 
             //
@@ -74,68 +69,47 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(200), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The foliage instances density defined in instances count per 1000x1000 units area.")]
             public float Density
             {
-                get => _options.PaintDensity;
-                set
-                {
-                    _options.PaintDensity = value;
-                    SetOptions();
-                }
+                get => _type.PaintDensity;
+                set => _type.PaintDensity = value;
             }
 
             [EditorOrder(210), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The minimum radius between foliage instances.")]
             public float Radius
             {
-                get => _options.PaintRadius;
-                set
-                {
-                    _options.PaintRadius = value;
-                    SetOptions();
-                }
+                get => _type.PaintRadius;
+                set => _type.PaintRadius = value;
             }
 
             [EditorOrder(215), EditorDisplay("Painting"), Limit(0.0f, 360.0f), Tooltip("The minimum and maximum ground slope angle to paint foliage on it (in degrees).")]
             public Vector2 PaintGroundSlopeAngleRange
             {
-                get => new Vector2(_options.PaintGroundSlopeAngleMin, _options.PaintGroundSlopeAngleMax);
+                get => new Vector2(_type.PaintGroundSlopeAngleMin, _type.PaintGroundSlopeAngleMax);
                 set
                 {
-                    _options.PaintGroundSlopeAngleMin = value.X;
-                    _options.PaintGroundSlopeAngleMax = value.Y;
-                    SetOptions();
+                    _type.PaintGroundSlopeAngleMin = value.X;
+                    _type.PaintGroundSlopeAngleMax = value.Y;
                 }
             }
 
             [EditorOrder(220), EditorDisplay("Painting"), Tooltip("The scaling mode.")]
-            public FlaxEngine.Foliage.ScalingModes Scaling
+            public FoliageScalingModes Scaling
             {
-                get => _options.PaintScaling;
-                set
-                {
-                    _options.PaintScaling = value;
-                    SetOptions();
-                }
+                get => _type.PaintScaling;
+                set => _type.PaintScaling = value;
             }
 
             [EditorOrder(230), EditorDisplay("Painting"), Limit(0.0f), CustomEditor(typeof(ActorTransformEditor.PositionScaleEditor)), Tooltip("The scale minimum values per axis.")]
             public Vector3 ScaleMin
             {
-                get => _options.PaintScaleMin;
-                set
-                {
-                    _options.PaintScaleMin = value;
-                    SetOptions();
-                }
+                get => _type.PaintScaleMin;
+                set => _type.PaintScaleMin = value;
             }
 
             [EditorOrder(240), EditorDisplay("Painting"), Limit(0.0f), CustomEditor(typeof(ActorTransformEditor.PositionScaleEditor)), Tooltip("The scale maximum values per axis.")]
             public Vector3 ScaleMax
             {
-                get => _options.PaintScaleMax;
-                set
-                {
-                    _options.PaintScaleMax = value;
-                    SetOptions();
-                }
+                get => _type.PaintScaleMax;
+                set => _type.PaintScaleMax = value;
             }
 
             //
@@ -143,56 +117,36 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(300), EditorDisplay("Placement", "Offset Y"), Tooltip("The per-instance random offset range on axis Y (min-max).")]
             public Vector2 OffsetY
             {
-                get => _options.PlacementOffsetY;
-                set
-                {
-                    _options.PlacementOffsetY = value;
-                    SetOptions();
-                }
+                get => _type.PlacementOffsetY;
+                set => _type.PlacementOffsetY = value;
             }
 
             [EditorOrder(310), EditorDisplay("Placement"), Limit(0.0f), Tooltip("The random pitch angle range (uniform in both ways around normal vector).")]
             public float RandomPitchAngle
             {
-                get => _options.PlacementRandomPitchAngle;
-                set
-                {
-                    _options.PlacementRandomPitchAngle = value;
-                    SetOptions();
-                }
+                get => _type.PlacementRandomPitchAngle;
+                set => _type.PlacementRandomPitchAngle = value;
             }
 
             [EditorOrder(320), EditorDisplay("Placement"), Limit(0.0f), Tooltip("The random roll angle range (uniform in both ways around normal vector).")]
             public float RandomRollAngle
             {
-                get => _options.PlacementRandomRollAngle;
-                set
-                {
-                    _options.PlacementRandomRollAngle = value;
-                    SetOptions();
-                }
+                get => _type.PlacementRandomRollAngle;
+                set => _type.PlacementRandomRollAngle = value;
             }
 
             [EditorOrder(330), EditorDisplay("Placement", "Align To Normal"), Tooltip("If checked, instances will be aligned to normal of the placed surface.")]
             public bool AlignToNormal
             {
-                get => _options.PlacementAlignToNormal != 0;
-                set
-                {
-                    _options.PlacementAlignToNormal = (byte)(value ? 1 : 0);
-                    SetOptions();
-                }
+                get => _type.PlacementAlignToNormal;
+                set => _type.PlacementAlignToNormal = value;
             }
 
             [EditorOrder(340), EditorDisplay("Placement"), Tooltip("If checked, instances will use randomized yaw when placed. Random yaw uses will rotation range over the Y axis.")]
             public bool RandomYaw
             {
-                get => _options.PlacementRandomYaw != 0;
-                set
-                {
-                    _options.PlacementRandomYaw = (byte)(value ? 1 : 0);
-                    SetOptions();
-                }
+                get => _type.PlacementRandomYaw;
+                set => _type.PlacementRandomYaw = value;
             }
         }
 
@@ -240,16 +194,16 @@ namespace FlaxEditor.Tools.Foliage
             var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
             {
                 SplitterValue = 0.2f,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
 
             // Foliage types list
             _items = new VerticalPanel
             {
-                Y = 4,
-                Height = 4,
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(4, 4, 4, 0),
                 IsScrollable = true,
                 Parent = splitPanel.Panel1
             };
@@ -313,15 +267,15 @@ namespace FlaxEditor.Tools.Foliage
                 int typesCount = foliage.FoliageTypesCount;
                 for (int i = 0; i < typesCount; i++)
                 {
-                    var model = foliage.GetFoliageTypeModel(i);
+                    var model = foliage.GetFoliageType(i).Model;
                     var asset = Tab.Editor.ContentDatabase.FindAsset(model.ID);
 
                     var itemPanel = new ContainerControl();
 
                     var itemCheck = new CheckBox
                     {
-                        DockStyle = DockStyle.Left,
-                        Width = 18,
+                        AnchorPreset = AnchorPresets.VerticalStretchLeft,
+                        Offsets = new Margin(0, 18, 0, 0),
                         TooltipText = "If checked, enables painting with this foliage type.",
                         Tag = i,
                         Parent = itemPanel,
@@ -340,14 +294,15 @@ namespace FlaxEditor.Tools.Foliage
 
                     var itemView = new AssetSearchPopup.AssetItemView(asset)
                     {
-                        DockStyle = DockStyle.Fill,
+                        AnchorPreset = AnchorPresets.StretchAll,
+                        Offsets = new Margin(itemCheck.Width + 2, 0, 1, 1),
                         TooltipText = asset.NamePath,
                         Tag = i,
                         Parent = itemPanel,
                     };
                     itemView.Clicked += OnFoliageTypeListItemClicked;
 
-                    itemPanel.Height = itemView.Height;
+                    itemPanel.Height = 34;
                     itemPanel.Parent = _items;
 
                     itemPanel.UnlockChildrenRecursive();
@@ -370,8 +325,8 @@ namespace FlaxEditor.Tools.Foliage
         {
             var index = (int)item.Tag;
             var foliage = Tab.SelectedFoliage;
-            var foliageType = foliage.GetFoliageTypeModel(index);
-            Tab.FoliageTypeModelIdsToPaint[foliageType.ID] = item.Checked;
+            var model = foliage.GetFoliageType(index).Model;
+            Tab.FoliageTypeModelIdsToPaint[model.ID] = item.Checked;
         }
 
         private void OnFoliageTypeListItemClicked(ItemsListContextMenu.Item item)

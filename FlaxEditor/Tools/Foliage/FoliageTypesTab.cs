@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Linq;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
@@ -52,18 +53,11 @@ namespace FlaxEditor.Tools.Foliage
                 SelectedFoliageTypeIndex = -1;
             }
 
-            private MaterialBase[] _materials;
-            private IntPtr[] _materialsPtr;
-            private FlaxEngine.Foliage.TypeOptions _options;
+            private FoliageType _type;
 
             public void SyncOptions()
             {
-                Foliage.GetFoliageTypeOptions(SelectedFoliageTypeIndex, out _options);
-            }
-
-            public void SetOptions()
-            {
-                Foliage.SetFoliageTypeOptions(SelectedFoliageTypeIndex, ref _options);
+                _type = Foliage.GetFoliageType(SelectedFoliageTypeIndex);
             }
 
             //
@@ -71,10 +65,17 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(10), EditorDisplay("Model"), Tooltip("Model to draw by all the foliage instances of this type. It must be unique within the foliage actor and cannot be null.")]
             public Model Model
             {
-                get => Foliage.GetFoliageTypeModel(SelectedFoliageTypeIndex);
+                get => _type.Model;
                 set
                 {
-                    Foliage.SetFoliageTypeModel(SelectedFoliageTypeIndex, value);
+                    if (_type.Model == value)
+                        return;
+                    if (Foliage.FoliageTypes.Any(x => x.Model == value))
+                    {
+                        MessageBox.Show("The given model is already used by the other foliage type.", "Invalid model", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    _type.Model = value;
                     Tab.UpdateFoliageTypesList();
 
                     // TODO: support undo for editing foliage type properties
@@ -88,41 +89,13 @@ namespace FlaxEditor.Tools.Foliage
                 {
                     if (Model.WaitForLoaded())
                         throw new Exception("Failed to load foliage model.");
-
-                    var size = Model.MaterialSlotsCount;
-                    if (_materials == null || _materials.Length != size)
-                    {
-                        _materials = new MaterialBase[size];
-                        _materialsPtr = new IntPtr[size];
-                    }
-
-                    Foliage.GetFoliageTypeMaterials(SelectedFoliageTypeIndex, _materials);
-
-                    return _materials;
+                    return _type.Materials;
                 }
                 set
                 {
                     if (Model.WaitForLoaded())
                         throw new Exception("Failed to load foliage model.");
-
-                    var size = Model.MaterialSlotsCount;
-                    if (value == null || value.Length != size)
-                        throw new ArgumentException("value", "Inalid materials buffer size for foliage type overrides.");
-
-                    _materials = value;
-
-                    if (_materialsPtr == null || _materialsPtr.Length != size)
-                    {
-                        _materialsPtr = new IntPtr[size];
-                    }
-
-                    for (int i = 0; i < size; i++)
-                    {
-                        var v = value[i];
-                        _materialsPtr[i] = v ? v.unmanagedPtr : IntPtr.Zero;
-                    }
-
-                    Foliage.SetFoliageTypeMaterials(SelectedFoliageTypeIndex, _materialsPtr);
+                    _type.Materials = value;
                 }
             }
 
@@ -131,77 +104,73 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(100), EditorDisplay("Instance Options"), Limit(0.0f), Tooltip("The per-instance cull distance.")]
             public float CullDistance
             {
-                get => _options.CullDistance;
+                get => _type.CullDistance;
                 set
                 {
-                    _options.CullDistance = value;
-                    SetOptions();
+                    if (Mathf.NearEqual(_type.CullDistance, value))
+                        return;
+                    _type.CullDistance = value;
+                    Foliage.UpdateCullDistance();
                 }
             }
 
             [EditorOrder(110), EditorDisplay("Instance Options"), Limit(0.0f), Tooltip("The per-instance cull distance randomization range (randomized per instance and added to master CullDistance value).")]
             public float CullDistanceRandomRange
             {
-                get => _options.CullDistanceRandomRange;
+                get => _type.CullDistanceRandomRange;
                 set
                 {
-                    _options.CullDistanceRandomRange = value;
-                    SetOptions();
+                    if (Mathf.NearEqual(_type.CullDistanceRandomRange, value))
+                        return;
+                    _type.CullDistanceRandomRange = value;
+                    Foliage.UpdateCullDistance();
                 }
             }
 
-            [EditorOrder(120), DefaultValue(FlaxEngine.DrawPass.Default), EditorDisplay("Instance Options"), Tooltip("The draw passes to use for rendering this foliage type.")]
-            public FlaxEngine.DrawPass DrawModes
+            [EditorOrder(120), DefaultValue(DrawPass.Default), EditorDisplay("Instance Options"), Tooltip("The draw passes to use for rendering this foliage type.")]
+            public DrawPass DrawModes
             {
-                get => _options.DrawModes;
-                set
-                {
-                    _options.DrawModes = value;
-                    SetOptions();
-                }
+                get => _type.DrawModes;
+                set => _type.DrawModes = value;
             }
 
             [EditorOrder(130), DefaultValue(ShadowsCastingMode.All), EditorDisplay("Instance Options"), Tooltip("The shadows casting mode.")]
             public ShadowsCastingMode ShadowsMode
             {
-                get => _options.ShadowsMode;
-                set
-                {
-                    _options.ShadowsMode = value;
-                    SetOptions();
-                }
+                get => _type.ShadowsMode;
+                set => _type.ShadowsMode = value;
             }
 
             [EditorOrder(140), EditorDisplay("Instance Options"), Tooltip("Determines whenever this meshes can receive decals.")]
             public bool ReceiveDecals
             {
-                get => _options.ReceiveDecals != 0;
-                set
-                {
-                    _options.ReceiveDecals = (byte)(value ? 1 : 0);
-                    SetOptions();
-                }
+                get => _type.ReceiveDecals;
+                set => _type.ReceiveDecals = value;
             }
 
             [EditorOrder(150), EditorDisplay("Instance Options"), Tooltip("Flag used to determinate whenever use global foliage density scaling for instances of this foliage type.")]
             public bool UseDensityScaling
             {
-                get => _options.UseDensityScaling != 0;
+                get => _type.UseDensityScaling;
                 set
                 {
-                    _options.UseDensityScaling = (byte)(value ? 1 : 0);
-                    SetOptions();
+                    if (_type.UseDensityScaling == value)
+                        return;
+                    _type.UseDensityScaling = value;
+                    Foliage.RebuildClusters();
                 }
             }
 
             [EditorOrder(160), VisibleIf("UseDensityScaling"), Limit(0, 10, 0.001f), EditorDisplay("Instance Options"), Tooltip("The density scaling scale applied to the global scale for the foliage instances of this type. Can be used to boost or reduce density scaling effect on this foliage type.")]
             public float DensityScalingScale
             {
-                get => _options.DensityScalingScale;
+                get => _type.DensityScalingScale;
                 set
                 {
-                    _options.DensityScalingScale = value;
-                    SetOptions();
+                    if (Mathf.NearEqual(_type.DensityScalingScale, value))
+                        return;
+                    _type.DensityScalingScale = value;
+                    Foliage.RebuildClusters();
                 }
             }
 
@@ -210,68 +179,47 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(200), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The foliage instances density defined in instances count per 1000x1000 units area.")]
             public float Density
             {
-                get => _options.PaintDensity;
-                set
-                {
-                    _options.PaintDensity = value;
-                    SetOptions();
-                }
+                get => _type.PaintDensity;
+                set => _type.PaintDensity = value;
             }
 
             [EditorOrder(210), EditorDisplay("Painting"), Limit(0.0f), Tooltip("The minimum radius between foliage instances.")]
             public float Radius
             {
-                get => _options.PaintRadius;
-                set
-                {
-                    _options.PaintRadius = value;
-                    SetOptions();
-                }
+                get => _type.PaintRadius;
+                set => _type.PaintRadius = value;
             }
 
             [EditorOrder(215), EditorDisplay("Painting"), Limit(0.0f, 360.0f), Tooltip("The minimum and maximum ground slope angle to paint foliage on it (in degrees).")]
             public Vector2 PaintGroundSlopeAngleRange
             {
-                get => new Vector2(_options.PaintGroundSlopeAngleMin, _options.PaintGroundSlopeAngleMax);
+                get => new Vector2(_type.PaintGroundSlopeAngleMin, _type.PaintGroundSlopeAngleMax);
                 set
                 {
-                    _options.PaintGroundSlopeAngleMin = value.X;
-                    _options.PaintGroundSlopeAngleMax = value.Y;
-                    SetOptions();
+                    _type.PaintGroundSlopeAngleMin = value.X;
+                    _type.PaintGroundSlopeAngleMax = value.Y;
                 }
             }
 
             [EditorOrder(220), EditorDisplay("Painting"), Tooltip("The scaling mode.")]
-            public FlaxEngine.Foliage.ScalingModes Scaling
+            public FoliageScalingModes Scaling
             {
-                get => _options.PaintScaling;
-                set
-                {
-                    _options.PaintScaling = value;
-                    SetOptions();
-                }
+                get => _type.PaintScaling;
+                set => _type.PaintScaling = value;
             }
 
             [EditorOrder(230), EditorDisplay("Painting"), Limit(0.0f), CustomEditor(typeof(ActorTransformEditor.PositionScaleEditor)), Tooltip("The scale minimum values per axis.")]
             public Vector3 ScaleMin
             {
-                get => _options.PaintScaleMin;
-                set
-                {
-                    _options.PaintScaleMin = value;
-                    SetOptions();
-                }
+                get => _type.PaintScaleMin;
+                set => _type.PaintScaleMin = value;
             }
 
             [EditorOrder(240), EditorDisplay("Painting"), Limit(0.0f), CustomEditor(typeof(ActorTransformEditor.PositionScaleEditor)), Tooltip("The scale maximum values per axis.")]
             public Vector3 ScaleMax
             {
-                get => _options.PaintScaleMax;
-                set
-                {
-                    _options.PaintScaleMax = value;
-                    SetOptions();
-                }
+                get => _type.PaintScaleMax;
+                set => _type.PaintScaleMax = value;
             }
 
             //
@@ -279,56 +227,36 @@ namespace FlaxEditor.Tools.Foliage
             [EditorOrder(300), EditorDisplay("Placement", "Offset Y"), Tooltip("The per-instance random offset range on axis Y (min-max).")]
             public Vector2 OffsetY
             {
-                get => _options.PlacementOffsetY;
-                set
-                {
-                    _options.PlacementOffsetY = value;
-                    SetOptions();
-                }
+                get => _type.PlacementOffsetY;
+                set => _type.PlacementOffsetY = value;
             }
 
             [EditorOrder(310), EditorDisplay("Placement"), Limit(0.0f), Tooltip("The random pitch angle range (uniform in both ways around normal vector).")]
             public float RandomPitchAngle
             {
-                get => _options.PlacementRandomPitchAngle;
-                set
-                {
-                    _options.PlacementRandomPitchAngle = value;
-                    SetOptions();
-                }
+                get => _type.PlacementRandomPitchAngle;
+                set => _type.PlacementRandomPitchAngle = value;
             }
 
             [EditorOrder(320), EditorDisplay("Placement"), Limit(0.0f), Tooltip("The random roll angle range (uniform in both ways around normal vector).")]
             public float RandomRollAngle
             {
-                get => _options.PlacementRandomRollAngle;
-                set
-                {
-                    _options.PlacementRandomRollAngle = value;
-                    SetOptions();
-                }
+                get => _type.PlacementRandomRollAngle;
+                set => _type.PlacementRandomRollAngle = value;
             }
 
             [EditorOrder(330), EditorDisplay("Placement", "Align To Normal"), Tooltip("If checked, instances will be aligned to normal of the placed surface.")]
             public bool AlignToNormal
             {
-                get => _options.PlacementAlignToNormal != 0;
-                set
-                {
-                    _options.PlacementAlignToNormal = (byte)(value ? 1 : 0);
-                    SetOptions();
-                }
+                get => _type.PlacementAlignToNormal;
+                set => _type.PlacementAlignToNormal = value;
             }
 
             [EditorOrder(340), EditorDisplay("Placement"), Tooltip("If checked, instances will use randomized yaw when placed. Random yaw uses will rotation range over the Y axis.")]
             public bool RandomYaw
             {
-                get => _options.PlacementRandomYaw != 0;
-                set
-                {
-                    _options.PlacementRandomYaw = (byte)(value ? 1 : 0);
-                    SetOptions();
-                }
+                get => _type.PlacementRandomYaw;
+                set => _type.PlacementRandomYaw = value;
             }
         }
 
@@ -407,16 +335,16 @@ namespace FlaxEditor.Tools.Foliage
             var splitPanel = new SplitPanel(Orientation.Vertical, ScrollBars.Vertical, ScrollBars.Vertical)
             {
                 SplitterValue = 0.2f,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
 
             // Foliage types list
             _items = new VerticalPanel
             {
-                Y = 4,
-                Height = 4,
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(4, 4, 4, 0),
                 IsScrollable = true,
                 Parent = splitPanel.Panel1
             };
@@ -535,7 +463,7 @@ namespace FlaxEditor.Tools.Foliage
                 _foliageTypesCount = typesCount;
                 for (int i = 0; i < typesCount; i++)
                 {
-                    var model = foliage.GetFoliageTypeModel(i);
+                    var model = foliage.GetFoliageType(i).Model;
                     var asset = Tab.Editor.ContentDatabase.FindAsset(model.ID);
                     var itemView = new AssetSearchPopup.AssetItemView(asset)
                     {

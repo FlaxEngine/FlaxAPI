@@ -9,7 +9,6 @@ using FlaxEditor.SceneGraph;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Newtonsoft.Json;
-using Object = System.Object;
 
 namespace FlaxEditor.Utilities
 {
@@ -163,11 +162,15 @@ namespace FlaxEditor.Utilities
         {
             if (type == typeof(string))
                 return string.Empty;
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
+            if (type == typeof(Color))
+                return Color.White;
+            if (type == typeof(Quaternion))
+                return Quaternion.Identity;
+            if (type == typeof(Transform))
+                return Transform.Identity;
 
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
             if (typeof(object).IsAssignableFrom(type))
                 return null;
             return Activator.CreateInstance(type);
@@ -328,32 +331,6 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
-        /// Gets the type of the base class for the given content domain. Used by the editor internal layer to convert static enum to the runtime asset type.
-        /// </summary>
-        /// <param name="domain">The domain.</param>
-        /// <returns>The asset object type.</returns>
-        public static Type GetType(ContentDomain domain)
-        {
-            switch (domain)
-            {
-            case ContentDomain.Texture: return typeof(Texture);
-            case ContentDomain.CubeTexture: return typeof(CubeTexture);
-            case ContentDomain.Material: return typeof(MaterialBase);
-            case ContentDomain.Model: return typeof(Model);
-            case ContentDomain.Shader: return typeof(Shader);
-            case ContentDomain.Font: return typeof(FontAsset);
-            case ContentDomain.IESProfile: return typeof(IESProfile);
-            case ContentDomain.Document: return typeof(JsonAsset);
-            case ContentDomain.Audio: return typeof(AudioClip);
-            case ContentDomain.Animation: return typeof(Animation);
-            case ContentDomain.SkeletonMask: return typeof(SkeletonMask);
-            }
-
-            // Anything
-            return typeof(Asset);
-        }
-
-        /// <summary>
         /// Tries to create object instance of the given full typename. Searches in-build Flax Engine/Editor assemblies and game assemblies.
         /// </summary>
         /// <param name="typeName">The full name of the type.</param>
@@ -395,9 +372,9 @@ namespace FlaxEditor.Utilities
         /// </summary>
         /// <param name="srcDirectoryPath">The source directory path.</param>
         /// <param name="dstDirectoryPath">The destination directory path.</param>
-        /// <param name="copySubdirs">If set to <c>true</c> copy subdirectories.</param>
+        /// <param name="copySubDirs">If set to <c>true</c> copy subdirectories.</param>
         /// <param name="overrideFiles">if set to <c>true</c> override existing files.</param>
-        public static void DirectoryCopy(string srcDirectoryPath, string dstDirectoryPath, bool copySubdirs = true, bool overrideFiles = false)
+        public static void DirectoryCopy(string srcDirectoryPath, string dstDirectoryPath, bool copySubDirs = true, bool overrideFiles = false)
         {
             var dir = new DirectoryInfo(srcDirectoryPath);
 
@@ -418,7 +395,7 @@ namespace FlaxEditor.Utilities
                 files[i].CopyTo(tmp, overrideFiles);
             }
 
-            if (copySubdirs)
+            if (copySubDirs)
             {
                 var dirs = dir.GetDirectories();
                 for (int i = 0; i < dirs.Length; i++)
@@ -906,10 +883,48 @@ namespace FlaxEditor.Utilities
         }
 
         /// <summary>
+        /// Gets the runtime object type of the graph parameter values objects.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The object type.</returns>
+        public static Type GetGraphParameterValueType(GraphParamType type)
+        {
+            switch (type)
+            {
+            case GraphParamType.Bool: return typeof(bool);
+            case GraphParamType.Integer: return typeof(int);
+            case GraphParamType.Float: return typeof(float);
+            case GraphParamType.Vector2: return typeof(Vector2);
+            case GraphParamType.Vector3: return typeof(Vector3);
+            case GraphParamType.Vector4: return typeof(Vector4);
+            case GraphParamType.Color: return typeof(Color);
+            case GraphParamType.Texture: return typeof(Texture);
+            case GraphParamType.NormalMap: return typeof(Texture);
+            case GraphParamType.String: return typeof(string);
+            case GraphParamType.Box: return typeof(BoundingBox);
+            case GraphParamType.Rotation: return typeof(Quaternion);
+            case GraphParamType.Transform: return typeof(Transform);
+            case GraphParamType.Asset: return typeof(Asset);
+            case GraphParamType.Actor: return typeof(Actor);
+            case GraphParamType.Rectangle: return typeof(Rectangle);
+            case GraphParamType.CubeTexture: return typeof(CubeTexture);
+            case GraphParamType.SceneTexture: return typeof(MaterialSceneTextures);
+            case GraphParamType.GPUTexture: return typeof(GPUTexture);
+            case GraphParamType.Matrix: return typeof(Matrix);
+            case GraphParamType.GPUTextureArray: return typeof(GPUTexture);
+            case GraphParamType.GPUTextureVolume: return typeof(GPUTexture);
+            case GraphParamType.GPUTextureCube: return typeof(GPUTexture);
+            case GraphParamType.ChannelMask: return typeof(ChannelMask);
+            default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        /// <summary>
         /// Shows the source code window.
         /// </summary>
-        /// <param name="material">The material asset.</param>
-        public static void ShowSourceCode(string source, string title)
+        /// <param name="source">The source code.</param>
+        /// <param name="title">The window title.</param>
+        public static void ShowSourceCodeWindow(string source, string title)
         {
             if (string.IsNullOrEmpty(source))
             {
@@ -917,7 +932,7 @@ namespace FlaxEditor.Utilities
                 return;
             }
 
-            CreateWindowSettings settings = CreateWindowSettings.Default;
+            var settings = CreateWindowSettings.Default;
             settings.ActivateWhenFirstShown = true;
             settings.AllowMaximize = false;
             settings.AllowMinimize = false;
@@ -925,12 +940,14 @@ namespace FlaxEditor.Utilities
             settings.StartPosition = WindowStartPosition.CenterScreen;
             settings.Size = new Vector2(500, 600) * Platform.DpiScale;
             settings.Title = title;
-            var dialog = Window.Create(settings);
+            var dialog = Platform.CreateWindow(ref settings);
 
-            var copyButton = new Button(4, 4, 100);
-            copyButton.Text = "Copy";
-            copyButton.Clicked += () => Platform.ClipboardText = source;
-            copyButton.Parent = dialog.GUI;
+            var copyButton = new Button(4, 4, 100)
+            {
+                Text = "Copy",
+                Parent = dialog.GUI,
+            };
+            copyButton.Clicked += () => Clipboard.Text = source;
 
             var sourceTextBox = new TextBox(true, 2, copyButton.Bottom + 4, settings.Size.X - 4);
             sourceTextBox.Height = settings.Size.Y - sourceTextBox.Top - 2;
@@ -939,6 +956,64 @@ namespace FlaxEditor.Utilities
 
             dialog.Show();
             dialog.Focus();
+        }
+
+        private static OrientedBoundingBox GetWriteBox(ref Vector3 min, ref Vector3 max, float margin)
+        {
+            var box = new OrientedBoundingBox();
+            Vector3 vec = max - min;
+            Vector3 dir = Vector3.Normalize(vec);
+            Quaternion orientation;
+            if (Vector3.Dot(dir, Vector3.Up) >= 0.999f)
+                orientation = Quaternion.RotationAxis(Vector3.Left, Mathf.PiOverTwo);
+            else
+                orientation = Quaternion.LookRotation(dir, Vector3.Cross(Vector3.Cross(dir, Vector3.Up), dir));
+            Vector3 up = Vector3.Up * orientation;
+            box.Transformation = Matrix.CreateWorld(min + vec * 0.5f, dir, up);
+            Matrix inv;
+            Matrix.Invert(ref box.Transformation, out inv);
+            Vector3 vecLocal = Vector3.TransformNormal(vec * 0.5f, inv);
+            box.Extents.X = margin;
+            box.Extents.Y = margin;
+            box.Extents.Z = vecLocal.Z;
+            return box;
+        }
+
+        /// <summary>
+        /// Checks if given ray intersects with the oriented bounding wire box.
+        /// </summary>
+        /// <param name="box">The box.</param>
+        /// <param name="ray">The ray.</param>
+        /// <param name="distance">The result intersection distance.</param>
+        /// <param name="viewPosition">The view position used to scale the wires thickness depending on the wire distance from the view.</param>
+        /// <returns>True ray hits bounds, otherwise false.</returns>
+        public static unsafe bool RayCastWire(ref OrientedBoundingBox box, ref Ray ray, out float distance, ref Vector3 viewPosition)
+        {
+            var corners = stackalloc Vector3[8];
+            box.GetCorners(corners);
+
+            var minDistance = Vector3.DistanceSquared(ref viewPosition, ref corners[0]);
+            for (int i = 1; i < 8; i++)
+                minDistance = Mathf.Min(minDistance, Vector3.DistanceSquared(ref viewPosition, ref corners[i]));
+            minDistance = Mathf.Sqrt(minDistance);
+            var margin = Mathf.Clamp(minDistance / 80.0f, 0.1f, 100.0f);
+
+            if (GetWriteBox(ref corners[0], ref corners[1], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[0], ref corners[3], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[0], ref corners[4], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[1], ref corners[2], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[1], ref corners[5], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[2], ref corners[3], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[2], ref corners[6], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[3], ref corners[7], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[4], ref corners[5], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[4], ref corners[7], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[5], ref corners[6], margin).Intersects(ref ray, out distance) ||
+                GetWriteBox(ref corners[6], ref corners[7], margin).Intersects(ref ray, out distance))
+                return true;
+
+            distance = 0;
+            return false;
         }
     }
 }

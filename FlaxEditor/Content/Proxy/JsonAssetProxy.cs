@@ -30,9 +30,6 @@ namespace FlaxEditor.Content
         public override string Name => "Json";
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Document;
-
-        /// <inheritdoc />
         public override string FileExtension => Extension;
 
         /// <inheritdoc />

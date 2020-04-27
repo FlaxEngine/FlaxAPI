@@ -131,11 +131,14 @@ namespace FlaxEditor.Windows.Assets
                 Asset = window.Asset;
 
                 // Setup cooking parameters
-                Type = Asset.Type;
+                var options = Asset.Options;
+                Type = options.Type;
                 if (Type == CollisionDataType.None)
                     Type = CollisionDataType.ConvexMesh;
-                Model = Asset.Model;
-                Asset.GetCookOptions(out ModelLodIndex, out ConvexFlags, out ConvexVertexLimit);
+                Model = FlaxEngine.Content.LoadAsync<Model>(options.Model);
+                ModelLodIndex = options.ModelLodIndex;
+                ConvexFlags = options.ConvexFlags;
+                ConvexVertexLimit = options.ConvexVertexLimit;
             }
 
             public void OnClean()
@@ -161,12 +164,13 @@ namespace FlaxEditor.Windows.Assets
         {
             // Toolstrip
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/physics/colliders/collision-data.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/physics/colliders/collision-data.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.7f,
                 Parent = this
             };
@@ -203,7 +207,7 @@ namespace FlaxEditor.Windows.Assets
         private void UpdateWiresModel()
         {
             // Don't update on a importer/worker thread
-            if (!Platform.IsInMainThread)
+            if (Platform.CurrentThreadID != Globals.MainThreadID)
             {
                 _updateWireMesh = true;
                 return;
@@ -212,7 +216,7 @@ namespace FlaxEditor.Windows.Assets
             if (_collisionWiresModel == null)
             {
                 _collisionWiresModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
-                _collisionWiresModel.SetupLODs(1);
+                _collisionWiresModel.SetupLODs(new[] { 1 });
             }
             Editor.Internal_GetCollisionWires(Asset.unmanagedPtr, out var triangles, out var indices);
             if (triangles != null && indices != null)
@@ -222,11 +226,11 @@ namespace FlaxEditor.Windows.Assets
             if (_collisionWiresShowActor == null)
             {
                 _collisionWiresShowActor = StaticModel.New();
-                _preview.Task.CustomActors.Add(_collisionWiresShowActor);
+                _preview.Task.AddCustomActor(_collisionWiresShowActor);
             }
             _collisionWiresShowActor.Model = _collisionWiresModel;
-            _collisionWiresShowActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
-            _preview.Model = _asset.Model;
+            _collisionWiresShowActor.SetMaterial(0, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial));
+            _preview.Model = FlaxEngine.Content.LoadAsync<Model>(_asset.Options.Model);
         }
 
         /// <inheritdoc />

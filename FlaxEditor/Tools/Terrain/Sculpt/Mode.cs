@@ -125,9 +125,9 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                     continue;
 
                 // Get the patch data (cached internally by the c++ core in editor)
-                var sourceHeightsPtr = EditHoles ? IntPtr.Zero : TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord);
-                var sourceHolesPtr = EditHoles ? TerrainTools.GetHolesMaskData(terrain, ref patch.PatchCoord) : IntPtr.Zero;
-                if (sourceHeightsPtr == IntPtr.Zero && sourceHolesPtr == IntPtr.Zero)
+                float* sourceHeights = EditHoles ? null : TerrainTools.GetHeightmapData(terrain, ref patch.PatchCoord);
+                byte* sourceHoles = EditHoles ? TerrainTools.GetHolesMaskData(terrain, ref patch.PatchCoord) : null;
+                if (sourceHeights == null && sourceHoles == null)
                 {
                     throw new FlaxException("Cannot modify terrain. Loading heightmap failed. See log for more info.");
                 }
@@ -143,8 +143,8 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
                 p.ModifiedSize = modifiedSize;
                 p.PatchCoord = patch.PatchCoord;
                 p.PatchPositionLocal = patchPositionLocal;
-                p.SourceHeightMap = (float*)sourceHeightsPtr.ToPointer();
-                p.SourceHolesMask = (byte*)sourceHolesPtr.ToPointer();
+                p.SourceHeightMap = sourceHeights;
+                p.SourceHolesMask = sourceHoles;
                 Apply(ref p);
             }
 
@@ -156,7 +156,7 @@ namespace FlaxEditor.Tools.Terrain.Sculpt
             {
                 if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
                 {
-                    terrain.Scene.BuildNavMesh(brushBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                    Navigation.BuildNavMesh(terrain.Scene, brushBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
                 }
             }
         }

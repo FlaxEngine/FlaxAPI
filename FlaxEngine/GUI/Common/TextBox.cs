@@ -83,7 +83,7 @@ namespace FlaxEngine.GUI
             var style = Style.Current;
             Font = new FontReference(style.FontMedium);
             TextColor = style.Foreground;
-            WatermarkTextColor = new Color(0.7f);
+            WatermarkTextColor = style.ForegroundDisabled;
             SelectionColor = style.BackgroundSelected;
         }
 
@@ -110,7 +110,7 @@ namespace FlaxEngine.GUI
             }
 
             height = font.Height;
-            return font.GetCharPosition(_text, index, _layout);
+            return font.GetCharPosition(_text, index, ref _layout);
         }
 
         /// <inheritdoc />
@@ -122,7 +122,7 @@ namespace FlaxEngine.GUI
                 return 0;
             }
 
-            return font.HitTestText(_text, location, _layout);
+            return font.HitTestText(_text, location, ref _layout);
         }
 
         /// <inheritdoc />
@@ -158,8 +158,8 @@ namespace FlaxEngine.GUI
             // Check if sth is selected to draw selection
             if (HasSelection)
             {
-                Vector2 leftEdge = font.GetCharPosition(_text, SelectionLeft, _layout);
-                Vector2 rightEdge = font.GetCharPosition(_text, SelectionRight, _layout);
+                Vector2 leftEdge = font.GetCharPosition(_text, SelectionLeft, ref _layout);
+                Vector2 rightEdge = font.GetCharPosition(_text, SelectionRight, ref _layout);
                 float fontHeight = font.Height;
 
                 // Draw selection background
@@ -200,11 +200,11 @@ namespace FlaxEngine.GUI
                 var color = TextColor;
                 if (!enabled)
                     color *= 0.6f;
-                Render2D.DrawText(font, TextMaterial, _text, color, ref _layout);
+                Render2D.DrawText(font, _text, color, ref _layout, TextMaterial);
             }
             else if (!string.IsNullOrEmpty(WatermarkText) && !IsFocused)
             {
-                Render2D.DrawText(font, TextMaterial, WatermarkText, WatermarkTextColor, ref _layout);
+                Render2D.DrawText(font, WatermarkText, WatermarkTextColor, ref _layout, TextMaterial);
             }
 
             // Caret
@@ -229,9 +229,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             _layout.Bounds = TextRectangle;
         }

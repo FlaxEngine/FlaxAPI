@@ -30,7 +30,7 @@ namespace FlaxEditor.Content.Thumbnails
 
         private readonly List<ThumbnailRequest> _requests = new List<ThumbnailRequest>(128);
         private readonly PreviewRoot _guiRoot = new PreviewRoot();
-        private CustomRenderTask _task;
+        private RenderTask _task;
         private GPUTexture _output;
 
         internal ThumbnailsModule(Editor editor)
@@ -205,16 +205,16 @@ namespace FlaxEditor.Content.Thumbnails
             }
 
             // Create render task but disabled for now
-            _output = GPUDevice.CreateTexture("ThumbnailsOutput");
+            _output = GPUDevice.Instance.CreateTexture("ThumbnailsOutput");
             var desc = GPUTextureDescription.New2D(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize, PreviewsCache.AssetIconsAtlasFormat);
             _output.Init(ref desc);
-            _task = Object.New<CustomRenderTask>();
+            _task = Object.New<RenderTask>();
             _task.Order = 50; // Render this task later
             _task.Enabled = false;
             _task.Render += OnRender;
         }
 
-        private void OnRender(GPUContext context)
+        private void OnRender(RenderTask task, GPUContext context)
         {
             lock (_requests)
             {
@@ -252,7 +252,7 @@ namespace FlaxEditor.Content.Thumbnails
                 _guiRoot.UnlockChildrenRecursive();
 
                 // Draw preview
-                context.Clear(_output, Color.Black);
+                context.Clear(_output.View(), Color.Black);
                 Render2D.CallDrawing(_guiRoot, context, _output);
 
                 // Call proxy and cleanup UI (delete create controls, shared controls should be unlinked during OnThumbnailDrawEnd event)
@@ -260,7 +260,7 @@ namespace FlaxEditor.Content.Thumbnails
                 _guiRoot.DisposeChildren();
 
                 // Copy backbuffer with rendered preview into atlas
-                Sprite icon = atlas.OccupySlot(_output, request.Item.ID);
+                SpriteHandle icon = atlas.OccupySlot(_output, request.Item.ID);
                 if (!icon.IsValid)
                 {
                     // Error
@@ -476,7 +476,8 @@ namespace FlaxEditor.Content.Thumbnails
         /// <inheritdoc />
         public override void OnExit()
         {
-            _task?.Dispose();
+            if (_task)
+                _task.Enabled = false;
 
             lock (_requests)
             {
@@ -519,12 +520,6 @@ namespace FlaxEditor.Content.Thumbnails
                 // Draw accent
                 const float accentHeight = 2;
                 Render2D.FillRectangle(new Rectangle(0, Height - accentHeight, Width, accentHeight), AccentColor);
-            }
-
-            /// <inheritdoc />
-            protected override void SetSizeInternal(ref Vector2 size)
-            {
-                // Cannot change default preview size
             }
         }
     }

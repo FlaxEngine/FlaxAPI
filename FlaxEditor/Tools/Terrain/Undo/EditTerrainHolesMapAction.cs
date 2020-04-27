@@ -11,7 +11,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
     /// <seealso cref="FlaxEditor.IUndoAction" />
     /// <seealso cref="EditTerrainMapAction" />
     [Serializable]
-    public class EditTerrainHolesMapAction : EditTerrainMapAction
+    public unsafe class EditTerrainHolesMapAction : EditTerrainMapAction
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EditTerrainHolesMapAction"/> class.
@@ -28,7 +28,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// <inheritdoc />
         protected override IntPtr GetData(ref Int2 patchCoord, object tag)
         {
-            return TerrainTools.GetHolesMaskData(Terrain, ref patchCoord);
+            return new IntPtr(TerrainTools.GetHolesMaskData(Terrain, ref patchCoord));
         }
 
         /// <inheritdoc />
@@ -36,7 +36,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         {
             var offset = Int2.Zero;
             var size = new Int2((int)Mathf.Sqrt(_heightmapLength));
-            if (TerrainTools.ModifyHolesMask(Terrain, ref patchCoord, data, ref offset, ref size))
+            if (TerrainTools.ModifyHolesMask(Terrain, ref patchCoord, (byte*)data, ref offset, ref size))
                 throw new FlaxException("Failed to modify the terrain holes.");
         }
     }

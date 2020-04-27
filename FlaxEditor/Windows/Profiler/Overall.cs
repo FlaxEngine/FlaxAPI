@@ -24,12 +24,14 @@ namespace FlaxEditor.Windows.Profiler
             // Layout
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this,
             };
             var layout = new VerticalPanel
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = Margin.Zero,
                 IsScrollable = true,
                 Parent = panel,
             };
@@ -96,8 +98,8 @@ namespace FlaxEditor.Windows.Profiler
             _updateTimeChart.AddSample(sharedData.Stats.UpdateTimeMs);
             _drawTimeCPUChart.AddSample(sharedData.Stats.DrawCPUTimeMs);
             _drawTimeGPUChart.AddSample(sharedData.Stats.DrawGPUTimeMs);
-            _cpuMemChart.AddSample(sharedData.Stats.ProcessMemory_UsedPhysicalMemory / 1024 / 1024);
-            _gpuMemChart.AddSample(sharedData.Stats.MemoryGPU_Used / 1024 / 1024);
+            _cpuMemChart.AddSample(sharedData.Stats.ProcessMemory.UsedPhysicalMemory / 1024 / 1024);
+            _gpuMemChart.AddSample(sharedData.Stats.MemoryGPU.Used / 1024 / 1024);
         }
 
         /// <inheritdoc />

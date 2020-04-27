@@ -49,7 +49,8 @@ namespace FlaxEditor.Tools.Terrain
             // Main panel
             var panel = new Panel(ScrollBars.Both)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
 
@@ -189,7 +190,7 @@ namespace FlaxEditor.Tools.Terrain
                 {
                     if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
                     {
-                        terrain.Scene.BuildNavMesh(patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                        Navigation.BuildNavMesh(terrain.Scene, patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
                     }
                 }
             }
@@ -274,7 +275,7 @@ namespace FlaxEditor.Tools.Terrain
                     return;
                 }
 
-                terrain.SetChunkOverrideMaterial(ref _patchCoord, ref _chunkCoord, FlaxEngine.Content.LoadAsync<MaterialBase>(ref id));
+                terrain.SetChunkOverrideMaterial(ref _patchCoord, ref _chunkCoord, FlaxEngine.Content.LoadAsync<MaterialBase>(id));
 
                 Editor.Instance.Scene.MarkSceneEdited(terrain.Scene);
             }
@@ -297,7 +298,8 @@ namespace FlaxEditor.Tools.Terrain
             if (_isUpdatingUI)
                 return;
 
-            string outputFolder = MessageBox.BrowseFolderDialog(null, null, "Select the output folder");
+            if (FileSystem.ShowBrowseFolderDialog(null, null, "Select the output folder", out var outputFolder))
+                return;
             TerrainTools.ExportTerrain(CarveTab.SelectedTerrain, outputFolder);
         }
 

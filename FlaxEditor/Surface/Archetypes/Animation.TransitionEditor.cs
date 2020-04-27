@@ -67,7 +67,7 @@ namespace FlaxEditor.Surface.Archetypes
                     Parent = this
                 };
                 var editor = new CustomEditorPresenter(null);
-                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.AnchorPreset = AnchorPresets.HorizontalStretchTop;
                 editor.Panel.IsScrollable = true;
                 editor.Panel.Parent = panel1;
 
@@ -107,9 +107,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
-                if (key == Keys.Escape)
+                if (key == KeyboardKeys.Escape)
                 {
                     Hide();
                     return true;

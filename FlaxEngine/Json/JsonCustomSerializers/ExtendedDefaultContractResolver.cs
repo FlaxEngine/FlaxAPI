@@ -15,7 +15,6 @@ namespace FlaxEngine.Json.JsonCustomSerializers
 
         private readonly Type[] _attributesIgnoreList =
         {
-            typeof(UnmanagedCallAttribute),
             typeof(NonSerializedAttribute),
             typeof(NoSerializeAttribute)
         };

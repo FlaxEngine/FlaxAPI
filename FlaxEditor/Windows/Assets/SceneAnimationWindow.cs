@@ -36,12 +36,13 @@ namespace FlaxEditor.Windows.Assets
         public SceneAnimationWindow(Editor editor, AssetItem item)
         : base(editor, item)
         {
-            SceneManager.ActorDeleted += OnActorDeleted;
+            Level.ActorDeleted += OnActorDeleted;
 
             // Timeline
             _timeline = new SceneAnimationTimeline
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 Parent = this,
                 Enabled = false
             };
@@ -50,18 +51,18 @@ namespace FlaxEditor.Windows.Assets
 
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(Editor.Icons.Save32, Save).LinkTooltip("Save");
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/scene-animations/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/animation/scene-animations/index.html")).LinkTooltip("See documentation to learn more");
 
             // Preview player picker
             var previewPlayerPickerContainer = new ContainerControl();
             var previewPlayerPickerLabel = new Label
             {
-                DockStyle = DockStyle.Left,
+                AnchorPreset = AnchorPresets.VerticalStretchLeft,
                 VerticalAlignment = TextAlignment.Center,
                 HorizontalAlignment = TextAlignment.Far,
+                Parent = previewPlayerPickerContainer,
                 Width = 60.0f,
                 Text = "Player:",
-                Parent = previewPlayerPickerContainer,
             };
             _previewPlayerPicker = new FlaxObjectRefPickerControl
             {
@@ -272,7 +273,7 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void OnDestroy()
         {
-            SceneManager.ActorDeleted -= OnActorDeleted;
+            Level.ActorDeleted -= OnActorDeleted;
 
             _timeline = null;
             _saveButton = null;

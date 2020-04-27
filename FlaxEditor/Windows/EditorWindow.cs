@@ -179,7 +179,7 @@ namespace FlaxEditor.Windows
         #endregion
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Base
             if (base.OnKeyDown(key))

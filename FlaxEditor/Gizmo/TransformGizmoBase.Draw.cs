@@ -50,7 +50,7 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <inheritdoc />
-        public override void Draw(DrawCallsCollector collector)
+        public override void Draw(ref RenderContext renderContext)
         {
             if (!_isActive || !IsActive)
                 return;
@@ -81,30 +81,30 @@ namespace FlaxEditor.Gizmo
                 // XY plane
                 m2 = Matrix.Transformation(new Vector3(boxSize, 1.0f, boxSize), Quaternion.RotationX(Mathf.PiOverTwo), new Vector3(boxSize * 0.5f, boxSize * 0.5f, 0.0f));
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(boxMesh, _activeAxis == Axis.XY ? _materialWireFocus : _materialWire, ref m3);
+                boxMesh.Draw(ref renderContext, _activeAxis == Axis.XY ? _materialWireFocus : _materialWire, ref m3);
 
                 // ZX plane
                 m2 = Matrix.Transformation(new Vector3(boxSize, 1.0f, boxSize), Quaternion.Identity, new Vector3(boxSize * 0.5f, 0.0f, boxSize * 0.5f));
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(boxMesh, _activeAxis == Axis.ZX ? _materialWireFocus : _materialWire, ref m3);
+                boxMesh.Draw(ref renderContext, _activeAxis == Axis.ZX ? _materialWireFocus : _materialWire, ref m3);
 
                 // YZ plane
                 m2 = Matrix.Transformation(new Vector3(boxSize, 1.0f, boxSize), Quaternion.RotationZ(Mathf.PiOverTwo), new Vector3(0.0f, boxSize * 0.5f, boxSize * 0.5f));
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(boxMesh, _activeAxis == Axis.YZ ? _materialWireFocus : _materialWire, ref m3);
+                boxMesh.Draw(ref renderContext, _activeAxis == Axis.YZ ? _materialWireFocus : _materialWire, ref m3);
 
                 // X axis
-                collector.AddDrawCall(axisMesh, isXAxis ? _materialAxisFocus : _materialAxisX, ref m1);
+                axisMesh.Draw(ref renderContext, isXAxis ? _materialAxisFocus : _materialAxisX, ref m1);
 
                 // Y axis
                 Matrix.RotationZ(Mathf.PiOverTwo, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(axisMesh, isYAxis ? _materialAxisFocus : _materialAxisY, ref m3);
+                axisMesh.Draw(ref renderContext, isYAxis ? _materialAxisFocus : _materialAxisY, ref m3);
 
                 // Z axis
                 Matrix.RotationY(-Mathf.PiOverTwo, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(axisMesh, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
+                axisMesh.Draw(ref renderContext, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
 
                 break;
             }
@@ -123,22 +123,22 @@ namespace FlaxEditor.Gizmo
                 // X axis
                 Matrix.RotationZ(Mathf.PiOverTwo, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(circleMesh, isXAxis ? _materialAxisFocus : _materialAxisX, ref m3);
+                circleMesh.Draw(ref renderContext, isXAxis ? _materialAxisFocus : _materialAxisX, ref m3);
 
                 // Y axis
-                collector.AddDrawCall(circleMesh, isYAxis ? _materialAxisFocus : _materialAxisY, ref m1);
+                circleMesh.Draw(ref renderContext, isYAxis ? _materialAxisFocus : _materialAxisY, ref m1);
 
                 // Z axis
                 Matrix.RotationX(-Mathf.PiOverTwo, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(circleMesh, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
+                circleMesh.Draw(ref renderContext, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
 
                 // Center box
                 Matrix.Scaling(gizmoModelsScale2RealGizmoSize, out m3);
                 Matrix.Multiply(ref m3, ref _gizmoWorld, out m1);
                 Matrix.Scaling(1.0f, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(boxMesh, isCenter ? _materialWireFocus : _materialWire, ref m3);
+                boxMesh.Draw(ref renderContext, isCenter ? _materialWireFocus : _materialWire, ref m3);
 
                 break;
             }
@@ -157,22 +157,22 @@ namespace FlaxEditor.Gizmo
                 // X axis
                 Matrix.RotationY(-Mathf.PiOverTwo, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(axisMesh, isXAxis ? _materialAxisFocus : _materialAxisX, ref m3);
+                axisMesh.Draw(ref renderContext, isXAxis ? _materialAxisFocus : _materialAxisX, ref m3);
 
                 // Y axis
                 Matrix.RotationX(Mathf.PiOverTwo, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(axisMesh, isYAxis ? _materialAxisFocus : _materialAxisY, ref m3);
+                axisMesh.Draw(ref renderContext, isYAxis ? _materialAxisFocus : _materialAxisY, ref m3);
 
                 // Z axis
                 Matrix.RotationX(Mathf.Pi, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(axisMesh, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
+                axisMesh.Draw(ref renderContext, isZAxis ? _materialAxisFocus : _materialAxisZ, ref m3);
 
                 // Center box
                 Matrix.Scaling(10.0f, out m2);
                 Matrix.Multiply(ref m2, ref m1, out m3);
-                collector.AddDrawCall(boxMesh, isCenter ? _materialWireFocus : _materialWire, ref m3);
+                boxMesh.Draw(ref renderContext, isCenter ? _materialWireFocus : _materialWire, ref m3);
 
                 break;
             }

@@ -50,7 +50,7 @@ namespace FlaxEditor.GUI.Timeline
         /// <summary>
         /// The icon of the track type (for UI).
         /// </summary>
-        public Sprite Icon;
+        public SpriteHandle Icon;
 
         /// <summary>
         /// The track create factory callback.

@@ -67,6 +67,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
             // Try get MemberCollectionAttribute for collection editor meta
             var attributes = Values.GetAttributes();
+            Type overrideEditorType = null;
             if (attributes != null)
             {
                 var memberCollection = (MemberCollectionAttribute)attributes.FirstOrDefault(x => x is MemberCollectionAttribute);
@@ -78,6 +79,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     _readOnly = memberCollection.ReadOnly;
                     _canReorderItems = memberCollection.CanReorderItems;
                     _notNullItems = memberCollection.NotNullItems;
+                    overrideEditorType = Utils.GetType(memberCollection.OverrideEditorTypeName);
                 }
             }
 
@@ -117,7 +119,8 @@ namespace FlaxEditor.CustomEditors.Editors
                     item.Label(key.ToString());
 
                     // Value
-                    item.Object(new DictionaryValueContainer(valueType, key, Values));
+                    var overrideEditor = overrideEditorType != null ? (CustomEditor)Activator.CreateInstance(overrideEditorType) : null;
+                    item.Object(new DictionaryValueContainer(valueType, key, Values), overrideEditor);
                 }
             }
             _elementsCount = size;

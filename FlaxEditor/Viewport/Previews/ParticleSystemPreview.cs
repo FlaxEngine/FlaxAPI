@@ -59,21 +59,21 @@ namespace FlaxEditor.Viewport.Previews
                         _boundsModel = StaticModel.New();
                         _boundsModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Gizmo/WireBox");
                         _boundsModel.Model.WaitForLoaded();
-                        _boundsModel.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialWireFocus");
-                        Task.CustomActors.Add(_boundsModel);
+                        _boundsModel.SetMaterial(0, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialWireFocus"));
+                        Task.AddCustomActor(_boundsModel);
                     }
                     else if (!_boundsModel.IsActive)
                     {
                         _boundsModel.IsActive = true;
-                        Task.CustomActors.Add(_boundsModel);
+                        Task.AddCustomActor(_boundsModel);
                     }
 
-                    UpdateBounds();
+                    UpdateBoundsModel();
                 }
                 else
                 {
                     _boundsModel.IsActive = false;
-                    Task.CustomActors.Remove(_boundsModel);
+                    Task.RemoveCustomActor(_boundsModel);
                 }
 
                 if (_showBoundsButton != null)
@@ -99,21 +99,21 @@ namespace FlaxEditor.Viewport.Previews
                         _originModel = StaticModel.New();
                         _originModel.Model = FlaxEngine.Content.LoadAsyncInternal<Model>("Editor/Primitives/Sphere");
                         _originModel.Model.WaitForLoaded();
-                        _originModel.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialAxisFocus");
+                        _originModel.SetMaterial(0, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>("Editor/Gizmo/MaterialAxisFocus"));
                         _originModel.Position = _previewEffect.Position;
                         _originModel.Scale = new Vector3(0.1f);
-                        Task.CustomActors.Add(_originModel);
+                        Task.AddCustomActor(_originModel);
                     }
                     else if (!_originModel.IsActive)
                     {
                         _originModel.IsActive = true;
-                        Task.CustomActors.Add(_originModel);
+                        Task.AddCustomActor(_originModel);
                     }
                 }
                 else
                 {
                     _originModel.IsActive = false;
-                    Task.CustomActors.Remove(_originModel);
+                    Task.RemoveCustomActor(_originModel);
                 }
 
                 if (_showOriginButton != null)
@@ -153,7 +153,7 @@ namespace FlaxEditor.Viewport.Previews
             _previewEffect.CustomViewRenderTask = Task;
 
             // Link actors for rendering
-            Task.CustomActors.Add(_previewEffect);
+            Task.AddCustomActor(_previewEffect);
 
             if (useWidgets)
             {
@@ -163,7 +163,7 @@ namespace FlaxEditor.Viewport.Previews
             }
         }
 
-        private void UpdateBounds()
+        private void UpdateBoundsModel()
         {
             var bounds = _previewEffect.Box;
             Transform t = Transform.Identity;
@@ -200,7 +200,7 @@ namespace FlaxEditor.Viewport.Previews
             // Keep bounds matching the model
             if (_boundsModel && _boundsModel.IsActive)
             {
-                UpdateBounds();
+                UpdateBoundsModel();
             }
         }
 
@@ -213,12 +213,12 @@ namespace FlaxEditor.Viewport.Previews
             {
                 var count = _previewEffect.CPUParticlesCount;
                 Render2D.DrawText(
-                    Style.Current.FontSmall,
-                    "Particles: " + count,
-                    new Rectangle(Vector2.Zero, Size),
-                    Color.Wheat,
-                    TextAlignment.Near,
-                    TextAlignment.Far);
+                                  Style.Current.FontSmall,
+                                  "Particles: " + count,
+                                  new Rectangle(Vector2.Zero, Size),
+                                  Color.Wheat,
+                                  TextAlignment.Near,
+                                  TextAlignment.Far);
             }
         }
 

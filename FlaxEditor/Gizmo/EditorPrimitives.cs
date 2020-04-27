@@ -15,11 +15,10 @@ namespace FlaxEditor.Gizmo
         /// Draws the custom editor primitives.
         /// </summary>
         /// <param name="context">The GPU commands context.</param>
-        /// <param name="task">The current scene rendering task.</param>
+        /// <param name="renderContext">The rendering context.</param>
         /// <param name="target">The output texture to render to.</param>
         /// <param name="targetDepth">The scene depth buffer that can be used to z-buffering.</param>
-        /// <param name="collector">The draw calls collector.</param>
-        void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, GPUTexture target, GPUTexture targetDepth, DrawCallsCollector collector);
+        void DrawEditorPrimitives(GPUContext context, ref RenderContext renderContext, GPUTexture target, GPUTexture targetDepth);
     }
 
     /// <summary>
@@ -27,8 +26,6 @@ namespace FlaxEditor.Gizmo
     /// </summary>
     public sealed class EditorPrimitives : PostProcessEffect
     {
-        private readonly DrawCallsCollector _drawCallsCollector = new DrawCallsCollector();
-
         /// <summary>
         /// The target viewport.
         /// </summary>
@@ -38,7 +35,7 @@ namespace FlaxEditor.Gizmo
         public override int Order => -100;
 
         /// <inheritdoc />
-        public override void Render(GPUContext context, SceneRenderTask task, GPUTexture input, GPUTexture output)
+        public override void Render(GPUContext context, ref RenderContext renderContext, GPUTexture input, GPUTexture output)
         {
             if (Viewport == null)
                 throw new NullReferenceException();
@@ -47,8 +44,8 @@ namespace FlaxEditor.Gizmo
 
             // Check if use MSAA
             var format = output.Format;
-            GPUDevice.GetFeatures(format, out var formatSupport);
-            bool enableMsaa = formatSupport.MSAALevelMax >= MSAALevel.X4 && Editor.Instance.Options.Options.Visual.EnableMSAAForDebugDraw;
+            var formatFeatures = GPUDevice.Instance.GetFormatFeatures(format);
+            bool enableMsaa = formatFeatures.MSAALevelMax >= MSAALevel.X4 && Editor.Instance.Options.Options.Visual.EnableMSAAForDebugDraw;
 
             // Prepare
             var msaaLevel = enableMsaa ? MSAALevel.X4 : MSAALevel.None;
@@ -61,19 +58,31 @@ namespace FlaxEditor.Gizmo
 
             // Copy frame and clear depth
             context.Draw(target, input);
-            context.ClearDepth(targetDepth);
+            context.ClearDepth(targetDepth.View());
+            context.SetViewport(width, height);
+            context.SetRenderTarget(targetDepth.View(), target.View());
 
-            // Draw gizmos and other editor primitives (collect draw calls only)
-            _drawCallsCollector.Clear();
+            // Draw gizmos and other editor primitives
+            var renderList = RenderList.GetFromPool();
+            var prevList = renderContext.List;
+            renderContext.List = renderList;
             for (int i = 0; i < Viewport.Gizmos.Count; i++)
             {
-                Viewport.Gizmos[i].Draw(_drawCallsCollector);
+                Viewport.Gizmos[i].Draw(ref renderContext);
             }
-            Viewport.DrawEditorPrimitives(context, task, target, targetDepth, _drawCallsCollector);
+            Viewport.DrawEditorPrimitives(context, ref renderContext, target, targetDepth);
 
-            // Draw gizmos (actual drawing)
-            _drawCallsCollector.ExecuteDrawCalls(context, task, target, DrawPass.GBuffer);
-            _drawCallsCollector.ExecuteDrawCalls(context, task, target, DrawPass.Forward);
+            // Sort draw calls
+            renderList.SortDrawCalls(ref renderContext, false, DrawCallsListType.GBuffer);
+            renderList.SortDrawCalls(ref renderContext, false, DrawCallsListType.GBufferNoDecals);
+            renderList.SortDrawCalls(ref renderContext, true, DrawCallsListType.Forward);
+
+            // Perform the rendering
+            renderContext.View.Pass = DrawPass.GBuffer;
+            renderList.ExecuteDrawCalls(ref renderContext, DrawCallsListType.GBuffer);
+            renderList.ExecuteDrawCalls(ref renderContext, DrawCallsListType.GBufferNoDecals);
+            renderContext.View.Pass = DrawPass.Forward;
+            renderList.ExecuteDrawCalls(ref renderContext, DrawCallsListType.Forward);
 
             // Resolve MSAA texture
             if (enableMsaa)
@@ -84,6 +93,8 @@ namespace FlaxEditor.Gizmo
             // Cleanup
             RenderTargetPool.Release(targetDepth);
             RenderTargetPool.Release(target);
+            RenderList.ReturnToPool(renderList);
+            renderContext.List = prevList;
 
             Profiler.EndEventGPU();
         }

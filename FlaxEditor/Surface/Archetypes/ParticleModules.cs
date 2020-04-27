@@ -40,89 +40,6 @@ namespace FlaxEditor.Surface.Archetypes
         }
 
         /// <summary>
-        /// The sprite particle rendering facing modes.
-        /// </summary>
-        public enum ParticleSpriteFacingMode
-        {
-            /// <summary>
-            /// Particles will face camera position.
-            /// </summary>
-            FaceCameraPosition,
-
-            /// <summary>
-            /// Particles will face camera plane.
-            /// </summary>
-            FaceCameraPlane,
-
-            /// <summary>
-            /// Particles will orient along velocity vector.
-            /// </summary>
-            AlongVelocity,
-
-            /// <summary>
-            /// Particles will use the custom vector for facing.
-            /// </summary>
-            CustomFacingVector,
-
-            /// <summary>
-            /// Particles will use the custom fixed axis for facing up.
-            /// </summary>
-            FixedAxis,
-        }
-
-        /// <summary>
-        /// The model particle rendering facing modes.
-        /// </summary>
-        public enum ParticleModelFacingMode
-        {
-            /// <summary>
-            /// Particles will face camera position.
-            /// </summary>
-            FaceCameraPosition,
-
-            /// <summary>
-            /// Particles will face camera plane.
-            /// </summary>
-            FaceCameraPlane,
-
-            /// <summary>
-            /// Particles will orient along velocity vector.
-            /// </summary>
-            AlongVelocity,
-        }
-
-        /// <summary>
-        /// The particles sorting modes.
-        /// </summary>
-        public enum ParticleSortMode
-        {
-            /// <summary>
-            /// Do not perform additional sorting prior to rendering.
-            /// </summary>
-            None,
-
-            /// <summary>
-            /// Sorts particles by depth to the view's near plane.
-            /// </summary>
-            ViewDepth,
-
-            /// <summary>
-            /// Sorts particles by distance to the view's origin.
-            /// </summary>
-            ViewDistance,
-
-            /// <summary>
-            /// The custom sorting according to a per particle attribute. Lower values are rendered before higher values.
-            /// </summary>
-            CustomAscending,
-
-            /// <summary>
-            /// The custom sorting according to a per particle attribute. Higher values are rendered before lower values.
-            /// </summary>
-            CustomDescending,
-        }
-
-        /// <summary>
         /// Customized <see cref="SurfaceNode"/> for particle emitter module node.
         /// </summary>
         /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
@@ -203,12 +120,11 @@ namespace FlaxEditor.Surface.Archetypes
                 Render2D.DrawRectangle(new Rectangle(1, 0, Width - 2, Height - 1), Colors[idx]);
 
                 // Close button
-                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, _closeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
 
                 // Arrange button
-                alpha = _arrangeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(Editor.Instance.Icons.DragBar12, _arrangeButtonRect, _arrangeButtonInUse ? Color.Orange : new Color(alpha));
+                var dragBarColor = _arrangeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey;
+                Render2D.DrawSprite(Editor.Instance.Icons.DragBar12, _arrangeButtonRect, _arrangeButtonInUse ? Color.Orange : dragBarColor);
                 if (_arrangeButtonInUse && ArrangeAreaCheck(out _, out var arrangeTargetRect))
                 {
                     Render2D.FillRectangle(arrangeTargetRect, Color.Orange * 0.8f);
@@ -1462,7 +1378,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Material
                     NodeElementArchetype.Factory.Text(0, -10, "Material", 80.0f, 16.0f, "The material used for sprites rendering (quads). It must have Domain set to Particle."),
-                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, ContentDomain.Material),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, typeof(MaterialBase)),
 
                     // Draw Modes
                     NodeElementArchetype.Factory.Text(0, -10 + 70, "Draw Modes:", 40),
@@ -1534,11 +1450,11 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Model
                     NodeElementArchetype.Factory.Text(0, -10, "Model", 80.0f, 16.0f, "model material used for rendering."),
-                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, ContentDomain.Model),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10, 2, typeof(Model)),
 
                     // Material
                     NodeElementArchetype.Factory.Text(0, -10 + 70, "Material", 80.0f, 16.0f, "The material used for models rendering. It must have Domain set to Particle."),
-                    NodeElementArchetype.Factory.Asset(100.0f, -10 + 70, 3, ContentDomain.Material),
+                    NodeElementArchetype.Factory.Asset(100.0f, -10 + 70, 3, typeof(MaterialBase)),
 
                     // Draw Modes
                     NodeElementArchetype.Factory.Text(0, -10 + 140, "Draw Modes:", 40),
@@ -1567,7 +1483,7 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     // Material
                     NodeElementArchetype.Factory.Text(0, -10, "Material", 80.0f, 16.0f, "The material used for ribbons rendering. It must have Domain set to Particle."),
-                    NodeElementArchetype.Factory.Asset(80, -10, 2, ContentDomain.Material),
+                    NodeElementArchetype.Factory.Asset(80, -10, 2, typeof(MaterialBase)),
 
                     // UV options
                     NodeElementArchetype.Factory.Text(0.0f, 3.0f * Surface.Constants.LayoutOffsetY, "UV Tiling Distance"),

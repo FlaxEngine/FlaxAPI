@@ -29,7 +29,7 @@ namespace FlaxEditor.Tools.Foliage.Undo
         public EditFoliageAction(FlaxEngine.Foliage foliage)
         {
             _foliageId = foliage._internalId;
-            _before = Actor.Serialize(foliage);
+            _before = foliage.ToJson();
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace FlaxEditor.Tools.Foliage.Undo
             var foliageId = _foliageId;
             var foliage = FlaxEngine.Object.Find<FlaxEngine.Foliage>(ref foliageId);
 
-            _after = Actor.Serialize(foliage);
+            _after = foliage.ToJson();
 
             Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
         }
@@ -72,7 +72,7 @@ namespace FlaxEditor.Tools.Foliage.Undo
             var foliageId = _foliageId;
             var foliage = FlaxEngine.Object.Find<FlaxEngine.Foliage>(ref foliageId);
 
-            Actor.Deserialize(foliage, data);
+            foliage.FromJson(data);
 
             Editor.Instance.Scene.MarkSceneEdited(foliage.Scene);
         }

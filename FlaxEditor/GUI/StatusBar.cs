@@ -34,10 +34,9 @@ namespace FlaxEditor.GUI
         /// Initializes a new instance of the <see cref="StatusBar"/> class.
         /// </summary>
         public StatusBar()
-        : base(0, 0, 100, DefaultHeight)
         {
             AutoFocus = false;
-            DockStyle = DockStyle.Bottom;
+            AnchorPreset = AnchorPresets.HorizontalStretchBottom;
         }
 
         /// <inheritdoc />
@@ -49,7 +48,7 @@ namespace FlaxEditor.GUI
 
             // Draw size grip
             if (Root is WindowRootControl window && !window.IsMaximized)
-                Render2D.DrawSprite(style.StatusBarSizeGrip, new Rectangle(Width - 12, 10, 12, 12));
+                Render2D.DrawSprite(style.StatusBarSizeGrip, new Rectangle(Width - 12, 10, 12, 12), style.Foreground);
 
             // Draw status text
             Render2D.DrawText(style.FontSmall, Text, new Rectangle(4, 0, Width - 20, Height), style.Foreground, TextAlignment.Near, TextAlignment.Center);

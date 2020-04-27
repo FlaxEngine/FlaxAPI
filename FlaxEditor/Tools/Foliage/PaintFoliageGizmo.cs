@@ -63,10 +63,8 @@ namespace FlaxEditor.Tools.Foliage
         }
 
         /// <inheritdoc />
-        public override void Draw(DrawCallsCollector collector)
+        public override void Draw(ref RenderContext renderContext)
         {
-            base.Draw(collector);
-
             if (!IsActive)
                 return;
 
@@ -95,7 +93,7 @@ namespace FlaxEditor.Tools.Foliage
                     else
                         rotation = Quaternion.LookRotation(Vector3.Cross(Vector3.Cross(brushNormal, Vector3.Forward), brushNormal), brushNormal);
                     Matrix transform = Matrix.Scaling(Mode.CurrentBrush.Size * 0.01f) * Matrix.RotationQuaternion(rotation) * Matrix.Translation(brushPosition);
-                    collector.AddDrawCall(_brushModel, 0, brushMaterial, 0, ref transform, StaticFlags.None, false);
+                    _brushModel.Draw(ref renderContext, brushMaterial, ref transform);
                 }
             }
         }
@@ -135,7 +133,7 @@ namespace FlaxEditor.Tools.Foliage
                 _foliageTypesIndices.Clear();
             for (int index = 0; index < foliageTypesCount; index++)
             {
-                var model = foliage.GetFoliageTypeModel(index);
+                var model = foliage.GetFoliageType(index).Model;
                 if (model && (!foliageTypeModelIdsToPaint.TryGetValue(model.ID, out var selected) || selected))
                 {
                     _foliageTypesIndices.Add(index);
@@ -190,8 +188,9 @@ namespace FlaxEditor.Tools.Foliage
             // Perform detailed tracing to find cursor location for the foliage placement
             var mouseRay = Owner.MouseRay;
             var ray = Owner.MouseRay;
+            var view = new Ray(Owner.ViewPosition, Owner.ViewDirection);
             var rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.SkipEditorPrimitives | SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, out var closest, out var hitNormal, rayCastFlags);
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref view, out var closest, out var hitNormal, rayCastFlags);
             if (hit != null)
             {
                 var hitLocation = mouseRay.GetPoint(closest);

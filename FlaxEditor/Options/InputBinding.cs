@@ -22,27 +22,27 @@ namespace FlaxEditor.Options
         /// <summary>
         /// The key to bind.
         /// </summary>
-        public Keys Key;
+        public KeyboardKeys Key;
 
         /// <summary>
-        /// The first modifier (<see cref="Keys.None"/> if not used).
+        /// The first modifier (<see cref="KeyboardKeys.None"/> if not used).
         /// </summary>
-        public Keys Modifier1;
+        public KeyboardKeys Modifier1;
 
         /// <summary>
-        /// The second modifier (<see cref="Keys.None"/> if not used).
+        /// The second modifier (<see cref="KeyboardKeys.None"/> if not used).
         /// </summary>
-        public Keys Modifier2;
+        public KeyboardKeys Modifier2;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputBinding"/> struct.
         /// </summary>
         /// <param name="key">The key.</param>
-        public InputBinding(Keys key)
+        public InputBinding(KeyboardKeys key)
         {
             Key = key;
-            Modifier1 = Keys.None;
-            Modifier2 = Keys.None;
+            Modifier1 = KeyboardKeys.None;
+            Modifier2 = KeyboardKeys.None;
         }
 
         /// <summary>
@@ -50,11 +50,11 @@ namespace FlaxEditor.Options
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="modifier1">The first modifier.</param>
-        public InputBinding(Keys key, Keys modifier1)
+        public InputBinding(KeyboardKeys key, KeyboardKeys modifier1)
         {
             Key = key;
             Modifier1 = modifier1;
-            Modifier2 = Keys.None;
+            Modifier2 = KeyboardKeys.None;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace FlaxEditor.Options
         /// <param name="key">The key.</param>
         /// <param name="modifier1">The first modifier.</param>
         /// <param name="modifier2">The second modifier.</param>
-        public InputBinding(Keys key, Keys modifier1, Keys modifier2)
+        public InputBinding(KeyboardKeys key, KeyboardKeys modifier1, KeyboardKeys modifier2)
         {
             Key = key;
             Modifier1 = modifier1;
@@ -76,11 +76,11 @@ namespace FlaxEditor.Options
         /// <param name="value">The value.</param>
         /// <param name="result">The result (valid only if parsing succeed).</param>
         /// <returns>True if parsing succeed, otherwise false.</returns>
-        public static bool Parse(string value, out Keys result)
+        public static bool Parse(string value, out KeyboardKeys result)
         {
             if (string.Equals(value, "Ctrl", StringComparison.OrdinalIgnoreCase))
             {
-                result = Keys.Control;
+                result = KeyboardKeys.Control;
                 return true;
             }
 
@@ -92,11 +92,11 @@ namespace FlaxEditor.Options
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>A <see cref="System.String" /> that represents the key.</returns>
-        public static string ToString(Keys key)
+        public static string ToString(KeyboardKeys key)
         {
             switch (key)
             {
-            case Keys.Control: return "Ctrl";
+            case KeyboardKeys.Control: return "Ctrl";
             default: return key.ToString();
             }
         }
@@ -144,9 +144,9 @@ namespace FlaxEditor.Options
 
             if (root.GetKeyDown(Key))
             {
-                if (Modifier1 == Keys.None || root.GetKey(Modifier1))
+                if (Modifier1 == KeyboardKeys.None || root.GetKey(Modifier1))
                 {
-                    if (Modifier2 == Keys.None || root.GetKey(Modifier2))
+                    if (Modifier2 == KeyboardKeys.None || root.GetKey(Modifier2))
                     {
                         return true;
                     }
@@ -160,17 +160,17 @@ namespace FlaxEditor.Options
         public override string ToString()
         {
             string result = string.Empty;
-            if (Modifier2 != Keys.None)
+            if (Modifier2 != KeyboardKeys.None)
             {
                 result = ToString(Modifier2);
             }
-            if (Modifier1 != Keys.None)
+            if (Modifier1 != KeyboardKeys.None)
             {
                 if (result.Length != 0)
                     result += '+';
                 result += ToString(Modifier1);
             }
-            if (Key != Keys.None)
+            if (Key != KeyboardKeys.None)
             {
                 if (result.Length != 0)
                     result += '+';
@@ -243,7 +243,7 @@ namespace FlaxEditor.Options
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
                 // Skip already added keys
                 if (_binding.Key == key || _binding.Modifier1 == key || _binding.Modifier2 == key)
@@ -252,17 +252,17 @@ namespace FlaxEditor.Options
                 switch (key)
                 {
                 // Skip
-                case Keys.Spacebar: break;
+                case KeyboardKeys.Spacebar: break;
 
                 // Modifiers
-                case Keys.Control:
-                case Keys.Shift:
-                    if (_binding.Modifier1 == Keys.None)
+                case KeyboardKeys.Control:
+                case KeyboardKeys.Shift:
+                    if (_binding.Modifier1 == KeyboardKeys.None)
                     {
                         _binding.Modifier1 = key;
                         _text = _binding.ToString();
                     }
-                    else if (_binding.Modifier2 == Keys.None)
+                    else if (_binding.Modifier2 == KeyboardKeys.None)
                     {
                         _binding.Modifier2 = key;
                         _text = _binding.ToString();
@@ -271,7 +271,7 @@ namespace FlaxEditor.Options
 
                 // Keys
                 default:
-                    if (_binding.Key == Keys.None)
+                    if (_binding.Key == KeyboardKeys.None)
                     {
                         _binding.Key = key;
                         _text = _binding.ToString();
@@ -415,7 +415,7 @@ namespace FlaxEditor.Options
         /// <param name="control">The input providing control.</param>
         /// <param name="key">The input key.</param>
         /// <returns>True if event has been handled, otherwise false.</returns>
-        public bool Process(Editor editor, Control control, Keys key)
+        public bool Process(Editor editor, Control control, KeyboardKeys key)
         {
             var root = control.Root;
             var options = editor.Options.Options.Input;
@@ -425,9 +425,9 @@ namespace FlaxEditor.Options
                 var binding = _bindings[i].Binder(options);
                 if (binding.Key == key)
                 {
-                    if (binding.Modifier1 == Keys.None || root.GetKey(binding.Modifier1))
+                    if (binding.Modifier1 == KeyboardKeys.None || root.GetKey(binding.Modifier1))
                     {
-                        if (binding.Modifier2 == Keys.None || root.GetKey(binding.Modifier2))
+                        if (binding.Modifier2 == KeyboardKeys.None || root.GetKey(binding.Modifier2))
                         {
                             _bindings[i].Callback();
                             return true;

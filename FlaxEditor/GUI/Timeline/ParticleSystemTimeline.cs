@@ -130,6 +130,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             _preview.PlaySimulation = false;
             _preview.PreviewActor.ResetSimulation();
+            _preview.PreviewActor.UpdateSimulation();
 
             base.OnStop();
         }
@@ -152,6 +153,7 @@ namespace FlaxEditor.GUI.Timeline
         {
             var data = Save();
             asset.SaveTimeline(data);
+            asset.Reload();
         }
 
         /// <inheritdoc />

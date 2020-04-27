@@ -88,49 +88,53 @@ namespace FlaxEditor.Tools.Terrain
             Width = TotalWidth;
 
             // Header and help description
-            var headerLabel = new Label(0, 0, TotalWidth, 40)
+            var headerLabel = new Label
             {
                 Text = "New Terrain",
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(0, 0, 0, 40),
                 Parent = this,
                 Font = new FontReference(Style.Current.FontTitle)
             };
-            var infoLabel = new Label(10, headerLabel.Bottom + 5, TotalWidth - 20, 70)
+            var infoLabel = new Label
             {
                 Text = "Specify options for new terrain.\nIt will be added to the first opened scene.\nMany of the following settings can be adjusted later.\nYou can also create terrain at runtime from code.",
                 HorizontalAlignment = TextAlignment.Near,
                 Margin = new Margin(7),
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(10, -20, 45, 70),
                 Parent = this
             };
 
             // Buttons
             const float ButtonsWidth = 60;
+            const float ButtonsHeight = 24;
             const float ButtonsMargin = 8;
-            var importButton = new Button(TotalWidth - ButtonsMargin - ButtonsWidth, infoLabel.Bottom - 30, ButtonsWidth)
+            var importButton = new Button
             {
                 Text = "Create",
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.BottomRight,
+                Offsets = new Margin(-ButtonsWidth - ButtonsMargin, ButtonsWidth, -ButtonsHeight - ButtonsMargin, ButtonsHeight),
                 Parent = this
             };
             importButton.Clicked += OnCreate;
-            var cancelButton = new Button(importButton.Left - ButtonsMargin - ButtonsWidth, importButton.Y, ButtonsWidth)
+            var cancelButton = new Button
             {
                 Text = "Cancel",
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.BottomRight,
+                Offsets = new Margin(-ButtonsWidth - ButtonsMargin - ButtonsWidth - ButtonsMargin, ButtonsWidth, -ButtonsHeight - ButtonsMargin, ButtonsHeight),
                 Parent = this
             };
             cancelButton.Clicked += OnCancel;
 
             // Settings editor
             var settingsEditor = new CustomEditorPresenter(null);
-            settingsEditor.Panel.Y = infoLabel.Bottom;
-            settingsEditor.Panel.Size = new Vector2(TotalWidth, EditorHeight);
-            settingsEditor.Panel.DockStyle = DockStyle.Fill;
+            settingsEditor.Panel.AnchorPreset = AnchorPresets.HorizontalStretchTop;
+            settingsEditor.Panel.Offsets = new Margin(2, 2, infoLabel.Bottom + 2, EditorHeight);
             settingsEditor.Panel.Parent = this;
             _editor = settingsEditor;
 
-            Size = new Vector2(TotalWidth, settingsEditor.Panel.Bottom);
+            _dialogSize = new Vector2(TotalWidth, settingsEditor.Panel.Bottom);
 
             settingsEditor.Select(_options);
         }
@@ -140,7 +144,7 @@ namespace FlaxEditor.Tools.Terrain
             if (_isWorking)
                 return;
 
-            var scene = SceneManager.GetScene(0);
+            var scene = Level.GetScene(0);
             if (scene == null)
                 throw new InvalidOperationException("No scene found to add terrain to it!");
 
@@ -161,9 +165,10 @@ namespace FlaxEditor.Tools.Terrain
             // Show loading label
             var label = new Label
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Text = "Generating terrain...",
-                BackgroundColor = Color.Black * 0.6f,
+                BackgroundColor = Style.Current.ForegroundDisabled,
                 Parent = this,
             };
 
@@ -228,17 +233,17 @@ namespace FlaxEditor.Tools.Terrain
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (_isWorking)
                 return true;
 
             switch (key)
             {
-            case Keys.Escape:
+            case KeyboardKeys.Escape:
                 OnCancel();
                 return true;
-            case Keys.Return:
+            case KeyboardKeys.Return:
                 OnCreate();
                 return true;
             }

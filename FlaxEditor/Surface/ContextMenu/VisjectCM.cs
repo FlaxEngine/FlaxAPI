@@ -128,7 +128,7 @@ namespace FlaxEditor.Surface.ContextMenu
             // Create second panel (for groups arrangement)
             var panel2 = new VerticalPanel
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 IsScrollable = true,
                 Parent = panel1
             };
@@ -143,10 +143,10 @@ namespace FlaxEditor.Surface.ContextMenu
                 nodes.Clear();
                 foreach (var nodeArchetype in groupArchetype.Archetypes)
                 {
-                    if ((nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) != 0 || !info.CanSpawnNode(nodeArchetype))
-                        continue;
-
-                    nodes.Add(nodeArchetype);
+                    if (info.CanSpawnNode(nodeArchetype))
+                    {
+                        nodes.Add(nodeArchetype);
+                    }
                 }
 
                 // Check if can create group for them
@@ -428,14 +428,14 @@ namespace FlaxEditor.Surface.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
-            if (key == Keys.Escape)
+            if (key == KeyboardKeys.Escape)
             {
                 Hide();
                 return true;
             }
-            else if (key == Keys.Return)
+            else if (key == KeyboardKeys.Return)
             {
                 if (SelectedItem != null)
                     OnClickItem(SelectedItem);
@@ -443,7 +443,7 @@ namespace FlaxEditor.Surface.ContextMenu
                     Hide();
                 return true;
             }
-            else if (key == Keys.ArrowUp)
+            else if (key == KeyboardKeys.ArrowUp)
             {
                 if (SelectedItem == null)
                     return true;
@@ -463,7 +463,7 @@ namespace FlaxEditor.Surface.ContextMenu
                 }
                 return true;
             }
-            else if (key == Keys.ArrowDown)
+            else if (key == KeyboardKeys.ArrowDown)
             {
                 if (SelectedItem == null)
                     return true;

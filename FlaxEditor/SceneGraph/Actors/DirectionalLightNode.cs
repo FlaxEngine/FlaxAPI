@@ -22,7 +22,7 @@ namespace FlaxEditor.SceneGraph.Actors
             base.OnDebugDraw(data);
 
             var transform = Actor.Transform;
-            DebugDraw.DrawWireArrow(transform.Translation, transform.Orientation, Color.Red, 1.0f, 0.0f, false);
+            DebugDraw.DrawWireArrow(transform.Translation, transform.Orientation, 1.0f, Color.Red, 0.0f, false);
         }
     }
 }

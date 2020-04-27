@@ -10,7 +10,6 @@ using FlaxEditor.GUI.Dialogs;
 using FlaxEditor.GUI.Input;
 using FlaxEditor.SceneGraph;
 using FlaxEditor.SceneGraph.Actors;
-using FlaxEditor.Scripting;
 using FlaxEditor.Utilities;
 using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Windows;
@@ -128,6 +127,8 @@ namespace FlaxEditor.Modules
         : base(editor)
         {
             InitOrder = -90;
+            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
+            ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
         }
 
         /// <summary>
@@ -158,7 +159,7 @@ namespace FlaxEditor.Modules
 
             // Update buttons
             bool canEditScene = state.CanEditScene;
-            bool canEnterPlayMode = state.CanEnterPlayMode && SceneManager.IsAnySceneLoaded;
+            bool canEnterPlayMode = state.CanEnterPlayMode && Level.IsAnySceneLoaded;
             //
             _toolStripUndo.Enabled = canEditScene && undoRedo.CanUndo;
             _toolStripRedo.Enabled = canEditScene && undoRedo.CanRedo;
@@ -316,57 +317,6 @@ namespace FlaxEditor.Modules
             DockHintWindow.Proxy.Dispose();
         }
 
-        internal void CreateStyle()
-        {
-            var style = new Style();
-
-            // Metro Style colors
-            style.Background = Color.FromBgra(0xFF1C1C1C);
-            style.LightBackground = Color.FromBgra(0xFF2D2D30);
-            style.Foreground = Color.FromBgra(0xFFFFFFFF);
-            style.ForegroundDisabled = new Color(0.6f);
-            style.BackgroundHighlighted = Color.FromBgra(0xFF54545C);
-            style.BorderHighlighted = Color.FromBgra(0xFF6A6A75);
-            style.BackgroundSelected = Color.FromBgra(0xFF007ACC);
-            style.BorderSelected = Color.FromBgra(0xFF1C97EA);
-            style.BackgroundNormal = Color.FromBgra(0xFF3F3F46);
-            style.BorderNormal = Color.FromBgra(0xFF54545C);
-            style.TextBoxBackground = Color.FromBgra(0xFF333337);
-            style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
-            style.DragWindow = style.BackgroundSelected * 0.7f;
-            style.ProgressNormal = Color.FromBgra(0xFF0ad328);
-
-            // Color picking
-            ColorValueBox.ShowPickColorDialog += ShowPickColorDialog;
-
-            // Fonts
-            var options = Editor.Options.Options;
-            style.FontTitle = options.Interface.TitleFont.GetFont();
-            style.FontLarge = options.Interface.LargeFont.GetFont();
-            style.FontMedium = options.Interface.MediumFont.GetFont();
-            style.FontSmall = options.Interface.SmallFont.GetFont();
-
-            // Icons
-            style.ArrowDown = Editor.Icons.ArrowDown12;
-            style.ArrowRight = Editor.Icons.ArrowRight12;
-            style.Search = Editor.Icons.Search12;
-            style.Settings = Editor.Icons.Settings12;
-            style.Cross = Editor.Icons.Cross12;
-            style.CheckBoxIntermediate = Editor.Icons.CheckBoxIntermediate12;
-            style.CheckBoxTick = Editor.Icons.CheckBoxTick12;
-            style.StatusBarSizeGrip = Editor.Icons.StatusBarSizeGrip12;
-            style.Translate = Editor.Icons.Translate16;
-            style.Rotate = Editor.Icons.Rotate16;
-            style.Scale = Editor.Icons.Scale16;
-
-            style.SharedTooltip = new Tooltip();
-
-            VisjectSurfaceBackground = FlaxEngine.Content.LoadAsyncInternal<Texture>("Editor/VisjectSurface");
-
-            // Set as default
-            Style.Current = style;
-        }
-
         private IColorPickerDialog ShowPickColorDialog(Control targetControl, Color initialValue, ColorValueBox.ColorPickerEvent colorChanged, ColorValueBox.ColorPickerClosedEvent pickerClosed, bool useDynamicEditing)
         {
             var dialog = new ColorPickerDialog(initialValue, colorChanged, pickerClosed, useDynamicEditing);
@@ -382,6 +332,8 @@ namespace FlaxEditor.Modules
                 var desktopEnd = desktopSize.BottomRight - new Vector2(10.0f);
                 if (dialogEnd.X >= desktopEnd.X || dialogEnd.Y >= desktopEnd.Y)
                     pos = targetControl.ClientToScreen(Vector2.Zero) - new Vector2(10.0f + dialog.Width, dialog.Height);
+                var desktopBounds = Platform.VirtualDesktopBounds;
+                pos = Vector2.Clamp(pos, desktopBounds.UpperLeft, desktopBounds.BottomRight - dialog.Size);
                 dialog.RootWindow.Window.Position = pos;
             }
 
@@ -407,12 +359,6 @@ namespace FlaxEditor.Modules
             cm.AddSeparator();
             cm.AddButton("Open project...", OpenProject);
             cm.AddSeparator();
-            if (Editor.IsDevInstance())
-            {
-                cm.AddButton("Regenerate Engine API", () => ScriptsBuilder.Internal_GenerateApi(ScriptsBuilder.ApiEngineType.Engine));
-                cm.AddButton("Regenerate Editor API", () => ScriptsBuilder.Internal_GenerateApi(ScriptsBuilder.ApiEngineType.Editor));
-                cm.AddSeparator();
-            }
             cm.AddButton("Exit", "Alt+F4", () => Editor.Windows.MainWindow.Close(ClosingReason.User));
 
             // Edit
@@ -495,22 +441,25 @@ namespace FlaxEditor.Modules
             // Help
             MenuHelp = MainMenu.AddButton("Help");
             cm = MenuHelp.ContextMenu;
-            cm.AddButton("Discord", () => Platform.StartProcess(Constants.DiscordUrl));
-            cm.AddButton("Documentation", () => Platform.StartProcess(Constants.DocsUrl));
-            cm.AddButton("Report an issue", () => Platform.StartProcess(Constants.BugTrackerUrl));
+            cm.AddButton("Discord", () => Platform.OpenUrl(Constants.DiscordUrl));
+            cm.AddButton("Documentation", () => Platform.OpenUrl(Constants.DocsUrl));
+            cm.AddButton("Report an issue", () => Platform.OpenUrl(Constants.BugTrackerUrl));
             cm.AddSeparator();
-            cm.AddButton("Official Website", () => Platform.StartProcess(Constants.WebsiteUrl));
-            cm.AddButton("Facebook Fanpage", () => Platform.StartProcess(Constants.FacebookUrl));
-            cm.AddButton("Youtube Channel", () => Platform.StartProcess(Constants.YoutubeUrl));
-            cm.AddButton("Twitter", () => Platform.StartProcess(Constants.TwitterUrl));
+            cm.AddButton("Official Website", () => Platform.OpenUrl(Constants.WebsiteUrl));
+            cm.AddButton("Facebook Fanpage", () => Platform.OpenUrl(Constants.FacebookUrl));
+            cm.AddButton("Youtube Channel", () => Platform.OpenUrl(Constants.YoutubeUrl));
+            cm.AddButton("Twitter", () => Platform.OpenUrl(Constants.TwitterUrl));
             cm.AddSeparator();
             cm.AddButton("Information about Flax", () => new AboutDialog().Show());
         }
 
         private void InitToolstrip(RootControl mainWindow)
         {
-            ToolStrip = new ToolStrip();
-            ToolStrip.Parent = mainWindow;
+            ToolStrip = new ToolStrip
+            {
+                Parent = mainWindow,
+                Bounds = new Rectangle(0, MainMenu.Bottom, mainWindow.Width, 34),
+            };
 
             ToolStrip.AddButton(Editor.Icons.Save32, Editor.SaveAll).LinkTooltip("Save all (Ctrl+S)");
             ToolStrip.AddSeparator();
@@ -534,7 +483,8 @@ namespace FlaxEditor.Modules
             StatusBar = new StatusBar
             {
                 Text = "Loading...",
-                Parent = mainWindow
+                Parent = mainWindow,
+                Offsets = new Margin(0, 0, -StatusBar.DefaultHeight, StatusBar.DefaultHeight),
             };
 
             // Progress bar with label
@@ -545,23 +495,22 @@ namespace FlaxEditor.Modules
             var progressPanel = new Panel(ScrollBars.None)
             {
                 Visible = false,
-                DockStyle = DockStyle.Fill,
-                Parent = StatusBar
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
+                Parent = StatusBar,
             };
-            _progressBar = new ProgressBar(
-                progressPanel.Width - progressBarWidth - progressBarRightMargin,
-                (StatusBar.Height - progressBarHeight) * 0.5f,
-                progressBarWidth,
-                progressBarHeight)
+            _progressBar = new ProgressBar
             {
-                AnchorStyle = AnchorStyle.CenterRight,
-                Parent = progressPanel
+                AnchorPreset = AnchorPresets.MiddleRight,
+                Parent = progressPanel,
+                Offsets = new Margin(-progressBarWidth - progressBarRightMargin, progressBarWidth, progressBarHeight * -0.5f, progressBarHeight),
             };
-            _progressLabel = new Label(0, 0, _progressBar.Left - progressBarLeftMargin, progressPanel.Height)
+            _progressLabel = new Label
             {
                 HorizontalAlignment = TextAlignment.Far,
-                AnchorStyle = AnchorStyle.CenterRight,
-                Parent = progressPanel
+                AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
+                Parent = progressPanel,
+                Offsets = new Margin(progressBarRightMargin, progressBarWidth + progressBarLeftMargin + progressBarRightMargin, 0, 0),
             };
 
             UpdateStatusBar();
@@ -570,13 +519,16 @@ namespace FlaxEditor.Modules
         private void InitDockPanel(RootControl mainWindow)
         {
             // Dock Panel
+            MasterPanel.AnchorPreset = AnchorPresets.StretchAll;
             MasterPanel.Parent = mainWindow;
+            MasterPanel.Offsets = new Margin(0, 0, ToolStrip.Bottom, StatusBar.Height);
         }
 
         private void OpenProject()
         {
             // Ask user to select project file
-            var files = MessageBox.OpenFileDialog(Editor.Windows.MainWindow, null, "Project files (Project.xml)\0Project.xml\0All files (*.*)\0*.*\0", false, "Select project file");
+            if (FileSystem.ShowOpenFileDialog(Editor.Windows.MainWindow, null, "Project files (Project.xml)\0Project.xml\0All files (*.*)\0*.*\0", false, "Select project file", out var files))
+                return;
             if (files != null && files.Length > 0)
             {
                 Editor.OpenProject(files[0]);
@@ -589,7 +541,7 @@ namespace FlaxEditor.Modules
                 return;
             var c = (ContextMenu)control;
 
-            bool hasOpenedScene = SceneManager.IsAnySceneLoaded;
+            bool hasOpenedScene = Level.IsAnySceneLoaded;
 
             _menuFileSaveScenes.Enabled = hasOpenedScene;
             _menuFileCloseScenes.Enabled = hasOpenedScene;
@@ -617,7 +569,7 @@ namespace FlaxEditor.Modules
             _menuEditCopy.Enabled = hasSthSelected;
             _menuEditDelete.Enabled = hasSthSelected;
             _menuEditDuplicate.Enabled = hasSthSelected;
-            _menuEditSelectAll.Enabled = SceneManager.IsAnySceneLoaded;
+            _menuEditSelectAll.Enabled = Level.IsAnySceneLoaded;
 
             control.PerformLayout();
         }
@@ -636,7 +588,7 @@ namespace FlaxEditor.Modules
             _menuSceneAlignViewportWithActor.Enabled = hasActorSelected;
             _menuScenePilotActor.Enabled = hasActorSelected || isPilotActorActive;
             _menuScenePilotActor.Text = isPilotActorActive ? "Stop piloting actor" : "Pilot actor";
-            _menuSceneCreateTerrain.Enabled = SceneManager.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
+            _menuSceneCreateTerrain.Enabled = Level.IsAnySceneLoaded && Editor.StateMachine.CurrentState.CanEditScene && !Editor.StateMachine.IsPlayMode;
 
             control.PerformLayout();
         }
@@ -660,8 +612,8 @@ namespace FlaxEditor.Modules
                 return;
 
             var c = (ContextMenu)control;
-            bool canBakeLightmaps = GPUDevice.Limits.IsComputeSupported;
-            bool canEdit = SceneManager.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
+            bool canBakeLightmaps = GPUDevice.Instance.Limits.HasCompute;
+            bool canEdit = Level.IsAnySceneLoaded && Editor.StateMachine.IsEditMode;
             bool isBakingLightmaps = Editor.ProgressReporting.BakeLightmaps.IsActive;
             _menuToolsBakeLightmaps.Enabled = (canEdit && canBakeLightmaps) || isBakingLightmaps;
             _menuToolsBakeLightmaps.Text = isBakingLightmaps ? "Cancel baking lightmaps" : "Bake lightmaps";
@@ -670,7 +622,7 @@ namespace FlaxEditor.Modules
             _menuToolsBuildCSGMesh.Enabled = canEdit;
             _menuToolsBuildNavMesh.Enabled = canEdit;
             _menuToolsCancelBuilding.Enabled = GameCooker.IsRunning;
-            _menuToolsSetTheCurrentSceneViewAsDefault.Enabled = SceneManager.ScenesCount > 0;
+            _menuToolsSetTheCurrentSceneViewAsDefault.Enabled = Level.ScenesCount > 0;
 
             c.PerformLayout();
         }
@@ -777,22 +729,22 @@ namespace FlaxEditor.Modules
 
         private void BuildCSG()
         {
-            var scenes = SceneManager.Scenes;
+            var scenes = Level.Scenes;
             scenes.ToList().ForEach(x => x.BuildCSG(0));
             Editor.Scene.MarkSceneEdited(scenes);
         }
 
         private void BuildNavMesh()
         {
-            var scenes = SceneManager.Scenes;
-            scenes.ToList().ForEach(x => x.BuildNavMesh(0));
+            var scenes = Level.Scenes;
+            scenes.ToList().ForEach(x => Navigation.BuildNavMesh(x, 0));
             Editor.Scene.MarkSceneEdited(scenes);
         }
 
         private void SetTheCurrentSceneViewAsDefault()
         {
             var projectInfo = Editor.ProjectInfo;
-            projectInfo.DefaultSceneId = SceneManager.Scenes[0].ID;
+            projectInfo.DefaultSceneId = Level.Scenes[0].ID;
             projectInfo.DefaultSceneSpawn = Editor.Windows.EditWin.Viewport.ViewRay;
             projectInfo.Save();
         }

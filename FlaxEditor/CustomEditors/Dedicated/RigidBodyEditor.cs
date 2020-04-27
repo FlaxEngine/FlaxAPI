@@ -19,7 +19,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// <inheritdoc />
         protected override void SpawnProperty(LayoutElementsContainer itemLayout, ValueContainer itemValues, ItemInfo item)
         {
-            var order = item.Order.Order;
+            var order = item.Order?.Order ?? 0;
 
             if (order != MassOrder)
             {

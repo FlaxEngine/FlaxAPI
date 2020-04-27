@@ -61,19 +61,19 @@ namespace FlaxEditor.Windows.Assets
                 _floorModel.Position = new Vector3(0, -25, 0);
                 _floorModel.Scale = new Vector3(5, 0.5f, 5);
                 _floorModel.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
-                Task.CustomActors.Add(_floorModel);
+                Task.AddCustomActor(_floorModel);
 
                 // Enable shadows
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
                 PreviewLight.CascadeCount = 2;
                 PreviewLight.ShadowsDistance = 1000.0f;
-                Task.View.Flags |= ViewFlags.Shadows;
+                Task.ViewFlags |= ViewFlags.Shadows;
             }
 
             private void OnShowFloorModelClicked(ContextMenuButton obj)
             {
                 _floorModel.IsActive = !_floorModel.IsActive;
-                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : Sprite.Invalid;
+                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
             }
 
             /// <inheritdoc />
@@ -84,7 +84,7 @@ namespace FlaxEditor.Windows.Assets
                 var style = Style.Current;
                 if (_window.Asset == null || !_window.Asset.IsLoaded)
                 {
-                    Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+                    Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
                 }
                 if (_window._properties.BaseModel == null)
                 {
@@ -142,12 +142,8 @@ namespace FlaxEditor.Windows.Assets
             /// <param name="window">The graph window.</param>
             public void OnLoad(AnimationGraphWindow window)
             {
-                // Link
                 Window = window;
-
-                var model = window.PreviewActor;
-                var param = model.GetParam(BaseModelId);
-                BaseModel = param?.Value as SkinnedModel;
+                BaseModel = window.PreviewActor.GetParameterValue(BaseModelId) as SkinnedModel;
             }
 
             /// <summary>
@@ -157,9 +153,7 @@ namespace FlaxEditor.Windows.Assets
             public void OnSave(AnimationGraphWindow window)
             {
                 var model = window.PreviewActor;
-                var param = model.GetParam(BaseModelId);
-                if (param != null)
-                    param.Value = BaseModel;
+                model.SetParameterValue(BaseModelId, BaseModel);
                 var surfaceParam = window.Surface.GetParameter(BaseModelId);
                 if (surfaceParam != null)
                     surfaceParam.Value = BaseModel?.ID ?? Guid.Empty;
@@ -213,7 +207,7 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _toolstrip.AddButton(editor.Icons.Bone32, () => _preview.ShowNodes = !_preview.ShowNodes).SetAutoCheck(true).LinkTooltip("Show animated model nodes debug view");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/anim-graph/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/animation/anim-graph/index.html")).LinkTooltip("See documentation to learn more");
 
             // Navigation bar
             _navigationBar = new NavigationBar
@@ -232,7 +226,8 @@ namespace FlaxEditor.Windows.Assets
         {
             try
             {
-                PreviewActor.Parameters[index].Value = value;
+                var param = Surface.Parameters[index];
+                PreviewActor.SetParameterValue(param.ID, value);
             }
             catch
             {
@@ -284,6 +279,7 @@ namespace FlaxEditor.Windows.Assets
                     Editor.LogError("Failed to save animation graph surface data");
                     return;
                 }
+                _asset.Reload();
 
                 // Reset any root motion
                 _preview.PreviewActor.ResetLocalTransform();
@@ -293,17 +289,8 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         protected override bool LoadSurface()
         {
-            // Load surface data from the asset
-            byte[] data = _asset.LoadSurface();
-            if (data == null)
-            {
-                // Error
-                Editor.LogError("Failed to load animation graph surface data.");
-                return true;
-            }
-
             // Load surface graph
-            if (_surface.Load(data))
+            if (_surface.Load())
             {
                 // Error
                 Editor.LogError("Failed to load animation graph surface.");

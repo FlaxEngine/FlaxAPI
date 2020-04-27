@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.Modules;
 using FlaxEngine;
+using FlaxEngine.GUI;
 using FlaxEngine.Json;
 
 namespace FlaxEditor.Options
@@ -172,7 +173,6 @@ namespace FlaxEditor.Options
         {
             Editor.Log("Editor options changed!");
 
-#if !UNIT_TEST_COMPILANT
             // Sync C++ backend options
             Editor.InternalOptions internalOptions;
             internalOptions.AutoReloadScriptsOnMainWindowFocus = (byte)(Options.General.AutoReloadScriptsOnMainWindowFocus ? 1 : 0);
@@ -182,7 +182,6 @@ namespace FlaxEditor.Options
             internalOptions.AutoRebuildNavMesh = (byte)(Options.General.AutoRebuildNavMesh ? 1 : 0);
             internalOptions.AutoRebuildNavMeshTimeoutMs = Options.General.AutoRebuildNavMeshTimeoutMs;
             Editor.Internal_SetOptions(ref internalOptions);
-#endif
 
             EditorAssets.Cache.OnEditorOptionsChanged(Options);
 
@@ -190,12 +189,74 @@ namespace FlaxEditor.Options
             OptionsChanged?.Invoke(Options);
         }
 
+        private void SetupStyle()
+        {
+            var themeOptions = Options.Theme;
+
+            // If a non-default style was chosen, switch to that style
+            string styleName = themeOptions.SelectedStyle;
+            if (styleName != "Default" && themeOptions.Styles.ContainsKey(styleName))
+            {
+                Style.Current = themeOptions.Styles[themeOptions.SelectedStyle];
+            }
+            else
+            {
+                Style.Current = CreateDefaultStyle();
+            }
+        }
+
+        public Style CreateDefaultStyle()
+        {
+            var style = new Style();
+
+            // Metro Style colors
+            style.Background = Color.FromBgra(0xFF1C1C1C);
+            style.LightBackground = Color.FromBgra(0xFF2D2D30);
+            style.Foreground = Color.FromBgra(0xFFFFFFFF);
+            style.ForegroundGrey = Color.FromBgra(0xFFA9A9B3);
+            style.ForegroundDisabled = Color.FromBgra(0xFF787883);
+            style.BackgroundHighlighted = Color.FromBgra(0xFF54545C);
+            style.BorderHighlighted = Color.FromBgra(0xFF6A6A75);
+            style.BackgroundSelected = Color.FromBgra(0xFF007ACC);
+            style.BorderSelected = Color.FromBgra(0xFF1C97EA);
+            style.BackgroundNormal = Color.FromBgra(0xFF3F3F46);
+            style.BorderNormal = Color.FromBgra(0xFF54545C);
+            style.TextBoxBackground = Color.FromBgra(0xFF333337);
+            style.TextBoxBackgroundSelected = Color.FromBgra(0xFF3F3F46);
+            style.DragWindow = style.BackgroundSelected * 0.7f;
+            style.ProgressNormal = Color.FromBgra(0xFF0ad328);
+
+            // Fonts
+            var options = Options;
+            style.FontTitle = options.Interface.TitleFont.GetFont();
+            style.FontLarge = options.Interface.LargeFont.GetFont();
+            style.FontMedium = options.Interface.MediumFont.GetFont();
+            style.FontSmall = options.Interface.SmallFont.GetFont();
+
+            // Icons
+            style.ArrowDown = Editor.Icons.ArrowDown12;
+            style.ArrowRight = Editor.Icons.ArrowRight12;
+            style.Search = Editor.Icons.Search12;
+            style.Settings = Editor.Icons.Settings12;
+            style.Cross = Editor.Icons.Cross12;
+            style.CheckBoxIntermediate = Editor.Icons.CheckBoxIntermediate12;
+            style.CheckBoxTick = Editor.Icons.CheckBoxTick12;
+            style.StatusBarSizeGrip = Editor.Icons.StatusBarSizeGrip12;
+            style.Translate = Editor.Icons.Translate16;
+            style.Rotate = Editor.Icons.Rotate16;
+            style.Scale = Editor.Icons.Scale16;
+
+            style.SharedTooltip = new Tooltip();
+
+            return style;
+        }
+
         /// <inheritdoc />
         public override void OnInit()
         {
             Editor.Log("Options file path: " + _optionsFilePath);
             Load();
-            Editor.UI.CreateStyle();
+            SetupStyle();
         }
     }
 }

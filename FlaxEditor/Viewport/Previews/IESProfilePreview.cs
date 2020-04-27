@@ -24,7 +24,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (_asset != value)
                 {
                     _asset = value;
-                    _previewMaterial.GetParam("Texture").Value = value;
+                    _previewMaterial.SetParameterValue("Texture", value);
                     UpdateTextureRect();
                 }
             }

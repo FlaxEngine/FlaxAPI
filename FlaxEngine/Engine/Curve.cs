@@ -138,21 +138,12 @@ namespace FlaxEngine
 
             public void Bezier(ref Quaternion p0, ref Quaternion p1, ref Quaternion p2, ref Quaternion p3, float alpha, out Quaternion result)
             {
-                /*
-                // TODO: use Slerp for Bezier for Quaternion
                 Quaternion.Slerp(ref p0, ref p1, alpha, out var p01);
                 Quaternion.Slerp(ref p1, ref p2, alpha, out var p12);
                 Quaternion.Slerp(ref p2, ref p3, alpha, out var p23);
                 Quaternion.Slerp(ref p01, ref p12, alpha, out var p012);
                 Quaternion.Slerp(ref p12, ref p23, alpha, out var p123);
                 Quaternion.Slerp(ref p012, ref p123, alpha, out result);
-                */
-                var e0 = p0.EulerAngles;
-                var e1 = p1.EulerAngles;
-                var e2 = p2.EulerAngles;
-                var e3 = p3.EulerAngles;
-                Bezier(ref e0, ref e1, ref e2, ref e3, alpha, out var e);
-                Quaternion.Euler(ref e, out result);
             }
 
             public void GetTangent(ref Color32 value, ref Color32 tangent, float lengthThird, out Color32 result)
@@ -400,7 +391,7 @@ namespace FlaxEngine
             EvaluateKey(out var endValue, end, false);
 
             // Begin
-            for (int i = 0; i < result.Count() && result.Count > 0; i++)
+            for (int i = 0; i < result.Count && result.Count > 0; i++)
             {
                 if (result[i].Time < start)
                 {
@@ -420,7 +411,7 @@ namespace FlaxEngine
             }
 
             // End
-            for (int i = result.Count() - 1; i >= 0 && result.Count > 0; i--)
+            for (int i = result.Count - 1; i >= 0 && result.Count > 0; i--)
             {
                 if (result[i].Time > end)
                 {

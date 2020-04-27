@@ -203,7 +203,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Update node text color (based on ActorNode.IsActiveInHierarchy but with optimized logic a little)
             if (Parent is ActorTreeNode)
             {
-                Color color = Color.White;
+                Color color = Style.Current.Foreground;
                 var actor = Actor;
                 if (actor != null && actor.HasPrefabLink)
                 {
@@ -214,7 +214,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 if (actor != null && !actor.IsActiveInHierarchy)
                 {
                     // Inactive
-                    return color * 0.6f;
+                    return Style.Current.ForegroundGrey;
                 }
 
                 if (actor?.Scene != null && Editor.Instance.StateMachine.IsPlayMode && actor.IsStatic)
@@ -303,11 +303,11 @@ namespace FlaxEditor.SceneGraph.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (IsFocused)
             {
-                if (key == Keys.F2)
+                if (key == KeyboardKeys.F2)
                 {
                     StartRenaming();
                     return true;
@@ -323,7 +323,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Check if cannot edit scene or there is no scene loaded (handle case for actors in prefab editor)
             if (_actorNode?.ParentScene != null)
             {
-                if (!Editor.Instance.StateMachine.CurrentState.CanEditScene || !SceneManager.IsAnySceneLoaded)
+                if (!Editor.Instance.StateMachine.CurrentState.CanEditScene || !Level.IsAnySceneLoaded)
                     return DragDropEffect.None;
             }
             else
@@ -510,7 +510,7 @@ namespace FlaxEditor.SceneGraph.GUI
             if (myActor == null)
             {
                 // Append to the last scene
-                var scenes = SceneManager.Scenes;
+                var scenes = Level.Scenes;
                 if (scenes == null || scenes.Length == 0)
                     throw new InvalidOperationException("No scene loaded.");
                 newParent = scenes[scenes.Length - 1];
@@ -543,7 +543,7 @@ namespace FlaxEditor.SceneGraph.GUI
             // Drag actors
             if (_dragActors != null && _dragActors.HasValidDrag)
             {
-                bool worldPositionLock = Root.GetKey(Keys.Control) == false;
+                bool worldPositionLock = Root.GetKey(KeyboardKeys.Control) == false;
                 var singleObject = _dragActors.Objects.Count == 1;
                 if (singleObject)
                 {
@@ -577,89 +577,77 @@ namespace FlaxEditor.SceneGraph.GUI
             {
                 for (int i = 0; i < _dragAssets.Objects.Count; i++)
                 {
-                    var item = _dragAssets.Objects[i];
+                    var assetItem = _dragAssets.Objects[i];
 
-                    switch (item.ItemDomain)
+                    if (assetItem.IsOfType<SkinnedModel>())
                     {
-                    case ContentDomain.Model:
-                    {
-                        if (item.TypeName == typeof(SkinnedModel).FullName)
-                        {
-                            // Create actor
-                            var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
-                            var actor = AnimatedModel.New();
-                            actor.StaticFlags = Actor.StaticFlags;
-                            actor.Name = item.ShortName;
-                            actor.SkinnedModel = model;
-                            actor.Transform = Actor.Transform;
+                        // Create actor
+                        var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(assetItem.ID);
+                        var actor = AnimatedModel.New();
+                        actor.StaticFlags = Actor.StaticFlags;
+                        actor.Name = assetItem.ShortName;
+                        actor.SkinnedModel = model;
+                        actor.Transform = Actor.Transform;
 
-                            // Spawn
-                            ActorNode.Root.Spawn(actor, Actor);
-                        }
-                        else
-                        {
-                            // Create actor
-                            var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
-                            var actor = StaticModel.New();
-                            actor.StaticFlags = Actor.StaticFlags;
-                            actor.Name = item.ShortName;
-                            actor.Model = model;
-                            actor.Transform = Actor.Transform;
-
-                            // Spawn
-                            ActorNode.Root.Spawn(actor, Actor);
-                        }
-
-                        break;
+                        // Spawn
+                        ActorNode.Root.Spawn(actor, Actor);
                     }
-                    case ContentDomain.Other:
+                    else if (assetItem.IsOfType<Model>())
                     {
-                        if (item.TypeName == typeof(CollisionData).FullName)
-                        {
-                            // Create actor
-                            var actor = MeshCollider.New();
-                            actor.StaticFlags = Actor.StaticFlags;
-                            actor.Name = item.ShortName;
-                            actor.CollisionData = FlaxEngine.Content.LoadAsync<CollisionData>(item.ID);
-                            actor.Transform = Actor.Transform;
+                        // Create actor
+                        var model = FlaxEngine.Content.LoadAsync<Model>(assetItem.ID);
+                        var actor = StaticModel.New();
+                        actor.StaticFlags = Actor.StaticFlags;
+                        actor.Name = assetItem.ShortName;
+                        actor.Model = model;
+                        actor.Transform = Actor.Transform;
 
-                            // Spawn
-                            ActorNode.Root.Spawn(actor, Actor);
-                        }
-                        else if (item.TypeName == typeof(ParticleSystem).FullName)
-                        {
-                            // Create actor
-                            var actor = ParticleEffect.New();
-                            actor.StaticFlags = Actor.StaticFlags;
-                            actor.Name = item.ShortName;
-                            actor.ParticleSystem = FlaxEngine.Content.LoadAsync<ParticleSystem>(item.ID);
-                            actor.Transform = Actor.Transform;
-
-                            // Spawn
-                            ActorNode.Root.Spawn(actor, Actor);
-                        }
-                        else if (item.TypeName == typeof(SceneAnimation).FullName)
-                        {
-                            // Create actor
-                            var actor = SceneAnimationPlayer.New();
-                            actor.StaticFlags = Actor.StaticFlags;
-                            actor.Name = item.ShortName;
-                            actor.Animation = FlaxEngine.Content.LoadAsync<SceneAnimation>(item.ID);
-                            actor.Transform = Actor.Transform;
-
-                            // Spawn
-                            ActorNode.Root.Spawn(actor, Actor);
-                        }
-
-                        break;
+                        // Spawn
+                        ActorNode.Root.Spawn(actor, Actor);
                     }
-                    case ContentDomain.Audio:
+                    else if (assetItem.IsOfType<CollisionData>())
+                    {
+                        // Create actor
+                        var actor = MeshCollider.New();
+                        actor.StaticFlags = Actor.StaticFlags;
+                        actor.Name = assetItem.ShortName;
+                        actor.CollisionData = FlaxEngine.Content.LoadAsync<CollisionData>(assetItem.ID);
+                        actor.Transform = Actor.Transform;
+
+                        // Spawn
+                        ActorNode.Root.Spawn(actor, Actor);
+                    }
+                    else if (assetItem.IsOfType<ParticleSystem>())
+                    {
+                        // Create actor
+                        var actor = ParticleEffect.New();
+                        actor.StaticFlags = Actor.StaticFlags;
+                        actor.Name = assetItem.ShortName;
+                        actor.ParticleSystem = FlaxEngine.Content.LoadAsync<ParticleSystem>(assetItem.ID);
+                        actor.Transform = Actor.Transform;
+
+                        // Spawn
+                        ActorNode.Root.Spawn(actor, Actor);
+                    }
+                    else if (assetItem.IsOfType<SceneAnimation>())
+                    {
+                        // Create actor
+                        var actor = SceneAnimationPlayer.New();
+                        actor.StaticFlags = Actor.StaticFlags;
+                        actor.Name = assetItem.ShortName;
+                        actor.Animation = FlaxEngine.Content.LoadAsync<SceneAnimation>(assetItem.ID);
+                        actor.Transform = Actor.Transform;
+
+                        // Spawn
+                        ActorNode.Root.Spawn(actor, Actor);
+                    }
+                    else if (assetItem.IsOfType<AudioClip>())
                     {
                         // Create actor
                         var actor = AudioSource.New();
                         actor.StaticFlags = Actor.StaticFlags;
-                        actor.Name = item.ShortName;
-                        actor.Clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
+                        actor.Name = assetItem.ShortName;
+                        actor.Clip = FlaxEngine.Content.LoadAsync<AudioClip>(assetItem.ID);
                         actor.Transform = Actor.Transform;
 
                         // Spawn
@@ -667,20 +655,17 @@ namespace FlaxEditor.SceneGraph.GUI
 
                         break;
                     }
-                    case ContentDomain.Prefab:
+                    else if (assetItem.IsOfType<Prefab>())
                     {
                         // Create prefab instance
-                        var prefab = FlaxEngine.Content.LoadAsync<Prefab>(item.ID);
+                        var prefab = FlaxEngine.Content.LoadAsync<Prefab>(assetItem.ID);
                         var actor = PrefabManager.SpawnPrefab(prefab, null);
                         actor.StaticFlags = Actor.StaticFlags;
-                        actor.Name = item.ShortName;
+                        actor.Name = assetItem.ShortName;
                         actor.Transform = Actor.Transform;
 
                         // Spawn
                         ActorNode.Root.Spawn(actor, Actor);
-
-                        break;
-                    }
                     }
                 }
 
@@ -694,7 +679,7 @@ namespace FlaxEditor.SceneGraph.GUI
                     var item = _dragActorType.Objects[i];
 
                     // Create actor
-                    var actor = FlaxEngine.Object.New(item) as Actor;
+                    var actor = Object.New(item) as Actor;
                     if (actor == null)
                     {
                         Editor.LogWarning("Failed to spawn actor of type " + item.FullName);
@@ -739,27 +724,25 @@ namespace FlaxEditor.SceneGraph.GUI
         /// <summary>
         /// Validates the asset for drag and drop into one of the scene tree nodes.
         /// </summary>
-        /// <param name="item">The item.</param>
+        /// <param name="assetItem">The item.</param>
         /// <returns>True if can drag and drop it, otherwise false.</returns>
-        public static bool ValidateDragAsset(AssetItem item)
+        public static bool ValidateDragAsset(AssetItem assetItem)
         {
-            switch (item.ItemDomain)
-            {
-            case ContentDomain.Model:
-            case ContentDomain.Audio:
-            case ContentDomain.Prefab: return true;
-            case ContentDomain.Other:
-            {
-                if (item.TypeName == typeof(CollisionData).FullName)
-                    return true;
-                if (item.TypeName == typeof(ParticleSystem).FullName)
-                    return true;
-                if (item.TypeName == typeof(SceneAnimation).FullName)
-                    return true;
-                return false;
-            }
-            default: return false;
-            }
+            if (assetItem.IsOfType<SkinnedModel>())
+                return true;
+            if (assetItem.IsOfType<Model>())
+                return true;
+            if (assetItem.IsOfType<AudioClip>())
+                return true;
+            if (assetItem.IsOfType<Prefab>())
+                return true;
+            if (assetItem.IsOfType<CollisionData>())
+                return true;
+            if (assetItem.IsOfType<ParticleSystem>())
+                return true;
+            if (assetItem.IsOfType<SceneAnimation>())
+                return true;
+            return false;
         }
 
         /// <summary>

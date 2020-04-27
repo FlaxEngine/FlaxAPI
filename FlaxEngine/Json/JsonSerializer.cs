@@ -230,7 +230,7 @@ namespace FlaxEngine.Json
         /// Serializes the specified object.
         /// </summary>
         /// <param name="obj">The object.</param>
-        /// <param name="obj">The object type. Can be typeof(object) to handle generic object serialization.</param>
+        /// <param name="type">The object type. Can be typeof(object) to handle generic object serialization.</param>
         /// <returns>The output json string.</returns>
         public static string Serialize(object obj, Type type)
         {

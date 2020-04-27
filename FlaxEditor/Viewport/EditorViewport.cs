@@ -8,7 +8,6 @@ using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Widgets;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Utilities;
 
 namespace FlaxEditor.Viewport
 {
@@ -95,9 +94,9 @@ namespace FlaxEditor.Viewport
             /// <param name="useMouse">True if use mouse input, otherwise will skip mouse.</param>
             public void Gather(Window window, bool useMouse)
             {
-                IsControlDown = window.GetKey(Keys.Control);
-                IsShiftDown = window.GetKey(Keys.Shift);
-                IsAltDown = window.GetKey(Keys.Alt);
+                IsControlDown = window.GetKey(KeyboardKeys.Control);
+                IsShiftDown = window.GetKey(KeyboardKeys.Shift);
+                IsAltDown = window.GetKey(KeyboardKeys.Alt);
 
                 IsMouseRightDown = useMouse && window.GetMouseButton(MouseButton.Right);
                 IsMouseMiddleDown = useMouse && window.GetMouseButton(MouseButton.Middle);
@@ -139,6 +138,7 @@ namespace FlaxEditor.Viewport
 
         private bool _isControllingMouse;
         private int _deltaFilteringStep;
+        private Vector2 _startPosMiddle;
         private Vector2 _startPosRight;
         private Vector2 _startPosLeft;
         private Vector2 _mouseDeltaRightLast;
@@ -423,7 +423,8 @@ namespace FlaxEditor.Viewport
             if (_camera != null)
                 _camera.Viewport = this;
 
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
 
             // Setup options
             {
@@ -460,7 +461,7 @@ namespace FlaxEditor.Viewport
                 // View mode widget
                 var viewMode = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
                 ViewWidgetButtonMenu = new ContextMenu();
-                var viewModeButton = new ViewportWidgetButton("View", Sprite.Invalid, ViewWidgetButtonMenu);
+                var viewModeButton = new ViewportWidgetButton("View", SpriteHandle.Invalid, ViewWidgetButtonMenu);
                 viewModeButton.TooltipText = "View properties";
                 viewModeButton.Parent = viewMode;
                 viewMode.Parent = this;
@@ -485,7 +486,7 @@ namespace FlaxEditor.Viewport
                         var button = viewFlags.AddButton(v.Name);
                         button.Tag = v.Mode;
                     }
-                    viewFlags.ButtonClicked += (button) => Task.View.Flags ^= (ViewFlags)button.Tag;
+                    viewFlags.ButtonClicked += button => Task.ViewFlags ^= (ViewFlags)button.Tag;
                     viewFlags.VisibleChanged += WidgetViewFlagsShowHide;
                 }
 
@@ -498,7 +499,7 @@ namespace FlaxEditor.Viewport
                         var button = debugView.AddButton(v.Name);
                         button.Tag = v.Mode;
                     }
-                    debugView.ButtonClicked += (button) => Task.View.Mode = (ViewMode)button.Tag;
+                    debugView.ButtonClicked += button => Task.ViewMode = (ViewMode)button.Tag;
                     debugView.VisibleChanged += WidgetViewModeShowHide;
                 }
 
@@ -592,9 +593,13 @@ namespace FlaxEditor.Viewport
             _mouseSensitivity = options.Viewport.MouseSensitivity;
         }
 
-        private void OnRenderBegin(SceneRenderTask task, GPUContext context)
+        private void OnRenderBegin(RenderTask task, GPUContext context)
         {
-            CopyViewData(ref task.View);
+            var sceneTask = (SceneRenderTask)task;
+
+            var view = sceneTask.View;
+            CopyViewData(ref view);
+            sceneTask.View = view;
         }
 
         #region FPS Counter
@@ -610,14 +615,16 @@ namespace FlaxEditor.Viewport
             {
                 base.Draw();
 
-                int fps = Time.FramesPerSecond;
+                int fps = Engine.FramesPerSecond;
                 Color color = Color.Green;
                 if (fps < 13)
                     color = Color.Red;
                 else if (fps < 22)
                     color = Color.Yellow;
-                string text = string.Format("FPS: {0}", fps);
-                Render2D.DrawText(Style.Current.FontMedium, text, new Rectangle(Vector2.Zero, Size), color);
+                var text = string.Format("FPS: {0}", fps);
+                var font = Style.Current.FontMedium;
+                Render2D.DrawText(font, text, new Rectangle(Vector2.One, Size), Color.Black);
+                Render2D.DrawText(font, text, new Rectangle(Vector2.Zero, Size), color);
             }
         }
 
@@ -634,7 +641,7 @@ namespace FlaxEditor.Viewport
             {
                 _fpsCounter.Visible = value;
                 _fpsCounter.Enabled = value;
-                _showFpsButon.Icon = value ? Style.Current.CheckBoxTick : Sprite.Invalid;
+                _showFpsButon.Icon = value ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
             }
         }
 
@@ -672,6 +679,8 @@ namespace FlaxEditor.Viewport
             view.Direction = ViewDirection;
             view.Near = _nearPlane;
             view.Far = _farPlane;
+
+            view.UpdateCachedData();
         }
 
         /// <summary>
@@ -812,6 +821,21 @@ namespace FlaxEditor.Viewport
         }
 
         /// <summary>
+        /// Called when middle mouse button goes down (on press).
+        /// </summary>
+        protected virtual void OnMiddleMouseButtonDown()
+        {
+            _startPosMiddle = _viewMousePos;
+        }
+
+        /// <summary>
+        /// Called when middle mouse button goes up (on release).
+        /// </summary>
+        protected virtual void OnMiddleMouseButtonUp()
+        {
+        }
+
+        /// <summary>
         /// Updates the view.
         /// </summary>
         /// <param name="dt">The delta time (in seconds).</param>
@@ -868,6 +892,11 @@ namespace FlaxEditor.Viewport
                     OnRightMouseButtonDown();
                 else if (_prevInput.IsMouseRightDown && !_input.IsMouseRightDown)
                     OnRightMouseButtonUp();
+                //
+                if (!_prevInput.IsMouseMiddleDown && _input.IsMouseMiddleDown)
+                    OnMiddleMouseButtonDown();
+                else if (_prevInput.IsMouseMiddleDown && !_input.IsMouseMiddleDown)
+                    OnMiddleMouseButtonUp();
             }
 
             // Get clamped delta time (more stable during lags)
@@ -930,7 +959,7 @@ namespace FlaxEditor.Viewport
                     moveDelta *= 0.3f;
 
                 // Calculate smooth mouse delta not dependant on viewport size
-                Vector2 offset = _viewMousePos - _startPosRight;
+                Vector2 offset = _viewMousePos - (_input.IsMouseMiddleDown ? _startPosMiddle : _startPosRight);
                 offset.X = offset.X > 0 ? Mathf.Floor(offset.X) : Mathf.Ceil(offset.X);
                 offset.Y = offset.Y > 0 ? Mathf.Floor(offset.Y) : Mathf.Ceil(offset.Y);
                 _mouseDeltaRight = offset / size;
@@ -970,9 +999,9 @@ namespace FlaxEditor.Viewport
                 UpdateView(dt, ref moveDelta, ref mouseDelta, out var centerMouse);
 
                 // Move mouse back to the root position
-                if (centerMouse && (_input.IsMouseRightDown || _input.IsMouseLeftDown))
+                if (centerMouse && (_input.IsMouseRightDown || _input.IsMouseLeftDown || _input.IsMouseMiddleDown))
                 {
-                    Vector2 center = PointToWindow(_startPosRight);
+                    Vector2 center = PointToWindow(_input.IsMouseMiddleDown ? _startPosMiddle : _startPosRight);
                     win.MousePosition = center;
                 }
             }
@@ -990,19 +1019,19 @@ namespace FlaxEditor.Viewport
 
                     // Get input movement
                     Vector3 moveDelta = Vector3.Zero;
-                    if (win.GetKey(Keys.ArrowRight))
+                    if (win.GetKey(KeyboardKeys.ArrowRight))
                     {
                         moveDelta += Vector3.Right;
                     }
-                    if (win.GetKey(Keys.ArrowLeft))
+                    if (win.GetKey(KeyboardKeys.ArrowLeft))
                     {
                         moveDelta += Vector3.Left;
                     }
-                    if (win.GetKey(Keys.ArrowUp))
+                    if (win.GetKey(KeyboardKeys.ArrowUp))
                     {
                         moveDelta += Vector3.Up;
                     }
-                    if (win.GetKey(Keys.ArrowDown))
+                    if (win.GetKey(KeyboardKeys.ArrowDown))
                     {
                         moveDelta += Vector3.Down;
                     }
@@ -1058,7 +1087,7 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Base
             if (base.OnKeyDown(key))
@@ -1124,12 +1153,12 @@ namespace FlaxEditor.Viewport
         private static readonly ViewModeOptions[] EditorViewportViewModeValues =
         {
             new ViewModeOptions(ViewMode.Default, "Default"),
+            new ViewModeOptions(ViewMode.Unlit, "Unlit"),
             new ViewModeOptions(ViewMode.NoPostFx, "No PostFx"),
             new ViewModeOptions(ViewMode.Wireframe, "Wireframe"),
             new ViewModeOptions(ViewMode.LightBuffer, "Light Buffer"),
             new ViewModeOptions(ViewMode.Reflections, "Reflections Buffer"),
             new ViewModeOptions(ViewMode.Depth, "Depth Buffer"),
-            new ViewModeOptions(ViewMode.Unlit, "Unlit"),
             new ViewModeOptions(ViewMode.Diffuse, "Diffuse"),
             new ViewModeOptions(ViewMode.Metalness, "Metalness"),
             new ViewModeOptions(ViewMode.Roughness, "Roughness"),
@@ -1156,7 +1185,7 @@ namespace FlaxEditor.Viewport
                     var v = (float)b.Tag;
                     b.Icon = Mathf.Abs(MovementSpeed - v) < 0.001f
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -1174,7 +1203,7 @@ namespace FlaxEditor.Viewport
                     var v = (ViewMode)b.Tag;
                     b.Icon = Task.View.Mode == v
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -1232,7 +1261,7 @@ namespace FlaxEditor.Viewport
                     var v = (ViewFlags)b.Tag;
                     b.Icon = (Task.View.Flags & v) != 0
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }

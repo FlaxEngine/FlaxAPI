@@ -10,7 +10,7 @@ using Object = FlaxEngine.Object;
 namespace FlaxEditor.Viewport.Previews
 {
     /// <summary>
-    /// Base class for texture previews. Draws a surface in the UI and supports view moving/zomming.
+    /// Base class for texture previews. Draws a surface in the UI and supports view moving/zooming.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
     public abstract class TexturePreviewBase : ContainerControl
@@ -24,7 +24,8 @@ namespace FlaxEditor.Viewport.Previews
         /// <inheritdoc />
         protected TexturePreviewBase()
         {
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
         }
 
         /// <summary>
@@ -188,9 +189,9 @@ namespace FlaxEditor.Viewport.Previews
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             // Update texture rectangle and move view to the center
             UpdateTextureRect();
@@ -280,7 +281,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (_usePointSampler != value)
                 {
                     _usePointSampler = value;
-                    _previewMaterial.GetParam("PointSampler").Value = value;
+                    _previewMaterial.SetParameterValue("PointSampler", value);
                 }
             }
         }
@@ -296,7 +297,7 @@ namespace FlaxEditor.Viewport.Previews
                 if (!Mathf.NearEqual(_mipLevel, value))
                 {
                     _mipLevel = value;
-                    _previewMaterial.GetParam("Mip").Value = value;
+                    _previewMaterial.SetParameterValue("Mip", value);
                 }
             }
         }
@@ -319,28 +320,28 @@ namespace FlaxEditor.Viewport.Previews
                 // Channels widget
                 var channelsWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
                 //
-                var channelR = new ViewportWidgetButton("R", Sprite.Invalid, null, true)
+                var channelR = new ViewportWidgetButton("R", SpriteHandle.Invalid, null, true)
                 {
                     Checked = true,
                     TooltipText = "Show/hide texture red channel",
                     Parent = channelsWidget
                 };
                 channelR.Toggled += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Red : (ViewChannels & ~ChannelFlags.Red);
-                var channelG = new ViewportWidgetButton("G", Sprite.Invalid, null, true)
+                var channelG = new ViewportWidgetButton("G", SpriteHandle.Invalid, null, true)
                 {
                     Checked = true,
                     TooltipText = "Show/hide texture green channel",
                     Parent = channelsWidget
                 };
                 channelG.Toggled += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Green : (ViewChannels & ~ChannelFlags.Green);
-                var channelB = new ViewportWidgetButton("B", Sprite.Invalid, null, true)
+                var channelB = new ViewportWidgetButton("B", SpriteHandle.Invalid, null, true)
                 {
                     Checked = true,
                     TooltipText = "Show/hide texture blue channel",
                     Parent = channelsWidget
                 };
                 channelB.Toggled += button => ViewChannels = button.Checked ? ViewChannels | ChannelFlags.Blue : (ViewChannels & ~ChannelFlags.Blue);
-                var channelA = new ViewportWidgetButton("A", Sprite.Invalid, null, true)
+                var channelA = new ViewportWidgetButton("A", SpriteHandle.Invalid, null, true)
                 {
                     Checked = true,
                     TooltipText = "Show/hide texture alpha channel",
@@ -354,7 +355,7 @@ namespace FlaxEditor.Viewport.Previews
                 var mipWidget = new ViewportWidgetsContainer(ViewportWidgetLocation.UpperLeft);
                 _mipWidgetMenu = new ContextMenu();
                 _mipWidgetMenu.VisibleChanged += OnMipWidgetMenuOnVisibleChanged;
-                var mipWidgetButton = new ViewportWidgetButton("Mip", Sprite.Invalid, _mipWidgetMenu)
+                var mipWidgetButton = new ViewportWidgetButton("Mip", SpriteHandle.Invalid, _mipWidgetMenu)
                 {
                     TooltipText = "The mip level to show. The default is -1.",
                     Parent = mipWidget
@@ -368,7 +369,7 @@ namespace FlaxEditor.Viewport.Previews
                 filterWidgetMenu.VisibleChanged += OnFilterWidgetMenuVisibleChanged;
                 _filterWidgetPointButton = filterWidgetMenu.AddButton("Point", () => UsePointSampler = true);
                 _filterWidgetLinearButton = filterWidgetMenu.AddButton("Linear", () => UsePointSampler = false);
-                var filterWidgetButton = new ViewportWidgetButton("Filter", Sprite.Invalid, filterWidgetMenu)
+                var filterWidgetButton = new ViewportWidgetButton("Filter", SpriteHandle.Invalid, filterWidgetMenu)
                 {
                     TooltipText = "The texture preview filtering mode. The default is Linear.",
                     Parent = filterWidget
@@ -396,7 +397,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="value">The value.</param>
         protected void SetTexture(object value)
         {
-            _previewMaterial.GetParam("Texture").Value = value;
+            _previewMaterial.SetParameterValue("Texture", value);
             UpdateTextureRect();
         }
 
@@ -405,7 +406,7 @@ namespace FlaxEditor.Viewport.Previews
             if (!control.Visible)
                 return;
 
-            var textureObj = _previewMaterial.GetParam("Texture").Value;
+            var textureObj = _previewMaterial.GetParameterValue("Texture");
 
             if (textureObj is TextureBase texture && !texture.WaitForLoaded())
             {
@@ -436,7 +437,7 @@ namespace FlaxEditor.Viewport.Previews
                 mask.Z = 0;
             if ((_channelFlags & ChannelFlags.Alpha) == 0)
                 mask.W = 0;
-            _previewMaterial.GetParam("Mask").Value = mask;
+            _previewMaterial.SetParameterValue("Mask", mask);
         }
 
         /// <inheritdoc />
@@ -585,7 +586,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="useWidgets">True if show viewport widgets.</param>
         /// <inheritdoc />
         public TexturePreview(bool useWidgets)
-        : base(useWidgets)
+            : base(useWidgets)
         {
         }
 
@@ -640,7 +641,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <param name="useWidgets">True if show viewport widgets.</param>
         /// <inheritdoc />
         public SpriteAtlasPreview(bool useWidgets)
-        : base(useWidgets)
+            : base(useWidgets)
         {
         }
 

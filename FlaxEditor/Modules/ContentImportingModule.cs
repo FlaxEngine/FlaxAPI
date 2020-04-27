@@ -108,7 +108,8 @@ namespace FlaxEditor.Modules
         public void ShowImportFileDialog(ContentFolder targetLocation)
         {
             // Ask user to select files to import
-            var files = MessageBox.OpenFileDialog(Editor.Windows.MainWindow, null, "All files (*.*)\0*.*\0", true, "Select files to import");
+            if (FileSystem.ShowOpenFileDialog(Editor.Windows.MainWindow, null, "All files (*.*)\0*.*\0", true, "Select files to import", out var files))
+                return;
             if (files != null && files.Length > 0)
             {
                 Import(files, targetLocation);
@@ -135,7 +136,8 @@ namespace FlaxEditor.Modules
 
                     // Ask user to select new file location
                     var title = string.Format("Please find missing \'{0}\' file for asset \'{1}\'", importPath, item.ShortName);
-                    var files = MessageBox.OpenFileDialog(Editor.Windows.MainWindow, null, "All files (*.*)\0*.*\0", false, title);
+                    if (FileSystem.ShowOpenFileDialog(Editor.Windows.MainWindow, null, "All files (*.*)\0*.*\0", false, title, out var files))
+                        return;
                     if (files != null && files.Length > 0)
                         importPath = files[0];
 
@@ -206,7 +208,7 @@ namespace FlaxEditor.Modules
                     if (!skipDialog)
                     {
                         skipDialog = true;
-                        MessageBox.Show("Target location cannot have assets. Use Content folder for your game assets.", "Cannot import assets", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                        MessageBox.Show("Target location cannot have assets. Use Content folder for your game assets.", "Cannot import assets", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     return;
                 }
@@ -224,7 +226,7 @@ namespace FlaxEditor.Modules
                     if (!skipDialog)
                     {
                         skipDialog = true;
-                        MessageBox.Show("Target location cannot have scripts. Use Source folder for your game source code.", "Cannot import assets", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                        MessageBox.Show("Target location cannot have scripts. Use Source folder for your game source code.", "Cannot import assets", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     return;
                 }

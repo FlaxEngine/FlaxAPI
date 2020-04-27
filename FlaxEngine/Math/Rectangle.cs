@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace FlaxEngine
 {
     /// <summary>
-    /// Define a Rectangle.
+    /// Describes rectangle in 2D space defines by location of its upper-left corner and the size.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Rectangle : IEquatable<Rectangle>
@@ -426,6 +426,36 @@ namespace FlaxEngine
         public static Rectangle operator *(Rectangle rectangle, float scale)
         {
             return rectangle.MakeScaled(scale);
+        }
+
+        /// <summary>
+        /// Tests for equality between two objects.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="left" /> has the same value as <paramref name="right" />; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(Rectangle left, Rectangle right)
+        {
+            return left.Equals(ref right);
+        }
+
+        /// <summary>
+        /// Tests for inequality between two objects.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="left" /> has a different value than <paramref name="right" />; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(Rectangle left, Rectangle right)
+        {
+            return !left.Equals(ref right);
         }
 
         #endregion

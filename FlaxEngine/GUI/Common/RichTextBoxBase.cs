@@ -287,7 +287,7 @@ namespace FlaxEngine.GUI
                 {
                     var underLineHeight = 2.0f;
                     var underlineRect = new Rectangle(textBlock.Bounds.Location.X, textBlock.Bounds.Location.Y + font.Height - underLineHeight * 0.5f, textBlock.Bounds.Width, underLineHeight);
-                    textBlock.Style.UnderlineBrush.Draw(underlineRect, Color.White);
+                    textBlock.Style.UnderlineBrush.Draw(underlineRect, textBlock.Style.Color);
                 }
             }
 

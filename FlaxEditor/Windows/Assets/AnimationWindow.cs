@@ -68,8 +68,7 @@ namespace FlaxEditor.Windows.Assets
                     {
                         var group = layout.Group("General");
 
-                        Animation.Info info;
-                        proxy.Asset.GetInfo(out info);
+                        var info = proxy.Asset.Info;
                         group.Label("Length: " + info.Length + "s");
                         group.Label("Frames: " + info.FramesCount);
                         group.Label("Chanels: " + info.ChannelsCount);
@@ -81,7 +80,7 @@ namespace FlaxEditor.Windows.Assets
                         var group = layout.Group("Import Settings");
 
                         var importSettingsField = typeof(PropertiesProxy).GetField("ImportSettings", BindingFlags.NonPublic | BindingFlags.Instance);
-                        var importSettingsValues = new ValueContainer(importSettingsField) { proxy.ImportSettings };
+                        var importSettingsValues = new ValueContainer(importSettingsField) {proxy.ImportSettings};
                         group.Object(importSettingsValues);
 
                         layout.Space(5);
@@ -98,11 +97,12 @@ namespace FlaxEditor.Windows.Assets
 
         /// <inheritdoc />
         public AnimationWindow(Editor editor, AssetItem item)
-        : base(editor, item)
+            : base(editor, item)
         {
             _panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 Parent = this
             };
 

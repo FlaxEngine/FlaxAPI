@@ -193,7 +193,8 @@ namespace FlaxEditor.GUI.Docking
             _parentPanel = parentPanel;
             _parentPanel?._childPanels.Add(this);
 
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
         }
 
         /// <summary>
@@ -402,7 +403,6 @@ namespace FlaxEditor.GUI.Docking
                 c2 = _tabsProxy;
                 break;
             }
-
             case DockState.DockBottom:
             {
                 splitterValue = 1 - splitterValue;
@@ -411,7 +411,6 @@ namespace FlaxEditor.GUI.Docking
                 c2 = dockPanel;
                 break;
             }
-
             case DockState.DockLeft:
             {
                 o = Orientation.Horizontal;
@@ -419,7 +418,6 @@ namespace FlaxEditor.GUI.Docking
                 c2 = _tabsProxy;
                 break;
             }
-
             case DockState.DockRight:
             {
                 splitterValue = 1 - splitterValue;
@@ -428,15 +426,17 @@ namespace FlaxEditor.GUI.Docking
                 c2 = dockPanel;
                 break;
             }
-
             default: throw new ArgumentOutOfRangeException();
             }
 
             // Create splitter and link controls
             var parent = _tabsProxy.Parent;
-            SplitPanel splitter = new SplitPanel(o, ScrollBars.None, ScrollBars.None);
-            splitter.DockStyle = DockStyle.Fill;
-            splitter.SplitterValue = splitterValue;
+            var splitter = new SplitPanel(o, ScrollBars.None, ScrollBars.None)
+            {
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
+                SplitterValue = splitterValue,
+            };
             splitter.Panel1.AddChild(c1);
             splitter.Panel2.AddChild(c2);
             parent.AddChild(splitter);

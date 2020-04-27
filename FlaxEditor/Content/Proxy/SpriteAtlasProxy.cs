@@ -37,9 +37,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x5C7F69);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Texture;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(SpriteAtlas);
 
         /// <inheritdoc />
@@ -47,8 +44,11 @@ namespace FlaxEditor.Content
         {
             if (_preview == null)
             {
-                _preview = new SimpleSpriteAtlasPreview();
-                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+                _preview = new SimpleSpriteAtlasPreview
+                {
+                    Offsets = Margin.Zero,
+                    AnchorPreset = AnchorPresets.StretchAll,
+                };
             }
 
             // TODO: disable streaming for asset during thumbnail rendering (and restore it after)

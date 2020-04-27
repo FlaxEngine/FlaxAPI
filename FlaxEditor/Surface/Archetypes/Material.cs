@@ -257,6 +257,26 @@ namespace FlaxEditor.Surface.Archetypes
             }
         }
 
+        private sealed class MaterialFunctionNode : Function.FunctionNode
+        {
+            /// <inheritdoc />
+            public MaterialFunctionNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            /// <inheritdoc />
+            protected override Asset LoadSignature(Guid id, out int[] types, out string[] names)
+            {
+                types = null;
+                names = null;
+                var function = FlaxEngine.Content.Load<MaterialFunction>(id);
+                if (function)
+                    function.GetSignature(out types, out names);
+                return function;
+            }
+        }
+
         /// <summary>
         /// The nodes for that group.
         /// </summary>
@@ -591,6 +611,23 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Input(0, "Fade Distance", true, ConnectionType.Float, 0, 0),
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Float, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 24,
+                Create = (id, context, arch, groupArch) => new MaterialFunctionNode(id, context, arch, groupArch),
+                Title = "Material Function",
+                Description = "Calls material function",
+                Flags = NodeFlags.MaterialGraph,
+                Size = new Vector2(220, 120),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, typeof(MaterialFunction)),
                 }
             },
         };

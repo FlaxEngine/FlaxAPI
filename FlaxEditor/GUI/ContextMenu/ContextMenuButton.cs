@@ -38,7 +38,7 @@ namespace FlaxEditor.GUI.ContextMenu
         /// <summary>
         /// Item icon (best is 16x16).
         /// </summary>
-        public Sprite Icon;
+        public SpriteHandle Icon;
 
         /// <summary>
         /// The checked state.
@@ -113,7 +113,7 @@ namespace FlaxEditor.GUI.ContextMenu
             const float iconSize = 14;
             var icon = Checked ? Style.Current.CheckBoxTick : Icon;
             if (icon.IsValid)
-                Render2D.DrawSprite(icon, new Rectangle(-iconSize - 1, (Height - iconSize) / 2, iconSize, iconSize));
+                Render2D.DrawSprite(icon, new Rectangle(-iconSize - 1, (Height - iconSize) / 2, iconSize, iconSize), textColor);
         }
 
         /// <inheritdoc />

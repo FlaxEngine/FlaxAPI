@@ -19,7 +19,9 @@ namespace FlaxEditor
         private int[] _highlightIndicesSet;
         private Model _highlightTrianglesModel;
 
-        internal IntPtr[] ActorsPtrs => _actors.Count > 0 ? _actors.ToArray() : null;
+        internal IntPtr[] ActorsPtrs => Utils.ExtractArrayFromList(_actors);
+
+        internal int ActorsCount => _actors.Count;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewportDebugDrawData" /> class.
@@ -51,7 +53,7 @@ namespace FlaxEditor
             if (model.Model == null)
                 return;
 
-            ModelEntryInfo[] entries = model.Entries;
+            var entries = model.Entries;
             for (var i = 0; i < entries.Length; i++)
                 HighlightModel(model, i);
         }
@@ -76,7 +78,7 @@ namespace FlaxEditor
         /// <param name="surface">The surface.</param>
         public void HighlightBrushSurface(BrushSurface surface)
         {
-            var vertices = surface.GetVertices();
+            surface.Brush.GetVertices(surface.Index, out var vertices);
             if (vertices.Length > 0)
             {
                 _highlightTriangles.AddRange(vertices);
@@ -84,29 +86,43 @@ namespace FlaxEditor
         }
 
         /// <summary>
-        /// Called when task calls <see cref="SceneRenderTask.Draw" /> event.
+        /// Called when task calls <see cref="SceneRenderTask.CollectDrawCalls" /> event.
         /// </summary>
-        /// <param name="collector">The draw calls collector.</param>
-        public virtual void OnDraw(DrawCallsCollector collector)
+        /// <param name="renderContext">The rendering context.</param>
+        public virtual void OnDraw(ref RenderContext renderContext)
         {
             if (_highlightMaterial == null)
                 return;
 
-            Matrix m1, m2, world;
+            Matrix world;
             for (var i = 0; i < _highlights.Count; i++)
             {
                 HighlightData highlight = _highlights[i];
                 if (highlight.Target is StaticModel staticModel)
                 {
-                    if (staticModel.Model == null)
+                    var model = staticModel.Model;
+                    if (model == null)
                         continue;
 
-                    staticModel.Transform.GetWorld(out m1);
-                    staticModel.Entries[highlight.EntryIndex].Transform.GetWorld(out m2);
-                    Matrix.Multiply(ref m2, ref m1, out world);
+                    staticModel.Transform.GetWorld(out world);
+
                     BoundingSphere bounds = BoundingSphere.FromBox(staticModel.Box);
 
-                    collector.AddDrawCall(staticModel.Model, highlight.EntryIndex, _highlightMaterial, ref bounds, ref world);
+                    // Pick a proper LOD
+                    int lodIndex = RenderTools.ComputeModelLOD(model, ref bounds.Center, bounds.Radius, ref renderContext);
+                    var lods = model.LODs;
+                    if (lods == null || lods.Length < lodIndex || lodIndex < 0)
+                        continue;
+                    var lod = lods[lodIndex];
+
+                    // Draw meshes
+                    for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
+                    {
+                        if (lod.Meshes[meshIndex].MaterialSlotIndex == highlight.EntryIndex)
+                        {
+                            lod.Meshes[meshIndex].Draw(ref renderContext, _highlightMaterial, ref world);
+                        }
+                    }
                 }
             }
 
@@ -123,7 +139,7 @@ namespace FlaxEditor
                 }
 
                 world = Matrix.Identity;
-                collector.AddDrawCall(mesh, _highlightMaterial, ref world);
+                mesh.Draw(ref renderContext, _highlightMaterial, ref world);
             }
         }
 

@@ -218,7 +218,7 @@ namespace FlaxEditor.Windows.Assets
                 throw new ArgumentNullException(nameof(parent));
 
             // Link it
-            actor.SetParent(parent);
+            actor.Parent = parent;
 
             // Peek spawned node
             var actorNode = SceneGraphFactory.FindNode(actor.ID) as ActorNode ?? SceneGraphFactory.BuildActorNode(actor);

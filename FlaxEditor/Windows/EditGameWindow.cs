@@ -69,11 +69,24 @@ namespace FlaxEditor.Windows
                 _pinButton = new Button(Width - PinSize - PinMargin, PinMargin)
                 {
                     Size = new Vector2(PinSize),
-                    AnchorStyle = AnchorStyle.UpperRight,
+                    AnchorPreset = AnchorPresets.TopRight,
                     Parent = this
                 };
                 _pinButton.Clicked += () => IsPinned = !IsPinned;
                 UpdatePinButton();
+
+                Task.Begin += OnTaskBegin;
+            }
+
+            private void OnTaskBegin(RenderTask task, GPUContext context)
+            {
+                var sceneTask = (SceneRenderTask)task;
+
+                // Copy camera view parameters for the scene rendering
+                var view = sceneTask.View;
+                var viewport = new FlaxEngine.Viewport(Vector2.Zero, sceneTask.Buffers.Size);
+                view.CopyFrom(Camera, ref viewport);
+                sceneTask.View = view;
             }
 
             private void UpdatePinButton()
@@ -137,7 +150,7 @@ namespace FlaxEditor.Windows
                 NearPlane = 8.0f,
                 FarPlane = 20000.0f
             };
-            Viewport.Task.View.Flags = ViewFlags.DefaultEditor;
+            Viewport.Task.ViewFlags = ViewFlags.DefaultEditor;
 
             Editor.Scene.ActorRemoved += SceneOnActorRemoved;
         }
@@ -171,7 +184,7 @@ namespace FlaxEditor.Windows
                 {
                     Parent = Viewport,
                 };
-                _pilotWidget = new ViewportWidgetButton(string.Empty, Sprite.Invalid)
+                _pilotWidget = new ViewportWidgetButton(string.Empty, SpriteHandle.Invalid)
                 {
                     Parent = container,
                 };
@@ -200,10 +213,10 @@ namespace FlaxEditor.Windows
                 bool navigationDirty = (_pilotActor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation;
                 var action = new TransformObjectsAction
                 (
-                    new List<SceneGraphNode> { Editor.Scene.GetActorNode(_pilotActor) },
-                    new List<Transform> { _pilotStart },
-                    ref _pilotBounds,
-                    navigationDirty
+                 new List<SceneGraphNode> { Editor.Scene.GetActorNode(_pilotActor) },
+                 new List<Transform> { _pilotStart },
+                 ref _pilotBounds,
+                 navigationDirty
                 );
                 Editor.Undo.AddAction(action);
             }
@@ -375,7 +388,7 @@ namespace FlaxEditor.Windows
             // TODO: call camera preview update only on selection change, or state change
             UpdateCameraPreview();
 
-            if (Root.GetKeyDown(Keys.F12))
+            if (Root.GetKeyDown(KeyboardKeys.F12))
             {
                 Viewport.TakeScreenshot();
             }
@@ -444,7 +457,7 @@ namespace FlaxEditor.Windows
             if (bool.TryParse(node.GetAttribute("UseOrthographicProjection"), out value1))
                 Viewport.UseOrthographicProjection = value1;
             if (long.TryParse(node.GetAttribute("ViewFlags"), out value3))
-                Viewport.Task.View.Flags = (ViewFlags)value3;
+                Viewport.Task.ViewFlags = (ViewFlags)value3;
         }
 
         /// <inheritdoc />

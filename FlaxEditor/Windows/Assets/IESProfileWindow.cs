@@ -22,7 +22,7 @@ namespace FlaxEditor.Windows.Assets
             // IES Profile preview
             _preview = new IESProfilePreview
             {
-                DockStyle = DockStyle.Fill,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 Parent = this
             };
 

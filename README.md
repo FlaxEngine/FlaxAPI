@@ -18,7 +18,7 @@ This repository contains an open source public C# API as well as full source cod
 * Nested Prefabs
 * Terrain and foliage
 * Top Performance
-* Xbox One, Windows, Linux and UWP support
+* Xbox One, Windows, PlayStation 4, Linux and UWP support
 * Global Illumination (lightmaps baking on GPU)
 * Model LODs and content streaming
 * Rich & Extensible editor
@@ -48,6 +48,7 @@ This extension is available to download [here](https://marketplace.visualstudio.
 # Screenshots
 
 ![rendering](https://flaxengine.com/wp-content/images/flax-pic-1.png "Rendering")
+![performance](https://flaxengine.com/wp-content/images/flax-pic-3.png "High Performance")
 ![pbr-rendering](https://flaxengine.com/wp-content/images/flax-pic-2.png "PBR Rendering")
 ![terrain](https://flaxengine.com/wp-content/images/visuals/terrain.jpg "Terrain")
 ![gi](https://flaxengine.com/wp-content/images/visuals/gi.jpg "Global Illumination")

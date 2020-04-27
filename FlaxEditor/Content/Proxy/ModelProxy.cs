@@ -37,9 +37,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0xe67e22);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Model;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(Model);
 
         /// <inheritdoc />
@@ -47,17 +44,18 @@ namespace FlaxEditor.Content
         {
             if (_preview == null)
             {
-                _preview = new ModelPreview(false);
-                _preview.RenderOnlyWithWindow = false;
+                _preview = new ModelPreview(false)
+                {
+                    RenderOnlyWithWindow = false,
+                    Offsets = Margin.Zero,
+                    AnchorPreset = AnchorPresets.StretchAll,
+                };
                 _preview.Task.Enabled = false;
 
                 var eyeAdaptation = _preview.PostFxVolume.EyeAdaptation;
                 eyeAdaptation.Mode = EyeAdaptationMode.None;
-                eyeAdaptation.OverrideFlags |= EyeAdaptationSettings.Override.Mode;
+                eyeAdaptation.OverrideFlags |= EyeAdaptationSettingsOverride.Mode;
                 _preview.PostFxVolume.EyeAdaptation = eyeAdaptation;
-
-                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-                _preview.SyncBackbufferSize();
             }
 
             // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
@@ -79,8 +77,9 @@ namespace FlaxEditor.Content
         {
             _preview.Model = (Model)request.Asset;
             _preview.Parent = guiRoot;
+                _preview.SyncBackbufferSize();
 
-            _preview.Task.OnRender(context);
+            _preview.Task.OnDraw();
         }
 
         /// <inheritdoc />

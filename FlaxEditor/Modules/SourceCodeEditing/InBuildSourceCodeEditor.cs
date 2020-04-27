@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
-using FlaxEditor.Scripting;
 
 namespace FlaxEditor.Modules.SourceCodeEditing
 {
@@ -14,43 +13,43 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         /// <summary>
         /// The type of the editor.
         /// </summary>
-        public readonly ScriptsBuilder.InBuildEditorTypes Type;
+        public readonly CodeEditorTypes Type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InBuildSourceCodeEditor"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
-        public InBuildSourceCodeEditor(ScriptsBuilder.InBuildEditorTypes type)
+        public InBuildSourceCodeEditor(CodeEditorTypes type)
         {
             Type = type;
 
             switch (type)
             {
-            case ScriptsBuilder.InBuildEditorTypes.Custom:
+            case CodeEditorTypes.Custom:
                 Name = "Custom";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.SystemDefault:
+            case CodeEditorTypes.SystemDefault:
                 Name = "System Default";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.VS2008:
+            case CodeEditorTypes.VS2008:
                 Name = "Visual Studio 2008";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.VS2010:
+            case CodeEditorTypes.VS2010:
                 Name = "Visual Studio 2010";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.VS2012:
+            case CodeEditorTypes.VS2012:
                 Name = "Visual Studio 2012";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.VS2013:
+            case CodeEditorTypes.VS2013:
                 Name = "Visual Studio 2013";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.VS2015:
+            case CodeEditorTypes.VS2015:
                 Name = "Visual Studio 2015";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.VS2017:
+            case CodeEditorTypes.VS2017:
                 Name = "Visual Studio 2017";
                 break;
-            case ScriptsBuilder.InBuildEditorTypes.VS2019:
+            case CodeEditorTypes.VS2019:
                 Name = "Visual Studio 2019";
                 break;
             default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -63,13 +62,13 @@ namespace FlaxEditor.Modules.SourceCodeEditing
         /// <inheritdoc />
         public void OpenSolution()
         {
-            ScriptsBuilder.Internal_OpenSolution(Type);
+            CodeEditingManager.OpenSolution(Type);
         }
 
         /// <inheritdoc />
         public void OpenFile(string path, int line)
         {
-            ScriptsBuilder.Internal_OpenFile(Type, path, line);
+            CodeEditingManager.OpenFile(Type, path, line);
         }
 
         /// <inheritdoc />

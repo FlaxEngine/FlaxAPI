@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -62,7 +61,7 @@ namespace FlaxEditor.Windows.Assets
 
                 // Get data from the asset
                 Skeleton = Asset.Skeleton;
-                NodesMask = Asset.GetNodesMask();
+                NodesMask = Asset.NodesMask;
             }
 
             public void OnClean()
@@ -106,6 +105,8 @@ namespace FlaxEditor.Windows.Assets
                     var mask = proxy.NodesMask;
                     if (mask == null || mask.Length != nodes.Length)
                     {
+                        if (mask != null)
+                            Debug.Write(LogType.Error, $"Invalid size nodes mask (got {mask.Length} but there are {nodes.Length} nodes)");
                         mask = proxy.NodesMask = new bool[nodes.Length];
                         for (int i = 0; i < nodes.Length; i++)
                             mask[i] = true;
@@ -183,12 +184,13 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(editor.Icons.Save32, Save).LinkTooltip("Save asset to the file");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/skeleton-mask.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/animation/skeleton-mask.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.7f,
                 Parent = this
             };
@@ -216,26 +218,33 @@ namespace FlaxEditor.Windows.Assets
                 return;
 
             _asset.Skeleton = _properties.Skeleton;
-            var count = _preview.NodesMask.Count(x => x);
-            var nodes = new string[count];
-            var i = 0;
-            for (int nodeIndex = 0; nodeIndex < _preview.NodesMask.Length; nodeIndex++)
+            int count = 0;
+            var nodesMask = _preview.NodesMask;
+            if (nodesMask != null)
             {
-                if (_preview.NodesMask[nodeIndex])
+                for (int nodeIndex = 0; nodeIndex < nodesMask.Length; nodeIndex++)
                 {
-                    nodes[i] = _properties.Skeleton.Nodes[nodeIndex].Name;
-                    i++;
+                    if (nodesMask[nodeIndex])
+                        count++;
+                }
+            }
+            var nodes = new string[count];
+            if (nodesMask != null)
+            {
+                var i = 0;
+                for (int nodeIndex = 0; nodeIndex < nodesMask.Length; nodeIndex++)
+                {
+                    if (nodesMask[nodeIndex])
+                        nodes[i++] = _properties.Skeleton.Nodes[nodeIndex].Name;
                 }
             }
             _asset.MaskedNodes = nodes;
             if (_asset.Save())
             {
-                // Error
-                Editor.LogError("Failed to save asset " + _item);
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 
-            // Update
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }

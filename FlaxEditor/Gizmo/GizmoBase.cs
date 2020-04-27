@@ -72,8 +72,8 @@ namespace FlaxEditor.Gizmo
         /// <summary>
         /// Draws the gizmo.
         /// </summary>
-        /// <param name="collector">The draw calls collector.</param>
-        public virtual void Draw(DrawCallsCollector collector)
+        /// <param name="renderContext">The rendering context.</param>
+        public virtual void Draw(ref RenderContext renderContext)
         {
         }
     }

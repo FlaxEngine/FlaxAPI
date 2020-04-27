@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.Dialogs;
-using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -75,7 +74,7 @@ namespace FlaxEditor.Windows
             /// The configuration mode.
             /// </summary>
             [EditorOrder(40), Tooltip("Plugin code configuration mode.")]
-            public BuildMode Configuration = BuildMode.Release;
+            public ScriptsBuilder.BuildMode Configuration = ScriptsBuilder.BuildMode.Release;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ExportOptions"/> class.
@@ -103,7 +102,7 @@ namespace FlaxEditor.Windows
 
             if (!PluginUtils.GetPluginToExport(out var gamePlugin, out var editorPlugin, out var errorMsg))
             {
-                MessageBox.Show(parentWin, errorMsg, "Cannot export plugin", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                MessageBox.Show(parentWin, errorMsg, "Cannot export plugin", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -122,48 +121,54 @@ namespace FlaxEditor.Windows
             _options = new ExportOptions(gamePlugin, editorPlugin);
 
             // Header and help description
-            var headerLabel = new Label(0, 0, TotalWidth, 40)
+            var headerLabel = new Label
             {
                 Text = "Export plugin " + _options.Description.Name,
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(0, 0, 0, 40),
                 Parent = this,
                 Font = new FontReference(Style.Current.FontTitle)
             };
-            var infoLabel = new Label(10, headerLabel.Bottom + 5, TotalWidth - 20, 40)
+            var infoLabel = new Label
             {
                 Text = "Specify options for exporting plugin. To learn more about it see the online documentation.",
                 HorizontalAlignment = TextAlignment.Near,
                 Margin = new Margin(7),
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(10, -20, 45, 70),
                 Parent = this
             };
 
             // Buttons
             const float ButtonsWidth = 60;
+            const float ButtonsHeight = 24;
             const float ButtonsMargin = 8;
-            var exportButton = new Button(TotalWidth - ButtonsMargin - ButtonsWidth, infoLabel.Bottom - 30, ButtonsWidth)
+            var exportButton = new Button
             {
                 Text = "Export",
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.BottomRight,
+                Offsets = new Margin(-ButtonsWidth - ButtonsMargin, ButtonsWidth, -ButtonsHeight - ButtonsMargin, ButtonsHeight),
                 Parent = this
             };
             exportButton.Clicked += OnExport;
-            var cancelButton = new Button(exportButton.Left - ButtonsMargin - ButtonsWidth, exportButton.Y, ButtonsWidth)
+            var cancelButton = new Button
             {
                 Text = "Cancel",
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.BottomRight,
+                Offsets = new Margin(-ButtonsWidth - ButtonsMargin - ButtonsWidth - ButtonsMargin, ButtonsWidth, -ButtonsHeight - ButtonsMargin, ButtonsHeight),
                 Parent = this
             };
             cancelButton.Clicked += OnCancel;
 
             // Settings editor
             var editor = new CustomEditorPresenter(null);
-            editor.Panel.DockStyle = DockStyle.Fill;
+            editor.Panel.AnchorPreset = AnchorPresets.StretchAll;
+            editor.Panel.Offsets = new Margin(2, 2, infoLabel.Bottom + 2, ButtonsHeight + ButtonsMargin + ButtonsMargin);
             editor.Panel.Parent = this;
 
             editor.Select(_options);
 
-            Size = new Vector2(TotalWidth, 300);
+            Size = _dialogSize = new Vector2(TotalWidth, 300);
         }
 
         private void OnExport()
@@ -173,12 +178,12 @@ namespace FlaxEditor.Windows
             var errorMsg = DoExport(ref _options);
             if (errorMsg != null)
             {
-                MessageBox.Show("Cannot export plugin. " + errorMsg, "Failed to export plugin.", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                MessageBox.Show("Cannot export plugin. " + errorMsg, "Failed to export plugin.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Show the output folder
-            Platform.StartProcess(_options.OutputPath);
+            Platform.StartProcess(_options.OutputPath, null, null);
 
             Close(DialogResult.OK);
         }
@@ -221,7 +226,7 @@ namespace FlaxEditor.Windows
                 Remove(files, "Game.Editor");
                 Remove(files, assemblyName);
                 Remove(files, assemblyName + ".Editor");
-                
+
                 for (int i = 0; i < files.Count; i++)
                 {
                     Editor.Log("Removing " + files[i]);
@@ -270,7 +275,7 @@ namespace FlaxEditor.Windows
                 RemoveStartsWith(files, "Newtonsoft.Json");
 
                 // Don't copy pdb files if release mode is checked
-                if (options.Configuration == BuildMode.Release)
+                if (options.Configuration == ScriptsBuilder.BuildMode.Release)
                 {
                     RemoveEndsWith(files, ".pdb");
                 }

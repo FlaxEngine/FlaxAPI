@@ -58,7 +58,7 @@ namespace FlaxEditor.GUI
             };
             Tree = new Tree.Tree
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 IsScrollable = true,
                 Parent = panel1
             };
@@ -97,9 +97,9 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
-            if (key == Keys.Escape)
+            if (key == KeyboardKeys.Escape)
             {
                 Hide();
                 return true;

@@ -9,14 +9,12 @@ using System.Text;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.GUI.Dialogs;
-using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
 using FlaxEditor.Windows.Assets;
 using FlaxEditor.Windows.Profiler;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 using FlaxEngine.GUI;
-using FlaxEngine.Utilities;
 using DockPanel = FlaxEditor.GUI.Docking.DockPanel;
 using DockState = FlaxEditor.GUI.Docking.DockState;
 using FloatWindowDockPanel = FlaxEditor.GUI.Docking.FloatWindowDockPanel;
@@ -159,7 +157,7 @@ namespace FlaxEditor.Modules
             if (mainWindow)
             {
                 var projectPath = Globals.ProjectFolder.Replace('/', '\\');
-                var platformBit = Platform.Is64bitApp ? "64" : "32";
+                var platformBit = Platform.Is64BitApp ? "64" : "32";
                 var title = string.Format("Flax Editor - \'{0}\' ({1}-bit)", projectPath, platformBit);
                 mainWindow.Title = title;
             }
@@ -521,7 +519,7 @@ namespace FlaxEditor.Modules
                 };
                 cancelButton.Clicked += OnCancel;
 
-                Size = okButton.BottomRight + new Vector2(8);
+                _dialogSize = okButton.BottomRight + new Vector2(8);
             }
 
             private void OnOk()
@@ -550,14 +548,14 @@ namespace FlaxEditor.Modules
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
                 switch (key)
                 {
-                case Keys.Escape:
+                case KeyboardKeys.Escape:
                     OnCancel();
                     return true;
-                case Keys.Return:
+                case KeyboardKeys.Return:
                     OnOk();
                     return true;
                 }
@@ -705,7 +703,7 @@ namespace FlaxEditor.Modules
                 settings.HasSizingFrame = false;
             }
 
-            MainWindow = Window.Create(settings);
+            MainWindow = Platform.CreateWindow(ref settings);
 
             if (MainWindow == null)
             {
@@ -735,14 +733,14 @@ namespace FlaxEditor.Modules
             PluginsWin = new PluginsWindow(Editor);
 
             // Bind events
-            SceneManager.SceneSaveError += OnSceneSaveError;
-            SceneManager.SceneLoaded += OnSceneLoaded;
-            SceneManager.SceneLoadError += OnSceneLoadError;
-            SceneManager.SceneLoading += OnSceneLoading;
-            SceneManager.SceneSaved += OnSceneSaved;
-            SceneManager.SceneSaving += OnSceneSaving;
-            SceneManager.SceneUnloaded += OnSceneUnloaded;
-            SceneManager.SceneUnloading += OnSceneUnloading;
+            Level.SceneSaveError += OnSceneSaveError;
+            Level.SceneLoaded += OnSceneLoaded;
+            Level.SceneLoadError += OnSceneLoadError;
+            Level.SceneLoading += OnSceneLoading;
+            Level.SceneSaved += OnSceneSaved;
+            Level.SceneSaving += OnSceneSaving;
+            Level.SceneUnloaded += OnSceneUnloaded;
+            Level.SceneUnloading += OnSceneUnloading;
             ScriptsBuilder.ScriptsReloadEnd += OnScriptsReloadEnd;
         }
 
@@ -853,7 +851,7 @@ namespace FlaxEditor.Modules
             else
             {
                 // Close editor
-                Platform.Exit();
+                Engine.RequestExit();
             }
         }
 
@@ -903,7 +901,7 @@ namespace FlaxEditor.Modules
             {
                 Editor.Log("Closing Editor after project icon screenshot");
                 EditWin.Viewport.SaveProjectIconEnd();
-                Platform.Exit();
+                Engine.RequestExit();
             }
 
             // Update editor windows
@@ -919,14 +917,14 @@ namespace FlaxEditor.Modules
         public override void OnExit()
         {
             // Unbind events
-            SceneManager.SceneSaveError -= OnSceneSaveError;
-            SceneManager.SceneLoaded -= OnSceneLoaded;
-            SceneManager.SceneLoadError -= OnSceneLoadError;
-            SceneManager.SceneLoading -= OnSceneLoading;
-            SceneManager.SceneSaved -= OnSceneSaved;
-            SceneManager.SceneSaving -= OnSceneSaving;
-            SceneManager.SceneUnloaded -= OnSceneUnloaded;
-            SceneManager.SceneUnloading -= OnSceneUnloading;
+            Level.SceneSaveError -= OnSceneSaveError;
+            Level.SceneLoaded -= OnSceneLoaded;
+            Level.SceneLoadError -= OnSceneLoadError;
+            Level.SceneLoading -= OnSceneLoading;
+            Level.SceneSaved -= OnSceneSaved;
+            Level.SceneSaving -= OnSceneSaving;
+            Level.SceneUnloaded -= OnSceneUnloaded;
+            Level.SceneUnloading -= OnSceneUnloading;
             ScriptsBuilder.ScriptsReloadEnd -= OnScriptsReloadEnd;
 
             // Close main window
@@ -934,10 +932,10 @@ namespace FlaxEditor.Modules
             MainWindow = null;
 
             // Close all windows
-            var windows = Window.Windows.ToArray();
+            var windows = Windows.ToArray();
             for (int i = 0; i < windows.Length; i++)
             {
-                if (windows[i] && windows[i].IsVisible)
+                if (windows[i] != null)
                     windows[i].Close(ClosingReason.EngineExit);
             }
         }

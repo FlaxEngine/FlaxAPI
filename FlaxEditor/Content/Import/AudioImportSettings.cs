@@ -182,10 +182,8 @@ namespace FlaxEditor.Content.Import
 
         #region Internal Calls
 
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetAudioImportOptions(string path, out AudioImportSettings.InternalOptions result);
-#endif
 
         #endregion
     }

@@ -69,8 +69,8 @@ namespace FlaxEditor.Viewport
 
             // Prepare rendering task
             Task.ActorsSource = ActorsSources.CustomActors;
-            Task.View.Flags = ViewFlags.DefaultEditor & ~ViewFlags.EditorSprites;
-            Task.End += RenderTaskOnEnd;
+            Task.ViewFlags = ViewFlags.DefaultEditor & ~ViewFlags.EditorSprites;
+            Task.PostRender += OnPostRender;
 
             // Create post effects
             SelectionOutline = FlaxEngine.Object.New<SelectionOutline>();
@@ -108,7 +108,7 @@ namespace FlaxEditor.Viewport
             };
             enableScaleSnapping.Toggled += OnScaleSnappingToggle;
             var scaleSnappingCM = new ContextMenu();
-            _scaleSnapping = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), Sprite.Invalid, scaleSnappingCM);
+            _scaleSnapping = new ViewportWidgetButton(TransformGizmo.ScaleSnapValue.ToString(), SpriteHandle.Invalid, scaleSnappingCM);
             _scaleSnapping.TooltipText = "Scale snapping values";
             for (int i = 0; i < EditorViewportScaleSnapValues.Length; i++)
             {
@@ -131,7 +131,7 @@ namespace FlaxEditor.Viewport
             };
             enableRotateSnapping.Toggled += OnRotateSnappingToggle;
             var rotateSnappingCM = new ContextMenu();
-            _rotateSnapping = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), Sprite.Invalid, rotateSnappingCM);
+            _rotateSnapping = new ViewportWidgetButton(TransformGizmo.RotationSnapValue.ToString(), SpriteHandle.Invalid, rotateSnappingCM);
             _rotateSnapping.TooltipText = "Rotation snapping values";
             for (int i = 0; i < EditorViewportRotateSnapValues.Length; i++)
             {
@@ -154,7 +154,7 @@ namespace FlaxEditor.Viewport
             };
             enableTranslateSnapping.Toggled += OnTranslateSnappingToggle;
             var translateSnappingCM = new ContextMenu();
-            _translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), Sprite.Invalid, translateSnappingCM);
+            _translateSnappng = new ViewportWidgetButton(TransformGizmo.TranslationSnapValue.ToString(), SpriteHandle.Invalid, translateSnappingCM);
             _translateSnappng.TooltipText = "Position snapping values";
             for (int i = 0; i < EditorViewportTranslateSnapValues.Length; i++)
             {
@@ -213,13 +213,15 @@ namespace FlaxEditor.Viewport
             }
         }
 
-        private void RenderTaskOnEnd(SceneRenderTask task, GPUContext context)
+        private void OnPostRender(GPUContext context, RenderContext renderContext)
         {
-            // Render editor primitives, gizmo and debug shapes in debug view modes
-            if (task.View.Mode != ViewMode.Default)
+            if (renderContext.View.Mode != ViewMode.Default)
             {
+                var task = renderContext.Task;
+
+                // Render editor primitives, gizmo and debug shapes in debug view modes
                 // Note: can use Output buffer as both input and output because EditorPrimitives is using a intermediate buffers
-                EditorPrimitives.Render(context, task, task.Output, task.Output);
+                EditorPrimitives.Render(context, ref renderContext, task.Output, task.Output);
             }
         }
 
@@ -259,10 +261,10 @@ namespace FlaxEditor.Viewport
         public Vector2 MouseDelta => _mouseDeltaLeft * 1000;
 
         /// <inheritdoc />
-        public bool UseSnapping => Root.GetKey(Keys.Control);
+        public bool UseSnapping => Root.GetKey(KeyboardKeys.Control);
 
         /// <inheritdoc />
-        public bool UseDuplicate => Root.GetKey(Keys.Shift);
+        public bool UseDuplicate => Root.GetKey(KeyboardKeys.Shift);
 
         /// <inheritdoc />
         public Undo Undo { get; }
@@ -350,7 +352,7 @@ namespace FlaxEditor.Viewport
                     var v = (float)b.Tag;
                     b.Icon = Mathf.Abs(TransformGizmo.ScaleSnapValue - v) < 0.001f
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -387,7 +389,7 @@ namespace FlaxEditor.Viewport
                     var v = (float)b.Tag;
                     b.Icon = Mathf.Abs(TransformGizmo.RotationSnapValue - v) < 0.001f
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -423,7 +425,7 @@ namespace FlaxEditor.Viewport
                     var v = (float)b.Tag;
                     b.Icon = Mathf.Abs(TransformGizmo.TranslationSnapValue - v) < 0.001f
                              ? Style.Current.CheckBoxTick
-                             : Sprite.Invalid;
+                             : SpriteHandle.Invalid;
                 }
             }
         }
@@ -503,7 +505,8 @@ namespace FlaxEditor.Viewport
 
             // Get mouse ray and try to hit any object
             var ray = MouseRay;
-            var hit = _window.Graph.Root.RayCast(ref ray, out _, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+            var view = new Ray(ViewPosition, ViewDirection);
+            var hit = _window.Graph.Root.RayCast(ref ray, ref view, out _, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
 
             // Update selection
             if (hit != null)
@@ -532,7 +535,7 @@ namespace FlaxEditor.Viewport
                     }
                 }
 
-                bool addRemove = Root.GetKey(Keys.Control);
+                bool addRemove = Root.GetKey(KeyboardKeys.Control);
                 bool isSelected = _window.Selection.Contains(hit);
 
                 if (addRemove)
@@ -572,18 +575,19 @@ namespace FlaxEditor.Viewport
         {
             if (contentItem is BinaryAssetItem binaryAssetItem)
             {
-                if (binaryAssetItem.Type == typeof(ParticleSystem))
+                if (binaryAssetItem.IsOfType<ParticleSystem>())
+                    return true;
+                if (binaryAssetItem.IsOfType<MaterialBase>())
+                    return true;
+                if (binaryAssetItem.IsOfType<ModelBase>())
+                    return true;
+                if (binaryAssetItem.IsOfType<AudioClip>())
+                    return true;
+                if (binaryAssetItem.IsOfType<Prefab>())
                     return true;
             }
 
-            switch (contentItem.ItemDomain)
-            {
-            case ContentDomain.Material:
-            case ContentDomain.Model:
-            case ContentDomain.Audio:
-            case ContentDomain.Prefab: return true;
-            default: return false;
-            }
+            return false;
         }
 
         private static bool ValidateDragActorType(Type actorType)
@@ -622,18 +626,16 @@ namespace FlaxEditor.Viewport
             {
                 float snapValue = TransformGizmo.TranslationSnapValue;
                 location = new Vector3(
-                    (int)(location.X / snapValue) * snapValue,
-                    (int)(location.Y / snapValue) * snapValue,
-                    (int)(location.Z / snapValue) * snapValue);
+                                       (int)(location.X / snapValue) * snapValue,
+                                       (int)(location.Y / snapValue) * snapValue,
+                                       (int)(location.Z / snapValue) * snapValue);
             }
 
             return location;
         }
 
-        private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector3 hitLocation)
+        private void Spawn(AssetItem item, SceneGraphNode hit, ref Vector2 location, ref Vector3 hitLocation)
         {
-            // TODO: refactor this and dont use ContentDomain but only asset Type for matching
-
             if (item is BinaryAssetItem binaryAssetItem)
             {
                 if (binaryAssetItem.Type == typeof(ParticleSystem))
@@ -644,33 +646,24 @@ namespace FlaxEditor.Viewport
                     actor.ParticleSystem = particleSystem;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Spawn(actor);
-
                     return;
                 }
-            }
-
-            switch (item.ItemDomain)
-            {
-            case ContentDomain.Material:
-            {
-                if (hit is StaticModelNode.EntryNode meshNode)
+                if (typeof(MaterialBase).IsAssignableFrom(binaryAssetItem.Type))
                 {
-                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                    using (new UndoBlock(Undo, meshNode.Model, "Change material"))
-                        meshNode.Entry.Material = material;
+                    if (hit is StaticModelNode staticModelNode)
+                    {
+                        var staticModel = (StaticModel)staticModelNode.Actor;
+                        var ray = ConvertMouseToRay(ref location);
+                        if (staticModel.IntersectsEntry(ref ray, out _, out _, out var entryIndex))
+                        {
+                            var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
+                            using (new UndoBlock(Undo, staticModel, "Change material"))
+                                staticModel.SetMaterial(entryIndex, material);
+                        }
+                    }
+                    return;
                 }
-                else if (hit is BoxBrushNode.SideLinkNode brushSurfaceNode)
-                {
-                    var material = FlaxEngine.Content.LoadAsync<MaterialBase>(item.ID);
-                    using (new UndoBlock(Undo, brushSurfaceNode.Brush, "Change material"))
-                        brushSurfaceNode.Surface.Material = material;
-                }
-
-                break;
-            }
-            case ContentDomain.Model:
-            {
-                if (item.TypeName == typeof(SkinnedModel).FullName)
+                if (typeof(SkinnedModel).IsAssignableFrom(binaryAssetItem.Type))
                 {
                     var model = FlaxEngine.Content.LoadAsync<SkinnedModel>(item.ID);
                     var actor = AnimatedModel.New();
@@ -678,8 +671,9 @@ namespace FlaxEditor.Viewport
                     actor.SkinnedModel = model;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Spawn(actor);
+                    return;
                 }
-                else
+                if (typeof(Model).IsAssignableFrom(binaryAssetItem.Type))
                 {
                     var model = FlaxEngine.Content.LoadAsync<Model>(item.ID);
                     var actor = StaticModel.New();
@@ -687,32 +681,27 @@ namespace FlaxEditor.Viewport
                     actor.Model = model;
                     actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
                     Spawn(actor);
+                    return;
                 }
-
-                break;
-            }
-            case ContentDomain.Audio:
-            {
-                var clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
-                var actor = AudioSource.New();
-                actor.Name = item.ShortName;
-                actor.Clip = clip;
-                actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
-                Spawn(actor);
-
-                break;
-            }
-            case ContentDomain.Prefab:
-            {
-                var prefab = FlaxEngine.Content.LoadAsync<Prefab>(item.ID);
-                var actor = PrefabManager.SpawnPrefab(prefab, null);
-                actor.Name = item.ShortName;
-                actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
-                Spawn(actor);
-
-                break;
-            }
-            default: throw new ArgumentOutOfRangeException();
+                if (typeof(AudioClip).IsAssignableFrom(binaryAssetItem.Type))
+                {
+                    var clip = FlaxEngine.Content.LoadAsync<AudioClip>(item.ID);
+                    var actor = AudioSource.New();
+                    actor.Name = item.ShortName;
+                    actor.Clip = clip;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Spawn(actor);
+                    return;
+                }
+                if (typeof(Prefab).IsAssignableFrom(binaryAssetItem.Type))
+                {
+                    var prefab = FlaxEngine.Content.LoadAsync<Prefab>(item.ID);
+                    var actor = PrefabManager.SpawnPrefab(prefab, null);
+                    actor.Name = item.ShortName;
+                    actor.Position = PostProcessSpawnedActorLocation(actor, ref hitLocation);
+                    Spawn(actor);
+                    return;
+                }
             }
         }
 
@@ -748,7 +737,8 @@ namespace FlaxEditor.Viewport
             {
                 // Get mouse ray and try to hit any object
                 var ray = ConvertMouseToRay(ref location);
-                hit = _window.Graph.Root.RayCast(ref ray, out var closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
+                var view = new Ray(ViewPosition, ViewDirection);
+                hit = _window.Graph.Root.RayCast(ref ray, ref view, out var closest, SceneGraphNode.RayCastData.FlagTypes.SkipColliders);
                 if (hit != null)
                 {
                     // Use hit location
@@ -770,7 +760,7 @@ namespace FlaxEditor.Viewport
                 for (int i = 0; i < _dragAssets.Objects.Count; i++)
                 {
                     var item = _dragAssets.Objects[i];
-                    Spawn(item, hit, ref hitLocation);
+                    Spawn(item, hit, ref location, ref hitLocation);
                 }
             }
             // Drag actor type
@@ -799,7 +789,7 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public void DrawEditorPrimitives(GPUContext context, SceneRenderTask task, GPUTexture target, GPUTexture targetDepth, DrawCallsCollector collector)
+        public void DrawEditorPrimitives(GPUContext context, ref RenderContext renderContext, GPUTexture target, GPUTexture targetDepth)
         {
         }
     }

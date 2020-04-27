@@ -224,7 +224,7 @@ namespace FlaxEditor.GUI
             // Create second panel (for items arrangement)
             ItemsPanel = new VerticalPanel
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 IsScrollable = true,
                 Parent = panel1
             };
@@ -308,9 +308,9 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
-            if (key == Keys.Escape)
+            if (key == KeyboardKeys.Escape)
             {
                 Hide();
                 return true;

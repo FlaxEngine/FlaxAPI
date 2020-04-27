@@ -34,9 +34,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x2D74B2);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Font;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(FontAsset);
 
         /// <inheritdoc />
@@ -46,7 +43,8 @@ namespace FlaxEditor.Content
             guiRoot.AddChild(new Label
             {
                 Text = asset.FamilyName,
-                Size = guiRoot.Size,
+                Offsets = Margin.Zero,
+                AnchorPreset = AnchorPresets.StretchAll,
                 Wrapping = TextWrapping.WrapWords
             });
         }

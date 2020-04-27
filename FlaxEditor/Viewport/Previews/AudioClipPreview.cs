@@ -37,7 +37,7 @@ namespace FlaxEditor.Viewport.Previews
         private readonly object _locker = new object();
         private AudioClip _asset;
         private float[] _pcmData;
-        private AudioClip.AudioDataInfo _pcmInfo;
+        private AudioDataInfo _pcmInfo;
 
         /// <summary>
         /// Gets or sets the clip to preview.
@@ -206,7 +206,7 @@ namespace FlaxEditor.Viewport.Previews
             }
 
             float[] data;
-            AudioClip.AudioDataInfo dataInfo;
+            AudioDataInfo dataInfo;
             try
             {
                 asset.ExtractDataFloat(out data, out dataInfo);

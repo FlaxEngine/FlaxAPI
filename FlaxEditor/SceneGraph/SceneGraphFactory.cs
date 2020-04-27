@@ -49,7 +49,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(AudioSource), typeof(AudioSourceNode));
             CustomNodesTypes.Add(typeof(BoneSocket), typeof(BoneSocketNode));
             CustomNodesTypes.Add(typeof(Decal), typeof(DecalNode));
-            CustomNodesTypes.Add(typeof(BoxCollider), typeof(ColliderNode));
+            CustomNodesTypes.Add(typeof(BoxCollider), typeof(BoxColliderNode));
             CustomNodesTypes.Add(typeof(SphereCollider), typeof(ColliderNode));
             CustomNodesTypes.Add(typeof(CapsuleCollider), typeof(ColliderNode));
             CustomNodesTypes.Add(typeof(MeshCollider), typeof(ColliderNode));
@@ -59,6 +59,7 @@ namespace FlaxEditor.SceneGraph
             CustomNodesTypes.Add(typeof(Terrain), typeof(TerrainNode));
             CustomNodesTypes.Add(typeof(Foliage), typeof(FoliageNode));
             CustomNodesTypes.Add(typeof(NavMeshBoundsVolume), typeof(NavMeshBoundsVolumeNode));
+            CustomNodesTypes.Add(typeof(BoxVolume), typeof(BoxVolumeNode));
             CustomNodesTypes.Add(typeof(NavLink), typeof(NavLinkNode));
             CustomNodesTypes.Add(typeof(ParticleEffect), typeof(ParticleEffectNode));
             CustomNodesTypes.Add(typeof(SceneAnimationPlayer), typeof(SceneAnimationPlayerNode));

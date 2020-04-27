@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
-using FlaxEditor.Scripting;
 using FlaxEditor.States;
 using FlaxEditor.Windows;
 using FlaxEngine;
@@ -209,7 +208,7 @@ namespace FlaxEditor.Modules
                 if (_isPlayModeRequested)
                 {
                     // Check if editor has been compiled and scripting reloaded (there is no pending reload action)
-                    if (ScriptsBuilder.IsReady && !SceneManager.IsAnyAsyncActionPending)
+                    if (ScriptsBuilder.IsReady && !Level.IsAnyActionPending)
                     {
                         // Clear flag
                         _isPlayModeRequested = false;

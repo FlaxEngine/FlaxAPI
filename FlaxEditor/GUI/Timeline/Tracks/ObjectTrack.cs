@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
@@ -46,14 +47,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             // Add track button
             const float buttonSize = 14;
-            _addButton = new Button(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            _addButton = new Button
             {
                 Text = "+",
                 TooltipText = "Add sub-tracks",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + _muteCheckbox.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             _addButton.Clicked += OnAddButtonClicked;
         }
@@ -184,7 +186,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                     if (j != 0)
                         sb.Append(", ");
                     var p = parameters[j];
-                    if (!BasicTypesNames.TryGetValue(p.ParameterType, out var pName))
+                    if (!CustomEditorsUtil.InBuildTypeNames.TryGetValue(p.ParameterType, out var pName))
                         pName = p.ParameterType.Name;
                     sb.Append(pName);
                     sb.Append(' ');
@@ -228,7 +230,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <summary>
         /// Adds the property or field track to this object track.
         /// </summary>
-        /// <param name="script">The member (property or a field).</param>
+        /// <param name="m">The member (property or a field).</param>
         /// <returns>The created track or null if failed.</returns>
         public MemberTrack AddPropertyTrack(MemberInfo m)
         {
@@ -333,7 +335,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             if (BasicTypesTrackArchetypes.TryGetValue(valueType, out archetype))
             {
                 // Basic type
-                if (!BasicTypesNames.TryGetValue(valueType, out name))
+                if (!CustomEditorsUtil.InBuildTypeNames.TryGetValue(valueType, out name))
                     name = valueType.Name;
             }
             else if (valueType.IsEnum)
@@ -384,25 +386,6 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             typeof(Action), typeof(Action<>), typeof(Action<,>),
             typeof(Func<>), typeof(Func<,>), typeof(Func<,,>),
-        };
-
-        /// <summary>
-        /// Maps the basic type to it's UI name.
-        /// </summary>
-        protected static readonly Dictionary<Type, string> BasicTypesNames = new Dictionary<Type, string>
-        {
-            { typeof(bool), "bool" },
-            { typeof(byte), "byte" },
-            { typeof(sbyte), "sbyte" },
-            { typeof(char), "char" },
-            { typeof(short), "short" },
-            { typeof(ushort), "ushort" },
-            { typeof(int), "int" },
-            { typeof(uint), "uint" },
-            { typeof(long), "ulong" },
-            { typeof(float), "float" },
-            { typeof(double), "double" },
-            { typeof(string), "string" },
         };
 
         /// <summary>

@@ -105,7 +105,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (AmbientOcclusionSettings)Values[0];
-                settings.OverrideFlags = (AmbientOcclusionSettings.Override)value;
+                settings.OverrideFlags = (AmbientOcclusionSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -124,7 +124,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (BloomSettings)Values[0];
-                settings.OverrideFlags = (BloomSettings.Override)value;
+                settings.OverrideFlags = (BloomSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -143,7 +143,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (ToneMappingSettings)Values[0];
-                settings.OverrideFlags = (ToneMappingSettings.Override)value;
+                settings.OverrideFlags = (ToneMappingSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -162,7 +162,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (ColorGradingSettings)Values[0];
-                settings.OverrideFlags = (ColorGradingSettings.Override)value;
+                settings.OverrideFlags = (ColorGradingSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -181,7 +181,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (EyeAdaptationSettings)Values[0];
-                settings.OverrideFlags = (EyeAdaptationSettings.Override)value;
+                settings.OverrideFlags = (EyeAdaptationSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -200,7 +200,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (CameraArtifactsSettings)Values[0];
-                settings.OverrideFlags = (CameraArtifactsSettings.Override)value;
+                settings.OverrideFlags = (CameraArtifactsSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -219,7 +219,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (LensFlaresSettings)Values[0];
-                settings.OverrideFlags = (LensFlaresSettings.Override)value;
+                settings.OverrideFlags = (LensFlaresSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -238,7 +238,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (DepthOfFieldSettings)Values[0];
-                settings.OverrideFlags = (DepthOfFieldSettings.Override)value;
+                settings.OverrideFlags = (DepthOfFieldSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -257,7 +257,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (MotionBlurSettings)Values[0];
-                settings.OverrideFlags = (MotionBlurSettings.Override)value;
+                settings.OverrideFlags = (MotionBlurSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -276,7 +276,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (ScreenSpaceReflectionsSettings)Values[0];
-                settings.OverrideFlags = (ScreenSpaceReflectionsSettings.Override)value;
+                settings.OverrideFlags = (ScreenSpaceReflectionsSettingsOverride)value;
                 SetValue(settings);
             }
         }
@@ -295,7 +295,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
             set
             {
                 var settings = (AntiAliasingSettings)Values[0];
-                settings.OverrideFlags = (AntiAliasingSettings.Override)value;
+                settings.OverrideFlags = (AntiAliasingSettingsOverride)value;
                 SetValue(settings);
             }
         }

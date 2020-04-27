@@ -60,10 +60,8 @@ namespace FlaxEditor.Tools.Terrain
         }
 
         /// <inheritdoc />
-        public override void Draw(DrawCallsCollector collector)
+        public override void Draw(ref RenderContext renderContext)
         {
-            base.Draw(collector);
-
             if (!IsActive)
                 return;
 
@@ -82,7 +80,7 @@ namespace FlaxEditor.Tools.Terrain
                 for (int i = 0; i < Mode.ChunksUnderCursor.Count; i++)
                 {
                     var chunk = Mode.ChunksUnderCursor[i];
-                    collector.AddDrawCall(terrain, ref chunk.PatchCoord, ref chunk.ChunkCoord, brushMaterial);
+                    terrain.DrawChunk(ref renderContext, ref chunk.PatchCoord, ref chunk.ChunkCoord, brushMaterial);
                 }
             }
         }
@@ -169,7 +167,7 @@ namespace FlaxEditor.Tools.Terrain
                 // Freeze cursor
             }
             // Perform detailed tracing to find cursor location on the terrain
-            else if (TerrainTools.RayCastChunk(terrain, mouseRay, out var closest, out var patchCoord, out var chunkCoord))
+            else if (terrain.RayCast(mouseRay, out var closest, out var patchCoord, out var chunkCoord))
             {
                 var hitLocation = mouseRay.GetPoint(closest);
                 Mode.SetCursor(ref hitLocation);
@@ -194,8 +192,9 @@ namespace FlaxEditor.Tools.Terrain
         {
             // Get mouse ray and try to hit terrain
             var ray = Owner.MouseRay;
+            var view = new Ray(Owner.ViewPosition, Owner.ViewDirection);
             var rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, out _, rayCastFlags) as TerrainNode;
+            var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref view, out _, rayCastFlags) as TerrainNode;
 
             // Update selection
             var sceneEditing = Editor.Instance.SceneEditing;

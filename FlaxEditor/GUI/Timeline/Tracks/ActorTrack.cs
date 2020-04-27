@@ -68,16 +68,17 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             // Select Actor button
             const float buttonSize = 14;
             var icons = Editor.Instance.Icons;
-            _selectActor = new Image(_addButton.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            _selectActor = new Image
             {
                 TooltipText = "Selects the actor animated by this track",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
-                Color = new Color(0.8f),
+                Color = Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(icons.Search12),
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + _addButton.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             _selectActor.Clicked += OnClickedSelectActor;
         }

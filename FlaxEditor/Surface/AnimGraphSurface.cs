@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using FlaxEditor.Content;
-using FlaxEditor.Scripting;
 using FlaxEditor.Surface.ContextMenu;
 using FlaxEngine;
 using Animation = FlaxEditor.Surface.Archetypes.Animation;
@@ -139,7 +138,7 @@ namespace FlaxEditor.Surface
                     _cmStateMachineTransitionMenu = new VisjectCM(new VisjectCM.InitInfo
                     {
                         Groups = NodeFactory.DefaultGroups,
-                        CanSpawnNode = CanSpawnNodeType,
+                        CanSpawnNode = CanUseNodeType,
                         ParametersGetter = null,
                         CustomNodesGroup = GetCustomNodes(),
                     });
@@ -152,19 +151,31 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        public override string GetConnectionTypeName(ConnectionType type)
         {
-            return (nodeArchetype.Flags & NodeFlags.AnimGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);
+            switch (type)
+            {
+            case ConnectionType.Impulse: return "Local-space Pose";
+            case ConnectionType.ImpulseSecondary: return "Global-space Pose";
+            default: return base.GetConnectionTypeName(type);
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool CanUseNodeType(NodeArchetype nodeArchetype)
+        {
+            return (nodeArchetype.Flags & NodeFlags.AnimGraph) != 0 && base.CanUseNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />
         protected override bool ValidateDragItem(AssetItem assetItem)
         {
-            switch (assetItem.ItemDomain)
-            {
-            case ContentDomain.SkeletonMask:
-            case ContentDomain.Animation: return true;
-            }
+            if (assetItem.IsOfType<SkeletonMask>())
+                return true;
+            if (assetItem.IsOfType<FlaxEngine.Animation>())
+                return true;
+            if (assetItem.IsOfType<AnimationGraphFunction>())
+                return true;
             return base.ValidateDragItem(assetItem);
         }
 
@@ -173,31 +184,32 @@ namespace FlaxEditor.Surface
         {
             for (int i = 0; i < objects.Count; i++)
             {
-                var item = objects[i];
+                var assetItem = objects[i];
                 SurfaceNode node = null;
-                switch (item.ItemDomain)
-                {
-                case ContentDomain.Animation:
+
+                if (assetItem.IsOfType<FlaxEngine.Animation>())
                 {
                     node = Context.SpawnNode(9, 2, args.SurfaceLocation, new object[]
                     {
-                        item.ID,
+                        assetItem.ID,
                         1.0f,
                         true,
                         0.0f,
                     });
-                    break;
                 }
-                case ContentDomain.SkeletonMask:
+                else if (assetItem.IsOfType<SkeletonMask>())
                 {
                     node = Context.SpawnNode(9, 11, args.SurfaceLocation, new object[]
                     {
                         0.0f,
-                        item.ID,
+                        assetItem.ID,
                     });
-                    break;
                 }
+                else if (assetItem.IsOfType<AnimationGraphFunction>())
+                {
+                    node = Context.SpawnNode(9, 24, args.SurfaceLocation, new object[] { assetItem.ID, });
                 }
+
                 if (node != null)
                 {
                     args.SurfaceLocation.X += node.Width + 10;

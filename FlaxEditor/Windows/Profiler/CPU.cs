@@ -2,7 +2,6 @@
 
 using System;
 using FlaxEditor.GUI;
-using FlaxEditor.Profiling;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -12,12 +11,12 @@ namespace FlaxEditor.Windows.Profiler
     /// The CPU performance profiling mode.
     /// </summary>
     /// <seealso cref="FlaxEditor.Windows.Profiler.ProfilerMode" />
-    internal sealed class CPU : ProfilerMode
+    internal sealed unsafe class CPU : ProfilerMode
     {
         private readonly SingleChart _mainChart;
         private readonly Timeline _timeline;
         private readonly Table _table;
-        private readonly SamplesBuffer<ThreadStats[]> _events = new SamplesBuffer<ThreadStats[]>();
+        private readonly SamplesBuffer<ProfilingTools.ThreadStats[]> _events = new SamplesBuffer<ProfilingTools.ThreadStats[]>();
         private bool _showOnlyLastUpdateEvents;
 
         public CPU()
@@ -26,12 +25,14 @@ namespace FlaxEditor.Windows.Profiler
             // Layout
             var panel = new Panel(ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this,
             };
             var layout = new VerticalPanel
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = Margin.Zero,
                 IsScrollable = true,
                 Parent = panel,
             };
@@ -171,13 +172,13 @@ namespace FlaxEditor.Windows.Profiler
                 End = float.MaxValue
             };
 
-            public ViewRange(ref EventCPU e)
+            public ViewRange(ref ProfilerCPU.Event e)
             {
                 Start = e.Start - MinEventTimeMs;
                 End = e.End + MinEventTimeMs;
             }
 
-            public bool SkipEvent(ref EventCPU e)
+            public bool SkipEvent(ref ProfilerCPU.Event e)
             {
                 return e.Start < Start || e.Start > End;
             }
@@ -196,12 +197,14 @@ namespace FlaxEditor.Windows.Profiler
                         for (int j = 0; j < data.Length; j++)
                         {
                             var events = data[j].Events;
+                            if (events == null)
+                                continue;
 
                             for (int i = 0; i < events.Length; i++)
                             {
                                 var e = events[i];
 
-                                if (e.Depth == 0 && e.Name == "Update")
+                                if (e.Depth == 0 && new string(e.Name) == "Update")
                                 {
                                     return new ViewRange(ref e);
                                 }
@@ -214,19 +217,20 @@ namespace FlaxEditor.Windows.Profiler
             return ViewRange.Full;
         }
 
-        private void AddEvent(double startTime, int maxDepth, float xOffset, int depthOffset, int index, EventCPU[] events, ContainerControl parent)
+        private void AddEvent(double startTime, int maxDepth, float xOffset, int depthOffset, int index, ProfilerCPU.Event[] events, ContainerControl parent)
         {
-            EventCPU e = events[index];
+            ref ProfilerCPU.Event e = ref events[index];
 
             double length = e.End - e.Start;
             double scale = 100.0;
             float x = (float)((e.Start - startTime) * scale);
             float width = (float)(length * scale);
+            string name = new string(e.Name).Replace("::", ".");
 
             var control = new Timeline.Event(x + xOffset, e.Depth + depthOffset, width)
             {
-                Name = e.Name,
-                TooltipText = string.Format("{0}, {1} ms", e.Name, ((int)(length * 1000.0) / 1000.0f)),
+                Name = name,
+                TooltipText = string.Format("{0}, {1} ms", name, ((int)(length * 1000.0) / 1000.0f)),
                 Parent = parent,
             };
 
@@ -272,11 +276,14 @@ namespace FlaxEditor.Windows.Profiler
                 return 0;
 
             // Find the first event start time (for the timeline start time)
-            double startTime = data[0].Events[0].Start;
-            for (int i = 1; i < data.Length; i++)
+            double startTime = double.MaxValue;
+            for (int i = 0; i < data.Length; i++)
             {
-                startTime = Math.Min(startTime, data[i].Events[0].Start);
+                if (data[i].Events != null && data[i].Events.Length != 0)
+                    startTime = Math.Min(startTime, data[i].Events[0].Start);
             }
+            if (startTime >= double.MaxValue)
+                return 0;
 
             var container = _timeline.EventsContainer;
 
@@ -285,6 +292,8 @@ namespace FlaxEditor.Windows.Profiler
             for (int i = 0; i < data.Length; i++)
             {
                 var events = data[i].Events;
+                if (events == null)
+                    continue;
 
                 // Check maximum depth
                 int maxDepth = -1;
@@ -360,6 +369,8 @@ namespace FlaxEditor.Windows.Profiler
             for (int j = 0; j < data.Length; j++)
             {
                 var events = data[j].Events;
+                if (events == null)
+                    continue;
 
                 for (int i = 0; i < events.Length; i++)
                 {
@@ -388,12 +399,14 @@ namespace FlaxEditor.Windows.Profiler
                         subEventsMemoryTotal += sub.ManagedMemoryAllocation + e.NativeMemoryAllocation;
                     }
 
+                    string name = new string(e.Name).Replace("::", ".");
+
                     var row = new Row
                     {
                         Values = new object[]
                         {
                             // Event
-                            e.Name,
+                            name,
 
                             // Total (%)
                             (int)(time / totalTimeMs * 1000.0f) / 10.0f,

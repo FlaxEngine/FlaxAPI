@@ -54,46 +54,50 @@ namespace FlaxEditor.Content.Import
             Width = TotalWidth;
 
             // Header and help description
-            var headerLabel = new Label(0, 0, TotalWidth, 40)
+            var headerLabel = new Label
             {
                 Text = "Import settings",
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(0, 0, 0, 40),
                 Parent = this,
                 Font = new FontReference(Style.Current.FontTitle)
             };
-            var infoLabel = new Label(10, headerLabel.Bottom + 5, TotalWidth - 20, 40)
+            var infoLabel = new Label
             {
                 Text = "Specify options for importing files. Every file can have different settings. Select entries on the left panel to modify them.\nPro Tip: hold CTRL key and select entries to edit multiple at once.",
                 HorizontalAlignment = TextAlignment.Near,
                 Margin = new Margin(7),
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(10, -20, 45, 70),
                 Parent = this
             };
 
             // Buttons
             const float ButtonsWidth = 60;
+            const float ButtonsHeight = 24;
             const float ButtonsMargin = 8;
-            var importButton = new Button(TotalWidth - ButtonsMargin - ButtonsWidth, infoLabel.Bottom - 30, ButtonsWidth)
+            var importButton = new Button
             {
                 Text = "Import",
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.BottomRight,
+                Offsets = new Margin(-ButtonsWidth - ButtonsMargin, ButtonsWidth, -ButtonsHeight - ButtonsMargin, ButtonsHeight),
                 Parent = this
             };
             importButton.Clicked += OnImport;
-            var cancelButton = new Button(importButton.Left - ButtonsMargin - ButtonsWidth, importButton.Y, ButtonsWidth)
+            var cancelButton = new Button
             {
                 Text = "Cancel",
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.BottomRight,
+                Offsets = new Margin(-ButtonsWidth - ButtonsMargin - ButtonsWidth - ButtonsMargin, ButtonsWidth, -ButtonsHeight - ButtonsMargin, ButtonsHeight),
                 Parent = this
             };
             cancelButton.Clicked += OnCancel;
 
             // Split panel for entries list and settings editor
-            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.Vertical, ScrollBars.Vertical)
+            var splitPanel = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.Vertical)
             {
-                Y = infoLabel.Bottom,
-                Size = new Vector2(TotalWidth, EditorHeight),
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(2, 2, infoLabel.Bottom + 2, ButtonsHeight + ButtonsMargin + ButtonsMargin),
                 Parent = this
             };
 
@@ -102,8 +106,10 @@ namespace FlaxEditor.Content.Import
             _settingsEditor.Panel.Parent = splitPanel.Panel2;
 
             // Setup tree
-            var tree = new Tree(true);
-            tree.Parent = splitPanel.Panel1;
+            var tree = new Tree(true)
+            {
+                Parent = splitPanel.Panel1
+            };
             tree.RightClick += OnTreeRightClick;
             _rootNode = new TreeNode(false);
             for (int i = 0; i < entries.Count; i++)
@@ -125,7 +131,7 @@ namespace FlaxEditor.Content.Import
             // Select the first item
             tree.Select(_rootNode.Children[0] as TreeNode);
 
-            Size = new Vector2(TotalWidth, splitPanel.Bottom);
+            _dialogSize = new Vector2(TotalWidth, EditorHeight + splitPanel.Offsets.Height);
         }
 
         private void OnTreeRightClick(TreeNode node, Vector2 location)
@@ -161,7 +167,7 @@ namespace FlaxEditor.Content.Import
         private void OnShowInExplorerClicked(ContextMenuButton button)
         {
             var node = (ItemNode)button.ParentContextMenu.Tag;
-            Platform.StartProcess(Path.GetDirectoryName(node.Entry.SourceUrl));
+            FileSystem.ShowFileExplorer(Path.GetDirectoryName(node.Entry.SourceUrl));
         }
 
         private class ItemNode : TreeNode
@@ -245,14 +251,14 @@ namespace FlaxEditor.Content.Import
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             switch (key)
             {
-            case Keys.Escape:
+            case KeyboardKeys.Escape:
                 OnCancel();
                 return true;
-            case Keys.Return:
+            case KeyboardKeys.Return:
                 OnImport();
                 return true;
             }

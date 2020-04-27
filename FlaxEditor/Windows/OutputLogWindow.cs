@@ -127,18 +127,14 @@ namespace FlaxEditor.Windows
                 Parent = this,
             };
             _searchBox.TextChanged += OnSearchBoxTextChanged;
-            _hScroll = new HScrollBar(Height - ScrollBar.DefaultSize, Width)
+            _hScroll = new HScrollBar(this, Height - ScrollBar.DefaultSize, Width)
             {
-                AnchorStyle = AnchorStyle.Bottom,
                 Maximum = 0,
-                Parent = this,
             };
             _hScroll.ValueChanged += OnHScrollValueChanged;
-            _vScroll = new VScrollBar(Width - ScrollBar.DefaultSize, Height)
+            _vScroll = new VScrollBar(this, Width - ScrollBar.DefaultSize, Height)
             {
-                AnchorStyle = AnchorStyle.Right,
                 Maximum = 0,
-                Parent = this,
             };
             _vScroll.ValueChanged += OnVScrollValueChanged;
             _output = new OutputTextBox
@@ -158,7 +154,7 @@ namespace FlaxEditor.Windows
             _contextMenu.AddButton("Clear log", Clear);
             _contextMenu.AddButton("Copy selection", _output.Copy);
             _contextMenu.AddButton("Select All", _output.SelectAll);
-            _contextMenu.AddButton("Scroll to bottom", () => { _vScroll.TargetValue = _vScroll.Maximum; });
+            _contextMenu.AddButton("Scroll to bottom", () => { _vScroll.TargetValue = _vScroll.Maximum; }).Icon = Editor.Icons.ArrowDown12;
 
             // Setup editor options
             Editor.Options.OptionsChanged += OnEditorOptionsChanged;
@@ -228,6 +224,9 @@ namespace FlaxEditor.Windows
 
         private void OnOutputTextChanged()
         {
+            if (IsLayoutLocked)
+                return;
+
             _hScroll.Maximum = _output.TextSize.X;
             _vScroll.Maximum = Mathf.Max(_output.TextSize.Y - _output.Height, _vScroll.Minimum);
         }
@@ -261,7 +260,7 @@ namespace FlaxEditor.Windows
             Refresh();
         }
 
-        private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
+        private void OnGameCookerEvent(GameCooker.EventType eventType)
         {
             if (eventType == GameCooker.EventType.BuildFailed && !Editor.IsHeadlessMode)
                 FocusOrShow();
@@ -292,10 +291,11 @@ namespace FlaxEditor.Windows
         /// </summary>
         public void LoadLogFile()
         {
-            var result = MessageBox.OpenFileDialog(null, Path.Combine(Globals.ProjectFolder, "Logs"), null, false, "Pick a log file to load");
-            if (result != null && result.Length > 0)
+            if (FileSystem.ShowOpenFileDialog(null, Path.Combine(Globals.ProjectFolder, "Logs"), null, false, "Pick a log file to load", out var files))
+                return;
+            if (files != null && files.Length > 0)
             {
-                LoadLogFile(result[0]);
+                LoadLogFile(files[0]);
             }
         }
 
@@ -387,9 +387,9 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             // Update scroll range
             OnOutputTextChanged();

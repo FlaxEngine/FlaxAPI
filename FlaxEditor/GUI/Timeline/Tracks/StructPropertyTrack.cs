@@ -91,14 +91,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         {
             // Add track button
             const float buttonSize = 14;
-            _addButton = new Button(_muteCheckbox.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            _addButton = new Button
             {
                 Text = "+",
                 TooltipText = "Add sub-tracks",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + _muteCheckbox.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             _addButton.Clicked += OnAddButtonClicked;
         }

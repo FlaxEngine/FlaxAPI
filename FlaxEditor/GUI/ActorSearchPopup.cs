@@ -64,9 +64,9 @@ namespace FlaxEditor.GUI
             ItemClicked += OnItemClicked;
 
             // TODO: use async thread to search scenes
-            for (int i = 0; i < SceneManager.ScenesCount; i++)
+            for (int i = 0; i < Level.ScenesCount; i++)
             {
-                Find(SceneManager.GetScene(i));
+                Find(Level.GetScene(i));
             }
             SortChildren();
         }

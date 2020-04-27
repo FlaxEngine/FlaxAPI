@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.CustomEditors;
@@ -102,8 +103,8 @@ namespace FlaxEditor.Windows.Assets
                 if (Type == ParameterType.NormalMap)
                 {
                     // Use default normal map texture (don't load asset here, just lookup registry for id at path)
-                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out _, out var id);
-                    param.Value = id;
+                    FlaxEngine.Content.GetAssetInfo(StringUtils.CombinePaths(Globals.EngineFolder, "Textures/NormalTexture.flax"), out var assetInfo);
+                    param.Value = assetInfo.ID;
                 }
                 Window.Surface.Parameters.Insert(Index, param);
                 Window.Surface.OnParamCreated(param);
@@ -146,6 +147,11 @@ namespace FlaxEditor.Windows.Assets
                 if (asset == null)
                 {
                     layout.Label("No parameters");
+                    return;
+                }
+                if (asset.LastLoadFailed)
+                {
+                    layout.Label("Failed to load asset");
                     return;
                 }
                 if (!asset.IsLoaded)
@@ -206,7 +212,7 @@ namespace FlaxEditor.Windows.Assets
                         Drag = DragParameter
                     };
                     propertyLabel.MouseLeftDoubleClick += (label, location) => StartParameterRenaming(pIndex, label);
-                    propertyLabel.MouseRightClick += (label, location) => ShowParameterMenu(pIndex, label, ref location);
+                    propertyLabel.SetupContextMenu += OnPropertyLabelSetupContextMenu;
                     var property = layout.AddPropertyItem(propertyLabel);
                     property.Object(propertyValue);
                 }
@@ -232,24 +238,14 @@ namespace FlaxEditor.Windows.Assets
                 return DragNames.GetDragData(SurfaceParameter.DragPrefix, parameter.Name);
             }
 
-            /// <summary>
-            /// Shows the parameter context menu.
-            /// </summary>
-            /// <param name="index">The index.</param>
-            /// <param name="label">The label control.</param>
-            /// <param name="targetLocation">The target location.</param>
-            private void ShowParameterMenu(int index, Control label, ref Vector2 targetLocation)
+            private void OnPropertyLabelSetupContextMenu(PropertyNameLabel label, ContextMenu menu, CustomEditor linkedEditor)
             {
-                var contextMenu = new ContextMenu();
-                contextMenu.AddButton("Rename", () => StartParameterRenaming(index, label));
-                contextMenu.AddButton("Delete", () => DeleteParameter(index));
-                contextMenu.Show(label, targetLocation);
+                var index = (int)label.Tag;
+                menu.AddSeparator();
+                menu.AddButton("Rename", () => StartParameterRenaming(index, label));
+                menu.AddButton("Delete", () => DeleteParameter(index));
             }
 
-            /// <summary>
-            /// Adds the parameter.
-            /// </summary>
-            /// <param name="type">The type.</param>
             private void AddParameter(ParameterType type)
             {
                 var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
@@ -260,7 +256,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     Window = window,
                     IsAdd = true,
-                    Name = "New parameter",
+                    Name = StringUtils.IncrementNameNumber("New parameter", x => OnParameterRenameValidate(null, x)),
                     Type = type,
                     Index = window.Surface.Parameters.Count,
                 };
@@ -268,18 +264,20 @@ namespace FlaxEditor.Windows.Assets
                 action.Do();
             }
 
-            /// <summary>
-            /// Starts renaming parameter.
-            /// </summary>
-            /// <param name="index">The index.</param>
-            /// <param name="label">The label control.</param>
             private void StartParameterRenaming(int index, Control label)
             {
                 var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
                 var parameter = window.Surface.Parameters[(int)label.Tag];
                 var dialog = RenamePopup.Show(label, new Rectangle(0, 0, label.Width - 2, label.Height), parameter.Name, false);
                 dialog.Tag = index;
+                dialog.Validate += OnParameterRenameValidate;
                 dialog.Renamed += OnParameterRenamed;
+            }
+
+            private bool OnParameterRenameValidate(RenamePopup popup, string value)
+            {
+                var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
+                return !string.IsNullOrWhiteSpace(value) && window.Surface.Parameters.All(x => x.Name != value);
             }
 
             private void OnParameterRenamed(RenamePopup renamePopup)
@@ -297,10 +295,6 @@ namespace FlaxEditor.Windows.Assets
                 action.Do();
             }
 
-            /// <summary>
-            /// Removes the parameter.
-            /// </summary>
-            /// <param name="index">The index.</param>
             private void DeleteParameter(int index)
             {
                 var window = (VisjectSurfaceWindow<TAsset, TSurface, TPreview>)Values[0];
@@ -403,7 +397,8 @@ namespace FlaxEditor.Windows.Assets
             // Split Panel 1
             _split1 = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.None)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.7f,
                 Parent = this
             };
@@ -411,7 +406,8 @@ namespace FlaxEditor.Windows.Assets
             // Split Panel 2
             _split2 = new SplitPanel(Orientation.Vertical, ScrollBars.None, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 SplitterValue = 0.4f,
                 Parent = _split1.Panel2
             };
@@ -536,23 +532,19 @@ namespace FlaxEditor.Windows.Assets
         /// <inheritdoc />
         public override void Save()
         {
-            // Check if don't need to push any new changes to the original asset
             if (!IsEdited)
                 return;
 
-            // Just in case refresh data
             if (RefreshTempAsset())
             {
                 return;
             }
 
-            // Update original Particle Emitter so user can see changes in the scene
             if (SaveToOriginal())
             {
                 return;
             }
 
-            // Setup
             ClearEditedFlag();
             OnSurfaceEditedChanged();
             _item.RefreshThumbnail();

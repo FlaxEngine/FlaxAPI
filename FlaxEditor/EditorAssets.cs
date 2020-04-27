@@ -35,7 +35,7 @@ namespace FlaxEditor
 
             public static void OnEditorOptionsChanged(Options.EditorOptions options)
             {
-                var param = _highlightMaterial?.GetParam("Color");
+                var param = _highlightMaterial?.GetParameter("Color");
                 if (param != null)
                     param.Value = options.Visual.HighlightColor;
             }

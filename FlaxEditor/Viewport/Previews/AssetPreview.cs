@@ -80,9 +80,7 @@ namespace FlaxEditor.Viewport.Previews
         protected AssetPreview(bool useWidgets, ViewportCamera camera)
         : base(Object.New<SceneRenderTask>(), camera, useWidgets)
         {
-            DockStyle = DockStyle.Fill;
-
-            Task.View.Flags = ViewFlags.DefaultAssetPreview;
+            Task.ViewFlags = ViewFlags.DefaultAssetPreview;
             Task.AllowGlobalCustomPostFx = false;
 
             var orbitRadius = 200.0f;
@@ -121,11 +119,11 @@ namespace FlaxEditor.Viewport.Previews
 
             // Link actors for rendering
             Task.ActorsSource = ActorsSources.CustomActors;
-            Task.CustomActors.Add(PreviewLight);
-            Task.CustomActors.Add(EnvProbe);
-            Task.CustomActors.Add(Sky);
-            Task.CustomActors.Add(SkyLight);
-            Task.CustomActors.Add(PostFxVolume);
+            Task.AddCustomActor(PreviewLight);
+            Task.AddCustomActor(EnvProbe);
+            Task.AddCustomActor(Sky);
+            Task.AddCustomActor(SkyLight);
+            Task.AddCustomActor(PostFxVolume);
         }
 
         /// <inheritdoc />

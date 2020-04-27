@@ -70,39 +70,22 @@ namespace FlaxEngine.GUI
             if (task == null)
                 throw new ArgumentNullException();
 
-            _backBuffer = GPUDevice.CreateTexture();
+            _backBuffer = GPUDevice.Instance.CreateTexture();
             _resizeTime = ResizeCheckTime;
 
             _task = task;
             _task.Output = _backBuffer;
-            _task.CanSkipRendering += CanSkipRendering;
             _task.End += OnEnd;
+
+            Scripting.Update += OnUpdate;
         }
 
-        /// <summary>
-        /// Enables this output rendering.
-        /// </summary>
-        public void Enable()
-        {
-            Task.Enabled = true;
-        }
-
-        /// <summary>
-        /// Disables this output rendering.
-        /// </summary>
-        public void Disable()
-        {
-            Task.Enabled = false;
-        }
-
-        private bool walkTree(Control c)
+        private bool WalkTree(Control c)
         {
             while (c != null)
             {
-                if (c is RootControl win)
-                {
+                if (c is RootControl)
                     return false;
-                }
                 if (c.Visible == false)
                     break;
                 c = c.Parent;
@@ -116,11 +99,6 @@ namespace FlaxEngine.GUI
         /// <returns>True if skip rendering, otherwise false.</returns>
         protected virtual bool CanSkipRendering()
         {
-            if (_task == null)
-                return true;
-
-            _task.Output = _backBuffer;
-
             // Disable task rendering if control is very small
             const float MinRenderSize = 4;
             if (Width < MinRenderSize || Height < MinRenderSize)
@@ -129,7 +107,7 @@ namespace FlaxEngine.GUI
             // Disable task rendering if control is not used in a window (has using ParentWindow)
             if (RenderOnlyWithWindow)
             {
-                return walkTree(Parent);
+                return WalkTree(Parent);
             }
 
             return false;
@@ -140,7 +118,7 @@ namespace FlaxEngine.GUI
         /// </summary>
         /// <param name="task">The task.</param>
         /// <param name="context">The GPU execution context.</param>
-        protected virtual void OnEnd(SceneRenderTask task, GPUContext context)
+        protected virtual void OnEnd(RenderTask task, GPUContext context)
         {
             // Check if was using old backbuffer
             if (_backBufferOld)
@@ -153,18 +131,25 @@ namespace FlaxEngine.GUI
             }
         }
 
-        /// <inheritdoc />
-        public override void Update(float deltaTime)
+        private void OnUpdate()
         {
+            var deltaTime = Time.UnscaledDeltaTime;
+
             // Check if need to resize the output
             _resizeTime += deltaTime;
-            if (_resizeTime >= ResizeCheckTime)
+            if (_resizeTime >= ResizeCheckTime && Visible && Enabled)
             {
                 _resizeTime = 0;
                 SyncBackbufferSize();
             }
 
-            base.Update(deltaTime);
+            // Check if skip rendering
+            var wasEnabled = _task.Enabled;
+            _task.Enabled = !CanSkipRendering();
+            if (wasEnabled != _task.Enabled)
+            {
+                SyncBackbufferSize();
+            }
         }
 
         /// <inheritdoc />
@@ -199,7 +184,7 @@ namespace FlaxEngine.GUI
             if (_backBufferOld == null && _backBuffer.IsAllocated)
             {
                 _backBufferOld = _backBuffer;
-                _backBuffer = GPUDevice.CreateTexture();
+                _backBuffer = GPUDevice.Instance.CreateTexture();
             }
 
             // Set timeout to remove old buffer
@@ -218,7 +203,12 @@ namespace FlaxEngine.GUI
                 return;
 
             // Cleanup
-            _task?.Dispose();
+            Scripting.Update -= OnUpdate;
+            if (_task != null)
+            {
+                _task.Enabled = false;
+                //_task.CustomPostFx.Clear();
+            }
             Object.Destroy(ref _backBuffer);
             Object.Destroy(ref _backBufferOld);
             Object.Destroy(ref _task);

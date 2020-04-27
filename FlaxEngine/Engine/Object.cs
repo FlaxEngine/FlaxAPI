@@ -36,12 +36,20 @@ namespace FlaxEngine
         /// </summary>
         ~Object()
         {
-#if !UNIT_TEST_COMPILANT
             if (unmanagedPtr != IntPtr.Zero)
             {
                 Internal_ManagedInstanceDeleted(unmanagedPtr);
             }
-#endif
+        }
+
+        /// <summary>
+        /// Casts this object instance to the given object type.
+        /// </summary>
+        /// <typeparam name="T">object actor type.</typeparam>
+        /// <returns>The object instance cast to the given actor type.</returns>
+        public T As<T>() where T : Actor
+        {
+            return (T)this;
         }
 
         /// <summary>
@@ -52,11 +60,7 @@ namespace FlaxEngine
         /// <returns>Created object.</returns>
         public static T New<T>() where T : Object
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             return Internal_Create(typeof(T)) as T;
-#endif
         }
 
         /// <summary>
@@ -67,11 +71,7 @@ namespace FlaxEngine
         /// <returns>Created object.</returns>
         public static Object New(Type type)
         {
-#if UNIT_TEST_COMPILANT
-            throw new NotImplementedException("Unit tests, don't support methods calls. Only properties can be get or set.");
-#else
             return Internal_Create(type);
-#endif
         }
 
         /// <summary>
@@ -82,11 +82,7 @@ namespace FlaxEngine
         /// <returns>Found object or null if missing.</returns>
         public static T Find<T>(ref Guid id) where T : Object
         {
-#if UNIT_TEST_COMPILANT
-            return null;
-#else
             return Internal_FindObject(ref id) as T;
-#endif
         }
 
         /// <summary>
@@ -97,11 +93,7 @@ namespace FlaxEngine
         /// <returns>Found object or null if missing.</returns>
         public static T TryFind<T>(ref Guid id) where T : Object
         {
-#if UNIT_TEST_COMPILANT
-            return null;
-#else
             return Internal_TryFindObject(ref id) as T;
-#endif
         }
 
         /// <summary>
@@ -115,9 +107,7 @@ namespace FlaxEngine
         /// <param name="timeLeft">The time left to destroy object (in seconds).</param>
         public static void Destroy(Object obj, float timeLeft = 0.0f)
         {
-#if !UNIT_TEST_COMPILANT
             Internal_Destroy(GetUnmanagedPtr(obj), timeLeft);
-#endif
         }
 
         /// <summary>
@@ -133,9 +123,7 @@ namespace FlaxEngine
         {
             if (obj)
             {
-#if !UNIT_TEST_COMPILANT
                 Internal_Destroy(obj.unmanagedPtr, timeLeft);
-#endif
                 obj = null;
             }
         }
@@ -160,11 +148,7 @@ namespace FlaxEngine
         /// <inheritdoc />
         public override int GetHashCode()
         {
-#if UNIT_TEST_COMPILANT
-            return base.GetHashCode();
-#else
             return unmanagedPtr.GetHashCode();
-#endif
         }
 
         #region Internal Calls

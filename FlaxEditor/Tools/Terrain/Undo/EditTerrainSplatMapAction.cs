@@ -11,7 +11,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
     /// <seealso cref="FlaxEditor.IUndoAction" />
     /// <seealso cref="EditTerrainMapAction" />
     [Serializable]
-    public class EditTerrainSplatMapAction : EditTerrainMapAction
+    public unsafe class EditTerrainSplatMapAction : EditTerrainMapAction
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EditTerrainSplatMapAction"/> class.
@@ -28,7 +28,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         /// <inheritdoc />
         protected override IntPtr GetData(ref Int2 patchCoord, object tag)
         {
-            return TerrainTools.GetSplatMapData(Terrain, ref patchCoord, (int)tag);
+            return new IntPtr(TerrainTools.GetSplatMapData(Terrain, ref patchCoord, (int)tag));
         }
 
         /// <inheritdoc />
@@ -36,7 +36,7 @@ namespace FlaxEditor.Tools.Terrain.Undo
         {
             var offset = Int2.Zero;
             var size = new Int2((int)Mathf.Sqrt(_heightmapLength));
-            if (TerrainTools.ModifySplatMap(Terrain, ref patchCoord, (int)tag, data, ref offset, ref size))
+            if (TerrainTools.ModifySplatMap(Terrain, ref patchCoord, (int)tag, (Color32*)data, ref offset, ref size))
                 throw new FlaxException("Failed to modify the splatmap.");
         }
     }

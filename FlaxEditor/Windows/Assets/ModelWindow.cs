@@ -31,7 +31,9 @@ namespace FlaxEditor.Windows.Assets
         {
             private readonly ModelWindow _window;
             private ContextMenuButton _showFloorButton;
+            private ContextMenuButton _showCurrentLODButton;
             private StaticModel _floorModel;
+            private bool _showCurrentLOD;
 
             public Preview(ModelWindow window)
             : base(true)
@@ -42,25 +44,73 @@ namespace FlaxEditor.Windows.Assets
                 _showFloorButton = ViewWidgetShowMenu.AddButton("Floor", OnShowFloorModelClicked);
                 _showFloorButton.IndexInParent = 1;
 
+                // Show current LOD widget
+                _showCurrentLODButton = ViewWidgetShowMenu.AddButton("Current LOD", OnShowCurrentLODClicked);
+                _showCurrentLODButton.IndexInParent = 2;
+
                 // Floor model
                 _floorModel = StaticModel.New();
                 _floorModel.Position = new Vector3(0, -25, 0);
                 _floorModel.Scale = new Vector3(5, 0.5f, 5);
                 _floorModel.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
                 _floorModel.IsActive = false;
-                Task.CustomActors.Add(_floorModel);
+                Task.AddCustomActor(_floorModel);
 
                 // Enable shadows
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
                 PreviewLight.CascadeCount = 3;
                 PreviewLight.ShadowsDistance = 2000.0f;
-                Task.View.Flags |= ViewFlags.Shadows;
+                Task.ViewFlags |= ViewFlags.Shadows;
             }
 
             private void OnShowFloorModelClicked(ContextMenuButton obj)
             {
                 _floorModel.IsActive = !_floorModel.IsActive;
-                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : Sprite.Invalid;
+                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
+            }
+
+            private void OnShowCurrentLODClicked(ContextMenuButton obj)
+            {
+                _showCurrentLOD = !_showCurrentLOD;
+                _showCurrentLODButton.Icon = _showCurrentLOD ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
+            }
+
+            private int ComputeLODIndex(Model model)
+            {
+                if (PreviewStaticModel.ForcedLOD != -1)
+                    return PreviewStaticModel.ForcedLOD;
+
+                // Based on RenderTools::ComputeModelLOD
+                CreateProjectionMatrix(out var projectionMatrix);
+                float screenMultiple = 0.5f * Mathf.Max(projectionMatrix.M11, projectionMatrix.M22);
+                var sphere = PreviewStaticModel.Sphere;
+                var viewOrigin = ViewPosition;
+                float distSqr = Vector3.DistanceSquared(ref sphere.Center, ref viewOrigin);
+                var screenRadiusSquared = Mathf.Square(screenMultiple * sphere.Radius) / Mathf.Max(1.0f, distSqr);
+
+                // Check if model is being culled
+                if (Mathf.Square(model.MinScreenSize * 0.5f) > screenRadiusSquared)
+                    return -1;
+
+                // Skip if no need to calculate LOD
+                if (model.LoadedLODs == 0)
+                    return -1;
+                var lods = model.LODs;
+                if (lods.Length == 0)
+                    return -1;
+                if (lods.Length == 1)
+                    return 0;
+
+                // Iterate backwards and return the first matching LOD
+                for (int lodIndex = lods.Length - 1; lodIndex >= 0; lodIndex--)
+                {
+                    if (Mathf.Square(lods[lodIndex].ScreenSize * 0.5f) >= screenRadiusSquared)
+                    {
+                        return lodIndex + PreviewStaticModel.LODBias;
+                    }
+                }
+
+                return 0;
             }
 
             /// <inheritdoc />
@@ -69,9 +119,35 @@ namespace FlaxEditor.Windows.Assets
                 base.Draw();
 
                 var style = Style.Current;
-                if (_window.Asset == null || !_window.Asset.IsLoaded)
+                var asset = _window.Asset;
+                if (asset == null || !asset.IsLoaded)
                 {
-                    Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+                    Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+                    return;
+                }
+
+                if (_showCurrentLOD)
+                {
+                    var lodIndex = ComputeLODIndex(asset);
+                    string text = string.Format("Current LOD: {0}", lodIndex);
+                    if (lodIndex != -1)
+                    {
+                        var lods = asset.LODs;
+                        lodIndex = Mathf.Clamp(lodIndex + PreviewStaticModel.LODBias, 0, lods.Length - 1);
+                        var lod = lods[lodIndex];
+                        int triangleCount = 0, vertexCount = 0;
+                        for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
+                        {
+                            var mesh = lod.Meshes[meshIndex];
+                            triangleCount += mesh.TriangleCount;
+                            vertexCount += mesh.VertexCount;
+                        }
+                        text += string.Format("\nTriangles: {0}\nVertices: {1}", triangleCount, vertexCount);
+                    }
+                    var font = Style.Current.FontMedium;
+                    var pos = new Vector2(10, 50);
+                    Render2D.DrawText(font, text, new Rectangle(pos + Vector2.One, Size), Color.Black);
+                    Render2D.DrawText(font, text, new Rectangle(pos, Size), Color.White);
                 }
             }
 
@@ -91,7 +167,8 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(ProxyEditor))]
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true)]
+            [MemberCollection(CanReorderItems = true, NotNullItems = true, OverrideEditorTypeName = "FlaxEditor.CustomEditors.Editors.GenericEditor")]
+            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle)]
             public MaterialSlot[] MaterialSlots
             {
                 get => Asset?.MaterialSlots;
@@ -332,13 +409,13 @@ namespace FlaxEditor.Windows.Assets
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
                         {
                             var mesh = lod.Meshes[meshIndex];
-                            triangleCount += mesh.Triangles;
-                            vertexCount += mesh.Vertices;
+                            triangleCount += mesh.TriangleCount;
+                            vertexCount += mesh.VertexCount;
                         }
 
                         var group = layout.Group("LOD " + lodIndex);
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
-                        group.Label("Size: " + lod.Bounds.Size);
+                        group.Label("Size: " + lod.Box.Size);
                         var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
                         screenSize.FloatValue.MinValue = 0.0f;
                         screenSize.FloatValue.MaxValue = 10.0f;
@@ -408,15 +485,14 @@ namespace FlaxEditor.Windows.Assets
         {
             // Toolstrip
             _saveButton = (ToolStripButton)_toolstrip.AddButton(editor.Icons.Save32, Save).LinkTooltip("Save");
-            //_toolstrip.AddSeparator();
-            //_toolstrip.AddButton(editor.Icons.UV32, () => {CacheMeshData(); _uvDebugIndex++; if (_uvDebugIndex >= 2) _uvDebugIndex = -1; }).LinkTooltip("Show model UVs (toggles across all channels)"); // TODO: support gather mesh data
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/graphics/models/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/graphics/models/index.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.7f,
                 Parent = this
             };
@@ -439,12 +515,7 @@ namespace FlaxEditor.Windows.Assets
             // Highlight actor (used to highlight selected material slot, see UpdateEffectsOnAsset)
             _highlightActor = StaticModel.New();
             _highlightActor.IsActive = false;
-            _preview.Task.CustomActors.Add(_highlightActor);
-        }
-
-        private void CacheMeshData()
-        {
-            // TODO: finish mesh data gather from c# API (use async task)
+            _preview.Task.AddCustomActor(_highlightActor);
         }
 
         /// <summary>
@@ -459,6 +530,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     entries[i].Visible = _properties.IsolateIndex == -1 || _properties.IsolateIndex == i;
                 }
+                _preview.PreviewStaticModel.Entries = entries;
             }
 
             if (_properties.HighlightIndex != -1)
@@ -474,6 +546,7 @@ namespace FlaxEditor.Windows.Assets
                         entries[i].Material = highlightMaterial;
                         entries[i].Visible = _properties.HighlightIndex == i;
                     }
+                    _highlightActor.Entries = entries;
                 }
             }
             else
@@ -507,22 +580,17 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            // Wait until model asset file be fully loaded
             if (_asset.WaitForLoaded())
             {
-                // Error
                 return;
             }
 
-            // Call asset saving
             if (_asset.Save())
             {
-                // Error
-                Editor.LogError("Failed to save model " + _item.Path);
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 
-            // Update
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }
@@ -561,7 +629,7 @@ namespace FlaxEditor.Windows.Assets
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
             _refreshOnLODsLoaded = true;
-            _preview.ViewportCamera.SerArcBallView(Asset.Box);
+            _preview.ViewportCamera.SerArcBallView(Asset.GetBox());
 
             // TODO: disable streaming for this model
 

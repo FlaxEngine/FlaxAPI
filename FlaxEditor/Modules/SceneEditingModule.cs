@@ -28,9 +28,6 @@ namespace FlaxEditor.Modules
         /// <summary>
         /// Gets a value indicating whether any object is selected.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if any object is selected; otherwise, <c>false</c>.
-        /// </value>
         public bool HasSthSelected => Selection.Count > 0;
 
         /// <summary>
@@ -207,13 +204,13 @@ namespace FlaxEditor.Modules
         {
             bool isPlayMode = Editor.StateMachine.IsPlayMode;
 
-            if (SceneManager.IsAnySceneLoaded == false)
+            if (Level.IsAnySceneLoaded == false)
                 throw new InvalidOperationException("Cannot spawn actor when no scene is loaded.");
 
             SpawnBegin?.Invoke();
 
             // Add it
-            SceneManager.SpawnActor(actor, parent);
+            Level.SpawnActor(actor, parent);
 
             // Peek spawned node
             var actorNode = Editor.Instance.Scene.GetActorNode(actor);
@@ -249,7 +246,7 @@ namespace FlaxEditor.Modules
             if (!isPlayMode && options.General.AutoRebuildNavMesh && actor.Scene && (actor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
             {
                 var bounds = actor.BoxWithChildren;
-                actor.Scene.BuildNavMesh(bounds, options.General.AutoRebuildNavMeshTimeoutMs);
+                Navigation.BuildNavMesh(actor.Scene, bounds, options.General.AutoRebuildNavMeshTimeoutMs);
             }
         }
 
@@ -304,7 +301,7 @@ namespace FlaxEditor.Modules
                     if (obj is ActorNode node && node.Actor.Scene && (node.Actor.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
                     {
                         var bounds = node.Actor.BoxWithChildren;
-                        node.Actor.Scene.BuildNavMesh(bounds, options.General.AutoRebuildNavMeshTimeoutMs);
+                        Navigation.BuildNavMesh(node.Actor.Scene, bounds, options.General.AutoRebuildNavMeshTimeoutMs);
                     }
                 }
             }
@@ -330,7 +327,7 @@ namespace FlaxEditor.Modules
             }
 
             // Copy data
-            Platform.ClipboardRawData = data;
+            Clipboard.RawData = data;
         }
 
 
@@ -349,7 +346,7 @@ namespace FlaxEditor.Modules
         public void Paste(Actor pasteTargetActor)
         {
             // Get clipboard data
-            var data = Platform.ClipboardRawData;
+            var data = Clipboard.RawData;
 
             // Set paste target if only one actor is selected and no target provided
             if (pasteTargetActor == null && SelectionCount == 1 && Selection[0] is ActorNode actorNode)

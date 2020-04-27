@@ -104,7 +104,7 @@ namespace FlaxEditor.Windows.Assets
             // Toolstrip
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.BracketsSlash32, () => ShowSourceCode(_asset)).LinkTooltip("Show generated shader source code");
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/particles/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/particles/index.html")).LinkTooltip("See documentation to learn more");
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace FlaxEditor.Windows.Assets
         public static void ShowSourceCode(ParticleEmitter particleEmitter)
         {
             var source = Editor.GetParticleEmitterShaderSourceCode(particleEmitter);
-            Utilities.Utils.ShowSourceCode(source, "Particle Emitter GPU Simulation Source");
+            Utilities.Utils.ShowSourceCodeWindow(source, "Particle Emitter GPU Simulation Source");
         }
 
         /// <inheritdoc />
@@ -189,6 +189,7 @@ namespace FlaxEditor.Windows.Assets
                     _surface.MarkAsEdited();
                     Editor.LogError("Failed to save Particle Emitter surface data");
                 }
+                _asset.Reload();
                 _preview.PreviewActor.ResetSimulation();
             }
         }
@@ -199,17 +200,8 @@ namespace FlaxEditor.Windows.Assets
             // Init asset properties and parameters proxy
             _properties.OnLoad(this);
 
-            // Load surface data from the asset
-            byte[] data = _asset.LoadSurface(true);
-            if (data == null)
-            {
-                // Error
-                Editor.LogError("Failed to load Particle Emitter surface data.");
-                return true;
-            }
-
             // Load surface graph
-            if (_surface.Load(data))
+            if (_surface.Load())
             {
                 // Error
                 Editor.LogError("Failed to load Particle Emitter surface.");

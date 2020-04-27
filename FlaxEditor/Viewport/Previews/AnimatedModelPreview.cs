@@ -15,7 +15,6 @@ namespace FlaxEditor.Viewport.Previews
         private AnimatedModel _previewModel;
         private StaticModel _previewNodesActor;
         private Model _previewNodesModel;
-        private AnimatedModel.Pose _previewModelPose;
         private int _previewNodesCounter;
         private List<Vector3> _previewNodesVB;
         private List<int> _previewNodesIB;
@@ -70,17 +69,17 @@ namespace FlaxEditor.Viewport.Previews
             _previewModel.BoundsScale = 1000.0f;
             _previewModel.UpdateMode = AnimatedModel.AnimationUpdateMode.Manual;
             _previewNodesModel = FlaxEngine.Content.CreateVirtualAsset<Model>();
-            _previewNodesModel.SetupLODs(1);
+            _previewNodesModel.SetupLODs(new[] { 1 });
             _previewNodesActor = StaticModel.New();
             _previewNodesActor.Model = _previewNodesModel;
-            _previewNodesActor.Entries[0].Material = FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial);
+            _previewNodesActor.SetMaterial(0, FlaxEngine.Content.LoadAsyncInternal<MaterialBase>(EditorAssets.WiresDebugMaterial));
 
             // Link actors for rendering
-            Task.CustomActors.Add(_previewModel);
-            Task.CustomActors.Add(_previewNodesActor);
+            Task.AddCustomActor(_previewModel);
+            Task.AddCustomActor(_previewNodesActor);
         }
 
-        private void OnBegin(SceneRenderTask task, GPUContext context)
+        private void OnBegin(RenderTask task, GPUContext context)
         {
             if (!ScaleToFit)
             {
@@ -93,7 +92,7 @@ namespace FlaxEditor.Viewport.Previews
             if (skinnedModel && skinnedModel.IsLoaded)
             {
                 float targetSize = 30.0f;
-                float maxSize = Mathf.Max(0.001f, skinnedModel.Box.Size.MaxValue);
+                float maxSize = Mathf.Max(0.001f, skinnedModel.GetBox().Size.MaxValue);
                 _previewModel.Scale = new Vector3(targetSize / maxSize);
             }
         }
@@ -115,9 +114,9 @@ namespace FlaxEditor.Viewport.Previews
             _previewNodesActor.IsActive = ShowNodes;
             if (_previewNodesCounter++ % updateNodesCount == 0 && ShowNodes)
             {
-                _previewModel.GetCurrentPose(ref _previewModelPose);
+                _previewModel.GetCurrentPose(out var pose);
                 var nodes = _previewModel.SkinnedModel?.Nodes;
-                if (_previewModelPose.Nodes == null || _previewModelPose.Nodes.Length == 0 || nodes == null)
+                if (pose == null || pose.Length == 0 || nodes == null)
                 {
                     _previewNodesActor.IsActive = false;
                 }
@@ -135,13 +134,13 @@ namespace FlaxEditor.Viewport.Previews
                     // Draw bounding box at the node locations
                     var nodesMask = NodesMask != null && NodesMask.Length == nodes.Length ? NodesMask : null;
                     var localBox = new OrientedBoundingBox(new Vector3(-1.0f), new Vector3(1.0f));
-                    for (int i = 0; i < _previewModelPose.Nodes.Length; i++)
+                    for (int nodeIndex = 0; nodeIndex < pose.Length; nodeIndex++)
                     {
-                        if (nodesMask != null && !nodesMask[i])
+                        if (nodesMask != null && !nodesMask[nodeIndex])
                             continue;
 
-                        var transform = _previewModelPose.Nodes[i];
-                        transform.Decompose(out var scale, out var _, out var _);
+                        var transform = pose[nodeIndex];
+                        transform.Decompose(out var scale, out _, out _);
                         transform = Matrix.Invert(Matrix.Scaling(scale)) * transform;
 
                         // Some inlined code to improve performance
@@ -197,17 +196,17 @@ namespace FlaxEditor.Viewport.Previews
                     }
 
                     // Nodes connections
-                    for (int i = 0; i < nodes.Length; i++)
+                    for (int nodeIndex = 0; nodeIndex < nodes.Length; nodeIndex++)
                     {
-                        int parentIndex = nodes[i].ParentIndex;
+                        int parentIndex = nodes[nodeIndex].ParentIndex;
 
                         if (parentIndex != -1)
                         {
-                            if (nodesMask != null && (!nodesMask[i] || !nodesMask[parentIndex]))
+                            if (nodesMask != null && (!nodesMask[nodeIndex] || !nodesMask[parentIndex]))
                                 continue;
 
-                            var parentPos = _previewModelPose.GetNodePosition(parentIndex);
-                            var bonePos = _previewModelPose.GetNodePosition(i);
+                            var parentPos = pose[parentIndex].TranslationVector;
+                            var bonePos = pose[nodeIndex].TranslationVector;
 
                             var iStart = _previewNodesVB.Count;
                             _previewNodesVB.Add(parentPos);
@@ -219,7 +218,7 @@ namespace FlaxEditor.Viewport.Previews
                     }
 
                     if (_previewNodesIB.Count > 0)
-                        _previewNodesModel.LODs[0].Meshes[0].UpdateMesh(_previewNodesVB.ToArray(), _previewNodesIB.ToArray());
+                        _previewNodesModel.LODs[0].Meshes[0].UpdateMesh(_previewNodesVB, _previewNodesIB);
                     else
                         _previewNodesActor.IsActive = false;
                 }

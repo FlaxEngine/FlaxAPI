@@ -258,7 +258,7 @@ namespace FlaxEditor.CustomEditors
 
                 // Propagate values up (eg. when member of structure gets modified, also structure should be updated as a part of the other object)
                 var obj = _parent;
-                while (obj._parent != null && obj._parent != _presenter.Root && obj.NeedsValuePropagationUp)
+                while (obj._parent != null && !(obj._parent is SyncPointEditor))// && obj.NeedsValuePropagationUp)
                 {
                     obj.Values.Set(obj._parent.Values, obj.Values);
                     obj = obj._parent;
@@ -519,7 +519,7 @@ namespace FlaxEditor.CustomEditors
                     text = JsonSerializer.Serialize(Values[0]);
                 }
 
-                Platform.ClipboardText = text;
+                Clipboard.Text = text;
             }
             catch (Exception ex)
             {
@@ -531,7 +531,7 @@ namespace FlaxEditor.CustomEditors
         private bool GetClipboardObject(out object result)
         {
             result = null;
-            var text = Platform.ClipboardText;
+            var text = Clipboard.Text;
             if (string.IsNullOrEmpty(text))
                 return false;
 

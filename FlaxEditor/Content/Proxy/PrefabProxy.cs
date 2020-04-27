@@ -33,9 +33,6 @@ namespace FlaxEditor.Content
         public override string Name => "Prefab";
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Prefab;
-
-        /// <inheritdoc />
         public override string FileExtension => Extension;
 
         /// <inheritdoc />
@@ -88,7 +85,7 @@ namespace FlaxEditor.Content
                 Object.Destroy(actor, 20.0f);
             }
 
-            Editor.CreatePrefab(outputPath, actor, true);
+            PrefabManager.CreatePrefab(actor, outputPath, true);
         }
 
         /// <inheritdoc />
@@ -96,17 +93,18 @@ namespace FlaxEditor.Content
         {
             if (_preview == null)
             {
-                _preview = new PrefabPreview(false);
-                _preview.RenderOnlyWithWindow = false;
+                _preview = new PrefabPreview(false)
+                {
+                    RenderOnlyWithWindow = false,
+                    Offsets = Margin.Zero,
+                    AnchorPreset = AnchorPresets.StretchAll,
+                };
                 _preview.Task.Enabled = false;
 
                 var eyeAdaptation = _preview.PostFxVolume.EyeAdaptation;
                 eyeAdaptation.Mode = EyeAdaptationMode.None;
-                eyeAdaptation.OverrideFlags |= EyeAdaptationSettings.Override.Mode;
+                eyeAdaptation.OverrideFlags |= EyeAdaptationSettingsOverride.Mode;
                 _preview.PostFxVolume.EyeAdaptation = eyeAdaptation;
-
-                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
-                _preview.SyncBackbufferSize();
             }
 
             // TODO: disable streaming for asset during thumbnail rendering (and restore it after)
@@ -143,6 +141,7 @@ namespace FlaxEditor.Content
             _preview.Parent = guiRoot;
             _preview.Scale = Vector2.One;
             _preview.ShowDefaultSceneActors = true;
+            _preview.SyncBackbufferSize();
 
             // Special case for UI prefabs
             if (_preview.Instance is UIControl uiControl && uiControl.HasControl)
@@ -150,8 +149,8 @@ namespace FlaxEditor.Content
                 // Ensure to place UI in a proper way
                 uiControl.Control.Location = Vector2.Zero;
                 uiControl.Control.Scale *= PreviewsCache.AssetIconSize / uiControl.Control.Size.MaxValue;
-                uiControl.Control.DockStyle = DockStyle.None;
-                uiControl.Control.AnchorStyle = AnchorStyle.Center;
+                uiControl.Control.AnchorPreset = AnchorPresets.TopLeft;
+                uiControl.Control.AnchorPreset = AnchorPresets.MiddleCenter;
 
                 // Tweak preview
                 _preview.ShowDefaultSceneActors = false;
@@ -170,7 +169,7 @@ namespace FlaxEditor.Content
                 _preview.Instance.Position = Vector3.Zero;
             }
 
-            _preview.Task.OnRender(context);
+            _preview.Task.OnDraw();
         }
 
         /// <inheritdoc />

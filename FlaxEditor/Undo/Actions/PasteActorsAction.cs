@@ -77,9 +77,9 @@ namespace FlaxEditor.Actions
         protected virtual void LinkBrokenParentReference(Actor actor)
         {
             // Link to the first scene root
-            if (SceneManager.ScenesCount == 0)
+            if (Level.ScenesCount == 0)
                 throw new Exception("Failed to paste actor with a broken reference. No loaded scenes.");
-            actor.SetParent(SceneManager.GetScene(0), false);
+            actor.SetParent(Level.GetScene(0), false);
         }
 
         /// <inheritdoc />

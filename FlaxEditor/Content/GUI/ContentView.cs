@@ -11,6 +11,22 @@ using FlaxEngine.GUI;
 namespace FlaxEditor.Content.GUI
 {
     /// <summary>
+    /// The content items view modes.
+    /// </summary>
+    public enum ContentViewType
+    {
+        /// <summary>
+        /// The uniform tiles.
+        /// </summary>
+        Tiles,
+
+        /// <summary>
+        /// The vertical list.
+        /// </summary>
+        List,
+    }
+
+    /// <summary>
     /// Main control for <see cref="ContentWindow"/> used to present collection of <see cref="ContentItem"/>.
     /// </summary>
     /// <seealso cref="FlaxEngine.GUI.ContainerControl" />
@@ -21,6 +37,7 @@ namespace FlaxEditor.Content.GUI
         private readonly List<ContentItem> _selection = new List<ContentItem>(16);
 
         private float _viewScale = 1.0f;
+        private ContentViewType _viewType = ContentViewType.Tiles;
 
         #region External Events
 
@@ -53,6 +70,16 @@ namespace FlaxEditor.Content.GUI
         /// Called when user wants to navigate backward.
         /// </summary>
         public event Action OnNavigateBack;
+
+        /// <summary>
+        /// Occurs when view scale gets changed.
+        /// </summary>
+        public event Action ViewScaleChanged;
+
+        /// <summary>
+        /// Occurs when view type gets changed.
+        /// </summary>
+        public event Action ViewTypeChanged;
 
         #endregion
 
@@ -93,6 +120,24 @@ namespace FlaxEditor.Content.GUI
                 if (!Mathf.NearEqual(value, _viewScale))
                 {
                     _viewScale = value;
+                    ViewScaleChanged?.Invoke();
+                    PerformLayout();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the type of the view.
+        /// </summary>
+        public ContentViewType ViewType
+        {
+            get => _viewType;
+            set
+            {
+                if (_viewType != value)
+                {
+                    _viewType = value;
+                    ViewTypeChanged?.Invoke();
                     PerformLayout();
                 }
             }
@@ -104,6 +149,11 @@ namespace FlaxEditor.Content.GUI
         public bool IsSearching;
 
         /// <summary>
+        /// Flag used to indicate whenever show full file names including extensions.
+        /// </summary>
+        public bool ShowFileExtensions;
+
+        /// <summary>
         /// The input actions collection to processed during user input.
         /// </summary>
         public readonly InputActionsContainer InputActions;
@@ -113,9 +163,6 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public ContentView()
         {
-            DockStyle = DockStyle.Top;
-            IsScrollable = true;
-
             // Setup input actions
             InputActions = new InputActionsContainer(new[]
             {
@@ -212,9 +259,7 @@ namespace FlaxEditor.Content.GUI
         /// Determines whether the specified item is selected.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified item is selected; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the specified item is selected; otherwise, <c>false</c>.</returns>
         public bool IsSelected(ContentItem item)
         {
             return _selection.Contains(item);
@@ -362,7 +407,7 @@ namespace FlaxEditor.Content.GUI
                 return;
 
             var files = _selection.ConvertAll(x => x.Path).ToArray();
-            Platform.ClipboardFiles = files;
+            Clipboard.Files = files;
         }
 
         /// <summary>
@@ -371,7 +416,7 @@ namespace FlaxEditor.Content.GUI
         /// <returns>True if can paste files.</returns>
         public bool CanPaste()
         {
-            var files = Platform.ClipboardFiles;
+            var files = Clipboard.Files;
             return files != null && files.Length > 0;
         }
 
@@ -380,7 +425,7 @@ namespace FlaxEditor.Content.GUI
         /// </summary>
         public void Paste()
         {
-            var files = Platform.ClipboardFiles;
+            var files = Clipboard.Files;
             if (files == null || files.Length == 0)
                 return;
 
@@ -423,7 +468,7 @@ namespace FlaxEditor.Content.GUI
             bool isSelected = _selection.Contains(item);
 
             // Add/remove from selection
-            if (Root.GetKey(Keys.Control))
+            if (Root.GetKey(KeyboardKeys.Control))
             {
                 if (isSelected)
                     Deselect(item);
@@ -431,7 +476,7 @@ namespace FlaxEditor.Content.GUI
                     Select(item, true);
             }
             // Range select
-            else if (Root.GetKey(Keys.Shift))
+            else if (Root.GetKey(KeyboardKeys.Shift))
             {
                 int min = _selection.Min(x => x.IndexInParent);
                 int max = _selection.Max(x => x.IndexInParent);
@@ -526,7 +571,7 @@ namespace FlaxEditor.Content.GUI
         public override bool OnMouseWheel(Vector2 location, float delta)
         {
             // Check if pressing control key
-            if (Root.GetKey(Keys.Control))
+            if (Root.GetKey(KeyboardKeys.Control))
             {
                 // Zoom
                 ViewScale += delta * 0.05f;
@@ -539,10 +584,10 @@ namespace FlaxEditor.Content.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Navigate backward
-            if (key == Keys.Backspace)
+            if (key == KeyboardKeys.Backspace)
             {
                 OnNavigateBack?.Invoke();
                 return true;
@@ -555,7 +600,7 @@ namespace FlaxEditor.Content.GUI
             if (HasSelection)
             {
                 // Open
-                if (key == Keys.Return && _selection.Count == 1)
+                if (key == KeyboardKeys.Return && _selection.Count == 1)
                 {
                     OnOpen?.Invoke(_selection[0]);
                     return true;
@@ -567,19 +612,19 @@ namespace FlaxEditor.Content.GUI
                     Vector2 size = root.Size;
                     Vector2 offset = Vector2.Minimum;
                     ContentItem item = null;
-                    if (key == Keys.ArrowUp)
+                    if (key == KeyboardKeys.ArrowUp)
                     {
                         offset = new Vector2(0, -size.Y);
                     }
-                    else if (key == Keys.ArrowDown)
+                    else if (key == KeyboardKeys.ArrowDown)
                     {
                         offset = new Vector2(0, size.Y);
                     }
-                    else if (key == Keys.ArrowRight)
+                    else if (key == KeyboardKeys.ArrowRight)
                     {
                         offset = new Vector2(size.X, 0);
                     }
-                    else if (key == Keys.ArrowLeft)
+                    else if (key == KeyboardKeys.ArrowLeft)
                     {
                         offset = new Vector2(-size.X, 0);
                     }
@@ -601,30 +646,49 @@ namespace FlaxEditor.Content.GUI
         /// <inheritdoc />
         protected override void PerformLayoutSelf()
         {
-            // Calculate items size
-            float width = Width;
-            float defaultItemsWidth = ContentItem.DefaultWidth * _viewScale;
-            int itemsToFit = Mathf.FloorToInt(width / defaultItemsWidth);
-            float itemsWidth = width / Mathf.Max(itemsToFit, 1);
-            float itemsHeight = itemsWidth / defaultItemsWidth * (ContentItem.DefaultHeight * _viewScale);
-
-            // Arrange controls
+            float width = GetClientArea().Width;
             float x = 0, y = 0;
-            for (int i = 0; i < _children.Count; i++)
+
+            switch (ViewType)
             {
-                var c = _children[i];
-
-                c.Bounds = new Rectangle(x, y, itemsWidth, itemsHeight);
-
-                x += itemsWidth;
-                if (x + itemsWidth > width)
+            case ContentViewType.Tiles:
+            {
+                float defaultItemsWidth = ContentItem.DefaultWidth * _viewScale;
+                int itemsToFit = Mathf.FloorToInt(width / defaultItemsWidth);
+                float itemsWidth = width / Mathf.Max(itemsToFit, 1);
+                float itemsHeight = itemsWidth / defaultItemsWidth * (ContentItem.DefaultHeight * _viewScale);
+                for (int i = 0; i < _children.Count; i++)
                 {
-                    x = 0;
-                    y += itemsHeight;
+                    var c = _children[i];
+                    c.Bounds = new Rectangle(x, y, itemsWidth, itemsHeight);
+
+                    x += itemsWidth;
+                    if (x + itemsWidth > width)
+                    {
+                        x = 0;
+                        y += itemsHeight + 1;
+                    }
                 }
+                if (x > 0)
+                    y += itemsHeight;
+
+                break;
             }
-            if (x > 0)
-                y += itemsHeight;
+            case ContentViewType.List:
+            {
+                float itemsHeight = 50.0f * _viewScale;
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    var c = _children[i];
+                    c.Bounds = new Rectangle(x, y, width, itemsHeight);
+                    y += itemsHeight + 1;
+                }
+                y += 40.0f;
+
+                break;
+            }
+            default: throw new ArgumentOutOfRangeException();
+            }
 
             // Set maximum size and fit the parent container
             if (HasParent)

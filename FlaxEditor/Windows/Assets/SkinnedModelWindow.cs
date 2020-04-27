@@ -49,19 +49,19 @@ namespace FlaxEditor.Windows.Assets
                 _floorModel.Scale = new Vector3(5, 0.5f, 5);
                 _floorModel.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
                 _floorModel.IsActive = false;
-                Task.CustomActors.Add(_floorModel);
+                Task.AddCustomActor(_floorModel);
 
                 // Enable shadows
                 PreviewLight.ShadowsMode = ShadowsCastingMode.All;
                 PreviewLight.CascadeCount = 3;
                 PreviewLight.ShadowsDistance = 2000.0f;
-                Task.View.Flags |= ViewFlags.Shadows;
+                Task.ViewFlags |= ViewFlags.Shadows;
             }
 
             private void OnShowFloorModelClicked(ContextMenuButton obj)
             {
                 _floorModel.IsActive = !_floorModel.IsActive;
-                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : Sprite.Invalid;
+                _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
             }
 
             /// <inheritdoc />
@@ -72,7 +72,7 @@ namespace FlaxEditor.Windows.Assets
                 var style = Style.Current;
                 if (_window.Asset == null || !_window.Asset.IsLoaded)
                 {
-                    Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+                    Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
                 }
             }
 
@@ -92,7 +92,8 @@ namespace FlaxEditor.Windows.Assets
         [CustomEditor(typeof(ProxyEditor))]
         private sealed class PropertiesProxy
         {
-            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = true, NotNullItems = true)]
+            [MemberCollection(CanReorderItems = true, NotNullItems = true, OverrideEditorTypeName = "FlaxEditor.CustomEditors.Editors.GenericEditor")]
+            [EditorOrder(10), EditorDisplay("Materials", EditorDisplayAttribute.InlineStyle)]
             public MaterialSlot[] MaterialSlots
             {
                 get => Asset?.MaterialSlots;
@@ -326,14 +327,14 @@ namespace FlaxEditor.Windows.Assets
                         for (int meshIndex = 0; meshIndex < meshes.Length; meshIndex++)
                         {
                             var mesh = meshes[meshIndex];
-                            triangleCount += mesh.Triangles;
-                            vertexCount += mesh.Vertices;
+                            triangleCount += mesh.TriangleCount;
+                            vertexCount += mesh.VertexCount;
                         }
 
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
                         group.Label("Nodes: " + nodes.Length);
                         group.Label("Bones: " + bones.Length);
-                        group.Label("Size: " + proxy.Asset.Box.Size);
+                        group.Label("Size: " + proxy.Asset.GetBox().Size);
                     }
 
                     // Group per mesh
@@ -344,7 +345,7 @@ namespace FlaxEditor.Windows.Assets
                         var mesh = meshes[meshIndex];
 
                         var group = meshesGroup.Group("Mesh " + meshIndex);
-                        group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", mesh.Triangles, mesh.Vertices));
+                        group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", mesh.TriangleCount, mesh.VertexCount));
 
                         // Material Slot
                         var materialSlot = group.ComboBox("Material Slot", "Material slot used by this mesh during rendering");
@@ -459,12 +460,13 @@ namespace FlaxEditor.Windows.Assets
             _toolstrip.AddSeparator();
             _toolstrip.AddButton(editor.Icons.Bone32, () => _preview.ShowNodes = !_preview.ShowNodes).SetAutoCheck(true).LinkTooltip("Show animated model nodes debug view");
             _toolstrip.AddSeparator();
-            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.StartProcess(Utilities.Constants.DocsUrl + "manual/animation/skinned-model/index.html")).LinkTooltip("See documentation to learn more");
+            _toolstrip.AddButton(editor.Icons.Docs32, () => Platform.OpenUrl(Utilities.Constants.DocsUrl + "manual/animation/skinned-model/index.html")).LinkTooltip("See documentation to learn more");
 
             // Split Panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.None, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolstrip.Bottom, 0),
                 SplitterValue = 0.7f,
                 Parent = this
             };
@@ -487,7 +489,7 @@ namespace FlaxEditor.Windows.Assets
             // Highlight actor (used to highlight selected material slot, see UpdateEffectsOnAsset)
             _highlightActor = AnimatedModel.New();
             _highlightActor.IsActive = false;
-            _preview.Task.CustomActors.Add(_highlightActor);
+            _preview.Task.AddCustomActor(_highlightActor);
         }
 
         /// <summary>
@@ -502,6 +504,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     entries[i].Visible = _properties.IsolateIndex == -1 || _properties.IsolateIndex == i;
                 }
+                _preview.PreviewActor.Entries = entries;
             }
 
             if (_properties.HighlightIndex != -1)
@@ -518,6 +521,7 @@ namespace FlaxEditor.Windows.Assets
                         entries[i].Visible = _properties.HighlightIndex == i;
                     }
                 }
+                _highlightActor.Entries = entries;
             }
             else
             {
@@ -550,22 +554,12 @@ namespace FlaxEditor.Windows.Assets
             if (!IsEdited)
                 return;
 
-            // Wait until model asset file be fully loaded
-            if (_asset.WaitForLoaded())
-            {
-                // Error
-                return;
-            }
-
-            // Call asset saving
             if (_asset.Save())
             {
-                // Error
-                Editor.LogError("Failed to save model " + _item);
+                Editor.LogError("Cannot save asset.");
                 return;
             }
 
-            // Update
             ClearEditedFlag();
             _item.RefreshThumbnail();
         }
@@ -603,7 +597,7 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnLoad(this);
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
-            _preview.ViewportCamera.SerArcBallView(Asset.Box);
+            _preview.ViewportCamera.SerArcBallView(Asset.GetBox());
 
             // Reset any root motion
             _preview.PreviewActor.ResetLocalTransform();

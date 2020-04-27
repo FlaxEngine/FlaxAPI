@@ -371,8 +371,8 @@ namespace FlaxEditor.GUI.Tree
                 // Check if can perform update
                 if (_keyUpdateTime >= KeyUpdateTimeout)
                 {
-                    bool keyUpArrow = window.GetKeyDown(Keys.ArrowUp);
-                    bool keyDownArrow = window.GetKeyDown(Keys.ArrowDown);
+                    bool keyUpArrow = window.GetKeyDown(KeyboardKeys.ArrowUp);
+                    bool keyDownArrow = window.GetKeyDown(KeyboardKeys.ArrowDown);
 
                     // Check if arrow flags are different
                     if (keyDownArrow != keyUpArrow)
@@ -455,7 +455,7 @@ namespace FlaxEditor.GUI.Tree
                     _keyUpdateTime += deltaTime;
                 }
 
-                if (window.GetKeyDown(Keys.ArrowRight))
+                if (window.GetKeyDown(KeyboardKeys.ArrowRight))
                 {
                     if (node.IsExpanded)
                     {
@@ -472,7 +472,7 @@ namespace FlaxEditor.GUI.Tree
                         node.Expand();
                     }
                 }
-                else if (window.GetKeyDown(Keys.ArrowLeft))
+                else if (window.GetKeyDown(KeyboardKeys.ArrowLeft))
                 {
                     if (node.IsCollapsed)
                     {
@@ -495,15 +495,15 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Check if can use multi selection
             if (_supportMultiSelect)
             {
-                bool isCtrlDown = Root.GetKey(Keys.Control);
+                bool isCtrlDown = Root.GetKey(KeyboardKeys.Control);
 
                 // Select all expanded nodes
-                if (key == Keys.A && isCtrlDown)
+                if (key == KeyboardKeys.A && isCtrlDown)
                 {
                     SelectAllExpanded();
                     return true;
@@ -531,11 +531,11 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override void OnParentResized(ref Vector2 oldSize)
+        public override void OnParentResized()
         {
             UpdateSize();
 
-            base.OnParentResized(ref oldSize);
+            base.OnParentResized();
         }
 
         /// <inheritdoc />

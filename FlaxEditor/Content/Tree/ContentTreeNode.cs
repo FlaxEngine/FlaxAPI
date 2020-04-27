@@ -301,24 +301,24 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (IsFocused)
             {
                 switch (key)
                 {
-                case Keys.F2:
+                case KeyboardKeys.F2:
                     StartRenaming();
                     return true;
-                case Keys.Delete:
+                case KeyboardKeys.Delete:
                     Editor.Instance.Windows.ContentWin.Delete(Folder);
                     return true;
                 }
-                if (RootWindow.GetKey(Keys.Control))
+                if (RootWindow.GetKey(KeyboardKeys.Control))
                 {
                     switch (key)
                     {
-                    case Keys.D:
+                    case KeyboardKeys.D:
                         Editor.Instance.Windows.ContentWin.Duplicate(Folder);
                         return true;
                     }

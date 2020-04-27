@@ -16,14 +16,14 @@ namespace FlaxEditor.Content.Settings
         /// </summary>
         [DefaultValue(256)]
         [EditorOrder(10), Limit(32, short.MaxValue), EditorDisplay("General", "Max assets per package"), Tooltip("The maximum amount of assets to include into a single assets package. Assets will be split into several packages if need to.")]
-        public int MaxAssetsPerPackage = 256;
+        public int MaxAssetsPerPackage = 1024;
 
         /// <summary>
         /// The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.
         /// </summary>
         [DefaultValue(256)]
         [EditorOrder(20), Limit(16, short.MaxValue), EditorDisplay("General", "Max package size (in MB)"), Tooltip("The maximum size of the single assets package (in megabytes). Assets will be split into several packages if need to.")]
-        public int MaxPackageSizeMB = 256;
+        public int MaxPackageSizeMB = 1024;
 
         /// <summary>
         /// The game content cooking Keys. Use the same value for a game and DLC packages to support loading them by the build game. Use 0 to randomize it during building.
@@ -33,9 +33,35 @@ namespace FlaxEditor.Content.Settings
         public int ContentKey = 0;
 
         /// <summary>
+        /// The additional assets to include into build (into root assets set).
+        /// </summary>
+        [EditorOrder(1000), EditorDisplay("Additional Data"), Tooltip("The additional assets to include into build (into root assets set).")]
+        public Asset[] AdditionalAssets;
+
+        /// <summary>
+        /// The additional folders with assets to include into build (into root assets set). List of paths relative to the project directory (or absolute).
+        /// </summary>
+        [EditorOrder(1010), EditorDisplay("Additional Data"), Tooltip("The additional folders with assets to include into build (to root assets set). List of paths relative to the project directory (or absolute).")]
+        public string[] AdditionalAssetFolders;
+
+        /// <summary>
+        /// Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.
+        /// </summary>
+        [DefaultValue(false)]
+        [EditorOrder(2000), EditorDisplay("Content", "Shaders No Optimize"), Tooltip("Disables shaders compiler optimizations in cooked game. Can be used to debug shaders on a target platform or to speed up the shaders compilation time.")]
+        public bool ShadersNoOptimize;
+
+        /// <summary>
+        /// Enables shader debug data generation for shaders in cooked game (depends on the target platform rendering backend).
+        /// </summary>
+        [DefaultValue(false)]
+        [EditorOrder(2010), EditorDisplay("Content"), Tooltip("Enables shader debug data generation for shaders in cooked game (depends on the target platform rendering backend).")]
+        public bool ShadersGenerateDebugData;
+
+        /// <summary>
         /// The build presets.
         /// </summary>
-        [EditorOrder(100), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
+        [EditorOrder(5000), EditorDisplay("Presets", EditorDisplayAttribute.InlineStyle), Tooltip("Build presets configuration")]
         public BuildPreset[] Presets =
         {
             new BuildPreset
@@ -48,14 +74,14 @@ namespace FlaxEditor.Content.Settings
                         Name = "Windows 64bit",
                         Output = "Output\\Win64",
                         Platform = BuildPlatform.Windows64,
-                        Mode = BuildMode.Debug,
+                        Mode = BuildConfiguration.Development,
                     },
                     new BuildTarget
                     {
                         Name = "Windows 32bit",
                         Output = "Output\\Win32",
                         Platform = BuildPlatform.Windows32,
-                        Mode = BuildMode.Debug,
+                        Mode = BuildConfiguration.Development,
                     },
                 }
             },
@@ -69,14 +95,14 @@ namespace FlaxEditor.Content.Settings
                         Name = "Windows 64bit",
                         Output = "Output\\Win64",
                         Platform = BuildPlatform.Windows64,
-                        Mode = BuildMode.Release,
+                        Mode = BuildConfiguration.Development,
                     },
                     new BuildTarget
                     {
                         Name = "Windows 32bit",
                         Output = "Output\\Win32",
                         Platform = BuildPlatform.Windows32,
-                        Mode = BuildMode.Release,
+                        Mode = BuildConfiguration.Development,
                     },
                 }
             },

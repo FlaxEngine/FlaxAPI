@@ -83,7 +83,7 @@ namespace FlaxEditor.Modules
         /// </summary>
         public void MarkAllScenesEdited()
         {
-            MarkSceneEdited(SceneManager.Scenes);
+            MarkSceneEdited(Level.Scenes);
         }
 
         /// <summary>
@@ -139,50 +139,43 @@ namespace FlaxEditor.Modules
         {
             // Create a sample scene
             var scene = Scene.New();
-            var sky = Sky.New();
-            var sun = DirectionalLight.New();
-            var skyLight = SkyLight.New();
-            var floor = StaticModel.New();
-            var cam = Camera.New();
-            //
             scene.StaticFlags = StaticFlags.FullyStatic;
-            scene.AddChild(sky);
-            scene.AddChild(sun);
-            scene.AddChild(skyLight);
-            scene.AddChild(floor);
-            scene.AddChild(cam);
             //
+            var sun = scene.AddChild<DirectionalLight>();
+            sun.Name = "Sun";
+            sun.LocalPosition = new Vector3(40, 160, 0);
+            sun.LocalEulerAngles = new Vector3(45, 0, 0);
+            sun.StaticFlags = StaticFlags.FullyStatic;
+            //
+            var sky = scene.AddChild<Sky>();
             sky.Name = "Sky";
             sky.LocalPosition = new Vector3(40, 150, 0);
             sky.SunLight = sun;
             sky.StaticFlags = StaticFlags.FullyStatic;
             //
-            sun.Name = "Sun";
-            sun.Brightness = 10.0f;
-            sun.LocalPosition = new Vector3(40, 160, 0);
-            sun.LocalEulerAngles = new Vector3(45, 0, 0);
-            sun.StaticFlags = StaticFlags.FullyStatic;
-            //
+            var skyLight = scene.AddChild<SkyLight>();
             skyLight.Mode = SkyLight.Modes.CustomTexture;
             skyLight.Brightness = 1.8f;
             skyLight.CustomTexture = FlaxEngine.Content.LoadAsyncInternal<CubeTexture>(EditorAssets.DefaultSkyCubeTexture);
             skyLight.StaticFlags = StaticFlags.FullyStatic;
             //
+            var floor = scene.AddChild<StaticModel>();
             floor.Name = "Floor";
             floor.Scale = new Vector3(4, 0.5f, 4);
             floor.Model = FlaxEngine.Content.LoadAsync<Model>(StringUtils.CombinePaths(Globals.EditorFolder, "Primitives/Cube.flax"));
             if (floor.Model)
             {
                 floor.Model.WaitForLoaded();
-                floor.Entries[0].Material = FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax"));
+                floor.SetMaterial(0, FlaxEngine.Content.LoadAsync<MaterialBase>(StringUtils.CombinePaths(Globals.EngineFolder, "WhiteMaterial.flax")));
             }
             floor.StaticFlags = StaticFlags.FullyStatic;
             //
+            var cam = scene.AddChild<Camera>();
             cam.Name = "Camera";
             cam.Position = new Vector3(0, 150, -300);
 
             // Serialize
-            var bytes = SceneManager.SaveSceneToBytes(scene);
+            var bytes = Level.SaveSceneToBytes(scene);
 
             // Cleanup
             Object.Destroy(ref scene);
@@ -214,7 +207,7 @@ namespace FlaxEditor.Modules
                 return;
 
             scene.IsEdited = false;
-            SceneManager.SaveSceneAsync(scene.Scene);
+            Level.SaveSceneAsync(scene.Scene);
         }
 
         /// <summary>
@@ -230,7 +223,7 @@ namespace FlaxEditor.Modules
                 if (scene is SceneNode node)
                     node.IsEdited = false;
             }
-            SceneManager.SaveAllScenesAsync();
+            Level.SaveAllScenesAsync();
         }
 
         /// <summary>
@@ -287,7 +280,7 @@ namespace FlaxEditor.Modules
                 return;
 
             // Unload scenes
-            Editor.StateMachine.ChangingScenesState.UnloadScene(SceneManager.Scenes);
+            Editor.StateMachine.ChangingScenesState.UnloadScene(Level.Scenes);
         }
 
         /// <summary>
@@ -302,11 +295,11 @@ namespace FlaxEditor.Modules
             {
                 // Ask user for further action
                 var result = MessageBox.Show(
-                    string.Format("Scene \'{0}\' has been edited. Save before closing?", scene.Name),
-                    "Close without saving?",
-                    MessageBox.Buttons.YesNoCancel,
-                    MessageBox.Icon.Question
-                );
+                                             string.Format("Scene \'{0}\' has been edited. Save before closing?", scene.Name),
+                                             "Close without saving?",
+                                             MessageBoxButtons.YesNoCancel,
+                                             MessageBoxIcon.Question
+                                            );
                 if (result == DialogResult.OK || result == DialogResult.Yes)
                 {
                     // Save and close
@@ -334,13 +327,13 @@ namespace FlaxEditor.Modules
             if (IsEdited())
             {
                 // Ask user for further action
-                var scenes = SceneManager.Scenes;
+                var scenes = Level.Scenes;
                 var result = MessageBox.Show(
-                    scenes.Length == 1 ? string.Format("Scene \'{0}\' has been edited. Save before closing?", scenes[0].Name) : string.Format("{0} scenes have been edited. Save before closing?", scenes.Length),
-                    "Close without saving?",
-                    MessageBox.Buttons.YesNoCancel,
-                    MessageBox.Icon.Question
-                );
+                                             scenes.Length == 1 ? string.Format("Scene \'{0}\' has been edited. Save before closing?", scenes[0].Name) : string.Format("{0} scenes have been edited. Save before closing?", scenes.Length),
+                                             "Close without saving?",
+                                             MessageBoxButtons.YesNoCancel,
+                                             MessageBoxIcon.Question
+                                            );
                 if (result == DialogResult.OK || result == DialogResult.Yes)
                 {
                     // Save and close
@@ -568,28 +561,28 @@ namespace FlaxEditor.Modules
             Root = new ScenesRootNode();
 
             // Bind events
-            SceneManager.SceneLoaded += OnSceneLoaded;
-            SceneManager.SceneUnloading += OnSceneUnloading;
-            SceneManager.ActorSpawned += OnActorSpawned;
-            SceneManager.ActorDeleted += OnActorDeleted;
-            SceneManager.ActorParentChanged += OnActorParentChanged;
-            SceneManager.ActorOrderInParentChanged += OnActorOrderInParentChanged;
-            SceneManager.ActorNameChanged += OnActorNameChanged;
-            SceneManager.ActorActiveChanged += OnActorActiveChanged;
+            Level.SceneLoaded += OnSceneLoaded;
+            Level.SceneUnloading += OnSceneUnloading;
+            Level.ActorSpawned += OnActorSpawned;
+            Level.ActorDeleted += OnActorDeleted;
+            Level.ActorParentChanged += OnActorParentChanged;
+            Level.ActorOrderInParentChanged += OnActorOrderInParentChanged;
+            Level.ActorNameChanged += OnActorNameChanged;
+            Level.ActorActiveChanged += OnActorActiveChanged;
         }
 
         /// <inheritdoc />
         public override void OnExit()
         {
             // Unbind events
-            SceneManager.SceneLoaded -= OnSceneLoaded;
-            SceneManager.SceneUnloading -= OnSceneUnloading;
-            SceneManager.ActorSpawned -= OnActorSpawned;
-            SceneManager.ActorDeleted -= OnActorDeleted;
-            SceneManager.ActorParentChanged -= OnActorParentChanged;
-            SceneManager.ActorOrderInParentChanged -= OnActorOrderInParentChanged;
-            SceneManager.ActorNameChanged -= OnActorNameChanged;
-            SceneManager.ActorActiveChanged -= OnActorActiveChanged;
+            Level.SceneLoaded -= OnSceneLoaded;
+            Level.SceneUnloading -= OnSceneUnloading;
+            Level.ActorSpawned -= OnActorSpawned;
+            Level.ActorDeleted -= OnActorDeleted;
+            Level.ActorParentChanged -= OnActorParentChanged;
+            Level.ActorOrderInParentChanged -= OnActorOrderInParentChanged;
+            Level.ActorNameChanged -= OnActorNameChanged;
+            Level.ActorActiveChanged -= OnActorActiveChanged;
 
             // Cleanup graph
             Root.Dispose();

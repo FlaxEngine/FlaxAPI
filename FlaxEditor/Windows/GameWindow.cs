@@ -98,7 +98,7 @@ namespace FlaxEditor.Windows
                 return base.OnDragMove(ref location, data);
             }
 
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
                 if (!EnableEvents)
                     return false;
@@ -106,7 +106,7 @@ namespace FlaxEditor.Windows
                 return base.OnKeyDown(key);
             }
 
-            public override void OnKeyUp(Keys key)
+            public override void OnKeyUp(KeyboardKeys key)
             {
                 if (!EnableEvents)
                     return;
@@ -186,7 +186,8 @@ namespace FlaxEditor.Windows
             // Setup viewport
             _viewport = new RenderOutputControl(task)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 AutoFocus = false,
                 Parent = this
             };
@@ -194,7 +195,8 @@ namespace FlaxEditor.Windows
             // Override the game GUI root
             _guiRoot = new GameRoot
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 //Visible = false,
                 AutoFocus = false,
                 Parent = _viewport
@@ -231,18 +233,6 @@ namespace FlaxEditor.Windows
 
             // Hide GUI
             //_guiRoot.Visible = false;
-        }
-
-        /// <summary>
-        /// Sets the mouse position (handles call from the game scripts). Skips if editor is not focused on a game to prevent mouse position stealing.
-        /// </summary>
-        /// <param name="val">The value.</param>
-        public void SetGameMousePosition(ref Vector2 val)
-        {
-            if (Root is WindowRootControl win && win.Window.IsFocused && win.ContainsFocus && Viewport.IsMouseOver)
-            {
-                win.MousePosition = Vector2.Round(Viewport.PointToWindow(val));
-            }
         }
 
         /// <inheritdoc />
@@ -294,7 +284,7 @@ namespace FlaxEditor.Windows
             {
                 var style = Style.Current;
 
-                Render2D.DrawText(style.FontLarge, "No camera", new Rectangle(Vector2.Zero, Size), Color.White, TextAlignment.Center, TextAlignment.Center);
+                Render2D.DrawText(style.FontLarge, "No camera", new Rectangle(Vector2.Zero, Size), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
             }
 
             if (Editor.StateMachine.IsPlayMode)
@@ -310,8 +300,8 @@ namespace FlaxEditor.Windows
                     var alpha = Mathf.Saturate(-animTime / fadeOutTime);
                     var rect = new Rectangle(new Vector2(6), Size - 12);
                     var text = "Press Shift+F11 to unlock the mouse";
-                    Render2D.DrawText(style.FontSmall, text, rect + new Vector2(1.0f), Color.Black * alpha, TextAlignment.Near, TextAlignment.Far);
-                    Render2D.DrawText(style.FontSmall, text, rect, Color.White * alpha, TextAlignment.Near, TextAlignment.Far);
+                    Render2D.DrawText(style.FontSmall, text, rect + new Vector2(1.0f), style.Background * alpha, TextAlignment.Near, TextAlignment.Far);
+                    Render2D.DrawText(style.FontSmall, text, rect, style.Foreground * alpha, TextAlignment.Near, TextAlignment.Far);
                 }
 
                 timeout = 1.0f;
@@ -359,20 +349,20 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             switch (key)
             {
-            case Keys.Pause:
+            case KeyboardKeys.Pause:
                 Editor.Simulation.RequestResumeOrPause();
                 UnlockMouseInPlay();
                 return true;
-            case Keys.F12:
-                Screenshot.Capture();
+            case KeyboardKeys.F12:
+                Screenshot.Capture(string.Empty);
                 return true;
-            case Keys.F11:
+            case KeyboardKeys.F11:
             {
-                if (Root.GetKey(Keys.Shift))
+                if (Root.GetKey(KeyboardKeys.Shift))
                 {
                     // Unlock mouse in game mode
                     UnlockMouseInPlay();

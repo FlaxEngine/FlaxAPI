@@ -42,7 +42,7 @@ namespace FlaxEditor.States
             _scenesToLoad.Add(sceneId);
             if (!additive)
             {
-                _scenesToUnload.AddRange(SceneManager.Scenes);
+                _scenesToUnload.AddRange(Level.Scenes);
             }
 
             TryEnter();
@@ -126,7 +126,7 @@ namespace FlaxEditor.States
             // Skip already loaded scenes
             for (int j = 0; j < _scenesToLoad.Count; j++)
             {
-                if (SceneManager.FindScene(_scenesToLoad[j]))
+                if (Level.FindScene(_scenesToLoad[j]))
                 {
                     _scenesToLoad.RemoveAt(j--);
                     if (_scenesToLoad.Count == 0)
@@ -151,20 +151,20 @@ namespace FlaxEditor.States
             Assert.AreEqual(Guid.Empty, _lastSceneFromRequest, "Invalid state.");
 
             // Bind events
-            SceneManager.SceneLoaded += OnSceneEvent;
-            SceneManager.SceneLoadError += OnSceneEvent;
-            SceneManager.SceneUnloaded += OnSceneEvent;
+            Level.SceneLoaded += OnSceneEvent;
+            Level.SceneLoadError += OnSceneEvent;
+            Level.SceneUnloaded += OnSceneEvent;
 
             // Push scenes changing requests
             for (int i = 0; i < _scenesToUnload.Count; i++)
             {
                 _lastSceneFromRequest = _scenesToUnload[i].ID;
-                SceneManager.UnloadSceneAsync(_scenesToUnload[i]);
+                Level.UnloadSceneAsync(_scenesToUnload[i]);
             }
             for (int i = 0; i < _scenesToLoad.Count; i++)
             {
                 var id = _scenesToLoad[i];
-                bool failed = SceneManager.LoadSceneAsync(id);
+                bool failed = Level.LoadSceneAsync(id);
                 if (!failed)
                     _lastSceneFromRequest = id;
             }
@@ -196,9 +196,9 @@ namespace FlaxEditor.States
             }
 
             // Unbind events
-            SceneManager.SceneLoaded -= OnSceneEvent;
-            SceneManager.SceneLoadError -= OnSceneEvent;
-            SceneManager.SceneUnloaded -= OnSceneEvent;
+            Level.SceneLoaded -= OnSceneEvent;
+            Level.SceneLoadError -= OnSceneEvent;
+            Level.SceneUnloaded -= OnSceneEvent;
         }
 
         private void OnSceneEvent(Scene scene, Guid sceneId)

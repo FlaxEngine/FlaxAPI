@@ -44,7 +44,7 @@ namespace FlaxEditor.Gizmo
         }
 
         /// <inheritdoc />
-        public override void Draw(DrawCallsCollector collector)
+        public override void Draw(ref RenderContext renderContext)
         {
             if (!Enabled)
                 return;

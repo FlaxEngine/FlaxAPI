@@ -17,7 +17,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         public const int DefaultMargin = 2;
 
-        private Sprite _icon;
+        private SpriteHandle _icon;
         private string _text;
         private bool _mouseDown;
 
@@ -52,7 +52,7 @@ namespace FlaxEditor.GUI
         /// <summary>
         /// The icon.
         /// </summary>
-        public Sprite Icon
+        public SpriteHandle Icon
         {
             get => _icon;
             set
@@ -67,7 +67,7 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="height">The height.</param>
         /// <param name="icon">The icon.</param>
-        public ToolStripButton(float height, ref Sprite icon)
+        public ToolStripButton(float height, ref SpriteHandle icon)
         : base(0, 0, height, height)
         {
             _icon = icon;
@@ -115,7 +115,7 @@ namespace FlaxEditor.GUI
             // Draw icon
             if (_icon.IsValid)
             {
-                Render2D.DrawSprite(_icon, iconRect, enabled ? Color.White : style.ForegroundDisabled);
+                Render2D.DrawSprite(_icon, iconRect, enabled ? style.Foreground : style.ForegroundDisabled);
                 textRect.Location.X += iconSize + DefaultMargin;
             }
 

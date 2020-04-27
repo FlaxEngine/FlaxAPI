@@ -21,9 +21,6 @@ namespace FlaxEditor.Content
         public override string Name => "Scene";
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.Scene;
-
-        /// <inheritdoc />
         public override string FileExtension => Extension;
 
         /// <inheritdoc />

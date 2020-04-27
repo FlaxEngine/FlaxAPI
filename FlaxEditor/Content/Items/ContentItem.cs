@@ -177,13 +177,8 @@ namespace FlaxEditor.Content
         private Vector2 _mouseDownStartPos;
         private readonly List<IContentItemOwner> _references = new List<IContentItemOwner>(4);
 
-        private Sprite _thumbnail;
-        private Sprite _shadowIcon;
-
-        /// <summary>
-        /// Gets the item domain.
-        /// </summary>
-        public virtual ContentDomain ItemDomain => ContentDomain.Invalid;
+        private SpriteHandle _thumbnail;
+        private SpriteHandle _shadowIcon;
 
         /// <summary>
         /// Gets the type of the item.
@@ -255,6 +250,11 @@ namespace FlaxEditor.Content
         public string Path { get; private set; }
 
         /// <summary>
+        /// Gets the item file name (filename with extension).
+        /// </summary>
+        public string FileName { get; internal set; }
+
+        /// <summary>
         /// Gets the item short name (filename without extension).
         /// </summary>
         public string ShortName { get; internal set; }
@@ -276,10 +276,9 @@ namespace FlaxEditor.Content
         }
 
         /// <summary>
-        /// Gets the default name of the content item thumbnail.
-        /// Returns null if not used.
+        /// Gets the default name of the content item thumbnail. Returns null if not used.
         /// </summary>
-        public virtual Sprite DefaultThumbnail => Sprite.Invalid;
+        public virtual SpriteHandle DefaultThumbnail => SpriteHandle.Invalid;
 
         /// <summary>
         /// Gets a value indicating whether this item has default thumbnail.
@@ -289,7 +288,7 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets or sets the item thumbnail. Warning, thumbnail may not be available if item has no references (<see cref="ReferencesCount"/>).
         /// </summary>
-        public Sprite Thumbnail
+        public SpriteHandle Thumbnail
         {
             get => _thumbnail;
             set => _thumbnail = value;
@@ -304,6 +303,7 @@ namespace FlaxEditor.Content
         {
             // Set path
             Path = path;
+            FileName = System.IO.Path.GetFileName(path);
             ShortName = System.IO.Path.GetFileNameWithoutExtension(path);
         }
 
@@ -317,6 +317,7 @@ namespace FlaxEditor.Content
 
             // Set path
             Path = StringUtils.NormalizePath(value);
+            FileName = System.IO.Path.GetFileName(value);
             ShortName = System.IO.Path.GetFileNameWithoutExtension(value);
 
             // Fire event
@@ -345,6 +346,14 @@ namespace FlaxEditor.Content
             {
                 thumbnails.RequestPreview(this);
             }
+        }
+
+        /// <summary>
+        /// Updates the tooltip text text.
+        /// </summary>
+        protected virtual void UpdateTooltipText()
+        {
+            TooltipText = "Path: " + Path;
         }
 
         /// <summary>
@@ -390,24 +399,32 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets a value indicating whether draw item shadow.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if draw shadow; otherwise, <c>false</c>.
-        /// </value>
         protected virtual bool DrawShadow => false;
 
         /// <summary>
         /// Gets the local space rectangle for element name text area.
         /// </summary>
-        /// <value>
-        /// The text rectangle.
-        /// </value>
         public Rectangle TextRectangle
         {
             get
             {
-                float width = Width;
-                float textRectHeight = DefaultTextHeight * width / DefaultWidth;
-                return new Rectangle(0, Height - textRectHeight, width, textRectHeight);
+                var view = Parent as ContentView;
+                var size = Size;
+                switch (view?.ViewType ?? ContentViewType.Tiles)
+                {
+                case ContentViewType.Tiles:
+                {
+                    var textHeight = DefaultTextHeight * size.X / DefaultWidth;
+                    return new Rectangle(0, size.Y - textHeight, size.X, textHeight);
+                }
+                case ContentViewType.List:
+                {
+                    var thumbnailSize = size.Y - 2 * DefaultMarginSize;
+                    var textHeight = Mathf.Min(size.Y, 24.0f);
+                    return new Rectangle(thumbnailSize + DefaultMarginSize * 2, (size.Y - textHeight) * 0.5f, size.X - textHeight - DefaultMarginSize * 3.0f, textHeight);
+                }
+                default: throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -437,9 +454,6 @@ namespace FlaxEditor.Content
         /// <summary>
         /// Gets the amount of references to that item.
         /// </summary>
-        /// <value>
-        /// The references count.
-        /// </value>
         public int ReferencesCount => _references.Count;
 
         /// <summary>
@@ -517,7 +531,7 @@ namespace FlaxEditor.Content
         protected void ReleaseThumbnail()
         {
             // Simply unlink sprite
-            _thumbnail = Sprite.Invalid;
+            _thumbnail = SpriteHandle.Invalid;
         }
 
         /// <summary>
@@ -557,18 +571,45 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
+        protected override bool ShowTooltip => true;
+
+        /// <inheritdoc />
+        public override bool OnShowTooltip(out string text, out Vector2 location, out Rectangle area)
+        {
+            UpdateTooltipText();
+            return base.OnShowTooltip(out text, out location, out area);
+        }
+
+        /// <inheritdoc />
         public override void Draw()
         {
             // Cache data
-            var width = Width;
-            var height = Height;
+            var size = Size;
             var style = Style.Current;
             var view = Parent as ContentView;
-            bool isSelected = view.IsSelected(this);
-            var clientRect = new Rectangle(0, 0, width, height);
-            float thumbnailSize = width - 2 * DefaultMarginSize;
-            var thumbnailRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, thumbnailSize, thumbnailSize);
+            var isSelected = view.IsSelected(this);
+            var clientRect = new Rectangle(Vector2.Zero, size);
             var textRect = TextRectangle;
+            Rectangle thumbnailRect;
+            TextAlignment nameAlignment;
+            switch (view.ViewType)
+            {
+            case ContentViewType.Tiles:
+            {
+                var thumbnailSize = size.X - 2 * DefaultMarginSize;
+                thumbnailRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, thumbnailSize, thumbnailSize);
+                nameAlignment = TextAlignment.Center;
+                break;
+            }
+            case ContentViewType.List:
+            {
+                var thumbnailSize = size.Y - 2 * DefaultMarginSize;
+                thumbnailRect = new Rectangle(DefaultMarginSize, DefaultMarginSize, thumbnailSize, thumbnailSize);
+                nameAlignment = TextAlignment.Near;
+                break;
+            }
+            default: throw new ArgumentOutOfRangeException();
+            }
 
             // Draw background
             if (isSelected)
@@ -581,7 +622,7 @@ namespace FlaxEditor.Content
 
             // Draw short name
             Render2D.PushClip(ref textRect);
-            Render2D.DrawText(style.FontMedium, ShortName, textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);
+            Render2D.DrawText(style.FontMedium, view.ShowFileExtensions ? FileName : ShortName, textRect, style.Foreground, nameAlignment, TextAlignment.Center, TextWrapping.WrapWords, 0.75f, 0.95f);
             Render2D.PopClip();
         }
 

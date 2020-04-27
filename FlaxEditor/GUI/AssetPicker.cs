@@ -26,7 +26,7 @@ namespace FlaxEditor.GUI
         private bool _isMouseDown;
         private Vector2 _mouseDownPos;
         private Vector2 _mousePos;
-        private readonly DragAssets _dragOverElement;
+        private DragAssets _dragOverElement;
 
         /// <summary>
         /// Gets or sets the selected item.
@@ -159,7 +159,7 @@ namespace FlaxEditor.GUI
                 return true;
 
             // Json assets can contain any type of the object defined by the C# type (data oriented design)
-            if (_type == typeof(JsonAsset) && item is JsonAssetItem)
+            if (item is JsonAssetItem && (_type == typeof(JsonAsset) || _type == typeof(Asset)))
                 return true;
 
             // Special case for scene asset references
@@ -187,7 +187,6 @@ namespace FlaxEditor.GUI
         {
             _type = assetType;
             _mousePos = Vector2.Minimum;
-            _dragOverElement = new DragAssets(IsValid);
         }
 
         /// <summary>
@@ -250,7 +249,7 @@ namespace FlaxEditor.GUI
             var button3Rect = Button3Rect;
 
             // Draw asset picker button
-            Render2D.DrawSprite(style.ArrowDown, button1Rect, new Color(button1Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+            Render2D.DrawSprite(style.ArrowDown, button1Rect, button1Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
 
             // Check if has item selected
             if (_selectedItem != null)
@@ -259,29 +258,29 @@ namespace FlaxEditor.GUI
                 _selectedItem.DrawThumbnail(ref iconRect);
 
                 // Draw find button
-                Render2D.DrawSprite(style.Search, button2Rect, new Color(button2Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Search, button2Rect, button2Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
 
                 // Draw remove button
-                Render2D.DrawSprite(style.Cross, button3Rect, new Color(button3Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Cross, button3Rect, button3Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
 
                 // Draw name
                 float sizeForTextLeft = Width - button1Rect.Right;
                 if (sizeForTextLeft > 30)
                 {
                     Render2D.DrawText(
-                        style.FontSmall,
-                        _selectedItem.ShortName,
-                        new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
-                        Color.White,
-                        TextAlignment.Near,
-                        TextAlignment.Center);
+                                      style.FontSmall,
+                                      _selectedItem.ShortName,
+                                      new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
+                                      style.Foreground,
+                                      TextAlignment.Near,
+                                      TextAlignment.Center);
                 }
             }
             // Check if has no item but has an asset (eg. virtual asset)
             else if (_selected)
             {
                 // Draw remove button
-                Render2D.DrawSprite(style.Cross, button3Rect, new Color(button3Rect.Contains(_mousePos) ? 1.0f : 0.7f));
+                Render2D.DrawSprite(style.Cross, button3Rect, button3Rect.Contains(_mousePos) ? style.Foreground : style.ForegroundGrey);
 
                 // Draw name
                 float sizeForTextLeft = Width - button1Rect.Right;
@@ -291,12 +290,12 @@ namespace FlaxEditor.GUI
                     if (_selected.IsVirtual)
                         name += " (virtual)";
                     Render2D.DrawText(
-                        style.FontSmall,
-                        name,
-                        new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
-                        Color.White,
-                        TextAlignment.Near,
-                        TextAlignment.Center);
+                                      style.FontSmall,
+                                      name,
+                                      new Rectangle(button1Rect.Right + 2, 0, sizeForTextLeft, ButtonsSize),
+                                      style.Foreground,
+                                      TextAlignment.Near,
+                                      TextAlignment.Center);
                 }
             }
             else
@@ -307,7 +306,7 @@ namespace FlaxEditor.GUI
             }
 
             // Check if drag is over
-            if (IsDragOver && _dragOverElement.HasValidDrag)
+            if (IsDragOver && _dragOverElement != null && _dragOverElement.HasValidDrag)
                 Render2D.FillRectangle(iconRect, style.BackgroundSelected * 0.4f);
         }
 
@@ -437,6 +436,8 @@ namespace FlaxEditor.GUI
             base.OnDragEnter(ref location, data);
 
             // Check if drop asset
+            if (_dragOverElement == null)
+                _dragOverElement = new DragAssets(IsValid);
             if (_dragOverElement.OnDragEnter(data))
             {
             }

@@ -47,8 +47,8 @@ namespace FlaxEditor.Tools.Foliage
                 return;
 
             // Draw single instance
-            foliage.GetInstance(instanceIndex, out var instance);
-            var model = foliage.GetFoliageTypeModel(instance.Type);
+            var instance = foliage.GetInstance(instanceIndex);
+            var model = foliage.GetFoliageType(instance.Type).Model;
             if (model)
             {
                 Transform instanceWorld = foliage.Transform.LocalToWorld(instance.Transform);
@@ -63,7 +63,7 @@ namespace FlaxEditor.Tools.Foliage
                 _staticModel.Transform = instanceWorld;
                 _actors.Add(_staticModel);
 
-                context.DrawSceneDepth(task, customDepth, _actors, ActorsSources.CustomActors);
+                Renderer.DrawSceneDepth(context, task, customDepth, _actors);
             }
         }
     }

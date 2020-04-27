@@ -29,7 +29,7 @@ namespace FlaxEditor.Progress.Handlers
             }
         }
 
-        private void OnGameCookerEvent(GameCooker.EventType eventType, ref GameCooker.Options options)
+        private void OnGameCookerEvent(GameCooker.EventType eventType)
         {
             switch (eventType)
             {

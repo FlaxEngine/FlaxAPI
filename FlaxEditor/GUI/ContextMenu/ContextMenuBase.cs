@@ -48,7 +48,6 @@ namespace FlaxEditor.GUI.ContextMenu
         /// <summary>
         /// Returns true if context menu is opened
         /// </summary>
-        /// <returns>True if opened, otherwise false</returns>
         public bool IsOpened => Parent != null;
 
         /// <summary>
@@ -168,7 +167,7 @@ namespace FlaxEditor.GUI.ContextMenu
             desc.IsTopmost = true;
             desc.IsRegularWindow = false;
             desc.HasSizingFrame = false;
-            _window = Window.Create(desc);
+            _window = Platform.CreateWindow(ref desc);
             _window.LostFocus += OnWindowLostFocus;
 
             // Attach to the window
@@ -199,12 +198,7 @@ namespace FlaxEditor.GUI.ContextMenu
             // Close child
             HideChild();
 
-            // Unlink
-            if (_parentCM != null)
-            {
-                _parentCM._childCM = null;
-                _parentCM = null;
-            }
+            // Unlink from window
             Parent = null;
 
             // Close window
@@ -213,6 +207,13 @@ namespace FlaxEditor.GUI.ContextMenu
                 var win = _window;
                 _window = null;
                 win.Close();
+            }
+
+            // Unlink from parent
+            if (_parentCM != null)
+            {
+                _parentCM._childCM = null;
+                _parentCM = null;
             }
 
             // Hide
@@ -286,24 +287,14 @@ namespace FlaxEditor.GUI.ContextMenu
                 return;
 
             // Check if user stopped using that popup menu
-            var root = TopmostCM;
             if (_parentCM != null)
             {
-                // Skip if user clicked over the parent popup
-                var mouse = _parentCM.ScreenToClient(Platform.MousePosition / Platform.DpiScale);
-                if (!_parentCM.ContainsPoint(ref mouse))
+                // Focus parent if user clicked over the parent popup
+                var mouse = _parentCM.ScreenToClient(FlaxEngine.Input.MouseScreenPosition / Platform.DpiScale);
+                if (_parentCM.ContainsPoint(ref mouse))
                 {
-                    root.Hide();
+                    _parentCM._window.Focus();
                 }
-                else
-                {
-                    root._window.Focus();
-                    Hide();
-                }
-            }
-            else if (!HasChildCMOpened)
-            {
-                Hide();
             }
         }
 
@@ -323,6 +314,29 @@ namespace FlaxEditor.GUI.ContextMenu
                     }
                 }
                 return result;
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            // Let root context menu to check if none of the popup windows
+            if (_parentCM == null)
+            {
+                var anyForeground = false;
+                var c = this;
+                while (!anyForeground && c != null)
+                {
+                    if (c._window != null && c._window.IsForegroundWindow)
+                        anyForeground = true;
+                    c = c._childCM;
+                }
+                if (!anyForeground)
+                {
+                    Hide();
+                }
             }
         }
 

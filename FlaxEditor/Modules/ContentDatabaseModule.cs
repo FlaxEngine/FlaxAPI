@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using FlaxEditor.Content;
 using FlaxEditor.Content.Settings;
-using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.Assertions;
 
@@ -820,12 +819,10 @@ namespace FlaxEditor.Modules
                     ContentItem item = null;
 
                     // Try using in-build asset
-                    string typeName;
-                    Guid id;
-                    if (FlaxEngine.Content.GetAssetInfo(path, out typeName, out id))
+                    if (FlaxEngine.Content.GetAssetInfo(path, out var assetInfo))
                     {
-                        var proxy = GetAssetProxy(typeName, path);
-                        item = proxy?.ConstructItem(path, typeName, ref id);
+                        var proxy = GetAssetProxy(assetInfo.TypeName, path);
+                        item = proxy?.ConstructItem(path, assetInfo.TypeName, ref assetInfo.ID);
                     }
 
                     // Generic file
@@ -857,11 +854,13 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SkinnedModelProxy());
             Proxy.Add(new MaterialProxy());
             Proxy.Add(new MaterialInstanceProxy());
+            Proxy.Add(new MaterialFunctionProxy());
             Proxy.Add(new SpriteAtlasProxy());
             Proxy.Add(new CubeTextureProxy());
             Proxy.Add(new PreviewsCacheProxy());
             Proxy.Add(new FontProxy());
             Proxy.Add(new ParticleEmitterProxy());
+            Proxy.Add(new ParticleEmitterFunctionProxy());
             Proxy.Add(new ParticleSystemProxy());
             Proxy.Add(new SceneAnimationProxy());
             Proxy.Add(new ScriptProxy());
@@ -871,8 +870,10 @@ namespace FlaxEditor.Modules
             Proxy.Add(new CollisionDataProxy());
             Proxy.Add(new AudioClipProxy());
             Proxy.Add(new AnimationGraphProxy());
+            Proxy.Add(new AnimationGraphFunctionProxy());
             Proxy.Add(new AnimationProxy());
             Proxy.Add(new SkeletonMaskProxy());
+            Proxy.Add(new GameplayGlobalsProxy());
             Proxy.Add(new FileProxy());
             Proxy.Add(new SpawnableJsonAssetProxy<PhysicalMaterial>());
 
@@ -888,6 +889,7 @@ namespace FlaxEditor.Modules
             Proxy.Add(new SettingsProxy<WindowsPlatformSettings>());
             Proxy.Add(new SettingsProxy<UWPPlatformSettings>());
             Proxy.Add(new SettingsProxy<LinuxPlatformSettings>());
+            Proxy.Add(new SettingsProxy<PS4PlatformSettings>());
             Proxy.Add(new SettingsProxy<AudioSettings>());
 
             // Last add generic json (won't override other json proxies)
@@ -926,16 +928,14 @@ namespace FlaxEditor.Modules
             if (item is BinaryAssetItem binaryAssetItem)
             {
                 // Get asset info from the registry (content layer will update cache it just after import)
-                string typeName;
-                Guid id;
-                if (FlaxEngine.Content.GetAssetInfo(binaryAssetItem.Path, out typeName, out id))
+                if (FlaxEngine.Content.GetAssetInfo(binaryAssetItem.Path, out var assetInfo))
                 {
                     // If asset type id has been changed we HAVE TO close all windows that use it
                     // For eg. change texture to sprite atlas on reimport
-                    if (binaryAssetItem.TypeName != typeName)
+                    if (binaryAssetItem.TypeName != assetInfo.TypeName)
                     {
                         // Asset type has been changed!
-                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeName, typeName));
+                        Editor.LogWarning(string.Format("Asset \'{0}\' changed type from {1} to {2}", item.Path, binaryAssetItem.TypeName, assetInfo.TypeName));
                         Editor.Windows.CloseAllEditors(item);
 
                         // Remove this item from the database and some related data
@@ -954,7 +954,7 @@ namespace FlaxEditor.Modules
                     else
                     {
                         // Refresh element data that could change during importing
-                        binaryAssetItem.OnReimport(ref id);
+                        binaryAssetItem.OnReimport(ref assetInfo.ID);
                     }
                 }
 

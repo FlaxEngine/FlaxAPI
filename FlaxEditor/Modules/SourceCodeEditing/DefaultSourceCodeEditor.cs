@@ -1,7 +1,5 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
-using FlaxEditor.Scripting;
-
 namespace FlaxEditor.Modules.SourceCodeEditing
 {
     /// <summary>
@@ -40,9 +38,9 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             var codeEditing = Editor.Instance.CodeEditing;
             
             // Favor the newest Visual Studio
-            for (int i = (int)ScriptsBuilder.InBuildEditorTypes.VS2019; i >= (int)ScriptsBuilder.InBuildEditorTypes.VS2008; i--)
+            for (int i = (int)CodeEditorTypes.VS2019; i >= (int)CodeEditorTypes.VS2008; i--)
             {
-                var visualStudio = codeEditing.GetInBuildEditor((ScriptsBuilder.InBuildEditorTypes)i);
+                var visualStudio = codeEditing.GetInBuildEditor((CodeEditorTypes)i);
                 if (visualStudio != null)
                 {
                     _currentEditor = visualStudio;
@@ -51,7 +49,7 @@ namespace FlaxEditor.Modules.SourceCodeEditing
             }
 
             // Fallback default editor (always valid)
-            _currentEditor = codeEditing.GetInBuildEditor(ScriptsBuilder.InBuildEditorTypes.SystemDefault);
+            _currentEditor = codeEditing.GetInBuildEditor(CodeEditorTypes.SystemDefault);
         }
 
         /// <inheritdoc />

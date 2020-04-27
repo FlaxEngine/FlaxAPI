@@ -90,6 +90,7 @@ namespace FlaxEditor.Windows.Profiler
 
             var toolstrip = new ToolStrip
             {
+                Offsets = new Margin(0, 0, 0, 32),
                 Parent = this,
             };
             _liveRecordingButton = toolstrip.AddButton(editor.Icons.Play32);
@@ -111,7 +112,8 @@ namespace FlaxEditor.Windows.Profiler
             _tabs = new Tabs
             {
                 Orientation = Orientation.Vertical,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, toolstrip.Bottom, 0),
                 TabsSize = new Vector2(120, 32),
                 Parent = this
             };
@@ -217,17 +219,17 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (base.OnKeyDown(key))
                 return true;
 
             switch (key)
             {
-            case Keys.ArrowLeft:
+            case KeyboardKeys.ArrowLeft:
                 ViewFrameIndex--;
                 return true;
-            case Keys.ArrowRight:
+            case KeyboardKeys.ArrowRight:
                 ViewFrameIndex++;
                 return true;
             }

@@ -77,19 +77,19 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool GetKey(Keys key)
+        public override bool GetKey(KeyboardKeys key)
         {
             return Input.GetKey(key);
         }
 
         /// <inheritdoc />
-        public override bool GetKeyDown(Keys key)
+        public override bool GetKeyDown(KeyboardKeys key)
         {
             return Input.GetKeyDown(key);
         }
 
         /// <inheritdoc />
-        public override bool GetKeyUp(Keys key)
+        public override bool GetKeyUp(KeyboardKeys key)
         {
             return Input.GetKeyUp(key);
         }
@@ -128,7 +128,7 @@ namespace FlaxEngine.GUI
             Vector3 locationWorldSpace;
             Vector3 locationCanvasSpace = new Vector3(location, 0.0f);
             Vector3.Transform(ref locationCanvasSpace, ref world, out locationWorldSpace);
-            camera.ProjectPoint(ref locationWorldSpace, out location);
+            camera.ProjectPoint(locationWorldSpace, out location);
             return location;
         }
 
@@ -185,7 +185,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (!_canvas.ReceivesEvents)
                 return false;
@@ -194,7 +194,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(Keys key)
+        public override void OnKeyUp(KeyboardKeys key)
         {
             if (!_canvas.ReceivesEvents)
                 return;

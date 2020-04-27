@@ -242,7 +242,7 @@ namespace FlaxEditor.GUI
                     if (_leftMouseDown)
                     {
                         // Check if user is pressing control
-                        if (Root.GetKey(Keys.Control))
+                        if (Root.GetKey(KeyboardKeys.Control))
                         {
                             // Add to selection
                             keyframe.Select();
@@ -444,9 +444,9 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            protected override void SetLocationInternal(ref Vector2 location)
+            protected override void OnLocationChanged()
             {
-                base.SetLocationInternal(ref location);
+                base.OnLocationChanged();
 
                 UpdateTooltip();
             }
@@ -593,7 +593,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyframesEditor{T}"/> class.
+        /// Initializes a new instance of the <see cref="KeyframesEditor"/> class.
         /// </summary>
         public KeyframesEditor()
         {
@@ -601,7 +601,8 @@ namespace FlaxEditor.GUI
             {
                 ScrollMargin = new Margin(150.0f),
                 AlwaysShowScrollbars = true,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = this
             };
             _contents = new Contents(this)
@@ -806,7 +807,7 @@ namespace FlaxEditor.GUI
                     Parent = this
                 };
                 var editor = new CustomEditorPresenter(null);
-                editor.Panel.DockStyle = DockStyle.Top;
+                editor.Panel.AnchorPreset = AnchorPresets.HorizontalStretchTop;
                 editor.Panel.IsScrollable = true;
                 editor.Panel.Parent = panel1;
                 editor.Modified += OnModified;
@@ -815,8 +816,6 @@ namespace FlaxEditor.GUI
                 for (int i = 0; i < keyframes.Count; i++)
                     selection[i] = keyframes[i];
                 editor.Select(selection);
-
-                MessageBox.Show("Edit keyframe: " + keyframeIndices[0] + ", value: " + keyframes[0].Value);
 
                 _editor = editor;
             }
@@ -867,12 +866,12 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override bool OnKeyDown(Keys key)
+            public override bool OnKeyDown(KeyboardKeys key)
             {
                 if (base.OnKeyDown(key))
                     return true;
 
-                if (key == Keys.Escape)
+                if (key == KeyboardKeys.Escape)
                 {
                     Hide();
                     return true;
@@ -1073,30 +1072,30 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             UpdateKeyframes();
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (base.OnKeyDown(key))
                 return true;
 
-            if (key == Keys.Delete)
+            if (key == KeyboardKeys.Delete)
             {
                 RemoveKeyframes();
                 return true;
             }
 
-            if (Root.GetKey(Keys.Control))
+            if (Root.GetKey(KeyboardKeys.Control))
             {
                 switch (key)
                 {
-                case Keys.A:
+                case KeyboardKeys.A:
                     SelectAll();
                     return true;
                 }

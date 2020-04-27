@@ -56,10 +56,8 @@ namespace FlaxEditor.Tools.Terrain
         }
 
         /// <inheritdoc />
-        public override void Draw(DrawCallsCollector collector)
+        public override void Draw(ref RenderContext renderContext)
         {
-            base.Draw(collector);
-
             if (!IsActive)
                 return;
 
@@ -78,7 +76,7 @@ namespace FlaxEditor.Tools.Terrain
                 if (terrain.HasPatch(ref patchCoord))
                 {
                     var chunkCoord = Mode.SelectedChunkCoord;
-                    collector.AddDrawCall(terrain, ref patchCoord, ref chunkCoord, _highlightTerrainMaterial);
+                    terrain.DrawChunk(ref renderContext, ref patchCoord, ref chunkCoord, _highlightTerrainMaterial);
                 }
 
                 break;
@@ -97,7 +95,7 @@ namespace FlaxEditor.Tools.Terrain
                                    Matrix.Scaling(terrain.Scale) *
                                    Matrix.RotationQuaternion(terrain.Orientation) *
                                    Matrix.Translation(terrain.Position);
-                    collector.AddDrawCall(_planeModel, 0, _highlightMaterial, 0, ref world);
+                    _planeModel.Draw(ref renderContext, _highlightMaterial, ref world);
                 }
 
                 break;
@@ -108,7 +106,7 @@ namespace FlaxEditor.Tools.Terrain
                 var patchCoord = Mode.SelectedPatchCoord;
                 if (terrain.HasPatch(ref patchCoord))
                 {
-                    collector.AddDrawCall(terrain, ref patchCoord, _highlightTerrainMaterial);
+                    terrain.DrawPatch(ref renderContext, ref patchCoord, _highlightTerrainMaterial);
                 }
                 break;
             }
@@ -210,7 +208,7 @@ namespace FlaxEditor.Tools.Terrain
                 {
                     if (terrain.Scene && (terrain.StaticFlags & StaticFlags.Navigation) == StaticFlags.Navigation)
                     {
-                        terrain.Scene.BuildNavMesh(patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
+                        Navigation.BuildNavMesh(terrain.Scene, patchBounds, editorOptions.General.AutoRebuildNavMeshTimeoutMs);
                     }
                 }
             }
@@ -250,8 +248,9 @@ namespace FlaxEditor.Tools.Terrain
             {
                 // Get mouse ray and try to hit terrain
                 var ray = Owner.MouseRay;
+                var view = new Ray(Owner.ViewPosition, Owner.ViewDirection);
                 var rayCastFlags = SceneGraphNode.RayCastData.FlagTypes.SkipColliders;
-                var hit = Editor.Instance.Scene.Root.RayCast(ref ray, out _, rayCastFlags) as TerrainNode;
+                var hit = Editor.Instance.Scene.Root.RayCast(ref ray, ref view, out _, rayCastFlags) as TerrainNode;
 
                 // Update selection
                 var sceneEditing = Editor.Instance.SceneEditing;
@@ -261,7 +260,7 @@ namespace FlaxEditor.Tools.Terrain
                     {
                         // Perform detailed tracing
                         var terrain = (FlaxEngine.Terrain)hit.Actor;
-                        TerrainTools.RayCastChunk(terrain, ray, out _, out var patchCoord, out var chunkCoord);
+                        terrain.RayCast(ray, out _, out var patchCoord, out var chunkCoord);
                         Mode.SetSelectedChunk(ref patchCoord, ref chunkCoord);
                     }
 

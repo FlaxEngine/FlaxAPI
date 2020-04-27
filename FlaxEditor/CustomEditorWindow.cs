@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using FlaxEditor.CustomEditors;
-using FlaxEditor.Scripting;
 using FlaxEditor.Windows;
 using FlaxEngine.GUI;
 using DockState = FlaxEditor.GUI.Docking.DockState;

@@ -55,13 +55,9 @@ namespace FlaxEngine.GUI
         /// </summary>
         public bool IsMaximized => _window.IsMaximized;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WindowRootControl"/> class.
-        /// </summary>
-        /// <param name="window">Native window object.</param>
         internal WindowRootControl(Window window)
         {
-            _window = window ?? throw new ArgumentNullException(nameof(window));
+            _window = window;
             ClipChildren = false;
 
             if (Style.Current != null)
@@ -200,19 +196,19 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool GetKey(Keys key)
+        public override bool GetKey(KeyboardKeys key)
         {
             return _window.GetKey(key);
         }
 
         /// <inheritdoc />
-        public override bool GetKeyDown(Keys key)
+        public override bool GetKeyDown(KeyboardKeys key)
         {
             return _window.GetKeyDown(key);
         }
 
         /// <inheritdoc />
-        public override bool GetKeyUp(Keys key)
+        public override bool GetKeyUp(KeyboardKeys key)
         {
             return _window.GetKeyUp(key);
         }

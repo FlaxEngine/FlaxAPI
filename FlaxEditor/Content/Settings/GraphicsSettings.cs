@@ -7,7 +7,7 @@ namespace FlaxEditor.Content.Settings
     /// <summary>
     /// The graphics rendering settings container. Allows to edit asset via editor. To modify those settings at runtime use <see cref="FlaxEngine.GraphicsSettings"/>.
     /// </summary>
-    /// <seealso cref="FlaxEngine.GraphicsSettings"/>
+    /// <seealso cref="FlaxEngine.Graphics"/>
     public sealed class GraphicsSettings : SettingsBase
     {
         /// <summary>

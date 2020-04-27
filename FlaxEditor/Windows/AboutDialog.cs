@@ -18,7 +18,7 @@ namespace FlaxEditor.Windows
         public AboutDialog()
         : base("About Flax")
         {
-            Size = new Vector2(400, 260);
+            _dialogSize = Size = new Vector2(400, 260);
 
             Control header = CreateHeader();
             Control authorsLabel = CreateAuthorsLabels(header);
@@ -46,7 +46,7 @@ namespace FlaxEditor.Windows
             };
             new Label(nameLabel.Left, nameLabel.Bottom + 4, nameLabel.Width, 50)
             {
-                Text = string.Format("Version: {0}\nCopyright (c) 2012-2020 Wojciech Figat.\nAll rights reserved.", Globals.Version),
+                Text = string.Format("Version: {0}\nCopyright (c) 2012-2020 Wojciech Figat.\nAll rights reserved.", Globals.EngineVersion),
                 HorizontalAlignment = TextAlignment.Near,
                 VerticalAlignment = TextAlignment.Near,
                 Parent = this
@@ -57,12 +57,12 @@ namespace FlaxEditor.Windows
                 TooltipText = "Copies the current engine version information to system clipboard.",
                 Parent = this
             };
-            copyVersionButton.Clicked += () => Platform.ClipboardText = Globals.Version;
+            copyVersionButton.Clicked += () => Clipboard.Text = Globals.EngineVersion;
             return icon;
         }
 
         /// <summary>
-        ///     Create footer label
+        /// Create footer label
         /// </summary>
         /// <param name="topParentControl">Top element that this footer should be put under</param>
         private void CreateFooter(Control topParentControl)

@@ -351,11 +351,16 @@ namespace FlaxEditor.Surface
             if (groupArchetype == null || nodeArchetype == null)
                 throw new ArgumentNullException();
 
-            if (!_surface.CanSpawnNodeType(nodeArchetype))
+            // Check if cannot use that node in this surface type (ignore NoSpawnViaGUI)
+            var flags = nodeArchetype.Flags;
+            nodeArchetype.Flags &= ~NodeFlags.NoSpawnViaGUI;
+            if (!_surface.CanUseNodeType(nodeArchetype))
             {
+                nodeArchetype.Flags = flags;
                 Editor.LogWarning("Cannot spawn given node type. Title: " + nodeArchetype.Title);
                 return null;
             }
+            nodeArchetype.Flags = flags;
 
             var id = GetFreeNodeID();
 

@@ -140,7 +140,7 @@ namespace FlaxEditor.Surface.Elements
             _currentType = DefaultType;
 
             Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
-            TooltipText = CurrentType.ToString();
+            TooltipText = Surface.GetConnectionTypeName(CurrentType);
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace FlaxEditor.Surface.Elements
         protected virtual void OnCurrentTypeChanged()
         {
             Surface.Style.GetConnectionColor(_currentType, out _currentTypeColor);
-            TooltipText = CurrentType.ToString();
+            TooltipText = Surface.GetConnectionTypeName(CurrentType);
             CurrentTypeChanged?.Invoke(this);
         }
 
@@ -386,7 +386,7 @@ namespace FlaxEditor.Surface.Elements
             float alpha = Enabled ? 1.0f : 0.6f;
             Color color = _currentTypeColor * alpha;
             var style = Surface.Style;
-            Sprite icon;
+            SpriteHandle icon;
             if (_currentType == ConnectionType.Impulse || _currentType == ConnectionType.ImpulseSecondary)
                 icon = hasConnections ? style.Icons.ArrowClose : style.Icons.ArrowOpen;
             else
@@ -452,7 +452,7 @@ namespace FlaxEditor.Surface.Elements
                 {
                     // Click
 
-                    if (Root.GetKey(Keys.Control))
+                    if (Root.GetKey(KeyboardKeys.Control))
                     {
                         // Add to selection
                         if (!ParentNode.IsSelected)

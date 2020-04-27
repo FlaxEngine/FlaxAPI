@@ -66,7 +66,7 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <summary>
-            /// Gets or sets a value indicating whether skip any triggered transitions durig first animation state machine update.
+            /// Gets or sets a value indicating whether skip any triggered transitions during first animation state machine update.
             /// </summary>
             public bool SkipFirstUpdateTransition
             {
@@ -86,28 +86,34 @@ namespace FlaxEditor.Surface.Archetypes
                 editButton.Parent = this;
                 editButton.Clicked += Edit;
 
-                var maxTransitionsPerUpdateLabel = new Label(marginX, editButton.Bottom + 4, 153, TextBox.DefaultHeight);
-                maxTransitionsPerUpdateLabel.HorizontalAlignment = TextAlignment.Near;
-                maxTransitionsPerUpdateLabel.Text = "Max Transitions Per Update:";
-                maxTransitionsPerUpdateLabel.Parent = this;
+                var maxTransitionsPerUpdateLabel = new Label(marginX, editButton.Bottom + 4, 153, TextBox.DefaultHeight)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Text = "Max Transitions Per Update:",
+                    Parent = this,
+                };
 
                 _maxTransitionsPerUpdate = new IntValueBox(3, maxTransitionsPerUpdateLabel.Right + 4, maxTransitionsPerUpdateLabel.Y, 40, 1, 32, 0.1f);
                 _maxTransitionsPerUpdate.ValueChanged += () => MaxTransitionsPerUpdate = _maxTransitionsPerUpdate.Value;
                 _maxTransitionsPerUpdate.Parent = this;
 
-                var reinitializeOnBecomingRelevantLabel = new Label(marginX, maxTransitionsPerUpdateLabel.Bottom + 4, 185, TextBox.DefaultHeight);
-                reinitializeOnBecomingRelevantLabel.HorizontalAlignment = TextAlignment.Near;
-                reinitializeOnBecomingRelevantLabel.Text = "Reinitialize On Becoming Relevant:";
-                reinitializeOnBecomingRelevantLabel.Parent = this;
+                var reinitializeOnBecomingRelevantLabel = new Label(marginX, maxTransitionsPerUpdateLabel.Bottom + 4, 185, TextBox.DefaultHeight)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Text = "Reinitialize On Becoming Relevant:",
+                    Parent = this,
+                };
 
                 _reinitializeOnBecomingRelevant = new CheckBox(reinitializeOnBecomingRelevantLabel.Right + 4, reinitializeOnBecomingRelevantLabel.Y, true, TextBox.DefaultHeight);
                 _reinitializeOnBecomingRelevant.StateChanged += (checkbox) => ReinitializeOnBecomingRelevant = checkbox.Checked;
                 _reinitializeOnBecomingRelevant.Parent = this;
 
-                var skipFirstUpdateTransitionLabel = new Label(marginX, reinitializeOnBecomingRelevantLabel.Bottom + 4, 152, TextBox.DefaultHeight);
-                skipFirstUpdateTransitionLabel.HorizontalAlignment = TextAlignment.Near;
-                skipFirstUpdateTransitionLabel.Text = "Skip First Update Transition:";
-                skipFirstUpdateTransitionLabel.Parent = this;
+                var skipFirstUpdateTransitionLabel = new Label(marginX, reinitializeOnBecomingRelevantLabel.Bottom + 4, 152, TextBox.DefaultHeight)
+                {
+                    HorizontalAlignment = TextAlignment.Near,
+                    Text = "Skip First Update Transition:",
+                    Parent = this,
+                };
 
                 _skipFirstUpdateTransition = new CheckBox(skipFirstUpdateTransitionLabel.Right + 4, skipFirstUpdateTransitionLabel.Y, true, TextBox.DefaultHeight);
                 _skipFirstUpdateTransition.StateChanged += (checkbox) => SkipFirstUpdateTransition = checkbox.Checked;
@@ -421,6 +427,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// <inheritdoc />
             public override void DrawConnections(ref Vector2 mousePosition)
             {
+                var style = Style.Current;
                 var targetState = FirstState;
                 if (targetState != null)
                 {
@@ -428,7 +435,7 @@ namespace FlaxEditor.Surface.Archetypes
                     var center = Size * 0.5f;
                     var startPos = PointToParent(ref center);
                     targetState.GetConnectionEndPoint(ref startPos, out var endPos);
-                    var color = Color.White;
+                    var color = style.Foreground;
                     StateMachineState.DrawConnection(Surface, ref startPos, ref endPos, ref color);
                 }
             }
@@ -981,6 +988,7 @@ namespace FlaxEditor.Surface.Archetypes
             /// </summary>
             public void UpdateTransitionsColors()
             {
+                var style = Style.Current;
                 if (Transitions.Count == 0)
                     return;
 
@@ -991,7 +999,7 @@ namespace FlaxEditor.Surface.Archetypes
                     for (int i = 0; i < Transitions.Count; i++)
                     {
                         var t = Transitions[i];
-                        t.LineColor = t == firstSolo ? Color.White : Color.Gray;
+                        t.LineColor = t == firstSolo ? style.Foreground : style.ForegroundGrey;
                     }
                 }
                 else
@@ -999,7 +1007,7 @@ namespace FlaxEditor.Surface.Archetypes
                     for (int i = 0; i < Transitions.Count; i++)
                     {
                         var t = Transitions[i];
-                        t.LineColor = t.Enabled ? Color.White : Color.Gray;
+                        t.LineColor = t.Enabled ? style.Foreground : style.ForegroundGrey;
                     }
                 }
             }
@@ -1145,12 +1153,10 @@ namespace FlaxEditor.Surface.Archetypes
                 Render2D.DrawText(style.FontLarge, Title, _textRect, style.Foreground, TextAlignment.Center, TextAlignment.Center);
 
                 // Close button
-                float alpha = _closeButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(style.Cross, _closeButtonRect, new Color(alpha));
+                Render2D.DrawSprite(style.Cross, _closeButtonRect, _closeButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
 
                 // Rename button
-                alpha = _renameButtonRect.Contains(_mousePosition) ? 1.0f : 0.7f;
-                Render2D.DrawSprite(style.Settings, _renameButtonRect, new Color(alpha));
+                Render2D.DrawSprite(style.Settings, _renameButtonRect, _renameButtonRect.Contains(_mousePosition) ? style.Foreground : style.ForegroundGrey);
             }
 
             /// <inheritdoc />

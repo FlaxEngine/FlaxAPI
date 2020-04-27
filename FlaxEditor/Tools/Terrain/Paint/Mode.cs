@@ -127,12 +127,11 @@ namespace FlaxEditor.Tools.Terrain.Paint
                     continue;
 
                 // Get the patch data (cached internally by the c++ core in editor)
-                var sourceDataPtr = TerrainTools.GetSplatMapData(terrain, ref patch.PatchCoord, splatmapIndex);
-                if (sourceDataPtr == IntPtr.Zero)
+                var sourceData = TerrainTools.GetSplatMapData(terrain, ref patch.PatchCoord, splatmapIndex);
+                if (sourceData == null)
                 {
                     throw new FlaxException("Cannot modify terrain. Loading splatmap failed. See log for more info.");
                 }
-                var sourceData = (Color32*)sourceDataPtr.ToPointer();
 
                 // Record patch data before editing it
                 if (!gizmo.CurrentEditUndoAction.HashPatch(ref patch.PatchCoord))

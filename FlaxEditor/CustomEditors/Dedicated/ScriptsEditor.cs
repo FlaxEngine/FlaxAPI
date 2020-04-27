@@ -9,9 +9,9 @@ using FlaxEditor.Content;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Drag;
-using FlaxEditor.Scripting;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.CustomEditors.Dedicated
 {
@@ -38,12 +38,13 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
             // Add script button
             float addScriptButtonWidth = 60.0f;
-            var addScriptButton = new Button((Width - addScriptButtonWidth) / 2, 1, addScriptButtonWidth, 18)
+            var addScriptButton = new Button
             {
                 TooltipText = "Add new scripts to the actor",
-                AnchorStyle = AnchorStyle.UpperCenter,
+                AnchorPreset = AnchorPresets.MiddleCenter,
                 Text = "Add script",
                 Parent = this,
+                Bounds = new Rectangle((Width - addScriptButtonWidth) / 2, 1, addScriptButtonWidth, 18),
             };
             addScriptButton.ButtonClicked += AddScriptButtonOnClicked;
         }
@@ -224,11 +225,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         /// </summary>
         /// <param name="editor">The script editor.</param>
         /// <param name="script">The target script.</param>
-        /// <param name="x">The x position.</param>
-        /// <param name="y">The y position.</param>
-        /// <param name="size">The size (both width and height).</param>
-        public ScriptDragIcon(ScriptsEditor editor, Script script, float x, float y, float size)
-        : base(x, y, size, size)
+        public ScriptDragIcon(ScriptsEditor editor, Script script)
         {
             Tag = script;
             _editor = editor;
@@ -421,17 +418,18 @@ namespace FlaxEditor.CustomEditors.Dedicated
 
             // Add settings button to the group
             const float settingsButtonSize = 14;
-            var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
+            var settingsButton = new Image
             {
                 TooltipText = "Settings",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.UpperRight,
+                AnchorPreset = AnchorPresets.TopRight,
+                Parent = group.Panel,
+                Bounds = new Rectangle(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize),
                 IsScrollable = false,
-                Color = new Color(0.7f),
+                Color = FlaxEngine.GUI.Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(FlaxEngine.GUI.Style.Current.Settings),
                 Tag = index,
-                Parent = group.Panel
             };
             settingsButton.Clicked += MissingSettingsButtonOnClicked;
         }
@@ -457,7 +455,12 @@ namespace FlaxEditor.CustomEditors.Dedicated
             for (int i = 0; i < actors.Count; i++)
             {
                 var actor = (Actor)actors[i];
-                actor.DeleteScript(index);
+                var script = actor.GetScript(index);
+                if (script)
+                {
+                    script.Parent = null;
+                    Object.Destroy(script);
+                }
                 Editor.Instance.Scene.MarkSceneEdited(actor.Scene);
             }
         }
@@ -579,45 +582,49 @@ namespace FlaxEditor.CustomEditors.Dedicated
                     group.Panel.HeaderTextColor = FlaxEngine.GUI.Style.Current.ProgressNormal;
 
                 // Add toggle button to the group
-                var scriptToggle = new CheckBox(2, 0, script.Enabled)
+                var scriptToggle = new CheckBox
                 {
                     TooltipText = "If checked, script will be enabled",
                     IsScrollable = false,
+                    Checked = script.Enabled,
+                    Parent = group.Panel,
                     Size = new Vector2(14, 14),
+                    Bounds = new Rectangle(2, 0, 14, 14),
                     BoxSize = 12.0f,
                     Tag = script,
-                    Parent = group.Panel
                 };
                 scriptToggle.StateChanged += ScriptToggleOnCheckChanged;
                 _scriptToggles[i] = scriptToggle;
 
                 // Add drag button to the group
                 const float dragIconSize = 14;
-                var scriptDrag = new ScriptDragIcon(this, script, scriptToggle.Right, 0.5f, dragIconSize)
+                var scriptDrag = new ScriptDragIcon(this, script)
                 {
                     TooltipText = "Script reference",
                     AutoFocus = true,
                     IsScrollable = false,
-                    Color = new Color(0.7f),
+                    Color = FlaxEngine.GUI.Style.Current.ForegroundGrey,
+                    Parent = group.Panel,
+                    Bounds = new Rectangle(scriptToggle.Right, 0.5f, dragIconSize, dragIconSize),
                     Margin = new Margin(1),
                     Brush = new SpriteBrush(Editor.Instance.Icons.DragBar12),
                     Tag = script,
-                    Parent = group.Panel
                 };
 
                 // Add settings button to the group
                 const float settingsButtonSize = 14;
-                var settingsButton = new Image(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize)
+                var settingsButton = new Image
                 {
                     TooltipText = "Settings",
                     AutoFocus = true,
-                    AnchorStyle = AnchorStyle.UpperRight,
+                    AnchorPreset = AnchorPresets.TopRight,
+                    Parent = group.Panel,
+                    Bounds = new Rectangle(group.Panel.Width - settingsButtonSize, 0, settingsButtonSize, settingsButtonSize),
                     IsScrollable = false,
-                    Color = new Color(0.7f),
+                    Color = FlaxEngine.GUI.Style.Current.ForegroundGrey,
                     Margin = new Margin(1),
                     Brush = new SpriteBrush(FlaxEngine.GUI.Style.Current.Settings),
                     Tag = script,
-                    Parent = group.Panel
                 };
                 settingsButton.Clicked += SettingsButtonOnClicked;
 
@@ -721,7 +728,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
         private void OnClickCopyName(ContextMenuButton button)
         {
             var script = (Script)button.ParentContextMenu.Tag;
-            Platform.ClipboardText = script.GetType().FullName;
+            Clipboard.Text = script.GetType().FullName;
         }
 
         private void OnClickEditScript(ContextMenuButton button)

@@ -22,44 +22,29 @@ namespace FlaxEditor.Content
         /// <param name="path">The asset path.</param>
         /// <param name="id">The asset identifier.</param>
         /// <param name="typeName">The asset type name identifier.</param>
-        /// <param name="domain">The asset domain.</param>
-        public BinaryAssetItem(string path, Guid id, string typeName, ContentDomain domain)
+        public BinaryAssetItem(string path, Guid id, string typeName)
         : base(path, typeName, ref id)
         {
-            ItemDomain = domain;
             Type = Utilities.Utils.GetType(typeName);
 
-            switch (domain)
-            {
-            case ContentDomain.Texture:
-            case ContentDomain.CubeTexture:
+            if (typeof(TextureBase).IsAssignableFrom(Type))
                 SearchFilter = ContentItemSearchFilter.Texture;
-                break;
-            case ContentDomain.Material:
+            else if (typeof(MaterialBase).IsAssignableFrom(Type))
                 SearchFilter = ContentItemSearchFilter.Material;
-                break;
-            case ContentDomain.Model:
+            else if (typeof(ModelBase).IsAssignableFrom(Type))
                 SearchFilter = ContentItemSearchFilter.Model;
-                break;
-            case ContentDomain.Prefab:
+            else if (typeof(Prefab).IsAssignableFrom(Type))
                 SearchFilter = ContentItemSearchFilter.Prefab;
-                break;
-            case ContentDomain.Scene:
+            else if (typeof(SceneAsset).IsAssignableFrom(Type))
                 SearchFilter = ContentItemSearchFilter.Scene;
-                break;
-            case ContentDomain.Audio:
+            else if (typeof(AudioClip).IsAssignableFrom(Type))
                 SearchFilter = ContentItemSearchFilter.Audio;
-                break;
-            case ContentDomain.Animation:
+            else if (typeof(Animation).IsAssignableFrom(Type))
                 SearchFilter = ContentItemSearchFilter.Animation;
-                break;
-            default:
-                if (Type == typeof(ParticleEmitter) || Type == typeof(ParticleSystem))
-                    SearchFilter = ContentItemSearchFilter.Particles;
-                else
-                    SearchFilter = ContentItemSearchFilter.Other;
-                break;
-            }
+            else if (typeof(ParticleEmitter).IsAssignableFrom(Type) || typeof(ParticleSystem).IsAssignableFrom(Type))
+                SearchFilter = ContentItemSearchFilter.Particles;
+            else
+                SearchFilter = ContentItemSearchFilter.Other;
         }
 
         /// <summary>
@@ -92,9 +77,12 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override ContentDomain ItemDomain { get; }
+        public override ContentItemSearchFilter SearchFilter { get; }
 
         /// <inheritdoc />
-        public override ContentItemSearchFilter SearchFilter { get; }
+        public override bool IsOfType(Type type)
+        {
+            return type.IsAssignableFrom(Type);
+        }
     }
 }

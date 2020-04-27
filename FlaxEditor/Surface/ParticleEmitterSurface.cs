@@ -28,6 +28,16 @@ namespace FlaxEditor.Surface
         {
         }
 
+        /// <inheritdoc />
+        public override string GetConnectionTypeName(ConnectionType type)
+        {
+            switch (type)
+            {
+            case ConnectionType.Object: return "Texture";
+            default: return base.GetConnectionTypeName(type);
+            }
+        }
+
         /// <summary>
         /// Arranges the particle modules nodes.
         /// </summary>
@@ -77,9 +87,9 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        public override bool CanUseNodeType(NodeArchetype nodeArchetype)
         {
-            return (nodeArchetype.Flags & NodeFlags.ParticleEmitterGraph) != 0 && base.CanSpawnNodeType(nodeArchetype);
+            return (nodeArchetype.Flags & NodeFlags.ParticleEmitterGraph) != 0 && base.CanUseNodeType(nodeArchetype);
         }
 
         /// <inheritdoc />
@@ -92,10 +102,12 @@ namespace FlaxEditor.Surface
         /// <inheritdoc />
         protected override bool ValidateDragItem(AssetItem assetItem)
         {
-            switch (assetItem.ItemDomain)
-            {
-            case ContentDomain.Texture: return true;
-            }
+            if (assetItem.IsOfType<Texture>())
+                return true;
+            if (assetItem.IsOfType<CubeTexture>())
+                return true;
+            if (assetItem.IsOfType<ParticleEmitterFunction>())
+                return true;
             return base.ValidateDragItem(assetItem);
         }
 
@@ -104,22 +116,20 @@ namespace FlaxEditor.Surface
         {
             for (int i = 0; i < objects.Count; i++)
             {
-                var item = objects[i];
+                var assetItem = objects[i];
                 SurfaceNode node = null;
 
-                switch (item.ItemDomain)
+                if (assetItem.IsOfType<Texture>())
                 {
-                case ContentDomain.Texture:
-                {
-                    node = Context.SpawnNode(5, 11, args.SurfaceLocation, new object[] { item.ID });
-                    break;
+                    node = Context.SpawnNode(5, 11, args.SurfaceLocation, new object[] { assetItem.ID });
                 }
-
-                case ContentDomain.CubeTexture:
+                else if (assetItem.IsOfType<CubeTexture>())
                 {
-                    node = Context.SpawnNode(5, 12, args.SurfaceLocation, new object[] { item.ID });
-                    break;
+                    node = Context.SpawnNode(5, 12, args.SurfaceLocation, new object[] { assetItem.ID });
                 }
+                else if (assetItem.IsOfType<ParticleEmitterFunction>())
+                {
+                    node = Context.SpawnNode(14, 300, args.SurfaceLocation, new object[] { assetItem.ID });
                 }
 
                 if (node != null)

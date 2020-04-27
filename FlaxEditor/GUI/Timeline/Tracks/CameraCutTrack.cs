@@ -173,6 +173,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                          ViewFlags.Shadows | ViewFlags.SpecularLight | ViewFlags.AntiAliasing | ViewFlags.CustomPostProcess |
                          ViewFlags.Bloom | ViewFlags.ToneMapping | ViewFlags.CameraArtifacts | ViewFlags.LensFlares | ViewFlags.Decals |
                          ViewFlags.DepthOfField | ViewFlags.Fog;
+            view.UpdateCachedData();
             task.View = view;
         }
 
@@ -183,22 +184,25 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// <param name="context">The GPU rendering context.</param>
         /// <param name="req">The request data.</param>
         /// <param name="sprite">The thumbnail sprite.</param>
-        public void OnThumbnailRenderingEnd(SceneRenderTask task, GPUContext context, ref CameraCutThumbnailRenderer.Request req, ref Sprite sprite)
+        public void OnThumbnailRenderingEnd(SceneRenderTask task, GPUContext context, ref CameraCutThumbnailRenderer.Request req, ref SpriteHandle sprite)
         {
             var image = _thumbnails[req.ThumbnailIndex];
             if (image == null)
             {
                 if (req.ThumbnailIndex == 0)
-                    image = new Image(2, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height)
+                    image = new Image
                     {
-                        AnchorStyle = AnchorStyle.Left,
+                        AnchorPreset = AnchorPresets.MiddleLeft,
+                        Parent = this,
+                        Bounds = new Rectangle(2, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height),
                     };
                 else
-                    image = new Image(Width - 2 - CameraCutThumbnailRenderer.Width, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height)
+                    image = new Image
                     {
-                        AnchorStyle = AnchorStyle.Right,
+                        AnchorPreset = AnchorPresets.MiddleRight,
+                        Parent = this,
+                        Bounds = new Rectangle(Width - 2 - CameraCutThumbnailRenderer.Width, 2, CameraCutThumbnailRenderer.Width, CameraCutThumbnailRenderer.Height),
                     };
-                image.Parent = this;
                 image.UnlockChildrenRecursive();
                 _thumbnails[req.ThumbnailIndex] = image;
                 UpdateUI();
@@ -252,9 +256,9 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
             UpdateUI();
         }
@@ -408,7 +412,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
         /// Releases the thumbnail ans frees the sprite slot used by it.
         /// </summary>
         /// <param name="sprite">The sprite.</param>
-        public void ReleaseThumbnail(Sprite sprite)
+        public void ReleaseThumbnail(SpriteHandle sprite)
         {
             if (!sprite.IsValid)
                 return;
@@ -458,7 +462,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 _atlases = new List<Atlas>(4);
             if (_output == null)
             {
-                _output = GPUDevice.CreateTexture();
+                _output = GPUDevice.Instance.CreateTexture();
                 var desc = GPUTextureDescription.New2D(Width, Height, PixelFormat.R8G8B8A8_UNorm);
                 _output.Init(ref desc);
             }
@@ -474,14 +478,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             _task.Enabled = true;
         }
 
-        private void OnBegin(SceneRenderTask task, GPUContext context)
+        private void OnBegin(RenderTask task, GPUContext context)
         {
             // Setup
             var req = _queue[0];
-            req.Media.OnThumbnailRenderingBegin(task, context, ref req);
+            req.Media.OnThumbnailRenderingBegin((SceneRenderTask)task, context, ref req);
         }
 
-        private void OnEnd(SceneRenderTask task, GPUContext context)
+        private void OnEnd(RenderTask task, GPUContext context)
         {
             // Pick the atlas or create a new one
             int atlasIndex = -1;
@@ -506,7 +510,7 @@ namespace FlaxEditor.GUI.Timeline.Tracks
 
                 // Create sprite atlas texture
                 var spriteAtlas = FlaxEngine.Content.CreateVirtualAsset<SpriteAtlas>();
-                var data = new byte[atlasSize * atlasSize * atlasFormat.SizeInBytes()];
+                var data = new byte[atlasSize * atlasSize * PixelFormatExtensions.SizeInBytes(atlasFormat)];
                 var initData = new TextureBase.InitData
                 {
                     Width = atlasSize,
@@ -529,10 +533,14 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 var thumbnailSizeUV = new Vector2(width / atlasSize, height / atlasSize);
                 for (int i = 0; i < count; i++)
                 {
-                    var s = spriteAtlas.AddSprite();
                     var x = i % countX;
                     var y = i / countX;
-                    s.Area = new Rectangle(new Vector2(x, y) * thumbnailSizeUV, thumbnailSizeUV);
+                    var s = new Sprite
+                    {
+                        Name = string.Empty,
+                        Area = new Rectangle(new Vector2(x, y) * thumbnailSizeUV, thumbnailSizeUV),
+                    };
+                    spriteAtlas.AddSprite(s);
                 }
 
                 // Add atlas to the cached ones
@@ -565,15 +573,15 @@ namespace FlaxEditor.GUI.Timeline.Tracks
                 throw new FlaxException();
             atlas.Count++;
             _atlases[atlasIndex] = atlas;
-            var sprite = atlas.Texture.GetSprite(spriteIndex);
+            var sprite = new SpriteHandle(atlas.Texture, spriteIndex);
 
             // Copy output frame to the sprite atlas slot
             var spriteLocation = sprite.Location;
-            context.CopyTexture(atlas.Texture, 0, (uint)spriteLocation.X, (uint)spriteLocation.Y, 0, _output, 0);
+            context.CopyTexture(atlas.Texture.Texture, 0, (uint)spriteLocation.X, (uint)spriteLocation.Y, 0, _output, 0);
 
             // Link sprite to the UI
             var req = _queue[0];
-            req.Media.OnThumbnailRenderingEnd(task, context, ref req, ref sprite);
+            req.Media.OnThumbnailRenderingEnd((SceneRenderTask)task, context, ref req, ref sprite);
 
             // End
             _queue.RemoveAt(0);
@@ -670,16 +678,17 @@ namespace FlaxEditor.GUI.Timeline.Tracks
             // Pilot Camera button
             const float buttonSize = 14;
             var icons = Editor.Instance.Icons;
-            _pilotCamera = new Image(_selectActor.Left - buttonSize - 2.0f, 0, buttonSize, buttonSize)
+            _pilotCamera = new Image
             {
                 TooltipText = "Starts piloting camera (in scene edit window)",
                 AutoFocus = true,
-                AnchorStyle = AnchorStyle.CenterRight,
+                AnchorPreset = AnchorPresets.MiddleRight,
                 IsScrollable = false,
-                Color = new Color(0.8f),
+                Color = Style.Current.ForegroundGrey,
                 Margin = new Margin(1),
                 Brush = new SpriteBrush(icons.Camera32),
-                Parent = this
+                Offsets = new Margin(-buttonSize - 2 + _selectActor.Offsets.Left, buttonSize, buttonSize * -0.5f, buttonSize),
+                Parent = this,
             };
             _pilotCamera.Clicked += OnClickedPilotCamera;
         }

@@ -8,7 +8,7 @@ namespace FlaxEngine
     /// Specifies a tooltip for a property/field in the editor.
     /// </summary>
     /// <seealso cref="System.Attribute" />
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.All)]
     public sealed class TooltipAttribute : Attribute
     {
         /// <summary>

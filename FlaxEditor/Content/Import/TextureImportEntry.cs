@@ -141,7 +141,7 @@ namespace FlaxEditor.Content.Import
             /// <summary>
             /// The 8192.
             /// </summary>
-            _8192 = 8192
+            _8192 = 8192,
         }
 
         /// <summary>
@@ -227,10 +227,10 @@ namespace FlaxEditor.Content.Import
         public bool IndependentChannels { get; set; }
 
         /// <summary>
-        /// True if texture contains sRGB format and engine should keep that data format
+        /// True if use sRGB format for texture data. Recommended for color maps and diffuse color textures.
         /// </summary>
-        [EditorOrder(50), DefaultValue(false), EditorDisplay(null, "Is sRGB"), Tooltip("True if texture contains colors in sRGB format data")]
-        public bool IsSRGB { get; set; }
+        [EditorOrder(50), DefaultValue(false), EditorDisplay(null, "sRGB"), Tooltip("True if use sRGB format for texture data. Recommended for color maps and diffuse color textures.")]
+        public bool sRGB { get; set; }
 
         /// <summary>
         /// True if generate mip maps chain for the texture.
@@ -295,7 +295,7 @@ namespace FlaxEditor.Content.Import
             public byte NeverStream;
             public byte Compress;
             public byte IndependentChannels;
-            public byte IsSRGB;
+            public byte sRGB;
             public byte GenerateMipMaps;
             public byte FlipY;
             public byte Resize;
@@ -317,7 +317,7 @@ namespace FlaxEditor.Content.Import
                 NeverStream = (byte)(NeverStream ? 1 : 0),
                 Compress = (byte)(Compress ? 1 : 0),
                 IndependentChannels = (byte)(IndependentChannels ? 1 : 0),
-                IsSRGB = (byte)(IsSRGB ? 1 : 0),
+                sRGB = (byte)(sRGB ? 1 : 0),
                 GenerateMipMaps = (byte)(GenerateMipMaps ? 1 : 0),
                 FlipY = (byte)(FlipY ? 1 : 0),
                 Resize = (byte)(Resize ? 1 : 0),
@@ -352,7 +352,7 @@ namespace FlaxEditor.Content.Import
             NeverStream = options.NeverStream != 0;
             Compress = options.Compress != 0;
             IndependentChannels = options.IndependentChannels != 0;
-            IsSRGB = options.IsSRGB != 0;
+            sRGB = options.sRGB != 0;
             GenerateMipMaps = options.GenerateMipMaps != 0;
             FlipY = options.FlipY != 0;
             Resize = options.Resize != 0;
@@ -414,6 +414,11 @@ namespace FlaxEditor.Content.Import
                 _settings.Type = TextureImportSettings.CustomTextureFormatType.HdrRGBA;
                 _settings.Compress = false;
             }
+            else if (extension == ".hdr")
+            {
+                // HDR sky texture
+                _settings.Type = TextureImportSettings.CustomTextureFormatType.HdrRGB;
+            }
             else if (_settings.Type != TextureImportSettings.CustomTextureFormatType.ColorRGB)
             {
                 // Skip checking
@@ -438,6 +443,7 @@ namespace FlaxEditor.Content.Import
             {
                 // Albedo or diffuse map
                 _settings.Type = TextureImportSettings.CustomTextureFormatType.ColorRGB;
+                _settings.sRGB = true;
             }
             else if (snl.EndsWith("ao")
                      || snl.EndsWith("ambientocclusion")
@@ -489,10 +495,8 @@ namespace FlaxEditor.Content.Import
 
         #region Internal Calls
 
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetTextureImportOptions(string path, out TextureImportSettings.InternalOptions result);
-#endif
 
         #endregion
     }

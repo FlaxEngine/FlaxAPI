@@ -52,7 +52,8 @@ namespace FlaxEditor.Windows
         {
             TabsControl = new Tabs
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 TabsSize = new Vector2(48, 48),
                 Parent = this
             };
@@ -73,7 +74,8 @@ namespace FlaxEditor.Windows
             {
                 Orientation = Orientation.Vertical,
                 UseScroll = true,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 TabsSize = new Vector2(120, 32),
                 Parent = Spawn
             };
@@ -141,7 +143,8 @@ namespace FlaxEditor.Windows
 
             var info = paintTab.AddChild<Label>();
             info.Text = "Vertex painting coming soon...";
-            info.DockStyle = DockStyle.Fill;
+            info.AnchorPreset = AnchorPresets.StretchAll;
+            info.Margin = Margin.Zero;
         }
 
         private void InitFoliageTab(Tabs tabs)
@@ -170,11 +173,11 @@ namespace FlaxEditor.Windows
             private DragData _dragData;
 
             public Item(string text, DragData dragData = null)
-            : this(text, dragData, Sprite.Invalid)
+            : this(text, dragData, SpriteHandle.Invalid)
             {
             }
 
-            public Item(string text, DragData dragData, Sprite icon)
+            public Item(string text, DragData dragData, SpriteHandle icon)
             : base(false, icon, icon)
             {
                 Text = text;
@@ -196,12 +199,13 @@ namespace FlaxEditor.Windows
             var tab = parentTabs.AddTab(new Tab(title));
             var panel = new Panel(ScrollBars.Both)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = Margin.Zero,
                 Parent = tab
             };
             var tree = new Tree(false)
             {
-                DockStyle = DockStyle.Top,
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
                 IsScrollable = true,
                 Parent = panel
             };

@@ -7,7 +7,6 @@ using FlaxEditor.GUI.Drag;
 using FlaxEditor.Options;
 using FlaxEditor.Surface.Archetypes;
 using FlaxEditor.Surface.ContextMenu;
-using FlaxEditor.Surface.Elements;
 using FlaxEditor.Surface.GUI;
 using FlaxEditor.Surface.Undo;
 using FlaxEngine;
@@ -35,6 +34,7 @@ namespace FlaxEditor.Surface
         private VisjectCM _activeVisjectCM;
         private GroupArchetype _customNodesGroup;
         private List<NodeArchetype> _customNodes;
+        private Action _onSave;
 
         /// <summary>
         /// The left mouse down flag.
@@ -90,11 +90,6 @@ namespace FlaxEditor.Surface
         /// The primary context menu.
         /// </summary>
         protected VisjectCM _cmPrimaryMenu;
-
-        /// <summary>
-        /// The secondary context menu.
-        /// </summary>
-        protected FlaxEditor.GUI.ContextMenu.ContextMenu _cmSecondaryMenu;
 
         /// <summary>
         /// The context menu start position.
@@ -276,7 +271,8 @@ namespace FlaxEditor.Surface
         /// <param name="groups">The custom surface node types. Pass null to use the default nodes set.</param>
         public VisjectSurface(IVisjectSurfaceOwner owner, Action onSave, FlaxEditor.Undo undo = null, SurfaceStyle style = null, List<GroupArchetype> groups = null)
         {
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
             AutoFocus = false; // Disable to prevent autofocus and event handling on OnMouseDown event
 
             Owner = owner;
@@ -285,65 +281,11 @@ namespace FlaxEditor.Surface
                 throw new InvalidOperationException("Missing visject surface style.");
             NodeArchetypes = groups ?? NodeFactory.DefaultGroups;
             Undo = undo;
+            _onSave = onSave;
 
             // Initialize with the root context
             OpenContext(owner);
             RootContext.Modified += OnRootContextModified;
-
-            // Create secondary menu (for other actions)
-            _cmSecondaryMenu = new FlaxEditor.GUI.ContextMenu.ContextMenu();
-            _cmSecondaryMenu.AddButton("Save", onSave);
-            _cmSecondaryMenu.AddSeparator();
-            _cmCopyButton = _cmSecondaryMenu.AddButton("Copy", Copy);
-            _cmPasteButton = _cmSecondaryMenu.AddButton("Paste", Paste);
-            _cmDuplicateButton = _cmSecondaryMenu.AddButton("Duplicate", Duplicate);
-            _cmCutButton = _cmSecondaryMenu.AddButton("Cut", Cut);
-            _cmDeleteButton = _cmSecondaryMenu.AddButton("Delete", Delete);
-            _cmSecondaryMenu.AddSeparator();
-            _cmRemoveNodeConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that node(s)", () =>
-            {
-                var nodes = ((List<SurfaceNode>)_cmSecondaryMenu.Tag);
-
-                if (Undo != null)
-                {
-                    var actions = new List<IUndoAction>(nodes.Count);
-                    foreach (var node in nodes)
-                    {
-                        var action = new EditNodeConnections(Context, node);
-                        node.RemoveConnections();
-                        action.End();
-                        actions.Add(action);
-                    }
-                    Undo.AddAction(new MultiUndoAction(actions, actions[0].ActionString));
-                }
-                else
-                {
-                    foreach (var node in nodes)
-                    {
-                        node.RemoveConnections();
-                    }
-                }
-
-                MarkAsEdited();
-            });
-            _cmRemoveBoxConnectionsButton = _cmSecondaryMenu.AddButton("Remove all connections to that box", () =>
-            {
-                var boxUnderMouse = (Box)_cmRemoveBoxConnectionsButton.Tag;
-
-                if (Undo != null)
-                {
-                    var action = new EditNodeConnections(Context, boxUnderMouse.ParentNode);
-                    boxUnderMouse.RemoveConnections();
-                    action.End();
-                    Undo.AddAction(action);
-                }
-                else
-                {
-                    boxUnderMouse.RemoveConnections();
-                }
-
-                MarkAsEdited();
-            });
 
             // Setup input actions
             InputActions = new InputActionsContainer(new[]
@@ -362,6 +304,16 @@ namespace FlaxEditor.Surface
             // Init drag handlers
             DragHandlers.Add(_dragAssets = new DragAssets<DragDropEventArgs>(ValidateDragItem));
             DragHandlers.Add(_dragParameters = new DragNames<DragDropEventArgs>(SurfaceParameter.DragPrefix, ValidateDragParameter));
+        }
+
+        /// <summary>
+        /// Gets the display name of the connection type used in the surface.
+        /// </summary>
+        /// <param name="type">The graph connection type.</param>
+        /// <returns>The display name (for UI).</returns>
+        public virtual string GetConnectionTypeName(ConnectionType type)
+        {
+            return type.ToString();
         }
 
         private void OnRootContextModified(VisjectSurfaceContext context, bool graphEdited)
@@ -456,13 +408,13 @@ namespace FlaxEditor.Surface
         }
 
         /// <summary>
-        /// Determines whether the specified node archetype can be spawned into the surface.
+        /// Determines whether the specified node archetype can be used in the surface.
         /// </summary>
         /// <param name="nodeArchetype">The node archetype.</param>
-        /// <returns>True if can spawn this node archetype, otherwise false.</returns>
-        public virtual bool CanSpawnNodeType(NodeArchetype nodeArchetype)
+        /// <returns>True if can use this node archetype, otherwise false.</returns>
+        public virtual bool CanUseNodeType(NodeArchetype nodeArchetype)
         {
-            return true;
+            return (nodeArchetype.Flags & NodeFlags.NoSpawnViaGUI) == 0;
         }
 
         /// <summary>
@@ -735,17 +687,6 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
-        {
-            // Keep view stable
-            var viewCenter = ViewCenterPosition;
-
-            base.SetSizeInternal(ref size);
-
-            ViewCenterPosition = viewCenter;
-        }
-
-        /// <inheritdoc />
         public override void OnDestroy()
         {
             if (IsDisposing)
@@ -755,6 +696,7 @@ namespace FlaxEditor.Surface
             // Cleanup context cache
             _root = null;
             _context = null;
+            _onSave = null;
             ContextStack.Clear();
             foreach (var context in _contextCache.Values)
             {
@@ -765,7 +707,6 @@ namespace FlaxEditor.Surface
             // Cleanup
             _activeVisjectCM = null;
             _cmPrimaryMenu?.Dispose();
-            _cmSecondaryMenu.Dispose();
 
             base.OnDestroy();
         }
@@ -791,20 +732,54 @@ namespace FlaxEditor.Surface
             case ParameterType.Texture:
             case ParameterType.NormalMap: return typeof(Texture);
             case ParameterType.String: return typeof(string);
-            case ParameterType.Box: return typeof(Box);
+            case ParameterType.Box: return typeof(BoundingBox);
             case ParameterType.Rotation: return typeof(Quaternion);
             case ParameterType.Transform: return typeof(Transform);
             case ParameterType.Asset: return typeof(Asset);
             case ParameterType.Actor: return typeof(Actor);
             case ParameterType.Rectangle: return typeof(Rectangle);
             case ParameterType.CubeTexture: return typeof(CubeTexture);
-            case ParameterType.GPUTexture: return typeof(bool);
+            case ParameterType.GPUTexture: return typeof(GPUTexture);
             case ParameterType.Matrix: return typeof(Matrix);
-            case ParameterType.GPUTextureArray: return typeof(bool);
-            case ParameterType.GPUTextureVolume: return typeof(bool);
-            case ParameterType.GPUTextureCube: return typeof(bool);
+            case ParameterType.GPUTextureArray: return typeof(GPUTextureView);
+            case ParameterType.GPUTextureVolume: return typeof(GPUTextureView);
+            case ParameterType.GPUTextureCube: return typeof(GPUTextureView);
             default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        /// <summary>
+        /// Gets the type of the connection (runtime value type to enum).
+        /// </summary>
+        /// <param name="type">The runtime value type.</param>
+        /// <returns>The connection time.</returns>
+        public static ConnectionType GetValueTypeConnectionType(Type type)
+        {
+            if (type == typeof(bool))
+                return ConnectionType.Bool;
+            if (type == typeof(int))
+                return ConnectionType.Integer;
+            if (type == typeof(float))
+                return ConnectionType.Float;
+            if (type == typeof(Vector2))
+                return ConnectionType.Vector2;
+            if (type == typeof(Vector3))
+                return ConnectionType.Vector3;
+            if (type == typeof(Vector4) || type == typeof(Color))
+                return ConnectionType.Vector4;
+            if (type == typeof(string))
+                return ConnectionType.String;
+            if (type == typeof(BoundingBox))
+                return ConnectionType.Box;
+            if (type == typeof(Quaternion))
+                return ConnectionType.Rotation;
+            if (type == typeof(Transform))
+                return ConnectionType.Transform;
+            if (type == typeof(object))
+                return ConnectionType.Object;
+            if (type == typeof(uint))
+                return ConnectionType.UnsignedInteger;
+            throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
     }
 }

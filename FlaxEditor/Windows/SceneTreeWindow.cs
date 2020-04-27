@@ -34,24 +34,31 @@ namespace FlaxEditor.Windows
             ScrollMargin = new Margin(0, 0, 0, 100.0f);
 
             // Scene searching query input box
-            var headerPanel = new ContainerControl();
-            headerPanel.DockStyle = DockStyle.Top;
-            headerPanel.IsScrollable = true;
-            headerPanel.Parent = this;
-            _searchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
-            _searchBox.AnchorStyle = AnchorStyle.Upper;
-            _searchBox.WatermarkText = "Search...";
-            _searchBox.Parent = headerPanel;
+            var headerPanel = new ContainerControl
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                IsScrollable = true,
+                Offsets = new Margin(0, 0, 0, 18 + 6),
+                Parent = this,
+            };
+            _searchBox = new TextBox
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
+                WatermarkText = "Search...",
+                Parent = headerPanel,
+                Bounds = new Rectangle(4, 4, headerPanel.Width - 8, 18),
+            };
             _searchBox.TextChanged += OnSearchBoxTextChanged;
-            headerPanel.Height = _searchBox.Bottom + 6;
 
             // Create scene structure tree
             var root = editor.Scene.Root;
             root.TreeNode.ChildrenIndent = 0;
             root.TreeNode.Expand();
-            _tree = new Tree(true);
-            _tree.Y = headerPanel.Bottom;
-            _tree.Margin = new Margin(0.0f, 0.0f, -16.0f, 0.0f); // Hide root node
+            _tree = new Tree(true)
+            {
+                Y = headerPanel.Bottom,
+                Margin = new Margin(0.0f, 0.0f, -16.0f, 0.0f), // Hide root node
+            };
             _tree.AddChild(root.TreeNode);
             _tree.SelectedChanged += Tree_OnSelectedChanged;
             _tree.RightClick += Tree_OnRightClick;
@@ -99,7 +106,7 @@ namespace FlaxEditor.Windows
             }
             if (parentActor == null)
             {
-                var scenes = SceneManager.Scenes;
+                var scenes = Level.Scenes;
                 if (scenes.Length > 0)
                     parentActor = scenes[scenes.Length - 1];
             }
@@ -201,6 +208,7 @@ namespace FlaxEditor.Windows
         /// <inheritdoc />
         public override void Draw()
         {
+            var style = Style.Current;
             // Draw overlay
             string overlayText = null;
             var state = Editor.StateMachine.CurrentState;
@@ -218,7 +226,7 @@ namespace FlaxEditor.Windows
             }
             if (overlayText != null)
             {
-                Render2D.DrawText(Style.Current.FontLarge, overlayText, GetClientArea(), new Color(0.8f), TextAlignment.Center, TextAlignment.Center);
+                Render2D.DrawText(Style.Current.FontLarge, overlayText, GetClientArea(), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
             }
 
             base.Draw();

@@ -7,6 +7,8 @@ using System.Xml;
 using FlaxEditor.Content;
 using FlaxEditor.Content.GUI;
 using FlaxEditor.GUI;
+using FlaxEditor.GUI.ContextMenu;
+using FlaxEditor.GUI.Input;
 using FlaxEditor.GUI.Tree;
 using FlaxEngine;
 using FlaxEngine.Assertions;
@@ -36,7 +38,7 @@ namespace FlaxEditor.Windows
         private Tree _tree;
         private TextBox _foldersSearchBox;
         private TextBox _itemsSearchBox;
-        private SearchFilterComboBox _itemsFilterBox;
+        private ViewDropdown _viewDowndown;
 
         private RootContentTreeNode _root;
 
@@ -69,80 +71,161 @@ namespace FlaxEditor.Windows
             editor.ContentDatabase.WorkspaceModified += () => _isWorkspaceDirty = true;
             editor.ContentDatabase.ItemRemoved += ContentDatabaseOnItemRemoved;
 
-            // Tool strip
-            _toolStrip = new ToolStrip();
+            // Toolstrip
+            _toolStrip = new ToolStrip
+            {
+                Parent = this,
+                Bounds = new Rectangle(0, 0, Width, 34),
+            };
             _importButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.Import32, () => Editor.ContentImporting.ShowImportFileDialog(CurrentViewFolder)).LinkTooltip("Import content");
             _toolStrip.AddSeparator();
             _navigateBackwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowLeft32, NavigateBackward).LinkTooltip("Navigate backward");
             _navigateForwardButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowRight32, NavigateForward).LinkTooltip("Navigate forward");
             _navigateUpButton = (ToolStripButton)_toolStrip.AddButton(Editor.Icons.ArrowUp32, NavigateUp).LinkTooltip("Navigate up");
-            _toolStrip.Parent = this;
 
             // Navigation bar
             _navigationBar = new NavigationBar
             {
-                Parent = this
+                Parent = this,
             };
 
             // Split panel
             _split = new SplitPanel(Orientation.Horizontal, ScrollBars.Both, ScrollBars.Vertical)
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
+                Offsets = new Margin(0, 0, _toolStrip.Bottom, 0),
                 SplitterValue = 0.2f,
-                Parent = this
+                Parent = this,
             };
 
             // Content structure tree searching query input box
-            var headerPanel = new ContainerControl();
-            headerPanel.DockStyle = DockStyle.Top;
-            headerPanel.IsScrollable = true;
-            headerPanel.Parent = _split.Panel1;
-            //
-            _foldersSearchBox = new TextBox(false, 4, 4, headerPanel.Width - 8);
-            _foldersSearchBox.AnchorStyle = AnchorStyle.Upper;
-            _foldersSearchBox.WatermarkText = "Search...";
-            _foldersSearchBox.Parent = headerPanel;
+            var headerPanel = new ContainerControl
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                IsScrollable = true,
+                Offsets = new Margin(0, 0, 0, 18 + 6),
+                Parent = _split.Panel1,
+            };
+            _foldersSearchBox = new TextBox
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
+                WatermarkText = "Search...",
+                Parent = headerPanel,
+                Bounds = new Rectangle(4, 4, headerPanel.Width - 8, 18),
+            };
             _foldersSearchBox.TextChanged += OnFoldersSearchBoxTextChanged;
-            //
-            headerPanel.Height = _foldersSearchBox.Bottom + 6;
 
             // Content structure tree
-            _tree = new Tree(false);
-            _tree.Y = headerPanel.Bottom;
+            _tree = new Tree(false)
+            {
+                Y = headerPanel.Bottom,
+                Parent = _split.Panel1,
+            };
             _tree.SelectedChanged += OnTreeSelectionChanged;
-            _tree.Parent = _split.Panel1;
 
             // Content items searching query input box and filters selector
-            var contentItemsSearchPanel = new ContainerControl();
-            contentItemsSearchPanel.DockStyle = DockStyle.Top;
-            contentItemsSearchPanel.IsScrollable = true;
-            contentItemsSearchPanel.Parent = _split.Panel2;
-            //
-            const float filterBoxWidth = 56.0f;
-            _itemsSearchBox = new TextBox(false, filterBoxWidth + 8, 4, contentItemsSearchPanel.Width - 8 - filterBoxWidth);
-            _itemsSearchBox.AnchorStyle = AnchorStyle.Upper;
-            _itemsSearchBox.WatermarkText = "Search...";
-            _itemsSearchBox.Parent = contentItemsSearchPanel;
+            var contentItemsSearchPanel = new ContainerControl
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                IsScrollable = true,
+                Offsets = new Margin(0, 0, 0, 18 + 8),
+                Parent = _split.Panel2,
+            };
+            const float viewDropdownWidth = 50.0f;
+            _itemsSearchBox = new TextBox
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchMiddle,
+                WatermarkText = "Search...",
+                Parent = contentItemsSearchPanel,
+                Bounds = new Rectangle(viewDropdownWidth + 8, 4, contentItemsSearchPanel.Width - 12 - viewDropdownWidth, 18),
+            };
             _itemsSearchBox.TextChanged += UpdateItemsSearch;
-            //
-            contentItemsSearchPanel.Height = _itemsSearchBox.Bottom + 4;
-            //
-            _itemsFilterBox = new SearchFilterComboBox(4, (contentItemsSearchPanel.Height - ComboBox.DefaultHeight) * 0.5f, filterBoxWidth);
-            _itemsFilterBox.Parent = contentItemsSearchPanel;
-            _itemsFilterBox.SelectedIndexChanged += e => UpdateItemsSearch();
-            _itemsFilterBox.SupportMultiSelect = true;
+            _viewDowndown = new ViewDropdown
+            {
+                AnchorPreset = AnchorPresets.MiddleLeft,
+                SupportMultiSelect = true,
+                TooltipText = "Change content view and filter options",
+                Parent = contentItemsSearchPanel,
+                Offsets = new Margin(4, viewDropdownWidth, -9, 18),
+            };
+            _viewDowndown.SelectedIndexChanged += e => UpdateItemsSearch();
             for (int i = 0; i <= (int)ContentItemSearchFilter.Other; i++)
-                _itemsFilterBox.Items.Add(((ContentItemSearchFilter)i).ToString());
+                _viewDowndown.Items.Add(((ContentItemSearchFilter)i).ToString());
+            _viewDowndown.PopupCreate += OnViewDropdownPopupCreate;
 
             // Content View
-            _view = new ContentView();
+            _view = new ContentView
+            {
+                AnchorPreset = AnchorPresets.HorizontalStretchTop,
+                Offsets = new Margin(0, 0, contentItemsSearchPanel.Bottom + 4, 0),
+                IsScrollable = true,
+                Parent = _split.Panel2,
+            };
             _view.OnOpen += Open;
             _view.OnNavigateBack += NavigateBackward;
             _view.OnRename += Rename;
             _view.OnDelete += Delete;
             _view.OnDuplicate += Duplicate;
             _view.OnPaste += Paste;
-            _view.Parent = _split.Panel2;
+        }
+
+        private ContextMenu OnViewDropdownPopupCreate(ComboBox comboBox)
+        {
+            var menu = new ContextMenu();
+
+            var showFileExtensionsButton = menu.AddButton("Show file extensions", () => View.ShowFileExtensions = !View.ShowFileExtensions);
+            showFileExtensionsButton.Checked = View.ShowFileExtensions;
+            showFileExtensionsButton.AutoCheck = true;
+
+            var viewScale = menu.AddButton("View Scale");
+            var scaleValue = new FloatValueBox(1, 75, 2, 50.0f, 0.3f, 3.0f, 0.01f);
+            scaleValue.Parent = viewScale;
+            scaleValue.ValueChanged += () => View.ViewScale = scaleValue.Value;
+            menu.VisibleChanged += control => { scaleValue.Value = View.ViewScale; };
+
+            var viewType = menu.AddChildMenu("View Type");
+            viewType.ContextMenu.AddButton("Tiles", OnViewTypeButtonClicked).Tag = ContentViewType.Tiles;
+            viewType.ContextMenu.AddButton("List", OnViewTypeButtonClicked).Tag = ContentViewType.List;
+            viewType.ContextMenu.VisibleChanged += control =>
+            {
+                if (!control.Visible)
+                    return;
+                foreach (var item in ((ContextMenu)control).Items)
+                {
+                    if (item is ContextMenuButton button)
+                        button.Checked = View.ViewType == (ContentViewType)button.Tag;
+                }
+            };
+
+            var filters = menu.AddChildMenu("Filters");
+            for (int i = 0; i < _viewDowndown.Items.Count; i++)
+            {
+                var filterButton = filters.ContextMenu.AddButton(_viewDowndown.Items[i], OnFilterClicked);
+                filterButton.Tag = i;
+            }
+            filters.ContextMenu.VisibleChanged += control =>
+            {
+                if (!control.Visible)
+                    return;
+                foreach (var item in ((ContextMenu)control).Items)
+                {
+                    if (item is ContextMenuButton filterButton)
+                        filterButton.Checked = _viewDowndown.IsSelected(filterButton.Text);
+                }
+            };
+
+            return menu;
+        }
+
+        private void OnViewTypeButtonClicked(ContextMenuButton button)
+        {
+            View.ViewType = (ContentViewType)button.Tag;
+        }
+
+        private void OnFilterClicked(ContextMenuButton filterButton)
+        {
+            var i = (int)filterButton.Tag;
+            _viewDowndown.OnClicked(i);
         }
 
         /// <summary>
@@ -180,8 +263,7 @@ namespace FlaxEditor.Windows
 
         private bool OnRenameValidate(RenamePopup popup, string value)
         {
-            string hint;
-            return Editor.ContentEditing.IsValidAssetName((ContentItem)popup.Tag, value, out hint);
+            return Editor.ContentEditing.IsValidAssetName((ContentItem)popup.Tag, value, out _);
         }
 
         /// <summary>
@@ -198,7 +280,7 @@ namespace FlaxEditor.Windows
             if (!item.CanRename)
             {
                 // Cannot
-                MessageBox.Show("Cannot rename this item.", "Cannot rename", MessageBox.Buttons.OK, MessageBox.Icon.Error);
+                MessageBox.Show("Cannot rename this item.", "Cannot rename", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -209,8 +291,8 @@ namespace FlaxEditor.Windows
                 // Invalid name
                 MessageBox.Show("Given asset name is invalid. " + hint,
                                 "Invalid name",
-                                MessageBox.Buttons.OK,
-                                MessageBox.Icon.Error);
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                 return;
             }
 
@@ -308,8 +390,8 @@ namespace FlaxEditor.Windows
                 // Single item
                 if (MessageBox.Show(string.Format("Are you sure to delete \'{0}\'?\nThis action cannot be undone. Files will be deleted permanently.", items[0].Path),
                                     "Delete asset(s)",
-                                    MessageBox.Buttons.OKCancel,
-                                    MessageBox.Icon.Question)
+                                    MessageBoxButtons.OKCancel,
+                                    MessageBoxIcon.Question)
                     != DialogResult.OK)
                 {
                     // Break
@@ -321,8 +403,8 @@ namespace FlaxEditor.Windows
                 // Many items
                 if (MessageBox.Show(string.Format("Are you sure to delete {0} selected items?\nThis action cannot be undone. Files will be deleted permanently.", items.Count),
                                     "Delete asset(s)",
-                                    MessageBox.Buttons.OKCancel,
-                                    MessageBox.Icon.Question)
+                                    MessageBoxButtons.OKCancel,
+                                    MessageBoxIcon.Question)
                     != DialogResult.OK)
                 {
                     // Break
@@ -485,9 +567,11 @@ namespace FlaxEditor.Windows
             } while (parentFolder.FindChild(path) != null);
 
             // Create new asset proxy, add to view and rename it
-            _newElement = new NewItem(path, proxy, argument);
-            _newElement.ParentFolder = parentFolder;
-            _newElement.Tag = created;
+            _newElement = new NewItem(path, proxy, argument)
+            {
+                ParentFolder = parentFolder,
+                Tag = created,
+            };
             RefreshView();
             Rename(_newElement);
         }
@@ -763,17 +847,24 @@ namespace FlaxEditor.Windows
         {
             writer.WriteAttributeString("Split", _split.SplitterValue.ToString());
             writer.WriteAttributeString("Scale", _view.ViewScale.ToString());
+            writer.WriteAttributeString("ShowFileExtensions", _view.ShowFileExtensions.ToString());
+            writer.WriteAttributeString("ViewType", _view.ViewType.ToString());
         }
 
         /// <inheritdoc />
         public override void OnLayoutDeserialize(XmlElement node)
         {
             float value1;
+            bool value2;
 
             if (float.TryParse(node.GetAttribute("Split"), out value1))
                 _split.SplitterValue = value1;
             if (float.TryParse(node.GetAttribute("Scale"), out value1))
                 _view.ViewScale = value1;
+            if (bool.TryParse(node.GetAttribute("ShowFileExtensions"), out value2))
+                _view.ShowFileExtensions = value2;
+            if (Enum.TryParse(node.GetAttribute("ViewType"), out ContentViewType viewType))
+                _view.ViewType = viewType;
         }
 
         /// <inheritdoc />
@@ -788,7 +879,7 @@ namespace FlaxEditor.Windows
         {
             _foldersSearchBox = null;
             _itemsSearchBox = null;
-            _itemsFilterBox = null;
+            _viewDowndown = null;
 
             base.OnDestroy();
         }

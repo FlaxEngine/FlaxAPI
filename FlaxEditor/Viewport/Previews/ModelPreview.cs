@@ -46,7 +46,7 @@ namespace FlaxEditor.Viewport.Previews
             _previewModel = StaticModel.New();
 
             // Link actors for rendering
-            Task.CustomActors.Add(_previewModel);
+            Task.AddCustomActor(_previewModel);
 
             if (useWidgets)
             {
@@ -61,7 +61,7 @@ namespace FlaxEditor.Viewport.Previews
             }
         }
 
-        private void OnBegin(SceneRenderTask task, GPUContext context)
+        private void OnBegin(RenderTask task, GPUContext context)
         {
             if (!ScaleToFit)
             {
@@ -74,7 +74,7 @@ namespace FlaxEditor.Viewport.Previews
             if (model && model.IsLoaded)
             {
                 float targetSize = 30.0f;
-                float maxSize = Mathf.Max(0.001f, model.Box.Size.MaxValue);
+                float maxSize = Mathf.Max(0.001f, model.GetBox().Size.MaxValue);
                 _previewModel.Scale = new Vector3(targetSize / maxSize);
             }
         }

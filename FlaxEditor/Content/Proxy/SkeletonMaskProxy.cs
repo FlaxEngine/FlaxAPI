@@ -26,9 +26,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x00B31C);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.SkeletonMask;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(SkeletonMask);
 
         /// <inheritdoc />

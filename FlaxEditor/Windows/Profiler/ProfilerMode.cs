@@ -2,7 +2,7 @@
 
 using System;
 using FlaxEditor.GUI.Tabs;
-using FlaxEditor.Profiling;
+using FlaxEngine;
 
 namespace FlaxEditor.Windows.Profiler
 {
@@ -16,30 +16,30 @@ namespace FlaxEditor.Windows.Profiler
         /// </summary>
         public struct SharedUpdateData
         {
-            private ThreadStats[] _cpuEvents;
-            private EventGPU[] _gpuEvents;
+            private ProfilingTools.ThreadStats[] _cpuEvents;
+            private ProfilerGPU.Event[] _gpuEvents;
 
             /// <summary>
             /// The main stats. Gathered by auto by profiler before profiler mode update.
             /// </summary>
-            public MainStats Stats;
+            public ProfilingTools.MainStats Stats;
 
             /// <summary>
             /// Gets the collected CPU events by the profiler from local or remote session.
             /// </summary>
             /// <returns>Buffer with events per thread.</returns>
-            public ThreadStats[] GetEventsCPU()
+            public ProfilingTools.ThreadStats[] GetEventsCPU()
             {
-                return _cpuEvents ?? (_cpuEvents = ProfilingTools.GetEventsCPU());
+                return _cpuEvents ?? (_cpuEvents = ProfilingTools.EventsCPU);
             }
 
             /// <summary>
             /// Gets the collected GPU events by the profiler from local or remote session.
             /// </summary>
             /// <returns>Buffer with rendering events.</returns>
-            public EventGPU[] GetEventsGPU()
+            public ProfilerGPU.Event[] GetEventsGPU()
             {
-                return _gpuEvents ?? (_gpuEvents = ProfilingTools.GetEventsGPU());
+                return _gpuEvents ?? (_gpuEvents = ProfilingTools.EventsGPU);
             }
 
             /// <summary>

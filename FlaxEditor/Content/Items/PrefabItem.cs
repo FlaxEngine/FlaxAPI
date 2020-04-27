@@ -22,15 +22,12 @@ namespace FlaxEditor.Content
         }
 
         /// <inheritdoc />
-        public override ContentDomain ItemDomain => ContentDomain.Prefab;
-
-        /// <inheritdoc />
         public override ContentItemType ItemType => ContentItemType.Asset;
 
         /// <inheritdoc />
         public override ContentItemSearchFilter SearchFilter => ContentItemSearchFilter.Prefab;
 
         /// <inheritdoc />
-        public override Sprite DefaultThumbnail => Sprite.Invalid;
+        public override SpriteHandle DefaultThumbnail => SpriteHandle.Invalid;
     }
 }

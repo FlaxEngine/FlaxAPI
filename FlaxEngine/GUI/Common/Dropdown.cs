@@ -235,9 +235,9 @@ namespace FlaxEngine.GUI
             BorderColorHighlighted = style.BorderSelected;
             BorderColorSelected = BorderColorHighlighted;
             ArrowImage = new SpriteBrush(style.ArrowDown);
-            ArrowColor = Color.White * 0.6f;
+            ArrowColor = style.Foreground * 0.6f;
             ArrowColorSelected = style.BackgroundSelected;
-            ArrowColorHighlighted = Color.White;
+            ArrowColorHighlighted = style.Foreground;
             CheckedImage = new SpriteBrush(style.CheckBoxTick);
         }
 
@@ -309,7 +309,7 @@ namespace FlaxEngine.GUI
 
             var container = new VerticalPanel
             {
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
                 BackgroundColor = BackgroundColor,
                 AutoSize = false,
                 Parent = popup,
@@ -318,7 +318,7 @@ namespace FlaxEngine.GUI
             {
                 BorderColor = BorderColorHighlighted,
                 Width = 4.0f,
-                DockStyle = DockStyle.Fill,
+                AnchorPreset = AnchorPresets.StretchAll,
                 Parent = popup,
             };
 
@@ -352,7 +352,7 @@ namespace FlaxEngine.GUI
                     TextColor = Color.White * 0.9f,
                     TextColorHighlighted = Color.White,
                     HorizontalAlignment = TextAlignment.Near,
-                    DockStyle = DockStyle.Right,
+                    AnchorPreset = AnchorPresets.VerticalStretchRight,
                     Text = _items[i],
                     Parent = item,
                 };
@@ -364,7 +364,7 @@ namespace FlaxEngine.GUI
                         Brush = CheckedImage,
                         Width = itemsMargin,
                         Margin = new Margin(4.0f, 6.0f, 4.0f, 4.0f),
-                        DockStyle = DockStyle.Left,
+                        AnchorPreset = AnchorPresets.VerticalStretchLeft,
                         Parent = item,
                     };
                 }

@@ -59,11 +59,12 @@ namespace FlaxEditor.GUI
         /// </summary>
         /// <param name="mainWindow">The main window.</param>
         public MainMenu(RootControl mainWindow)
-        : base(0, 0, 1, 20)
+        : base(0, 0, 0, 20)
         {
             _useCustomWindowSystem = !Editor.Instance.Options.Options.Interface.UseNativeWindowSystem;
             AutoFocus = false;
-            DockStyle = DockStyle.Top;
+            AnchorPreset = AnchorPresets.HorizontalStretchTop;
+            _performChildrenLayoutFirst = true;
 
             if (_useCustomWindowSystem)
             {
@@ -82,8 +83,9 @@ namespace FlaxEditor.GUI
                 {
                     Margin = new Margin(6, 6, 6, 6),
                     Brush = new TextureBrush(windowIcon),
+                    Color = Style.Current.Foreground,
                     KeepAspectRatio = false,
-                    TooltipText = string.Format("{0}\nVersion {1}\nGraphics {2}", _window.Title, Globals.Version, GPUDevice.RendererType),
+                    TooltipText = string.Format("{0}\nVersion {1}\nGraphics {2}", _window.Title, Globals.EngineVersion, GPUDevice.Instance.RendererType),
                     Parent = this,
                 };
 
@@ -93,8 +95,8 @@ namespace FlaxEditor.GUI
                     HorizontalAlignment = TextAlignment.Center,
                     VerticalAlignment = TextAlignment.Center,
                     ClipText = true,
-                    TextColor = new Color(0.7f, 0.7f, 0.7f, 1.0f),
-                    TextColorHighlighted = new Color(0.7f, 0.7f, 0.7f, 1.0f),
+                    TextColor = Style.Current.ForegroundGrey,
+                    TextColorHighlighted = Style.Current.ForegroundGrey,
                     Parent = this,
                 };
 
@@ -106,7 +108,7 @@ namespace FlaxEditor.GUI
                     BorderColor = Color.Transparent,
                     BorderColorHighlighted = Color.Transparent,
                     BorderColorSelected = Color.Transparent,
-                    TextColor = Color.White,
+                    TextColor = Style.Current.Foreground,
                     Width = 46,
                     BackgroundColorHighlighted = Color.Red,
                     BackgroundColorSelected = Color.Red.RGBMultiplied(1.3f),
@@ -122,7 +124,7 @@ namespace FlaxEditor.GUI
                     BorderColor = Color.Transparent,
                     BorderColorHighlighted = Color.Transparent,
                     BorderColorSelected = Color.Transparent,
-                    TextColor = Color.White,
+                    TextColor = Style.Current.Foreground,
                     Width = 46,
                     BackgroundColorHighlighted = Style.Current.LightBackground.RGBMultiplied(1.3f),
                     Parent = this,
@@ -137,7 +139,7 @@ namespace FlaxEditor.GUI
                     BorderColor = Color.Transparent,
                     BorderColorHighlighted = Color.Transparent,
                     BorderColorSelected = Color.Transparent,
-                    TextColor = Color.White,
+                    TextColor = Style.Current.Foreground,
                     Width = 46,
                     BackgroundColorHighlighted = Style.Current.LightBackground.RGBMultiplied(1.3f),
                     Parent = this,
@@ -291,8 +293,7 @@ namespace FlaxEditor.GUI
                 var c = _children[i];
                 if (c is MainMenuButton b && c.Visible)
                 {
-                    b.Height = Height;
-                    b.Location = new Vector2(x, 0);
+                    b.Bounds = new Rectangle(x, 0, b.Width, Height);
 
                     if (rightMostButton == null)
                         rightMostButton = b;

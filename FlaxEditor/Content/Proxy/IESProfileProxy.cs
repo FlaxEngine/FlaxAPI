@@ -37,9 +37,6 @@ namespace FlaxEditor.Content
         public override Color AccentColor => Color.FromRGB(0x695C7F);
 
         /// <inheritdoc />
-        public override ContentDomain Domain => ContentDomain.IESProfile;
-
-        /// <inheritdoc />
         public override Type AssetType => typeof(IESProfile);
 
         /// <inheritdoc />
@@ -47,8 +44,11 @@ namespace FlaxEditor.Content
         {
             if (_preview == null)
             {
-                _preview = new IESProfilePreview();
-                _preview.Size = new Vector2(PreviewsCache.AssetIconSize, PreviewsCache.AssetIconSize);
+                _preview = new IESProfilePreview
+                {
+                    Offsets = Margin.Zero,
+                    AnchorPreset = AnchorPresets.StretchAll,
+                };
             }
 
             // TODO: disable streaming for asset during thumbnail rendering (and restore it after)

@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using FlaxEditor.CustomEditors;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.Input;
+using FlaxEditor.Surface.Elements;
 using FlaxEngine;
 using FlaxEngine.GUI;
 
@@ -541,6 +543,103 @@ namespace FlaxEditor.Surface.Archetypes
         }
 
         /// <summary>
+        /// Surface node type for Gameplay Globals get.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.Surface.SurfaceNode" />
+        private class GetGameplayGlobalNode : SurfaceNode
+        {
+            private ComboBoxElement _combobox;
+            private bool _isUpdating;
+
+            /// <inheritdoc />
+            public GetGameplayGlobalNode(uint id, VisjectSurfaceContext context, NodeArchetype nodeArch, GroupArchetype groupArch)
+            : base(id, context, nodeArch, groupArch)
+            {
+            }
+
+            private void UpdateCombo()
+            {
+                if (_isUpdating)
+                    return;
+                _isUpdating = true;
+
+                // Cache combo box
+                if (_combobox == null)
+                {
+                    _combobox = (ComboBoxElement)_children[0];
+                    _combobox.SelectedIndexChanged += OnSelectedChanged;
+                }
+
+                // Update items
+                Type type = null;
+                var toSelect = (string)Values[1];
+                var asset = FlaxEngine.Content.Load<GameplayGlobals>((Guid)Values[0]);
+                _combobox.ClearItems();
+                if (asset)
+                {
+                    var values = asset.DefaultValues;
+                    var tooltips = new string[values.Count];
+                    var i = 0;
+                    foreach (var e in values)
+                    {
+                        _combobox.AddItem(e.Key);
+                        tooltips[i++] = "Type: " + CustomEditorsUtil.GetTypeNameUI(e.Value.GetType()) + ", default value: " + e.Value;
+                        if (toSelect == e.Key)
+                        {
+                            type = e.Value.GetType();
+                        }
+                    }
+                    _combobox.Tooltips = tooltips;
+                }
+
+                // Preserve selected item
+                _combobox.SelectedItem = toSelect;
+
+                // Update output value type
+                var box = GetBox(0);
+                if (type == null)
+                {
+                    box.Enabled = false;
+                }
+                else
+                {
+                    box.Enabled = true;
+                    box.CurrentType = VisjectSurface.GetValueTypeConnectionType(type);
+                }
+
+                _isUpdating = false;
+            }
+
+            private void OnSelectedChanged(ComboBox cb)
+            {
+                if (_isUpdating)
+                    return;
+
+                var selected = _combobox.SelectedItem;
+                if (selected != (string)Values[1])
+                {
+                    SetValue(1, selected);
+                }
+            }
+
+            /// <inheritdoc />
+            public override void OnLoaded()
+            {
+                base.OnLoaded();
+
+                UpdateCombo();
+            }
+
+            /// <inheritdoc />
+            public override void OnValuesChanged()
+            {
+                base.OnValuesChanged();
+
+                UpdateCombo();
+            }
+        }
+
+        /// <summary>
         /// The nodes for that group.
         /// </summary>
         public static NodeArchetype[] Nodes =
@@ -727,7 +826,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 11,
                 Title = "Comment",
-                AlternativeTitles = new string[] { "//" },
+                AlternativeTitles = new[] { "//" },
                 TryParseText = (string filterText, out object[] data) =>
                 {
                     data = null;
@@ -760,6 +859,47 @@ namespace FlaxEditor.Surface.Archetypes
             CurveNode<Vector2>.GetArchetype(13, "Curve Vector2", ConnectionType.Vector2, Vector2.Zero, Vector2.One),
             CurveNode<Vector3>.GetArchetype(14, "Curve Vector3", ConnectionType.Vector3, Vector3.Zero, Vector3.One),
             CurveNode<Vector4>.GetArchetype(15, "Curve Vector4", ConnectionType.Vector4, Vector4.Zero, Vector4.One),
+            new NodeArchetype
+            {
+                TypeID = 16,
+                Create = (id, context, arch, groupArch) => new GetGameplayGlobalNode(id, context, arch, groupArch),
+                Title = "Get Gameplay Global",
+                Description = "Gets the Gameplay Global variable value",
+                Flags = NodeFlags.AllGraphs,
+                Size = new Vector2(220, 90),
+                DefaultValues = new object[]
+                {
+                    Guid.Empty,
+                    string.Empty
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.ComboBox(0, 70, 120),
+                    NodeElementArchetype.Factory.Asset(0, 0, 0, typeof(GameplayGlobals)),
+                    NodeElementArchetype.Factory.Output(0, "Value", ConnectionType.Variable, 0),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 17,
+                Title = "Platform Switch",
+                Description = "Gets the input value based on the runtime-platform type",
+                Flags = NodeFlags.AllGraphs,
+                Size = new Vector2(220, 130),
+                DefaultType = ConnectionType.Variable,
+                IndependentBoxes = new[] { 1, 2, 3, 4, 5, 6 },
+                DependentBoxes = new[] { 0 },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Variable, 0),
+                    NodeElementArchetype.Factory.Input(0, "Default", true, ConnectionType.Variable, 1),
+                    NodeElementArchetype.Factory.Input(1, "Windows", true, ConnectionType.Variable, 2),
+                    NodeElementArchetype.Factory.Input(2, "Xbox One", true, ConnectionType.Variable, 3),
+                    NodeElementArchetype.Factory.Input(3, "Windows Store", true, ConnectionType.Variable, 4),
+                    NodeElementArchetype.Factory.Input(4, "Linux", true, ConnectionType.Variable, 5),
+                    NodeElementArchetype.Factory.Input(5, "PlayStation 4", true, ConnectionType.Variable, 6),
+                }
+            },
         };
     }
 }

@@ -29,31 +29,31 @@ namespace FlaxEditor.CustomEditors.Dedicated
             int order = item.Order?.Order ?? int.MinValue;
             switch (order)
             {
-            // Override static flags editor
-            case -80:
-                item.CustomEditor = new CustomEditorAttribute(typeof(ActorStaticFlagsEditor));
-                break;
+                // Override static flags editor
+                case -80:
+                    item.CustomEditor = new CustomEditorAttribute(typeof(ActorStaticFlagsEditor));
+                    break;
 
-            // Override layer editor
-            case -69:
-                item.CustomEditor = new CustomEditorAttribute(typeof(ActorLayerEditor));
-                break;
+                // Override layer editor
+                case -69:
+                    item.CustomEditor = new CustomEditorAttribute(typeof(ActorLayerEditor));
+                    break;
 
-            // Override tag editor
-            case -68:
-                item.CustomEditor = new CustomEditorAttribute(typeof(ActorTagEditor));
-                break;
+                // Override tag editor
+                case -68:
+                    item.CustomEditor = new CustomEditorAttribute(typeof(ActorTagEditor));
+                    break;
 
-            // Override position/scale editor
-            case -30:
-            case -10:
-                item.CustomEditor = new CustomEditorAttribute(typeof(ActorTransformEditor.PositionScaleEditor));
-                break;
+                // Override position/scale editor
+                case -30:
+                case -10:
+                    item.CustomEditor = new CustomEditorAttribute(typeof(ActorTransformEditor.PositionScaleEditor));
+                    break;
 
-            // Override orientation editor
-            case -20:
-                item.CustomEditor = new CustomEditorAttribute(typeof(ActorTransformEditor.OrientationEditor));
-                break;
+                // Override orientation editor
+                case -20:
+                    item.CustomEditor = new CustomEditorAttribute(typeof(ActorTransformEditor.OrientationEditor));
+                    break;
             }
 
             base.SpawnProperty(itemLayout, itemValues, item);
@@ -89,7 +89,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 if (prefab && !prefab.WaitForLoaded())
                 {
                     var prefabObjectId = actor.PrefabObjectID;
-                    var prefabInstance = Prefab.Internal_GetDefaultInstance(prefab.unmanagedPtr, ref prefabObjectId);
+                    var prefabInstance = prefab.GetDefaultInstance(ref prefabObjectId);
                     if (prefabInstance != null)
                     {
                         // Use default prefab instance as a reference for the editor
@@ -145,7 +145,7 @@ namespace FlaxEditor.CustomEditors.Dedicated
                 {
                     var actor = (Actor)Values[0];
                     var prefabObjectId = actor.PrefabObjectID;
-                    var prefabInstance = Prefab.Internal_GetDefaultInstance(prefab.unmanagedPtr, ref prefabObjectId);
+                    var prefabInstance = prefab.GetDefaultInstance(ref prefabObjectId);
                     if (prefabInstance != null)
                     {
                         Values.SetReferenceValue(prefabInstance);

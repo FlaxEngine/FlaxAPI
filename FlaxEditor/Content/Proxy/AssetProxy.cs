@@ -13,11 +13,6 @@ namespace FlaxEditor.Content
     /// <seealso cref="FlaxEditor.Content.ContentProxy" />
     public abstract class AssetProxy : ContentProxy
     {
-        /// <summary>
-        /// Gets the assets domain.
-        /// </summary>
-        public abstract ContentDomain Domain { get; }
-
         /// <inheritdoc />
         public override bool IsAsset => true;
 
@@ -77,7 +72,8 @@ namespace FlaxEditor.Content
             guiRoot.AddChild(new Label
             {
                 Text = Name,
-                Size = guiRoot.Size,
+                Offsets = Margin.Zero,
+                AnchorPreset = AnchorPresets.StretchAll,
                 Wrapping = TextWrapping.WrapWords
             });
         }

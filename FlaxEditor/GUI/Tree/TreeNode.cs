@@ -31,7 +31,7 @@ namespace FlaxEditor.GUI.Tree
         private float _xOffset, _textWidth;
         private float _headerHeight = 16.0f;
         private Rectangle _headerRect;
-        private Sprite _iconCollaped, _iconOpened;
+        private SpriteHandle _iconCollaped, _iconOpened;
         private Margin _margin = new Margin(2.0f);
         private string _text;
         private bool _textChanged;
@@ -281,7 +281,7 @@ namespace FlaxEditor.GUI.Tree
         /// </summary>
         /// <param name="canChangeOrder">Enable/disable changing node order in parent tree node.</param>
         public TreeNode(bool canChangeOrder)
-        : this(canChangeOrder, Sprite.Invalid, Sprite.Invalid)
+        : this(canChangeOrder, SpriteHandle.Invalid, SpriteHandle.Invalid)
         {
         }
 
@@ -291,7 +291,7 @@ namespace FlaxEditor.GUI.Tree
         /// <param name="canChangeOrder">Enable/disable changing node order in parent tree node.</param>
         /// <param name="iconCollapsed">The icon for node collapsed.</param>
         /// <param name="iconOpened">The icon for node opened.</param>
-        public TreeNode(bool canChangeOrder, Sprite iconCollapsed, Sprite iconOpened)
+        public TreeNode(bool canChangeOrder, SpriteHandle iconCollapsed, SpriteHandle iconOpened)
         : base(0, 0, 64, 16)
         {
             _canChangeOrder = canChangeOrder;
@@ -635,7 +635,7 @@ namespace FlaxEditor.GUI.Tree
             // Draw arrow
             if (HasAnyVisibleChild)
             {
-                Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, _mouseOverHeader ? Color.White : new Color(0.8f, 0.8f, 0.8f, 0.8f));
+                Render2D.DrawSprite(_opened ? style.ArrowDown : style.ArrowRight, ArrowRect, _mouseOverHeader ? style.Foreground : style.ForegroundGrey);
             }
 
             // Draw icon
@@ -742,12 +742,12 @@ namespace FlaxEditor.GUI.Tree
                     // Check if user is pressing control key
                     var tree = ParentTree;
                     var window = tree.Root;
-                    if (window.GetKey(Keys.Shift))
+                    if (window.GetKey(KeyboardKeys.Shift))
                     {
                         // Select range
                         tree.SelectRange(this);
                     }
-                    else if (window.GetKey(Keys.Control))
+                    else if (window.GetKey(KeyboardKeys.Control))
                     {
                         // Add/Remove
                         tree.AddOrRemoveSelection(this);
@@ -860,7 +860,7 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Base
             if (_opened)
@@ -869,7 +869,7 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override void OnKeyUp(Keys key)
+        public override void OnKeyUp(KeyboardKeys key)
         {
             // Base
             if (_opened)
@@ -885,9 +885,10 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override void OnParentResized(ref Vector2 oldSize)
+        public override void OnParentResized()
         {
-            base.OnParentResized(ref oldSize);
+            base.OnParentResized();
+
             Width = Parent.Width;
         }
 
@@ -997,11 +998,10 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        protected override void SetSizeInternal(ref Vector2 size)
+        protected override void OnSizeChanged()
         {
-            base.SetSizeInternal(ref size);
+            base.OnSizeChanged();
 
-            // Cache data
             _headerRect = new Rectangle(0, 0, Width, _headerHeight);
         }
 

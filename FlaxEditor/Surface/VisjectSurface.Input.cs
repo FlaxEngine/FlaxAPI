@@ -344,7 +344,7 @@ namespace FlaxEditor.Surface
                 if (_leftMouseDown && controlUnderMouse.CanSelect(ref cLocation))
                 {
                     // Check if user is pressing control
-                    if (Root.GetKey(Keys.Control))
+                    if (Root.GetKey(KeyboardKeys.Control))
                     {
                         // Add to selection
                         if (!controlUnderMouse.IsSelected)
@@ -470,7 +470,7 @@ namespace FlaxEditor.Surface
                             Select(controlUnderMouse);
 
                         // Show secondary context menu
-                        ShowSecondaryCM(_cmStartPos);
+                        ShowSecondaryCM(_cmStartPos, controlUnderMouse);
                     }
                     else
                     {
@@ -516,7 +516,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             if (base.OnKeyDown(key))
                 return true;
@@ -526,18 +526,18 @@ namespace FlaxEditor.Surface
 
             if (HasNodesSelection)
             {
-                if (key == Keys.Backspace)
+                if (key == KeyboardKeys.Backspace)
                 {
                     if (InputText.Length > 0)
                         InputText = InputText.Substring(0, InputText.Length - 1);
                     return true;
                 }
-                if (key == Keys.Escape)
+                if (key == KeyboardKeys.Escape)
                 {
                     ClearSelection();
                     return true;
                 }
-                if (key == Keys.Return)
+                if (key == KeyboardKeys.Return)
                 {
                     Box selectedBox = GetSelectedBox(SelectedNodes);
                     if (selectedBox != null)

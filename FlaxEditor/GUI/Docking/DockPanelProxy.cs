@@ -61,7 +61,8 @@ namespace FlaxEditor.GUI.Docking
             AutoFocus = false;
 
             _panel = panel;
-            DockStyle = DockStyle.Fill;
+            AnchorPreset = AnchorPresets.StretchAll;
+            Offsets = Margin.Zero;
         }
 
         private DockWindow GetTabAtPos(Vector2 position, out bool closeButton)
@@ -207,7 +208,7 @@ namespace FlaxEditor.GUI.Docking
                 bool isMouseOverCross = isMouseOver && crossRect.Contains(MousePosition);
                 if (isMouseOverCross)
                     Render2D.FillRectangle(crossRect, (containsFocus ? style.BackgroundSelected : style.LightBackground) * 1.3f);
-                Render2D.DrawSprite(style.Cross, crossRect, isMouseOverCross ? Color.White : new Color(0.8f));
+                Render2D.DrawSprite(style.Cross, crossRect, isMouseOverCross ? style.Foreground : style.ForegroundGrey);
             }
             else
             {
@@ -256,7 +257,7 @@ namespace FlaxEditor.GUI.Docking
                         bool isMouseOverCross = isMouseOver && crossRect.Contains(MousePosition);
                         if (isMouseOverCross)
                             Render2D.FillRectangle(crossRect, tabColor * 1.3f);
-                        Render2D.DrawSprite(style.Cross, crossRect, isMouseOverCross ? Color.White : new Color(0.8f));
+                        Render2D.DrawSprite(style.Cross, crossRect, isMouseOverCross ? style.Foreground : style.ForegroundGrey);
                     }
 
                     // Move
@@ -457,7 +458,7 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <inheritdoc />
-        protected override void GetDesireClientArea(out Rectangle rect)
+        public override void GetDesireClientArea(out Rectangle rect)
         {
             rect = new Rectangle(0, DockPanel.DefaultHeaderHeight, Width, Height - DockPanel.DefaultHeaderHeight);
         }

@@ -15,55 +15,55 @@ namespace FlaxEditor.Options
 
         [DefaultValue(typeof(InputBinding), "Ctrl+S")]
         [EditorDisplay("Common"), EditorOrder(100)]
-        public InputBinding Save = new InputBinding(Keys.S, Keys.Control);
+        public InputBinding Save = new InputBinding(KeyboardKeys.S, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "F2")]
         [EditorDisplay("Common"), EditorOrder(110)]
-        public InputBinding Rename = new InputBinding(Keys.F2);
+        public InputBinding Rename = new InputBinding(KeyboardKeys.F2);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+C")]
         [EditorDisplay("Common"), EditorOrder(120)]
-        public InputBinding Copy = new InputBinding(Keys.C, Keys.Control);
+        public InputBinding Copy = new InputBinding(KeyboardKeys.C, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+X")]
         [EditorDisplay("Common"), EditorOrder(130)]
-        public InputBinding Cut = new InputBinding(Keys.X, Keys.Control);
+        public InputBinding Cut = new InputBinding(KeyboardKeys.X, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+V")]
         [EditorDisplay("Common"), EditorOrder(140)]
-        public InputBinding Paste = new InputBinding(Keys.V, Keys.Control);
+        public InputBinding Paste = new InputBinding(KeyboardKeys.V, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+D")]
         [EditorDisplay("Common"), EditorOrder(150)]
-        public InputBinding Duplicate = new InputBinding(Keys.D, Keys.Control);
+        public InputBinding Duplicate = new InputBinding(KeyboardKeys.D, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "Delete")]
         [EditorDisplay("Common"), EditorOrder(160)]
-        public InputBinding Delete = new InputBinding(Keys.Delete);
+        public InputBinding Delete = new InputBinding(KeyboardKeys.Delete);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+Z")]
         [EditorDisplay("Common"), EditorOrder(170)]
-        public InputBinding Undo = new InputBinding(Keys.Z, Keys.Control);
+        public InputBinding Undo = new InputBinding(KeyboardKeys.Z, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+Y")]
         [EditorDisplay("Common"), EditorOrder(180)]
-        public InputBinding Redo = new InputBinding(Keys.Y, Keys.Control);
+        public InputBinding Redo = new InputBinding(KeyboardKeys.Y, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+A")]
         [EditorDisplay("Common"), EditorOrder(190)]
-        public InputBinding SelectAll = new InputBinding(Keys.A, Keys.Control);
+        public InputBinding SelectAll = new InputBinding(KeyboardKeys.A, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "F")]
         [EditorDisplay("Common"), EditorOrder(200)]
-        public InputBinding FocusSelection = new InputBinding(Keys.F);
+        public InputBinding FocusSelection = new InputBinding(KeyboardKeys.F);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+F")]
         [EditorDisplay("Common"), EditorOrder(210)]
-        public InputBinding Search = new InputBinding(Keys.F, Keys.Control);
+        public InputBinding Search = new InputBinding(KeyboardKeys.F, KeyboardKeys.Control);
 
         [DefaultValue(typeof(InputBinding), "Ctrl+O")]
         [EditorDisplay("Common"), EditorOrder(220)]
-        public InputBinding ContentFinder = new InputBinding(Keys.O, Keys.Control);
+        public InputBinding ContentFinder = new InputBinding(KeyboardKeys.O, KeyboardKeys.Control);
 
         #endregion
 
@@ -71,19 +71,19 @@ namespace FlaxEditor.Options
 
         [DefaultValue(typeof(InputBinding), "End")]
         [EditorDisplay("Scene", "Snap To Ground"), EditorOrder(500)]
-        public InputBinding SnapToGround = new InputBinding(Keys.End);
+        public InputBinding SnapToGround = new InputBinding(KeyboardKeys.End);
 
         [DefaultValue(typeof(InputBinding), "F5")]
         [EditorDisplay("Scene"), EditorOrder(510)]
-        public InputBinding Play = new InputBinding(Keys.F5);
+        public InputBinding Play = new InputBinding(KeyboardKeys.F5);
 
         [DefaultValue(typeof(InputBinding), "F6")]
         [EditorDisplay("Scene"), EditorOrder(520)]
-        public InputBinding Pause = new InputBinding(Keys.F6);
+        public InputBinding Pause = new InputBinding(KeyboardKeys.F6);
 
         [DefaultValue(typeof(InputBinding), "F11")]
         [EditorDisplay("Scene"), EditorOrder(530)]
-        public InputBinding StepFrame = new InputBinding(Keys.F11);
+        public InputBinding StepFrame = new InputBinding(KeyboardKeys.F11);
 
         #endregion
 
@@ -91,15 +91,15 @@ namespace FlaxEditor.Options
 
         [DefaultValue(typeof(InputBinding), "Alpha1")]
         [EditorDisplay("Gizmo"), EditorOrder(1000)]
-        public InputBinding TranslateMode = new InputBinding(Keys.Alpha1);
+        public InputBinding TranslateMode = new InputBinding(KeyboardKeys.Alpha1);
 
         [DefaultValue(typeof(InputBinding), "Alpha2")]
         [EditorDisplay("Gizmo"), EditorOrder(1010)]
-        public InputBinding RotateMode = new InputBinding(Keys.Alpha2);
+        public InputBinding RotateMode = new InputBinding(KeyboardKeys.Alpha2);
 
         [DefaultValue(typeof(InputBinding), "Alpha3")]
         [EditorDisplay("Gizmo"), EditorOrder(1020)]
-        public InputBinding ScaleMode = new InputBinding(Keys.Alpha3);
+        public InputBinding ScaleMode = new InputBinding(KeyboardKeys.Alpha3);
 
         #endregion
 
@@ -107,27 +107,27 @@ namespace FlaxEditor.Options
 
         [DefaultValue(typeof(InputBinding), "W")]
         [EditorDisplay("Viewport"), EditorOrder(1500)]
-        public InputBinding Forward = new InputBinding(Keys.W);
+        public InputBinding Forward = new InputBinding(KeyboardKeys.W);
 
         [DefaultValue(typeof(InputBinding), "S")]
         [EditorDisplay("Viewport"), EditorOrder(1510)]
-        public InputBinding Backward = new InputBinding(Keys.S);
+        public InputBinding Backward = new InputBinding(KeyboardKeys.S);
 
         [DefaultValue(typeof(InputBinding), "A")]
         [EditorDisplay("Viewport"), EditorOrder(1520)]
-        public InputBinding Left = new InputBinding(Keys.A);
+        public InputBinding Left = new InputBinding(KeyboardKeys.A);
 
         [DefaultValue(typeof(InputBinding), "D")]
         [EditorDisplay("Viewport"), EditorOrder(1530)]
-        public InputBinding Right = new InputBinding(Keys.D);
+        public InputBinding Right = new InputBinding(KeyboardKeys.D);
 
         [DefaultValue(typeof(InputBinding), "E")]
         [EditorDisplay("Viewport"), EditorOrder(1540)]
-        public InputBinding Up = new InputBinding(Keys.E);
+        public InputBinding Up = new InputBinding(KeyboardKeys.E);
 
         [DefaultValue(typeof(InputBinding), "Q")]
         [EditorDisplay("Viewport"), EditorOrder(1550)]
-        public InputBinding Down = new InputBinding(Keys.Q);
+        public InputBinding Down = new InputBinding(KeyboardKeys.Q);
 
         #endregion
     }

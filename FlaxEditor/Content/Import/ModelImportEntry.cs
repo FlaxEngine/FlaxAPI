@@ -100,8 +100,15 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
+        [VisibleIf("CalculateNormals")]
         [EditorOrder(30), DefaultValue(175.0f), Limit(0, 175, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two face normals at the same vertex position that their are smoothed together. The default value is 175.")]
         public float SmoothingNormalsAngle { get; set; } = 175.0f;
+
+        /// <summary>
+        /// If checked, the imported normal vectors of the mesh will be flipped (scaled by -1).
+        /// </summary>
+        [EditorOrder(35), DefaultValue(false), EditorDisplay("Geometry"), Tooltip("If checked, the imported normal vectors of the mesh will be flipped (scaled by -1).")]
+        public bool FlipNormals { get; set; } = false;
 
         /// <summary>
         /// True if calculate model tangents, otherwise will import them.
@@ -112,6 +119,7 @@ namespace FlaxEditor.Content.Import
         /// <summary>
         /// Calculated normals smoothing angle.
         /// </summary>
+        [VisibleIf("CalculateTangents")]
         [EditorOrder(45), DefaultValue(45.0f), Limit(0, 45, 0.1f), EditorDisplay("Geometry"), Tooltip("Specifies the maximum angle (in degrees) that may be between two vertex tangents that their tangents and bi-tangents are smoothed. The default value is 45.")]
         public float SmoothingTangentsAngle { get; set; } = 45.0f;
 
@@ -232,9 +240,33 @@ namespace FlaxEditor.Content.Import
         public int AnimationIndex { get; set; } = -1;
 
         /// <summary>
+        /// If checked, the importer will generate a sequence of LODs based on the base LOD index.
+        /// </summary>
+        [EditorOrder(1100), DefaultValue(false), EditorDisplay("Level Of Detail", "Generate LODs"), Tooltip("If checked, the importer will generate a sequence of LODs based on the base LOD index.")]
+        public bool GenerateLODs { get; set; } = false;
+
+        /// <summary>
+        /// The index of the LOD from the source model data to use as a reference for following LODs generation.
+        /// </summary>
+        [EditorOrder(1110), DefaultValue(0), Limit(0, Model.MaxLODs - 1), EditorDisplay("Level Of Detail", "Base LOD"), Tooltip("The index of the LOD from the source model data to use as a reference for following LODs generation.")]
+        public int BaseLOD { get; set; } = 0;
+
+        /// <summary>
+        /// The amount of LODs to include in the model (all reaming ones starting from Base LOD will be generated).
+        /// </summary>
+        [EditorOrder(1120), DefaultValue(4), Limit(1, Model.MaxLODs), EditorDisplay("Level Of Detail", "LOD Count"), Tooltip("The amount of LODs to include in the model (all reaming ones starting from Base LOD will be generated).")]
+        public int LODCount { get; set; } = 4;
+
+        /// <summary>
+        /// The target amount of triangles for the generated LOD (based on the higher LOD). Normalized to range 0-1. For instance 0.4 cuts the triangle count to 40%.
+        /// </summary>
+        [EditorOrder(1130), DefaultValue(0.5f), Limit(0, 1, 0.001f), EditorDisplay("Level Of Detail"), Tooltip("The target amount of triangles for the generated LOD (based on the higher LOD). Normalized to range 0-1. For instance 0.4 cuts the triangle count to 40%.")]
+        public float TriangleReduction { get; set; } = 0.5f;
+
+        /// <summary>
         /// If checked, the importer will try to restore the model material slots.
         /// </summary>
-        [EditorOrder(1100), DefaultValue(true), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the assigned materials to the model slots.")]
+        [EditorOrder(1200), DefaultValue(true), EditorDisplay("Miscellaneous", "Restore Materials On Reimport"), Tooltip("If checked, the importer will try to restore the assigned materials to the model slots.")]
         public bool RestoreMaterialsOnReimport { get; set; } = true;
 
         [StructLayout(LayoutKind.Sequential)]
@@ -245,6 +277,7 @@ namespace FlaxEditor.Content.Import
             // Geometry
             public byte CalculateNormals;
             public float SmoothingNormalsAngle;
+            public byte FlipNormals;
             public float SmoothingTangentsAngle;
             public byte CalculateTangents;
             public byte OptimizeMeshes;
@@ -271,6 +304,12 @@ namespace FlaxEditor.Content.Import
             public string RootNodeName;
             public int AnimationIndex;
 
+            // Level Of Detail
+            public byte GenerateLODs;
+            public int BaseLOD;
+            public int LODCount;
+            public float TriangleReduction;
+
             // Misc
             public byte RestoreMaterialsOnReimport;
         }
@@ -282,6 +321,7 @@ namespace FlaxEditor.Content.Import
                 Type = Type,
                 CalculateNormals = (byte)(CalculateNormals ? 1 : 0),
                 SmoothingNormalsAngle = SmoothingNormalsAngle,
+                FlipNormals = (byte)(FlipNormals ? 1 : 0),
                 SmoothingTangentsAngle = SmoothingTangentsAngle,
                 CalculateTangents = (byte)(CalculateTangents ? 1 : 0),
                 OptimizeMeshes = (byte)(OptimizeMeshes ? 1 : 0),
@@ -303,6 +343,10 @@ namespace FlaxEditor.Content.Import
                 EnableRootMotion = (byte)(EnableRootMotion ? 1 : 0),
                 RootNodeName = RootNodeName,
                 AnimationIndex = AnimationIndex,
+                GenerateLODs = (byte)(GenerateLODs ? 1 : 0),
+                BaseLOD = BaseLOD,
+                LODCount = LODCount,
+                TriangleReduction = TriangleReduction,
                 RestoreMaterialsOnReimport = (byte)(RestoreMaterialsOnReimport ? 1 : 0),
             };
         }
@@ -312,6 +356,7 @@ namespace FlaxEditor.Content.Import
             Type = options.Type;
             CalculateNormals = options.CalculateNormals != 0;
             SmoothingNormalsAngle = options.SmoothingNormalsAngle;
+            FlipNormals = options.FlipNormals != 0;
             SmoothingTangentsAngle = options.SmoothingTangentsAngle;
             CalculateTangents = options.CalculateTangents != 0;
             OptimizeMeshes = options.OptimizeMeshes != 0;
@@ -332,6 +377,10 @@ namespace FlaxEditor.Content.Import
             EnableRootMotion = options.EnableRootMotion != 0;
             RootNodeName = options.RootNodeName;
             AnimationIndex = options.AnimationIndex;
+            GenerateLODs = options.GenerateLODs != 0;
+            BaseLOD = options.BaseLOD;
+            LODCount = options.LODCount;
+            TriangleReduction = options.TriangleReduction;
             RestoreMaterialsOnReimport = options.RestoreMaterialsOnReimport != 0;
         }
 
@@ -394,10 +443,8 @@ namespace FlaxEditor.Content.Import
 
         #region Internal Calls
 
-#if !UNIT_TEST_COMPILANT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Internal_GetModelImportOptions(string path, out ModelImportSettings.InternalOptions result);
-#endif
 
         #endregion
     }

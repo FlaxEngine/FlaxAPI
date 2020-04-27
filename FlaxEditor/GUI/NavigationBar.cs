@@ -22,7 +22,6 @@ namespace FlaxEditor.GUI
         public NavigationBar()
         : base(ScrollBars.Horizontal)
         {
-            Height = 32;
         }
 
         /// <inheritdoc />
@@ -33,8 +32,11 @@ namespace FlaxEditor.GUI
             for (int i = 0; i < _children.Count; i++)
             {
                 var child = _children[i];
-                child.X = x;
-                x += child.Width + DefaultButtonsMargin;
+                if (child.IsScrollable)
+                {
+                    child.X = x;
+                    x += child.Width + DefaultButtonsMargin;
+                }
             }
         }
 
@@ -48,9 +50,10 @@ namespace FlaxEditor.GUI
                 return;
 
             var lastToolstripButton = toolstrip.LastButton;
-            var bounds = new Rectangle(
+            var bounds = new Rectangle
+            (
                 new Vector2(lastToolstripButton.Right + 8.0f, 0),
-                new Vector2(Parent.Width - X - 8.0f, Height)
+                new Vector2(Parent.Width - X - 8.0f, 32)
             );
             Bounds = bounds;
         }

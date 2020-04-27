@@ -79,12 +79,13 @@ namespace FlaxEditor.GUI
 
             _inputField = new TextBox(isMultiline, 0, 0, size.Y);
             _inputField.TextChanged += OnTextChanged;
-            _inputField.DockStyle = DockStyle.Fill;
+            _inputField.AnchorPreset = AnchorPresets.StretchAll;
+            _inputField.Offsets = Margin.Zero;
             _inputField.Text = _startValue;
             _inputField.Parent = this;
         }
 
-        private bool IsInputValid => _inputField.Text == _startValue || Validate == null || Validate(this, _inputField.Text);
+        private bool IsInputValid => !string.IsNullOrWhiteSpace(_inputField.Text) && (_inputField.Text == _startValue || Validate == null || Validate(this, _inputField.Text));
 
         private void OnTextChanged()
         {
@@ -129,7 +130,7 @@ namespace FlaxEditor.GUI
         private void OnEnd()
         {
             var text = Text;
-            if (text.Length > 0 && text != _startValue && IsInputValid)
+            if (text != _startValue && IsInputValid)
             {
                 Renamed?.Invoke(this);
             }
@@ -138,16 +139,16 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnKeyDown(Keys key)
+        public override bool OnKeyDown(KeyboardKeys key)
         {
             // Enter
-            if (key == Keys.Return)
+            if (key == KeyboardKeys.Return)
             {
                 OnEnd();
                 return true;
             }
             // Esc
-            if (key == Keys.Escape)
+            if (key == KeyboardKeys.Escape)
             {
                 Hide();
                 return true;

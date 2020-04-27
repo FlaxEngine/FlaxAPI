@@ -204,16 +204,6 @@ namespace FlaxEngine
             A = values[3];
         }
 
-        /// <summary>
-        /// Duplicates color with multiplied alpha channel value.
-        /// </summary>
-        /// <param name="multiplier">The alpha channel multiplier.</param>
-        /// <returns>The color with scaled alpha.</returns>
-        public Color AlphaMultiplied(float multiplier)
-        {
-            return new Color(R, G, B, A * multiplier);
-        }
-
         /// <inheritdoc />
         public override bool Equals(object other)
         {
@@ -258,10 +248,10 @@ namespace FlaxEngine
         public static Color FromRGB(uint rgb, float a = 1.0f)
         {
             return new Color(
-                ((rgb >> 16) & 0xff) / 255.0f,
-                ((rgb >> 8) & 0xff) / 255.0f,
-                (rgb & 0xff) / 255.0f,
-                a);
+                             ((rgb >> 16) & 0xff) / 255.0f,
+                             ((rgb >> 8) & 0xff) / 255.0f,
+                             (rgb & 0xff) / 255.0f,
+                             a);
         }
 
         /// <summary>
@@ -720,7 +710,7 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Returns the color with RGB channels multiplied by the given scale factor. The alpha channels remains the same.
+        /// Returns the color with RGB channels multiplied by the given scale factor. The alpha channel remains the same.
         /// </summary>
         /// <param name="multiplier">The multiplier.</param>
         /// <returns>The modified color.</returns>
@@ -730,13 +720,23 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Returns the color with RGB channels multiplied by the given color. The alpha channels remains the same.
+        /// Returns the color with RGB channels multiplied by the given color. The alpha channel remains the same.
         /// </summary>
         /// <param name="multiplier">The multiplier.</param>
         /// <returns>The modified color.</returns>
         public Color RGBMultiplied(Color multiplier)
         {
             return new Color(R * multiplier.R, G * multiplier.G, B * multiplier.B, A);
+        }
+
+        /// <summary>
+        /// Returns the color with alpha channel multiplied by the given color. The RGB channels remain the same.
+        /// </summary>
+        /// <param name="multiplier">The multiplier.</param>
+        /// <returns>The modified color.</returns>
+        public Color AlphaMultiplied(float multiplier)
+        {
+            return new Color(R, G, B, A * multiplier);
         }
 
         /// <summary>
@@ -835,10 +835,10 @@ namespace FlaxEngine
         public static Color AdjustContrast(Color value, float contrast)
         {
             return new Color(
-                0.5f + contrast * (value.R - 0.5f),
-                0.5f + contrast * (value.G - 0.5f),
-                0.5f + contrast * (value.B - 0.5f),
-                value.A);
+                             0.5f + contrast * (value.R - 0.5f),
+                             0.5f + contrast * (value.G - 0.5f),
+                             0.5f + contrast * (value.B - 0.5f),
+                             value.A);
         }
 
         /// <summary>
@@ -868,10 +868,10 @@ namespace FlaxEngine
             float grey = value.R * 0.2125f + value.G * 0.7154f + value.B * 0.0721f;
 
             return new Color(
-                grey + saturation * (value.R - grey),
-                grey + saturation * (value.G - grey),
-                grey + saturation * (value.B - grey),
-                value.A);
+                             grey + saturation * (value.R - grey),
+                             grey + saturation * (value.G - grey),
+                             grey + saturation * (value.B - grey),
+                             value.A);
         }
 
         /// <summary>
@@ -895,11 +895,11 @@ namespace FlaxEngine
         public static void Max(ref Color left, ref Color right, out Color result)
         {
             result = new Color(
-                Mathf.Max(left.R, right.R),
-                Mathf.Max(left.G, right.G),
-                Mathf.Max(left.B, right.B),
-                Mathf.Max(left.A, right.A)
-            );
+                               Mathf.Max(left.R, right.R),
+                               Mathf.Max(left.G, right.G),
+                               Mathf.Max(left.B, right.B),
+                               Mathf.Max(left.A, right.A)
+                              );
         }
 
         /// <summary>
@@ -925,11 +925,11 @@ namespace FlaxEngine
         public static void Min(ref Color left, ref Color right, out Color result)
         {
             result = new Color(
-                Mathf.Min(left.R, right.R),
-                Mathf.Min(left.G, right.G),
-                Mathf.Min(left.B, right.B),
-                Mathf.Min(left.A, right.A)
-            );
+                               Mathf.Min(left.R, right.R),
+                               Mathf.Min(left.G, right.G),
+                               Mathf.Min(left.B, right.B),
+                               Mathf.Min(left.A, right.A)
+                              );
         }
 
         /// <summary>
@@ -954,11 +954,11 @@ namespace FlaxEngine
         public static void Clamp(ref Color value, ref Color min, ref Color max, out Color result)
         {
             result = new Color(
-                Mathf.Clamp(value.R, min.R, max.R),
-                Mathf.Clamp(value.G, min.G, max.G),
-                Mathf.Clamp(value.B, min.B, max.B),
-                Mathf.Clamp(value.A, min.A, max.A)
-            );
+                               Mathf.Clamp(value.R, min.R, max.R),
+                               Mathf.Clamp(value.G, min.G, max.G),
+                               Mathf.Clamp(value.B, min.B, max.B),
+                               Mathf.Clamp(value.A, min.A, max.A)
+                              );
         }
 
         /// <summary>
