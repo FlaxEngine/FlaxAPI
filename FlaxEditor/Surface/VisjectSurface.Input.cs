@@ -65,8 +65,6 @@ namespace FlaxEditor.Surface
             }
         }
 
-        private bool HasInputSelection => HasNodesSelection;
-
         private string InputText
         {
             get => _currentInputText;
@@ -526,7 +524,7 @@ namespace FlaxEditor.Surface
             if (InputActions.Process(Editor.Instance, this, key))
                 return true;
 
-            if (HasInputSelection)
+            if (HasNodesSelection)
             {
                 if (key == Keys.Backspace)
                 {
@@ -534,11 +532,12 @@ namespace FlaxEditor.Surface
                         InputText = InputText.Substring(0, InputText.Length - 1);
                     return true;
                 }
-                else if (key == Keys.Escape)
+                if (key == Keys.Escape)
                 {
                     ClearSelection();
+                    return true;
                 }
-                else if (key == Keys.Return)
+                if (key == Keys.Return)
                 {
                     Box selectedBox = GetSelectedBox(SelectedNodes);
                     if (selectedBox != null)
@@ -551,6 +550,7 @@ namespace FlaxEditor.Surface
                             toSelect.ParentNode.SelectBox(toSelect);
                         }
                     }
+                    return true;
                 }
             }
 
