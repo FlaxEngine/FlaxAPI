@@ -149,7 +149,7 @@ namespace FlaxEngine.GUI
                 if (containsY && (containsX || (i + 1 < count && textBlocks[i + 1].Bounds.Location.Y > textBlock.Bounds.Location.Y + 1.0f)))
                 {
                     var font = textBlock.Style.Font.GetFont();
-                    if (!font)
+                    if (!font && textBlock.Range.Length > 0)
                         break;
                     return font.HitTestText(_text, ref textBlock.Range, location - textBlock.Bounds.Location) + textBlock.Range.StartIndex;
                 }
