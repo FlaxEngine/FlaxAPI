@@ -619,7 +619,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 208,
                 Title = "Random Float",
                 Description = "Gets the random floating point value (normalized to 0-1 range)",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.AnimGraph,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -631,7 +631,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 209,
                 Title = "Random Vector2",
                 Description = "Gets the random Vector2 value (normalized to 0-1 range)",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.AnimGraph,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -643,7 +643,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 210,
                 Title = "Random Vector3",
                 Description = "Gets the random Vector3 value (normalized to 0-1 range)",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.AnimGraph,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -655,7 +655,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 211,
                 Title = "Random Vector4",
                 Description = "Gets the random Vector4 value (normalized to 0-1 range)",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.AnimGraph,
                 Size = new Vector2(160, 30),
                 Elements = new[]
                 {
@@ -679,7 +679,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 213,
                 Title = "Random Float Range",
                 Description = "Gets the random floating point value from a given range",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.AnimGraph,
                 Size = new Vector2(260, 40),
                 DefaultValues = new object[]
                 {
@@ -702,7 +702,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 214,
                 Title = "Random Vector2 Range",
                 Description = "Gets the random Vector2 value from a given range (per-component range)",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.AnimGraph,
                 Size = new Vector2(260, 40),
                 DefaultValues = new object[]
                 {
@@ -727,7 +727,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 215,
                 Title = "Random Vector3 Range",
                 Description = "Gets the random Vector3 value from a given range (per-component range)",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.AnimGraph,
                 Size = new Vector2(260, 40),
                 DefaultValues = new object[]
                 {
@@ -754,7 +754,7 @@ namespace FlaxEditor.Surface.Archetypes
                 TypeID = 216,
                 Title = "Random Vector4 Range",
                 Description = "Gets the random Vector4 value from a given range (per-component range)",
-                Flags = NodeFlags.ParticleEmitterGraph,
+                Flags = NodeFlags.ParticleEmitterGraph | NodeFlags.AnimGraph,
                 Size = new Vector2(260, 40),
                 DefaultValues = new object[]
                 {
