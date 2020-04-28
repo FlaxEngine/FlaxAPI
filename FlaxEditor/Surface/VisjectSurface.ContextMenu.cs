@@ -74,6 +74,7 @@ namespace FlaxEditor.Surface
         /// <param name="moveSurface">If the surface should be moved to accommodate for the menu.</param>
         /// <param name="input">The user text input for nodes search.</param>
         public virtual void ShowPrimaryMenu(Vector2 location, bool moveSurface = false, string input = null)
+        {
             // Check if need to create default context menu (no override specified)
             if (_activeVisjectCM == null && _cmPrimaryMenu == null)
             {
