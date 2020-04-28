@@ -26,7 +26,7 @@ namespace FlaxEditor.Viewport.Previews
         /// <summary>
         /// Gets the model actor used to preview selected asset.
         /// </summary>
-        public StaticModel PreviewStaticModel => _previewModel;
+        public StaticModel PreviewActor => _previewModel;
 
         /// <summary>
         /// Gets or sets a value indicating whether scale the model to the normalized bounds.

@@ -164,9 +164,43 @@ namespace FlaxEngine
         internal static extern void Internal_SetCustomBounds(IntPtr obj, ref BoundingBox value);
 
         /// <summary>
+        /// The model Level Of Detail bias value. Allows to increase or decrease rendered model quality.
+        /// </summary>
+        [EditorOrder(80), DefaultValue(0), Limit(-100, 100, 0.1f), EditorDisplay("Skinned Model", "LOD Bias")]
+        [Tooltip("The model Level Of Detail bias value. Allows to increase or decrease rendered model quality.")]
+        public int LODBias
+        {
+            get { return Internal_GetLODBias(unmanagedPtr); }
+            set { Internal_SetLODBias(unmanagedPtr, value); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetLODBias(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetLODBias(IntPtr obj, int value);
+
+        /// <summary>
+        /// Gets the model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.
+        /// </summary>
+        [EditorOrder(90), DefaultValue(-1), Limit(-1, 100, 0.1f), EditorDisplay("Skinned Model", "Forced LOD")]
+        [Tooltip("The model forced Level Of Detail index. Allows to bind the given model LOD to show. Value -1 disables this feature.")]
+        public int ForcedLOD
+        {
+            get { return Internal_GetForcedLOD(unmanagedPtr); }
+            set { Internal_SetForcedLOD(unmanagedPtr, value); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetForcedLOD(IntPtr obj);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetForcedLOD(IntPtr obj, int value);
+
+        /// <summary>
         /// The draw passes to use for rendering this object.
         /// </summary>
-        [EditorOrder(75), DefaultValue(DrawPass.Default), EditorDisplay("Skinned Model")]
+        [EditorOrder(100), DefaultValue(DrawPass.Default), EditorDisplay("Skinned Model")]
         [Tooltip("The draw passes to use for rendering this object.")]
         public DrawPass DrawModes
         {
@@ -183,7 +217,7 @@ namespace FlaxEngine
         /// <summary>
         /// The shadows casting mode.
         /// </summary>
-        [EditorOrder(80), DefaultValue(ShadowsCastingMode.All), EditorDisplay("Skinned Model")]
+        [EditorOrder(110), DefaultValue(ShadowsCastingMode.All), EditorDisplay("Skinned Model")]
         [Tooltip("The shadows casting mode.")]
         public ShadowsCastingMode ShadowsMode
         {
@@ -200,7 +234,7 @@ namespace FlaxEngine
         /// <summary>
         /// The animation root motion apply target. If not specified the animated model will apply it itself.
         /// </summary>
-        [EditorOrder(100), DefaultValue(null), EditorDisplay("Skinned Model")]
+        [EditorOrder(120), DefaultValue(null), EditorDisplay("Skinned Model")]
         [Tooltip("The animation root motion apply target. If not specified the animated model will apply it itself.")]
         public Actor RootMotionTarget
         {

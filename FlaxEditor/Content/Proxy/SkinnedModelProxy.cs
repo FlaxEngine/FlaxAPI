@@ -69,7 +69,7 @@ namespace FlaxEditor.Content
 
             // Check if asset is streamed enough
             var asset = (SkinnedModel)request.Asset;
-            return asset.IsLoaded && asset.HasMeshesLoaded;
+            return asset.LoadedLODs >= Mathf.Max(1, (int)(asset.LODs.Length * ThumbnailsModule.MinimumRequriedResourcesQuality));
         }
 
         /// <inheritdoc />

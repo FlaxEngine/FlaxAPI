@@ -32,7 +32,9 @@ namespace FlaxEditor.Windows.Assets
         {
             private readonly SkinnedModelWindow _window;
             private ContextMenuButton _showFloorButton;
+            private ContextMenuButton _showCurrentLODButton;
             private StaticModel _floorModel;
+            private bool _showCurrentLOD;
 
             public Preview(SkinnedModelWindow window)
             : base(true)
@@ -42,6 +44,10 @@ namespace FlaxEditor.Windows.Assets
                 // Show floor widget
                 _showFloorButton = ViewWidgetShowMenu.AddButton("Floor", OnShowFloorModelClicked);
                 _showFloorButton.IndexInParent = 1;
+
+                // Show current LOD widget
+                _showCurrentLODButton = ViewWidgetShowMenu.AddButton("Current LOD", OnShowCurrentLODClicked);
+                _showCurrentLODButton.IndexInParent = 2;
 
                 // Floor model
                 _floorModel = StaticModel.New();
@@ -64,15 +70,84 @@ namespace FlaxEditor.Windows.Assets
                 _showFloorButton.Icon = _floorModel.IsActive ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
             }
 
+            private void OnShowCurrentLODClicked(ContextMenuButton obj)
+            {
+                _showCurrentLOD = !_showCurrentLOD;
+                _showCurrentLODButton.Icon = _showCurrentLOD ? Style.Current.CheckBoxTick : SpriteHandle.Invalid;
+            }
+
+            private int ComputeLODIndex(SkinnedModel model)
+            {
+                if (PreviewActor.ForcedLOD != -1)
+                    return PreviewActor.ForcedLOD;
+
+                // Based on RenderTools::ComputeModelLOD
+                CreateProjectionMatrix(out var projectionMatrix);
+                float screenMultiple = 0.5f * Mathf.Max(projectionMatrix.M11, projectionMatrix.M22);
+                var sphere = PreviewActor.Sphere;
+                var viewOrigin = ViewPosition;
+                float distSqr = Vector3.DistanceSquared(ref sphere.Center, ref viewOrigin);
+                var screenRadiusSquared = Mathf.Square(screenMultiple * sphere.Radius) / Mathf.Max(1.0f, distSqr);
+
+                // Check if model is being culled
+                if (Mathf.Square(model.MinScreenSize * 0.5f) > screenRadiusSquared)
+                    return -1;
+
+                // Skip if no need to calculate LOD
+                if (model.LoadedLODs == 0)
+                    return -1;
+                var lods = model.LODs;
+                if (lods.Length == 0)
+                    return -1;
+                if (lods.Length == 1)
+                    return 0;
+
+                // Iterate backwards and return the first matching LOD
+                for (int lodIndex = lods.Length - 1; lodIndex >= 0; lodIndex--)
+                {
+                    if (Mathf.Square(lods[lodIndex].ScreenSize * 0.5f) >= screenRadiusSquared)
+                    {
+                        return lodIndex + PreviewActor.LODBias;
+                    }
+                }
+
+                return 0;
+            }
+
             /// <inheritdoc />
             public override void Draw()
             {
                 base.Draw();
 
                 var style = Style.Current;
-                if (_window.Asset == null || !_window.Asset.IsLoaded)
+                var asset = _window.Asset;
+                if (asset == null || !asset.IsLoaded)
                 {
                     Render2D.DrawText(style.FontLarge, "Loading...", new Rectangle(Vector2.Zero, Size), style.ForegroundDisabled, TextAlignment.Center, TextAlignment.Center);
+                }
+
+                if (_showCurrentLOD)
+                {
+                    var lodIndex = ComputeLODIndex(asset);
+                    string text = string.Format("Current LOD: {0}", lodIndex);
+                    if (lodIndex != -1)
+                    {
+                        var lods = asset.LODs;
+                        lodIndex = Mathf.Clamp(lodIndex + PreviewActor.LODBias, 0, lods.Length - 1);
+                        var lod = lods[lodIndex];
+                        int triangleCount = 0, vertexCount = 0;
+                        for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
+                        {
+                            var mesh = lod.Meshes[meshIndex];
+                            triangleCount += mesh.TriangleCount;
+                            vertexCount += mesh.VertexCount;
+                        }
+                        text += string.Format("\nTriangles: {0}\nVertices: {1}", triangleCount, vertexCount);
+                    }
+                    var font = Style.Current.FontMedium;
+                    var pos = new Vector2(10, 50);
+                    Render2D.DrawText(font, text, new Rectangle(pos + Vector2.One, Size), Color.Black);
+                    Render2D.DrawText(font, text, new Rectangle(pos, Size), Color.White);
                 }
             }
 
@@ -81,6 +156,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 Object.Destroy(ref _floorModel);
                 _showFloorButton = null;
+                _showCurrentLODButton = null;
 
                 base.OnDestroy();
             }
@@ -305,13 +381,16 @@ namespace FlaxEditor.Windows.Assets
                     proxy._materialSlotComboBoxes.Clear();
                     proxy._isolateCheckBoxes.Clear();
                     proxy._highlightCheckBoxes.Clear();
-                    var meshes = proxy.Asset.Meshes;
+                    var lods = proxy.Asset.LODs;
+                    var loadedLODs = proxy.Asset.LoadedLODs;
                     var nodes = proxy.Asset.Nodes;
                     var bones = proxy.Asset.Bones;
 
                     // General properties
                     {
                         var group = layout.Group("General");
+                        group.Label("Nodes: " + nodes.Length);
+                        group.Label("Bones: " + bones.Length);
 
                         var minScreenSize = group.FloatValue("Min Screen Size", "The minimum screen size to draw model (the bottom limit). Used to cull small models. Set to 0 to disable this feature.");
                         minScreenSize.FloatValue.MinValue = 0.0f;
@@ -322,6 +401,19 @@ namespace FlaxEditor.Windows.Assets
                             proxy.Asset.MinScreenSize = minScreenSize.FloatValue.Value;
                             proxy.Window.MarkAsEdited();
                         };
+                    }
+
+                    // Group per LOD
+                    for (int lodIndex = 0; lodIndex < lods.Length; lodIndex++)
+                    {
+                        var group = layout.Group("LOD " + lodIndex);
+                        if (lodIndex < lods.Length - loadedLODs)
+                        {
+                            group.Label("Loading LOD...");
+                            continue;
+                        }
+                        var lod = lods[lodIndex];
+                        var meshes = lod.Meshes;
 
                         int triangleCount = 0, vertexCount = 0;
                         for (int meshIndex = 0; meshIndex < meshes.Length; meshIndex++)
@@ -332,38 +424,41 @@ namespace FlaxEditor.Windows.Assets
                         }
 
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
-                        group.Label("Nodes: " + nodes.Length);
-                        group.Label("Bones: " + bones.Length);
-                        group.Label("Size: " + proxy.Asset.GetBox().Size);
-                    }
+                        group.Label("Size: " + lod.Box.Size);
+                        var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
+                        screenSize.FloatValue.MinValue = 0.0f;
+                        screenSize.FloatValue.MaxValue = 10.0f;
+                        screenSize.FloatValue.Value = lod.ScreenSize;
+                        screenSize.FloatValue.ValueChanged += () =>
+                        {
+                            lod.ScreenSize = screenSize.FloatValue.Value;
+                            proxy.Window.MarkAsEdited();
+                        };
 
-                    // Group per mesh
-                    var meshesGroup = layout.Group("Meshes");
-                    meshesGroup.Panel.Close(false);
-                    for (int meshIndex = 0; meshIndex < meshes.Length; meshIndex++)
-                    {
-                        var mesh = meshes[meshIndex];
+                        // Every mesh properties
+                        for (int meshIndex = 0; meshIndex < meshes.Length; meshIndex++)
+                        {
+                            var mesh = meshes[meshIndex];
+                            group.Label($"Mesh {meshIndex} (tris: {mesh.TriangleCount:N0}, verts: {mesh.VertexCount:N0})");
 
-                        var group = meshesGroup.Group("Mesh " + meshIndex);
-                        group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", mesh.TriangleCount, mesh.VertexCount));
+                            // Material Slot
+                            var materialSlot = group.ComboBox("Material Slot", "Material slot used by this mesh during rendering");
+                            materialSlot.ComboBox.Tag = mesh;
+                            materialSlot.ComboBox.SelectedIndexChanged += comboBox => proxy.SetMaterialSlot((SkinnedMesh)comboBox.Tag, comboBox.SelectedIndex);
+                            proxy._materialSlotComboBoxes.Add(materialSlot.ComboBox);
 
-                        // Material Slot
-                        var materialSlot = group.ComboBox("Material Slot", "Material slot used by this mesh during rendering");
-                        materialSlot.ComboBox.Tag = mesh;
-                        materialSlot.ComboBox.SelectedIndexChanged += comboBox => proxy.SetMaterialSlot((SkinnedMesh)comboBox.Tag, comboBox.SelectedIndex);
-                        proxy._materialSlotComboBoxes.Add(materialSlot.ComboBox);
+                            // Isolate
+                            var isolate = group.Checkbox("Isolate", "Shows only this mesh (and meshes using the same material slot)");
+                            isolate.CheckBox.Tag = mesh;
+                            isolate.CheckBox.StateChanged += (box) => proxy.SetIsolate(box.Checked ? (SkinnedMesh)box.Tag : null);
+                            proxy._isolateCheckBoxes.Add(isolate.CheckBox);
 
-                        // Isolate
-                        var isolate = group.Checkbox("Isolate", "Shows only this mesh (and meshes using the same material slot)");
-                        isolate.CheckBox.Tag = mesh;
-                        isolate.CheckBox.StateChanged += (box) => proxy.SetIsolate(box.Checked ? (SkinnedMesh)box.Tag : null);
-                        proxy._isolateCheckBoxes.Add(isolate.CheckBox);
-
-                        // Highlight
-                        var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color (and meshes using the same material slot)");
-                        highlight.CheckBox.Tag = mesh;
-                        highlight.CheckBox.StateChanged += (box) => proxy.SetHighlight(box.Checked ? (SkinnedMesh)box.Tag : null);
-                        proxy._highlightCheckBoxes.Add(highlight.CheckBox);
+                            // Highlight
+                            var highlight = group.Checkbox("Highlight", "Highlights this mesh with a tint color (and meshes using the same material slot)");
+                            highlight.CheckBox.Tag = mesh;
+                            highlight.CheckBox.StateChanged += (box) => proxy.SetHighlight(box.Checked ? (SkinnedMesh)box.Tag : null);
+                            proxy._highlightCheckBoxes.Add(highlight.CheckBox);
+                        }
                     }
 
                     // Skeleton Bones
@@ -449,7 +544,7 @@ namespace FlaxEditor.Windows.Assets
         private readonly PropertiesProxy _properties;
         private readonly ToolStripButton _saveButton;
         private AnimatedModel _highlightActor;
-        private bool _refreshOnMeshesLoaded;
+        private bool _refreshOnLODsLoaded;
 
         /// <inheritdoc />
         public SkinnedModelWindow(Editor editor, AssetItem item)
@@ -538,10 +633,10 @@ namespace FlaxEditor.Windows.Assets
                 _highlightActor.Transform = _preview.PreviewActor.Transform;
             }
 
-            // Model is loaded but meshes data may be during streaming so refresh properties on fully loaded
-            if (_refreshOnMeshesLoaded && _asset && _asset.HasMeshesLoaded)
+            // Model is loaded but LODs data may be during streaming so refresh properties on fully loaded
+            if (_refreshOnLODsLoaded && _asset && _asset.LoadedLODs == _asset.LODs.Length)
             {
-                _refreshOnMeshesLoaded = false;
+                _refreshOnLODsLoaded = false;
                 _propertiesPresenter.BuildLayout();
             }
 
@@ -597,6 +692,7 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnLoad(this);
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
+            _refreshOnLODsLoaded = true;
             _preview.ViewportCamera.SerArcBallView(Asset.GetBox());
 
             // Reset any root motion
@@ -612,7 +708,7 @@ namespace FlaxEditor.Windows.Assets
             _properties.OnClean();
             _propertiesPresenter.BuildLayout();
             ClearEditedFlag();
-            _refreshOnMeshesLoaded = true;
+            _refreshOnLODsLoaded = true;
 
             base.OnItemReimported(item);
         }

@@ -195,7 +195,7 @@ namespace FlaxEditor.Windows.Assets
             // Sync helper actor size with actual preview model (preview scales model for better usage experience)
             if (_collisionWiresShowActor && _collisionWiresShowActor.IsActive)
             {
-                _collisionWiresShowActor.Transform = _preview.PreviewStaticModel.Transform;
+                _collisionWiresShowActor.Transform = _preview.PreviewActor.Transform;
             }
 
             base.Update(deltaTime);

@@ -19,40 +19,28 @@ namespace FlaxEngine
         }
 
         /// <summary>
-        /// Array with all meshes.
+        /// Model level of details. The first entry is the highest quality LOD0 followed by more optimized versions.
         /// </summary>
-        [Tooltip("Array with all meshes.")]
-        public SkinnedMesh[] Meshes
+        [Tooltip("Model level of details. The first entry is the highest quality LOD0 followed by more optimized versions.")]
+        public SkinnedModelLOD[] LODs
         {
-            get { return Internal_GetMeshes(unmanagedPtr, typeof(SkinnedMesh)); }
+            get { return Internal_GetLODs(unmanagedPtr, typeof(SkinnedModelLOD)); }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern SkinnedMesh[] Internal_GetMeshes(IntPtr obj, System.Type resultArrayItemType0);
+        internal static extern SkinnedModelLOD[] Internal_GetLODs(IntPtr obj, System.Type resultArrayItemType0);
 
         /// <summary>
-        /// Determines whether this skinned has all the meshes loaded (vertex/index buffers data is on a GPU).
+        /// Gets the amount of loaded model LODs.
         /// </summary>
-        [Tooltip("Determines whether this skinned has all the meshes loaded (vertex/index buffers data is on a GPU).")]
-        public bool HasMeshesLoaded
+        [Tooltip("The amount of loaded model LODs.")]
+        public int LoadedLODs
         {
-            get { return Internal_HasMeshesLoaded(unmanagedPtr); }
+            get { return Internal_GetLoadedLODs(unmanagedPtr); }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_HasMeshesLoaded(IntPtr obj);
-
-        /// <summary>
-        /// Gets the amount of meshes in the skinned model.
-        /// </summary>
-        [Tooltip("The amount of meshes in the skinned model.")]
-        public int MeshesCount
-        {
-            get { return Internal_MeshesCount(unmanagedPtr); }
-        }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int Internal_MeshesCount(IntPtr obj);
+        internal static extern int Internal_GetLoadedLODs(IntPtr obj);
 
         /// <summary>
         /// Gets the skeleton nodes hierarchy.
@@ -121,39 +109,41 @@ namespace FlaxEngine
         /// Gets the model bounding box in custom matrix world space (rig pose transformed by matrix, not animated).
         /// </summary>
         /// <param name="world">The transformation matrix.</param>
+        /// <param name="lodIndex">The Level Of Detail index.</param>
         /// <returns>The bounding box.</returns>
-        public BoundingBox GetBox(Matrix world)
+        public BoundingBox GetBox(Matrix world, int lodIndex = 0)
         {
-            Internal_GetBox(unmanagedPtr, ref world, out var resultAsRef); return resultAsRef;
+            Internal_GetBox(unmanagedPtr, ref world, lodIndex, out var resultAsRef); return resultAsRef;
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetBox(IntPtr obj, ref Matrix world, out BoundingBox resultAsRef);
+        internal static extern void Internal_GetBox(IntPtr obj, ref Matrix world, int lodIndex, out BoundingBox resultAsRef);
 
         /// <summary>
         /// Gets the model bounding box in local space (rig pose, not animated).
         /// </summary>
+        /// <param name="lodIndex">The Level Of Detail index.</param>
         /// <returns>The bounding box.</returns>
-        public BoundingBox GetBox()
+        public BoundingBox GetBox(int lodIndex = 0)
         {
-            Internal_GetBox1(unmanagedPtr, out var resultAsRef); return resultAsRef;
+            Internal_GetBox1(unmanagedPtr, lodIndex, out var resultAsRef); return resultAsRef;
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_GetBox1(IntPtr obj, out BoundingBox resultAsRef);
+        internal static extern void Internal_GetBox1(IntPtr obj, int lodIndex, out BoundingBox resultAsRef);
 
         /// <summary>
-        /// Setups the skinned model including meshes creation and skeleton definition setup. Ensure to init SkeletonData manually after the call.
+        /// Setups the model LODs collection including meshes creation.
         /// </summary>
-        /// <param name="meshesCount">The meshes count.</param>
+        /// <param name="meshesCountPerLod">The meshes count per lod array (amount of meshes per LOD).</param>
         /// <returns>True if failed, otherwise false.</returns>
-        public bool SetupMeshes(int meshesCount)
+        public bool SetupLODs(int[] meshesCountPerLod)
         {
-            return Internal_SetupMeshes(unmanagedPtr, meshesCount);
+            return Internal_SetupLODs(unmanagedPtr, meshesCountPerLod);
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Internal_SetupMeshes(IntPtr obj, int meshesCount);
+        internal static extern bool Internal_SetupLODs(IntPtr obj, int[] meshesCountPerLod);
 
         /// <summary>
         /// Setups the skinned model skeleton. Uses the same nodes layout for skeleton bones and calculates the offset matrix by auto.

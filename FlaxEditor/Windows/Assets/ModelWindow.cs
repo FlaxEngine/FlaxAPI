@@ -77,13 +77,13 @@ namespace FlaxEditor.Windows.Assets
 
             private int ComputeLODIndex(Model model)
             {
-                if (PreviewStaticModel.ForcedLOD != -1)
-                    return PreviewStaticModel.ForcedLOD;
+                if (PreviewActor.ForcedLOD != -1)
+                    return PreviewActor.ForcedLOD;
 
                 // Based on RenderTools::ComputeModelLOD
                 CreateProjectionMatrix(out var projectionMatrix);
                 float screenMultiple = 0.5f * Mathf.Max(projectionMatrix.M11, projectionMatrix.M22);
-                var sphere = PreviewStaticModel.Sphere;
+                var sphere = PreviewActor.Sphere;
                 var viewOrigin = ViewPosition;
                 float distSqr = Vector3.DistanceSquared(ref sphere.Center, ref viewOrigin);
                 var screenRadiusSquared = Mathf.Square(screenMultiple * sphere.Radius) / Mathf.Max(1.0f, distSqr);
@@ -106,7 +106,7 @@ namespace FlaxEditor.Windows.Assets
                 {
                     if (Mathf.Square(lods[lodIndex].ScreenSize * 0.5f) >= screenRadiusSquared)
                     {
-                        return lodIndex + PreviewStaticModel.LODBias;
+                        return lodIndex + PreviewActor.LODBias;
                     }
                 }
 
@@ -133,7 +133,7 @@ namespace FlaxEditor.Windows.Assets
                     if (lodIndex != -1)
                     {
                         var lods = asset.LODs;
-                        lodIndex = Mathf.Clamp(lodIndex + PreviewStaticModel.LODBias, 0, lods.Length - 1);
+                        lodIndex = Mathf.Clamp(lodIndex + PreviewActor.LODBias, 0, lods.Length - 1);
                         var lod = lods[lodIndex];
                         int triangleCount = 0, vertexCount = 0;
                         for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
@@ -156,6 +156,7 @@ namespace FlaxEditor.Windows.Assets
             {
                 Object.Destroy(ref _floorModel);
                 _showFloorButton = null;
+                _showCurrentLODButton = null;
 
                 base.OnDestroy();
             }
@@ -384,6 +385,7 @@ namespace FlaxEditor.Windows.Assets
                     proxy._isolateCheckBoxes.Clear();
                     proxy._highlightCheckBoxes.Clear();
                     var lods = proxy.Asset.LODs;
+                    var loadedLODs = proxy.Asset.LoadedLODs;
 
                     // General properties
                     {
@@ -403,17 +405,23 @@ namespace FlaxEditor.Windows.Assets
                     // Group per LOD
                     for (int lodIndex = 0; lodIndex < lods.Length; lodIndex++)
                     {
+                        var group = layout.Group("LOD " + lodIndex);
+                        if (lodIndex < lods.Length - loadedLODs)
+                        {
+                            group.Label("Loading LOD...");
+                            continue;
+                        }
                         var lod = lods[lodIndex];
+                        var meshes = lod.Meshes;
 
                         int triangleCount = 0, vertexCount = 0;
-                        for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
+                        for (int meshIndex = 0; meshIndex < meshes.Length; meshIndex++)
                         {
-                            var mesh = lod.Meshes[meshIndex];
+                            var mesh = meshes[meshIndex];
                             triangleCount += mesh.TriangleCount;
                             vertexCount += mesh.VertexCount;
                         }
 
-                        var group = layout.Group("LOD " + lodIndex);
                         group.Label(string.Format("Triangles: {0:N0}   Vertices: {1:N0}", triangleCount, vertexCount));
                         group.Label("Size: " + lod.Box.Size);
                         var screenSize = group.FloatValue("Screen Size", "The screen size to switch LODs. Bottom limit of the model screen size to render this LOD.");
@@ -427,10 +435,10 @@ namespace FlaxEditor.Windows.Assets
                         };
 
                         // Every mesh properties
-                        for (int meshIndex = 0; meshIndex < lod.Meshes.Length; meshIndex++)
+                        for (int meshIndex = 0; meshIndex < meshes.Length; meshIndex++)
                         {
-                            var mesh = lod.Meshes[meshIndex];
-                            group.Label("Mesh " + meshIndex);
+                            var mesh = meshes[meshIndex];
+                            group.Label($"Mesh {meshIndex} (tris: {mesh.TriangleCount:N0}, verts: {mesh.VertexCount:N0})");
 
                             // Material Slot
                             var materialSlot = group.ComboBox("Material Slot", "Material slot used by this mesh during rendering");
@@ -523,14 +531,14 @@ namespace FlaxEditor.Windows.Assets
         /// </summary>
         private void UpdateEffectsOnAsset()
         {
-            var entries = _preview.PreviewStaticModel.Entries;
+            var entries = _preview.PreviewActor.Entries;
             if (entries != null)
             {
                 for (int i = 0; i < entries.Length; i++)
                 {
                     entries[i].Visible = _properties.IsolateIndex == -1 || _properties.IsolateIndex == i;
                 }
-                _preview.PreviewStaticModel.Entries = entries;
+                _preview.PreviewActor.Entries = entries;
             }
 
             if (_properties.HighlightIndex != -1)
@@ -561,7 +569,7 @@ namespace FlaxEditor.Windows.Assets
             // Sync highlight actor size with actual preview model (preview scales model for better usage experience)
             if (_highlightActor && _highlightActor.IsActive)
             {
-                _highlightActor.Transform = _preview.PreviewStaticModel.Transform;
+                _highlightActor.Transform = _preview.PreviewActor.Transform;
             }
 
             // Model is loaded but LODs data may be during streaming so refresh properties on fully loaded
