@@ -143,7 +143,11 @@ namespace FlaxEditor.Windows.Assets
             public void OnLoad(AnimationGraphWindow window)
             {
                 Window = window;
-                BaseModel = window.PreviewActor.GetParameterValue(BaseModelId) as SkinnedModel;
+                var surfaceParam = window.Surface.GetParameter(BaseModelId);
+                if (surfaceParam != null)
+                    BaseModel = FlaxEngine.Content.LoadAsync<SkinnedModel>((Guid)surfaceParam.Value);
+                else
+                    BaseModel = window.PreviewActor.GetParameterValue(BaseModelId) as SkinnedModel;
             }
 
             /// <summary>
