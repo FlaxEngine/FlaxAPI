@@ -97,6 +97,7 @@ namespace FlaxEditor.Viewport.Previews
             if (!ScaleToFit)
             {
                 _previewModel.Scale = Vector3.One;
+                _previewModel.Position = Vector3.Zero;
                 return;
             }
 
@@ -104,9 +105,12 @@ namespace FlaxEditor.Viewport.Previews
             var skinnedModel = SkinnedModel;
             if (skinnedModel && skinnedModel.IsLoaded)
             {
-                float targetSize = 30.0f;
-                float maxSize = Mathf.Max(0.001f, skinnedModel.GetBox().Size.MaxValue);
-                _previewModel.Scale = new Vector3(targetSize / maxSize);
+                float targetSize = 50.0f;
+                BoundingBox box = skinnedModel.GetBox();
+                float maxSize = Mathf.Max(0.001f, box.Size.MaxValue);
+                float scale = targetSize / maxSize;
+                _previewModel.Scale = new Vector3(scale);
+                _previewModel.Position = box.Center * (-0.5f * scale) + new Vector3(0, -10, 0);
             }
         }
 
