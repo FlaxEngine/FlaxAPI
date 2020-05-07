@@ -380,6 +380,43 @@ namespace FlaxEngine
         internal static extern void Internal_SetParameterValue1(IntPtr obj, ref Guid id, object value);
 
         /// <summary>
+        /// Gets the weight of the blend shape.
+        /// </summary>
+        /// <param name="name">The blend shape name.</param>
+        /// <returns>The normalized weight of the blend shape (in range -1:1).</returns>
+        public float GetBlendShapeWeight(string name)
+        {
+            return Internal_GetBlendShapeWeight(unmanagedPtr, name);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float Internal_GetBlendShapeWeight(IntPtr obj, string name);
+
+        /// <summary>
+        /// Sets the weight of the blend shape.
+        /// </summary>
+        /// <param name="name">The blend shape name.</param>
+        /// <param name="value">The normalized weight of the blend shape (in range -1:1).</param>
+        public void SetBlendShapeWeight(string name, float value)
+        {
+            Internal_SetBlendShapeWeight(unmanagedPtr, name, value);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_SetBlendShapeWeight(IntPtr obj, string name, float value);
+
+        /// <summary>
+        /// Clears the weights of the blend shapes (disabled any used blend shapes).
+        /// </summary>
+        public void ClearBlendShapeWeights()
+        {
+            Internal_ClearBlendShapeWeights(unmanagedPtr);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Internal_ClearBlendShapeWeights(IntPtr obj);
+
+        /// <summary>
         /// Describes the animation graph updates frequency for the animated model.
         /// </summary>
         [Tooltip("Describes the animation graph updates frequency for the animated model.")]

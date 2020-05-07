@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
@@ -14,6 +15,7 @@ using FlaxEditor.Viewport.Cameras;
 using FlaxEditor.Viewport.Previews;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using Object = FlaxEngine.Object;
 
 namespace FlaxEditor.Windows.Assets
 {
@@ -40,6 +42,7 @@ namespace FlaxEditor.Windows.Assets
             : base(true)
             {
                 _window = window;
+                PlayAnimation = true;
 
                 // Show floor widget
                 _showFloorButton = ViewWidgetShowMenu.AddButton("Floor", OnShowFloorModelClicked);
@@ -492,6 +495,27 @@ namespace FlaxEditor.Windows.Assets
                                 BuildSkeletonNodesTree(nodes, node, i);
                                 node.TreeNode.ExpandAll(true);
                             }
+                        }
+                    }
+
+                    // Blend Shapes
+                    var blendShapes = proxy.Asset.BlendShapes;
+                    if (blendShapes.Length != 0)
+                    {
+                        var group = layout.Group("Blend Shapes");
+                        group.Panel.Close(false);
+                        proxy.Window._preview.PreviewActor.ClearBlendShapeWeights();
+
+                        for (int i = 0; i < blendShapes.Length; i++)
+                        {
+                            var blendShape = blendShapes[i];
+                            var property = group.AddPropertyItem(blendShape);
+                            var editor = property.FloatValue();
+                            editor.FloatValue.Value = 0.0f;
+                            editor.FloatValue.MinValue = -1;
+                            editor.FloatValue.MaxValue = 1;
+                            editor.FloatValue.SlideSpeed = 0.01f;
+                            editor.FloatValue.ValueChanged += () => { proxy.Window._preview.PreviewActor.SetBlendShapeWeight(blendShape, editor.FloatValue.Value); };
                         }
                     }
 

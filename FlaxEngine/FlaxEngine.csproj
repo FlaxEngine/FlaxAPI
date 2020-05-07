@@ -136,6 +136,7 @@
     <Compile Include="API\Graphics\SkeletonData.Gen.cs" />
     <Compile Include="API\Graphics\SkinnedMesh.cs" />
     <Compile Include="API\Graphics\SkinnedMesh.Gen.cs" />
+    <Compile Include="API\Graphics\SkinnedModelLOD.Gen.cs" />
     <Compile Include="API\Graphics\TextureBase.cs" />
     <Compile Include="API\Graphics\TextureBase.Gen.cs" />
     <Compile Include="API\Input\Enums.Gen.cs" />

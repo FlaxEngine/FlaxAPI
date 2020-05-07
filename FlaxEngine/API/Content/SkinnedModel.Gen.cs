@@ -67,6 +67,18 @@ namespace FlaxEngine
         internal static extern SkeletonBone[] Internal_GetBones(IntPtr obj, System.Type resultArrayItemType0);
 
         /// <summary>
+        /// Gets the blend shapes names used by the skinned model meshes (from LOD 0 only).
+        /// </summary>
+        [Tooltip("The blend shapes names used by the skinned model meshes (from LOD 0 only).")]
+        public string[] BlendShapes
+        {
+            get { return Internal_GetBlendShapes(unmanagedPtr); }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string[] Internal_GetBlendShapes(IntPtr obj);
+
+        /// <summary>
         /// Finds the node with the given name.
         /// </summary>
         /// <param name="name">Thr name of the node.</param>
