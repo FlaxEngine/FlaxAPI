@@ -155,8 +155,8 @@ namespace FlaxEditor.GUI
         {
             base.OnVisibleChanged();
 
-            // Show/hide child events (only if using depth mode)
-            if (HasParent && Depth != -1)
+            // Hide child events (only if using depth mode)
+            if (HasParent && Depth != -1 && !Visible)
             {
                 SetSubRowsVisible(Visible);
             }

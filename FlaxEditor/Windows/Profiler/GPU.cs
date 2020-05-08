@@ -308,6 +308,7 @@ namespace FlaxEditor.Windows.Profiler
 
                 if (i % 2 == 0)
                     row.BackgroundColor = rowColor2;
+                row.Visible = e.Depth < 3;
             }
         }
     }
