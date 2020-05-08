@@ -1,6 +1,5 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
@@ -9,6 +8,7 @@ using FlaxEditor.Content.Import;
 using FlaxEditor.CustomEditors;
 using FlaxEditor.CustomEditors.Editors;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.Viewport.Cameras;
@@ -509,7 +509,12 @@ namespace FlaxEditor.Windows.Assets
                         for (int i = 0; i < blendShapes.Length; i++)
                         {
                             var blendShape = blendShapes[i];
-                            var property = group.AddPropertyItem(blendShape);
+                            var label = new PropertyNameLabel(blendShape);
+                            label.SetupContextMenu += (nameLabel, menu, linkedEditor) =>
+                            {
+                                menu.AddButton("Copy name", () => Clipboard.Text = blendShape);
+                            };
+                            var property = group.AddPropertyItem(label);
                             var editor = property.FloatValue();
                             editor.FloatValue.Value = 0.0f;
                             editor.FloatValue.MinValue = -1;
