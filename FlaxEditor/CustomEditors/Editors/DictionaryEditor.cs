@@ -124,6 +124,41 @@ namespace FlaxEditor.CustomEditors.Editors
                 }
             }
             _elementsCount = size;
+
+            // Add/Remove buttons
+            if (!_readOnly)
+            {
+                var area = layout.Space(20);
+                var addButton = new Button(area.ContainerControl.Width - (16 + 16 + 2 + 2), 2, 16, 16)
+                {
+                    Text = "+",
+                    TooltipText = "Add new item",
+                    AnchorPreset = AnchorPresets.TopRight,
+                    Parent = area.ContainerControl
+                };
+                addButton.Clicked += () =>
+                {
+                    if (IsSetBlocked)
+                        return;
+
+                    Resize(Count + 1);
+                };
+                var removeButton = new Button(addButton.Right + 2, addButton.Y, 16, 16)
+                {
+                    Text = "-",
+                    TooltipText = "Remove last item",
+                    AnchorPreset = AnchorPresets.TopRight,
+                    Parent = area.ContainerControl,
+                    Enabled = size > 0
+                };
+                removeButton.Clicked += () =>
+                {
+                    if (IsSetBlocked)
+                        return;
+
+                    Resize(Count - 1);
+                };
+            }
         }
 
         private void OnSizeChanged()
