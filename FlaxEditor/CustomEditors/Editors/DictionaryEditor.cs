@@ -9,6 +9,7 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Utilities;
 using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.CustomEditors.Editors
@@ -80,8 +81,8 @@ namespace FlaxEditor.CustomEditors.Editors
                 var keyType = argTypes[0];
                 var valueType = argTypes[1];
 
-                // Only int and string keys are supported
-                if (keyType == typeof(int) || keyType == typeof(string))
+                // Only primitives and string keys are supported
+                if (keyType == typeof(string) || keyType.IsPrimitive)
                     return true;
 
                 // TODO: add ReadOnlyDictionaryEditor - then show keys/values of any type but without editing
@@ -267,16 +268,17 @@ namespace FlaxEditor.CustomEditors.Editors
             int newItemsLeft = newSize - oldSize;
             while (newItemsLeft-- > 0)
             {
-                if (keyType == typeof(int))
+                if (keyType.IsPrimitive)
                 {
-                    int uniqueKey = 0;
+                    long uniqueKey = 0;
                     bool isUnique;
                     do
                     {
                         isUnique = true;
                         foreach (var e in newValues.Keys)
                         {
-                            if ((int)e == uniqueKey)
+                            var asLong = Convert.ToInt64(e);
+                            if (asLong == uniqueKey)
                             {
                                 uniqueKey++;
                                 isUnique = false;
@@ -285,7 +287,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         }
                     } while (!isUnique);
 
-                    newValues[uniqueKey] = Utils.GetDefaultValue(valueType);
+                    newValues[Convert.ChangeType(uniqueKey, keyType)] = Utils.GetDefaultValue(valueType);
                 }
                 else if (keyType == typeof(string))
                 {
