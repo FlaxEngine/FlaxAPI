@@ -19,7 +19,6 @@ namespace FlaxEditor.CustomEditors.Editors
         private IntegerValueElement _size;
         private int _elementsCount;
         private bool _readOnly;
-        private bool _canReorderItems;
         private bool _notNullItems;
 
         /// <summary>
@@ -55,7 +54,6 @@ namespace FlaxEditor.CustomEditors.Editors
         public override void Initialize(LayoutElementsContainer layout)
         {
             _readOnly = false;
-            _canReorderItems = true;
             _notNullItems = false;
 
             // No support for different collections for now
@@ -65,21 +63,20 @@ namespace FlaxEditor.CustomEditors.Editors
             var type = Values.Type;
             var size = Count;
 
-            // Try get MemberCollectionAttribute for collection editor meta
+            // Try get CollectionAttribute for collection editor meta
             var attributes = Values.GetAttributes();
             Type overrideEditorType = null;
             if (attributes != null)
             {
-                var memberCollection = (MemberCollectionAttribute)attributes.FirstOrDefault(x => x is MemberCollectionAttribute);
-                if (memberCollection != null)
+                var collection = (CollectionAttribute)attributes.FirstOrDefault(x => x is CollectionAttribute);
+                if (collection != null)
                 {
                     // TODO: handle ReadOnly and NotNullItems by filtering child editors SetValue
                     // TODO: handle CanReorderItems
 
-                    _readOnly = memberCollection.ReadOnly;
-                    _canReorderItems = memberCollection.CanReorderItems;
-                    _notNullItems = memberCollection.NotNullItems;
-                    overrideEditorType = Utils.GetType(memberCollection.OverrideEditorTypeName);
+                    _readOnly = collection.ReadOnly;
+                    _notNullItems = collection.NotNullItems;
+                    overrideEditorType = Utils.GetType(collection.OverrideEditorTypeName);
                 }
             }
 

@@ -107,7 +107,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the brush proxies per surface.
         /// </summary>
-        [Serialize, EditorOrder(100), EditorDisplay("Surfaces", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
+        [Serialize, EditorOrder(100), EditorDisplay("Surfaces", EditorDisplayAttribute.InlineStyle), Collection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
         [Tooltip("The brush proxies per surface.")]
         public BrushSurface[] Surfaces
         {

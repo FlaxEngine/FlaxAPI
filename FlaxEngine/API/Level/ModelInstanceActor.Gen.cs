@@ -22,7 +22,7 @@ namespace FlaxEngine
         /// <summary>
         /// Gets or sets the model entries collection. Each entry contains data how to render meshes using this entry (transformation, material, shadows casting, etc.).
         /// </summary>
-        [Serialize, EditorOrder(1000), EditorDisplay("Entries", EditorDisplayAttribute.InlineStyle), MemberCollection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
+        [Serialize, EditorOrder(1000), EditorDisplay("Entries", EditorDisplayAttribute.InlineStyle), Collection(CanReorderItems = false, NotNullItems = true, ReadOnly = true)]
         [Tooltip("The model entries collection. Each entry contains data how to render meshes using this entry (transformation, material, shadows casting, etc.).")]
         public ModelInstanceEntry[] Entries
         {

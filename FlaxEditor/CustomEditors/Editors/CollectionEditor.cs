@@ -112,20 +112,20 @@ namespace FlaxEditor.CustomEditors.Editors
 
             var size = Count;
 
-            // Try get MemberCollectionAttribute for collection editor meta
+            // Try get CollectionAttribute for collection editor meta
             var attributes = Values.GetAttributes();
             Type overrideEditorType = null;
             if (attributes != null)
             {
-                var memberCollection = (MemberCollectionAttribute)attributes.FirstOrDefault(x => x is MemberCollectionAttribute);
-                if (memberCollection != null)
+                var collection = (CollectionAttribute)attributes.FirstOrDefault(x => x is CollectionAttribute);
+                if (collection != null)
                 {
                     // TODO: handle NotNullItems by filtering child editors SetValue
 
-                    _readOnly = memberCollection.ReadOnly;
-                    _canReorderItems = memberCollection.CanReorderItems;
-                    _notNullItems = memberCollection.NotNullItems;
-                    overrideEditorType = Utils.GetType(memberCollection.OverrideEditorTypeName);
+                    _readOnly = collection.ReadOnly;
+                    _canReorderItems = collection.CanReorderItems;
+                    _notNullItems = collection.NotNullItems;
+                    overrideEditorType = Utils.GetType(collection.OverrideEditorTypeName);
                 }
             }
 

@@ -33,7 +33,7 @@ namespace FlaxEngine
         /// <summary>
         /// List with all scripts attached to the actor (readonly). All items are valid (not null).
         /// </summary>
-        [HideInEditor, NoAnimate, EditorOrder(-5), EditorDisplay("Scripts", EditorDisplayAttribute.InlineStyle), MemberCollection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]
+        [HideInEditor, NoAnimate, EditorOrder(-5), EditorDisplay("Scripts", EditorDisplayAttribute.InlineStyle), Collection(ReadOnly = true, NotNullItems = true, CanReorderItems = false)]
         [Tooltip("List with all scripts attached to the actor (readonly). All items are valid (not null).")]
         public Script[] Scripts
         {
