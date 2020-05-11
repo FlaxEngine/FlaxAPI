@@ -148,6 +148,12 @@ namespace FlaxEditor.Content.Import
         public bool ImportVertexColors { get; set; } = true;
 
         /// <summary>
+        /// Enable/disable importing blend shapes (morph targets).
+        /// </summary>
+        [EditorOrder(85), DefaultValue(false), EditorDisplay("Geometry"), Tooltip("Enable/disable importing blend shapes (morph targets).")]
+        public bool ImportBlendShapes { get; set; } = false;
+
+        /// <summary>
         /// The lightmap UVs source.
         /// </summary>
         [EditorOrder(90), DefaultValue(ModelLightmapUVsSource.Disable), EditorDisplay("Geometry", "Lightmap UVs Source"), Tooltip("Model lightmap UVs source")]
@@ -284,6 +290,7 @@ namespace FlaxEditor.Content.Import
             public byte MergeMeshes;
             public byte ImportLODs;
             public byte ImportVertexColors;
+            public byte ImportBlendShapes;
             public ModelLightmapUVsSource LightmapUVsSource;
 
             // Transform
@@ -328,6 +335,7 @@ namespace FlaxEditor.Content.Import
                 MergeMeshes = (byte)(MergeMeshes ? 1 : 0),
                 ImportLODs = (byte)(ImportLODs ? 1 : 0),
                 ImportVertexColors = (byte)(ImportVertexColors ? 1 : 0),
+                ImportBlendShapes = (byte)(ImportBlendShapes ? 1 : 0),
                 LightmapUVsSource = LightmapUVsSource,
                 Scale = Scale,
                 Rotation = Rotation,
@@ -363,6 +371,7 @@ namespace FlaxEditor.Content.Import
             MergeMeshes = options.MergeMeshes != 0;
             ImportLODs = options.ImportLODs != 0;
             ImportVertexColors = options.ImportVertexColors != 0;
+            ImportBlendShapes = options.ImportBlendShapes != 0;
             LightmapUVsSource = options.LightmapUVsSource;
             Scale = options.Scale;
             Rotation = options.Rotation;
