@@ -5,6 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
+using FlaxEditor.CustomEditors.GUI;
+using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using Utils = FlaxEditor.Utilities.Utils;
@@ -16,6 +18,49 @@ namespace FlaxEditor.CustomEditors.Editors
     /// </summary>
     public class DictionaryEditor : CustomEditor
     {
+        /// <summary>
+        /// The custom implementation of the dictionary items labels that can be used to remove items or edit keys.
+        /// </summary>
+        /// <seealso cref="FlaxEditor.CustomEditors.GUI.PropertyNameLabel" />
+        private class DictionaryItemLabel : PropertyNameLabel
+        {
+            /// <summary>
+            /// The editor.
+            /// </summary>
+            public DictionaryEditor Editor;
+
+            /// <summary>
+            /// The key of the item.
+            /// </summary>
+            public readonly object Key;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DictionaryItemLabel"/> class.
+            /// </summary>
+            /// <param name="editor">The editor.</param>
+            /// <param name="key">The key.</param>
+            public DictionaryItemLabel(DictionaryEditor editor, object key)
+            : base(key?.ToString() ?? "<null>")
+            {
+                Editor = editor;
+                Key = key;
+
+                SetupContextMenu += OnSetupContextMenu;
+            }
+
+            private void OnSetupContextMenu(PropertyNameLabel label, ContextMenu menu, CustomEditor linkedEditor)
+            {
+                menu.AddSeparator();
+
+                menu.AddButton("Remove", OnRemoveClicked).Enabled = !Editor._readOnly;
+            }
+
+            private void OnRemoveClicked(ContextMenuButton button)
+            {
+                Editor.Remove(Key);
+            }
+        }
+
         private IntegerValueElement _size;
         private int _elementsCount;
         private bool _readOnly;
@@ -72,7 +117,6 @@ namespace FlaxEditor.CustomEditors.Editors
                 if (collection != null)
                 {
                     // TODO: handle ReadOnly and NotNullItems by filtering child editors SetValue
-                    // TODO: handle CanReorderItems
 
                     _readOnly = collection.ReadOnly;
                     _notNullItems = collection.NotNullItems;
@@ -104,20 +148,13 @@ namespace FlaxEditor.CustomEditors.Editors
                 var keys = keysEnumerable as object[] ?? keysEnumerable.ToArray();
                 for (int i = 0; i < size; i++)
                 {
-                    var item = layout.CustomContainer<UniformGridPanel>();
-                    var itemGrid = item.CustomControl;
-                    itemGrid.Height = TextBox.DefaultHeight; // TODO: make slots auto sizable instead of fixed height
-                    itemGrid.SlotsHorizontally = 2;
-                    itemGrid.SlotsVertically = 1;
-
                     // Key
                     // TODO: allow edit keys
                     var key = keys.ElementAt(i);
-                    item.Label(key.ToString());
 
                     // Value
                     var overrideEditor = overrideEditorType != null ? (CustomEditor)Activator.CreateInstance(overrideEditorType) : null;
-                    item.Object(new DictionaryValueContainer(valueType, key, Values), overrideEditor);
+                    layout.Object(new DictionaryItemLabel(this, key), new DictionaryValueContainer(valueType, key, Values), overrideEditor);
                 }
             }
             _elementsCount = size;
@@ -167,6 +204,34 @@ namespace FlaxEditor.CustomEditors.Editors
         }
 
         /// <summary>
+        /// Removes the item of the specified key. It supports undo.
+        /// </summary>
+        /// <param name="key">The key of the item to remove.</param>
+        private void Remove(object key)
+        {
+            if (IsSetBlocked)
+                return;
+
+            // Allocate new collection
+            var dictionary = Values[0] as IDictionary;
+            var type = Values.Type;
+            var newValues = (IDictionary)Activator.CreateInstance(type);
+
+            // Copy all keys/values except the specified one
+            if (dictionary != null)
+            {
+                foreach (var e in dictionary.Keys)
+                {
+                    if (e == key)
+                        continue;
+                    newValues[e] = dictionary[e];
+                }
+            }
+
+            SetValue(newValues);
+        }
+
+        /// <summary>
         /// Resizes collection to the specified new size.
         /// </summary>
         /// <param name="newSize">The new size.</param>
@@ -175,80 +240,80 @@ namespace FlaxEditor.CustomEditors.Editors
             var dictionary = Values[0] as IDictionary;
             var oldSize = dictionary?.Count ?? 0;
 
-            if (oldSize != newSize)
+            if (oldSize == newSize)
+                return;
+
+            // Allocate new collection
+            var type = Values.Type;
+            var argTypes = type.GetGenericArguments();
+            var keyType = argTypes[0];
+            var valueType = argTypes[1];
+            var newValues = (IDictionary)Activator.CreateInstance(type);
+
+            // Copy all keys/values
+            int itemsLeft = newSize;
+            if (dictionary != null)
             {
-                // Allocate new collection
-                var type = Values.Type;
-                var argTypes = type.GetGenericArguments();
-                var keyType = argTypes[0];
-                var valueType = argTypes[1];
-                var newValues = (IDictionary)Activator.CreateInstance(type);
-
-                // Copy all keys/values
-                int itemsLeft = newSize;
-                if (dictionary != null)
+                foreach (var e in dictionary.Keys)
                 {
-                    foreach (var e in dictionary.Keys)
-                    {
-                        if (itemsLeft == 0)
-                            break;
-                        newValues[e] = dictionary[e];
-                        itemsLeft--;
-                    }
+                    if (itemsLeft == 0)
+                        break;
+                    newValues[e] = dictionary[e];
+                    itemsLeft--;
                 }
-
-                // Insert new items (find unique keys)
-                int newItesmLeft = newSize - oldSize;
-                while (newItesmLeft-- > 0)
-                {
-                    if (keyType == typeof(int))
-                    {
-                        int uniqueKey = 0;
-                        bool isUnique;
-                        do
-                        {
-                            isUnique = true;
-                            foreach (var e in newValues.Keys)
-                            {
-                                if ((int)e == uniqueKey)
-                                {
-                                    uniqueKey++;
-                                    isUnique = false;
-                                    break;
-                                }
-                            }
-                        } while (!isUnique);
-
-                        newValues[uniqueKey] = Utils.GetDefaultValue(valueType);
-                    }
-                    else if (keyType == typeof(string))
-                    {
-                        string uniqueKey = "Key";
-                        bool isUnique;
-                        do
-                        {
-                            isUnique = true;
-                            foreach (var e in newValues.Keys)
-                            {
-                                if ((string)e == uniqueKey)
-                                {
-                                    uniqueKey += "*";
-                                    isUnique = false;
-                                    break;
-                                }
-                            }
-                        } while (!isUnique);
-
-                        newValues[uniqueKey] = Utils.GetDefaultValue(valueType);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
-
-                SetValue(newValues);
             }
+
+            // Insert new items (find unique keys)
+            int newItemsLeft = newSize - oldSize;
+            while (newItemsLeft-- > 0)
+            {
+                if (keyType == typeof(int))
+                {
+                    int uniqueKey = 0;
+                    bool isUnique;
+                    do
+                    {
+                        isUnique = true;
+                        foreach (var e in newValues.Keys)
+                        {
+                            if ((int)e == uniqueKey)
+                            {
+                                uniqueKey++;
+                                isUnique = false;
+                                break;
+                            }
+                        }
+                    } while (!isUnique);
+
+                    newValues[uniqueKey] = Utils.GetDefaultValue(valueType);
+                }
+                else if (keyType == typeof(string))
+                {
+                    string uniqueKey = "Key";
+                    bool isUnique;
+                    do
+                    {
+                        isUnique = true;
+                        foreach (var e in newValues.Keys)
+                        {
+                            if ((string)e == uniqueKey)
+                            {
+                                uniqueKey += "*";
+                                isUnique = false;
+                                break;
+                            }
+                        }
+                    } while (!isUnique);
+
+                    newValues[uniqueKey] = Utils.GetDefaultValue(valueType);
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+
+            SetValue(newValues);
         }
 
         /// <inheritdoc />
