@@ -48,7 +48,7 @@ namespace FlaxEditor.GUI.Tabs
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
                 Tabs.SelectedTabIndex = Index;
                 Tabs.Focus();

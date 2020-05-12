@@ -237,9 +237,9 @@ namespace FlaxEditor.CustomEditors.Editors
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Clear flag
                 _isMouseDown = false;
@@ -264,24 +264,24 @@ namespace FlaxEditor.CustomEditors.Editors
             if (_supportsPickDropDown && (isSelected ? button2Rect : button1Rect).Contains(ref location))
                 ShowDropDownMenu();
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Set flag
                 _isMouseDown = true;
                 _mouseDownPos = location;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             Focus();
 
@@ -295,7 +295,7 @@ namespace FlaxEditor.CustomEditors.Editors
                     Editor.Instance.Windows.ContentWin.Select(asset);
             }
 
-            return base.OnMouseDoubleClick(location, buttons);
+            return base.OnMouseDoubleClick(location, button);
         }
 
         private void DoDrag()

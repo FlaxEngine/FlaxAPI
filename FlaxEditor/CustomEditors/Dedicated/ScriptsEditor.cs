@@ -266,28 +266,28 @@ namespace FlaxEditor.CustomEditors.Dedicated
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Clear flag
                 _isMouseDown = false;
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Set flag
                 _isMouseDown = true;
                 _mouseDownPos = location;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         private void DoDrag()

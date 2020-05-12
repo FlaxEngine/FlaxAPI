@@ -88,23 +88,23 @@ namespace FlaxEditor.CustomEditors.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Right)
+            if (button == MouseButton.Right)
             {
                 _mouseDown = true;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
-            if (_mouseDown && buttons == MouseButton.Right)
+            if (_mouseDown && button == MouseButton.Right)
             {
                 _mouseDown = false;
 

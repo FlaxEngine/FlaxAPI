@@ -191,9 +191,9 @@ namespace FlaxEditor.GUI.Input
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     // Remove focus
                     var parentWin = Root;
@@ -219,15 +219,15 @@ namespace FlaxEditor.GUI.Input
                     }
                 }
 
-                return base.OnMouseDown(location, buttons);
+                return base.OnMouseDown(location, button);
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
                 EndTracking();
 
-                return base.OnMouseUp(location, buttons);
+                return base.OnMouseUp(location, button);
             }
 
             /// <inheritdoc />

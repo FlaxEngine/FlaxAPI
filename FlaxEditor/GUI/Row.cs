@@ -111,9 +111,9 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && Values != null && _table?.Columns != null)
+            if (button == MouseButton.Left && Values != null && _table?.Columns != null)
             {
                 float x = 0;
                 int end = Mathf.Min(Values.Length, _table.Columns.Length);
@@ -147,7 +147,7 @@ namespace FlaxEditor.GUI
                 }
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

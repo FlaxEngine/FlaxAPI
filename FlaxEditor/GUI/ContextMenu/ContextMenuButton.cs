@@ -126,9 +126,9 @@ namespace FlaxEditor.GUI.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseDown(location, buttons))
+            if (base.OnMouseDown(location, button))
                 return true;
 
             // Set flag
@@ -138,9 +138,9 @@ namespace FlaxEditor.GUI.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
             // Check if mouse was pressing

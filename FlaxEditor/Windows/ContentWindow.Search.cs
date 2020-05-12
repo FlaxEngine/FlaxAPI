@@ -65,7 +65,7 @@ namespace FlaxEditor.Windows
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
                 // Check flags
                 if (_mouseDown && !_blockPopup)

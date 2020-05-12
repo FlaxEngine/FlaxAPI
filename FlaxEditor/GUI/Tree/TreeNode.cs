@@ -689,13 +689,13 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             // Check if mouse hits bar and node isn't a root
             if (_mouseOverHeader)
             {
                 // Check if left button goes down
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     _isMouseDown = true;
                     _mouseDownPos = location;
@@ -709,7 +709,7 @@ namespace FlaxEditor.GUI.Tree
 
             // Base
             if (_opened)
-                return base.OnMouseDown(location, buttons);
+                return base.OnMouseDown(location, button);
 
             // Handled
             Focus();
@@ -717,16 +717,16 @@ namespace FlaxEditor.GUI.Tree
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Check if mouse hits bar
-            if (buttons == MouseButton.Right && TestHeaderHit(ref location))
+            if (button == MouseButton.Right && TestHeaderHit(ref location))
             {
                 ParentTree.OnRightClickInternal(this, ref location);
             }
 
             // Clear flag for left button
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Clear flag
                 _isMouseDown = false;
@@ -775,23 +775,23 @@ namespace FlaxEditor.GUI.Tree
             }
 
             // Base
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             // Check if mouse hits bar
             if (TestHeaderHit(ref location))
             {
-                return OnMouseDoubleClickHeader(ref location, buttons);
+                return OnMouseDoubleClickHeader(ref location, button);
             }
 
             // Check if animation has been finished
             if (_animationProgress >= 1.0f)
             {
                 // Base
-                return base.OnMouseDoubleClick(location, buttons);
+                return base.OnMouseDoubleClick(location, button);
             }
 
             return false;

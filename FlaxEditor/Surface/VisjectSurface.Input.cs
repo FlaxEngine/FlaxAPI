@@ -284,12 +284,12 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             // Base
-            bool handled = base.OnMouseDoubleClick(location, buttons);
+            bool handled = base.OnMouseDoubleClick(location, button);
             if (!handled)
-                CustomMouseDoubleClick?.Invoke(ref location, buttons, ref handled);
+                CustomMouseDoubleClick?.Invoke(ref location, button, ref handled);
             if (handled)
             {
                 return true;
@@ -299,16 +299,16 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             // Check if user is connecting boxes
             if (_connectionInstigator != null)
                 return true;
 
             // Base
-            bool handled = base.OnMouseDown(location, buttons);
+            bool handled = base.OnMouseDown(location, button);
             if (!handled)
-                CustomMouseDown?.Invoke(ref location, buttons, ref handled);
+                CustomMouseDown?.Invoke(ref location, button, ref handled);
             if (handled)
             {
                 // Clear flags
@@ -324,12 +324,12 @@ namespace FlaxEditor.Surface
             // Cache data
             _isMovingSelection = false;
             _mousePos = location;
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 _leftMouseDown = true;
                 _leftMouseDownPos = location;
             }
-            if (buttons == MouseButton.Right)
+            if (button == MouseButton.Right)
             {
                 _rightMouseDown = true;
                 _rightMouseDownPos = location;
@@ -417,7 +417,7 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Cache mouse location
             _mousePos = location;
@@ -426,7 +426,7 @@ namespace FlaxEditor.Surface
             SurfaceControl controlUnderMouse = GetControlUnderMouse();
 
             // Cache flags and state
-            if (_leftMouseDown && buttons == MouseButton.Left)
+            if (_leftMouseDown && button == MouseButton.Left)
             {
                 _leftMouseDown = false;
                 EndMouseCapture();
@@ -453,7 +453,7 @@ namespace FlaxEditor.Surface
                     UpdateSelectionRectangle();
                 }
             }
-            if (_rightMouseDown && buttons == MouseButton.Right)
+            if (_rightMouseDown && button == MouseButton.Right)
             {
                 _rightMouseDown = false;
                 EndMouseCapture();
@@ -482,9 +482,9 @@ namespace FlaxEditor.Surface
             }
 
             // Base
-            bool handled = base.OnMouseUp(location, buttons);
+            bool handled = base.OnMouseUp(location, button);
             if (!handled)
-                CustomMouseUp?.Invoke(ref location, buttons, ref handled);
+                CustomMouseUp?.Invoke(ref location, button, ref handled);
             if (handled)
             {
                 // Clear flags

@@ -372,12 +372,12 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
-            if (buttons == MouseButton.Right)
+            if (button == MouseButton.Right)
             {
                 _contextMenu.Show(this, location);
                 return true;

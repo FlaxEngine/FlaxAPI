@@ -203,21 +203,21 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             if (!_canvas.ReceivesEvents)
                 return false;
 
-            return base.OnMouseDoubleClick(location, buttons);
+            return base.OnMouseDoubleClick(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             if (!_canvas.ReceivesEvents)
                 return false;
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
@@ -252,12 +252,12 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             if (!_canvas.ReceivesEvents)
                 return false;
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

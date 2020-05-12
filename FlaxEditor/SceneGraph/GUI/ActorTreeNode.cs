@@ -231,7 +231,7 @@ namespace FlaxEditor.SceneGraph.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             var actor = Actor;
             if (actor && TestHeaderHit(ref location))
@@ -240,7 +240,7 @@ namespace FlaxEditor.SceneGraph.GUI
                 return true;
             }
 
-            return base.OnMouseDoubleClick(location, buttons);
+            return base.OnMouseDoubleClick(location, button);
         }
 
         /// <inheritdoc />

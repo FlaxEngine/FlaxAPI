@@ -210,9 +210,9 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseDown(location, buttons))
+                if (base.OnMouseDown(location, button))
                 {
                     // Clear flags
                     _isMovingSelection = false;
@@ -224,12 +224,12 @@ namespace FlaxEditor.GUI
                 // Cache data
                 _isMovingSelection = false;
                 _mousePos = location;
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     _leftMouseDown = true;
                     _leftMouseDownPos = location;
                 }
-                if (buttons == MouseButton.Right)
+                if (button == MouseButton.Right)
                 {
                     _rightMouseDown = true;
                     _rightMouseDownPos = location;
@@ -288,11 +288,11 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
                 _mousePos = location;
 
-                if (_leftMouseDown && buttons == MouseButton.Left)
+                if (_leftMouseDown && button == MouseButton.Left)
                 {
                     _leftMouseDown = false;
                     EndMouseCapture();
@@ -312,7 +312,7 @@ namespace FlaxEditor.GUI
 
                     _isMovingSelection = false;
                 }
-                if (_rightMouseDown && buttons == MouseButton.Right)
+                if (_rightMouseDown && button == MouseButton.Right)
                 {
                     _rightMouseDown = false;
                     EndMouseCapture();
@@ -359,7 +359,7 @@ namespace FlaxEditor.GUI
                     _mouseMoveAmount = 0;
                 }
 
-                if (base.OnMouseUp(location, buttons))
+                if (base.OnMouseUp(location, button))
                 {
                     // Clear flags
                     _rightMouseDown = false;
@@ -452,12 +452,12 @@ namespace FlaxEditor.GUI
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseDoubleClick(location, buttons))
+                if (base.OnMouseDoubleClick(location, button))
                     return true;
 
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     Editor.EditKeyframes(this, location, new List<int> { Index });
                     return true;

@@ -36,10 +36,10 @@ namespace FlaxEngine.GUI
             public ContainerControl ItemsContainer;
 
             /// <inheritdoc />
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
                 isMouseDown = true;
-                var result = base.OnMouseDown(location, buttons);
+                var result = base.OnMouseDown(location, button);
                 isMouseDown = false;
 
                 if (!result)
@@ -464,20 +464,20 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             // Check mouse buttons
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Set flag
                 _mouseDown = true;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Check flags
             if (_mouseDown)

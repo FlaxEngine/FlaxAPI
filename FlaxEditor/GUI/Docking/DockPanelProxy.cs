@@ -291,42 +291,42 @@ namespace FlaxEditor.GUI.Docking
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             MouseDownWindow = GetTabAtPos(location, out IsMouseDownOverCross);
 
             // Check buttons
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Cache data
                 IsMouseLeftButtonDown = true;
                 if (!IsMouseDownOverCross && MouseDownWindow != null)
                     _panel.SelectTab(MouseDownWindow);
             }
-            else if (buttons == MouseButton.Right)
+            else if (button == MouseButton.Right)
             {
                 // Cache data
                 IsMouseRightButtonDown = true;
                 if (MouseDownWindow != null)
                     _panel.SelectTab(MouseDownWindow);
             }
-            else if (buttons == MouseButton.Middle)
+            else if (button == MouseButton.Middle)
             {
                 // Cache data
                 IsMouseMiddleButtonDown = true;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Check tabs under mouse position at the beginning and at the end
             var tab = GetTabAtPos(location, out var overCross);
 
             // Check buttons
-            if (buttons == MouseButton.Left && IsMouseLeftButtonDown)
+            if (button == MouseButton.Left && IsMouseLeftButtonDown)
             {
                 // Clear flag
                 IsMouseLeftButtonDown = false;
@@ -336,7 +336,7 @@ namespace FlaxEditor.GUI.Docking
                     tab.Close(ClosingReason.User);
                 MouseDownWindow = null;
             }
-            else if (buttons == MouseButton.Right && IsMouseRightButtonDown)
+            else if (button == MouseButton.Right && IsMouseRightButtonDown)
             {
                 // Clear flag
                 IsMouseRightButtonDown = false;
@@ -346,7 +346,7 @@ namespace FlaxEditor.GUI.Docking
                     ShowContextMenu(tab, ref location);
                 }
             }
-            else if (buttons == MouseButton.Middle && IsMouseMiddleButtonDown)
+            else if (button == MouseButton.Middle && IsMouseMiddleButtonDown)
             {
                 // Clear flag
                 IsMouseMiddleButtonDown = false;
@@ -357,7 +357,7 @@ namespace FlaxEditor.GUI.Docking
                 }
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

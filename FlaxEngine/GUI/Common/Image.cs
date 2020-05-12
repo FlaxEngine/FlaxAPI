@@ -121,14 +121,14 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
             if (Clicked != null)
             {
-                Clicked.Invoke(this, buttons);
+                Clicked.Invoke(this, button);
                 return true;
             }
 

@@ -63,9 +63,9 @@ namespace FlaxEditor.GUI.Timeline.GUI
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     Gradient.Select(this);
                     _isMoving = true;
@@ -74,19 +74,19 @@ namespace FlaxEditor.GUI.Timeline.GUI
                     return true;
                 }
 
-                return base.OnMouseDown(location, buttons);
+                return base.OnMouseDown(location, button);
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
-                if (buttons == MouseButton.Left && _isMoving)
+                if (button == MouseButton.Left && _isMoving)
                 {
                     _isMoving = false;
                     EndMouseCapture();
                 }
 
-                return base.OnMouseUp(location, buttons);
+                return base.OnMouseUp(location, button);
             }
 
             /// <inheritdoc />
@@ -118,12 +118,12 @@ namespace FlaxEditor.GUI.Timeline.GUI
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseDoubleClick(location, buttons))
+                if (base.OnMouseDoubleClick(location, button))
                     return true;
 
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     // Show color picker dialog
                     _currentDialog = ColorValueBox.ShowPickColorDialog?.Invoke(this, Gradient._data[Index].Value, OnColorChanged);
@@ -398,12 +398,12 @@ namespace FlaxEditor.GUI.Timeline.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseDoubleClick(location, buttons))
+            if (base.OnMouseDoubleClick(location, button))
                 return true;
 
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Add stop
                 var frame = (int)(location.X / _scale);

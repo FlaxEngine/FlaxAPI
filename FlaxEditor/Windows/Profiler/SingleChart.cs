@@ -149,9 +149,9 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && location.Y < (Height - TitleHeight))
+            if (button == MouseButton.Left && location.Y < (Height - TitleHeight))
             {
                 _isSelecting = true;
                 OnClick(ref location);
@@ -159,7 +159,7 @@ namespace FlaxEditor.Windows.Profiler
                 return true;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
@@ -174,16 +174,16 @@ namespace FlaxEditor.Windows.Profiler
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && _isSelecting)
+            if (button == MouseButton.Left && _isSelecting)
             {
                 _isSelecting = false;
                 EndMouseCapture();
                 return true;
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

@@ -141,9 +141,9 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 if (_columns != null && _splits != null)
                 {
@@ -167,7 +167,7 @@ namespace FlaxEditor.GUI
                 }
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
@@ -199,15 +199,15 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && _movingSplit != -1)
+            if (button == MouseButton.Left && _movingSplit != -1)
             {
                 _movingSplit = -1;
                 EndMouseCapture();
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

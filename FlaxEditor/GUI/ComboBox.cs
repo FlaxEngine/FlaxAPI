@@ -474,20 +474,20 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             // Check mouse buttons
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 // Set flag
                 _mouseDown = true;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Check flags
             if (_mouseDown && !_blockPopup)
@@ -509,9 +509,9 @@ namespace FlaxEditor.GUI
                         if (!_blockPopup)
                             Focus();
                     };
-                    _popupMenu.ButtonClicked += button =>
+                    _popupMenu.ButtonClicked += btn =>
                     {
-                        OnItemClicked((int)button.Tag);
+                        OnItemClicked((int)btn.Tag);
                         _popupMenu?.Hide();
                     };
                 }
@@ -538,17 +538,17 @@ namespace FlaxEditor.GUI
                     var style = Style.Current;
                     for (int i = 0; i < _items.Count; i++)
                     {
-                        var button = _popupMenu.AddButton(_items[i]);
+                        var btn = _popupMenu.AddButton(_items[i]);
                         if (_selectedIndices.Contains(i))
                         {
-                            button.Icon = style.CheckBoxTick;
+                            btn.Icon = style.CheckBoxTick;
                         }
                         if (_tooltips != null && _tooltips.Length > i)
                         {
-                            button.TooltipText = _tooltips[i];
+                            btn.TooltipText = _tooltips[i];
                         }
 
-                        button.Tag = i;
+                        btn.Tag = i;
                     }
 
                     // Show dropdown list

@@ -160,7 +160,7 @@ namespace FlaxEditor.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             if (Value == null)
             {
@@ -170,7 +170,7 @@ namespace FlaxEditor.GUI
             var editorWindow = new StyleEditorWindow(Editor.Instance, this.Value, OnValueChanged, true);
             editorWindow.Show();
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
     }
 }

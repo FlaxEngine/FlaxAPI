@@ -137,11 +137,11 @@ namespace FlaxEditor.Windows
                 public Action DoubleClick;
 
                 /// <inheritdoc />
-                public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+                public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
                 {
                     DoubleClick?.Invoke();
 
-                    return base.OnMouseDoubleClick(location, buttons);
+                    return base.OnMouseDoubleClick(location, button);
                 }
             }
         }

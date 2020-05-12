@@ -801,10 +801,10 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Check if it's a right mouse button
-            if (buttons == MouseButton.Right)
+            if (button == MouseButton.Right)
             {
                 // Find control that is under the mouse
                 var c = GetChildAtRecursive(location);
@@ -828,7 +828,7 @@ namespace FlaxEditor.Windows
                 return true;
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

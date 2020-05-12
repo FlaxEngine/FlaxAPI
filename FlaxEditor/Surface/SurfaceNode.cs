@@ -804,13 +804,13 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
             // Close
-            if (buttons == MouseButton.Left && (Archetype.Flags & NodeFlags.NoCloseButton) == 0)
+            if (button == MouseButton.Left && (Archetype.Flags & NodeFlags.NoCloseButton) == 0)
             {
                 if (_closeButtonRect.Contains(ref location))
                 {
@@ -819,7 +819,7 @@ namespace FlaxEditor.Surface
                 }
             }
             // Secondary Context Menu
-            if (buttons == MouseButton.Right)
+            if (button == MouseButton.Right)
             {
                 if (!IsSelected)
                     Surface.Select(this);

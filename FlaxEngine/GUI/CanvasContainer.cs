@@ -205,10 +205,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             // 2D GUI first
-            if (base.OnMouseDown(location, buttons))
+            if (base.OnMouseDown(location, button))
                 return true;
 
             // Calculate 3D mouse ray
@@ -223,7 +223,7 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, ref ray, out childLocation))
                     {
-                        child.OnMouseDown(childLocation, buttons);
+                        child.OnMouseDown(childLocation, button);
                         return true;
                     }
                 }
@@ -233,10 +233,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // 2D GUI first
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
             // Calculate 3D mouse ray
@@ -251,7 +251,7 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, ref ray, out childLocation))
                     {
-                        child.OnMouseUp(childLocation, buttons);
+                        child.OnMouseUp(childLocation, button);
                         return true;
                     }
                 }
@@ -261,10 +261,10 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             // 2D GUI first
-            if (base.OnMouseDoubleClick(location, buttons))
+            if (base.OnMouseDoubleClick(location, button))
                 return true;
 
             // Calculate 3D mouse ray
@@ -279,7 +279,7 @@ namespace FlaxEngine.GUI
                     Vector2 childLocation;
                     if (IntersectsChildContent(child, ref ray, out childLocation))
                     {
-                        child.OnMouseDoubleClick(childLocation, buttons);
+                        child.OnMouseDoubleClick(childLocation, button);
                         return true;
                     }
                 }

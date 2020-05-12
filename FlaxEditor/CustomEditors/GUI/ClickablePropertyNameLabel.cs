@@ -44,10 +44,10 @@ namespace FlaxEditor.CustomEditors.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Fire events
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 if (MouseLeftClick != null)
                 {
@@ -55,7 +55,7 @@ namespace FlaxEditor.CustomEditors.GUI
                     return true;
                 }
             }
-            else if (buttons == MouseButton.Right)
+            else if (button == MouseButton.Right)
             {
                 if (MouseRightClick != null)
                 {
@@ -64,14 +64,14 @@ namespace FlaxEditor.CustomEditors.GUI
                 }
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             // Fire events
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 if (MouseLeftDoubleClick != null)
                 {
@@ -79,7 +79,7 @@ namespace FlaxEditor.CustomEditors.GUI
                     return true;
                 }
             }
-            else if (buttons == MouseButton.Right)
+            else if (button == MouseButton.Right)
             {
                 if (MouseRightDoubleClick != null)
                 {
@@ -88,7 +88,7 @@ namespace FlaxEditor.CustomEditors.GUI
                 }
             }
 
-            return base.OnMouseDoubleClick(location, buttons);
+            return base.OnMouseDoubleClick(location, button);
         }
 
         /// <inheritdoc />

@@ -671,7 +671,7 @@ namespace FlaxEngine.GUI
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
         [NoAnimate]
-        public virtual bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public virtual bool OnMouseDown(Vector2 location, MouseButton button)
         {
             return _autoFocus && Focus(this);
         }
@@ -683,7 +683,7 @@ namespace FlaxEngine.GUI
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
         [NoAnimate]
-        public virtual bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public virtual bool OnMouseUp(Vector2 location, MouseButton button)
         {
             return false;
         }
@@ -695,7 +695,7 @@ namespace FlaxEngine.GUI
         /// <param name="buttons">Mouse buttons state (flags)</param>
         /// <returns>True if event has been handled, otherwise false</returns>
         [NoAnimate]
-        public virtual bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public virtual bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             return false;
         }

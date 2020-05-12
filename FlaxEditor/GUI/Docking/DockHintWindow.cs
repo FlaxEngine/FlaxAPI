@@ -312,9 +312,9 @@ namespace FlaxEditor.GUI.Docking
             Proxy.Window.ClientBounds = _rectWindow;
         }
 
-        private void OnMouseUp(ref Vector2 location, MouseButton buttons, ref bool handled)
+        private void OnMouseUp(ref Vector2 location, MouseButton button, ref bool handled)
         {
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 Dispose();
             }

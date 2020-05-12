@@ -114,20 +114,20 @@ namespace FlaxEditor.Windows
                 base.OnKeyUp(key);
             }
 
-            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
             {
                 if (!EnableEvents)
                     return false;
 
-                return base.OnMouseDoubleClick(location, buttons);
+                return base.OnMouseDoubleClick(location, button);
             }
 
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
                 if (!EnableEvents)
                     return false;
 
-                return base.OnMouseDown(location, buttons);
+                return base.OnMouseDown(location, button);
             }
 
             public override void OnMouseEnter(Vector2 location)
@@ -154,12 +154,12 @@ namespace FlaxEditor.Windows
                 base.OnMouseMove(location);
             }
 
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
                 if (!EnableEvents)
                     return false;
 
-                return base.OnMouseUp(location, buttons);
+                return base.OnMouseUp(location, button);
             }
 
             public override bool OnMouseWheel(Vector2 location, float delta)
@@ -398,9 +398,9 @@ namespace FlaxEditor.Windows
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            var result = base.OnMouseDown(location, buttons);
+            var result = base.OnMouseDown(location, button);
 
             // Catch user focus
             if (!ContainsFocus)

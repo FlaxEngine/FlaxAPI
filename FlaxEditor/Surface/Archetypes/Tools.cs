@@ -107,9 +107,9 @@ namespace FlaxEditor.Surface.Archetypes
                 }
 
                 /// <inheritdoc />
-                public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+                public override bool OnMouseDown(Vector2 location, MouseButton button)
                 {
-                    if (buttons == MouseButton.Left)
+                    if (button == MouseButton.Left)
                     {
                         Node.Select(this);
                         _isMoving = true;
@@ -118,19 +118,19 @@ namespace FlaxEditor.Surface.Archetypes
                         return true;
                     }
 
-                    return base.OnMouseDown(location, buttons);
+                    return base.OnMouseDown(location, button);
                 }
 
                 /// <inheritdoc />
-                public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+                public override bool OnMouseUp(Vector2 location, MouseButton button)
                 {
-                    if (buttons == MouseButton.Left && _isMoving)
+                    if (button == MouseButton.Left && _isMoving)
                     {
                         _isMoving = false;
                         EndMouseCapture();
                     }
 
-                    return base.OnMouseUp(location, buttons);
+                    return base.OnMouseUp(location, button);
                 }
 
                 /// <inheritdoc />

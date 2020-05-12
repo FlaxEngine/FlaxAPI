@@ -159,7 +159,7 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             // Select the word under the mouse
             int textLength = TextLength;
@@ -173,7 +173,7 @@ namespace FlaxEngine.GUI
                 SetSelection(left, right);
             }
 
-            return base.OnMouseDoubleClick(location, buttons);
+            return base.OnMouseDoubleClick(location, button);
         }
 
         /// <inheritdoc />

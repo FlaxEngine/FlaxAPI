@@ -27,9 +27,9 @@ namespace FlaxEngine
         /// Perform mouse buttons action.
         /// </summary>
         /// <param name="mouse">The mouse position.</param>
-        /// <param name="buttons">The mouse buttons state.</param>
+        /// <param name="button">The mouse buttons state.</param>
         /// <param name="handled">The flag that indicated that event has been handled by the custom code and should not be passed further. By default it is set to false.</param>
-        public delegate void MouseButtonDelegate(ref Vector2 mouse, MouseButton buttons, ref bool handled);
+        public delegate void MouseButtonDelegate(ref Vector2 mouse, MouseButton button, ref bool handled);
 
         /// <summary>
         /// Perform mouse move action.
@@ -198,40 +198,40 @@ namespace FlaxEngine
             GUI.OnKeyUp(key);
         }
 
-        internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButton buttons)
+        internal void Internal_OnMouseDown(ref Vector2 mousePos, MouseButton button)
         {
             Vector2 pos = mousePos / _dpiScale;
 
             bool handled = false;
-            MouseDown?.Invoke(ref pos, buttons, ref handled);
+            MouseDown?.Invoke(ref pos, button, ref handled);
             if (handled)
                 return;
 
-            GUI.OnMouseDown(pos, buttons);
+            GUI.OnMouseDown(pos, button);
         }
 
-        internal void Internal_OnMouseUp(ref Vector2 mousePos, MouseButton buttons)
+        internal void Internal_OnMouseUp(ref Vector2 mousePos, MouseButton button)
         {
             Vector2 pos = mousePos / _dpiScale;
 
             bool handled = false;
-            MouseUp?.Invoke(ref pos, buttons, ref handled);
+            MouseUp?.Invoke(ref pos, button, ref handled);
             if (handled)
                 return;
 
-            GUI.OnMouseUp(pos, buttons);
+            GUI.OnMouseUp(pos, button);
         }
 
-        internal void Internal_OnMouseDoubleClick(ref Vector2 mousePos, MouseButton buttons)
+        internal void Internal_OnMouseDoubleClick(ref Vector2 mousePos, MouseButton button)
         {
             Vector2 pos = mousePos / _dpiScale;
 
             bool handled = false;
-            MouseDoubleClick?.Invoke(ref pos, buttons, ref handled);
+            MouseDoubleClick?.Invoke(ref pos, button, ref handled);
             if (handled)
                 return;
 
-            GUI.OnMouseDoubleClick(pos, buttons);
+            GUI.OnMouseDoubleClick(pos, button);
         }
 
         internal void Internal_OnMouseWheel(ref Vector2 mousePos, float delta)

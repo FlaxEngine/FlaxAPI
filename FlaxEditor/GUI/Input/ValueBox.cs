@@ -215,10 +215,10 @@ namespace FlaxEditor.GUI.Input
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             // Check if can start sliding
-            if (buttons == MouseButton.Left && CanUseSliding && SlideRect.Contains(location))
+            if (button == MouseButton.Left && CanUseSliding && SlideRect.Contains(location))
             {
                 // Start sliding
                 _isSliding = true;
@@ -230,7 +230,7 @@ namespace FlaxEditor.GUI.Input
                 return true;
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
@@ -251,16 +251,16 @@ namespace FlaxEditor.GUI.Input
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && _isSliding)
+            if (button == MouseButton.Left && _isSliding)
             {
                 // End sliding
                 EndSliding();
                 return true;
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

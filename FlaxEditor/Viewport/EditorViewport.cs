@@ -1062,11 +1062,11 @@ namespace FlaxEditor.Viewport
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             Focus();
 
-            base.OnMouseDown(location, buttons);
+            base.OnMouseDown(location, button);
             return true;
         }
 

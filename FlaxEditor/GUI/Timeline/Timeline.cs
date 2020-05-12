@@ -49,12 +49,12 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseDown(location, buttons))
+                if (base.OnMouseDown(location, button))
                     return true;
 
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     _isLeftMouseButtonDown = true;
                     _timeline._isMovingPositionHandle = true;
@@ -90,12 +90,12 @@ namespace FlaxEditor.GUI.Timeline
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseUp(location, buttons))
+                if (base.OnMouseUp(location, button))
                     return true;
 
-                if (buttons == MouseButton.Left && _isLeftMouseButtonDown)
+                if (button == MouseButton.Left && _isLeftMouseButtonDown)
                 {
                     Seek(ref location);
                     EndMouseCapture();
@@ -1736,12 +1736,12 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseDown(location, buttons))
+            if (base.OnMouseDown(location, button))
                 return true;
 
-            if (buttons == MouseButton.Right)
+            if (button == MouseButton.Right)
             {
                 _isRightMouseButtonDown = true;
                 _rightMouseButtonDownPos = location;
@@ -1760,9 +1760,9 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Right && _isRightMouseButtonDown)
+            if (button == MouseButton.Right && _isRightMouseButtonDown)
             {
                 _isRightMouseButtonDown = false;
 
@@ -1799,7 +1799,7 @@ namespace FlaxEditor.GUI.Timeline
                 }
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

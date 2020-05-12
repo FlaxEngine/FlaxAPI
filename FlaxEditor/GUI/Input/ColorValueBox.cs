@@ -126,7 +126,7 @@ namespace FlaxEditor.GUI.Input
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Show color picker dialog
             _currentDialog = ShowPickColorDialog?.Invoke(this, _value, OnColorChanged, OnPickerClosed);

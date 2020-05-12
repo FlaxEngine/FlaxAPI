@@ -208,9 +208,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseDoubleClick(location, buttons))
+                if (base.OnMouseDoubleClick(location, button))
                     return true;
 
                 if (_headerRect.Contains(ref location))
@@ -371,9 +371,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
-                if (buttons == MouseButton.Left && !_dragAreaRect.Contains(ref location))
+                if (button == MouseButton.Left && !_dragAreaRect.Contains(ref location))
                 {
                     _isMouseDown = true;
                     Cursor = CursorType.Hand;
@@ -381,23 +381,23 @@ namespace FlaxEditor.Surface.Archetypes
                     return true;
                 }
 
-                if (base.OnMouseDown(location, buttons))
+                if (base.OnMouseDown(location, button))
                     return true;
 
                 return false;
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     _isMouseDown = false;
                     Cursor = CursorType.Default;
                     Surface.ConnectingEnd(this);
                 }
 
-                if (base.OnMouseUp(location, buttons))
+                if (base.OnMouseUp(location, button))
                     return true;
 
                 return false;
@@ -780,9 +780,9 @@ namespace FlaxEditor.Surface.Archetypes
                 }
             }
 
-            private void OnTransitionClicked(StateMachineTransition transition, ref Vector2 mouse, ref Vector2 mousePosition, MouseButton buttons)
+            private void OnTransitionClicked(StateMachineTransition transition, ref Vector2 mouse, ref Vector2 mousePosition, MouseButton button)
             {
-                switch (buttons)
+                switch (button)
                 {
                 case MouseButton.Left:
                     transition.Edit();
@@ -1166,9 +1166,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseDoubleClick(location, buttons))
+                if (base.OnMouseDoubleClick(location, button))
                     return true;
 
                 if (_renameButtonRect.Contains(ref location) || _closeButtonRect.Contains(ref location))
@@ -1179,9 +1179,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
-                if (buttons == MouseButton.Left && !_dragAreaRect.Contains(ref location))
+                if (button == MouseButton.Left && !_dragAreaRect.Contains(ref location))
                 {
                     _isMouseDown = true;
                     Cursor = CursorType.Hand;
@@ -1189,23 +1189,23 @@ namespace FlaxEditor.Surface.Archetypes
                     return true;
                 }
 
-                if (base.OnMouseDown(location, buttons))
+                if (base.OnMouseDown(location, button))
                     return true;
 
                 return false;
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     _isMouseDown = false;
                     Cursor = CursorType.Default;
                     Surface.ConnectingEnd(this);
                 }
 
-                if (base.OnMouseUp(location, buttons))
+                if (base.OnMouseUp(location, button))
                     return true;
 
                 // Rename

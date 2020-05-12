@@ -404,12 +404,12 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseDown(location, buttons))
+            if (base.OnMouseDown(location, button))
                 return true;
 
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 _isMouseDown = true;
                 Focus();
@@ -418,6 +418,7 @@ namespace FlaxEditor.Surface.Elements
             return false;
         }
 
+        /// <inheritdoc />
         public override void OnMouseLeave()
         {
             if (_isMouseDown)
@@ -436,12 +437,12 @@ namespace FlaxEditor.Surface.Elements
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 _isMouseDown = false;
                 if (Surface.IsConnecting)

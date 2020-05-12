@@ -170,9 +170,9 @@ namespace FlaxEditor.GUI.Dialogs
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && _wheelRect.Contains(location))
+            if (button == MouseButton.Left && _wheelRect.Contains(location))
             {
                 _isMouseDownWheel = true;
                 StartMouseCapture();
@@ -184,16 +184,16 @@ namespace FlaxEditor.GUI.Dialogs
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && _isMouseDownWheel)
+            if (button == MouseButton.Left && _isMouseDownWheel)
             {
                 _isMouseDownWheel = false;
                 EndMouseCapture();
                 return true;
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />
@@ -301,28 +301,28 @@ namespace FlaxEditor.GUI.Dialogs
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && _slider1Rect.Contains(location))
+            if (button == MouseButton.Left && _slider1Rect.Contains(location))
             {
                 _isMouseDownSlider1 = true;
                 StartMouseCapture();
                 UpdateMouse(ref location);
             }
-            if (buttons == MouseButton.Left && _slider2Rect.Contains(location))
+            if (button == MouseButton.Left && _slider2Rect.Contains(location))
             {
                 _isMouseDownSlider2 = true;
                 StartMouseCapture();
                 UpdateMouse(ref location);
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && (_isMouseDownSlider1 || _isMouseDownSlider2))
+            if (button == MouseButton.Left && (_isMouseDownSlider1 || _isMouseDownSlider2))
             {
                 _isMouseDownSlider1 = false;
                 _isMouseDownSlider2 = false;
@@ -330,7 +330,7 @@ namespace FlaxEditor.GUI.Dialogs
                 return true;
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />

@@ -353,16 +353,16 @@ namespace FlaxEditor.GUI.ContextMenu
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            base.OnMouseDown(location, buttons);
+            base.OnMouseDown(location, button);
             return true;
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            base.OnMouseUp(location, buttons);
+            base.OnMouseUp(location, button);
             return true;
         }
 

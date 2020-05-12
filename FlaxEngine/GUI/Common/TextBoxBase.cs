@@ -909,9 +909,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && _text.Length > 0)
+            if (button == MouseButton.Left && _text.Length > 0)
             {
                 Focus();
                 OnSelectingBegin();
@@ -935,7 +935,7 @@ namespace FlaxEngine.GUI
                 return true;
             }
 
-            if (buttons == MouseButton.Left && !IsFocused)
+            if (button == MouseButton.Left && !IsFocused)
             {
                 Focus();
                 return true;
@@ -945,9 +945,9 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left)
+            if (button == MouseButton.Left)
             {
                 OnSelectingEnd();
                 return true;

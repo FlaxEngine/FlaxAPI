@@ -205,7 +205,7 @@ namespace FlaxEditor.Windows
                 Clipboard.Text = Info.Replace("\n", Environment.NewLine);
             }
 
-            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
             {
                 // Show the location
                 Editor.Instance.CodeEditing.OpenFile(Desc.LocationFile, Desc.LocationLine);
@@ -214,12 +214,12 @@ namespace FlaxEditor.Windows
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDown(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseDown(location, buttons))
+                if (base.OnMouseDown(location, button))
                     return true;
 
-                if (buttons == MouseButton.Right)
+                if (button == MouseButton.Right)
                 {
                     Focus();
 
@@ -231,12 +231,12 @@ namespace FlaxEditor.Windows
             }
 
             /// <inheritdoc />
-            public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+            public override bool OnMouseUp(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseUp(location, buttons))
+                if (base.OnMouseUp(location, button))
                     return true;
 
-                if (_isRightMouseDown && buttons == MouseButton.Right)
+                if (_isRightMouseDown && button == MouseButton.Right)
                 {
                     Focus();
 

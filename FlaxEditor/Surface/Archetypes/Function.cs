@@ -287,9 +287,9 @@ namespace FlaxEditor.Surface.Archetypes
             }
 
             /// <inheritdoc />
-            public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
             {
-                if (base.OnMouseDoubleClick(location, buttons))
+                if (base.OnMouseDoubleClick(location, button))
                     return true;
 
                 if (_nameField.Bounds.Contains(ref location))

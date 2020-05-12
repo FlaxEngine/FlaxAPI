@@ -284,36 +284,36 @@ namespace FlaxEngine.GUI
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             if (_trackingControl != null)
             {
-                return _trackingControl.OnMouseDown(_trackingControl.PointFromWindow(location), buttons);
+                return _trackingControl.OnMouseDown(_trackingControl.PointFromWindow(location), button);
             }
 
-            return base.OnMouseDown(location, buttons);
+            return base.OnMouseDown(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             if (_trackingControl != null)
             {
-                return _trackingControl.OnMouseUp(_trackingControl.PointFromWindow(location), buttons);
+                return _trackingControl.OnMouseUp(_trackingControl.PointFromWindow(location), button);
             }
 
-            return base.OnMouseUp(location, buttons);
+            return base.OnMouseUp(location, button);
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
             if (_trackingControl != null)
             {
-                return _trackingControl.OnMouseDoubleClick(_trackingControl.PointFromWindow(location), buttons);
+                return _trackingControl.OnMouseDoubleClick(_trackingControl.PointFromWindow(location), button);
             }
 
-            return base.OnMouseDoubleClick(location, buttons);
+            return base.OnMouseDoubleClick(location, button);
         }
 
         /// <inheritdoc />

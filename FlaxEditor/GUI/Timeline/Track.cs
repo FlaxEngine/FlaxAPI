@@ -914,17 +914,17 @@ namespace FlaxEditor.GUI.Timeline
 
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
             // Base
-            if (base.OnMouseDown(location, buttons))
+            if (base.OnMouseDown(location, button))
                 return true;
 
             // Check if mouse hits bar and track isn't a root
             if (IsMouseOver)
             {
                 // Check if left button goes down
-                if (buttons == MouseButton.Left)
+                if (button == MouseButton.Left)
                 {
                     _isMouseDown = true;
                     _mouseDownPos = location;
@@ -949,14 +949,14 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
             // Base
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
             // Check if mouse hits bar
-            if (buttons == MouseButton.Right)
+            if (button == MouseButton.Right)
             {
                 // Show context menu
                 var menu = new ContextMenu.ContextMenu();
@@ -972,7 +972,7 @@ namespace FlaxEditor.GUI.Timeline
                 OnContextMenu(menu);
                 menu.Show(this, location);
             }
-            else if (buttons == MouseButton.Left)
+            else if (button == MouseButton.Left)
             {
                 // Clear flag
                 _isMouseDown = false;
@@ -1171,9 +1171,9 @@ namespace FlaxEditor.GUI.Timeline
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseDoubleClick(location, buttons))
+            if (base.OnMouseDoubleClick(location, button))
                 return true;
 
             if (CanRename && TestHeaderHit(ref location))

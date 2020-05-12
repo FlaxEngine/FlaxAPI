@@ -1,11 +1,14 @@
 // Copyright (c) 2012-2020 Wojciech Figat. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 
 namespace FlaxEngine
 {
     partial class Actor : ITransformable, ISceneObject
     {
+        public Dictionary<string, string> Data1 = new Dictionary<string, string>();
+
         /// <summary>
         /// The rotation as Euler angles in degrees.
         /// </summary>

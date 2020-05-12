@@ -201,13 +201,13 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDown(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDown(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseDown(location, buttons))
+            if (base.OnMouseDown(location, button))
                 return true;
 
             // Check if can start resizing
-            if (buttons == MouseButton.Left && _resizeButtonRect.Contains(ref location))
+            if (button == MouseButton.Left && _resizeButtonRect.Contains(ref location))
             {
                 // Start sliding
                 _isResizing = true;
@@ -237,9 +237,9 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseDoubleClick(Vector2 location, MouseButton buttons)
+        public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
         {
-            if (base.OnMouseDoubleClick(location, buttons))
+            if (base.OnMouseDoubleClick(location, button))
                 return true;
 
             // Rename
@@ -266,15 +266,15 @@ namespace FlaxEditor.Surface
         }
 
         /// <inheritdoc />
-        public override bool OnMouseUp(Vector2 location, MouseButton buttons)
+        public override bool OnMouseUp(Vector2 location, MouseButton button)
         {
-            if (buttons == MouseButton.Left && _isResizing)
+            if (button == MouseButton.Left && _isResizing)
             {
                 EndResizing();
                 return true;
             }
 
-            if (base.OnMouseUp(location, buttons))
+            if (base.OnMouseUp(location, button))
                 return true;
 
             // Close
