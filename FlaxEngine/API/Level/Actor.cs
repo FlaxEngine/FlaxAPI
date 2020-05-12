@@ -7,8 +7,6 @@ namespace FlaxEngine
 {
     partial class Actor : ITransformable, ISceneObject
     {
-        public Dictionary<string, string> Data1 = new Dictionary<string, string>();
-
         /// <summary>
         /// The rotation as Euler angles in degrees.
         /// </summary>

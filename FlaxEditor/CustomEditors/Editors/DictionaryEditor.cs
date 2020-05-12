@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using FlaxEditor.CustomEditors.Elements;
 using FlaxEditor.CustomEditors.GUI;
+using FlaxEditor.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
+using FlaxEngine.Json;
 using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.CustomEditors.Editors
@@ -46,11 +48,80 @@ namespace FlaxEditor.CustomEditors.Editors
                 menu.AddSeparator();
 
                 menu.AddButton("Remove", OnRemoveClicked).Enabled = !_editor._readOnly;
+                menu.AddButton("Edit", OnEditClicked).Enabled = _editor._canEditKeys;
             }
 
             private void OnRemoveClicked(ContextMenuButton button)
             {
                 _editor.Remove(_key);
+            }
+
+            private void OnEditClicked(ContextMenuButton button)
+            {
+                var keyType = _editor.Values.Type.GetGenericArguments()[0];
+                if (keyType == typeof(string) || keyType.IsPrimitive)
+                {
+                    var popup = RenamePopup.Show(Parent, Bounds, Text, false);
+                    popup.Validate += (renamePopup, value) =>
+                    {
+                        object newKey;
+                        if (keyType.IsPrimitive)
+                            newKey = JsonSerializer.Deserialize(value, keyType);
+                        else
+                            newKey = value;
+                        return !((IDictionary)_editor.Values[0]).Contains(newKey);
+                    };
+                    popup.Renamed += renamePopup =>
+                    {
+                        object newKey;
+                        if (keyType.IsPrimitive)
+                            newKey = JsonSerializer.Deserialize(renamePopup.Text, keyType);
+                        else
+                            newKey = renamePopup.Text;
+
+                        _editor.ChangeKey(_key, newKey);
+                        _key = newKey;
+                        Text = _key.ToString();
+                    };
+                }
+                else if (keyType.IsEnum)
+                {
+                    var popup = RenamePopup.Show(Parent, Bounds, Text, false);
+                    var picker = new EnumComboBox(keyType)
+                    {
+                        AnchorPreset = AnchorPresets.StretchAll,
+                        Offsets = Margin.Zero,
+                        Parent = popup,
+                        EnumTypeValue = _key,
+                    };
+                    picker.ValueChanged += () =>
+                    {
+                        popup.Hide();
+                        object newKey = picker.EnumTypeValue;
+                        if (!((IDictionary)_editor.Values[0]).Contains(newKey))
+                        {
+                            _editor.ChangeKey(_key, newKey);
+                            _key = newKey;
+                            Text = _key.ToString();
+                        }
+                    };
+                }
+                else
+                {
+                    throw new NotImplementedException("Missing editing for dictionary key type " + keyType);
+                }
+            }
+
+            /// <inheritdoc />
+            public override bool OnMouseDoubleClick(Vector2 location, MouseButton button)
+            {
+                if (button == MouseButton.Left)
+                {
+                    OnEditClicked(null);
+                    return true;
+                }
+
+                return base.OnMouseDoubleClick(location, button);
             }
 
             /// <inheritdoc />
@@ -224,6 +295,25 @@ namespace FlaxEditor.CustomEditors.Editors
         }
 
         /// <summary>
+        /// Changes the key of the item.
+        /// </summary>
+        /// <param name="oldKey">The old key value.</param>
+        /// <param name="newKey">The new key value.</param>
+        protected void ChangeKey(object oldKey, object newKey)
+        {
+            var dictionary = (IDictionary)Values[0];
+            var newValues = (IDictionary)Activator.CreateInstance(Values.Type);
+            foreach (var e in dictionary.Keys)
+            {
+                if (Equals(e, oldKey))
+                    newValues[newKey] = dictionary[e];
+                else
+                    newValues[e] = dictionary[e];
+            }
+            SetValue(newValues);
+        }
+
+        /// <summary>
         /// Resizes collection to the specified new size.
         /// </summary>
         /// <param name="newSize">The new size.</param>
@@ -280,7 +370,7 @@ namespace FlaxEditor.CustomEditors.Editors
 
                     newValues[Convert.ChangeType(uniqueKey, keyType)] = Utils.GetDefaultValue(valueType);
                 }
-                if (keyType.IsEnum)
+                else if (keyType.IsEnum)
                 {
                     var enumValues = Enum.GetValues(keyType);
                     int uniqueKeyIndex = 0;
@@ -290,7 +380,7 @@ namespace FlaxEditor.CustomEditors.Editors
                         isUnique = true;
                         foreach (var e in newValues.Keys)
                         {
-                            if (e.ToString() == enumValues.GetValue(uniqueKeyIndex).ToString())
+                            if (Equals(e, enumValues.GetValue(uniqueKeyIndex)))
                             {
                                 uniqueKeyIndex++;
                                 isUnique = false;
