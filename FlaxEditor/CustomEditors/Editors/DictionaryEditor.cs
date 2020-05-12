@@ -81,8 +81,8 @@ namespace FlaxEditor.CustomEditors.Editors
                 var keyType = argTypes[0];
                 var valueType = argTypes[1];
 
-                // Only primitives and string keys are supported
-                if (keyType == typeof(string) || keyType.IsPrimitive)
+                // Only primitives, enums and string keys are supported
+                if (keyType == typeof(string) || keyType.IsPrimitive || keyType.IsEnum)
                     return true;
 
                 // TODO: add ReadOnlyDictionaryEditor - then show keys/values of any type but without editing
@@ -288,6 +288,27 @@ namespace FlaxEditor.CustomEditors.Editors
                     } while (!isUnique);
 
                     newValues[Convert.ChangeType(uniqueKey, keyType)] = Utils.GetDefaultValue(valueType);
+                }
+                if (keyType.IsEnum)
+                {
+                    var enumValues = Enum.GetValues(keyType);
+                    int uniqueKeyIndex = 0;
+                    bool isUnique;
+                    do
+                    {
+                        isUnique = true;
+                        foreach (var e in newValues.Keys)
+                        {
+                            if (e.ToString() == enumValues.GetValue(uniqueKeyIndex).ToString())
+                            {
+                                uniqueKeyIndex++;
+                                isUnique = false;
+                                break;
+                            }
+                        }
+                    } while (!isUnique && uniqueKeyIndex < enumValues.Length);
+
+                    newValues[enumValues.GetValue(uniqueKeyIndex)] = Utils.GetDefaultValue(valueType);
                 }
                 else if (keyType == typeof(string))
                 {
