@@ -9,7 +9,6 @@ using FlaxEditor.CustomEditors.GUI;
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEngine;
 using FlaxEngine.GUI;
-using FlaxEngine.Utilities;
 using Utils = FlaxEditor.Utilities.Utils;
 
 namespace FlaxEditor.CustomEditors.Editors
@@ -25,15 +24,8 @@ namespace FlaxEditor.CustomEditors.Editors
         /// <seealso cref="FlaxEditor.CustomEditors.GUI.PropertyNameLabel" />
         private class DictionaryItemLabel : PropertyNameLabel
         {
-            /// <summary>
-            /// The editor.
-            /// </summary>
-            public DictionaryEditor Editor;
-
-            /// <summary>
-            /// The key of the item.
-            /// </summary>
-            public readonly object Key;
+            private DictionaryEditor _editor;
+            private object _key;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="DictionaryItemLabel"/> class.
@@ -43,8 +35,8 @@ namespace FlaxEditor.CustomEditors.Editors
             public DictionaryItemLabel(DictionaryEditor editor, object key)
             : base(key?.ToString() ?? "<null>")
             {
-                Editor = editor;
-                Key = key;
+                _editor = editor;
+                _key = key;
 
                 SetupContextMenu += OnSetupContextMenu;
             }
@@ -53,12 +45,21 @@ namespace FlaxEditor.CustomEditors.Editors
             {
                 menu.AddSeparator();
 
-                menu.AddButton("Remove", OnRemoveClicked).Enabled = !Editor._readOnly;
+                menu.AddButton("Remove", OnRemoveClicked).Enabled = !_editor._readOnly;
             }
 
             private void OnRemoveClicked(ContextMenuButton button)
             {
-                Editor.Remove(Key);
+                _editor.Remove(_key);
+            }
+
+            /// <inheritdoc />
+            public override void OnDestroy()
+            {
+                _editor = null;
+                _key = null;
+
+                base.OnDestroy();
             }
         }
 
@@ -66,6 +67,7 @@ namespace FlaxEditor.CustomEditors.Editors
         private int _elementsCount;
         private bool _readOnly;
         private bool _notNullItems;
+        private bool _canEditKeys;
 
         /// <summary>
         /// Determines whether this editor[can edit the specified dictionary type.
@@ -77,15 +79,7 @@ namespace FlaxEditor.CustomEditors.Editors
             // Ensure it's a generic dictionary type
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
-                var argTypes = type.GetGenericArguments();
-                var keyType = argTypes[0];
-                var valueType = argTypes[1];
-
-                // Only primitives, enums and string keys are supported
-                if (keyType == typeof(string) || keyType.IsPrimitive || keyType.IsEnum)
-                    return true;
-
-                // TODO: add ReadOnlyDictionaryEditor - then show keys/values of any type but without editing
+                return true;
             }
 
             return false;
@@ -108,6 +102,10 @@ namespace FlaxEditor.CustomEditors.Editors
 
             var type = Values.Type;
             var size = Count;
+            var argTypes = type.GetGenericArguments();
+            var keyType = argTypes[0];
+            var valueType = argTypes[1];
+            _canEditKeys = keyType == typeof(string) || keyType.IsPrimitive || keyType.IsEnum;
 
             // Try get CollectionAttribute for collection editor meta
             var attributes = Values.GetAttributes();
@@ -126,7 +124,7 @@ namespace FlaxEditor.CustomEditors.Editors
             }
 
             // Size
-            if (_readOnly)
+            if (_readOnly || !_canEditKeys)
             {
                 layout.Label("Size", size.ToString());
             }
@@ -142,18 +140,11 @@ namespace FlaxEditor.CustomEditors.Editors
             // Elements
             if (size > 0)
             {
-                var argTypes = type.GetGenericArguments();
-                var keyType = argTypes[0];
-                var valueType = argTypes[1];
                 var keysEnumerable = ((IDictionary)Values[0]).Keys.OfType<object>();
                 var keys = keysEnumerable as object[] ?? keysEnumerable.ToArray();
                 for (int i = 0; i < size; i++)
                 {
-                    // Key
-                    // TODO: allow edit keys
                     var key = keys.ElementAt(i);
-
-                    // Value
                     var overrideEditor = overrideEditorType != null ? (CustomEditor)Activator.CreateInstance(overrideEditorType) : null;
                     layout.Object(new DictionaryItemLabel(this, key), new DictionaryValueContainer(valueType, key, Values), overrideEditor);
                 }
@@ -161,7 +152,7 @@ namespace FlaxEditor.CustomEditors.Editors
             _elementsCount = size;
 
             // Add/Remove buttons
-            if (!_readOnly)
+            if (!_readOnly && _canEditKeys)
             {
                 var area = layout.Space(20);
                 var addButton = new Button(area.ContainerControl.Width - (16 + 16 + 2 + 2), 2, 16, 16)
