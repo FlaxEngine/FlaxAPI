@@ -444,11 +444,11 @@ namespace FlaxEditor.Surface
             /// <param name="width">The width of the element.</param>
             /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
             /// <returns>The archetype.</returns>
-            public static NodeElementArchetype SkeletonNodeSelect(float x, float y, int width, int valueIndex)
+            public static NodeElementArchetype SkeletonBoneIndexSelect(float x, float y, int width, int valueIndex)
             {
                 return new NodeElementArchetype
                 {
-                    Type = NodeElementType.SkeletonNodeSelect,
+                    Type = NodeElementType.SkeletonBoneIndexSelect,
                     Position = new Vector2(x, y),
                     Size = new Vector2(width, 0),
                     Text = null,

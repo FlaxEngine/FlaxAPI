@@ -68,9 +68,9 @@ namespace FlaxEditor.Surface
         TextBox = 14,
 
         /// <summary>
-        /// The skeleton node selection.
+        /// The skeleton bone index selection.
         /// </summary>
-        SkeletonNodeSelect = 15,
+        SkeletonBoneIndexSelect = 15,
 
         /// <summary>
         /// The bounding box value.

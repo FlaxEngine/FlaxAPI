@@ -178,8 +178,8 @@ namespace FlaxEditor.Surface
             case NodeElementType.TextBox:
                 element = new TextBoxView(this, arch);
                 break;
-            case NodeElementType.SkeletonNodeSelect:
-                element = new SkeletonNodeSelectElement(this, arch);
+            case NodeElementType.SkeletonBoneIndexSelect:
+                element = new SkeletonBoneIndexSelectElement(this, arch);
                 break;
             case NodeElementType.BoxValue:
                 element = new BoxValue(this, arch);

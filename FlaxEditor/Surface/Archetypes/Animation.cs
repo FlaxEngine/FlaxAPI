@@ -324,7 +324,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
                     NodeElementArchetype.Factory.Input(3, "Scale", true, ConnectionType.Vector3, 4),
-                    NodeElementArchetype.Factory.SkeletonNodeSelect(40, Surface.Constants.LayoutOffsetY * 4, 120, 0),
+                    NodeElementArchetype.Factory.SkeletonBoneIndexSelect(40, Surface.Constants.LayoutOffsetY * 4, 120, 0),
                     NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 5, 120, 1, typeof(BoneTransformMode)),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Bone:"),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Mode:"),
@@ -349,7 +349,7 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
                     NodeElementArchetype.Factory.Input(3, "Scale", true, ConnectionType.Vector3, 4),
-                    NodeElementArchetype.Factory.SkeletonNodeSelect(40, Surface.Constants.LayoutOffsetY * 4, 120, 0),
+                    NodeElementArchetype.Factory.SkeletonBoneIndexSelect(40, Surface.Constants.LayoutOffsetY * 4, 120, 0),
                     NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 5, 120, 1, typeof(BoneTransformMode)),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Bone:"),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Mode:"),
@@ -400,8 +400,8 @@ namespace FlaxEditor.Surface.Archetypes
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
                     NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
-                    NodeElementArchetype.Factory.SkeletonNodeSelect(100, Surface.Constants.LayoutOffsetY * 1, 120, 0),
-                    NodeElementArchetype.Factory.SkeletonNodeSelect(100, Surface.Constants.LayoutOffsetY * 2, 120, 0),
+                    NodeElementArchetype.Factory.SkeletonBoneIndexSelect(100, Surface.Constants.LayoutOffsetY * 1, 120, 0),
+                    NodeElementArchetype.Factory.SkeletonBoneIndexSelect(100, Surface.Constants.LayoutOffsetY * 2, 120, 1),
                     NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 3, 2),
                     NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 4, 3),
                     NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 5, 4),
@@ -426,7 +426,7 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 0),
-                    NodeElementArchetype.Factory.SkeletonNodeSelect(40, Surface.Constants.LayoutOffsetY * 1, 120, 0),
+                    NodeElementArchetype.Factory.SkeletonBoneIndexSelect(40, Surface.Constants.LayoutOffsetY * 1, 120, 0),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Bone:"),
                     NodeElementArchetype.Factory.Output(0, "Transform", ConnectionType.Transform, 1),
                 }

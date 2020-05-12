@@ -7,12 +7,12 @@ using FlaxEngine;
 namespace FlaxEditor.Surface.Elements
 {
     /// <summary>
-    /// The Visject surface node element used to pick a skeleton node with a combo box.
+    /// The Visject surface node element used to pick a skeleton bone index with a combo box.
     /// </summary>
-    public class SkeletonNodeSelectElement : ComboBoxElement
+    public class SkeletonBoneIndexSelectElement : ComboBoxElement
     {
         /// <inheritdoc />
-        public SkeletonNodeSelectElement(SurfaceNode parentNode, NodeElementArchetype archetype)
+        public SkeletonBoneIndexSelectElement(SurfaceNode parentNode, NodeElementArchetype archetype)
         : base(parentNode, archetype)
         {
             _isAutoSelect = true;
@@ -49,7 +49,7 @@ namespace FlaxEditor.Surface.Elements
             // Get the skeleton
             var surfaceParam = Surface.GetParameter(Windows.Assets.AnimationGraphWindow.BaseModelId);
             var skeleton = surfaceParam != null ? FlaxEngine.Content.LoadAsync<SkinnedModel>((Guid)surfaceParam.Value) : null;
-            if (skeleton == null || !skeleton.WaitForLoaded())
+            if (skeleton == null || skeleton.WaitForLoaded())
             {
                 SelectedIndex = -1;
                 return;
