@@ -307,10 +307,11 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
+                // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 3,
                 Title = "Transform Bone (local space)",
                 Description = "Transforms the skeleton bone",
-                Flags = NodeFlags.AnimGraph,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(270, 130),
                 DefaultValues = new object[]
                 {
@@ -332,10 +333,11 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
+                // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 4,
                 Title = "Transform Bone (global space)",
                 Description = "Transforms the skeleton bone",
-                Flags = NodeFlags.AnimGraph,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(270, 130),
                 DefaultValues = new object[]
                 {
@@ -383,10 +385,11 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
+                // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 7,
                 Title = "Copy Bone",
                 Description = "Copies the skeleton bone transformation data (in local space)",
-                Flags = NodeFlags.AnimGraph,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(260, 140),
                 DefaultValues = new object[]
                 {
@@ -414,10 +417,11 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
+                // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 8,
                 Title = "Get Bone Transform",
                 Description = "Samples the skeleton bone transformation (in global space)",
-                Flags = NodeFlags.AnimGraph,
+                Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(250, 40),
                 DefaultValues = new object[]
                 {
@@ -775,6 +779,106 @@ namespace FlaxEditor.Surface.Archetypes
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Asset(0, 0, 0, typeof(AnimationGraphFunction)),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 25,
+                Title = "Transform Node (local space)",
+                Description = "Transforms the skeleton node",
+                Flags = NodeFlags.AnimGraph,
+                Size = new Vector2(270, 130),
+                DefaultValues = new object[]
+                {
+                    string.Empty,
+                    (int)BoneTransformMode.Add,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
+                    NodeElementArchetype.Factory.Input(3, "Scale", true, ConnectionType.Vector3, 4),
+                    NodeElementArchetype.Factory.SkeletonNodeNameSelect(40, Surface.Constants.LayoutOffsetY * 4, 120, 0),
+                    NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 5, 120, 1, typeof(BoneTransformMode)),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Node:"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Mode:"),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 26,
+                Title = "Transform Node (global space)",
+                Description = "Transforms the skeleton node",
+                Flags = NodeFlags.AnimGraph,
+                Size = new Vector2(270, 130),
+                DefaultValues = new object[]
+                {
+                    string.Empty,
+                    (int)BoneTransformMode.Add,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.ImpulseSecondary, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 1),
+                    NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
+                    NodeElementArchetype.Factory.Input(3, "Scale", true, ConnectionType.Vector3, 4),
+                    NodeElementArchetype.Factory.SkeletonNodeNameSelect(40, Surface.Constants.LayoutOffsetY * 4, 120, 0),
+                    NodeElementArchetype.Factory.ComboBox(40, Surface.Constants.LayoutOffsetY * 5, 120, 1, typeof(BoneTransformMode)),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Node:"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Mode:"),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 27,
+                Title = "Copy Node",
+                Description = "Copies the skeleton node transformation data (in local space)",
+                Flags = NodeFlags.AnimGraph,
+                Size = new Vector2(260, 140),
+                DefaultValues = new object[]
+                {
+                    string.Empty,
+                    string.Empty,
+                    true,
+                    true,
+                    true,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.SkeletonNodeNameSelect(100, Surface.Constants.LayoutOffsetY * 1, 120, 0),
+                    NodeElementArchetype.Factory.SkeletonNodeNameSelect(100, Surface.Constants.LayoutOffsetY * 2, 120, 1),
+                    NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 3, 2),
+                    NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 4, 3),
+                    NodeElementArchetype.Factory.Bool(100, Surface.Constants.LayoutOffsetY * 5, 4),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Source Node:"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 2, "Destination Node:"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 3, "Copy Translation:"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 4, "Copy Rotation:"),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 5, "Copy Scale:"),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 28,
+                Title = "Get Node Transform",
+                Description = "Samples the skeleton node transformation (in global space)",
+                Flags = NodeFlags.AnimGraph,
+                Size = new Vector2(250, 40),
+                DefaultValues = new object[]
+                {
+                    string.Empty,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 0),
+                    NodeElementArchetype.Factory.SkeletonNodeNameSelect(40, Surface.Constants.LayoutOffsetY * 1, 120, 0),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Node:"),
+                    NodeElementArchetype.Factory.Output(0, "Transform", ConnectionType.Transform, 1),
                 }
             },
         };

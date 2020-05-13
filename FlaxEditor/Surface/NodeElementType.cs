@@ -81,5 +81,10 @@ namespace FlaxEditor.Surface
         /// The enum value (as int).
         /// </summary>
         EnumValue = 17,
+
+        /// <summary>
+        /// The skeleton node name selection.
+        /// </summary>
+        SkeletonNodeNameSelect = 18,
     }
 }

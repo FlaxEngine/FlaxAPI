@@ -59,6 +59,7 @@
     <Compile Include="EditorIcons.cs" />
     <Compile Include="IEditable.cs" />
     <Compile Include="ProjectInfo.cs" />
+    <Compile Include="Surface\Elements\SkeletonNodeNameSelectElement.cs" />
     <Compile Include="ViewportDebugDrawData.cs" />
     <Compile Include="API\Editor.cs" />
     <Compile Include="API\Editor\CodeEditor.Gen.cs" />

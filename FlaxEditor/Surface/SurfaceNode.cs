@@ -187,6 +187,10 @@ namespace FlaxEditor.Surface
             case NodeElementType.EnumValue:
                 element = new EnumValue(this, arch);
                 break;
+            case NodeElementType.SkeletonNodeNameSelect:
+                element = new SkeletonNodeNameSelectElement(this, arch);
+                break;
+            //default: throw new NotImplementedException("Unknown node element type: " + arch.Type);
             }
             if (element != null)
             {

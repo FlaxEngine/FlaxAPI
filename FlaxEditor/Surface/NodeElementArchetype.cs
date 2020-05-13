@@ -104,8 +104,8 @@ namespace FlaxEditor.Surface
                 {
                     Type = NodeElementType.Input,
                     Position = new Vector2(
-                        Constants.NodeMarginX - Constants.BoxOffsetX,
-                        Constants.NodeMarginY + Constants.NodeHeaderSize + ylevel * Constants.LayoutOffsetY),
+                                           Constants.NodeMarginX - Constants.BoxOffsetX,
+                                           Constants.NodeMarginY + Constants.NodeHeaderSize + ylevel * Constants.LayoutOffsetY),
                     Text = text,
                     Single = single,
                     ValueIndex = valueIndex,
@@ -128,8 +128,8 @@ namespace FlaxEditor.Surface
                 {
                     Type = NodeElementType.Output,
                     Position = new Vector2(
-                        Constants.NodeMarginX - Constants.BoxSize + Constants.BoxOffsetX,
-                        Constants.NodeMarginY + Constants.NodeHeaderSize + ylevel * Constants.LayoutOffsetY),
+                                           Constants.NodeMarginX - Constants.BoxSize + Constants.BoxOffsetX,
+                                           Constants.NodeMarginY + Constants.NodeHeaderSize + ylevel * Constants.LayoutOffsetY),
                     Text = text,
                     Single = false,
                     ValueIndex = -1,
@@ -437,7 +437,7 @@ namespace FlaxEditor.Surface
             }
 
             /// <summary>
-            /// Creates new Skeleton Node Select element description for enum editing.
+            /// Creates new Skeleton Bone Index Select element description for enum editing.
             /// </summary>
             /// <param name="x">The x location (in node area space).</param>
             /// <param name="y">The y location (in node area space).</param>
@@ -449,6 +449,28 @@ namespace FlaxEditor.Surface
                 return new NodeElementArchetype
                 {
                     Type = NodeElementType.SkeletonBoneIndexSelect,
+                    Position = new Vector2(x, y),
+                    Size = new Vector2(width, 0),
+                    Text = null,
+                    Single = false,
+                    ValueIndex = valueIndex,
+                    ConnectionsType = ConnectionType.Invalid
+                };
+            }
+
+            /// <summary>
+            /// Creates new Skeleton Node Name Select element description for enum editing.
+            /// </summary>
+            /// <param name="x">The x location (in node area space).</param>
+            /// <param name="y">The y location (in node area space).</param>
+            /// <param name="width">The width of the element.</param>
+            /// <param name="valueIndex">The index of the node variable linked as the input. Useful to make a physical connection between input box and default value for it.</param>
+            /// <returns>The archetype.</returns>
+            public static NodeElementArchetype SkeletonNodeNameSelect(float x, float y, int width, int valueIndex)
+            {
+                return new NodeElementArchetype
+                {
+                    Type = NodeElementType.SkeletonNodeNameSelect,
                     Position = new Vector2(x, y),
                     Size = new Vector2(width, 0),
                     Text = null,
