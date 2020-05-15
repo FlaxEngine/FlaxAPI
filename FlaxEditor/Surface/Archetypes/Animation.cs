@@ -885,6 +885,28 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
+                TypeID = 29,
+                Title = "Aim IK",
+                Description = "Rotates a node so it aims at a target.",
+                Flags = NodeFlags.AnimGraph,
+                Size = new Vector2(250, 80),
+                DefaultValues = new object[]
+                {
+                    string.Empty,
+                    1.0f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.Input(1, "Target", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(2, "Weight", true, ConnectionType.Float, 3, 1),
+                    NodeElementArchetype.Factory.SkeletonNodeNameSelect(40, Surface.Constants.LayoutOffsetY * 3, 120, 0),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 3, "Node:"),
+                }
+            },
+            new NodeArchetype
+            {
                 TypeID = 30,
                 Title = "Get Node Transform (local space)",
                 Description = "Samples the skeleton node transformation (in local space)",
