@@ -155,8 +155,7 @@ namespace FlaxEditor.Surface
         {
             switch (type)
             {
-            case ConnectionType.Impulse: return "Local-Space Pose";
-            case ConnectionType.ImpulseSecondary: return "Model-Space Pose";
+            case ConnectionType.Impulse: return "Skeleton Pose (local space)";
             default: return base.GetConnectionTypeName(type);
             }
         }

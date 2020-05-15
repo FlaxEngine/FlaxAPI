@@ -309,7 +309,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 3,
-                Title = "Transform Bone (local space)",
+                Title = "[deprecated] Transform Bone (local space)",
                 Description = "Transforms the skeleton bone",
                 Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(270, 130),
@@ -335,7 +335,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 4,
-                Title = "Transform Bone (model space)",
+                Title = "[deprecated] Transform Bone (model space)",
                 Description = "Transforms the skeleton bone",
                 Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(270, 130),
@@ -346,8 +346,8 @@ namespace FlaxEditor.Surface.Archetypes
                 },
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.ImpulseSecondary, 0),
-                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 1),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
                     NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
                     NodeElementArchetype.Factory.Input(3, "Scale", true, ConnectionType.Vector3, 4),
@@ -359,35 +359,37 @@ namespace FlaxEditor.Surface.Archetypes
             },
             new NodeArchetype
             {
+                // [Deprecated on 15.05.2020, expires on 15.05.2021]
                 TypeID = 5,
-                Title = "Local To Model",
+                Title = "[deprecated] Local To Model",
                 Description = "Transforms the skeleton bones from local into model space",
                 Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.ImpulseSecondary, 0),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
                     NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
                 }
             },
             new NodeArchetype
             {
+                // [Deprecated on 15.05.2020, expires on 15.05.2021]
                 TypeID = 6,
-                Title = "Model To Local",
+                Title = "[deprecated] Model To Local",
                 Description = "Transforms the skeleton bones from model into local space",
                 Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(150, 40),
                 Elements = new[]
                 {
                     NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
-                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 1),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
                 }
             },
             new NodeArchetype
             {
                 // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 7,
-                Title = "Copy Bone",
+                Title = "[deprecated] Copy Bone",
                 Description = "Copies the skeleton bone transformation data (in local space)",
                 Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(260, 140),
@@ -419,7 +421,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 8,
-                Title = "Get Bone Transform",
+                Title = "[deprecated] Get Bone Transform (model space)",
                 Description = "Samples the skeleton bone transformation (in model space)",
                 Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(250, 40),
@@ -429,7 +431,7 @@ namespace FlaxEditor.Surface.Archetypes
                 },
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 0),
                     NodeElementArchetype.Factory.SkeletonBoneIndexSelect(40, Surface.Constants.LayoutOffsetY * 1, 120, 0),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Bone:"),
                     NodeElementArchetype.Factory.Output(0, "Transform", ConnectionType.Transform, 1),
@@ -820,8 +822,8 @@ namespace FlaxEditor.Surface.Archetypes
                 },
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.ImpulseSecondary, 0),
-                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 1),
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
                     NodeElementArchetype.Factory.Input(1, "Translation", true, ConnectionType.Vector3, 2),
                     NodeElementArchetype.Factory.Input(2, "Rotation", true, ConnectionType.Rotation, 3),
                     NodeElementArchetype.Factory.Input(3, "Scale", true, ConnectionType.Vector3, 4),
@@ -865,7 +867,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 28,
-                Title = "Get Node Transform",
+                Title = "Get Node Transform (model space)",
                 Description = "Samples the skeleton node transformation (in model space)",
                 Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(250, 40),
@@ -875,7 +877,26 @@ namespace FlaxEditor.Surface.Archetypes
                 },
                 Elements = new[]
                 {
-                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.ImpulseSecondary, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.SkeletonNodeNameSelect(40, Surface.Constants.LayoutOffsetY * 1, 120, 0),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Node:"),
+                    NodeElementArchetype.Factory.Output(0, "Transform", ConnectionType.Transform, 1),
+                }
+            },
+            new NodeArchetype
+            {
+                TypeID = 30,
+                Title = "Get Node Transform (local space)",
+                Description = "Samples the skeleton node transformation (in local space)",
+                Flags = NodeFlags.AnimGraph,
+                Size = new Vector2(250, 40),
+                DefaultValues = new object[]
+                {
+                    string.Empty,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 0),
                     NodeElementArchetype.Factory.SkeletonNodeNameSelect(40, Surface.Constants.LayoutOffsetY * 1, 120, 0),
                     NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 1, "Node:"),
                     NodeElementArchetype.Factory.Output(0, "Transform", ConnectionType.Transform, 1),
