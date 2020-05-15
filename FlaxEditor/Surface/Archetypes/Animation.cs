@@ -335,7 +335,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 4,
-                Title = "Transform Bone (global space)",
+                Title = "Transform Bone (model space)",
                 Description = "Transforms the skeleton bone",
                 Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(270, 130),
@@ -360,8 +360,8 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 5,
-                Title = "Local To Global",
-                Description = "Transforms the skeleton bones from local into global space",
+                Title = "Local To Model",
+                Description = "Transforms the skeleton bones from local into model space",
                 Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(150, 40),
                 Elements = new[]
@@ -373,8 +373,8 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 6,
-                Title = "Global To Local",
-                Description = "Transforms the skeleton bones from global into local space",
+                Title = "Model To Local",
+                Description = "Transforms the skeleton bones from model into local space",
                 Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(150, 40),
                 Elements = new[]
@@ -420,7 +420,7 @@ namespace FlaxEditor.Surface.Archetypes
                 // [Deprecated on 13.05.2020, expires on 13.05.2021]
                 TypeID = 8,
                 Title = "Get Bone Transform",
-                Description = "Samples the skeleton bone transformation (in global space)",
+                Description = "Samples the skeleton bone transformation (in model space)",
                 Flags = NodeFlags.AnimGraph | NodeFlags.NoSpawnViaGUI,
                 Size = new Vector2(250, 40),
                 DefaultValues = new object[]
@@ -809,7 +809,7 @@ namespace FlaxEditor.Surface.Archetypes
             new NodeArchetype
             {
                 TypeID = 26,
-                Title = "Transform Node (global space)",
+                Title = "Transform Node (model space)",
                 Description = "Transforms the skeleton node",
                 Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(270, 130),
@@ -866,7 +866,7 @@ namespace FlaxEditor.Surface.Archetypes
             {
                 TypeID = 28,
                 Title = "Get Node Transform",
-                Description = "Samples the skeleton node transformation (in global space)",
+                Description = "Samples the skeleton node transformation (in model space)",
                 Flags = NodeFlags.AnimGraph,
                 Size = new Vector2(250, 40),
                 DefaultValues = new object[]
