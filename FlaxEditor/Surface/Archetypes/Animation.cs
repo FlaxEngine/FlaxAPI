@@ -924,6 +924,33 @@ namespace FlaxEditor.Surface.Archetypes
                     NodeElementArchetype.Factory.Output(0, "Transform", ConnectionType.Transform, 1),
                 }
             },
+            new NodeArchetype
+            {
+                TypeID = 31,
+                Title = "Two Bone IK",
+                Description = "Performs inverse kinematic on a three nodes chain.",
+                Flags = NodeFlags.AnimGraph,
+                Size = new Vector2(250, 140),
+                DefaultValues = new object[]
+                {
+                    string.Empty,
+                    1.0f,
+                    false,
+                    1.5f,
+                },
+                Elements = new[]
+                {
+                    NodeElementArchetype.Factory.Output(0, string.Empty, ConnectionType.Impulse, 0),
+                    NodeElementArchetype.Factory.Input(0, string.Empty, true, ConnectionType.Impulse, 1),
+                    NodeElementArchetype.Factory.Input(1, "Target", true, ConnectionType.Vector3, 2),
+                    NodeElementArchetype.Factory.Input(2, "Joint Target", true, ConnectionType.Vector3, 3),
+                    NodeElementArchetype.Factory.Input(3, "Weight", true, ConnectionType.Float, 4, 1),
+                    NodeElementArchetype.Factory.Input(4, "Allow Stretching", true, ConnectionType.Bool, 5, 2),
+                    NodeElementArchetype.Factory.Input(5, "Max Stretch Scale", true, ConnectionType.Float, 6, 3),
+                    NodeElementArchetype.Factory.SkeletonNodeNameSelect(40, Surface.Constants.LayoutOffsetY * 6, 120, 0),
+                    NodeElementArchetype.Factory.Text(0, Surface.Constants.LayoutOffsetY * 6, "Node:"),
+                }
+            },
         };
     }
 }
