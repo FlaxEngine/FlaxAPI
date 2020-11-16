@@ -3,6 +3,8 @@
 using FlaxEditor.GUI.ContextMenu;
 using FlaxEditor.GUI.Input;
 using FlaxEditor.Options;
+using FlaxEditor.SceneGraph.Actors;
+using FlaxEditor.Viewport;
 using FlaxEngine;
 using FlaxEngine.GUI;
 using FlaxEngine.Utilities;
@@ -313,6 +315,16 @@ namespace FlaxEditor.Windows
                     Render2D.DrawRectangle(new Rectangle(new Vector2(4), Size - 8), Color.Orange * alpha);
                 }
             }
+            
+            Editor.Instance.SceneEditing.Selection.ForEach((node) =>
+            {
+                if (node.EditableObject is UIControl controlActor)
+                {
+                    if (controlActor.Control != null)
+                        Render2D.DrawRectangle(controlActor.Control.Bounds, Editor.Instance.Options.Options.Visual.SelectionOutlineColor0, Editor.Instance.Options.Options.Visual.UISelectionOutlineSize);
+                }
+            });
+            
         }
 
         /// <summary>
